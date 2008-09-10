@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;

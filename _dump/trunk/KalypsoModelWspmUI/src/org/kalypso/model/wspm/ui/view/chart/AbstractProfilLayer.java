@@ -72,9 +72,19 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
+   */
+  @Override
+  public void setTargetComponent( String componentId )
+  {
+    m_targetComponent = componentId;
+    
+  }
+
   private IProfil m_profil;
 
-  private final String m_targetComponent;
+  private  String m_targetComponent;
 
   private final String m_domainComponent;
 

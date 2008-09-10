@@ -82,26 +82,21 @@ public abstract class AbstractObservationBuilding implements IProfileObject
 
   protected void init( final IProfil profil, final IObservation<TupleResult> observation )
   {
+
     m_profil = profil;
     m_observation = observation;
 
-// final String[] buildingProfileProperties = getProfileProperties();
-// final Map<String, IComponent> props = ProfilUtil.getComponentsFromProfile( profil );
-
     for( final String id : getProfileProperties() )
     {
-// if( !props.containsKey( id ) )
-// {
+
       final IComponent property = profil.getPointPropertyFor( id );
       if( !profil.hasPointProperty( property ) )
         profil.addPointProperty( property );
-// }
     }
   }
 
   protected abstract String[] getProfileProperties( );
 
-  // protected abstract IComponent getPointProperty( String id );
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)

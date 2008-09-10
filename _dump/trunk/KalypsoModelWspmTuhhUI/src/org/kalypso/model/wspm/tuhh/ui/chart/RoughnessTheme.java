@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;

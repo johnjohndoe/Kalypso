@@ -38,16 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.ui.view.chart;
 
+import java.util.ArrayList;
+
+import org.apache.tools.ant.taskdefs.Length;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -77,7 +78,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public void onActiveLayerChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
@@ -87,7 +88,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public void onLayerContentChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
@@ -114,18 +115,39 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   }
 
-  private final ILayerManager m_layerManager = new LayerManager();
+  private final ILayerManager m_layerManager = new LayerManager()
+  {
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
+     */
+    @Override
+    public IChartLayer[] getLayers( )
+    {
+      final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>( super.getLayers().length );
+      for( final IChartLayer layer : super.getLayers() )
+      {
+        if( ((IProfilChartLayer) layer).getTargetComponent() != null )
+          layers.add( layer );
+      }
+      return layers.toArray( new IChartLayer[] {} );
+    }
+  };
 
   private IProfilChartLayer m_hovering = null;
 
   private final String m_title;
 
+  private final String m_id;
+
   public AbstractProfilTheme( final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( null, id, null );
     m_title = title;
+    m_id = id;
     setCoordinateMapper( cm );
     ILayerManager mngr = getLayerManager();
+
     for( final IChartLayer layer : chartLayers )
     {
       mngr.addLayer( layer );
@@ -161,13 +183,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       public void onLayerMoved( IChartLayer layer )
       {
         fireLayerContentChange();
-       
+
       }
 
       @Override
       public void onLayerRemoved( IChartLayer layer )
       {
-        // TODO Auto-generated method stub
+        fireLayerContentChange();
 
       }
 
@@ -178,6 +200,15 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
       }
     } );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return m_id;
   }
 
   /**
@@ -332,15 +363,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     }
     return null;
 
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
-   */
-  @Override
-  public String getId( )
-  {
-    return super.getId();
   }
 
   public final ILayerManager getLayerManager( )

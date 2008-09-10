@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -304,13 +305,10 @@ public class TrennerPanel extends AbstractProfilView
           final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
           final IComponent bordvoll = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
 
-          if( !profil.hasPointProperty( bordvoll ) )
-            profil.addPointProperty( bordvoll );
-
+          operation.addChange( new PointPropertyAdd( profil, bordvoll) );
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
-          //TODO:KIM reparieren
-//          operation.addChange( new VisibleMarkerEdit( getViewData(), bordvoll.getId(), true ) );
+ 
 
           operation.addChange( new ActiveObjectEdit( profil, db_devs[1].getPoint(), bordvoll ) );
           new ProfilOperationJob( operation ).schedule();
@@ -331,6 +329,7 @@ public class TrennerPanel extends AbstractProfilView
           operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ) );
           new ProfilOperationJob( operation ).schedule();
         }
+        
       }
     } );
 
@@ -458,9 +457,10 @@ public class TrennerPanel extends AbstractProfilView
 
   }
 
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isProfilPropertyChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
+    if( hint.isPointPropertiesChanged() || hint.isPointsChanged() || hint.isMarkerMoved() || hint.isMarkerDataChanged() )
     {
 
       final Control control = getControl();

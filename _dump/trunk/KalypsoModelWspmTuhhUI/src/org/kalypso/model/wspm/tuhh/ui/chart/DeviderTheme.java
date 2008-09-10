@@ -43,10 +43,16 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -76,6 +82,7 @@ public class DeviderTheme extends AbstractProfilTheme
   {
     return new TrennerPanel( getProfil() );
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
@@ -85,6 +92,7 @@ public class DeviderTheme extends AbstractProfilTheme
     // this theme will not be painted, so supress the dimension of pointMarkers
     return null;
   }
+
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
@@ -107,5 +115,27 @@ public class DeviderTheme extends AbstractProfilTheme
     return new ILegendEntry[] { le };
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return;
+    if( hint.isPointPropertiesChanged() )
+    {
 
+      for( final IProfilChange change : changes )
+        if( change instanceof PointPropertyAdd || change instanceof PointPropertyRemove )
+        {
+          getEventHandler().fireLayerContentChanged( this );
+        }
+
+    }
+    else
+      super.onProfilChanged( hint, changes );
+  }
 }

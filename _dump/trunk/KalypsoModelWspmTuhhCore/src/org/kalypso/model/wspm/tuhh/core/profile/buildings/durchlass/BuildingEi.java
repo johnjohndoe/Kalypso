@@ -69,7 +69,7 @@ public class BuildingEi extends AbstractObservationBuilding
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
+    final Observation<TupleResult> observation = new Observation<TupleResult>(  ID,"Ei", result, new ArrayList<MetadataObject>() );
 
     init( profil, observation );
   }

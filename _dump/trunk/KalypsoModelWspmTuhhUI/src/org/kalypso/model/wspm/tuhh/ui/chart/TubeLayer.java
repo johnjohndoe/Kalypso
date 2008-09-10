@@ -41,39 +41,54 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.model.figure.IFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
  */
-public class StationLineLayer extends AbstractProfilLayer
+public class TubeLayer extends AbstractProfilLayer
 {
 
-  public StationLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public TubeLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
-    super( profil, targetRangeProperty, styleProvider );
+    super( profil, "", styleProvider );
+
   }
 
-  @Override
-  public String getId( )
+  private IProfileObject getTube( )
   {
-    return super.getId() + "_STATIONLINE";
+    final IProfileObject[] obj = getProfil().getProfileObjects();
+    if( obj != null && obj.length > 0 )
+      return obj[0];
+    return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
+   */
   @Override
   public String getTitle( )
   {
-    return "stationlines";
+    return getTube() == null ? "" : getTube().getObservation().getDescription();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
+   */
+  @Override
+  public IComponent getTargetComponent( )
+  {
+    return super.getDomainComponent();
   }
 
   /**
@@ -82,21 +97,25 @@ public class StationLineLayer extends AbstractProfilLayer
   @Override
   public void paint( GC gc )
   {
-    final IProfil profil = getProfil();
-
-    if( profil == null )
+    if( getTube() == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
-
-    IAxis targetAxis = getCoordinateMapper().getTargetAxis();
-    final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
-    final PolylineFigure pf = new PolylineFigure();
-    pf.setStyle( getLineStyle_hover() );
-    for( IRecord profilPoint : profilPoints )
+    final AreaStyle as = new AreaStyle( new ColorFill( getPointStyle().getInlineColor() ), getPointStyle().getAlpha(), getLineStyle(), getPointStyle().isFillVisible() );
+   // as.apply( gc );
+    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS))
     {
-      final Point point = toScreen( profilPoint );
-      pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
-      pf.paintFigure( gc );
+      return;
+    }
+    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ))
+    {
+     return; 
+    }
+    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_MAUL))
+    {
+      return;
+    }
+    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_EI))
+    {
+     return; 
     }
   }
 

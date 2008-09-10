@@ -82,5 +82,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
   public void executeDrop( Point point, EditInfo dragStartData );
 
   public void executeClick(EditInfo dragStartData );
+  
+  public void setTargetComponent(final String componentId);
  
 }

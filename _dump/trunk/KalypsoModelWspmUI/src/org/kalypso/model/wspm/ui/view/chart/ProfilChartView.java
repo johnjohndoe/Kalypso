@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
@@ -123,6 +124,16 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @SuppressWarnings("boxing")//$NON-NLS-1$
   protected void createLayer( )
   {
+    
+    
+ // get visibility and clear layer
+    final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
+    final ILayerManager lm = m_chart.getChartModel().getLayerManager();
+    for( final IChartLayer layer : lm.getLayers() )
+    {
+      visibility.put( layer.getId(), layer.isVisible() );
+      lm.removeLayer( layer );
+    }
 
     final IProfil profil = getProfil();
     if( profil != null )
@@ -135,33 +146,22 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           // TODO: display userinformation
           return;
       }
+      // call provider
+      final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
 
-      final HashMap<String, IChartLayer> requieredLayer = new HashMap<String, IChartLayer>();
-      for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
+      for( final String layerId : requieredLayer )
       {
         final IProfilChartLayer layer = m_layerProvider.createLayer( layerId, this );
         if( layer != null )
-          requieredLayer.put( layerId, layer );
-      }
-
-      final ILayerManager lm = m_chart.getChartModel().getLayerManager();
-      final HashMap<String, IChartLayer> existingLayer = new HashMap<String, IChartLayer>();
-      for( final IChartLayer layer : lm.getLayers() )
-      {
-        existingLayer.put( layer.getId(), layer );
-      }
-
-      for( final IChartLayer layer : requieredLayer.values() )
-      {
-        if( existingLayer.get( layer.getId() ) == null )
+        {
+          final Boolean visible = visibility.get( layer.getId() );
+          layer.setVisible( visible == null ? layer.isVisible() : visible );
           lm.addLayer( layer );
-      }
-      for( final IChartLayer layer : existingLayer.values() )
-      {
-        if( requieredLayer.get( layer.getId() ) == null )
-          lm.removeLayer( layer );
+        }
       }
     }
+
+
 
   }
 
@@ -236,16 +236,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     new TooltipHandler( m_chart );
 
-    // TODO: KIM ersetzen der actions durch handler
-    // m_actions = new ChartStandardActions( m_chart, m_domainRange, m_valueRangeLeft );
-
-    // TODO: move this to actiondelegate
-
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
-    // m_plotDragHandler.setActiveHandler( new DragEditHandler( m_chart, TRASH_HOLD ) );
-//
-// m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
 
     return m_chart;
   }
@@ -313,13 +305,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     {
       public void run( )
       {
-        if( hint.isObjectChanged() || hint.isPointPropertiesChanged() )
-        {
-          createLayer();
-          return;
-        }
-        else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
-            || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
+//        if( hint.isObjectChanged() || hint.isPointPropertiesChanged() )
+//        {
+//          createLayer();
+//          return;
+//        }
+//        else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
+//            || hint.isActivePointChanged() || hint.isActivePropertyChanged() )
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
             if( layer instanceof IProfilChartLayer )
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
@@ -384,42 +376,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
   }
 
-// public void runChartAction( final ProfilChartActionsEnum chartAction )
-// {
-//
-// // TODO: KIM ersetzen der Actions durch commands,handler
-//
-// if( (m_chart != null) && !m_chart.isDisposed() )
-// switch( chartAction )
-// {
-// case MAXIMIZE:
-// // m_chart.maximize();
-// break;
-//
-// case ZOOM_IN:
-// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
-// break;
-// case ZOOM_OUT:
-// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_OUT ).setChecked( true );
-// break;
-// case PAN:
-// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.PAN ).setChecked( true );
-// break;
-//
-// case EDIT:
-// {
-// // TODO: KIM ersetzen final IAction editAction = m_actions.getAction( ChartStandardActions.Action.EDIT );
-// // editAction.setChecked( !editAction.isChecked() );
-// }
-// break;
-//
-// case EXPORT_IMAGE:
-// // saveChartAsImage( m_chart );
-// break;
-//
-// }
-// }
-
   /**
    * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
    */
@@ -462,8 +418,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @Override
   public Object getAdapter( Class< ? > clazz )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( clazz == IChartPart.class )
+      return this;
+    return super.getAdapter( clazz );
   }
 
   /**

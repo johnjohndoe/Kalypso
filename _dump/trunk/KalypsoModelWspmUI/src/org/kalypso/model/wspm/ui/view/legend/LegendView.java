@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -57,12 +56,15 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -112,7 +114,8 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     }
     else
     {
-      m_chartlegend = new ChartEditorTreeOutlinePage( this.getProfilChartView() ); // this
+      m_chartlegend = new ChartEditorTreeOutlinePage( this.getProfilChartView() );
+      
       m_chartlegend.createControl( parent );
       m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
       {
@@ -135,6 +138,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
           }
         }
       } );
+
       final Control control = m_chartlegend.getControl();
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       control.addMouseListener( new MouseAdapter()

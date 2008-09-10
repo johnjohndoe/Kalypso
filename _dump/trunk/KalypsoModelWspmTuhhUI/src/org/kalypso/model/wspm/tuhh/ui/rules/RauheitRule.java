@@ -101,7 +101,7 @@ public class RauheitRule extends AbstractValidatorRule
 
   private final boolean istDurchlass( final IProfileObject[] objects )
   {
-    if( objects == null || objects.length < 1 )
+    if( objects == null || objects.length < 1 || objects[0]==null)
       return false;
     final String building = objects[0].getId();
     if( building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS )

@@ -43,6 +43,13 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -61,28 +68,36 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.observation.result.IComponent;
 
 /**
- * @author belger
- */
-/**
  * @author kimwerner
  */
-public class BuildingPanel extends AbstractProfilView
+public class TubePanel extends AbstractProfilView
 {
   private final Collection<Text> m_texts = new ArrayList<Text>( 8 );
 
+  private Composite m_propPanel;
+
+  private ComboViewer m_cmb = null;
+
+  private final IProfileObject[] m_tubes = new IProfileObject[] { new BuildingKreis( null ), new BuildingTrapez( null ), new BuildingMaul( null ), new BuildingEi( null ) };
+
   private final IProfileObject m_building;
 
-  public BuildingPanel( final IProfil profile)
+  public TubePanel( final IProfil profile )
   {
-    super( profile);
+    super( profile );
 
     final IProfileObject[] profileObjects = getProfil().getProfileObjects();
     if( profileObjects.length > 0 )
@@ -96,7 +111,7 @@ public class BuildingPanel extends AbstractProfilView
   {
 
     String label = property.getName();
-    
+
 // TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
     if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
     {
@@ -126,21 +141,71 @@ public class BuildingPanel extends AbstractProfilView
     panel.setLayout( gridLayout );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
+    final Label cmbL = new Label( panel, SWT.NONE );
+    cmbL.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, true, false ) );
+    cmbL.setText( "Querschnittsform" );
+    m_cmb = new ComboViewer( panel );
+    m_cmb.setContentProvider( new ArrayContentProvider() );
+
+    m_cmb.setInput( m_tubes );
+
+    m_cmb.setLabelProvider( new LabelProvider()
+    {
+
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        return ((IProfileObject) element).getObservation().getDescription();
+      }
+    } );
+    m_cmb.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+
+      @Override
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+
+        final IProfileObject tube = (IProfileObject) selection.getFirstElement();
+
+        if( tube != null && !tube.getId().equals( getProfil().getProfileObjects()[0].getId() ) )
+        {
+          final ProfilOperation operation = new ProfilOperation( "Rohrquerschnitt ändern", getProfil(), true );
+          operation.addChange( new ProfileObjectSet( getProfil(), new IProfileObject[] { tube } ) );
+          new ProfilOperationJob( operation ).schedule();
+        }
+      }
+    } );
+    m_propPanel = new Composite( panel, SWT.NONE );
+
+    m_propPanel.setLayout( new GridLayout( 2, false ) );
+    m_propPanel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL, true, true, 2, 1 ) );
+    createPropertyPanel( m_propPanel );
+
+    updateControls();
+
+    return panel;
+  }
+
+  protected void createPropertyPanel( final Composite parent )
+  {
     final Display display = parent.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
-
     for( final IComponent buildingProperty : m_building.getObjectProperties() )
     {
       final String tooltip = buildingProperty.getDescription();
 
-      final Label label = new Label( panel, SWT.NONE );
+      final Label label = new Label( parent, SWT.NONE );
       label.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, true, false ) );
       label.setText( getLabel( buildingProperty ) );
       label.setToolTipText( tooltip );
 
-      final Text bldText = new Text( panel, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+      final Text bldText = new Text( parent, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
       m_texts.add( bldText );
       bldText.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
@@ -191,32 +256,33 @@ public class BuildingPanel extends AbstractProfilView
         }
       } );
     }
-
-    updateControls();
-
-    return panel;
   }
 
   protected void updateControls( )
   {
-    for( final Text text : m_texts )
-    {
-      try
-      {
-        if( !text.isDisposed() )
-        {
-          text.setText( String.format( "%.2f", m_building.getValue( (IComponent) text.getData() ) ) );
-          if( text.isFocusControl() )
-            text.selectAll();
-        }
-      }
-      catch( final Exception e )
-      {
-        text.setText( "Formatfehler" );
-      }
-    }
+
+//    final IProfileObject[] obj = getProfil().getProfileObjects();
+//    if( obj == null || obj.length < 1 )
+//    {
+//      m_propPanel.dispose();
+//      m_propPanel = null;
+//      return;
+//    }
+//    final String t_id = obj[0].getId();
+//    if( t_id.equals( ((IProfileObject) ((IStructuredSelection) m_cmb.getSelection()).getFirstElement()).getId() ) )
+//    {
+//      for( final IProfileObject tube : m_tubes )
+//      {
+//        if( t_id.equals( tube.getId() ) )
+//          m_cmb.setSelection( new StructuredSelection( tube ) );
+//      }
+//  //    m_propPanel.dispose();
+//   //   createPropertyPanel( pa );
+//    }
+    
   }
 
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isObjectChanged() || hint.isObjectDataChanged() )

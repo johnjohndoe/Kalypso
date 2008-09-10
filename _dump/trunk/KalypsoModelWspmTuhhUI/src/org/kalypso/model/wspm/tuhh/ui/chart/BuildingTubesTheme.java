@@ -42,10 +42,9 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -58,13 +57,13 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public class BuildingWeirTheme extends AbstractProfilTheme
+public class BuildingTubesTheme extends AbstractProfilTheme
 
 {
 
-  public BuildingWeirTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public BuildingTubesTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_WEHR, "Wehr", chartLayers, cm );
+    super( IWspmTuhhConstants.LAYER_TUBES, "Rohrdurchlass", chartLayers, cm );
 
   }
 
@@ -75,9 +74,8 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Brücke entfernen", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( "Rohrprofil entfernen", getProfil(), true );
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -87,7 +85,7 @@ public class BuildingWeirTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new WeirPanel( getProfil() );
+    return new TubePanel( getProfil() );
   }
 
   /**

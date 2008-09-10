@@ -45,10 +45,11 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -71,7 +72,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new BuildingPanel( getProfil() );
+    return new TubePanel( getProfil() );
   }
 
   /**
