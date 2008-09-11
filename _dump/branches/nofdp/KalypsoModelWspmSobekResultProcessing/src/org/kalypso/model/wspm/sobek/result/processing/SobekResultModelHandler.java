@@ -55,13 +55,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCache
 {
-  private static JAXBContext JC = null;
+  private JAXBContext JC = null;
 
   private final IFolder m_resultFolder;
 
-  private static final Map<String, GMLWorkspace> m_workspaces = new HashMap<String, GMLWorkspace>();
+  private final Map<String, GMLWorkspace> m_workspaces = new HashMap<String, GMLWorkspace>();
 
-  private static final Map<String, CommandableWorkspace> m_commandables = new HashMap<String, CommandableWorkspace>();
+  private final Map<String, CommandableWorkspace> m_commandables = new HashMap<String, CommandableWorkspace>();
 
   private GMLWorkspace m_branchesWorkspace;
 
