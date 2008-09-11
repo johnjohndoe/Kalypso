@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -73,7 +73,7 @@ public class ZoomInByRectWidget extends AbstractWidget
 
   private Point m_startPoint = null;
 
-  private static final double MIN_PIXEL_ZOOM_BOX = 20;
+  private static final double MIN_PIXEL_ZOOM_BOX = 5;
 
   @Override
   public void dragged( final Point p )
