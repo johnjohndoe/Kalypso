@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
@@ -81,6 +81,7 @@ import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.i18n.Messages;
@@ -438,11 +439,9 @@ public class GrafikLauncher
 
       final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
 
-      final List curves = element.getCurve();
-      for( final Iterator itc = curves.iterator(); itc.hasNext(); )
+      final List<TypeCurve> curves = element.getCurve();
+      for( final TypeCurve tc : curves )
       {
-        final TypeCurve tc = (TypeCurve) itc.next();
-
         // create a corresponding dat-File for the current observation file
         final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
             .getName() )
@@ -545,7 +544,8 @@ public class GrafikLauncher
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( final String element2 : mds )
         {
-          final Double value = new Double( mdl.getProperty( element2 ) );
+          final String alarmLevel = mdl.getProperty( element2 );
+          final Double value = NumberUtils.parseQuietDouble( alarmLevel );
           yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }

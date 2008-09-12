@@ -160,9 +160,6 @@ public class SelectFeatureWidget extends AbstractWidget
 
       m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
       m_featureLists[0] = m_themes == null ? null : m_themes[0].getFeatureList();
-
-      if( m_featureLists[0] == null )
-        System.out.println( "Huch" );
     }
 
   }
@@ -511,10 +508,10 @@ public class SelectFeatureWidget extends AbstractWidget
         else
           toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
       }
-
-      if( !add && !toggle )
-        selectionManager.clear();
     }
+
+    if( !add && !toggle )
+      selectionManager.clear();
 
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
@@ -600,16 +597,19 @@ public class SelectFeatureWidget extends AbstractWidget
       if( m_themes[i] != null )
       {
         final FeatureList featureList = m_themes[i].getFeatureList();
-        if( featureList != null )
-          m_featureLists[i] = featureList;
+        m_featureLists[i] = featureList;
       }
     }
   }
 
-  public static Feature grabNextFeature( final MapPanel mapPanel, final GM_Point currentPos, final FeatureList[] featureLists, final QName[] qnamesToSelect, final QName geomQName )
+  public static Feature grabNextFeature( final MapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme[] themes, final QName[] qnamesToSelect, final QName geomQName )
   {
-    for( final FeatureList featureList : featureLists )
+    for( final IKalypsoFeatureTheme theme : themes )
     {
+      if( theme == null )
+        continue;
+
+      final FeatureList featureList = theme.getFeatureList();
       if( featureList == null )
         continue;
 
@@ -618,7 +618,11 @@ public class SelectFeatureWidget extends AbstractWidget
       final QName geomQNameToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
       final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNameToSelect, qnamesToSelect );
       if( foundFeature != null )
-        return foundFeature;
+      {
+        final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
+        if( visibles != null && visibles.contains( foundFeature ) )
+          return foundFeature;
+      }
     }
 
     return null;
