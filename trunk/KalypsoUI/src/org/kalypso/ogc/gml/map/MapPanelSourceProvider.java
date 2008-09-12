@@ -195,8 +195,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
     m_mapPanel = null;
 
-    for( final IServiceWithSources service : m_registeredServices )
-      service.removeSourceProvider( this );
+// for( final IServiceWithSources service : m_registeredServices )
+// service.removeSourceProvider( this );
 
     if( m_mapPanelContext != null )
       m_contextService.deactivateContext( m_mapPanelContext );

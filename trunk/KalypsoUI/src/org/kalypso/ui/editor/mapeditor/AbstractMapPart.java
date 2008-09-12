@@ -461,8 +461,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_mapModell = mapModell;
 
-// m_mapModellContextSwitcher.setMapModell( mapModell );
-
     final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
     if( !workbench.isClosing() )
     {

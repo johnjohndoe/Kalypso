@@ -57,6 +57,8 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypsodeegree.model.feature.Feature;
@@ -73,6 +75,29 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class SelectSingleFeatureWidget extends AbstractWidget
 {
+  private final IMapModellListener m_mapModellListener = new MapModellAdapter()
+  {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      reinit();
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
+    {
+      reinit();
+    }
+  };
+
   private IGeometryBuilder m_geometryBuilder;
 
   private IKalypsoFeatureTheme[] m_themes;
@@ -88,6 +113,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   private Point m_currentPoint;
 
   private boolean m_toggle = false;
+
 
   public SelectSingleFeatureWidget( )
   {
@@ -116,10 +142,12 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   {
     super.activate( commandPoster, mapPanel );
 
+    mapPanel.getMapModell().addMapModelListener( m_mapModellListener );
+
     reinit();
   }
 
-  private void reinit( )
+  protected void reinit( )
   {
     m_geometryBuilder = new PointGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
 
@@ -142,6 +170,17 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    if( mapModell != null )
+      mapModell.removeMapModelListener( m_mapModellListener );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
@@ -157,7 +196,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     if( m_featureLists == null || mapPanel == null )
       return;
 
-    m_foundFeature = SelectFeatureWidget.grabNextFeature( mapPanel, currentPos, m_featureLists, m_qnamesToSelect, m_geomQName );
+    m_foundFeature = SelectFeatureWidget.grabNextFeature( mapPanel, currentPos, m_themes, m_qnamesToSelect, m_geomQName );
 
     mapPanel.repaint();
   }
@@ -196,6 +235,9 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     }
     finally
     {
+// // Always reinit, this makes the widget more robust against change of the active theme
+// // Else, we must be a panel listener etc.
+// reinit();
       m_geometryBuilder.reset();
     }
   }

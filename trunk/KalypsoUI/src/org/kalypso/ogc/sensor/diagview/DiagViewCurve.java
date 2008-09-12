@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Set;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
@@ -96,7 +97,7 @@ public class DiagViewCurve extends ObsViewItem
   {
     m_stroke = stroke;
   }
-  
+
   /**
    * @return true when this curve represents a Water-Level and the Water-Level-Feature is activated in the view
    */
@@ -127,9 +128,9 @@ public class DiagViewCurve extends ObsViewItem
 
     for( int i = 0; i < alarms.length; i++ )
     {
-      final Double value = new Double( mdl.getProperty( alarms[i] ) );
-
-      als[i] = new AlarmLevel( value.doubleValue(), alarms[i] );
+      final String alarmProperty = mdl.getProperty( alarms[i] );
+      final double value = NumberUtils.parseQuietDouble( alarmProperty );
+      als[i] = new AlarmLevel( value, alarms[i] );
     }
 
     return als;
