@@ -59,12 +59,9 @@ public class ObservationServiceJob extends Job
    * This wrapper also implements the {@link IObservationService}-Interface. It uses this job for reloading the
    * observation service.
    */
-  private ObservationServiceImpl m_observationServiceWrapper;
+  private final ObservationServiceImpl m_observationServiceWrapper;
 
-  /**
-   * The constructor.
-   */
-  public ObservationServiceJob( ObservationServiceImpl observationServiceWrapper )
+  public ObservationServiceJob( final ObservationServiceImpl observationServiceWrapper )
   {
     super( "ObservationServiceJob" );
 
@@ -75,7 +72,7 @@ public class ObservationServiceJob extends Job
    * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( IProgressMonitor monitor )
+  protected IStatus run( final IProgressMonitor monitor )
   {
     try
     {
@@ -84,14 +81,14 @@ public class ObservationServiceJob extends Job
         return Status.CANCEL_STATUS;
 
       /* Create the observation service. */
-      IObservationService observationService = new ObservationServiceDelegate();
+      final IObservationService observationService = new ObservationServiceDelegate();
 
       /* Monitor. */
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
       /* Dispose the old delegate. */
-      ObservationServiceDelegate delegate = (ObservationServiceDelegate) m_observationServiceWrapper.getDelegateInternal();
+      final ObservationServiceDelegate delegate = (ObservationServiceDelegate) m_observationServiceWrapper.getDelegateInternal();
       if( delegate != null )
       {
         // System.out.println( "Dispose the old observation service delegate (" + delegate.toString() + ") ... " +
@@ -106,7 +103,7 @@ public class ObservationServiceJob extends Job
 
       return Status.OK_STATUS;
     }
-    catch( RepositoryException ex )
+    catch( final RepositoryException ex )
     {
       return StatusUtilities.statusFromThrowable( ex );
     }

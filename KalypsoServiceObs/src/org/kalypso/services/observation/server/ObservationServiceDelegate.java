@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
@@ -47,7 +47,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -83,6 +82,7 @@ import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -104,6 +104,7 @@ import org.xml.sax.InputSource;
  * @author Gernot Belger
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 public class ObservationServiceDelegate implements IObservationService
 {
   private final List<IRepository> m_repositories;
@@ -131,6 +132,8 @@ public class ObservationServiceDelegate implements IObservationService
 
   private boolean m_initialized = false;
 
+  private final String m_configurationLocation;
+
   /**
    * Constructs the service by reading the configuration.
    */
@@ -148,6 +151,8 @@ public class ObservationServiceDelegate implements IObservationService
 
     m_tmpDir = FileUtilities.createNewTempDir( "Observations" );
     m_tmpDir.deleteOnExit();
+
+    m_configurationLocation = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_CONFIGURATION_LOCATION );
 
     /* HINT: The init method tries to access another servlet in the same container. */
     init();
@@ -203,7 +208,13 @@ public class ObservationServiceDelegate implements IObservationService
    */
   protected final synchronized void init( ) throws RepositoryException
   {
-    if( m_initialized )
+    // TODO: at the moment, we silently ignore this implementation if no
+    // service location was given: this is necessary, because if
+    // the help system is running (jetty!), this implementation is also available at the
+    // client side...
+    // TODO Solution: remove this server code from the client side... (but in order to do that, we must split-up the
+    // observation service plug-ins)
+    if( m_initialized || m_configurationLocation == null )
       return;
 
     m_initialized = true;
@@ -214,8 +225,7 @@ public class ObservationServiceDelegate implements IObservationService
 
     try
     {
-      final String configurationLocation = FrameworkProperties.getProperty( "kalypso.hwv.observation.service.configuration.location" );
-      final URL confLocation = new URL( configurationLocation );
+      final URL confLocation = new URL( m_configurationLocation );
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repconf_server.xml" );
 
       // this call also closes the stream
@@ -254,9 +264,9 @@ public class ObservationServiceDelegate implements IObservationService
       }
 
       /* Load Repositories */
-      for( final Iterator< ? > it = facConfs.iterator(); it.hasNext(); )
+      for( final Object name : facConfs )
       {
-        final RepositoryFactoryConfig item = (RepositoryFactoryConfig) it.next();
+        final RepositoryFactoryConfig item = (RepositoryFactoryConfig) name;
         final IRepositoryFactory fact = item.getFactory();
 
         try
@@ -302,7 +312,7 @@ public class ObservationServiceDelegate implements IObservationService
     {
       init();
     }
-    catch( RepositoryException e1 )
+    catch( final RepositoryException e1 )
     {
       throw new SensorException( e1 );
     }
@@ -400,14 +410,14 @@ public class ObservationServiceDelegate implements IObservationService
     {
       if( fos != null )
         try
-        {
+      {
           fos.close();
-        }
-        catch( final IOException e )
-        {
-          m_logger.severe( e.getLocalizedMessage() );
-          throw new SensorException( "Error closing the output stream", e );
-        }
+      }
+      catch( final IOException e )
+      {
+        m_logger.severe( e.getLocalizedMessage() );
+        throw new SensorException( "Error closing the output stream", e );
+      }
     }
   }
 
@@ -449,7 +459,7 @@ public class ObservationServiceDelegate implements IObservationService
         obs.setValues( zml.getValues( null ) );
       }
     }
-    catch( final Exception e ) // generic exception caught for simplicity
+    catch( final Throwable e ) // generic exception caught for simplicity
     {
       m_logger.throwing( getClass().getName(), "writeData", e );
       throw new SensorException( e.getLocalizedMessage(), e );
@@ -513,17 +523,17 @@ public class ObservationServiceDelegate implements IObservationService
     if( parent == null )
       return m_repositories.size() > 0;
 
-    try
-    {
-      final IRepositoryItem item = itemFromBean( parent );
+      try
+      {
+        final IRepositoryItem item = itemFromBean( parent );
 
-      return item.hasChildren();
-    }
-    catch( final RepositoryException e )
-    {
-      m_logger.throwing( getClass().getName(), "hasChildren", e );
-      throw e;
-    }
+        return item.hasChildren();
+      }
+      catch( final RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "hasChildren", e );
+        throw e;
+      }
   }
 
   /**

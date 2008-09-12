@@ -22,6 +22,10 @@ import org.osgi.service.url.URLStreamHandlerService;
  */
 public class KalypsoServiceObsActivator extends AbstractUIPlugin
 {
+  public final static String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location";
+
+  public final static String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval";
+
   // The shared instance.
   private static KalypsoServiceObsActivator plugin;
 
@@ -39,7 +43,7 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -63,7 +67,7 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
     plugin = null;
@@ -105,7 +109,7 @@ public class KalypsoServiceObsActivator extends AbstractUIPlugin
 
         m_observationService = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IObservationService.class );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
         return null;
