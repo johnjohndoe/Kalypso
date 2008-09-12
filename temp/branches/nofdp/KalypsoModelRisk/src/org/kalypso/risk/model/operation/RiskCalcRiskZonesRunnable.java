@@ -221,7 +221,6 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final FeatureComponent createDictionaryComponent = ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL );
 
     result.addComponent( createDictionaryComponent );
-
   }
 
   private static void fillResultWithData( final TupleResult result, final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel )

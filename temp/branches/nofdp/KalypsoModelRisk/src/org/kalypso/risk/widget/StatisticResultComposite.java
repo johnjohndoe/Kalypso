@@ -105,8 +105,10 @@ public class StatisticResultComposite extends Composite
           // Total Damage
           if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.1") + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
+            String pre = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1" ); //$NON-NLS-1$
+            String unit = Messages.getString( "StatisticResultComposite.1" ); //$NON-NLS-1$
+
+            final String headerName = String.format( "%s %s %s", pre, compNameStrings[1], unit ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
@@ -114,10 +116,12 @@ public class StatisticResultComposite extends Composite
             count++;
           }
           // Flooded Area
-          if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
+          else if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.2") + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            String pre = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2" ); //$NON-NLS-1$
+            String unit = Messages.getString( "StatisticResultComposite.3" ); //$NON-NLS-1$
+
+            final String headerName = String.format( "%s %s %s", pre, compNameStrings[1], unit ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
@@ -125,30 +129,35 @@ public class StatisticResultComposite extends Composite
             count++;
           }
           // Averaged Damage
-          if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
+          else if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.3") + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            String pre = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3" ); //$NON-NLS-1$
+            String unit = Messages.getString( "StatisticResultComposite.5" ); //$NON-NLS-1$
+
+            final String headerName = String.format( "%s %s %s", pre, compNameStrings[1], unit ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
               myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
-          if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
+          else if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.4") + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
+            String pre = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ); //$NON-NLS-1$
+            String unit = Messages.getString( "StatisticResultComposite.7" ); //$NON-NLS-1$
+
+            final String headerName = String.format( "%s %s", pre, unit ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
               myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
-          if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
+          else if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
           {
-            // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.5"); //$NON-NLS-1$
+            String pre = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.5" ); //$NON-NLS-1$
+
+            final String headerName = String.format( "%s", pre ); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
