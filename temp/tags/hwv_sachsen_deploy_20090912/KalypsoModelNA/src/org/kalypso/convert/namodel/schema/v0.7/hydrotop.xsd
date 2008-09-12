@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
+<schema xmlns:hyd="http://www.tuhh.de/hydrotop" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" targetNamespace="http://www.tuhh.de/hydrotop" elementFormDefault="qualified" version="0.7">
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<element name="NAHydrotop" type="hyd:HydrotopType"/>
+	<complexType name="HydrotopType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="hydrotopMember" type="hyd:HydrotopAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="HydrotopAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="hyd:Hydrotop"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<element name="Hydrotop" type="hyd:HydrotopFeatureType" substitutionGroup="gml:_Feature"/>
+	<complexType name="HydrotopFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="position" type="gml:PolygonPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ort</label>
+								<tooltip>geometriescher Ort</tooltip>
+								<description>Geometrie des Objektes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Geometry</label>
+								<tooltip>geometric position</tooltip>
+								<description>Geometry of the Object</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="area" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Hydrotopflaeche</label>
+								<tooltip>Flaeche des Hydrotopes [m^2]</tooltip>
+								<description>Gesamtflaeche des Hydrotopes [m^2]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Hydrotope area</label>
+								<tooltip>Area of the hydrotope [m^2]</tooltip>
+								<description>Total area of the Hydrotope [m^2]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuse" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Nutzungsschlüssel</label>
+								<tooltip>Link zum Nutzungsschlüssel</tooltip>
+								<description>vorhandene Nutzung - Link zum Nutzungsschlüssel, welcher in der Nutzungsdatensammlung vorhanden sein muss (maximal 10 Zeichen)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Landuse key</label>
+								<tooltip>Link to landuse key</tooltip>
+								<description>Available landuse - link to landuse key, which must be available in the landuse data collection (maximum 10 signs)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<!--TODO: Link zu Parameter.xsd Bodentyp -> text6-->
+					<element name="soiltype" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bodenschlüssel</label>
+								<tooltip>Link zum Bodenschlüssel</tooltip>
+								<description>anstehender Boden - Link zum Bodenschlüssel, welcher in der Bodendatensammlung vorhanden sein muss (maximal 10 Zeichen)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Soilkey</label>
+								<tooltip>Link to soilkey</tooltip>
+								<description>layered soil - link to soilkey, which must be available in the soil data collection (maximum 10 signs)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="corrSealing" type="double" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Faktor Versiegelung</label>
+								<tooltip>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</tooltip>
+								<description>Korrekturfaktor Versiegelungsgrad [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Coefficient sealing rate</label>
+								<tooltip>Correction coefficient of sealing rate [-] (= 0-1)</tooltip>
+								<description>Correction coefficient of sealing rate [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainageType" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Entwaesserung</label>
+								<tooltip>Entwaesserungsart (besielt/unbesielt)</tooltip>
+								<description>Untergliederung der in besielte und unbesielte Flaechen (wird zur Zeit noch nicht im Modell verwendet)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Drainage</label>
+								<tooltip>Type of drainage (sealed/unsealed)</tooltip>
+								<description>Subdivision of the selaed and unsealed areas (still not used in the model at present )</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="m_perkm" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>max. Perkolationsrate</label>
+								<tooltip>maximale Perkolationsrate [m/s]</tooltip>
+								<description>maximale Perkolationsrate [m/s]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Max. percolation rate</label>
+								<tooltip>Maximal percolation rate [m/s]</tooltip>
+								<description>Maximal percolation rate [m/s]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="m_f1gws" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zuflussanteil GW</label>
+								<tooltip>Zuflussanteil Grundwasser [-] (= 0-1)</tooltip>
+								<description>Zuflussanteil Grundwasser [-] (= 0-1)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Inflow rate GW</label>
+								<tooltip>Inflow rate of groundwater [-] (= 0-1)</tooltip>
+								<description>Inflow rate of groundwater  [-] (= 0-1)</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
