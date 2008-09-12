@@ -54,7 +54,7 @@ public class I10nString
   private final ITranslator m_translator;
 
   /**
-   * Convenience constructor, same as {@link #I10nString(String, null)}.IUf this constructor is used, no translation
+   * Convenience constructor, same as {@link #I10nString(String, null)}. If this constructor is used, no translation
    * takes place, the key itself will be returned as value.
    */
   public I10nString( final String key )

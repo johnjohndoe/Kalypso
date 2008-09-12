@@ -134,7 +134,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 
     for( final IKalypsoTheme theme : m_themes )
     {
-      formatter.format( headInfo, theme.getName() );
+      formatter.format( headInfo, theme.getName().getValue() );
 
       final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
       if( themeInfo == null )
