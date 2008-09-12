@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="googleEarthAdapter" name="googleEarthAdapter" schema="schema/googleEarthAdapter.exsd"/>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.google.earth.export.command"
+            icon="icons/googleEarth.png">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.kalypso.google.earth.export"
+            name="%category.name.0">
+      </category>
+      <command
+            categoryId="org.kalypso.google.earth.export"
+            defaultHandler="org.kalypso.google.earth.export.GoogleEarthExportCommandHandler"
+            description="%command.description.0"
+            id="org.kalypso.google.earth.export.command"
+            name="%command.name.0">
+      </command>
+   </extension>
+
+</plugin>
