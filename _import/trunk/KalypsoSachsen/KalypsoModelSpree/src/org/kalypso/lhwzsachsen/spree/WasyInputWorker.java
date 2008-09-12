@@ -27,6 +27,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -231,9 +232,8 @@ public class WasyInputWorker
       // TODO: as soon as DBFile was merged, reintroduce encoding here, its crucial for the wasy exe
       final DBaseFile dbf = new DBaseFile( wqFilename, fds /* , "CP850" */);
 
-      for( final Iterator<Entry<WQInfo, WechmannParams[]>> iter = paramMap.entrySet().iterator(); iter.hasNext(); )
+      for( final Entry<WQInfo, WechmannParams[]> entry : paramMap.entrySet() )
       {
-        final Map.Entry<WQInfo, WechmannParams[]> entry = iter.next();
         final WasyCalcJob.WQInfo info = entry.getKey();
         final WechmannParams[] paramArray = entry.getValue();
 
@@ -309,18 +309,11 @@ public class WasyInputWorker
   /* Helper method in order to parse alarm-level strings */
   private static Double alarmValue( final String ast1 )
   {
-    try
-    {
-      final Double value = new Double( ast1 );
-      /* If it is near zero, return non-value */
-      if( Math.abs( value.doubleValue() ) > 1 )
-        return value;
-    }
-    catch( final NumberFormatException e )
-    {
-      // ignore, return non-value
-    }
+    final double value = NumberUtils.parseQuietDouble( ast1 );
+    if( !Double.isNaN( value ) && Math.abs( value ) > 1 )
+      return value;
 
+    /* If it is near zero, return non-value */
     return new Double( "999" );
   }
 
