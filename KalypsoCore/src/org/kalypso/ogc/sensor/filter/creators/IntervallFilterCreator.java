@@ -54,14 +54,14 @@ import org.kalypso.zml.filters.IntervallFilterType;
 
 public class IntervallFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
-    IntervallFilterType filter = (IntervallFilterType) aft;
-    IntervallFilter intervallFilter = new IntervallFilter( filter );
+    final IntervallFilterType filter = (IntervallFilterType) aft;
+    final IntervallFilter intervallFilter = new IntervallFilter( filter );
 
-    JAXBElement< ? extends AbstractFilterType> filter2 = filter.getFilter();
+    final JAXBElement< ? extends AbstractFilterType> filter2 = filter.getFilter();
 
-    AbstractFilterType value = filter2 == null ? null : filter2.getValue();
+    final AbstractFilterType value = filter2 == null ? null : filter2.getValue();
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( value, baseObs, context );
     intervallFilter.initFilter( filteredObs, filteredObs, context );
     return intervallFilter;

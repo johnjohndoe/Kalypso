@@ -141,7 +141,7 @@ public class ZmlFactory
     // not to be instanciated
   }
 
-  private static Properties getProperties( )
+  private static synchronized Properties getProperties( )
   {
     if( m_parserProps == null )
     {
