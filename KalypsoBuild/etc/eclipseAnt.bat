@@ -1,0 +1,1 @@
+java -cp C:\programme\eclipse3.0\startup.jar org.eclipse.core.launcher.Main -application org.eclipse.ant.core.antRunner -buildfile build.xml -debug

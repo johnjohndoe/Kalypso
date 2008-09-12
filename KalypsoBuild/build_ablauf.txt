@@ -1,0 +1,73 @@
+Dokumentation des Buildablaufes...
+
+KalypsoUI:builder:xroxy-calcService:/etc/ant/build.xml
+#proxy-CalcService
+|-depends:#build-core
+|         |-KalypsoBuild/central-build/build-core.xml"
+|         | #-build-core   
+|         |		JavaApiContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		EclipseRCPContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		EclipsePlatformContributions/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoCommons/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoAuth/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoMetaDoc/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoRepository/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoGMLSchema/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoDeegree/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoCore/etc/ant/build.xml" target="deploy" inheritAll="false" />
+|         |		KalypsoServiceCore/etc/ant/project-build.xml" target="deploy" inheritAll="false" />
+|         |     #deploy
+|         |      extends KalypsoBuild/common-project/build.xml
+|         |              #deploy
+|         |              | depends 
+|         |              | #prepare...
+|         |              |
+|         |              |jar
+|         |              |  build/bin/**/*.class     (are they builded ?)
+|         |              |  ->build/deploy/'KalypsoServiceCore'.jar
+|         |              |
+|         |              |copy 
+|         |              |  from 'KalypsoServiceCore'/lib/*
+|         |              |  to	 'KalypsoServiceCore'/build/deploy/
+|         |              |
+|         |-copy KalypsoServiceCore.jar
+|		  		 from /KalypsoServiceCore/build/deploy/
+|		  		 to   /KalypsoUI/lib
+|
+|-/KalypsoServiceCalc/etc/ant/build.xml
+|  |  extends
+|  |   KalypsoServiceCore/etc/ant/service-build.xml
+|  |     extends
+|  |      /KalypsoBuild/common-tomcat/build.xml
+|  |  
+|  #build-client (KalypsoServiceCore/etc/ant/service-build.xml)
+|  |   | depends
+|  |   |  #generate-gen-import...
+|  |   |  |  depends
+|  |   |  |   #generate-apt (binding-klassen)
+|  |   |  |
+|  |   |  |wsgen
+|  |   |     classpass deploy/bin
+|  |   |     classpass ...
+|  |   |     classpass ...
+|  |   |     ->build/ws/gen
+|  |   |
+|  |   |
+|  |   |
+|  |   |
+|  |   |jar
+|  |   | build/deploy/ws/wsimport/**/*.class
+|  |   |	<fileset dir="${project}/build/build-generate" includes="**/*.class" /> ?
+|  |   |	<fileset dir="${project}/build/bin" includes="**/*.class" />            ?
+|  |   | ->build/deploy/'kalypsoservice_calculation.jar'
+|  
+|  
+|  
+|  
+|  
+|-copy kalypsoservice_calculation.jar
+       from /KalypsoServiceCalc/build/deploy
+       to   /KalypsoUI/lib
+
+       
+    
