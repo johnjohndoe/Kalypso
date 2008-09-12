@@ -254,4 +254,13 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     m_visibility = visibility;
   }
+
+  /**
+   * @see org.kalypso.ui.action.IThemeCommand#toStyledLayerType()
+   */
+  public StyledLayerType toStyledLayerType( )
+  {
+    final org.kalypso.template.gismapview.ObjectFactory factory = new org.kalypso.template.gismapview.ObjectFactory();
+    return init( factory );
+  }
 }
