@@ -159,16 +159,16 @@ public class TimeserieUtils
 
     final ArrayList<String> mds = new ArrayList<String>();
 
-    
+
     final Set<Object> keySet = mdl.keySet();
-    for( Object object : keySet )
+    for( final Object object : keySet )
     {
       final String md = object.toString();
 
       if( md.startsWith( mdPrefix ) )
         mds.add( md );
     }
-    
+
     return mds.toArray( new String[mds.size()] );
   }
 
@@ -201,19 +201,19 @@ public class TimeserieUtils
    * 
    * @return config of the timeseries package
    */
-  private static Properties getProperties( )
+  private static synchronized Properties getProperties( )
   {
     if( m_config == null )
     {
       m_config = new Properties();
-      
+
       final Properties defaultConfig = new Properties();
       m_config = new Properties( defaultConfig );
 
       // The config file in the sources is used as defaults
       PropertiesUtilities.loadI18nProperties( defaultConfig, m_configBaseUrl, m_basename );
-	
-	// TODO: also load configured properties via i18n mechanism
+
+      // TODO: also load configured properties via i18n mechanism
       InputStream configIs = null;
       try
       {
@@ -249,7 +249,7 @@ public class TimeserieUtils
       finally
       {
         IOUtils.closeQuietly( configIs );
-      }      
+      }
     }
     return m_config;
   }
@@ -314,9 +314,7 @@ public class TimeserieUtils
    */
   public static String getUnit( final String type )
   {
-    final String strUnit = getProperties().getProperty( "AXISUNIT_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return strUnit;
+    return getProperties().getProperty( "AXISUNIT_" + type, "" );
   }
 
   /**
@@ -328,9 +326,7 @@ public class TimeserieUtils
    */
   public static String getName( final String type )
   {
-    final String strName = getProperties().getProperty( "AXISNAME_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return strName;
+    return getProperties().getProperty( "AXISNAME_" + type, "" );
   }
 
   /**
@@ -346,12 +342,12 @@ public class TimeserieUtils
 
     if( strColor == null )
       return new Color[]
-      { ColorUtilities.random() };
+                       { ColorUtilities.random() };
 
     final String[] strings = strColor.split( "#" );
     if( strings.length == 0 )
       return new Color[]
-      { ColorUtilities.random() };
+                       { ColorUtilities.random() };
 
     final Color[] colors = new Color[strings.length];
     for( int i = 0; i < colors.length; i++ )
@@ -436,7 +432,7 @@ public class TimeserieUtils
    * TODO once on JDK 5.0 use formated printing if possible. Note that some refactoring might need to be done since we
    * currently work with NumberFormats.
    */
-  public static NumberFormat getNumberFormat( final String format )
+  public static synchronized NumberFormat getNumberFormat( final String format )
   {
     final NumberFormat nf = m_formatMap.get( format );
     if( nf != null )
@@ -462,7 +458,7 @@ public class TimeserieUtils
     return getDefaultFormat();
   }
 
-  private static NumberFormat getDefaultFormat( )
+  private static synchronized NumberFormat getDefaultFormat( )
   {
     if( m_defaultFormat == null )
     {

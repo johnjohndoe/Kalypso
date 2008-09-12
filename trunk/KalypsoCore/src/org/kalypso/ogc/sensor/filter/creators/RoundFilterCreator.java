@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
+
+import javax.xml.bind.JAXBElement;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -52,15 +54,18 @@ import org.kalypso.zml.filters.RoundFilterType;
 
 public class RoundFilterCreator implements IFilterCreator
 {
-  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
-      throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
+  throws SensorException
   {
-    RoundFilterType filter = (RoundFilterType)aft;
-    RoundFilter intervallFilter = new RoundFilter( filter );
+    final RoundFilterType filter = (RoundFilterType)aft;
+    final RoundFilter roundFilter = new RoundFilter( filter );
 
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter, baseObs, context );
-    intervallFilter.initFilter( filteredObs, filteredObs, context );
-    return intervallFilter;
+    final JAXBElement< ? extends AbstractFilterType> filter2 = filter.getFilter();
+    final AbstractFilterType value = filter2 == null ? null : filter2.getValue();
+
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( value, baseObs, context );
+    roundFilter.initFilter( filteredObs, filteredObs, context );
+    return roundFilter;
   }
 
 }

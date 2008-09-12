@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
@@ -44,6 +44,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
@@ -66,7 +68,9 @@ final class SaveAndDisposeInfoJob extends UIJob
     {
       final String location = m_info.getKey().getLocation();
       final String message = Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.0") + location + Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.1"); //$NON-NLS-1$ //$NON-NLS-2$
-      final boolean doSave = MessageDialog.openQuestion( getDisplay().getActiveShell(), Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.2"), message ); //$NON-NLS-1$
+      final Display display = getDisplay();
+      final Shell shell = display == null ? null : display.getActiveShell();
+      final boolean doSave = MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.util.pool.SaveAndDisposeInfoJob.2" ), message ); //$NON-NLS-1$
       if( doSave )
         m_info.saveObject( monitor );
     }
