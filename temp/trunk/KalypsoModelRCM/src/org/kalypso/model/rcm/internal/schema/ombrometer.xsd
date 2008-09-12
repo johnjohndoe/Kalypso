@@ -12,6 +12,7 @@
 			<complexContent>
 				<extension base="gml:AbstractFeatureType">
 					<sequence>
+						<element name="hasBeenProcessed" type="boolean" default="true" />
 						<element name="ombrometerMember" minOccurs="0" maxOccurs="unbounded">
 							<complexType>
 								<sequence minOccurs="0" maxOccurs="1">

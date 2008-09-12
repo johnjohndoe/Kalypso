@@ -26,6 +26,10 @@
             class="org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator"
             qname="{org.kalypso.model.rcm}OmbrometerRainfallGenerator">
       </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.OmbrometerCollection"
+            qname="{org.kalypso.model.rcm.ombrometer}OmbrometerCollection">
+      </feature>
    </extension>
 
 </plugin>
