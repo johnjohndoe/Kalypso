@@ -231,11 +231,12 @@
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
     	-->
 
+		<!--
 		<echo message="Ablage der oberen Umhüllenden Q" />
 		<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true" />
 		<echo message="Ablage der unteren Umhüllenden Q" />
 		<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false" IgnoreIllegalFeaturePath="true" />
-
+		-->
 
 		<echo message="Ablage der oberen Umhüllenden W" />
 		<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseWUp}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true" />
