@@ -1,4 +1,4 @@
-#Tue Sep 02 18:14:46 CEST 2008
+#Thu Sep 11 16:43:13 CEST 2008
 eclipse.preferences.version=1
 encoding//.model/observationConf/VorhersageMapping.gml=UTF-8
 encoding//.model/observationConf/ZwischengebieteMapping.gml=UTF-8
@@ -32,6 +32,8 @@ encoding//.prognose/Vorhersage-2007-12-18_17h02/Zeitreihen/Zuflusspegel/Porschdo
 encoding//.prognose/Vorhersage-2007-12-18_17h02/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2008-07-17_13h23/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2008-07-17_13h23/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-10_08h42/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2008-09-10_08h42/calcCase.gml=UTF-8
 encoding//.templates/calcCase/calcCase.gml=UTF-8
 encoding/<project>=UTF-8
 encoding/modell.gml=UTF-8

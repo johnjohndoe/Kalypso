@@ -18,6 +18,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="htmlFilePath" value=".model/wizardhtml/01_Zwischengebietspegel.html"/>
                 <arg name="helpId" value="&hid;sec_Assi_elbeZwge_02_Zwischengebietspegel"/>
                 <!--  -->
+                <arg name="selectFeatureID" value="Kirnitzschtal"/>
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01a_zwischengebietspegelUstiDresden.gmt"/>
                 <arg name="maximizeMap" value="false"/>
                 <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
@@ -76,6 +77,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="htmlFilePath" value=".model/wizardhtml/01a_Zwischengebietspegel.html"/>
                 <arg name="helpId" value="&hid;sec_Assi_elbeZwge_02_Zwischengebietspegel"/>
                 <!--  -->
+                <arg name="selectFeatureID" value="Cotta"/>
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01b_zwischengebietspegelDresdenTorgau.gmt"/>
                 <arg name="maximizeMap" value="false"/>
                 <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
@@ -142,6 +144,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="hideCalcButton" value="true"/>
                 <!-- 
 			Karte -->
+                <arg name="selectFeatureID" value="UstiDresden"/>
                 <arg name="mapTemplate" value=".templates/calcCase/wiz04_ZwischengebietsErgebnisse.gmt"/>
                 <arg name="mapTemplateContextIsCalcCase" value="true"/>
                 <arg name="maximizeMap" value="true"/>
@@ -174,6 +177,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="rightSash" value="30"/>
                 <!-- 
 			Karte -->
+                <arg name="selectFeatureID" value="UstiDresden"/>
                 <arg name="mapTemplate" value=".templates/calcCase/wiz05_berichtsablage.gmt"/>
                 <arg name="mapTemplateContextIsCalcCase" value="true"/>
                 <arg name="maximizeMap" value="true"/>

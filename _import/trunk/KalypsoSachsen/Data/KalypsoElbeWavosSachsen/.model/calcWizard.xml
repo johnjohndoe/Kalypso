@@ -262,7 +262,7 @@
                         <arg name="exporter3a">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Wasserstand"/>
-                                <arg name="documentName" value="Wasserstand-Scheitelwerte"/>
+                                <arg name="documentName" value="Scheitelwerte-Wasserstand"/>
                                 <arg name="documentTitle" value="Scheitelwerttabelle - Wasserstand"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->
@@ -304,8 +304,8 @@
                         <arg name="exporter4">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Abfluss"/>
-                                <arg name="documentName" value="Abfluss-Scheitelwerte"/>
-                                <arg name="documentTitle" value="Abfluss - Wasserstand"/>
+                                <arg name="documentName" value="Scheitelwerte-Abfluss"/>
+                                <arg name="documentTitle" value="Scheitelwerttabelle - Abfluss"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->
                                 <arg name="delta" value="0.0001"/>
@@ -348,14 +348,14 @@
                         <arg name="id" value="simpleTemplateExporter"/>
                         <arg name="name" value="Längsschnitte"/>
                         <arg name="templateDiagLS_Q">
-                                <arg name="documentName" value="Abfluss-Längsschnitt"/>
-                                <arg name="label" value="Längsschnitt - Abfluss"/>
+                                <arg name="documentName" value="Längsschnitt-Abfluss"/>
+                                <arg name="label" value="Abfluss"/>
                                 <arg name="category" value="Längsschnitt Pegel;Elbe Abfluss"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_Q.odt"/>
                         </arg>
                         <arg name="templateDiagLS_W">
-                                <arg name="documentName" value="Wasserstand-Längsschnitt"/>
-                                <arg name="label" value="Längsschnitt - Wasserstand"/>
+                                <arg name="documentName" value="Längsschnitt-Wasserstand"/>
+                                <arg name="label" value="Wasserstand"/>
                                 <arg name="category" value="Längsschnitt Pegel;Elbe Wasserstand"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_W.odt"/>
                         </arg>

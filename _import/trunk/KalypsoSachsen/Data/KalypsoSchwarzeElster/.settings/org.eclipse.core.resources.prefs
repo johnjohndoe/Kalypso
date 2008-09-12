@@ -1,4 +1,4 @@
-#Thu Sep 04 17:55:52 CEST 2008
+#Thu Sep 11 15:57:06 CEST 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/ombrometer.csv=Cp1252
 encoding//.Rechenvarianten_Info/Ereignis95/.calculation=UTF-8
@@ -360,6 +360,12 @@ encoding//.prognose/Vorhersage-2005-11-23_14h57/grafik/QX_GROEDI-1.dat=UTF-8
 encoding//.prognose/Vorhersage-2005-11-23_14h57/grafik/W_GROEDI-1.dat=UTF-8
 encoding//.prognose/Vorhersage-2006-03-08_17h36/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2006-03-08_17h36/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/Zeitreihen/QV_ZUKNAP.zml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/Zeitreihen/W_TRADO.zml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/ombrometer.gml=UTF-8
+encoding//.prognose/Vorhersage-2008-09-11_08h41/rainfallCatchment.gml=UTF-8
 encoding//.prognose/Vorhersage-25-10-2004_15h15/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/.calculation=UTF-8
 encoding//.prognose/prognose1/results.gml=UTF-8

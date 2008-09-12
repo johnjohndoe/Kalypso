@@ -294,7 +294,7 @@ ToDo: Help-Ids setzen!!! -->
                         <arg name="exporter3a">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Wasserstand"/>
-                                <arg name="documentName" value="Wasserstand-Scheitelwerte"/>
+                                <arg name="documentName" value="Scheitelwerte-Wasserstand"/>
                                 <arg name="documentTitle" value="Scheitelwerttabelle - Wasserstand"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->
@@ -328,7 +328,7 @@ ToDo: Help-Ids setzen!!! -->
                         <arg name="exporter3b">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Abfluss"/>
-                                <arg name="documentName" value="Abfluss-Scheitelwerte"/>
+                                <arg name="documentName" value="Scheitelwerte-Abfluss"/>
                                 <arg name="documentTitle" value="Scheitelwerttabelle - Abfluss"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->

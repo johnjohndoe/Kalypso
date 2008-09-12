@@ -8,6 +8,7 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Ansicht Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Ombrometer" />
 		<arg name="htmlFilePath" value=".model/wizardhtml/01_Ombrometer.html" />
+		<arg name="selectFeatureID" value="Ombrometer-42012"/>
 		<arg name="mapTemplate" value="project:.templates/calcCase/Ombrometer.gmt" />
 		<arg name="mapToolbar">
 			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
@@ -24,6 +25,7 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietsniederschlagsmodell - Kontrolle/Bearbeitung Niederschlag" imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Gebietsniederschlag" />
 		<arg name="htmlFilePath" value=".model/wizardhtml/02_Gebietsniederschlag.html" />
+		<arg name="selectFeatureID" value="Catchment1002"/>		
 		<arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt" />
 		<arg name="mapToolbar">
 			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
@@ -55,6 +57,7 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Gebietstemperaturmodell - Kontrolle/Bearbeitung Temperaturen" imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Gebietstemperatur" />
 		<arg name="htmlFilePath" value=".model/wizardhtml/04_Gebietstemperatur.html" />
+		<arg name="selectFeatureID" value="Catchment1002"/>		
 		<arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt" />
 		<arg name="mapToolbar">
 			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
@@ -620,7 +623,7 @@
                                 <!--arg name="charset" value="cp1252"/-->
 				<arg name="delta" value="0.0001" />
 				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss" />
-				<arg name="documentName" value="Wasserstand-Scheitelwerte" />
+				<arg name="documentName" value="Scheitelwerte-Wasserstand" />
 				<arg name="documentTitle" value="Scheitelwerttabelle - Wasserstand" />
 				<arg name="column1">
 					<arg name="position" value="1" />
@@ -706,7 +709,7 @@
                                 <!--arg name="charset" value="cp1252"/-->
 				<arg name="delta" value="0.0001" />
 				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss" />
-				<arg name="documentName" value="Abfluss-Scheitelwerte" />
+				<arg name="documentName" value="Scheitelwerte-Abfluss" />
 				<arg name="documentTitle" value="Scheitelwerttabelle - Abfluss" />
 				<arg name="column1">
 					<arg name="position" value="1" />
