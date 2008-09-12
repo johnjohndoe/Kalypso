@@ -59,6 +59,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author kuch
@@ -161,6 +162,14 @@ public abstract class AbstractNode implements INode
   public GM_Point getLocation( )
   {
     return (GM_Point) getFeature().getDefaultGeometryProperty();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getJTSLocation()
+   */
+  public Point getJTSLocation( ) throws GM_Exception
+  {
+    return (Point) JTSAdapter.export( getLocation() );
   }
 
   public IModelMember getModel( )
