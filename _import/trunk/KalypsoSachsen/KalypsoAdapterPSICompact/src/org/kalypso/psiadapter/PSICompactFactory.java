@@ -14,17 +14,15 @@ import de.psi.go.lhwz.PSICompactImpl;
  * 
  * @author schlienger
  */
+@SuppressWarnings("restriction")
 public final class PSICompactFactory
 {
-
   /**
    * Name of the system property which contains the location of the fake data. Must be an url. Normaly this points to
    * the directory containing the 'structure.txt' file. <br/>ATTENTION: If this property is set, the fake implementation
    * is used instead of the real PSICompact implementation!
    */
   private static final String SYSPROP_FAKE_LOCATION = "kalypso.psifake.location";
-
-  protected static PSICompact m_psiCompact = null;
 
   /**
    * Name of the system property which contains the location of the dictionary of .at files. <br>
@@ -33,7 +31,36 @@ public final class PSICompactFactory
    */
   public static final String SYSPROP_AT_DICTIONARY = "kalypso.psi.at.properties";
 
+  /**
+   * Name of the system property which defines the reinitialisation interval<br>
+   * After this amount of milliseconds, the current PSICompact is discarded.
+   */
+  public static final String SYSPROP_REINIT = "kalypso.psi.reinit";
+
+  private static long s_reinit;
+
+  private static long s_lastInit = 0;
+
+  protected static PSICompact m_psiCompact = null;
+
   private static IWQProvider s_wqProvider = null;
+
+  static
+  {
+    final String reinitStr = FrameworkProperties.getProperty( SYSPROP_REINIT, "-1" );
+    System.out.println( "PSI-Reinit: " + reinitStr + "ms" );
+    long reinit = -1;
+    try
+    {
+      reinit = Long.parseLong( reinitStr );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+    }
+    s_reinit = reinit;
+  }
+
 
   /**
    * Returns the connection to the PSI-Interface implementation.
@@ -42,11 +69,19 @@ public final class PSICompactFactory
    */
   public final static PSICompact getConnection( )
   {
+    final long time = System.currentTimeMillis();
+    if( s_reinit != -1 && time - s_lastInit > s_reinit )
+    {
+      System.out.println( "Reinitialising PSICompact" );
+      m_psiCompact = null;
+      s_lastInit = time;
+    }
+
     if( m_psiCompact != null )
     {
       try
       {
-        // fake Aufruf nur um zu testen ob die SST da ist
+        // fake Aufruf nur um zu testen, ob die SST da ist
         m_psiCompact.getDataModelVersion();
       }
       catch( final ECommException e )

@@ -26,6 +26,7 @@ import de.psi.go.lhwz.ECommException;
  * @author Gernot Belger
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 public class PSICompactCommiter extends DocumentServiceSimulation
 {
   /** distribution directory property */

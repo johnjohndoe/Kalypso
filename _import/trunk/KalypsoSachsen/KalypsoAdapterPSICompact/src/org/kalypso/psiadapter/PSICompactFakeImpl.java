@@ -21,6 +21,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -452,19 +453,19 @@ public class PSICompactFakeImpl implements PSICompact
       String p = null;
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_1 );
       if( p != null )
-        omd.setAlarm1( Double.valueOf( p ).doubleValue() );
+        omd.setAlarm1( NumberUtils.parseQuietDouble( p ) );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_2 );
       if( p != null )
-        omd.setAlarm2( Double.valueOf( p ).doubleValue() );
+        omd.setAlarm2( NumberUtils.parseQuietDouble( p ) );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_3 );
       if( p != null )
-        omd.setAlarm3( Double.valueOf( p ).doubleValue() );
+        omd.setAlarm3( NumberUtils.parseQuietDouble( p ) );
 
       p = mdl.getProperty( TimeserieConstants.MD_ALARM_4 );
       if( p != null )
-        omd.setAlarm4( Double.valueOf( p ).doubleValue() );
+        omd.setAlarm4( NumberUtils.parseQuietDouble( p ) );
 
       p = mdl.getProperty( TimeserieConstants.MD_GEWAESSER );
       if( p != null )
@@ -498,7 +499,7 @@ public class PSICompactFakeImpl implements PSICompact
 
       p = mdl.getProperty( TimeserieConstants.MD_PEGELNULLPUNKT );
       if( p != null )
-        omd.setLevel( Double.valueOf( p ).doubleValue() );
+        omd.setLevel( NumberUtils.parseQuietDouble( p ) );
 
       final IAxis nba = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
 
