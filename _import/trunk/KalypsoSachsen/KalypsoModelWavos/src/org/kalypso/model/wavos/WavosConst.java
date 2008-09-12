@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  g.belger@bjoernsen.de
  *  m.schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wavos;
 
@@ -46,10 +46,6 @@ package org.kalypso.model.wavos;
  */
 public class WavosConst
 {
-
-  /**
-   *  
-   */
   public static final String CALCJOB_SPEC = "wavosCalcJob_spec.xml";
 
   public static final String LOG_FILE = "elbeWavosSachsen.log";
@@ -61,6 +57,7 @@ public class WavosConst
 
   public static final String CALC_START = "Modell Berechnung wird gestartet";
   public static final String CALC_FILE_CREATION = "Dateien für Rechenkern werden erzeugt";
+
   public static final String CALC_RESULT_READ = "Ergebnisse werden zurückgelesen";
   public static final String CALC_CANCELLED = "Berechnung wurde durch den Benutzer abgebrochen.";
   public static final String CALC_FINISHED = "Berechnung ist beendet.";
@@ -112,13 +109,16 @@ public class WavosConst
   public static final String DIR_TAFEL = "tafel";
 
   public static final String ERROR_MINUS_4 = "Die WAVOS-Rechnung konnte nicht durchgeführt werden. Bitte überprüfen Sie die Messdaten und wählen Sie ggf. einen anderen Startzeitpunkt der Berechnung.";
+
   public static final String ERROR_MINUS = "Die WAVOS-Rechnung konnte nicht durchgeführt werden.";
+
   public static final String ERROR_PLUS = "Die WAVOS-Rechnung konnte nicht durchgeführt werden (unbekannter Fehlerstatus).";
+
   public static final String ERROR_SHIFTVOR = "Shiftvor konnte nicht erfolgreich durchgeführt werden.";
 
   public WavosConst()
   {
-  // will not be instantiated
+    // will not be instantiated
   }
 
 }
