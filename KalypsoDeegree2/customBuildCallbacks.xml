@@ -6,7 +6,7 @@
 
 	<!-- REMARK: set this to your eclipse workspace location -->
 	<!-- Sadly, there seems to be no way to use some globally defined properties here... -->
-	<property name="workspace_loc" value="C:/Eclipse/KalypsoHead332"/>
+	<property name="workspace_loc" value="C:/Eclipse/KalypsoHead34"/>
 	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
@@ -100,6 +100,8 @@
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
 		<copydir dest="${target.folder}/lib" src="${workspace_loc}/deegree2/lib"/>
+		<!-- Somehow this should work instead of incudling build -->
+		<!--copydir dest="${target.folder}" src="${build.result.folder}"/-->
 	</target>
 
 	<!-- ===================================================================== -->
@@ -117,7 +119,8 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<copydir dest="${target.folder}/deegree" src="${workspace_loc}/deegree2/src"/>
+		<!-- What is the sense of this? -->
+		<!--copydir dest="${target.folder}/deegree" src="${workspace_loc}/deegree2/src"/-->
 	</target>
 
 	<!-- ===================================================================== -->
