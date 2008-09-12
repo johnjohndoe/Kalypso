@@ -7,7 +7,7 @@
  * Germany http://www.tuhh.de/wb
  * 
  * and
- *  
+ * 
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
@@ -71,7 +71,7 @@ public class DWDObservationRaster
    * @param unit
    *          The unit of the values of this observation.
    */
-  public DWDObservationRaster( int dwdKey, int maxCells, String unit )
+  public DWDObservationRaster( final int dwdKey, final int maxCells, final String unit )
   {
     m_dwdKey = dwdKey;
     m_maxCells = maxCells;
@@ -101,14 +101,13 @@ public class DWDObservationRaster
   public void setValueFor( final Date date, final int cellPos, final double value )
   {
     if( !m_valueHash.containsKey( date ) )
-    {
       m_valueHash.put( date, new double[m_maxCells] );
-    }
+
     final double[] values = m_valueHash.get( date );
     values[cellPos] = value;
   }
 
-  public double getValueFor( Date date, int cellPos )
+  public double getValueFor( final Date date, final int cellPos )
   {
     final double[] values = m_valueHash.get( date );
     return values[cellPos];

@@ -65,7 +65,7 @@ import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
- * Helper class for dwd raster based methodes
+ * Helper class for dwd raster based methods
  * 
  * @author doemming
  */
@@ -92,7 +92,7 @@ public class DWDRasterHelper
     // interpretiert werden.
     // Dies ist vermutlich nicht richtig (TODO: verifizieren)
     // TODO: noch besser wäre es, die Zeitzone 'von aussen' konfigurierbar zu machen
-    DATEFORMAT_RASTER.setTimeZone( TimeZone.getTimeZone( "GMT-1:00" ) );
+    DATEFORMAT_RASTER.setTimeZone( TimeZone.getTimeZone( "GMT+1:00" ) );
   }
 
   /**
@@ -354,7 +354,7 @@ public class DWDRasterHelper
       int lmVersion = 0;
       String line = null;
       DWDObservationRaster raster = null;
-      Date blockDate = null;
+      long blockDate = -1;
       int cellpos = 0;
       boolean rightBlock = false; // Is only used by the dynamic header (lmVersion = 1)
       while( (line = reader.readLine()) != null )
@@ -369,7 +369,7 @@ public class DWDRasterHelper
           final int hour = Integer.parseInt( dynamicHeaderMatcher.group( 3 ) );
 
           startCal.add( Calendar.HOUR_OF_DAY, hour + 1 );
-          blockDate = startCal.getTime();
+          blockDate = startCal.getTimeInMillis();
 
           if( key == dwdKey )
           {
@@ -388,7 +388,9 @@ public class DWDRasterHelper
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() ) // lm2 ??
         {
-          blockDate = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
+          // TODO: this is stil not the correct way to parse the date...
+          // Google, how to do it correctly...
+          blockDate = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) ).getTime();
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
 
           if( key == dwdKey )
@@ -416,7 +418,7 @@ public class DWDRasterHelper
             for( final String value2 : values )
             {
               final double value = Double.parseDouble( value2 );
-              raster.setValueFor( blockDate, cellpos, (value + offset) * factor );
+              raster.setValueFor( new Date( blockDate ), cellpos, (value + offset) * factor );
               cellpos++;
             }
           }
@@ -427,7 +429,7 @@ public class DWDRasterHelper
             // One line represents all 78 values for one position.
             final String[] values = (line.trim()).split( " +" );
             final Calendar valueDate = Calendar.getInstance();
-            valueDate.setTime( blockDate );
+            valueDate.setTimeInMillis( blockDate );
             for( final String valueStr : values )
             {
               valueDate.add( Calendar.HOUR_OF_DAY, 1 ); // starting with hour 1, so add first here!
