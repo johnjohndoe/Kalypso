@@ -45,11 +45,17 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
+import org.kalypso.services.observation.sei.IObservationService;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -63,17 +69,17 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   private String m_remoteObs;
   private String m_sourceFilter;
 
-  public void setLocalObs( String localObs )
+  public void setLocalObs( final String localObs )
   {
     m_localObs = localObs;
   }
 
-  public void setRemoteObs( String remoteObs )
+  public void setRemoteObs( final String remoteObs )
   {
     m_remoteObs = remoteObs;
   }
 
-  public void setSourceFilter( String sourceFilter )
+  public void setSourceFilter( final String sourceFilter )
   {
     m_sourceFilter = sourceFilter;
   }
@@ -82,25 +88,15 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   {
     super( false );
   }
-  
+
   /**
    * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected FeatureVisitor createVisitor( URL context, IUrlResolver resolver, ILogger logger, IProgressMonitor monitor ) 
+  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final ILogger logger, final IProgressMonitor monitor )
   {
-    // TODO: reimplement
-    throw new UnsupportedOperationException();
-//    try
-//    {
-//      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
-//
-//      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
-//    }
-//    catch( final ServiceException e )
-//    {
-//      throw new InvocationTargetException( e );
-//    }
+    final IObservationService srv = KalypsoServiceObsActivator.getDefault().getObservationServiceProxy();
+    return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
   }
 
   /**
@@ -109,12 +105,11 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   @Override
   protected IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
-    throw new UnsupportedOperationException();
-//    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
-//    if( v.getStati().length > 0 )
-//      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
-//    
-//    return Status.OK_STATUS;
+    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor) visitor;
+    if( v.getStati().length > 0 )
+      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
+
+    return Status.OK_STATUS;
   }
 
   /**

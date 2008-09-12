@@ -139,7 +139,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     m_doSaveGml = doSaveGml;
   }
 
-  public void setIgnoreIllegalFeaturePath( boolean ignoreIllegalFeaturePath )
+  public void setIgnoreIllegalFeaturePath( final boolean ignoreIllegalFeaturePath )
   {
     m_ignoreIllegalFeaturePath = ignoreIllegalFeaturePath;
   }
@@ -164,7 +164,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     m_gml = gml;
   }
 
-  public void setDepth( String depth )
+  public void setDepth( final String depth )
   {
     m_depth = depth;
   }
@@ -193,8 +193,9 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     {
       throw be;
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
+      // Catch even throwables, else we never get an stack trace for errors
       e.printStackTrace();
 
       throw new BuildException( e.getLocalizedMessage(), e );
@@ -257,7 +258,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
 
       final List<IStatus> stati = new ArrayList<IStatus>();
-      for( int i = 0; i < m_featurePath.length; i++ )
+      for( final String fp : m_featurePath )
       {
         if( monitor.isCanceled() )
           throw new InterruptedException();
@@ -267,7 +268,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         {
           final FeatureVisitor visitor = createVisitor( m_context, resolver, logger, subProgressMonitor );
 
-          final String fp = m_featurePath[i];
           workspace.accept( visitor, fp, depth );
 
           final IStatus statusFromVisitor = statusFromVisitor( visitor );
