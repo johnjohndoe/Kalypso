@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,6 +52,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.conf.Repconf.Repository;
 
 /**
  * Utility class for the repository config package.
@@ -89,9 +89,8 @@ public class RepositoryConfigUtils
 
       final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
 
-      for( final Iterator<Repconf.Repository> it = list.iterator(); it.hasNext(); )
+      for( final Repository elt : list )
       {
-        final Repconf.Repository elt = it.next();
         final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
         fConfs.add( item );
       }
@@ -100,7 +99,7 @@ public class RepositoryConfigUtils
     }
     catch( final Exception e )
     {
-      throw new RepositoryException( e );
+      throw new RepositoryException( "Unable to load repository config from location: " + location, e );
     }
     finally
     {

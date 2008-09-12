@@ -50,8 +50,10 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.services.observation.KalypsoServiceObsActivator;
 import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -63,6 +65,7 @@ import org.kalypso.services.observation.sei.ObservationBean;
  * 
  * @author Holger Albert
  */
+@SuppressWarnings("restriction")
 @WebService(endpointInterface = "org.kalypso.services.observation.sei.IObservationService")
 public class ObservationServiceImpl implements IObservationService
 {
@@ -104,19 +107,29 @@ public class ObservationServiceImpl implements IObservationService
    */
   private IObservationService m_delegate;
 
-  /**
-   * The constructor.
-   */
   public ObservationServiceImpl( )
   {
     m_observationServiceJob = null;
-    m_intervall = 600000; // 10 Min
     m_delegate = null;
+
+    final String reinitStr = FrameworkProperties.getProperty( KalypsoServiceObsActivator.SYSPROP_REINIT_SERVICE, "600000" );
+    long reinit = 600000; // 10 min
+    try
+    {
+      reinit = Long.parseLong( reinitStr );
+    }
+    catch( final NumberFormatException e )
+    {
+      e.printStackTrace();
+    }
+    m_intervall = reinit;
 
     /* Start the reloading. */
     m_observationServiceJob = new ObservationServiceJob( this );
     m_observationServiceJob.addJobChangeListener( m_listener );
-    m_observationServiceJob.schedule( 2000 );
+    // TRICKY: give a bit of time for first schedule, as this will access a HttpResource,
+    // which may not be accessible right now
+    m_observationServiceJob.schedule( 3000 );
   }
 
   /**
