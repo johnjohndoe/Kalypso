@@ -80,7 +80,7 @@ public final class ExportWizard extends Wizard
 
   public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell,
       final ImageDescriptor defaultImage, final String windowTitle ) throws CoreException
-  {
+      {
     m_target = target;
     m_shell = shell;
 
@@ -93,18 +93,18 @@ public final class ExportWizard extends Wizard
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
 
     final IDialogSettings workbenchSettings = KalypsoMetaDocPlugin.getDefault().getDialogSettings();
-    IDialogSettings section = workbenchSettings.getSection( settingsName );//$NON-NLS-1$
+    IDialogSettings section = workbenchSettings.getSection( settingsName );
     if( section == null )
-      section = workbenchSettings.addNewSection( settingsName );//$NON-NLS-1$
+      section = workbenchSettings.addNewSection( settingsName );
     setDialogSettings( section );
 
     // use the target image as default image for this wizard
     final IWizardPage[] factoryPages = factory.createWizardPages( configuration, defaultImage );
     final IWizardPage[] targetPages = target.createWizardPages( configuration );
-    for( int i = 0; i < factoryPages.length; i++ )
-      addPage( factoryPages[i] );
-    for( int i = 0; i < targetPages.length; i++ )
-      addPage( targetPages[i] );
+    for( final IWizardPage factoryPage : factoryPages )
+      addPage( factoryPage );
+    for( final IWizardPage targetPage : targetPages )
+      addPage( targetPage );
 
     // operation which will be called for finish
     m_operation = new WorkspaceModifyOperation()
@@ -120,14 +120,13 @@ public final class ExportWizard extends Wizard
 
           monitor.beginTask( "Export", objects.length );
 
-          for( int i = 0; i < objects.length; i++ )
+          for( final IExportableObject exportableObject : objects )
           {
             if( monitor.isCanceled() )
               throw new InterruptedException();
 
-            final IExportableObject exportableObject = objects[i];
             monitor.subTask( exportableObject.getPreferredDocumentName() );
-            
+
             IStatus status;
             try
             {
@@ -136,7 +135,7 @@ public final class ExportWizard extends Wizard
             catch( final Exception e )
             {
               status = StatusUtilities.statusFromThrowable( e );
-              
+
               KalypsoMetaDocPlugin.getDefault().getLog().log( status );
             }
 
@@ -146,7 +145,7 @@ public final class ExportWizard extends Wizard
         catch( final CoreException e )
         {
           KalypsoMetaDocPlugin.getDefault().getLog().log( e.getStatus() );
-          
+
           stati.add( e.getStatus() );
         }
         finally
@@ -164,7 +163,7 @@ public final class ExportWizard extends Wizard
           throw new CoreException( status );
       }
     };
-  }
+      }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#dispose()
@@ -186,6 +185,6 @@ public final class ExportWizard extends Wizard
       exception.printStackTrace();
     ErrorDialog.openError( m_shell, m_target.getName(), "Export-Probleme", status );
 
-    return !status.matches( IStatus.ERROR );
+    return true;
   }
 }
