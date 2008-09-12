@@ -1,0 +1,37 @@
+Anforderungen an den Wizard:
+ * Reihenfolge dynamisch
+ * Konfiguration einfacher machen
+ * Knöpfe, die Aktionen auslösen (berechnen,Zeitreihen abholen,Gebietsniederschläge ausrechnen)
+ * GUI besser konfigurierbar
+Ideen zur Umsetzung:
+ * Reihenfolge:
+   - Links ein interaktives FLOW-Diagram einblenden
+   - oder Combo-Box zur Auswahl einfügen
+   - eine Java-Methode einbinden (z.B. wenn man abhängig vom Ergebnis verzweigen möchte)
+ * Knöpfe:
+   - Knöpfe, könne mit Ant-tasks verbunden werden
+   - "berechne" ist auch eine Ant-task, die mit modellspec.xml parametriesiert ist
+   - Die vorhandenen Knöpfe (Zurück,Weiter,Abbrechen,Fertig) können ebenfalls mit einer Ant-Task verbunden werden
+ * GUI:
+   - Der Wizard soll nicht mehr modal sein.
+   - Vorschläge: 
+      - Wizard wird wie eine Perspektive aufgebaut - verschiedene Views sind aktiv.
+      - oder GFT wird um ZML-Ansichten und GMT erweitert und man zeigt im Wizard dann immer genau eine GFT an.
+   
+Wizard-TODO:
+ Logig der Knöpfe beenden,abbrechen überarbeiten (Gernot) 
+ 
+Wizard-Bugs: 
+ * W-V Umschaltung in Diagram-Ansicht nicht möglich
+ * 
+ Idee:
+  - Es können auch rein informative Wizardseiten erstellt werden, die etwas erklären,
+    so kann z.B. ZUSÄTZLICH ein "Learning-Wizard" erstellt werden, der ein Modell erklärt.
+ 
+  ************
+  *  WICHTIG : Zeitnah muß folgendes implementiert werden: 
+  ************
+      - Reihenfolge dynamisch (4Monika)      
+      - W/V umschaltung in ZML-Diagramm (4Monika)
+      - Knöpfe (4Andreas z.B. Gebietsniederschlagsmodell)
+      

@@ -1,0 +1,7 @@
+java.lang.NullPointerException
+	at java.io.FileInputStream.<init>(FileInputStream.java:103)
+	at java.io.FileReader.<init>(FileReader.java:55)
+	at org.kalypso.dwd.RasterStorage.loadRaster(RasterStorage.java:158)
+	at org.kalypso.dwd.ForecastGenerator.generateForecast(ForecastGenerator.java:143)
+	at org.kalypso.dwd.ForecastGenerator.main(ForecastGenerator.java:107)
+Exception in thread "main" 

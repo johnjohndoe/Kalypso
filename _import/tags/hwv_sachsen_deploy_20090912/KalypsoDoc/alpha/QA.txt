@@ -1,0 +1,36 @@
+Qualitätssicherung
+------------------
+
+
+[ TODO: folgende Punkte täglich berücksichtigen ------------------------ ]
+
+- Quellcode dokumentieren (JavaDoc):
+wenn Klassen erstellt werden oder bei Bedarf wenn schon vorhanden aber ohne Dok.
+
+- JUnit Tests:
+wenn Klassen erstellt werden oder bei Bedarf wenn schon vorhanden aber ohne Test.
+
+- Speziellen Tests:
+für Berechnungen
+lesen und schreiben von speziellen Dateiformate
+
+
+
+[ TODO: folgende Punkte vor jede Auslieferung berücksichtigen ----------- ]
+
+- Metrics
+NB: Eclipse Plugin benutzen
+
+- Bug Suche
+NB: Eclipse Plugin (FindBugs) benutzen
+
+- Code Coverage
+NB: Eclipse Plugin benutzen
+eventuell für Regressionstests?
+
+
+
+[ TODO: folgende Punkte an bestimmte Zeitpunkten berücksichtigen -------- ]
+
+- Profiling bzw. Performance
+NB: Eclipse Plugin benutzen

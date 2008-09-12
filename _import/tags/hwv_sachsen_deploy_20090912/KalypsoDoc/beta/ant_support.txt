@@ -1,0 +1,15 @@
+- launch - build.xml
+
+vordefiniert Launches
+=====================
+- .model/launch/createCalcCase.launch
+- .model/launch/updateCalcCase.launch
+- .model/launch/afterCalc.launch
+
+Variable
+========
+Können im build.xml UND im .launch verwendet werden (letzteres z.B. fürs log-file)
+- calc.dir (absoluter Pfad im Dateisystem)
+- project.dir (dito)
+- calc.url (url der form platform:/resource/...)
+- project.url (dito)
