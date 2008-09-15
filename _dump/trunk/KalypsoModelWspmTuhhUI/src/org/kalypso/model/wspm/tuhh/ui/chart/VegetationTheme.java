@@ -43,9 +43,15 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -63,6 +69,21 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 public class VegetationTheme extends AbstractProfilTheme
 
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#removeYourself()
+   */
+  @Override
+  public void removeYourself( )
+  {
+    final IProfil profil = getProfil();
+    final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", getProfil(), true );
+    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[]{} ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) ) );
+    new ProfilOperationJob( operation ).schedule();
+  }
 
   public VegetationTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {

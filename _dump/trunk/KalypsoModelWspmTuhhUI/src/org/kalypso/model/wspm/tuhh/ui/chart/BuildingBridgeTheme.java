@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -72,7 +72,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new TubePanel( getProfil() );
+    return new BridgePanel( getProfil() );
   }
 
   /**

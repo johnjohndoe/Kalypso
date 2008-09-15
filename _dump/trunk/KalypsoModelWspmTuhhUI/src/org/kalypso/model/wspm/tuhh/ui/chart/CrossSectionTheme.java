@@ -53,6 +53,8 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -88,6 +90,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
         final Rectangle clipping = gc.getClipping();
 
         final PolylineFigure figure = new PolylineFigure();
+        figure.setStyle( StyleUtils.getDefaultStyle(ILineStyle.class));
         final Point[] path = new Point[6];
         path[0] = new Point( 0, clipping.width / 2 );
         path[1] = new Point( clipping.width / 5, clipping.height / 2 );
@@ -96,7 +99,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
         path[4] = new Point( clipping.width / 5 * 4, clipping.height / 2 );
         path[5] = new Point( clipping.width, clipping.height / 2 );
         figure.setPoints( path );
-        figure.paintFigure( gc );
+        figure.paint( gc );
 
       }
     };

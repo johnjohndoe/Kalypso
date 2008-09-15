@@ -42,11 +42,15 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 
 import java.util.HashMap;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -71,26 +75,22 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   {
 
     final int cnt = markers.length;
-    // final int offset = (16 - (3 * cnt)) / 2;
-    final int offset = (gc.getClipping().width - (3 * cnt)) / 2;
+    final int offset = ((gc.getClipping().width - (3 * cnt)) / 2)+1;
     int i = 0;
-    final Color oldColor = gc.getBackground();
+    final PolylineFigure rf = new PolylineFigure();
+
+    rf.setStyle( StyleUtils.getDefaultStyle( LineStyle.class ) );
+    rf.getStyle().setWidth( 3 );
     for( final String marker : markers )
     {
       final RGB rgb = m_markerTypes.get( marker );
       if( rgb != null )
       {
-        final Color color = new Color( gc.getDevice(), rgb );
-        try
-        {
-          gc.setBackground( color );
-          gc.fillRectangle( offset + 4 * i++, gc.getClipping().y, 3, gc.getClipping().height );
-        }
-        finally
-        {
-          gc.setBackground( oldColor );
-          color.dispose();
-        }
+
+        rf.getStyle().setColor( rgb );
+
+        rf.setPoints( new Point[]{ new Point( offset + 4 * i, gc.getClipping().y),new Point(offset + 4 * i++, gc.getClipping().height )} );
+        rf.paint( gc );
       }
     }
   }

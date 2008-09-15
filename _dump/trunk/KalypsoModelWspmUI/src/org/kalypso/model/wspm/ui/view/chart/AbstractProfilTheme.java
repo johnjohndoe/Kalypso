@@ -55,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -64,6 +65,8 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -261,19 +264,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   protected final void drawClippingRect( final GC gc )
   {
-    final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
-    try
-    {
-      gc.setForeground( col );
-      Rectangle clipping = gc.getClipping();
-      gc.setLineWidth( 1 );
-      gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
-      gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
-    }
-    finally
-    {
-      col.dispose();
-    }
+    final EmptyRectangleFigure rf = new EmptyRectangleFigure();
+    rf.setStyle( StyleUtils.getDefaultStyle( ILineStyle.class ) );
+    Rectangle clipping = gc.getClipping();
+    rf.setRectangle( clipping );
+    rf.paint( gc );
+    gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
   }
 
   /**

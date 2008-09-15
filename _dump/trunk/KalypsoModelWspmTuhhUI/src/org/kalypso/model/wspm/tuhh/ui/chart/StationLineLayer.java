@@ -42,7 +42,9 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
@@ -61,7 +63,9 @@ public class StationLineLayer extends AbstractProfilLayer
 
   public StationLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( profil, targetRangeProperty, styleProvider );
+    super( profil, targetRangeProperty, null );
+    LineStyle ls = styleProvider.getStyleFor(  getId() + "_LINE", LineStyle.class);
+    setLineStyle( ls );
   }
 
   @Override
@@ -91,12 +95,13 @@ public class StationLineLayer extends AbstractProfilLayer
     IAxis targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
     final PolylineFigure pf = new PolylineFigure();
-    pf.setStyle( getLineStyle_hover() );
+    ILineStyle ls = getLineStyle();
+    pf.setStyle( ls );
     for( IRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
       pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
-      pf.paintFigure( gc );
+      pf.paint( gc );
     }
   }
 

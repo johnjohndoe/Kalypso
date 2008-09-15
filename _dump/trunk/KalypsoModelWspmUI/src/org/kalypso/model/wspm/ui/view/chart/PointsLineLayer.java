@@ -59,6 +59,8 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class PointsLineLayer extends AbstractProfilLayer
 {
 
+  
+
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );

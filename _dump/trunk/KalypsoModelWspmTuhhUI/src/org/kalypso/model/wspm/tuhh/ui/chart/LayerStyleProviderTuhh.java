@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.Collection;
 import java.util.HashMap;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -50,8 +50,10 @@ import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -71,8 +73,14 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
 
-    final ILineStyle stationStyle = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE + "_LINE", LineStyle.class );
-    stationStyle.setDash( 0f, new float[] { 0, 1, 1 } );
+    ((ILineStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_STATIONLINE_LINE", LineStyle.class )).setDash( 0f, new float[] { 1, 1, 1 } );
+
+    ((IPointStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class )).getStroke().setColor( new RGB( 0, 0, 0 ) );
+    ((IPointStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class )).setInlineColor( new RGB( 0, 0, 0 ) );
+    ((IPointStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class )).setAlpha(50 );
+
+    ((ILineStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE_ACTIVE", LineStyle.class )).setColor( new RGB( 255, 0, 0 ) );
+    ((IPointStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_POINT_ACTIVE", PointStyle.class )).setInlineColor( new RGB( 255, 0, 0 ) );
   }
 
   /**
@@ -81,13 +89,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
    */
   public void dispose( )
   {
-//    if( m_styles == null )
-//      return;
-//    final Collection<IStyle> styles = m_styles.values();
-//    if( styles != null )
-//      for( final IStyle style : styles )
-//        if( style != null )
-//          style.dispose();
+
   }
 
   /**

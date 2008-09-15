@@ -44,6 +44,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -115,7 +116,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     else
     {
       m_chartlegend = new ChartEditorTreeOutlinePage( this.getProfilChartView() );
-      
+
       m_chartlegend.createControl( parent );
       m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
       {
@@ -149,6 +150,16 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
           showLayerProperties();
         }
       } );
+      final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
+      for( final IChartLayer layer : mngr.getLayers() )
+      {
+        if( layer.isActive() )
+        {
+          m_chartlegend.setSelection( new StructuredSelection( layer ) );
+          m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
+          break;
+        }
+      }
       return control;
     }
   }

@@ -79,12 +79,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public void setTargetComponent( String componentId )
   {
     m_targetComponent = componentId;
-    
+
   }
 
   private IProfil m_profil;
 
-  private  String m_targetComponent;
+  private String m_targetComponent;
 
   private final String m_domainComponent;
 
@@ -401,14 +401,13 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    if( hint.isActivePropertyChanged() && (getProfil() != null) )
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return;
+    if( hint.isActivePointChanged() )
     {
-      final IComponent cmp = getProfil().getActiveProperty();
-      if( cmp != null )
-        setActive( cmp.equals( getTargetComponent() ) );
+      getEventHandler().fireLayerContentChanged( this );
     }
-    // TODO: only fire if this layer is affected
-    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**

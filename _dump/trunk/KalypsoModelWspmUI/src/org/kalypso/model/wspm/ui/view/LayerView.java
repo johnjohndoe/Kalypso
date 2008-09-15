@@ -90,8 +90,10 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   @Override
   public void onLayerAdded( IChartLayer layer )
   {
-    // TODO Auto-generated method stub
-
+    for( final IChartLayer l : m_layerManager.getLayers() )
+    {
+      l.setActive( l == layer );
+    }
   }
 
   /**
@@ -120,8 +122,11 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   @Override
   public void onLayerRemoved( IChartLayer layer )
   {
-    // TODO Auto-generated method stub
-
+    final IChartLayer[] layers = m_layerManager.getLayers();
+    if( layers == null || layers.length < 1 )
+      return;
+    if( layer.isActive() )
+      m_layerManager.getLayers()[0].setActive( true );
   }
 
   /**
