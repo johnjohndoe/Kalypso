@@ -75,9 +75,9 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 
   public ThemeInfoWidget( )
   {
-    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setNoThemesTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.2") ); //$NON-NLS-1$
+    setNoThemesTooltip( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.2" ) ); //$NON-NLS-1$
   }
 
   public ThemeInfoWidget( final String name, final String toolTip )
@@ -100,14 +100,14 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     final GisMapOutlineView outlineView = (GisMapOutlineView) page.findView( GisMapOutlineView.ID );
     if( outlineView == null )
     {
-      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3") ); //$NON-NLS-1$
+      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3" ) ); //$NON-NLS-1$
       return;
     }
 
     final MapPanel outlineMapPanel = outlineView.getMapPanel();
     if( outlineMapPanel != mapPanel )
     {
-      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4") ); //$NON-NLS-1$
+      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -149,5 +149,4 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     if( getMapPanel() != null )
       moved( getCurrentPoint() );
   }
-
 }
