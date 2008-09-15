@@ -45,6 +45,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +60,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
@@ -138,9 +141,21 @@ public final class GmlSerializer
     }
   }
 
+  /**
+   * BLA<br>
+   * This method closes the writer!
+   */
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
   {
-    serializeWorkspace( writer, gmlWorkspace, charsetEncoding, new HashMap<String, String>() );
+    try
+    {
+      serializeWorkspace( writer, gmlWorkspace, charsetEncoding, new HashMap<String, String>() );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+
   }
 
   /**
@@ -174,10 +189,6 @@ public final class GmlSerializer
     catch( final Exception e )
     {
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
     }
   }
 
@@ -390,4 +401,30 @@ public final class GmlSerializer
     monitor.worked( 1 );
   }
 
+  /**
+   * serializes a workspace into a zipfile
+   */
+  public static void serializeWorkspaceToZipFile( final File gmlZipResultFile, final GMLWorkspace resultWorkspace, final String zipEntryName ) throws FileNotFoundException
+  {
+    final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( gmlZipResultFile ) ) );
+    try
+    {
+      final ZipEntry newEntry = new ZipEntry( zipEntryName );
+      zos.putNextEntry( newEntry );
+      final OutputStreamWriter gmlWriter = new OutputStreamWriter( zos, "CP1252" );
+
+      serializeWorkspace( gmlWriter, resultWorkspace, "CP1252", new HashMap<String, String>() );
+
+      zos.closeEntry();
+      zos.close();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zos );
+    }
+  }
 }
