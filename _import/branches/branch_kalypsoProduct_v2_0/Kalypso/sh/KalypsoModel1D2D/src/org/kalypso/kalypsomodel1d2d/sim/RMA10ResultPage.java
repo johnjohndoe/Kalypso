@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -68,8 +69,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -233,6 +237,81 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     setControl( composite );
   }
 
+  private void addSpinner( final CheckboxTableViewer resultProcessViewer, final Composite composite )
+  {
+    final Composite buttonComposite = new Composite( composite, SWT.NONE );
+    final GridLayout layout = new GridLayout();
+    layout.numColumns = 2;
+    layout.marginWidth = 0;
+    layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    buttonComposite.setLayout( layout );
+    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
+
+    final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
+    spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
+    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    spinnerLabel.setLayoutData( gridData );
+
+    final Spinner spinNumStepProcessing = new Spinner( buttonComposite, SWT.NONE );
+
+    final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+
+    spinNumStepProcessing.setLayoutData( gridDataSpin );
+    spinNumStepProcessing.setDigits( 0 );
+    spinNumStepProcessing.setMinimum( 1 );
+    spinNumStepProcessing.setMaximum( 100 );
+
+    spinNumStepProcessing.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
+    spinNumStepProcessing.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+
+        updateTableSelection( resultProcessViewer, spinNumStepProcessing );
+        updateSelection();
+      }
+    } );
+
+  }
+
+  protected void updateTableSelection( TableViewer resultProcessViewer, Spinner spinNumStepProcessing )
+  {
+    TableItem[] items = resultProcessViewer.getTable().getItems();
+    final int selection = spinNumStepProcessing.getSelection();
+
+    int length = items.length;
+    int start = 0;
+
+    // TODO: handle only unsteady time steps
+    for( int i = 0; i < length; i++ )
+    {
+      Object data = items[i].getData();
+      if( data instanceof Date )
+      {
+        Date date = (Date) data;
+        if( date == MAXI_DATE || date == STEADY_DATE )
+        {
+          start++;
+          // always enable steady and maxi result
+          items[i].setChecked( true );
+        }
+      }
+    }
+
+    for( int i = start; i < length; i++ )
+    {
+      final double mod = ((i - start)) % selection;
+      if( mod == 0 )
+        items[i].setChecked( true );
+      else
+        items[i].setChecked( false );
+    }
+  }
+
   @SuppressWarnings("unchecked")
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultInfoViewer infoViewer )
   {
@@ -251,6 +330,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
+
+    addSpinner( m_resultProcessViewer, composite );
 
     final String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
     final String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
