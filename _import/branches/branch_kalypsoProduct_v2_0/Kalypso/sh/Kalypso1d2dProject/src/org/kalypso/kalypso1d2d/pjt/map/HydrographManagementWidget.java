@@ -631,7 +631,8 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+        if( m_theme != null )
+          m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
 
         try
         {
