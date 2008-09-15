@@ -209,6 +209,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     final Date[] calculatedSteps = m_resultManager.findCalculatedSteps();
     m_resultProcessViewer.setInput( calculatedSteps );
+    m_selection = calculatedSteps;
+    m_resultManager.setStepsToProcess( m_selection, m_resultManager.getControlModel() );
+    getContainer().updateButtons();
 
     /* Info View for one result */
     final ResultInfoViewer infoViewer = new ResultInfoViewer( resultChooserComp, SWT.NONE );
@@ -245,7 +248,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     layout.marginWidth = 0;
     layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     buttonComposite.setLayout( layout );
-    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
+    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
 
     final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
     spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
@@ -321,6 +324,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   /**
    * Add the selection and deselection buttons to the page.
    */
+  @SuppressWarnings("restriction")
   private void addSelectionButtons( final CheckboxTableViewer checkboxViewer, final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );

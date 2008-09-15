@@ -206,7 +206,14 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       /* Read restart data */
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Restart-Daten werden gelesen" );
       progress.subTask( "Schreibe ASCII-Daten: Restart-Daten werden gelesen..." );
-      final RestartNodes m_restartNodes = RestartNodes.createRestartNodes( m_scenarioFolder, m_controlModel );
+
+      RestartNodes m_restartNodes;
+
+      if( m_controlModel.getRestart() )
+        m_restartNodes = RestartNodes.createRestartNodes( m_scenarioFolder, m_controlModel );
+      else
+        m_restartNodes = null;
+
       ProgressUtilities.worked( progress, 20 );
 
       /* .2d File */

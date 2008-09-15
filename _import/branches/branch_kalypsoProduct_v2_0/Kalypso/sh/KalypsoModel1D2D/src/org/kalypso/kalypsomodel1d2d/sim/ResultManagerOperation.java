@@ -222,12 +222,38 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     if( processBean.deleteFollowers && !dates.isEmpty() )
     {
       /* Delete all steps later than the first calculated */
+      // special cases for maxi and steady results
+      boolean maxi = false;
+      boolean steady = false;
+
+      // first remove the MAXI and STEADY dates from the list in order to make this code work
+      Date[] dateArray = dates.toArray( new Date[dates.size()] );
+      for( Date dateToProcess : dateArray )
+      {
+        if( dateToProcess.equals( MAXI_DATE ) )
+        {
+          dates.remove( MAXI_DATE );
+          maxi = true;
+        }
+        if( dateToProcess.equals( STEADY_DATE ) )
+        {
+          dates.remove( STEADY_DATE );
+          steady = true;
+        }
+      }
+
       final Date firstCalculated = dates.first();
       for( final Date date : existingSteps )
       {
         if( date.after( firstCalculated ) )
           dates.add( date );
       }
+
+      // then add them again.
+      if( maxi == true )
+        dates.add( MAXI_DATE );
+      if( steady == true )
+        dates.add( STEADY_DATE );
     }
 
     return dates.toArray( new Date[dates.size()] );
