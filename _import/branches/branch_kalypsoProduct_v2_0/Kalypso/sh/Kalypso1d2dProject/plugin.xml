@@ -244,6 +244,10 @@
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef">
        </handler>
        <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler"
+             commandId="workflow1d2d_ResultDataManager">
+       </handler>
+       <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultMapHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
        </handler>
