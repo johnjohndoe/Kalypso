@@ -56,10 +56,12 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -163,35 +165,50 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return wspValue - terrainValue;
   }
 
-  private double getWspValue( final Coordinate crd )
+  private double getWspValue( final Coordinate crd ) throws GeoGridException
   {
     final GM_Position pos = JTSAdapter.wrap( crd );
 
-    final List<ITinReference> tinsList = m_tins.query( pos );
-    for( final ITinReference tinReference : tinsList )
+    final GM_Point point = GeometryFactory.createGM_Point( pos, getSourceCRS() );
+
+    try
     {
-      // we remember the last found triangle...
-      if( m_triangle != null && m_triangle.contains( pos ) == true )
+      for( final ITinReference tinReference : m_tins )
       {
-        final double wspValue = m_triangle.getValue( pos );
-        if( !Double.isNaN( wspValue ) )
-          return wspValue;
-      }
-      else
-      {
-        m_triangle = tinReference.getTraingle( pos );
-        if( m_triangle != null )
+        final String tinCRS = tinReference.getTin().getCoordinateSystem();
+        final GeoTransformer transformer = new GeoTransformer( tinCRS );
+        final GM_Point transformedPoint = (GM_Point) transformer.transform( point );
+        final GM_Position transPos = transformedPoint.getPosition();
+
+        // we remember the last found triangle...
+        if( m_triangle != null && m_triangle.contains( transPos ) == true )
         {
-          final double wspValue = m_triangle.getValue( pos );
+          final double wspValue = m_triangle.getValue( transPos );
           if( !Double.isNaN( wspValue ) )
             return wspValue;
         }
+        else
+        {
+          m_triangle = tinReference.getTraingle( transPos );
+          if( m_triangle != null )
+          {
+            final double wspValue = m_triangle.getValue( transPos );
+            if( !Double.isNaN( wspValue ) )
+              return wspValue;
+          }
+        }
       }
+      return Double.NaN;
     }
-    return Double.NaN;
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return Double.NaN;
+    }
   }
 
-  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon )
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon ) throws GeoGridException
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
