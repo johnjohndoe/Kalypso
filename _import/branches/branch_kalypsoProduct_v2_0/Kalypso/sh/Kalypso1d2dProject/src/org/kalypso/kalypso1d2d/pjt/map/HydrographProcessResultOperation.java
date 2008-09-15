@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -151,9 +152,13 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         calendar.setTime( date );
 
         /* get the node result gml */
-        final IFolder folder = m_scenarioFolder.getFolder( entry.getKey() );
+        final IPath docPath = entry.getKey();
+        if( docPath == null )
+          return null;
 
-        final URL resultURL = ResourceUtilities.createURL( folder );
+        final URL scenarioURL = ResourceUtilities.createURL( m_scenarioFolder );
+        final URL resultURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
         final GMLWorkspace w = GmlSerializer.createGMLWorkspace( resultURL, null );
 
         final Feature feature = w.getRootFeature();

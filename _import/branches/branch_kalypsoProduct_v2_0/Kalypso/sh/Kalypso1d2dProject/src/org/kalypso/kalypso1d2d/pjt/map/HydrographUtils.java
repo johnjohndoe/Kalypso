@@ -179,6 +179,7 @@ public class HydrographUtils
       final URL hydrographURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
 
       // TODO: resolve file from docpath
+      // TODO: maybe this check will fail, if it is a zip file!
       final IFile file = scenarioFolder.getFile( docPath );
       if( !file.exists() )
       {

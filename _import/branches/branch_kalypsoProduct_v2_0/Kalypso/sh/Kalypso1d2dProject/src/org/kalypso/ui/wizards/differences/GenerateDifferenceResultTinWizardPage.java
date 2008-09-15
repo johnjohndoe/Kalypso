@@ -113,11 +113,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
   private final List<String> m_fieldNameList = new LinkedList<String>();
 
-  private String m_riverNameField;
-
-  private String m_toStationField;
-
-  private String m_fromStationField;
+  String m_riverNameField;
 
   private final Set<Object> m_riverNameSet = new HashSet<Object>();
 
@@ -373,7 +369,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     final Feature feature = (Feature) object;
 
     m_comboRiverLineNameField.setInput( properties );
-    final String customNamespace = targetFeatureType.getGMLSchema().getTargetNamespace(); //TODO: shape api?
+    final String customNamespace = targetFeatureType.getGMLSchema().getTargetNamespace(); // TODO: shape api?
     // set river name field to "NAME". If it does not exist, set it to the first field
     if( feature.getFeatureType().getProperty( new QName( customNamespace, RIVER_NAME_FIELD ) ) != null )
     {
@@ -391,31 +387,18 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     m_comboStationFromField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
     if( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) != null )
-    {
       m_comboStationFromField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) ) );
-      m_fromStationField = FROM_STATION_FIELD;
-    }
     else
-    {
       m_comboStationFromField.setSelection( new StructuredSelection( m_comboStationFromField.getElementAt( 1 ) ) );
-      m_fromStationField = properties[0].getQName().getLocalPart();
-    }
 
     m_comboStationToField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
     if( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) != null )
-    {
       m_comboStationToField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) ) );
-      m_toStationField = TO_STATION_FIELD;
-    }
     else
-    {
       m_comboStationToField.setSelection( new StructuredSelection( m_comboStationToField.getElementAt( 1 ) ) );
-      m_toStationField = properties[0].getQName().getLocalPart();
-    }
 
     // get all river names
-
     m_propertyType = feature.getFeatureType().getProperty( new QName( customNamespace, m_riverNameField ) );
     final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
     final IGuiTypeHandler guiTypeHandler = typeRegistry.getTypeHandlerFor( m_propertyType );
@@ -438,7 +421,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     }
   }
 
-  private void updateRiverNames( )
+  void updateRiverNames( )
   {
     if( m_riverNameField == null )
       return;

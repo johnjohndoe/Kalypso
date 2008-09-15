@@ -61,11 +61,11 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler;
@@ -83,6 +83,7 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypso.ui.wizards.results.filters.NonTinDocumentResultViewerFilter;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -384,12 +385,15 @@ public class GenerateDifferenceResultTinWizard extends Wizard
         try
         {
           IPath docPath = docResult.getFullPath();
-          IFolder folder = m_scenarioFolder.getFolder( docPath );
+          if( docPath == null )
+            return null;
 
-          final URL surfaceURL = ResourceUtilities.createURL( folder );
-          GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
+          final URL scenarioURL = ResourceUtilities.createURL( m_scenarioFolder );
+          final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
 
-          final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+          final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
+
+          final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
           w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 

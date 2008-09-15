@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.lengthsection;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -67,8 +66,6 @@ public class SelectLengthSectionWizard extends Wizard
   private final static String PAGE_SELECT_RESULTS_NAME = "selectLengthSection";
 
   private final IScenarioResultMeta m_resultModel;
-
-  private IFile m_selectedKodResultFile;
 
   private String m_selectedLGmlResultPath;
 
