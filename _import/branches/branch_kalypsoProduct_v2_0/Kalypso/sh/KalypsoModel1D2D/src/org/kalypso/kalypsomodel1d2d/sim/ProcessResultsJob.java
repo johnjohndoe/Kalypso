@@ -96,9 +96,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * TODO: remove processing of the map
- * 
- * This job processed one 2d-result file. *
+ * TODO: remove processing of the map This job processed one 2d-result file. *
  * 
  * @author Gernot Belger
  */
@@ -211,9 +209,13 @@ public class ProcessResultsJob extends Job
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "read results into GML...\n" );
 
+    final Runtime runtime = Runtime.getRuntime();
+    runtime.gc();
+
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
     final File gmlResultFile = new File( m_outputDir, "results.gml" );
+    final File gmlZipResultFile = new File( m_outputDir, "results.zip" );
 
     InputStream is = null;
     try
@@ -221,7 +223,7 @@ public class ProcessResultsJob extends Job
       is = new FileInputStream( m_inputFile );
 
       /* GMLWorkspace für Ergebnisse anlegen */
-      final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlResultFile.toURL(), null );
+      final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
 
       final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
@@ -250,7 +252,7 @@ public class ProcessResultsJob extends Job
             final File modelTinPath = new File( modelPath, "Tin" );
             modelTinPath.mkdirs();
 
-            final File tinResultFile = new File( modelTinPath, "tin.gml" );
+            final File tinResultFile = new File( modelTinPath, "tin.zip" );
             final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
             final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
             final Feature triangleFeature = triangleWorkspace.getRootFeature();
@@ -267,9 +269,9 @@ public class ProcessResultsJob extends Job
           final File tinPath = new File( m_outputDir, "Tin" );
           tinPath.mkdirs();
 
-          final File tinResultFile = new File( tinPath, "tin.gml" );
-
-          final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+          // final File tinResultFile = new File( tinPath, "tin.gml" );
+          final File tinZipResultFile = new File( tinPath, "tin.zip" );
+          final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinZipResultFile.toURL(), null );
           final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
           final Feature triangleFeature = triangleWorkspace.getRootFeature();
           triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
@@ -302,7 +304,7 @@ public class ProcessResultsJob extends Job
               throw new UnsupportedOperationException();
           }
 
-          final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
+          final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinZipResultFile, triangleWorkspace, surface, parameter );
 
           multiEater.addEater( gmlTriangleEater );
         }
@@ -327,18 +329,21 @@ public class ProcessResultsJob extends Job
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", " done.\n" );
 
       /* Node-GML in Datei schreiben */
-      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+      // GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+      // TOOD: replace
+      GmlSerializer.serializeWorkspaceToZipFile( gmlZipResultFile, resultWorkspace, "results.gml" );
+      // ENDE TODO
 
       /* LengthSection in Datei schreiben */
 
-      ICalculationUnit1D[] calcUnits = lsHandler.getCalcUnits();
+      final ICalculationUnit1D[] calcUnits = lsHandler.getCalcUnits();
 
-      for( ICalculationUnit1D calcUnit : calcUnits )
+      for( final ICalculationUnit1D calcUnit : calcUnits )
       {
         final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getGmlID() + ".gml" );
 
         final IObservation<TupleResult> lsObs = lsHandler.getObservation( calcUnit );
-        GMLWorkspace lsObsWorkspace = lsHandler.getWorkspace( calcUnit );
+        final GMLWorkspace lsObsWorkspace = lsHandler.getWorkspace( calcUnit );
         if( lsObs.getResult().size() > 0 )
         {
           ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
@@ -389,7 +394,7 @@ public class ProcessResultsJob extends Job
             {
               min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              ResultMeta1d2dHelper.addDocument( calcUnitResult, "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
+              ResultMeta1d2dHelper.addDocument( calcUnitResult, "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.zip!/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
             }
 
             break;
@@ -398,14 +403,14 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.zip!/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
             break;
 
           case VELOCITY:
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.zip!/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -413,7 +418,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.zip!/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -421,7 +426,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.zip!/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -432,7 +437,7 @@ public class ProcessResultsJob extends Job
 
       min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.zip!/results.gml" ), Status.OK_STATUS, min, max );
 
       /* HMO(s) */
       /*
@@ -455,6 +460,8 @@ public class ProcessResultsJob extends Job
 
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Schreiben in : " );
+
+      runtime.gc();
     }
   }
 

@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +51,6 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -241,21 +239,25 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     else
       param = "";
 
-    final String paramName = substring + "_" + param + extension;
-    final File paramFile = new File( paramName );
+    final String fileName = substring + "_" + param + extension;
 
     try
     {
-      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" );
+      // TODO: zip Url + stream
+      final File paramFile = new File( fileName );
+      if( extension.equals( ".zip" ) )
+      {
+
+        GmlSerializer.serializeWorkspaceToZipFile( paramFile, m_workspace, "tin_" + param + ".gml" );
+      }
+      else
+      {
+        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" );
+      }
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (IOException)." );
-      e.printStackTrace();
-    }
-    catch( final GmlSerializeException e )
-    {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (GmlSerializeException)." );
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater ." );
       e.printStackTrace();
     }
   }
