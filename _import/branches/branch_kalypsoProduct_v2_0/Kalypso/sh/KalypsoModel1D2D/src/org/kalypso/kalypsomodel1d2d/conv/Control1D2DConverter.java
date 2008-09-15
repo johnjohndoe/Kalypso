@@ -145,7 +145,7 @@ public class Control1D2DConverter
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
-      // so no locale parameter for each format is needed any more .
+      // so no local parameter for each format is needed any more .
       formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
       writeR10File( formatter );
       FormatterUtils.checkIoException( formatter );
@@ -223,6 +223,12 @@ public class Control1D2DConverter
 
     // C5
     formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
+
+    // C6
+    if( m_controlModel.getIcpu() != 0 )
+      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() );
+    // C7
+    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 );
 
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
@@ -334,7 +340,7 @@ public class Control1D2DConverter
     formatter.format( "ECL%n" ); //$NON-NLS-1$
 
     if( m_controlModel.getIDNOPT() != 0 && m_controlModel.getIDNOPT() != -1 )
-      formatter.format( "MP%21.2f%8.2f%8.2f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
+      formatter.format( "MP%21.3f%8.3f%8.5f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
 
     formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
 
@@ -478,7 +484,7 @@ public class Control1D2DConverter
       ihre = 0;
     }
 
-    formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre ); //$NON-NLS-1$
+    formatter.format( "DT%14.5f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre ); //$NON-NLS-1$
 
     // BC lines
     if( niti == 0 )
@@ -592,7 +598,13 @@ public class Control1D2DConverter
               && (boundaryCondition.isAbsolute() == null) )
           {
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+            // introduce FF for 'format free reading of line, although it's not completely format free. This would lead
+            // to big changes in Calculation core because, line reading must be much more flexible then. That's right
+            // now not the case.
+            if( stepValue > 9999.9 )
+              formatter.format( "QCFF%12d%8d%16.6e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+            else
+              formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {

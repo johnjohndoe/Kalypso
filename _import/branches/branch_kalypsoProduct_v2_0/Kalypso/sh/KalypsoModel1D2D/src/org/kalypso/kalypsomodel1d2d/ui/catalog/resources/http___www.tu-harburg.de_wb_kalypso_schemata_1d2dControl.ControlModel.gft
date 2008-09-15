@@ -56,6 +56,54 @@
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
 				</gft:group>
+				<gft:group text="allgemeine Parameter" style="SWT.NONE">
+					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
+						grabExcessHorizontalSpace="true" grabExcessVerticalSpace="false" />
+					<gft:gridLayout numColumns="4" horizontalSpacing="10" />
+
+					<gft:label text="Anzahl der Prozessoren" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+							grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:ICPU" tooltip="" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:label visible="false" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:validatorlabel property="c1d2d:ICPU" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:validatorlabel>
+
+					<gft:label text="maximale Bandbreite" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+							grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:MFW" tooltip="" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:label visible="false" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:validatorlabel property="c1d2d:MFW" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:validatorlabel>
+
+					<gft:label text="Speicherzuweisung [byte]" visible="true" style="SWT.NONE">
+						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+							grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:text editable="true" property="c1d2d:BUFFSIZ" tooltip="" style="SWT.BORDER">
+						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+					</gft:text>
+					<gft:label visible="false" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:label>
+					<gft:validatorlabel property="c1d2d:BUFFSIZ" visible="true" style="SWT.NONE">
+						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+					</gft:validatorlabel>
+				</gft:group>
+				
 
 			</gft:composite>
 		</gft:tabItem>
@@ -467,7 +515,12 @@
 					<gft:gridData horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"
 						grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 					<gft:gridLayout numColumns="4" horizontalSpacing="10" />
-					<gft:label text="Konvergenzschranke vx [m/s]" visible="true"
+					<gft:checkbox editable="true" property="c1d2d:PERCENT_CHECK" style="SWT.NONE">
+						<gft:text>prozentuale Aenderungen verwenden?</gft:text>
+						<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.BEGINNING"
+							grabExcessHorizontalSpace="true" />
+					</gft:checkbox>
+					<gft:label text="Konvergenzschranke vx [m/s]/[-]" visible="true"
 						tooltip="Maximale Änderung der Geschwindigkeit in x-Richtung [m/s]" style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
@@ -483,7 +536,7 @@
 					<gft:validatorlabel property="c1d2d:CONV_1" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
-					<gft:label text="Konvergenzschranke vy [m/s]" visible="true"
+					<gft:label text="Konvergenzschranke vy [m/s]/[-]" visible="true"
 						tooltip="Maximale Änderung der Geschwindigkeit in y-Richtung [m/s]" style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
@@ -498,7 +551,9 @@
 					<gft:validatorlabel property="c1d2d:CONV_2" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
-					<gft:label text="Konvergenzschranke h [m]" visible="true"
+
+
+					<gft:label text="Konvergenzschranke h [m]/[-]" visible="true"
 						tooltip="Maximale Änderung der Wassertiefe [m]" style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
