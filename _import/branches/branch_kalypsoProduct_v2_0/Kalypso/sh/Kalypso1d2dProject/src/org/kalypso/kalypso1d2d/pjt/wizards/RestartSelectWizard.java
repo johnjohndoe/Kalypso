@@ -61,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
@@ -182,7 +183,21 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getGmlID() );
-        restartInfo.setRestartFilePath( result.getFullPath() + RESULTS_FILE_PATH );
+
+        // TODO: implement accessing zip file!
+        IFeatureWrapperCollection<IResultMeta> children = result.getChildren();
+
+        for( IResultMeta resultMeta : children )
+        {
+          if( resultMeta instanceof IDocumentResultMeta )
+          {
+            IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
+              restartInfo.setRestartFilePath( docResult.getFullPath().toPortableString() );
+          }
+        }
+
+        // final String string = result.getFullPath() + RESULTS_FILE_PATH;
       }
     }
     try
