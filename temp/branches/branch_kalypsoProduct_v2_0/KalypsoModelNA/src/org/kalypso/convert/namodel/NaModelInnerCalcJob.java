@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
@@ -624,17 +624,17 @@ public class NaModelInnerCalcJob implements ISimulation
   /**
    * before: <br>
    * <code>
-   *  
+   *
    * Node1 O <---  O Node2
-   * 
+   *
    * </code> after: <br>
    * <code>
-   *  
+   *
    * Node1 O <--- newVChannel <-- newNode O <-- newVChannel
    *                                      A
    *                                      |
    *                                      O-- Node2
-   * 
+   *
    * </code>
    * 
    * @param workspace
@@ -711,7 +711,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * </code><br>
    * now: <br>
    * <code>
-   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)| 
+   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- input.zml <br>
    * </code> constant inflow <br>
    * before: <br>
@@ -720,7 +720,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * </code><br>
    * now: <br>
    * <code>
-   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)| 
+   * |Channel| <- o(1) <- |VChannel (new)| <- o(new) <- |VChannel (new)|
    *                                          A- Q(constant)<br>
    * </code>
    * 
@@ -747,7 +747,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
         nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
         newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
-        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP) );
+        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
       final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
@@ -763,22 +763,22 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * before: <code>
-   *      
+   *
    *     o(existing)
-   *      
+   *
    * </code> after: <code>
-   *      
-   *  |new Channel3|                  
-   *     |                  
-   *     V                  
+   *
+   *  |new Channel3|
+   *     |
+   *     V
    *     o(new Node2)  (return value)
-   *     |                  
-   *     V                  
-   *  |new Channel1|                  
-   *     |                  
-   *     V                  
+   *     |
+   *     V
+   *  |new Channel1|
+   *     |
+   *     V
    *     o(existing)
-   *      
+   *
    * </code>
    */
   private Feature buildVChannelNet( final GMLWorkspace workspace, final Feature existingNode ) throws Exception
@@ -923,7 +923,7 @@ public class NaModelInnerCalcJob implements ISimulation
   }
 
   /**
-   *  
+   *
    */
   private final static String[][] m_catchmentFactorsParameter = { new String[] { "retob", "faktorRetobRetint" }, new String[] { "retint", "faktorRetobRetint" }, new String[] { "aigw", "faktorAigw" } };
 
