@@ -52,9 +52,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -113,7 +111,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final String featurePath = "nodeResultMember";
     final String source = "../" + m_documentResult.getFullPath().toPortableString();
     final String style = "Vector Style";
-    final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, (IStepResultMeta) timeStepMeta, (ICalcUnitResultMeta) calcUnitMeta );
+    final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
     String styleLocation = null;
     final String type = "Node";
     final String styleLinkType = "sld";

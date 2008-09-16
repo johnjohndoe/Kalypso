@@ -308,7 +308,7 @@ public class ResultMeta1d2dHelper
   {
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
 
-    final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) stepResult.getParent();
+    final IResultMeta calcUnitMeta = stepResult.getParent();
     final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
 
     for( final IResultMeta stepChild : children )
@@ -344,12 +344,12 @@ public class ResultMeta1d2dHelper
     }
   }
 
-  public static String getNodeResultLayerName( IDocumentResultMeta docResult, IStepResultMeta stepResult, ICalcUnitResultMeta calcUnitMeta )
+  public static String getNodeResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
     return docResult.getName() + ", " + stepResult.getName() + ", " + calcUnitMeta.getName();
   }
 
-  public static String getIsolineResultLayerName( IDocumentResultMeta docResult, IStepResultMeta stepResult, ICalcUnitResultMeta calcUnitMeta )
+  public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
     return docResult.getName() + " (Isolinien), " + stepResult.getName() + ", " + calcUnitMeta.getName();
   }
@@ -360,12 +360,12 @@ public class ResultMeta1d2dHelper
    * @deprecated old projects use this theme name.
    */
   @Deprecated
-  private static String getIsolineResultLayerNameOld( IDocumentResultMeta docResult, ICalcUnitResultMeta calcUnitMeta )
+  private static String getIsolineResultLayerNameOld( IResultMeta docResult, IResultMeta calcUnitMeta )
   {
     return docResult.getName() + " (Isolinien), " + calcUnitMeta.getName();
   }
 
-  public static String getIsoareaResultLayerName( IDocumentResultMeta docResult, IStepResultMeta stepResult, ICalcUnitResultMeta calcUnitMeta )
+  public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
     return docResult.getName() + " (Isoflächen), " + stepResult.getName() + ", " + calcUnitMeta.getName();
   }

@@ -55,9 +55,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
@@ -203,7 +201,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     {
       type = "Polygon";
       style = "tin" + type + "Style";
-      themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, (IStepResultMeta) timeStepMeta, (ICalcUnitResultMeta) calcUnitMeta );
+      themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       // check, if there is a style already chosen, if not create one from default tamplate
       if( m_polyStyleComp == null )
@@ -229,7 +227,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     {
       type = "Line";
       style = "tin" + type + "Style";
-      themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, (IStepResultMeta) timeStepMeta, (ICalcUnitResultMeta) calcUnitMeta );
+      themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       if( m_lineStyleComp == null )
       {
