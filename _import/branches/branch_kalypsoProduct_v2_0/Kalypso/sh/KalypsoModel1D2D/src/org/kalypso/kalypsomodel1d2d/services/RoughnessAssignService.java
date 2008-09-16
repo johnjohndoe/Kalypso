@@ -108,7 +108,11 @@ public class RoughnessAssignService extends Job
       m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
         assignRoughness( monitor, element );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
         ProgressUtilities.worked( progress, 1 );
       }
     }

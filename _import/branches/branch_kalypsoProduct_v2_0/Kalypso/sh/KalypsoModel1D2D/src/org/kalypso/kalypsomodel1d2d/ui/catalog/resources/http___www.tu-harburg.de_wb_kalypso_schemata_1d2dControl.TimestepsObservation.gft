@@ -16,7 +16,9 @@
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="false" heightHint="270" grabExcessHorizontalSpace="true" />
 		<gft:recordsFixed>true</gft:recordsFixed>
-		<gft:toolbar addStandardItems="true"  >
+		<gft:toolbar addStandardItems="true" btnCopyToClipboard="true" btnPasteFromClipboard="true" btnAddRow="false" btnDeleteSelectedRows="true" btnInterpolateRows="false" >
+		<gft:command commandId="org.kalypso.model1d2d.Command1D2DTimestepsAddRow" style="SWT.PUSH" />
+		<gft:command commandId="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate" style="SWT.PUSH" />
 		</gft:toolbar>
 		<gft:columnDescriptor component="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"
 			alignment="SWT.LEFT" displayFormat="%d" editable="false" width="75" />
