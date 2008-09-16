@@ -42,8 +42,6 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -51,14 +49,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.map.MapUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -81,6 +78,10 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
 
   private ICommandTarget m_commandTarget;
 
+  private ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
+
+  private ResultManager1d2dWizardPage m_selectResultWizardPage;
+
   public ResultManager1d2dWizard( )
   {
     setWindowTitle( "1D2D-Ergebnisse" );
@@ -95,11 +96,12 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    final ResultManager1d2dWizardPage selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnisse verwalten", null, resultFilter, resultComparator, null );
+    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnisse verwalten", null, resultFilter, resultComparator, null );
+    m_selectResultWizardPage.setResultMeta( m_resultModel );
+    m_selectResultWizardPage.setCommandTarget( m_commandTarget );
+    m_selectResultWizardPage.setMapModel( m_modell );
 
-    selectResultWizardPage.setResultMeta( m_resultModel );
-
-    addPage( selectResultWizardPage );
+    addPage( m_selectResultWizardPage );
   }
 
   /**
@@ -128,12 +130,11 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-
+    m_modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
     }
     catch( final CoreException e )
     {
@@ -148,32 +149,17 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
   @Override
   public boolean performFinish( )
   {
-    final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
-    final IResultMeta[] results = page.getSelectedResults();
-    final IThemeConstructionFactory factory = page.getThemeFactory();
-    final IKalypsoLayerModell modell = m_modell;
-
-    if( modell != null )
+    try
     {
-
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @SuppressWarnings("synthetic-access")
-        public IStatus execute( IProgressMonitor monitor )
-        {
-          return MapUtils.addThemes( modell, m_commandTarget, results, factory, monitor );
-        }
-      };
-
-      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), "1D2D-Ergebnisse", "Fehler beim Hinzufügen der Ergebnisthemen", status );
-
-      return status.isOK();
+      final EmptyCommand command = new EmptyCommand( "You are dirty now, pool!", false );
+      final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IScenarioResultMeta.class );
+      commandableWorkspace.postCommand( command );
+      m_modelProvider.saveModel( IScenarioResultMeta.class, null );
     }
-    System.out.println( "No map modell available" );
-    return false;
-
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    return true;
   }
-
 }

@@ -80,8 +80,6 @@ public class ResultDataManagerHandler extends AbstractHandler
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
-    // TODO: Remove opening the map
-
     // wait until map has loaded
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Ergebnisdaten verwalten", "Karte wird geladen..." ) )
       return null;

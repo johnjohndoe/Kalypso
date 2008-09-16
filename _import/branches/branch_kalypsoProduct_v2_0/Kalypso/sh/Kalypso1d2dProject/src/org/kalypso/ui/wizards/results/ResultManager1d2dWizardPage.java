@@ -41,23 +41,36 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage2;
+import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 
 /**
- * @author jung
+ * @author Thomas Jung
  * 
  */
 public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 {
+
+  protected IKalypsoLayerModell m_modell;
+
+  protected ICommandTarget m_commandTarget;
 
   public ResultManager1d2dWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory )
   {
@@ -70,7 +83,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    // HACK: add an extra button 'Import'
+    // HACK: add an extra button 'Delete'
     final Composite panel = new Composite( parent, SWT.BORDER );
     panel.setLayout( new GridLayout() );
 
@@ -78,9 +91,14 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
 
     getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    final Button importButton = new Button( panel, SWT.PUSH );
-    importButton.setText( "Import..." );
-    importButton.addSelectionListener( new SelectionAdapter()
+    final Button deleteButton = new Button( panel, SWT.PUSH );
+    deleteButton.setToolTipText( "Löscht die selektierten Ergebnisse" );
+
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+
+    final Image deleteImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.DELETE );
+    deleteButton.setImage( deleteImage );
+    deleteButton.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -88,32 +106,39 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // handleImportPressed();
+        final CheckboxTreeViewer treeViewer = getTreeViewer();
+        final IResultMeta[] selectedResults = getSelectedResults();
+        for( final IResultMeta resultMeta : selectedResults )
+        {
+          if( resultMeta instanceof IStepResultMeta )
+          {
+
+            /* handle result meta entries */
+            final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
+            ResultMeta1d2dHelper.removeResult( stepResult );
+
+            /* handle map themes */
+            if( m_modell != null && m_commandTarget != null )
+              ResultMeta1d2dHelper.deleteResultThemeFromMap( stepResult, m_modell, m_commandTarget );
+
+            /* handle tree */
+            ViewerUtilities.refresh( treeViewer, true );
+          }
+        }
       }
     } );
 
     setControl( panel );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
-   */
-  @Override
-  public IWizardPage getNextPage( )
+  public void setMapModel( IKalypsoLayerModell modell )
   {
-    final IWizardPage nextPage = super.getNextPage();
-    if( nextPage instanceof RestartSelectWizardPage2 )
-      ((RestartSelectWizardPage2) nextPage).initializeResults( getSelectedResults() );
-    return nextPage;
+    m_modell = modell;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-   */
-  @Override
-  public boolean canFlipToNextPage( )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
-    return getSelectedResults().length > 0;
+    m_commandTarget = commandTarget;
   }
 
 }

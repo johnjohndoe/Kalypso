@@ -52,6 +52,7 @@ public class KalypsoModel1D2DUIImages
     OK("icons/elcl16/ok.gif"),
     EDIT("icons/elcl16/edit.gif"),
     SELECT("icons/elcl16/boxSel.gif"),
+    DELETE("icons/elcl16/remove.gif"),
     CHANGE("icons/elcl16/change.gif"),
     PLAY("icons/elcl16/nav_go.gif"),
     GO("icons/elcl16/blue_arrow_right.gif"),
