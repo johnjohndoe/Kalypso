@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml;
 /**
  * @author kuch
  */
-public interface IKalypsoCascadingTheme extends IKalypsoLayerModell
+public interface IKalypsoCascadingTheme extends IKalypsoLayerModell, IKalypsoTheme
 {
   IKalypsoTheme[] getChildThemes( );
 
