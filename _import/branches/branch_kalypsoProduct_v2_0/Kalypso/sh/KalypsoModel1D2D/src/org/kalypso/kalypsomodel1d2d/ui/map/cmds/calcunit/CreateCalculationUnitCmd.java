@@ -273,7 +273,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         final Feature newControlFeature = getNewFeature();
         final IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
 
-//        newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
+        // newControlModel.setName( Messages.getString( "CreateCalculationUnitCmd.2" ) + m_calcUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( m_calculationUnit );
         model1D2DCollection.setActiveControlModel( newControlModel );
 
@@ -316,7 +316,8 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           for( final IComponent component : components )
             result.addComponent( component );
 
-          result.setSortComponents( new IComponent[] { components[0] } );
+          result.setSortComponents( new IComponent[] { components[1] } );
+          result.setOrdinalNumberComponent( components[0] );
 
           ObservationFeatureFactory.toFeature( obs, obsFeature );
         }
