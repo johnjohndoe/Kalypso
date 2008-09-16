@@ -161,7 +161,7 @@ public class DateTimeDialog extends TitleAreaDialog
     dateTime.setDay( calendar.get( Calendar.DAY_OF_MONTH ) );
     dateTime.setMonth( calendar.get( Calendar.MONTH ) );
     dateTime.setYear( calendar.get( Calendar.YEAR ) );
-    dateTime.setHours( calendar.get( Calendar.HOUR ) );
+    dateTime.setHours( calendar.get( Calendar.HOUR_OF_DAY ) );
     dateTime.setMinutes( calendar.get( Calendar.MINUTE ) );
     dateTime.setSeconds( calendar.get( Calendar.SECOND ) );
   }
