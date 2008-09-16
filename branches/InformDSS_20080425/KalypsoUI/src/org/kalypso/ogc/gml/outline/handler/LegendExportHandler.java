@@ -172,7 +172,7 @@ public class LegendExportHandler extends AbstractHandler
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        IStatus status = MapUtilities.exportLegends( themes, legendFile, format, new NullProgressMonitor() );
+        IStatus status = MapUtilities.exportLegends( themes, legendFile, format, -1, -1, new NullProgressMonitor() );
         if( !status.isOK() )
         {
           /* Log the error. */

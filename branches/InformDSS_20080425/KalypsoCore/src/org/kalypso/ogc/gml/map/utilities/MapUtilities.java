@@ -348,11 +348,17 @@ public class MapUtilities
    *            The file, where it should save to.
    * @param format
    *            The image format (for example: SWT.IMAGE_PNG).
+   * @param sizeWidth
+   *            The width of the image, the legend is drawn onto.<br>
+   *            If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
+   * @param sizeHeight
+   *            The height of the image, the legend is drawn onto.<br>
+   *            If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
    * @param monitor
    *            A progress monitor.
    * @return A status, containing information about the process.
    */
-  public static IStatus exportLegends( List<IKalypsoTheme> themes, File file, int format, IProgressMonitor monitor )
+  public static IStatus exportLegends( List<IKalypsoTheme> themes, File file, int format, int sizeWidth, int sizeHeight, IProgressMonitor monitor )
   {
     /* Monitor. */
     monitor.beginTask( "Exporting legend", themes.size() * 100 + 100 );
@@ -390,14 +396,21 @@ public class MapUtilities
       /* Calculate the size. */
       int width = 0;
       int height = 0;
-
-      for( Image legend : legends )
+      if( sizeWidth > 0 && sizeHeight > 0 )
       {
-        Rectangle bounds = legend.getBounds();
-        if( bounds.width > width )
-          width = bounds.width;
+        width = sizeWidth;
+        height = sizeHeight;
+      }
+      else
+      {
+        for( Image legend : legends )
+        {
+          Rectangle bounds = legend.getBounds();
+          if( bounds.width > width )
+            width = bounds.width;
 
-        height = height + bounds.height;
+          height = height + bounds.height;
+        }
       }
 
       /* Monitor. */
