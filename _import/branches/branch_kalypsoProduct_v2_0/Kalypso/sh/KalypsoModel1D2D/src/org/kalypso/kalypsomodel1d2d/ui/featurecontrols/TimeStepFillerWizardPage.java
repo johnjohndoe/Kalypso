@@ -78,9 +78,9 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
   private int timeStep_val;
 
-  protected Date m_dateFrom = new Date();
+  private Date m_dateFrom = new Date();
 
-  protected Date m_dateTo = new Date();
+  private Date m_dateTo = new Date();
 
   protected Double m_uRelFactor;
 
@@ -92,12 +92,19 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
   private Combo m_uRelFactorCombo;
 
-  protected TimeStepFillerWizardPage( )
+  public TimeStepFillerWizardPage( )
   {
     super( "Example" );
     setTitle( "Zeitschrittdefinition" );
     setDescription( "Dieser Dialog ermöglicht die Vordefinition der gewünschten Berechnunszeitschritte." );
     // TODO Auto-generated constructor stub
+  }
+
+  public TimeStepFillerWizardPage( final Date startDate, final Date endDate )
+  {
+    this();
+    m_dateFrom = startDate;
+    m_dateTo = endDate;
   }
 
   /**
@@ -151,7 +158,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
       }
     } );
     // TODO: check for right time zone
-    m_dateTimeFrom.setText( DATEFORMAT.format( new Date() ) );
+    m_dateTimeFrom.setText( DATEFORMAT.format( m_dateFrom ) );
     m_dateTimeFrom.setLayoutData( gridFillHorizontal );
 
     final Button dateFromBtn = new Button( container, SWT.NONE );
@@ -210,7 +217,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     } );
 
     // TODO: check for right time zone
-    m_dateTimeTo.setText( DATETIMEFORMAT.format( new Date() ) );
+    m_dateTimeTo.setText( DATETIMEFORMAT.format( m_dateTo ) );
     m_dateTimeTo.setLayoutData( gridFillHorizontal );
 
     final Button dateToBtn = new Button( container, SWT.NONE );
