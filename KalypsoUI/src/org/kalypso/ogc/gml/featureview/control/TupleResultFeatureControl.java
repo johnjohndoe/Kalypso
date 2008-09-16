@@ -482,7 +482,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public static TupleResultFeatureControl create( final org.kalypso.template.featureview.TupleResult editorType, final Feature feature, final IPropertyType ftp )
   {
     final IComponentUiHandlerProvider provider = createHandler( editorType );
-
     final Toolbar toolbar = editorType.getToolbar();
     final Boolean recordsFixed = editorType.isRecordsFixed();
     final boolean areRecordsFixed = recordsFixed == null ? false : recordsFixed.booleanValue();
@@ -491,23 +490,30 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     if( toolbar == null )
       return tfc;
 
-    if( toolbar.isAddStandardItems() )
-    {
-      tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
-
-      if( !tfc.m_recordsFixed )
-      {
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
-      }
-    }
-
     final List<org.kalypso.template.featureview.TupleResult.Toolbar.Command> commands = toolbar.getCommand();
     for( final org.kalypso.template.featureview.TupleResult.Toolbar.Command command : commands )
     {
       final String commandId = command.getCommandId();
       final int style = SWTUtilities.createStyleFromString( command.getStyle() );
       tfc.addToolbarItem( commandId, style );
+    }
+    
+    if( toolbar.isAddStandardItems() )
+    {
+      if( toolbar.isBtnAddRow() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.addRowCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnDeleteSelectedRows() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnCopyToClipboard() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnPasteFromClipboard() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnInterpolateRows() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.interpolateSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnMoveRowsUp() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
+      if( toolbar.isBtnMoveRowsDown() )
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
     }
 
     return tfc;
