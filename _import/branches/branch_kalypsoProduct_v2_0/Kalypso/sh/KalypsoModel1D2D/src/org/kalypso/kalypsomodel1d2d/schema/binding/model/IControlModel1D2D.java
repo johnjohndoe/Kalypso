@@ -154,7 +154,7 @@ public interface IControlModel1D2D extends IControlModel
 
   boolean getPercentCheck( );
 
-  Integer getMFW( );
+  public Integer getMFW( );
 
-  Integer getBUFFSIZ( );
+  public Integer getBUFFSIZ( );
 }

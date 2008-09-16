@@ -78,6 +78,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.util.swt.StatusComposite;
@@ -89,7 +90,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
 {
-  private final ResultManager m_resultManager;
+  
+  private final ResultManager m_resultManager; 
 
   private IStatus m_simulationStatus;
 
@@ -109,13 +111,17 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   private Date[] m_selection = null;
 
-  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider )
+  private final RMA10CalculationWizard m_parentWizard;
+  
+
+  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard  )
   {
     super( pageName );
 
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
+    m_parentWizard = parentWizard;
 
     setTitle( "Ergebnisauswertung - " + resultManager.getControlModel().getCalculationUnit().getName() );
 
@@ -263,6 +269,10 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     spinNumStepProcessing.setDigits( 0 );
     spinNumStepProcessing.setMinimum( 1 );
     spinNumStepProcessing.setMaximum( 100 );
+    Integer resultIncrement = m_parentWizard.getResultIntervalFromCalcPage();
+    spinNumStepProcessing.setSelection( resultIncrement);
+    updateTableSelection( resultProcessViewer, spinNumStepProcessing );
+    updateSelection();
 
     spinNumStepProcessing.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
     spinNumStepProcessing.addSelectionListener( new SelectionAdapter()
@@ -312,6 +322,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
         items[i].setChecked( true );
       else
         items[i].setChecked( false );
+      
+      if (i == length - 1)
+        items[i].setChecked( true );
     }
   }
 

@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -54,6 +55,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -76,6 +79,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   protected boolean m_startResultProcessing = false;
 
   private Button m_startResultProcessingCheck;
+
+  private Spinner m_resultInterval;
+
 
   protected RMA10CalculationPage( final String pageName, final RMA10Calculation calculation )
   {
@@ -136,6 +142,31 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       }
     } );
 
+    final Composite buttonComposite = new Composite( tweakGroup, SWT.NONE );
+    final GridLayout layout = new GridLayout();
+    layout.numColumns = 2;
+    layout.marginWidth = 0;
+    layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    buttonComposite.setLayout( layout );
+    buttonComposite.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
+
+    m_resultInterval = new Spinner( buttonComposite, SWT.NONE );
+
+    final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, true );
+
+    m_resultInterval.setLayoutData( gridDataSpin );
+    m_resultInterval.setDigits( 0 );
+    m_resultInterval.setMinimum( 1 );
+    m_resultInterval.setMaximum( 100 );
+    m_resultInterval.setSelection( 1 );
+
+    m_resultInterval.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
+
+    final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
+    spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
+    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    spinnerLabel.setLayoutData( gridData );
+
     /* Iteration viewer */
     final Group iterGroup = new Group( composite, SWT.NONE );
     iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -152,6 +183,13 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   public boolean getStartResultProcessing( )
   {
     return m_startResultProcessing;
+  }
+
+  public Integer getResultInterval( )
+  {
+    if( m_resultInterval == null )
+      return 1;
+    return m_resultInterval.getSelection();
   }
 
   public void runCalculation( )

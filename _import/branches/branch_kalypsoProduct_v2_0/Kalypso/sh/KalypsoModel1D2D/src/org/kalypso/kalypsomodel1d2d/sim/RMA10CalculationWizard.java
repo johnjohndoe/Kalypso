@@ -93,7 +93,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     m_unitFolder = unitFolder;
     m_geoLog = geoLog;
     m_calcPage = new RMA10CalculationPage( "calcPage", calculation );
-    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider );
+    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider, this  );
 
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
@@ -172,6 +172,13 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   public void addPages( )
   {
     addPage( m_calcPage );
+  }
+
+  public Integer getResultIntervalFromCalcPage( )
+  {
+    if( m_calcPage == null )
+      return 1;
+    return m_calcPage.getResultInterval();
   }
 
   private IStatus runCalculation( )
