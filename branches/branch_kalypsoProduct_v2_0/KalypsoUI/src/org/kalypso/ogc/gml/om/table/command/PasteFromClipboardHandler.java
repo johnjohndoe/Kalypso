@@ -44,7 +44,9 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -93,7 +95,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     try
     {
       trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
-      // if Cipboard content is not text or that content is empty, just ignore it
+      // if clipboard content is not text or that content is empty, pop error message
       if( trstring == null || trstring.trim().length() == 0 )
       {
         MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -105,6 +107,12 @@ public class PasteFromClipboardHandler extends AbstractHandler
       MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.2" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
+
+    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    // store existing records temporarily, if paste command fails
+    final List<IRecord> oldTuplesList = new ArrayList<IRecord>( tupleResult.size() );
+    for( final IRecord record : tupleResult )
+      oldTuplesList.add( record );
 
     try
     {
@@ -131,8 +139,6 @@ public class PasteFromClipboardHandler extends AbstractHandler
         return null;
       final TupleResultFeatureControlHandlerProvider controlHandlerProvider = (TupleResultFeatureControlHandlerProvider) factory;
       final ColumnDescriptor[] descriptors = controlHandlerProvider.getDescriptors();
-
-      final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
 
       tupleResult.clear();
       final IComponent[] components = tupleResult.getComponents();
@@ -206,8 +212,11 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
     catch( final Exception ex )
     {
+      tupleResult.clear();
+      for( final IRecord record : oldTuplesList )
+        tupleResult.add( record );
       MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.12" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      ex.printStackTrace();
+// ex.printStackTrace();
     }
     return null;
   }
