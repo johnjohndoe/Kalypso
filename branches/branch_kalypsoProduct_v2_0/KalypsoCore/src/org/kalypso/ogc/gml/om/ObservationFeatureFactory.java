@@ -121,6 +121,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   private static final QName QNAME_P_SORTED_COMPONENT = new QName( NS.SWE_EXTENSIONS, "sortedComponent" ); //$NON-NLS-1$
 
+  private static final QName QNAME_P_ORDINALNUMBER_COMPONENT = new QName( NS.SWE_EXTENSIONS, "ordinalNumberComponent" ); //$NON-NLS-1$
+
   /**
    * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
@@ -172,10 +174,12 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IComponent[] components = ObservationFeatureFactory.buildComponents( recordDefinition );
     final IComponent[] sortComponents = ObservationFeatureFactory.buildSortComponents( recordDefinition );
+    final IComponent ordinalNumberComponent = ObservationFeatureFactory.getOrdinalNumberComponent( recordDefinition );
     final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
     final TupleResult tupleResult = new TupleResult( components );
     tupleResult.setSortComponents( sortComponents );
+    tupleResult.setOrdinalNumberComponent( ordinalNumberComponent );
 
     // TODO: move into own method
     // TODO: be more robust against inconsistency between resultDefinition and result
@@ -257,6 +261,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
     }
 
     return components.toArray( new IComponent[components.size()] );
+  }
+
+  private static IComponent getOrdinalNumberComponent( final Feature recordDefinition )
+  {
+    if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
+      return null;
+    final Feature component = (Feature) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
+    if( component != null )
+      return new FeatureComponent( FeatureHelper.getFeature( recordDefinition.getWorkspace(), component ) );
+    return null;
   }
 
   public static XsdBaseTypeHandler< ? >[] typeHandlersForComponents( final IComponent[] components )

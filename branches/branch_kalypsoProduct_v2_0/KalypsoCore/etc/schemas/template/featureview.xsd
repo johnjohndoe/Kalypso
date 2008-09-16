@@ -308,7 +308,23 @@
 										</xs:complexType>
 									</xs:element>
 								</xs:sequence>
+								<!-- 
+									addStandardItems attribute is used as a general switch for all the buttons
+									
+									TODO 
+									consider default visibility settings for the buttons,
+									for the moment, only btnCopyToClipboard is enabled by default
+									
+									also define button actions for different kinds of observations
+								-->
 								<xs:attribute name="addStandardItems" type="xs:boolean" default="true" />
+								<xs:attribute name="btnAddRow" type="xs:boolean" default="false" use="optional" />
+								<xs:attribute name="btnDeleteSelectedRows" type="xs:boolean" default="false" use="optional" />
+								<xs:attribute name="btnInterpolateRows" type="xs:boolean" default="false" use="optional" />
+								<xs:attribute name="btnCopyToClipboard" type="xs:boolean" default="true" use="optional" />
+								<xs:attribute name="btnPasteFromClipboard" type="xs:boolean" default="false" use="optional" />
+								<xs:attribute name="btnMoveRowsUp" type="xs:boolean" default="false" use="optional" />
+								<xs:attribute name="btnMoveRowsDown" type="xs:boolean" default="false" use="optional" />
 							</xs:complexType>
 						</xs:element>
 						<xs:choice>
