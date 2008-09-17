@@ -194,6 +194,16 @@ public class Control1D2DConverter
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
+    // TODO: @Nico -> hard coded defaults could be got from the schema, how?
+
+    // default value: 1500
+    if( m_controlModel.getMFW() != 0 )
+      formatter.format( "MFW     %8d%n", m_controlModel.getMFW() );
+
+    // default value: 10.000.000
+    if( m_controlModel.getBUFFSIZ() != 0)
+      formatter.format( "BUFFSIZL%16d%n", m_controlModel.getBUFFSIZ() );
+
     /* CONTROL DATA BLOCK */
     final String controlModelName = m_controlModel.getName();
     final String projectName = controlModelName == null ? Messages.getString( "Control1D2DConverter.8" ) : controlModelName; //$NON-NLS-1$

@@ -180,10 +180,10 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>
-									Speichergröße für Gleichungslöser
+									Speichergröße für Front-Gleichungslöser
 								</xs:label>
 								<xs:tooltip>
-									maximale Speichergröße, die dem Gleichungslöser zur Verfügung stehen kann (default: 20.000.000)
+									maximale Speichergröße für den Front-Gleichungslöser(default: 20.000.000); Eintrag 0 für default-Wert
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
@@ -195,7 +195,7 @@
 									maximale Bandbreite der Lösungsmatrix
 								</xs:label>
 								<xs:tooltip>
-									zulässige Bandbreite der Lösungsmatrix; performant bis 2500; (default: 1500)
+									zulässige Bandbreite der Lösungsmatrix (default: 1500); Eintrag 0 für default-Wert
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
