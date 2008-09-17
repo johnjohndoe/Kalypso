@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -53,6 +57,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -65,7 +70,6 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -76,102 +80,105 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class Command1D2DTimestepsInterpolate extends AbstractHandler
 {
+  private IStructuredSelection m_selection;
+
+  private TupleResult m_tupleResult;
+
+  protected List<IRecord> m_resultRecords = new ArrayList<IRecord>();
+
+  public static enum INTERPOLATION_METHOD
+  {
+    NUMBER_OF_STEPS,
+    TIME_INTERVAL
+  }
+
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    throw new ExecutionException( "Not implemented yet!" );
-/*    
-    
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
-    final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
-    if( viewer == null || tupleResult == null )
+    m_tupleResult = TupleResultCommandUtils.findTupleResult( event );
+    if( viewer == null || m_tupleResult == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.0" ) ); //$NON-NLS-1$
 
-    final IRecord row = tupleResult.createRecord();
-    // if tuple result is empty or contains just a single entry, we will just add another row with no interpolation
-    // default date/time is 01.01.2000 00:00:00.000
-    if( tupleResult.size() < 2 )
+    m_selection = (IStructuredSelection) viewer.getSelection();
+    if( m_selection == null )
     {
-      final GregorianCalendar calendar = new GregorianCalendar( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-      calendar.set( GregorianCalendar.DAY_OF_MONTH, 1 );
-      calendar.set( GregorianCalendar.MONTH, GregorianCalendar.JANUARY );
-      calendar.set( GregorianCalendar.YEAR, 2000 );
-      calendar.set( GregorianCalendar.HOUR_OF_DAY, 0 );
-      calendar.set( GregorianCalendar.MINUTE, 0 );
-      calendar.set( GregorianCalendar.SECOND, 0 );
-      calendar.set( GregorianCalendar.MILLISECOND, 0 );
-      row.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      row.setValue( 2, 1.0 );
-      tupleResult.add( row );
+      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.3" ) ); //$NON-NLS-1$
     }
-    else
+
+    if( m_selection.size() < 2 )
     {
-
-      final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-      if( selection == null )
-        throw new ExecutionException( "No selection is made. Please select ..." );
-
-      if( selection.size() < 2 )
-        throw new ExecutionException( "At least two rows should be selected." );
-
-      final List selectionList = selection.toList();
-      final int indexFirst = tupleResult.indexOf( selection.getFirstElement() );
-      final int indexLast = tupleResult.indexOf( selectionList.get( selectionList.size() - 1 ) );
-      
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-      final Command1D2DTimestepsInterpolationWizard wizard = new Command1D2DTimestepsInterpolationWizard();
-      final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
-      if( wizardDialog.open() != Window.OK )
-      {
-        wizard.getInterpolationMethod();
-        wizard.getNumberOfSteps();
-        wizard.getTimeInterval();
-      }
-
-      final IRecord previous, next;
-      final long timeMillis;
-      final TimeZone timeZone;
-      if( index == tupleResult.size() - 1 )
-      {
-        // last record is selected, special case
-        previous = tupleResult.get( index - 1 );
-        next = tupleResult.get( index );
-        final long t1 = ((XMLGregorianCalendar) previous.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
-        final long t2 = ((XMLGregorianCalendar) next.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
-        timeMillis = t2 + (t2 - t1);
-        timeZone = ((XMLGregorianCalendar) previous.getValue( 1 )).toGregorianCalendar().getTimeZone();
-      }
-      else
-      {
-        previous = tupleResult.get( index );
-        next = tupleResult.get( index + 1 );
-        final long t1 = ((XMLGregorianCalendar) previous.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
-        final long t2 = ((XMLGregorianCalendar) next.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
-        timeMillis = t1 + (t2 - t1) / 2;
-        timeZone = ((XMLGregorianCalendar) previous.getValue( 1 )).toGregorianCalendar().getTimeZone();
-      }
-
-      final GregorianCalendar calendar = new GregorianCalendar( timeZone );
-      calendar.setTimeInMillis( timeMillis );
-      row.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      row.setValue( 2, next.getValue( 2 ) );
-      tupleResult.add( index + 1, row );
+      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.4" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.6" ) ); //$NON-NLS-1$
     }
+    final int index = m_tupleResult.indexOf( m_selection.getFirstElement() );
+    final BigDecimal relaxationFactor = (BigDecimal) m_tupleResult.get( index ).getValue( 2 );
+
+    final Command1D2DTimestepsInterpolationWizard wizard = new Command1D2DTimestepsInterpolationWizard( this, relaxationFactor.doubleValue() );
+    final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+    if( wizardDialog.open() != Window.OK )
+      return null;
     // select the new row; in ui job, as table is also updated in an ui event
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        viewer.setSelection( new StructuredSelection( row ) );
+        viewer.setSelection( new StructuredSelection( m_resultRecords.toArray( new IRecord[] {} ) ) );
         return Status.OK_STATUS;
       }
     }.schedule();
     return null;
- */
   }
+
+  public void doInterpolate( final INTERPOLATION_METHOD interpolationMethod, final int numberOfSteps, final long timeInterval, final String relaxationFactor )
+  {
+    m_resultRecords.clear();
+
+    final Object firstInSelection = m_selection.getFirstElement();
+    Object lastInSelection = firstInSelection;
+    final Iterator iterator = m_selection.iterator();
+    while( iterator.hasNext() )
+      lastInSelection = iterator.next();
+    final int firstIndex = m_tupleResult.indexOf( firstInSelection );
+    final int lastIndex = m_tupleResult.indexOf( lastInSelection );
+    final IRecord firstRecord = m_tupleResult.get( firstIndex );
+    final IRecord lastRecord = m_tupleResult.get( lastIndex );
+    final long timeMillisStart = ((XMLGregorianCalendar) firstRecord.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
+    final long timeMillisEnd = ((XMLGregorianCalendar) lastRecord.getValue( 1 )).toGregorianCalendar().getTimeInMillis();
+    final TimeZone timeZone = ((XMLGregorianCalendar) firstRecord.getValue( 1 )).toGregorianCalendar().getTimeZone();
+
+    final long timeStepMillis;
+    switch( interpolationMethod )
+    {
+      case NUMBER_OF_STEPS:
+        timeStepMillis = (timeMillisEnd - timeMillisStart) / (numberOfSteps - 1);
+        break;
+
+      case TIME_INTERVAL:
+      default:
+        timeStepMillis = timeInterval;
+        break;
+    }
+
+    for( long currentTimeMillis = timeMillisStart; currentTimeMillis <= timeMillisEnd; currentTimeMillis += timeStepMillis )
+    {
+      final GregorianCalendar calendar = new GregorianCalendar( timeZone );
+      calendar.setTimeInMillis( currentTimeMillis );
+      final IRecord record = m_tupleResult.createRecord();
+      record.setValue( 0, new BigInteger( "0" ) ); //$NON-NLS-1$
+      record.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
+      record.setValue( 2, new BigDecimal( relaxationFactor ) );
+      m_resultRecords.add( record );
+    }
+
+    m_tupleResult.removeAll( m_selection.toList() );
+    m_tupleResult.addAll( firstIndex, m_resultRecords );
   }
+}

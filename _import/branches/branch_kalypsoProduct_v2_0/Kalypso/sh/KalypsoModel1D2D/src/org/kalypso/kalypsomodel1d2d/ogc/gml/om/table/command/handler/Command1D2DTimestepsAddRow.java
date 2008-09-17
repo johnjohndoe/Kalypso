@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler;
 
+import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -48,12 +49,16 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
@@ -71,6 +76,8 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
     if( viewer == null || tupleResult == null )
@@ -78,7 +85,7 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
 
     final IRecord row = tupleResult.createRecord();
     // if tuple result is empty or contains just a single entry, we will just add another row with no interpolation
-    // default date/time is 01.01.2000 00:00:00.000 
+    // default date/time is 01.01.2000 00:00:00.000
     if( tupleResult.size() < 2 )
     {
       final GregorianCalendar calendar = new GregorianCalendar( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
@@ -95,10 +102,12 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
     }
     else
     {
-
       final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-      if( selection == null )
-        throw new ExecutionException( "No selection is made. Please select ..." );
+      if( selection == null || selection.size() == 0 )
+      {
+        MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsAddRow.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsAddRow.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        throw new ExecutionException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsAddRow.3" ) ); //$NON-NLS-1$
+      }
 
       final int index = tupleResult.indexOf( selection.getFirstElement() );
 
@@ -127,12 +136,13 @@ public class Command1D2DTimestepsAddRow extends AbstractHandler
 
       final GregorianCalendar calendar = new GregorianCalendar( timeZone );
       calendar.setTimeInMillis( timeMillis );
+      row.setValue( 0, new BigInteger( "0" ) ); //$NON-NLS-1$
       row.setValue( 1, new XMLGregorianCalendarImpl( calendar ) );
-      row.setValue( 2, next.getValue( 2 ) );
+      row.setValue( 2, previous.getValue( 2 ) );
       tupleResult.add( index + 1, row );
     }
     // select the new row; in ui job, as table is also updated in an ui event
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
