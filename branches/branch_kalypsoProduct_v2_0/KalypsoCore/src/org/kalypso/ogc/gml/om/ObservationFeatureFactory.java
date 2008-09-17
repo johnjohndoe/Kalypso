@@ -388,9 +388,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IComponent[] components = result.getComponents();
     final IComponent[] sortComponents = result.getSortComponents();
+    final IComponent ordinalNumberComponent = result.getOrdinalNumberComponent();
 
     final IRelationType targetObsFeatureRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
-    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components, sortComponents );
+    final Feature rd = ObservationFeatureFactory.buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components, sortComponents, ordinalNumberComponent );
     changes.add( new FeatureChange( targetObsFeature, targetObsFeatureRelation, rd ) );
 
     final String strResult = ObservationFeatureFactory.serializeResultAsString( result );
@@ -405,7 +406,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * @param map
    *            ATTENTION: the recordset is written in the same order as this map
    */
-  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components, final IComponent[] sortComponents )
+  public static Feature buildRecordDefinition( final Feature targetObsFeature, final IRelationType targetObsFeatureRelation, final IComponent[] components, final IComponent[] sortComponents, final IComponent ordinalNumberComponent )
   {
     final IGMLSchema schema = targetObsFeature.getWorkspace().getGMLSchema();
 
@@ -438,6 +439,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
         final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, sortedItemDefRelation, schema, comp );
         FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT, featureItemDef );
       }
+    }
+
+    if( ordinalNumberComponent != null )
+    {
+      final IRelationType ordinalNumberItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
+      final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, ordinalNumberItemDefRelation, schema, ordinalNumberComponent );
+      FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT, featureItemDef );
     }
 
     return featureRD;
@@ -632,7 +640,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     /* Make sure there is always a record definition */
     if( recordDefinition == null )
     {
-      final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultRelation, new IComponent[] {}, null );
+      final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultRelation, new IComponent[] {}, null, null );
       obsFeature.setProperty( ObservationFeatureFactory.OM_RESULTDEFINITION, rd );
       return rd;
     }
