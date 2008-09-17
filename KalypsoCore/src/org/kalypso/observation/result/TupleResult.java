@@ -160,6 +160,11 @@ public class TupleResult implements List<IRecord>
     return m_sortComponents.toArray( new IComponent[m_sortComponents.size()] );
   }
 
+  public IComponent getOrdinalNumberComponent( )
+  {
+    return m_ordinalNumberComponent;
+  }
+
   /**
    * Invalidates the sort state.<br>
    * The next access to any data results in sorting.<br>
