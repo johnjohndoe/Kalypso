@@ -497,7 +497,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       final int style = SWTUtilities.createStyleFromString( command.getStyle() );
       tfc.addToolbarItem( commandId, style );
     }
-    
+
     if( toolbar.isAddStandardItems() )
     {
       if( toolbar.isBtnAddRow() )
