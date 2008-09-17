@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -50,6 +53,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IControlModel1D2DCollection extends IFeatureWrapperCollection<IControlModel1D2D>
 {
+  public static final QName QNAME_PROP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
+
   public void setActiveControlModel( IControlModel1D2D newControlModel );
 
   public IControlModel1D2D getActiveControlModel( );

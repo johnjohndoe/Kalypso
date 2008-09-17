@@ -919,6 +919,10 @@
            adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor"
            featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel">
      </modelAdapter>
+     <modelAdapter
+           adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter"
+           featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelGroup">
+     </modelAdapter>
   </extension>
   <extension
         name="1d2dChartCommands"
