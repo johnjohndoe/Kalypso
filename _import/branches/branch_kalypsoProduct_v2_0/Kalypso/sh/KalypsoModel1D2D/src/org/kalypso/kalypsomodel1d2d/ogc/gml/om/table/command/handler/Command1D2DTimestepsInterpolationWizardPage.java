@@ -280,7 +280,10 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
   public long getTimeInterval( )
   {
     final long MILLIS_PER_DAY = 86400000;
-    return MILLIS_PER_DAY * m_dateFld.getSelection() + 1000 * (m_timeFld.getSeconds() + 60 * (m_timeFld.getMinutes() + 24 * m_timeFld.getHours()));
+    final long MILLIS_PER_HOUR = 3600000;
+    final long MILLIS_PER_MINUTE = 60000;
+    final long MILLIS_PER_SECOND = 1000;
+    return MILLIS_PER_DAY * m_dateFld.getSelection() + MILLIS_PER_HOUR * m_timeFld.getHours() + MILLIS_PER_MINUTE * m_timeFld.getMinutes() + MILLIS_PER_SECOND * m_timeFld.getSeconds();
   }
 
   public String getRelaxationFactorValue( )
