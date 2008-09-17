@@ -100,12 +100,6 @@ public class TrennerPanel extends AbstractProfilView
 
   protected Combo m_fzr_combo;
 
-  protected Button m_fz_show;
-
-  protected Button m_db_show;
-
-  protected Button m_bv_show;
-
   protected Button m_db_add;
 
   protected Button m_db_del;
@@ -193,28 +187,6 @@ public class TrennerPanel extends AbstractProfilView
       }
     } );
 
-    m_fz_show = new Button( fliesszoneGroup, SWT.CHECK );
-    final GridData fz_showData = new GridData();
-    fz_showData.horizontalSpan = 2;
-    m_fz_show.setLayoutData( fz_showData );
-    m_fz_show.setText( "Trennflächen anzeigen" );
-    m_fz_show.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-
-        // TODO:KIM reparieren
-// final ProfilOperation operation = new ProfilOperation( "",profil, true );
-// operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,
-        // m_fz_show.getSelection() ) );
-// final IStatus status = operation.execute( new NullProgressMonitor(), null );
-// operation.dispose();
-// if( !status.isOK() )
-// KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      }
-    } );
-
     final Group durchstroemteGroup = new Group( panel, SWT.NONE );
     durchstroemteGroup.setText( "Durchströmter Bereich" );
     durchstroemteGroup.setLayout( new GridLayout( 2, false ) );
@@ -229,28 +201,6 @@ public class TrennerPanel extends AbstractProfilView
     m_dbr_text.addModifyListener( doubleModifyListener );
     m_dbr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 1 ) );
 
-    m_db_show = new Button( durchstroemteGroup, SWT.CHECK );
-    final GridData db_showData = new GridData();
-    db_showData.horizontalSpan = 2;
-    m_db_show.setLayoutData( db_showData );
-    m_db_show.setText( "Durchströmten Bereich anzeigen" );
-    m_db_show.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-        // TODO:KIM reparieren
-// final ProfilOperation operation = new ProfilOperation( "", profil, true );
-// operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE,
-        // m_db_show.getSelection() ) );
-// final IStatus status = operation.execute( new NullProgressMonitor(), null );
-// operation.dispose();
-// if( !status.isOK() )
-// KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-
-      }
-    } );
-
     final Group bordvollGroup = new Group( panel, SWT.NONE );
     bordvollGroup.setText( "Bordvollpunkte" );
     bordvollGroup.setLayout( new GridLayout( 2, false ) );
@@ -264,27 +214,6 @@ public class TrennerPanel extends AbstractProfilView
     m_bvr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvr_text.addModifyListener( doubleModifyListener );
     m_bvr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 1 ) );
-
-    m_bv_show = new Button( bordvollGroup, SWT.CHECK );
-    final GridData bv_showData = new GridData();
-    bv_showData.horizontalSpan = 2;
-    m_bv_show.setLayoutData( bv_showData );
-    m_bv_show.setText( "Bordvollpunkte anzeigen" );
-    m_bv_show.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-        // TODO:KIM reparieren
-// final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:",profil, true );
-// operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL,
-        // m_bv_show.getSelection() ) );
-// final IStatus status = operation.execute( new NullProgressMonitor(), null );
-// operation.dispose();
-// if( !status.isOK() )
-// KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      }
-    } );
 
     m_bv_add = new Button( bordvollGroup, SWT.NONE );
     final GridData bv_addData = new GridData( GridData.FILL_HORIZONTAL );
@@ -307,26 +236,20 @@ public class TrennerPanel extends AbstractProfilView
 
           final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
           final IComponent bordvoll = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+//          profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, db_devs[0].getPoint() );
+//          profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, db_devs[1].getPoint() );
 
-          operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
-          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
-          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
-
-          operation.addChange( new ActiveObjectEdit( profil, db_devs[1].getPoint(), bordvoll ) );
-          new ProfilOperationJob( operation ).schedule();
+ operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
+ operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
+ operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
+//
+ operation.addChange( new ActiveObjectEdit( profil, db_devs[1].getPoint(), bordvoll ) );
+ new ProfilOperationJob( operation ).schedule();
 
         }
         else
         {
-// final IProfilChange[] changes = new IProfilChange[bv_devs.length + 1];
-// for( int i = 0; i < bv_devs.length; i++ )
-// {
-// changes[i] = new PointMarkerEdit( bv_devs[i], null );
-// }
-// changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
 
-          // final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfil(), changes,
-          // true );
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", profil, true );
           operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ) );
           new ProfilOperationJob( operation ).schedule();
@@ -355,11 +278,7 @@ public class TrennerPanel extends AbstractProfilView
 
     try
     {
-      if( !m_fz_show.isDisposed() )
-      {
-        // TODO:KIM reparieren
-        // m_fz_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-      }
+
       if( !m_fzl_text.isDisposed() )
       {
         if( fz_devs.length > 0 )
@@ -401,11 +320,7 @@ public class TrennerPanel extends AbstractProfilView
           m_fzr_combo.select( 1 );
         }
       }
-      if( !m_db_show.isDisposed() )
-      {
-        // TODO:KIM reparieren
-// m_db_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-      }
+
       if( !m_dbl_text.isDisposed() )
       {
         if( db_devs.length > 0 )
@@ -430,10 +345,7 @@ public class TrennerPanel extends AbstractProfilView
         {
           m_bvr_text.setVisible( false );
         }
-        if( !m_bv_show.isDisposed() )
-        {
-          m_bv_show.setVisible( false );
-        }
+
         if( !m_bv_add.isDisposed() )
         {
           m_bv_add.setText( "Bordvollpunkte einfügen" );
@@ -441,12 +353,7 @@ public class TrennerPanel extends AbstractProfilView
       }
       else
       {
-        if( !m_bv_show.isDisposed() )
-        {
-          m_bv_show.setVisible( true );
-          // TODO:KIM reparieren
-// m_bv_show.setSelection( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-        }
+
         if( !m_bv_add.isDisposed() )
         {
           m_bv_add.setText( "Bordvollpunkte entfernen" );

@@ -46,8 +46,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -138,10 +140,22 @@ public class ProfilUtil
   public static Double getDoubleValueFor( final String componentID, final IProfileObject building )
   {
     final IComponent property = building.getObjectProperty( componentID );
-    final Object value = building.getValue( property );
-    if( value != null && value instanceof Double )
-      return (Double) value;
-    return Double.NaN;
+
+    try
+    {
+      final Object value = building.getValue( property );
+      if( value == null )
+        return Double.NaN;
+      if( value instanceof Double )
+        return (Double) value;
+      return Double.NaN;
+    }
+    catch( IllegalArgumentException e )
+    {
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log(new Status(IStatus.ERROR,componentID,e.getLocalizedMessage(), null ));
+      return Double.NaN;
+    }
+
   }
 
   /**
@@ -530,7 +544,7 @@ public class ProfilUtil
   }
 
   /**
-   * @deprecated use {@code  #getPoints2D(IProfil,String)} instead
+   * @deprecated use {@code #getPoints2D(IProfil,String)} instead
    */
   @Deprecated
   public static Point2D[] getPoints2D( final IProfil profil, final IComponent pointProperty )
@@ -752,7 +766,7 @@ public class ProfilUtil
    * returns the georeferenced points of a profile.
    * 
    * @param profile
-   *            input profile
+   *          input profile
    */
   public static IRecord[] getGeoreferencedPoints( final IProfil profile )
   {

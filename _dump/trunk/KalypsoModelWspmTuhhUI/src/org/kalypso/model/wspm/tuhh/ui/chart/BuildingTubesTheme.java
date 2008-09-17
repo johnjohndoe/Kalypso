@@ -88,13 +88,4 @@ public class BuildingTubesTheme extends AbstractProfilTheme
     return new TubePanel( getProfil() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
-   */
-  @Override
-  public IDataRange<Number> getTargetRange( )
-  {
-    // this theme will not be painted, so supress the dimension of GeoCoordinates
-    return null;
-  }
 }

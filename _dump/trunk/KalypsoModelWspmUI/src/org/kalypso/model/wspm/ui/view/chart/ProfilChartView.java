@@ -182,7 +182,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_chart = null;
 
     ChartHandlerUtilities.updateElements( this );
-    
+
     super.dispose();
   }
 
@@ -302,20 +302,20 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     return m_chart.getChartModel().getMapperRegistry().getAxis( id );
   }
 
-//  private IChartLayer getActiveLayer( final ILayerManager mngr, final boolean canActivate )
-//  {
-//    for( final IChartLayer layer : mngr.getLayers() )
-//    {
-//      if( layer.isActive() )
-//        return layer;
-//    }
-//    if( canActivate )
-//    {
-//      mngr.getLayers()[0].setActive( true );
-//      return mngr.getLayers()[0];
-//    }
-//    return null;
-//  }
+// private IChartLayer getActiveLayer( final ILayerManager mngr, final boolean canActivate )
+// {
+// for( final IChartLayer layer : mngr.getLayers() )
+// {
+// if( layer.isActive() )
+// return layer;
+// }
+// if( canActivate )
+// {
+// mngr.getLayers()[0].setActive( true );
+// return mngr.getLayers()[0];
+// }
+// return null;
+// }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
@@ -330,8 +330,18 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       {
         if( hint.isObjectChanged() || hint.isPointPropertiesChanged() )
         {
-
+          String act = null;
+          for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+          {
+            if( layer.isActive() )
+              act = layer.getId();
+          }
           createLayer();
+          for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+          {
+            if( act != null )
+              layer.setActive( act.equals( layer.getId() ) );
+          }
           return;
         }
         else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
@@ -395,9 +405,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         layer.setActive( active );
         activeLayerFound = activeLayerFound || active;
       }
-      if (layer instanceof IExpandableChartLayer)
+      if( layer instanceof IExpandableChartLayer )
       {
-        for(final IChartLayer child : ((IExpandableChartLayer)layer).getLayerManager().getLayers())
+        for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
         {
           final Boolean v = hash.get( child.getId() );
           if( v != null )
@@ -423,9 +433,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
         layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
         // nur eine Ebene tiefer
-        if (layer instanceof IExpandableChartLayer)
+        if( layer instanceof IExpandableChartLayer )
         {
-          for (final IChartLayer child : ((IExpandableChartLayer)layer).getLayerManager().getLayers())
+          for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
           {
             final IMemento lmem = getMementoChild( memento, MEM_LAYER_VIS, child.getId(), true );
             lmem.putTextData( "" + child.isVisible() );

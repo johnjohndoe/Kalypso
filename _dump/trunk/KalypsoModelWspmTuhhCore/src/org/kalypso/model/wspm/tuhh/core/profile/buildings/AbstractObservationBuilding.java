@@ -97,7 +97,6 @@ public abstract class AbstractObservationBuilding implements IProfileObject
 
   protected abstract String[] getProfileProperties( );
 
-
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
    */
@@ -106,7 +105,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     final TupleResult result = m_observation.getResult();
     final int index = result.indexOfComponent( component );
     if( index < 0 )
-      throw new IllegalArgumentException( component.getName() );
+      throw new IllegalArgumentException( component == null ? m_observation.getDescription() : component.getDescription() );
     if( result.size() > 1 )
       throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
     else if( result.size() == 0 )

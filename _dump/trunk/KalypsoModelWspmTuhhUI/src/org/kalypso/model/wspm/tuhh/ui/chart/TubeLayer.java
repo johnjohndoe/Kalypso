@@ -41,15 +41,19 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
@@ -61,8 +65,17 @@ public class TubeLayer extends AbstractProfilLayer
 
   public TubeLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
-    super( profil, "", styleProvider );
+    super( profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return getTube() == null ? "unknown ProfileObject" : getTube().getObservation().getName();
   }
 
   private IProfileObject getTube( )
@@ -83,40 +96,68 @@ public class TubeLayer extends AbstractProfilLayer
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
-   */
-  @Override
-  public IComponent getTargetComponent( )
-  {
-    return super.getDomainComponent();
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void paint( GC gc )
   {
-    if( getTube() == null )
-      return;
-    final AreaStyle as = new AreaStyle( new ColorFill( getPointStyle().getInlineColor() ), getPointStyle().getAlpha(), getLineStyle(), getPointStyle().isFillVisible() );
-   // as.apply( gc );
-    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_KREIS))
-    {
-      return;
-    }
-    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ))
-    {
-     return; 
-    }
-    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_MAUL))
-    {
-      return;
-    }
-    if (getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_EI))
-    {
-     return; 
-    }
-  }
 
+    final IProfileObject tube = getTube();
+    if( tube == null )
+      return;
+    IFigure tubeFigure = null;
+
+    final Double x = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, tube );
+    final Double y = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, tube );
+    final Double b = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, tube );
+    final Double h = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, tube );
+    final Double m = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, tube );
+
+    final IAxis targetAx = getTargetAxis();
+    final IAxis domAx = getDomainAxis();
+    final String tubeId = getTube().getId();
+
+    if( getTube().getId().equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
+    {
+      if( x.isNaN() || y.isNaN() || b.isNaN() || m.isNaN() || h.isNaN() )
+        return;
+      tubeFigure = new AbstractFigure<IPointStyle>()
+      {
+        @Override
+        protected void paintFigure( GC grc )
+        {
+          final int leftX = domAx.numericToScreen( x - b / 2 );
+          final int upperY = targetAx.numericToScreen( y + h );
+          final int rightX = domAx.numericToScreen( x + b / 2 );
+          final int lowerY = targetAx.numericToScreen( y );
+          final int deltaX = m > 0 ? (lowerY - upperY) / m.intValue() : 0;
+          grc.fillPolygon( new int[] { leftX, lowerY, leftX - deltaX, upperY, rightX + deltaX, upperY, rightX, lowerY } );
+        }
+      };
+    }
+
+    else if( tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || tubeId.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) )
+    {
+      if( x.isNaN() || y.isNaN() || b.isNaN() )
+        return;
+      tubeFigure = new AbstractFigure<IPointStyle>()
+      {
+        @Override
+        protected void paintFigure( GC grc )
+        {
+          final int leftX = domAx.numericToScreen( x - b / 2 );
+          final int upperY = targetAx.numericToScreen( y + (h.isNaN() ? b : h) );
+          final int rightX = domAx.numericToScreen( x + b / 2 );
+          final int lowerY = targetAx.numericToScreen( y );
+          grc.fillOval( leftX, upperY, rightX - leftX, lowerY - upperY );
+        }
+      };
+
+    }
+    if( tubeFigure == null )
+      return;
+    tubeFigure.setStyle( getPointStyle() );
+    tubeFigure.paint( gc );
+  }
 }
