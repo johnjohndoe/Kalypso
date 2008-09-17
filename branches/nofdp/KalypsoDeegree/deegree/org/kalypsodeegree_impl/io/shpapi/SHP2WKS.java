@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -221,9 +221,7 @@ public class SHP2WKS
         double cy = (t * ring[i].getY()) + ((1 - t) * ring[z].getY());
 
         if( point.getY() == cy )
-        { // point is on border of ring
           return false;
-        }
         else if( point.getY() > cy )
         { // downwards vertical line through point crosses ring
           crossings++;
@@ -235,9 +233,7 @@ public class SHP2WKS
       {
 
         if( ring[i].getY() == point.getY() )
-        { // point is on border of ring
           return false;
-        }
 
         // find next point on ring with different x
         // (adjacent points in shapefile can have equal x&y)
@@ -319,10 +315,12 @@ public class SHP2WKS
       for( int k = count; k >= 0; k-- )
       {
         final LinearRing in_ring = inner_rings.get( k );
-        if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )
-        {
-          list.add( inner_rings.get( k ) );
-        }
+
+        // TODO why?
+        // if( pir.isInside( in_ring.getCoordinateN( 0 ) ) )
+        // {
+        list.add( inner_rings.get( k ) );
+        // }
       }
       for( LinearRing ring : list )
         inner_rings.remove( ring );
