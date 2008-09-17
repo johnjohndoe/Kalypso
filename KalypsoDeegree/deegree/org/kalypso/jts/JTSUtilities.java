@@ -872,4 +872,37 @@ public class JTSUtilities
 
     return factory.createLineString( coordinates.toArray( new Coordinate[] {} ) );
   }
+
+  public static Polygon cleanPolygon( Polygon poly )
+  {
+    GeometryFactory factory = new GeometryFactory();
+
+    List<LinearRing> myInnerRings = new ArrayList<LinearRing>();
+    final int rings = poly.getNumInteriorRing();
+
+    for( int i = 0; i < rings; i++ )
+    {
+      LineString lineString = poly.getInteriorRingN( i );
+      Coordinate[] coordinates = lineString.getCoordinates();
+      LinearRing ring = factory.createLinearRing( coordinates );
+
+      Polygon innerPolygon = factory.createPolygon( ring, null );
+      double area = innerPolygon.getArea();
+      if( area > 0.001 )
+      {
+        myInnerRings.add( ring );
+      }
+    }
+
+    if( myInnerRings.size() != rings )
+    {
+      LineString outer = poly.getExteriorRing();
+      Coordinate[] outerCoordinates = outer.getCoordinates();
+      LinearRing outerRing = factory.createLinearRing( outerCoordinates );
+
+      poly = factory.createPolygon( outerRing, myInnerRings.toArray( new LinearRing[] {} ) );
+    }
+
+    return poly;
+  }
 }
