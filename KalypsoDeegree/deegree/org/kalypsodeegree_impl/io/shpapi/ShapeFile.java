@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -311,9 +311,7 @@ public class ShapeFile
   public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
@@ -441,9 +439,7 @@ public class ShapeFile
       geom = null;
     }
     else
-    {
       throw (new NotImplementedException());
-    }
 
     return geom;
   }
@@ -467,9 +463,7 @@ public class ShapeFile
     final DBaseIndex index = dBaseIndexes.get( column );
 
     if( index == null )
-    {
       return null;
-    }
 
     return index.search( value );
   }
@@ -489,9 +483,7 @@ public class ShapeFile
     GM_Envelope mbr = getFileMBR();
 
     if( !mbr.intersects( r ) )
-    {
       return null;
-    }
 
     if( hasRTreeIndex )
     {
@@ -575,9 +567,7 @@ public class ShapeFile
     final DBaseIndex index = dBaseIndexes.get( property );
 
     if( index == null )
-    {
       return false;
-    }
 
     return index.isUnique();
   }
@@ -589,9 +579,7 @@ public class ShapeFile
   public String[] getProperties( ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getProperties();
   }
@@ -603,9 +591,7 @@ public class ShapeFile
   public String[] getDataTypes( ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getDataTypes();
   }
@@ -634,9 +620,7 @@ public class ShapeFile
   public String[] getDataTypes( final String[] fields ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getDataTypes( fields );
   }
@@ -648,9 +632,7 @@ public class ShapeFile
   public Object[] getRow( final int rowNo ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getRow( rowNo );
   }
@@ -736,9 +718,7 @@ public class ShapeFile
     final int featuresLength = dataProvider.getFeaturesLength();
 
     if( featuresLength == 0 )
-    {
       throw new Exception( "Can't write an empty shape." );
-    }
 
     // mbr of the whole shape file
     SHPEnvelope shpmbr = new SHPEnvelope();
@@ -808,7 +788,9 @@ public class ShapeFile
 
       /* create a new SHP type entry in the specified shape type */
       /* convert feature geometry into output geometry */
-      ISHPGeometry shpGeom = getShapeGeometry( dataProvider.getGeometry( i ), dataProvider.getOutputShapeConstant() );
+      final GM_Object geometry = dataProvider.getGeometry( i );
+      ISHPGeometry shpGeom = getShapeGeometry( geometry, dataProvider.getOutputShapeConstant() );
+
 // if( shpGeom == null )
 // throw new UnsupportedOperationException( "Data type (" + dataProvider.getGeometry( i ).toString() + ") cannot
 // converted into the specified shape type ("
@@ -901,7 +883,7 @@ public class ShapeFile
       case ShapeConst.SHAPE_TYPE_POLYGON:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) geom.getAdapter( GM_SurfacePatch[].class );
-        if( surfacePatches == null )
+        if( surfacePatches == null || surfacePatches.length == 0 )
           return null;
         else
           return new SHPPolygon( surfacePatches );
