@@ -178,7 +178,12 @@ public class Command1D2DTimestepsInterpolate extends AbstractHandler
       m_resultRecords.add( record );
     }
 
-    m_tupleResult.removeAll( m_selection.toList() );
+    // because selection doesn't have to be continuous...
+    final List<IRecord> recordsToRemove = new ArrayList<IRecord>();
+    for( int i = firstIndex; i <= lastIndex; i++ )
+      recordsToRemove.add( m_tupleResult.get( i ) );
+
+    m_tupleResult.removeAll( recordsToRemove );
     m_tupleResult.addAll( firstIndex, m_resultRecords );
   }
 }
