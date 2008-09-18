@@ -125,7 +125,7 @@ public class ResourcePool
         {
           e.printStackTrace();
           e.getMessage();
-          final RuntimeException iae = new IllegalArgumentException( Messages.getString("org.kalypso.util.pool.ResourcePool.1") + key.getType() ); //$NON-NLS-1$
+          final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
           ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
           throw iae;
         }
@@ -151,7 +151,7 @@ public class ResourcePool
         if( info.removeListener( l ) && info.isEmpty() )
         {
           if( ResourcePool.DO_LOG )
-            ResourcePool.LOGGER.info( Messages.getString("org.kalypso.util.pool.ResourcePool.3") + key ); //$NON-NLS-1$
+            ResourcePool.LOGGER.info( Messages.getString( "org.kalypso.util.pool.ResourcePool.3" ) + key ); //$NON-NLS-1$
 
           iter.remove();
 
@@ -171,14 +171,14 @@ public class ResourcePool
         info.dispose();
       else if( askForSave )
       {
-        final UIJob job = new SaveAndDisposeInfoJob( Messages.getString("org.kalypso.util.pool.ResourcePool.5"), info ); //$NON-NLS-1$
+        final UIJob job = new SaveAndDisposeInfoJob( Messages.getString( "org.kalypso.util.pool.ResourcePool.5" ), info ); //$NON-NLS-1$
         job.setUser( true );
         job.setRule( mutex );
         job.schedule();
       }
       else
       {
-        System.out.println( Messages.getString("org.kalypso.util.pool.ResourcePool.6") + info.getObject() ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.util.pool.ResourcePool.6" ) + info.getObject() ); //$NON-NLS-1$
         info.dispose();
       }
     }
@@ -247,6 +247,9 @@ public class ResourcePool
    * <p>
    * Bear in mind that the pool-listener mechanism is bypassed here.
    */
+  /**
+   *
+   */
   public Object getObject( final IPoolableObjectType key ) throws CoreException// TODO: synchronize
   {
     final KeyInfo info = m_keyInfos.get( key );
@@ -258,7 +261,18 @@ public class ResourcePool
 
         final IStatus result = info.getResult();
         if( !result.isOK() )
-          throw new CoreException( result );
+        {
+          // special case of multistatus that contains INFO children
+          // occurs after model adaptation (versioned discretisation/control model)
+          if( result.isMultiStatus() )
+          {
+            for( final IStatus status : result.getChildren() )
+              if( !(status.isOK() || status.matches( Status.INFO )) )
+                throw new CoreException( result );
+          }
+          else
+            throw new CoreException( result );
+        }
 
         return info.getObject();
       }
@@ -266,7 +280,7 @@ public class ResourcePool
       {
         e.printStackTrace();
 
-        throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.ResourcePool.7") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.7" ) ) ); //$NON-NLS-1$
       }
 
     // falls object nicht bereits da,
@@ -284,7 +298,7 @@ public class ResourcePool
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.ResourcePool.8") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.8" ) ) ); //$NON-NLS-1$
     }
     finally
     {
