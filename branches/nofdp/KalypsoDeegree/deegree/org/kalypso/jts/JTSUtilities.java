@@ -115,7 +115,7 @@ public class JTSUtilities
   public static double pointDistanceOnLine( final LineString line, final Point point )
   {
     /* Check for intersection. */
-    if( point.distance( line ) >= 10E-08 )
+    if( point.distance( line ) >= 0.0001 )
       throw new IllegalStateException( "The point does not lie on the line ..." );
 
     /* The needed factory. */
@@ -132,7 +132,7 @@ public class JTSUtilities
 
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
-      if( point.distance( ls ) >= 10E-08 )
+      if( point.distance( ls ) >= 0.0001 )
         continue;
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
@@ -873,7 +873,7 @@ public class JTSUtilities
     return factory.createLineString( coordinates.toArray( new Coordinate[] {} ) );
   }
 
-  public static Polygon cleanPolygon( Polygon poly )
+  public static Polygon cleanPolygonInteriorRings( Polygon poly )
   {
     GeometryFactory factory = new GeometryFactory();
 
@@ -905,4 +905,69 @@ public class JTSUtilities
 
     return poly;
   }
+
+  public static Polygon[] cleanPolygonExteriorRing( Polygon poly )
+  {
+    throw new NotImplementedException();
+
+// List<Polygon> myPolygons = new ArrayList<Polygon>();
+// List<Coordinate> uniqueCoordinates = new ArrayList<Coordinate>();
+//
+// LineString ring = poly.getExteriorRing();
+// Coordinate[] coordinates = ring.getCoordinates();
+//
+// // idea: fill uniqueCoordinates and look if coordinate from coordinates exists in unique
+// for( int i = 0; i < coordinates.length - 1; i++ )
+// {
+// Coordinate coordinate = coordinates[i];
+//
+// final int listIndex = hasCoordinate( uniqueCoordinates.toArray( new Coordinate[] {} ), coordinate );
+//
+// if( listIndex >= 0 )
+// {
+// // TODO create child polygons from poly and remove points of child polygon from list
+//
+// // Math.abs(index -i) > 1?
+// if( Math.abs( listIndex - i ) == 1 )
+// continue;
+// else
+// {
+// List<Coordinate> subCoordinates = new ArrayList<Coordinate>();
+// Coordinate[] unique = uniqueCoordinates.toArray( new Coordinate[] {} );
+//
+// for( int sub = listIndex; sub < unique.length; sub++ )
+// {
+// subCoordinates.add( unique[sub] );
+//
+// // @hack "shift-remove"
+// uniqueCoordinates.remove( listIndex );
+// }
+// subCoordinates.add( coordinate );
+//
+// int asdfasfasdfd = 0;
+// int asdfasfd = 0;
+// }
+//
+// }
+// else
+// uniqueCoordinates.add( coordinate );
+//
+// }
+//
+// return new Polygon[] { poly };
+  }
+
+  private static int hasCoordinate( Coordinate[] list, Coordinate coordinate )
+  {
+    for( int i = 0; i < list.length; i++ )
+    {
+      Coordinate c = list[i];
+
+      if( coordinate.distance( c ) < 0.001 )
+        return i;
+    }
+
+    return -1;
+  }
+
 }
