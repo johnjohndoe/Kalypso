@@ -24,7 +24,7 @@
 <mapEntry key="eclipse.running" value="true"/>
 <mapEntry key="org.eclipse.ant.ui.ATTR_ANT_PROCESS_ID" value="1131977110423"/>
 <mapEntry key="eclipse.connect.port" value="1482"/>
-<mapEntry key="eclipse.home" value="c:\Programme\eclipse3.0"/>
+<mapEntry key="eclipse.home" value="${eclipse_home}"/>
 <mapEntry key="workspace" value="${workspace_loc}"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="pdf,"/>
