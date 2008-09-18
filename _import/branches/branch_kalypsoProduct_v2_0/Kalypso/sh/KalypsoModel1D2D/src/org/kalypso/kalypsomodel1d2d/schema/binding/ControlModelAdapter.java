@@ -43,7 +43,7 @@ public class ControlModelAdapter implements IModelAdaptor
   public CommandableWorkspace adapt( final CommandableWorkspace workspace )
   {
     final Object property = workspace.getRootFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
-    if( property != null )
+    if( property != null && property.equals( VERSION_1_0 ))
     {
       // no need to adapt any other models than those without the version property
       return workspace;
