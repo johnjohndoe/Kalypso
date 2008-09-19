@@ -235,7 +235,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         }
         catch( final Throwable e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          IFile myFile = file;
+
+          final String msg = String.format( "Could not load map \"%s\"", file.getName() );
+          final IStatus status = StatusUtilities.statusFromThrowable( e, msg ); //$NON-NLS-1$ //$NON-NLS-2$
           setStatus( status );
           return status;
         }
