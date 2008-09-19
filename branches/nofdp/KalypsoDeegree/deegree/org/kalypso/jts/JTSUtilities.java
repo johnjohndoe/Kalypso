@@ -888,7 +888,7 @@ public class JTSUtilities
 
       Polygon innerPolygon = factory.createPolygon( ring, null );
       double area = innerPolygon.getArea();
-      if( area > 0.001 )
+      if( area > 0.1 )
       {
         myInnerRings.add( ring );
       }
@@ -956,18 +956,4 @@ public class JTSUtilities
 //
 // return new Polygon[] { poly };
   }
-
-  private static int hasCoordinate( Coordinate[] list, Coordinate coordinate )
-  {
-    for( int i = 0; i < list.length; i++ )
-    {
-      Coordinate c = list[i];
-
-      if( coordinate.distance( c ) < 0.001 )
-        return i;
-    }
-
-    return -1;
-  }
-
 }
