@@ -17,7 +17,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/we_3.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_01_Steuerparameter.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -81,7 +81,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/we_4.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_02_Ombrometer.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -93,7 +93,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/wizard/sachsen/we_4a.png" scale="40" />
+          <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_03_Gebietsniederschlag.png" scale="40" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -144,7 +144,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/we_7.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_04_Berechnung.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
@@ -243,7 +243,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/wizard/sachsen/we_schema1.png" scale="50" />
+          <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_05_Modellschema.png" scale="50" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -265,7 +265,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/we_9.png" scale="40" />
+            <imagedata fileref="img/wizard/sachsen/Assi_WeissElst_06_Ergebnisse.png" scale="40" />
           </imageobject>
         </mediaobject>
       </screenshot>
