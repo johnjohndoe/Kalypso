@@ -55,7 +55,15 @@ LI{
  padding: 2pt;
 }
 
+img{
+	/* Geht nicht für IE, brauchen wir aber wg. eclipse help*/
+	max-width: 100%;
+}
 
+span.guilabel{
+	font-weight: bold;
+	font-style: italic;
+}
 
 /* Colors links green, sets to bold, 8 point. */
 a {

@@ -13,7 +13,7 @@
     <title>Client</title>
 
     <indexterm>
-      <primary>Inatallation und Konfiguration</primary>
+      <primary>Installation und Konfiguration</primary>
 
       <secondary>Client</secondary>
     </indexterm>
@@ -29,79 +29,61 @@
         <tertiary>Systemvoraussetzungen</tertiary>
       </indexterm>
 
-      <para>Voraussetzung ist ein Ethernet-LAN.</para>
-
       <para>KALYPSO wurde in der Programmiersprache Java und unter Verwendung
       der Eclipse Plattform realisiert, so dass die Software prinzipiell auf
-      allen Systemen unter einer Java Runtime Umgebung (ab Version. 1.4) und
+      allen Systemen unter einer Java Runtime Umgebung (ab Version. 1.6) und
       der Eclipse Plattform einsetzbar ist. Um allerdings die volle
       Funktionalität nutzen zu können (Anstoßen des Grafikprogramms zum
       Editieren von Ergebnisdaten), ist der Einsatz der Software unter Windows
       NT/2000/XP zwingend.</para>
+      
+      <para>Für den Zugriff auf die Server Dienste ist ein Ethernet-LAN Voraussetzung, die Kommunikation erfolgt über Port 8080 (HTTP). 
+      Für den Datenaustausch mit dem Berechnungsdienst wird zusätzlich eine für Server und Client beschreibbare Dateifreigabe benötigt.</para>
+
+      <para>Für das Einrichten eines zentralen Modellverzeichnisses zum Ablegen archivierter Rechenvarianten wird eine weitere für den Client 
+      beschreibbare Dateifreigabe benötigt.</para>
     </section>
 
     <section>
       <title>Installation</title>
 
       <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
+        <primary>Installation und Konfiguration</primary>
 
         <secondary>Client</secondary>
 
         <tertiary>Installation</tertiary>
       </indexterm>
 
-      <para>Die Installation der Client-Anwendung besteht aus zwei
-      Bausteinen:</para>
+      <para>Die Installation der Client-Anwendung besteht aus:</para>
 
       <itemizedlist>
         <listitem>
-          <para>der Rich-Client-Plattform von Eclipse (Eclipse-Plattform) +
-          spezifische Plugins der Eclipse SDK</para>
+          <para>Client.zip: Basisapplikation, basierend auf Eclipse, inklusive aktuelle Java Version (Sun JDK 1.6)</para>
         </listitem>
 
         <listitem>
-          <para>den KALYPSO-Plugins und KALYPSO-Features.</para>
+          <para>Client_plugins.zip: Kalypso plug-ins inklusive benötigter Eclipse plug-ins</para>
+        </listitem>
+
+        <listitem>
+          <para>Client_plugins_i10n.zip: Internationalisierung der verwendeten Eclipse plug-ins</para>
         </listitem>
       </itemizedlist>
 
-      <para>Für eine durchgängig deutsche Benutzeroberfläche muss zusätzlich
-      noch die Internationalisierung der Eclipse-Plattform (sog.
-      Language-Packs) installiert werden.</para>
-
-      <para>Alle benötigten Dateien liegen als ZIP-Archive vor. Die
-      Installation erfordert lediglich das Entpacken der Archive. Hierzu wird
-      die Eclipse-Plattform an einen beliebigen Ort (auch eine Installation in
-      einem Netzwerkpfad ist möglich) entpackt und die beiden weiteren
+      <para>Die Installation erfolgt durch das Entpacken der Archive. Hierzu wird
+      die Basisapplikation an einen beliebigen Ort entpackt und die weiteren
       Bausteine in die entsprechenden Unterverzeichnisse kopiert.</para>
 
-      <para>Da KALYPSO aus der Basis Eclipse-Plattform, zusätzlichen Features
-      und Plugins für KALYPSO selbst und der Internationalisierung besteht,
-      empfiehlt es sich, das Installationsverzeichnis zu unterteilen. Dies
-      wird durch den so genannten Links- und Extensionmechanismus von Eclipse
-      unterstützt.</para>
+	  <para>Für eine zentrale Installation kann die Installation auf einem Dateiserver erfolgen. Der Zugriff muss über eine Netzwerkplatte 
+	  (nicht über einen UNC-Pfad) erfolgen. Das Programmverzeichnis wird auf dem Dateiserver einmalig über den Aufruf
+	  <programlisting>kalypso.exe -initialize</programlisting> durch den Administrator initalisiert. Das Programmverzeihnis sollte dann für normale Benutzer 
+	  nicht beschreibbar sein. Neben dem Arbeitsverzeichnis, siehe unten, wird in diesem Fall eine lokale Konfiguration unter 
+	  <filename>.eclpse</filename> im Anwenderverzeichnis abgelegt.</para>  
 
-      <para>Vorgehensweise: Verzeichnis 'links' im Verzeichnis
-      <filename>eclipse</filename> erstellen. Dort für jede Erweiterung
-      (<abbrev>z. B.</abbrev> die Language-Packs, oder KALYPSO, usw.) eine
-      Link-Datei erstellen mit Namen des entsprechenden Features (aber ohne
-      ID-Teil '_X.Y.Z') und mit folgendem Aufbau: <programlisting>path=... (mit Forwardslashes '/' getrennt).</programlisting>Der
-      Pfad muss zu dem Verzeichnis führen, in dem die Features und Plugins zu
-      finden sind. Allerdings ist zu beachten, dass in diesem Verzeichnis
-      dieselbe Verzeichnisstruktur wie im ursprünglichen Eclipse-Verzeichnis
-      erforderlich ist (features, plugins und .eclipseextension). Zusätzlich
-      muss im Eclipse-Verzeichnis der Erweiterung eine Datei namens
-      <filename>.eclipseextension</filename> erstellt werden.</para>
-
-      <para>Siehe hierzu auch die Eclipse-Onlinehilfe, unter:</para>
-
-      <para><guilabel>Platform Plugin Dev Guide\Reference\Other reference
-      information\How to write an Eclipse installer</guilabel></para>
-
-      <para><guilabel><!--Folien zur Installation (Verzeichnisstruktur) aus der Schulung--></guilabel><!--PROFILING ANGANG sachsen-anhalt--></para>
-
+      <!--PROFILING ANFANG sachsen-anhalt-->
       <para vendor="sachsen-anhalt">Beispiel (Installation im HVZ in
-      Magdeburg): <programlisting>\\smdhvzwapp\KalypsoClient\
+      Magdeburg):<programlisting>\\smdhvzwapp\KalypsoClient\
         .eclipseproduct
         features
         plugins
@@ -112,52 +94,42 @@
         extensions\&lt;extension-name&gt;\eclipse\plugins</programlisting> Wie
       aus dem Beispiel ersichtlich, kann die KALYPSO-Client Installation
       zentral vorgenommen werden. Dies ist der Fall in Magdeburg und in
-      Halle.<!--PROFILING ENDE sachsen-anhalt--></para>
+      Halle.</para>
+	<!--PROFILING ENDE sachsen-anhalt-->
 
       <para>Auf jeden Client-Rechner muss nur noch das Datenverzeichnis (sog.
-      Workspace) und die KALYPSO-Verknüpfung kopiert werden. Die Verknüpfung
-      soll auf die EXE-Datei in der zentralen Installation verweisen,
-      allerdings über den Pfad der Freigabe. Die Freigabe selbst muss
-      angepasst werden, sodass nur Lese-Berechtigungen für
-      <quote>Jede(r)</quote> erteilt werden.</para>
-
-      <para>Die Verknüpfung hat folgenden Aufbau:</para>
-
-      <programlisting>\\FREIGABE\...\eclipse.exe -data WORKSPACE -vmargs -Xmx512m</programlisting>
-
+      Workspace) festgelegt werden. Hierzu wird eine Verknüpfung eingerichtet, welche auf die zentrale Installation
+      verweist und als Argument den Pfad auf das Datenverzeichnis enthält:
+      <programlisting>T:\...\kalypso.exe -data WORKSPACE -vmargs -Xmx512m -XX:MaxPermSize=128M</programlisting>
+	  </para>
+	  
       <para><itemizedlist>
           <listitem>
-            <para>FREIGABE ist durch die auf dem Server definierte Freigabe zu
-            ersetzen.</para>
+            <para>T: ist das freigegebene Netzwerklaufwerk</para>
           </listitem>
 
           <listitem>
-            <para>WORKSPACE ist durch den lokalen Pfad des Datenverzeichnisses
-            zu ersetzen.</para>
+            <para>WORKSPACE: ist durch den lokalen Pfad des Datenverzeichnisses zu ersetzen.</para>
           </listitem>
-        </itemizedlist></para>
 
-      <para>Zusätzlich zu dem Datenverzeichnis erstellt KALYPSO automatisch
-      temporäre Dateien im <filename>.eclipse</filename>-Verzeichnis im
-      Homeverzeichnis des aktuellen Benutzers. Bei Start-Problemen von KALYPSO
-      werden dort Log-Dateien abgelegt.</para>
+          <listitem>
+            <para>vmargs: Vorgaben für das Speichermanagement von Java </para>
+          </listitem>
+        </itemizedlist>
+      </para>
 
-      <para>Eine Übersicht über die vorliegende Client Installation findet
+      <!--PROFILING ANFANG sachsen-anhalt-->
+      
+      <para vendor="sachsen-anhalt">Eine Übersicht über die vorliegende Client Installation findet
       sich in <xref linkend="tab_install_client_overview" />.</para>
-
-      <!--PROFILING ANGANG sachsen-anhalt-->
-
       <table id="tab_install_client_overview" vendor="sachsen-anhalt">
         <title>Installationspfade und Freigaben der Client
         Installation</title>
 
         <tgroup cols="4">
           <colspec align="left" colwidth="1*" />
-
           <colspec align="left" colwidth="2*" />
-
           <colspec align="left" colwidth="2*" />
-
           <colspec align="left" colwidth="2*" />
 
           <thead>
@@ -196,49 +168,6 @@
         </tgroup>
       </table>
 
-      <!--PROFILING ANGANG sachsen-->
-
-      <table id="tab_install_client_overview" vendor="sachsen">
-        <title>Installationspfade und Freigaben der Client
-        Installation</title>
-
-        <tgroup cols="3">
-          <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" colwidth="2*" />
-
-          <colspec align="left" colwidth="2*" />
-
-          <thead>
-            <row>
-              <entry align="center">Rechner</entry>
-
-              <entry align="center">Installationspfad</entry>
-
-              <entry align="center">Freigabe</entry>
-            </row>
-          </thead>
-
-          <tbody>
-            <row>
-              <entry>LFUG-KV-01</entry>
-
-              <entry><filename>D:/Programme/client</filename></entry>
-
-              <entry><filename>//lfug-kv-01/client</filename></entry>
-            </row>
-
-            <row>
-              <entry>LFUG-KV-02</entry>
-
-              <entry><filename>D:/Programme/client</filename></entry>
-
-              <entry><filename>//lfug-kv-01/client</filename></entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
-
       <!--PROFILING ENDE-->
     </section>
 
@@ -246,93 +175,151 @@
       <title>Konfiguration</title>
 
       <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
+        <primary>Installation und Konfiguration</primary>
         <secondary>Client</secondary>
-
         <tertiary>Konfiguration</tertiary>
       </indexterm>
 
-      <para>Beim ersten Start von KALYPSO kann es sein, dass die Konfiguration
-      noch nicht vollständig ist. Dies hängt vom Eintrag in den
-      Benutzervorgaben ab. Mehr dazu im Laufe dieses Abschnitts.</para>
+	  <para>Die Konfiguraton des Kalypso Clients erfolgt an zentraler Stelle über die
+	  Datei <filename>configuration/config.ini</filename> innerhalb der Installation. 
+	  Die Konfiguration legt unter anderem die URL des Kalypso Server fest. Bei Konfiguration eines
+	  redundant ausgelegten System mit zwei Servern ist zumindest das Anlegen zweier Konfigurationen
+	  notwendig.</para>
 
-      <para>Wichtig für jeden Client ist der Speicherort der zentralen
-      Konfigurationsdatei in Form einer oder mehrerer URLs. Pro Client kann
-      eine Liste von alternativen Konfigurationsdateien eingestellt werden,
-      die solange abgearbeitet wird, bis eine passende Konfigurationsdatei
-      gefunden wurde. Jede Konfigurationsdatei entspricht dabei im Normalfall
-      einem (physischen) Server.</para>
-
-      <para>Die Konfigurationsdatei <filename>kalypso-Client.ini</filename>
-      liegt auf dem KALYPSO-Server in der WebDAV-Webapplikation. Diese
-      Webapplikation wird standardmäßig mit Tomcat geliefert und bietet eine
-      auf HTTP basierende standardisierte Verzeichnisablage.</para>
-
-      <para>Die konkrete Ablage der Konfigurationsdatei für die bestehende
-      Installation findet sich in <xref
-      linkend="tab_install_client_kalypsoclientini" />.</para>
-
+	  <para>In <xref linkend="tab_client_config_ini"></xref> sind die von Kalypso definierten
+	  Konfigurationsparameter aufgelistet. Darüber hinaus enthlt die Datei Parameter des Basissystems Eclipse, 
+	  diese sind in der Eclipse Online Hilfe unter dem Stichpunkt <filename>Eclipse Runtime Options</filename>
+	  dokumentiert.      
+	  </para>
+      
       <!--PROFILING ANFANG - ROW-basiert-->
+      <table id="tab_client_config_ini" vendor="sachsen;sachsen-anhalt">
+        <title>Konfigurationsparameter - Client</title>
 
-      <table id="tab_install_client_kalypsoclientini" vendor="">
-        <title>Ablage der Konfigurationsdatei</title>
-
-        <tgroup cols="2">
+        <tgroup cols="3">
           <colspec align="left" colwidth="1*" />
-
+          <colspec align="left" colwidth="1*" />
           <colspec align="left" colwidth="3*" />
 
           <thead>
             <row>
-              <entry align="center">Standort</entry>
-
-              <entry align="center">URL</entry>
+              <entry align="center">Parameter</entry>
+              <entry align="center">Typ</entry>
+              <entry align="center">Beschreibung</entry>
             </row>
           </thead>
 
           <tbody>
-            <row vendor="sachsen-anhalt">
-              <entry>Magdeburg</entry>
-
-              <entry><filename><filename>http://smdhvzwapp:8088/webdav/kalypso-client.ini</filename></filename></entry>
+            <row>
+              <entry>kalypso.hwv.prognose.dir</entry>
+              <entry>Verzeichnispfad (UNC möglich)</entry>
+              <entry>Dateipfad auf die zentral gespeicherten Prognosemodelle. Die hier gespeicherten Modelle
+              werden bei jedem Aufruf des Vorhersageassistenten in das lokale Arbeitsverzeichnis kopiert.
+              Archiviert Rechenvarianten werden im Unterverzeichnis <filename>.prognose</filename> abgelegt.                
+              </entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.modellist.url</entry>
+              <entry>URL</entry>
+              <entry>Ort der Konfigurationsdatei der Startseite. Legt die Auswahl der Modelle fest.</entry>
+            </row>
+            <row>
+              <entry>kalypso.ask_for_pool_save</entry>
+              <entry>boolean</entry>
+              <entry>Legt fest, ob beim Schließen ungespeicherter Daten ein Speicherdialog angezeigt wird.</entry>
+            </row>
+            <row>
+              <entry>kalypso.timezone</entry>
+              <entry>Zeitzone</entry>
+              <entry>Legt die globale Zeitzone durch Darstellung von Datumswerten fest. Siehe auch <programlisting>java.util.TimeZone</programlisting></entry>
+            </row>
+            <row>
+              <entry>kalypso.timeseries.properties</entry>
+              <entry>URL</entry>
+              <entry>Ort der Zeitreihen-Konfigurationsdatei. Legt z.B. Standardfarben oder Achsenbeschriftungen fest.</entry>
+            </row>
+            <row>
+              <entry>org.kalypso.service.wps.service</entry>
+              <entry>URL</entry>
+              <entry>Endpoint des WebProcessingService (WPS). Der WPS stellt eine Reihe von Server-Diensten zur Verfügung, u.a. den 
+              Berechnungsdienst.</entry>
+            </row>
+            <row>
+              <entry>org.kalypso.service.wps.input</entry>
+              <entry>Verzeichnispfad (UNC möglich)</entry>
+              <entry>Zentrale Eingabedaten für den WPS. Unter diesem Pfad stellt der Client temporäre Eingangsdaten 
+              für den WPS bereit. Siehe auch die Server-Konfiguration.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.user.service.id</entry>
+              <entry>WPS-ID</entry>
+              <entry>ID des WPS Prozesses zur Anfrage der Benutzerauthentifizierung.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.user.askUserName</entry>
+              <entry>boolean</entry>
+              <entry>Legt fest, ob beim Login-Dialog eine Eingabe des Benutzernamens möglich ist. Bei false wird 
+              automatisch der Windows-Benutzername angenommen.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.user.scenarioIdList</entry>
+              <entry>String</entry>
+              <entry>Strichpunkt getrennte Liste der möglichen Szenarien.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.user.scenarioIniList</entry>
+              <entry>URL</entry>
+              <entry>Strichpunkt getrennte Liste der Konfigurationsdateien je Szenario. Muss der id-Liste entsprechen.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.document.service.id</entry>
+              <entry>WPS-ID</entry>
+              <entry>ID des WPS Prozesses zur Berichtsablage.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.document.service.client.gml</entry>
+              <entry>URL</entry>
+              <entry>Vorlagendatei für Metadaten der Berichtsablage.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.document.service.client.gft</entry>
+              <entry>URL</entry>
+              <entry>Vorlagendatei zur Darstellung der Metadaten der Berichtsablage.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.observation.service.client.wsdl.location</entry>
+              <entry>URL</entry>
+              <entry>Service-Endpoint des WSDL-basierten Zeitreihendienstes.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.raster.database.get.entries</entry>
+              <entry>WPS-ID</entry>
+              <entry>ID des WPS Prozesses der Raster-Datenbank: Methode <quote>getEntries</quote></entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.raster.database.process.timeseries</entry>
+              <entry>WPS-ID</entry>
+              <entry>ID des WPS Prozesses der Raster-Datenbank: Methode <quote>processTimeseries</quote></entry>
             </row>
 
-            <row vendor="sachsen-anhalt">
-              <entry>Halle</entry>
-
-              <entry><filename>http://shalhvzwapp:8088/webdav/kalypso-client.ini</filename></entry>
-            </row>
-
-            <row vendor="sachsen">
-              <entry>LFUG-KV-01</entry>
-
-              <entry><filename><filename>http://lfug-kv-01:8080/webdav/kalypso-client.ini</filename></filename></entry>
-            </row>
-
-            <row vendor="sachsen">
-              <entry>LFUG-KV-02</entry>
-
-              <entry><filename>http://lfug-kv-02:8080/webdav/kalypso-client.ini</filename></entry>
-            </row>
           </tbody>
         </tgroup>
       </table>
-
       <!--PROFILING ENDE-->
 
-      <para>Nach dem ersten Start muss KALYPSO konfiguriert werden, da die
-      Konfigurations-URL in den Einstellungen fehlt. Um dies zu erreichen,
-      muss die Konfiguration unter <menuchoice>
+	 <para>Neben der zentralen Konfiguration können individuelle Benutzereinstellungen innerhalb
+	 des Programms unter  
+	 <menuchoice>
           <guimenu>Fenster</guimenu>
-
           <guisubmenu>Benutzervorgaben</guisubmenu>
-
           <guimenuitem>Kalypso</guimenuitem>
-        </menuchoice> angepasst werden. Eine Umstellung zwischen beiden
-      Standorten ist somit jederzeit möglich, es genügt, diese Einstellung
-      anzupassen. Ein Neustart des KALYPSO-Clients ist dabei nicht
-      erforderlich.</para>
+        </menuchoice> angepasst werden. Hier sind besonders die folgenden beiden Punkte auf der Seite 
+        <guimenu>Kalypso</guimenu> anzumerken:
+        <itemizedlist>
+        	<listitem>Globales Koordinatensystem: alle Kartendarstellungen erfolgen in der angegebenen Projektion, </listitem>
+        	<listitem>Zeitzone für die Darstellung: die Darstellung von Datums- oder Zeitwerten erfolgt in der angegebenen Zeitzone.</listitem>
+        </itemizedlist>
+      </para>
     </section>
   </section>
 
@@ -340,8 +327,7 @@
     <title>Server</title>
 
     <indexterm>
-      <primary>Inatallation und Konfiguration</primary>
-
+      <primary>Installation und Konfiguration</primary>
       <secondary>Server</secondary>
     </indexterm>
 
@@ -353,10 +339,8 @@
       <title>Systemvoraussetzungen</title>
 
       <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
+        <primary>Installation und Konfiguration</primary>
         <secondary>Server</secondary>
-
         <tertiary>Systemvoraussetzungen</tertiary>
       </indexterm>
 
@@ -368,33 +352,56 @@
 
       <para>Aufgrund der Programmierung der KALYPSO-Dienste in der
       Programmiersprache Java, ist die Software auf allen Systemen, die eine
-      Java Runtime Umgebung (ab Version 1.4.2) unterstützen,
+      Java Runtime Umgebung (ab Version 1.6) unterstützen,
       einsetzbar.</para>
 
       <para>Die Modell-Plugins und deren Rechenkerne stellen ggf. spezielle
       Anforderungen an die Laufzeitumgebung (DOS-Programm o.ä.).</para>
+      
+      <para>Für den Zugriff der Clients auf die Server Dienste ist ein Ethernet-LAN Voraussetzung, die Kommunikation erfolgt über Port 8080 (HTTP). 
+      Für den Datenaustausch mit dem Berechnungsdienst wird zusätzlich eine für Server und Client beschreibbare Dateifreigabe benötigt.</para>
     </section>
 
     <section>
-      <title>Dateistruktur der Installation</title>
+      <title>Installation</title>
 
       <indexterm>
         <primary>Inatallation und Konfiguration</primary>
-
         <secondary>Server</secondary>
-
-        <tertiary>Dateistruktur der Installation</tertiary>
+        <tertiary>Installation</tertiary>
       </indexterm>
 
-      <para>In <xref linkend="pic_install_Dateistruktur" /> ist die
-      Verzeichnisstruktur einer Serverinstallation beispielhaft zu
-      sehen.</para>
+      <para>Die Installation der Server-Anwendung besteht aus:</para>
 
-      <figure id="pic_install_Dateistruktur">
+      <itemizedlist>
+        <listitem>
+          <para>Tomcat6.0.18.zip: Tomcat Applikationsserver, inklusive aktueller Java Version (Sun JDK 1.6)</para>
+        </listitem>
+
+        <listitem>
+          <para>bridge.zip: Kalypso-Basiswebapplikation (Eclipse Equinox Bridge)</para>
+        </listitem>
+
+        <listitem>
+          <para>Service_plugins.zip: Plug-ins der Kalypso-Dienste</para>
+        </listitem>
+
+        <listitem>
+          <para>Prognose.zip: Aktueller Stand der Prognosemodelle</para>
+        </listitem>
+      </itemizedlist>
+
+	  <para>Die Installation erfolgt durch das Entpacken der Archive. Hierzu wird
+      die Basisapplikation an einen beliebigen Ort entpackt und die weiteren
+      Bausteine in die entsprechenden Unterverzeichnisse kopiert.</para>
+
+      <para >In <xref linkend="pic_install_Dateistruktur" /> ist die
+      Verzeichnisstruktur einer Serverinstallation beispielhaft zu sehen.</para>
+
+      <figure id="pic_install_Dateistruktur" >
         <title>Abbildung Dateistruktur</title>
 
         <!--PROFILING ANFANG sachsen-anhalt-->
-
         <mediaobject vendor="sachsen-anhalt">
           <imageobject>
             <imagedata fileref="img/kap3/Dateistruktur_Installation.png" />
@@ -402,83 +409,22 @@
         </mediaobject>
 
         <!--PROFILING ANFANG sachsen-->
-
         <mediaobject vendor="sachsen">
           <imageobject>
             <imagedata fileref="img/installation/sachsen/dirstruktur_lfug_kv.png" />
           </imageobject>
         </mediaobject>
+      <!--PROFILING ENDE-->
       </figure>
 
-      <!--PROFILING ANFANG sachsen-->
+	  <para>Zur Laufzeit erzeugt die Server-Anwendung verschiedene temporäre Dateien. Der Ablageort dieser Dateien
+	  wird über die Konfiguration des Servers festgelegt. Es empfiehlt sich, die temporären Dateien ausserhalb des
+	  Installationsverzeichnis an einer zentralen Stelle abzulegen und regelmässig zu löschen.</para>
 
-      <!--Aufzählung machen, nur von welchen der folgenden Punkten genau? (sieht im PDF komisch aus)-->
 
-      <para>Im Verzeichnis j2sdk1.4.2_06 wird das JDK 1.4.2
-      installiert.</para>
-
-      <para>Tomcat 5.0.28 wird im Verzeichnis Tomcat5.0 installiert.</para>
-
-      <para>Das bin-Verzeichnis beinhaltet u.a. die Startskripts um Tomcat zu
-      starten (optional in Debugmodus). Normalerweise wird aber Tomcat als
-      Betriebssystem-Dienst konfiguriert und auch gestartet.</para>
-
-      <para>Im webapps-Verzeichnis werden die KALYPSO-Dienste und die mit
-      Tomcat gelieferten Applikationen <filename>balancer</filename>,
-      <filename>ROOT</filename> und <filename>webdav</filename>
-      installiert.</para>
-
-      <para>Die WebDAV-Applikation stellt ihren verzeichnisbasierten Inhalt
-      über das HTTP-Protokoll zur Verfügung und wird von KALYPSO für
-      verschiedene Zwecke benutzt:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>prognose: beinhaltet die serverseitige Modellablage.</para>
-        </listitem>
-
-        <listitem>
-          <para>schemata: beinhaltet spezielle XML-Schemata, die vom
-          KALYPSO-Client benutzt werden.</para>
-        </listitem>
-
-        <listitem>
-          <para>srcvonf: beinhaltet die Konfigurationsdateien für die KALYPSO
-          Webdienste.</para>
-        </listitem>
-
-        <listitem>
-          <para>vorhersageconf: beinhaltet Konfigurationsdateien für die
-          KALYPSO Vorhersageassistenten.</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Wenn Tomcat und die KALYPSO-Dienste ausgeführt werden, entsteht im
-      logs-Verzeichnis die Datei <filename>Kalypso.log</filename>, welche
-      wichtige Information über den Ablauf beinhaltet. Daraus lassen sich u.a.
-      Probleme mit der Software feststellen.</para>
-
-      <para>Das temp-Verzeichnis sollte ab und zu geprüft und eventuell
-      geleert werden. Dort werden temporäre Dateien wie <abbrev>z. B.</abbrev>
-      dienstspezifische Log-Dateien abgespeichert.</para>
-
-      <para>Die anderen Verzeichnisse sind Tomcat-spezifisch, mehr
-      Informationen dazu können in der Tomcat-Hilfe gefunden werden.</para>
-    </section>
-
-    <section>
-      <title>Freigaben</title>
-
-      <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
-        <secondary>Server</secondary>
-
-        <tertiary>Freigaben</tertiary>
-      </indexterm>
-
-      <para>Der Systemadministrator muss folgende Dateifreigaben auf dem
-      Server konfigurieren:</para>
+		<!--  TODO TODO TODO -->
+      <para>Die folgenden Pfade und Freigaben müssen vor dem Start des Kalypso Servers 
+      eingerichtet werden:</para>
 
       <!--PREOFILING ANFANG sachsen-anhalt-->
 
@@ -487,17 +433,13 @@
 
         <tgroup cols="3">
           <colspec align="left" colwidth="2*" />
-
           <colspec align="left" colwidth="3*" />
-
           <colspec align="left" colwidth="3*" />
 
           <thead>
             <row>
               <entry align="center">Freigabe</entry>
-
               <entry align="center">Pfad (relativ zu )</entry>
-
               <entry align="center">Beschreibung</entry>
             </row>
           </thead>
@@ -505,9 +447,7 @@
           <tbody>
             <row>
               <entry>Kalypso-modelle</entry>
-
               <entry><filename>D:/Programme/Kalypso/webapps/webdav/prognose</filename></entry>
-
               <entry>Lese- und Schreibrechte für <quote>Jeder</quote>.
               Modelldaten werden auf diese Art und Weise zwischen Clients und
               Server ausgetauscht.</entry>
@@ -515,9 +455,7 @@
 
             <row>
               <entry>KalypsoClient</entry>
-
               <entry><filename>D:/Programme/KalypsoClient</filename></entry>
-
               <entry>Leserechte für <quote>Jeder</quote>. Ablage der zentralen
               Client-Installation.</entry>
             </row>
@@ -532,39 +470,73 @@
 
         <tgroup cols="3">
           <colspec align="left" colwidth="1*" />
-
-          <colspec align="left" colwidth="3*" />
-
-          <colspec align="left" colwidth="3*" />
+          <colspec align="left" colwidth="2*" />
+          <colspec align="left" colwidth="1*" />
+          <colspec align="left" colwidth="2*" />
 
           <thead>
             <row>
+              <entry align="center">Pfad</entry>
+              <entry align="center">Bedeutung</entry>
               <entry align="center">Freigabe</entry>
-
-              <entry align="center">Pfad (relativ zu )</entry>
-
-              <entry align="center">Beschreibung</entry>
+              <entry align="center">Berechtigung</entry>
             </row>
           </thead>
 
           <tbody>
             <row>
-              <entry>prognose$</entry>
-
-              <entry><filename>//lfug-kv-01/d/Programme/kalypso/Tomcat5.0/webapps/webdav/prognose</filename></entry>
-
-              <entry>Lese- und Schreibrechte für <quote>Jeder</quote>.
-              Modelldaten werden auf diese Art und Weise zwischen Clients und
-              Server ausgetauscht.</entry>
+              <entry><filename>D:\Programme\kalypso\client</filename></entry>
+              <entry>Programmverzeichnis Kalypso-Client</entry>
+              <entry><filename>client$</filename></entry>
+              <entry>Lesezugriff für alle Benutzer</entry>
             </row>
-
             <row>
-              <entry>client$</entry>
-
-              <entry><filename>//lfug-kv-01/d/Programme/kalypso/client</filename></entry>
-
-              <entry>Leserechte für <quote>Jeder</quote>. Ablage der zentralen
-              Client-Installation.</entry>
+              <entry><filename>D:\Programme\kalypso\prognose</filename></entry>
+              <entry> Verzeichnis der Prognosemodelle und archivierten Rechenvarianten</entry>
+              <entry><filename>prognose$</filename></entry>
+              <entry>Schreibrechte für alle Benutzer</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Programme\kalypso\Tomcat6.0.18</filename></entry>
+              <entry>Installation des Tomcat Webservers</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Programme\kalypso\dwd</filename></entry>
+              <entry>Speicherort der Datenbank für DWD-Raste</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Temp\kalypso</filename></entry>
+              <entry>Zentrales Verzeichnis für temporäre Dateien des Kalypso Service</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Temp\kalypso\wps</filename></entry>
+              <entry>Tempräre Dateien des !WebProcessingService</entry>
+              <entry><filename>wps$</filename></entry>
+              <entry>Schreibrechte für alle Benutzer</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Temp\kalypso\wps\inputs</filename></entry>
+              <entry>Vom Client übertragene Eingangsdateien</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Temp\kalypso\wps\results</filename></entry>
+              <entry>Ergebnisdaten des WPS</entry>
+              <entry>-</entry>
+              <entry>-</entry>
+            </row>
+            <row>
+              <entry><filename>D:\Programme\PSI\lhwz\dist\pgn</filename></entry>
+              <entry>Übergabeverzeichnis für DWD Daten</entry>
+              <entry>-</entry>
+              <entry>-</entry>
             </row>
           </tbody>
         </tgroup>
@@ -574,145 +546,209 @@
     </section>
 
     <section>
-      <title>Tomcat</title>
+      <title>Konfiguration Tomcat Applikationsserver</title>
 
       <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
+        <primary>Installation und Konfiguration</primary>
         <secondary>Server</secondary>
-
         <tertiary>Tomcat</tertiary>
       </indexterm>
 
-      <para>CATALINA_HOME bezeichnet das Installationsverzeichnis von
-      Tomcat.</para>
+	  <para>Die Basis-Konfiguration des Tomcat Applikationsserver besteht im Wesentlichen darin,
+	  diesen als Windows-Dienst anzumelden und diese Anmeldung zu Konfigurieren. Das Einrichten
+	  als Windows-Dienst ist notwendig, damit der Dienst nach Neustart des Servers
+      automatisch gestartet wird.</para>
+      
+      <para>Der Dienst wird durch Ausführen von <programlisting>bin/service.bat install</programlisting> 
+      auf der Kommandozeile installiert.</para>
+      
+      <para>Die Konfiguration des Dienstes erfolgt einmalig über das Hilfsprogramm <filename>bin/tomcat6w.exe</filename>. Folgenden 
+      Optionen müssen in diesem Konfigurationsdialog eingestellt werden:
+     <table id="tab_install_tomcat_service">
+       <title>Konfiguration des Tomcat-Dienstes</title>
 
-      <!--Die folgende Aufzählung sieht in PDF nicht gut aus... (taucht im weiteren Verlauf des Dokumentes auch immer wieder auf)-->
+       <tgroup cols="4">
+         <colspec align="left" colwidth="1*" />
+         <colspec align="left" colwidth="1*" />
+         <colspec align="left" colwidth="1*" />
+         <colspec align="left" colwidth="2*" />
 
-      <formalpara>
-        <title>Installation</title>
+         <thead>
+           <row>
+             <entry align="center">Register</entry>
+             <entry align="center">Option</entry>
+             <entry align="center">Einstellung</entry>
+             <entry align="center">Bemerkung</entry>
+           </row>
+         </thead>
 
-        <para>Tomcat (ab Version 5.0.28) installieren (Install-Programm
-        benutzen oder Dateien direkt kopieren). Abhängigkeiten: die libs
-        (*.jar) aus dem KalypsoServiceCore Projekt in CATALINA_HOME/common/lib
-        kopieren.</para>
-      </formalpara>
+         <tbody>
+           <row>
+             <entry>General</entry>
+             <entry>Display Name</entry>
+             <entry>-beliebig-</entry>
+             <entry>z.B. <quote>Tomcat Kalypso Prognosesystem</quote></entry>
+           </row>
 
-      <formalpara>
-        <title>manager.xml und admin.xml</title>
+		<row>
+             <entry></entry>
+             <entry>Startup type</entry>
+             <entry>Automatic</entry>
+             <entry></entry>
+           </row>
 
-        <para>Diese Dateien (in
-        <filename>CATALINA_HOME/conf/catalina/localhost</filename>) prüfen.
-        Der Gesamtpfad von Tomcat ist dort angeben. Pfad prüfen und so
-        anpassen, dass er mit dem tatsächlichen Pfad übereinstimmt. Dies ist
-        besonders relevant, wenn Tomcat manuell installiert wurde.</para>
-      </formalpara>
+           <row vendor="sachsen">
+             <entry>Log On</entry>
+             <entry>This Account</entry>
+             <entry>sm9</entry>
+             <entry></entry>
+           </row>
 
-      <formalpara>
-        <title>Sicherheitseinstellungen:</title>
+           <row vendor="sachsen">
+             <entry>Logging</entry>
+             <entry>Redirect Stdout</entry>
+             <entry>D:\Programme\kalypso\Tomcat6.0.18\logs\kalypso.log</entry>
+             <entry></entry>
+           </row>
 
-        <para>Die Datei <filename>catalina.policy</filename> editieren und die
-        Sicherheitseinstellungen anpassen (siehe das KalypsoConf-Projekt).
-        Java Permissions richtig setzen, u.a. für das definierte
-        Temp-Verzeichnis anpassen. Achtung: die Groß- /Kleinschreibung (siehe
-        Kommentar in Datei) ist relevant.</para>
-      </formalpara>
+           <row vendor="sachsen">
+             <entry></entry>
+             <entry>Redirect Stderror</entry>
+             <entry>D:\Programme\kalypso\Tomcat6.0.18\logs\kalypso.err</entry>
+             <entry></entry>
+           </row>
 
-      <formalpara>
-        <title>Tomcat starten:</title>
+           <row vendor="sachsen">
+             <entry>Java</entry>
+             <entry>Java Options</entry>
+             <entry></entry>
+             <entry>Ändern der System-Property <filename>java.io.tmpdir</filename> in <filename>D:/Temp/Kalypso</filename></entry>
+           </row>
 
-        <para>Sie können Tomcat über zwei Mechanismen starten: <itemizedlist>
-            <listitem>
-              <para>Mit Batch-Dateien: Die Batch-Dateien
-              <filename>Kalypso_server_start.bat</filename> und
-              <filename>Kalypso_server_stop.bat</filename> müssen mit dem Pfad
-              (entspr. der Freigabe) vom Temp-Verzeichnis angepasst
-              werden.</para>
-            </listitem>
+           <row vendor="sachsen">
+             <entry></entry>
+             <entry>Maximm Memory Pool</entry>
+             <entry>1024</entry>
+             <entry></entry>
+           </row>
+           
+         </tbody>
+       </tgroup>
+     </table>
+     
+     Abgesehen von diesen Änderungen müssen keine weiteren Anpassungen gegenüber der Standardeinstellung getätigt werden.
+      </para>
 
-            <listitem>
-              <para>Tomcat als Service einrichten und starten: Den Befehl
-              <filename>service.bat install</filename> aus dem Verzeichnis
-              <filename>CATALINA_HOME/bin</filename> ausführen. Die
-              notwendigen Parameter mittels Registry-Editor oder tomcat5w.exe
-              setzen. Die aktuelel Konfiguration findet sich in der Datei
-              <filename>TomcatService.reg</filename>. Diese kann zur einfachen
-              Installation in die Windows-Regitry reimportiert werden. Um
-              Zugriffe auf die UNC-Pfade zu erhalten, muss der Dienst unter
-              einem Domainenbenutzer gestartet werden.</para>
-            </listitem>
-          </itemizedlist></para>
-      </formalpara>
-    </section>
-
-    <section>
-      <title>Deployment der Dienste</title>
-
-      <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
-        <secondary>Server</secondary>
-
-        <tertiary>Deployment der Dienste</tertiary>
-      </indexterm>
-
-      <para vendor="sachsen-anhalt">Um die KALYPSO-Dienste deployen zu können,
-      ist das ANT-Skript im Verzeichnis
-      <filename>deployable-server-kunde</filename> im
-      KalypsoConfSachsenAnhalt-Projekt erforderlich.</para>
-
-      <para><filename>Kalypso-client.ini:</filename></para>
-
-      <para>In <filename>webapps/webdav</filename> ist die Datei
-      <filename>Kalypso-client.ini</filename> zwingend erforderlich. Sie wird
-      normalerweise beim Deploy über das ANT-Skript angelegt. Eine Überprüfung
-      des Dateiinhaltes ist ratsam, da die URLs mit den eingesetzten Services
-      übereinstimmen müssen.</para>
-
-      <para>Optional kann auch das KalypsoDWDFileCopyServlet aus dem
-      KalypsoDWD Projekt installiert werden. Dieser Dienst kopiert immer die
-      aktuelle DWD-Vorhersage aus dem IMS in das
-      <filename>webdav/dwd</filename> Verzeichnis. Damit steht die
-      DWD-Vorhersage für die KALYPSO-Clients zur Verfügung. Sie finden ein
-      ANT-Target in der <filename>build.xml</filename> im Projekt
-      <filename>KalypsoDWD</filename>, um die Servlet-Applikation zu
-      erstellen.</para>
+	  <para>Nach der Konfiguration kann der Dienst entweder über <filename>tomcat6w.exe</filename> (im Register <quote>General</quote>)
+	  oder über den Windows-Dienste Dialog gestartet werden.</para>
+      
+      <para>Nach dem Erstart (und im Fall von Problemen) sollte die Datei <filename>logs/kalpyos.log</filename> und die weiteren
+      im selben Verzeichnis abgelegten Dateien kontrolliert werden.</para> 
     </section>
 
     <section id="install-server_services_config">
-      <title>Konfiguration der KALYPSO-Server bzw. -Dienste</title>
+      <title>Konfiguration KALYPSO spezifisch</title>
 
       <indexterm>
-        <primary>Inatallation und Konfiguration</primary>
-
+        <primary>Installation und Konfiguration</primary>
         <secondary>Server</secondary>
-
         <tertiary>Konfiguration</tertiary>
       </indexterm>
 
-      <para>Der Server wird zusätzlich über folgende System-Properties
-      konfiguriert:</para>
+	  <para>Die KALYPSO spezifische Konfiguraton des Servers erfolgt an zentraler Stelle über die
+	  Datei <filename>Tomcat6.0.18/webapps/bridge/WEB-INF/eclipse/configuration/config.ini</filename> innerhalb der Installation. 
+	  </para>
 
-      <itemizedlist>
-        <listitem>
-          <para>Kalypso.server.tempdir: Pfad des Temp-Verzeichnis,</para>
-        </listitem>
+	  <para>In <xref linkend="tab_server_config_ini"></xref> sind die von Kalypso definierten
+	  Konfigurationsparameter aufgelistet. Darüber hinaus enthlt die Datei Parameter des Basissystems Eclipse, 
+	  diese sind in der Eclipse Online Hilfe unter dem Stichpunkt <filename>Eclipse Runtime Options</filename>
+	  dokumentiert.</para>
+      
+      <!--PROFILING ANFANG - ROW-basiert-->
+      <table id="tab_server_config_ini" vendor="sachsen;sachsen-anhalt">
+        <title>Konfigurationsparameter - Client</title>
 
-        <listitem>
-          <para>Kalypso.server.confdir: Pfad des
-          Konfigurationsverzeichnis.</para>
-        </listitem>
-      </itemizedlist>
+        <tgroup cols="3">
+          <colspec align="left" colwidth="1*" />
+          <colspec align="left" colwidth="1*" />
+          <colspec align="left" colwidth="3*" />
 
-      <para>Alle KALYPSO-Dienste benötigen die eben aufgelisteten
-      System-Properties (Pfade auf die Datenverzeichnisse). Zusätzlich muss in
-      der <filename>catalina.policy</filename> den entsprechenden Services
-      Zugriff auf diese Pfade und Properties gewährt werden.</para>
+          <thead>
+            <row>
+              <entry align="center">Parameter</entry>
+              <entry align="center">Typ</entry>
+              <entry align="center">Beschreibung</entry>
+            </row>
+          </thead>
 
-      <para>Das Setzen der System-Properties geschieht über eine spezielle
-      <filename>Kalypso_server_start.bat</filename> beim Start des
-      Applikation-Servers bzw. in den Registry-Einstellungen des
-      Tomcat-Dienstes, falls der Server als Dienst gestartet wird.</para>
+          <tbody>
+            <row>
+              <entry>org.kalypso.service.wps.service</entry>
+              <entry>URL</entry>
+              <entry>Endpoint des WebProcessingService (WPS). Der WPS stellt eine Reihe von Server-Diensten zur Verfügung, u.a. den 
+              Berechnungsdienst.</entry>
+            </row>
+            <row>
+              <entry>org.kalypso.service.wps.results</entry>
+              <entry>Verzeichnispfad (UNC möglich)</entry>
+              <entry>Ablageort der temporären Ergebnisdateien des WPS. Dieser Pfad muss auch von der Client Anwendung erreichbar sein.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.observation.service.configuration.location</entry>
+              <entry>URL</entry>
+              <entry>Basisverzeichnis der Konfiguration des Zeitreihendienstes.</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.raster.database.location</entry>
+              <entry>Verzeichnispfad (UNC möglich)</entry>
+              <entry>Speichertort der prozessierten DWD-Rasterdaten (<quote>Rasterdatenbank</quote>)</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.dwd.interval</entry>
+              <entry>Zeit (ms)</entry>
+              <entry>Abrufintervall der DWD-Rasterdaten</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.dwd.source</entry>
+              <entry>Verzeichnispfad (UNC möglich)</entry>
+              <entry>Quellverzeichnis der DWD-Rasterdaten</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.dwd.lmk</entry>
+              <entry>Dateimuster</entry>
+              <entry>Dateimuster (regulärer Audruck) der LMK-Dateien</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.dwd.lm2</entry>
+              <entry>Dateimuster</entry>
+              <entry>Dateimuster (regulärer Audruck) der LM2-Dateien</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.dwd.snow</entry>
+              <entry>Dateimuster</entry>
+              <entry>Dateimuster (regulärer Audruck) der SNOW-Dateien</entry>
+            </row>
+            <row>
+              <entry>kalypso.hwv.document.service.psidistdir</entry>
+              <entry>Relativer Pfad</entry>
+              <entry>Distributionspfad zur Ablage der Berichtsdokumente innerhalb der PSI Verzeichnisstruktur auf dem Server</entry>
+            </row>
+            <row>
+              <entry>kalypso.psi.at.properties</entry>
+              <entry>URL</entry>
+              <entry>Konfigurationsdatei zur Definition zusätzlicher Abflusstafeln</entry>
+            </row>
+            <row>
+              <entry>kalypso.psi.reinit</entry>
+              <entry>Zeitintervall (ms)</entry>
+              <entry>Reinitialisierungintervall der PSICompact-Schnittstelle. Nach Ablauf der angegebenen 
+              Zeit wird die Verbindng mit PSICompact neu aufgebaut.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <!--PROFILING ENDE-->
+      
     </section>
   </section>
 

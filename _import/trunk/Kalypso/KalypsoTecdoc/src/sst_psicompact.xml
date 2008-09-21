@@ -150,6 +150,11 @@
     <filename>catalina.policy</filename> beinhaltet einen speziellen Bereich
     für PSICompact (siehe <filename>catalina.policy</filename> im
     <filename>conf</filename>-Verzeichnis von Tomcat).</para>
+    
+    <para>Die Schnittstelle wird zur Laufzeit in regelmässigen Abständen verworfen, um den Neustart
+    des KALYPSO-Servers bei Neustart der PSI-Laufzeitumgebung zu vermeiden. Das Intervall der
+    Neuinitialisierung wird durch Setzen der System-Property <filename>kalypso.psi.reinit</filename> 
+    (in Millisekunden) definiert.</para>
   </section>
 
   <section>

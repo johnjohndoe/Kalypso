@@ -929,7 +929,7 @@
 
         <para>Der Prognoseteil des Gebietsniederschlags wird anhand der
         DWD-Rastervorhersagen des DWD ermittelt, wie in <xref
-        linkend="dwd-vorhersage" /> beschrieben. Die benötigte
+        linkend="rasterdb" /> beschrieben. Die benötigte
         Konfigurationsdatei zur Zuordnung der Rasterzellen zu den
         Modellzeitreihen liegt im Modell unter
         <filename>/KalypsoSpree/.model/dwd/dwdZmlConf.xml</filename>

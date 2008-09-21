@@ -9,6 +9,7 @@
 	<!ENTITY file_modelldaten SYSTEM "modelldaten.xml">
 	<!ENTITY file_zeitreihen SYSTEM "zeitreihen.xml">
 	<!ENTITY file_extras SYSTEM "extras.xml">
+	<!ENTITY file_dwd_raster SYSTEM "dwd_raster.xml">
 	<!ENTITY file_grafik SYSTEM "grafik.xml">
 
 	<!ENTITY file_sst_allg SYSTEM "sst_allg.xml">
@@ -40,6 +41,7 @@
 	&file_ansichtsvorlagen;
 	&file_modelldaten;
 	&file_zeitreihen;
+	&file_dwd_raster;
 	&file_extras;
 	&file_grafik;
 	
