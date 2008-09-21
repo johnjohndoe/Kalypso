@@ -136,7 +136,7 @@
                 <arg name="zmlTableTemplate" value=".templates/calcCase/wiz04_sortiertePolder.ott"/>
                 <!-- 
 			Diagramm -->
-                <arg name="timeserie1" value="nameColumn=name#nameString=Polderöffnung#linkColumn=ganglinie_zustand"/>
+                <arg name="timeserie1" value="nameColumn=name#nameString=Polderöffnung - %featureprop%#linkColumn=ganglinie_zustand"/>
         </page>
         <!-- Phase 2: Berechnung -->
         <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Berechnung" imageLocation="icons/calcwizard/kalypso32.gif">

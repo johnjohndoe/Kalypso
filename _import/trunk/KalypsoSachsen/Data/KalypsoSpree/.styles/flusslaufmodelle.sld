@@ -10,8 +10,6 @@
 				<Name>Flusslaufmodelle</Name>
 				<Rule>
 					<Name>Flusslaufmodelle</Name>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<PointSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -34,7 +32,7 @@
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
 						</Geometry>
-						<Label><ogc:PropertyName>Name</ogc:PropertyName>Name</Label>
+						<Label><ogc:PropertyName>Name</ogc:PropertyName></Label>
 						<Font>
 							<CssParameter name="font-family" />
 							<CssParameter name="font-color">#000000</CssParameter>
