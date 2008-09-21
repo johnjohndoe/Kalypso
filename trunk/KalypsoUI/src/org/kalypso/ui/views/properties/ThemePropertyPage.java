@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
@@ -92,7 +92,6 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     final Text text = new Text( composite, SWT.NONE );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setText( theme.getLabel() );
     text.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
@@ -101,6 +100,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
         setThemeName( name );
       }
     } );
+    text.setText( theme.getLabel() );
 
     return composite;
   }
