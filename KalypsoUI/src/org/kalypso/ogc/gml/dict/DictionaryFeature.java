@@ -224,7 +224,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
-  @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     return m_feature.getBoundedBy();
@@ -233,7 +232,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
    */
-  @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return m_feature.getDefaultGeometryPropertyValue();
@@ -242,7 +240,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
    */
-  @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return m_feature.getGeometryPropertyValues();
@@ -251,7 +248,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
    */
-  @Override
   public Feature getOwner( )
   {
     return m_feature.getOwner();
@@ -260,7 +256,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
    */
-  @Override
   public QName getQualifiedName( )
   {
     return m_feature.getQualifiedName();
@@ -269,7 +264,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
    */
-  @Override
   public void setEnvelopesUpdated( )
   {
     m_feature.setEnvelopesUpdated();
@@ -278,7 +272,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
-  @Override
   public void setFeatureType( IFeatureType ft )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -287,7 +280,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
-  @Override
   public void setId( String fid )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
@@ -312,7 +304,6 @@ public class DictionaryFeature implements Feature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
-  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_feature );
