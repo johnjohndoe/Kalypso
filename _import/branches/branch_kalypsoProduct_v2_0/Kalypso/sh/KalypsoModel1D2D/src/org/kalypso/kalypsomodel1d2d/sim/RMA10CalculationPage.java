@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -70,7 +69,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing";
 
-  private final RMA10Calculation m_calculation;
+  private RMA10Calculation m_calculation;
 
   private IStatus m_simulationStatus;
 
@@ -81,7 +80,6 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   private Button m_startResultProcessingCheck;
 
   private Spinner m_resultInterval;
-
 
   protected RMA10CalculationPage( final String pageName, final RMA10Calculation calculation )
   {
@@ -109,7 +107,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     /* Status composite */
     final Group statusGroup = new Group( composite, SWT.NONE );
+
     statusGroup.setLayout( new GridLayout() );
+
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     statusGroup.setText( "Simulationsergebnis" );
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
@@ -117,13 +117,15 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Simulation wurde noch nicht durchgeführt", null ) );
 
     final Group tweakGroup = new Group( composite, SWT.NONE );
-    tweakGroup.setLayout( new GridLayout() );
+    final GridLayout tweakLayout = new GridLayout();
+    tweakLayout.numColumns = 2;
+    tweakGroup.setLayout( tweakLayout );
     tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     tweakGroup.setText( "Einstellungen" );
 
     m_startResultProcessingCheck = new Button( tweakGroup, SWT.CHECK );
     final Button startResultProcessingCheck = m_startResultProcessingCheck;
-    startResultProcessingCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
+    startResultProcessingCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
     startResultProcessingCheck.setText( "Sofort mit der Ergebnisauswertung starten" );
     startResultProcessingCheck.setToolTipText( "Falls gesetzt, wird nach der Simulation sofort mit der Ergebnisauswertung aller Zeitschritte gestartet." );
     startResultProcessingCheck.setSelection( m_startResultProcessing );
@@ -144,11 +146,14 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     final Composite buttonComposite = new Composite( tweakGroup, SWT.NONE );
     final GridLayout layout = new GridLayout();
-    layout.numColumns = 2;
-    layout.marginWidth = 0;
-    layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    layout.numColumns = 3;
     buttonComposite.setLayout( layout );
-    buttonComposite.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
+    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+
+    final Label spinnerLabel1 = new Label( buttonComposite, SWT.NONE );
+    spinnerLabel1.setText( "Jeden " );
+    final GridData gridData1 = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    spinnerLabel1.setLayoutData( gridData1 );
 
     m_resultInterval = new Spinner( buttonComposite, SWT.NONE );
 
@@ -162,10 +167,10 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     m_resultInterval.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
 
-    final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
-    spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
-    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    spinnerLabel.setLayoutData( gridData );
+    final Label spinnerLabel2 = new Label( buttonComposite, SWT.NONE );
+    spinnerLabel2.setText( "-ten Schritt auswerten" );
+    final GridData gridData2 = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    spinnerLabel2.setLayoutData( gridData2 );
 
     /* Iteration viewer */
     final Group iterGroup = new Group( composite, SWT.NONE );
@@ -235,5 +240,6 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
   {
     return m_simulationStatus;
   }
+
 
 }
