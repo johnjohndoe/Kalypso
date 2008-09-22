@@ -1,8 +1,8 @@
       MODULE BLK10 
 
       INCLUDE 'PARAM.COM'
-      REAL*8 R1,RKEEP
-      INTEGER*2 IPOINT,LCS,LPS
+      REAL(kind = 8) :: R1,RKEEP
+      INTEGER (kind = 2) :: IPOINT,LCS,LPS
       integer (kind = 4) :: irwept
       
       ALLOCATABLE   LCS(:),LPS(:),IPOINT(:)
