@@ -38,6 +38,10 @@ C     +         ,NLAYH(:),NLAYQ(:),IINTERP(:),IQID(:)
 CIPK AUG03 MOVE TO BLK11.COM     +         ,WNDSP(MNP),WNDDR(MNP)
 
       DATA ISTDY/0/,ITIMEH/0/
+      
+      !read/write error catching
+      integer :: ioError
+      
       IF(ITIMEH .EQ. 0) THEN
       ALLOCATE (NHYDQ(NQLDS),QDIRS(NQLDS),NHYDH(NHDS),NHYDG(NHDS)
      +         ,NLAYH(NHDS),NLAYQ(NQLDS),IINTERP(NHDS),IQID(NQLDS))
@@ -155,7 +159,18 @@ CIPK DEC97 END ADDITION
         !nis,sep06,com: If no hydrograph file for that boundary condition, then read values out of control file
         IF(NHYDQ(IQGEN) .EQ. 0) THEN
           !nis,sep06,com: read value line
-          READ(DLIN,5034) J,LN,QF,QDIR,QQAL,LABL
+          !FF stands for format free
+          if (ID(3:4) == 'FF') then
+            ioError = 0
+            READ (DLIN, *, iostat = ioError) J, LN, QF, QDIR, QQAL
+            if (ioError /= 0) then
+              write (*,*) 'QC-line probably does not contain all inputs'
+            endif
+            labl = 0
+            
+          else
+            READ(DLIN,5034) J,LN,QF,QDIR,QQAL,LABL
+          endif
           !nis,sep06,com: meaning of the values
           ! J    = number of CCL, where discharge runs through
           ! LN   = layer number for the specified discharge; enter 0 for 1D or 2D depth averaged flow
