@@ -513,7 +513,7 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
           IF (IKALYPSOFM /= 0) THEN
             WRITE(*,*)' Entering write_Kalypso',
      +                ' steady state, after Iteration = ',maxn
-            call generateOutputFileName('stat', niti, 0, maxn, modellaus,
+           call generateOutputFileName('stat', niti, 0, maxn, modellaus,
      +                                modellein, modellrst, ct, nb,
      +                                outputFileName, inputFileName)
             CALL write_KALYPSO (outputFileName, 'resu')
