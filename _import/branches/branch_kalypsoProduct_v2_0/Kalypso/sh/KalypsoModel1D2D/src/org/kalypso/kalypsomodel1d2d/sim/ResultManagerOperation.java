@@ -227,8 +227,8 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       boolean steady = false;
 
       // first remove the MAXI and STEADY dates from the list in order to make this code work
-      Date[] dateArray = dates.toArray( new Date[dates.size()] );
-      for( Date dateToProcess : dateArray )
+      final Date[] dateArray = dates.toArray( new Date[dates.size()] );
+      for( final Date dateToProcess : dateArray )
       {
         if( dateToProcess.equals( MAXI_DATE ) )
         {
@@ -242,13 +242,15 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
         }
       }
 
-      final Date firstCalculated = dates.first();
-      for( final Date date : existingSteps )
+      if( dates.size() > 0 )
       {
-        if( date.after( firstCalculated ) )
-          dates.add( date );
+        final Date firstCalculated = dates.first();
+        for( final Date date : existingSteps )
+        {
+          if( date.after( firstCalculated ) )
+            dates.add( date );
+        }
       }
-
       // then add them again.
       if( maxi == true )
         dates.add( MAXI_DATE );
