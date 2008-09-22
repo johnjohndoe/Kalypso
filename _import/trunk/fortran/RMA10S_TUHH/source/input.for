@@ -473,6 +473,9 @@ CIPK AUG07  ADD ICPU
         IOUTRST=10
         IOUTRWD=NCYC+1
       ENDIF
+      
+      !nis,sep09: HACK: Deallocate some arrays, if MKL is used
+      if (icpu /= 0) deallocate (LHS, QS)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       !nis,jan08: New control line for additional output options
