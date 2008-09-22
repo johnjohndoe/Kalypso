@@ -344,7 +344,7 @@ UpdateDOFs: DO KK = 1, NDFM
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
 
           !nis,comment: efpor is updated for every node by usage of amf.subroutine
-          EX = EX * EFPOR
+          !EX = EX * EFPOR
         ENDIF
 
         !calculate the changes to be applied on the water stage
