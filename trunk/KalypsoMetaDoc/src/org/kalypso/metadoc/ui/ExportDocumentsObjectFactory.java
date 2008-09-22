@@ -72,7 +72,6 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  @Override
   public IExportableObject[] createExportableObjects( Configuration configuration ) 
   {
     final Object[] checkedElements = m_page.getCheckedElements();
@@ -92,7 +91,6 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      org.eclipse.jface.resource.ImageDescriptor)
    */
-  @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException
   {
     // wizard selection for each exporter

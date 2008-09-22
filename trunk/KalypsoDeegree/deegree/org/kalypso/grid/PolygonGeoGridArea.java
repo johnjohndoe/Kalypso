@@ -97,7 +97,6 @@ public class PolygonGeoGridArea implements IGeoGridArea
   /**
    * @see org.kalypso.grid.IGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
-  @Override
   public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
   {
     init();

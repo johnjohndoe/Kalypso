@@ -206,19 +206,16 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
     addKeyListener( new KeyListener()
     {
-      @Override
       public void keyPressed( final KeyEvent e )
       {
         System.out.println( "keyPressed" );
       }
 
-      @Override
       public void keyReleased( final KeyEvent e )
       {
         System.out.println( "keyReleased" );
       }
 
-      @Override
       public void keyTyped( final KeyEvent e )
       {
         System.out.println( "keyTyped" );

@@ -132,7 +132,6 @@ public abstract class AbstractExporter implements IExporter
   /**
    * @see org.kalypso.metadoc.IExporter#createTreeItem()
    */
-  @Override
   public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
   {
     final ExportableTreeItem item = new ExportableTreeItem( getName(), getImageDescriptor(), parent, null, true, false );
