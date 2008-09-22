@@ -3,17 +3,17 @@
       subroutine mkl_solver(  NPROCS, NSZF,
      &             icol, irow, a, b, x, IERROR, nOfEntriesInQs )
 
+      use PardisoParams
+      save
       include 'PARAM.COM'
+      
 c      save ipt, perm
 c      include 'mkl_pardiso.f77'
       
-      integer :: nOfEntriesInQs, nOfEntriesInQsOld
+      integer :: nOfEntriesInQs
       !32 bit OS
       !---------
-      integer(kind = 4) :: ipt(64)
-      !64 bit OS
-      !---------
-      !integer*8 ipt(64)
+      integer (kind = 4) :: msglvl
       
       
       
@@ -77,21 +77,27 @@ c      include 'mkl_pardiso.f77'
       integer (kind = 4) :: irow(*), icol(*)
       
       !ia and ja are position pointers for the line-matrix (see documentation below)
-      integer (kind = 4) :: ia(MR1SIZ+1), ja(NBUFFSIZ)
-      integer (kind = 4) :: perm(MR1SIZ)
+      integer (kind = 4), allocatable :: ia(:), ja(:)
       integer (kind = 4) :: ierror
       
       !a, b and x are matrix, right-side vector and result vector
       real (kind = 8) :: a(*), b(*), x(*)
-      real (kind = 8) :: da(NBUFFSIZ), db(MR1SIZ), dx(MR1SIZ)
+      real (kind = 8), allocatable :: da(:), db(:), dx(:)
       !
       real*8 dum
       real*8 ddum
       
-      common /blk_mkl/  ipt, perm, nzzold, nszfold, nOfEntriesInQsOld
+      !common /blk_mkl/  ipt, perm
       
       data ifirst /0/
       
+      !allocate locals
+      allocate (ia (mr1siz+1), dx(mr1siz))
+      allocate (ja (nbuffsiz), da(nbuffsiz), db(mr1siz))
+      
+      
+      if (ifirst == 0)allocate (perm(MR1SIZ))
+
       if ( ifirst .eq. 0 )  then
          iparm = 0
         iparm(1) = 1 ! no solver default
@@ -183,12 +189,14 @@ C  Need to sort ja so that for the row, the column indices are in increasing val
       n = nszf
       
       !parameters for PARDISO; see documentation above or for MKL (PARDISO)
-      nrhs = 1
+      nrhs   = 1
       maxfct = 1
-      mnum = 1
-      mtype = 11
+      mnum   = 1
+      mtype  = 11
       ierror = 0
       iphase = 11
+      msglvl = 1 ! print statistical information
+
       
       if (nzzold /= nzz .or. nszfold /= nszf) then
         if (nzzold /= 0) ifirst = 2
@@ -206,36 +214,32 @@ c      ifirst=1
       if ( ifirst < 3 ) then
       
           
-          !release all allocated memory
-          if (ifirst == 2) then
-            iphase = -1
-            call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
-     &          da, ia, ja, perm, nrhs, iparm, msglvl,
-c     &          db, dx, ierror )
-     &          ddum, ddum, ierror )
-          endif 
-
-          ipt = 0
-          iphase = 11
+        !release all allocated memory
+        if (ifirst == 2) then
+          iphase = -1
+          write(*,*) '*****************'
+          write(*,*) 'Releasing memory'
+          write(*,*) '*****************'
           call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
-     &          da, ia, ja, perm, nrhs, iparm, msglvl,
-c     &          db, dx, ierror )
-     &          ddum, ddum, ierror )
-     
-          if ( ierror .ne. 0 ) then
-            write(75,*) 'Error phase 11 ', ierror
-            stop
-          endif
-        
-          
-C        endif  
-        ifirst = 3
-c        do i=1,n
-c            x(i) = dx(i)
-c        enddo
-       
-c        return
+     &      da, ia, ja, perm, nrhs, iparm, msglvl,
+     &      ddum, ddum, ierror )
+        endif 
 
+        ipt = 0
+        iphase = 11
+          write(*,*) '********************'
+          write(*,*) 'reordering of matrix'
+          write(*,*) '********************'
+        call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
+     &    da, ia, ja, perm, nrhs, iparm, msglvl,
+     &    ddum, ddum, ierror )
+     
+        if ( ierror .ne. 0 ) then
+          write(75,*) 'Error phase 11 ', ierror
+          stop
+        endif
+
+        ifirst = 3
       endif
       call second(sutim2)
 
@@ -245,6 +249,9 @@ c        return
       iphase = 23
       ierror = 0
       
+      write(*,*) '***********************************'
+      write(*,*) 'factorization and solving of matrix'
+      write(*,*) '***********************************'
       call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
      &          da, ia, ja, perm, nrhs, iparm, msglvl,
      &          db, dx, ierror )
@@ -267,6 +274,11 @@ c      write(210,'(2i10)') (i,iparm(i),i=1,23)
       nzzold = nzz
       nszfold = nszf
       nOfEntriesInQsOld = nOfEntriesInQs
+      
+      !deallocate locals
+      deallocate (ia, dx)
+      deallocate (ja, da, db)
+
       
       end
 

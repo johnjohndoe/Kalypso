@@ -11,10 +11,14 @@ CIPK AUG07
       USE BLK11MOD
       USE BLKSANMOD
       USE BLKECOM
+      use PardisoParams
       SAVE
 
       integer (kind = 8) :: mxl, mfrw
-      PARAMETER (MFRW=MFWSIZ, MXL=680)
+      integer (kind = 4) :: ierr
+      PARAMETER (MXL=680)
+      
+      
       
 
 C-
@@ -25,14 +29,14 @@ C
 CIPK FEB07      REAL*4 BIGEQ,PILU,R,PIRU,BIGEQS
       REAL*8 BIGEQ,PILU,PIRU,BIGEQS
 
-      INTEGER*8 LROWENT(MR1SIZ),LRPOINT(MR1SIZ)
+      INTEGER(kind = 8), allocatable :: LROWENT(:),LRPOINT(:)
 
 C superLU
-      REAL*8  R1T(MR1SIZ)
-	INTEGER*8 ichgl(mr1SIZ)
+      REAL(kind = 8), allocatable ::  R1T(:)
+	INTEGER (kind = 8), allocatable :: ichgl(:)
 	data itime/0/
 	
-	
+	MFRW = mfwsiz
 	
 !some comments
 !NLSTEL(J)  :: NLSTEL (J) is last element, that is necessary to fill the global equation
@@ -43,6 +47,10 @@ C superLU
 !MR1SIZ     :: seems to be the maximum number of free degrees
 	
 C
+      !allocate locals
+      allocate (lrowent(mr1siz), lrpoint(mr1siz))
+      allocate (r1t(mr1siz), ichgl(mr1siz))
+      !allocate globals
       IF(ITIME .EQ. 0) THEN
         ALLOCATE (LCPOINT(MXL,MFWSIZ),eqq(MXL,MFWSIZ))
         ALLOCATE (RR(MR1SIZ),QS1(NBUFFSIZ))
@@ -206,6 +214,9 @@ cipk feb07 add LLDONE test
           ENDIF
 	  enddo
       ENDDO
+!      DO N=1,NSZF
+!      WRITE(198,'(2I15)') N,ICHGL(N)
+!      ENDDO
       
       do n=1,np
   	  do m=1,ndf
@@ -396,8 +407,6 @@ CIPK MAR05
                   ELSE
                     CALL COEF1NT(N,NRX)
 	            ENDIF
-CIPK SEP05  ADD ERROR TEST
-	            IF(JREDERR .EQ. 1) RETURN  
 CIPK MAR07
 C     Modify tests to allows for IDIFSW
 
@@ -409,8 +418,6 @@ C     Modify tests to allows for IDIFSW
 	            ELSE
                     CALL COEF2DNT(N,NRX)
 	            ENDIF
-CIPK SEP05  ADD ERROR TEST
-	            IF(JREDERR .EQ. 1) RETURN  
                 ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1
      +           .AND. IDIFSW .EQ. 2) THEN
 CIPK MAR05
@@ -425,8 +432,6 @@ CIPK MAR05
 	            ELSE
                     CALL COEF2NT(N,NRX)
 	            ENDIF
-CIPK SEP05  ADD ERROR TEST
-	            IF(JREDERR .EQ. 1) RETURN  
                 ENDIF
               ELSE
 ccc                GO TO 17
@@ -481,8 +486,6 @@ CIPK MAR07
   	                ELSE
 	                  CALL COEF2DNT(N,NRX)
 	                ENDIF
-CIPK SEP05  ADD ERROR TEST
-  	                IF(JREDERR .EQ. 1) RETURN  
                     ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND.
      +                     IDIFSW .EQ. 2) THEN
                       IF(INOTR .EQ. 0) THEN
@@ -496,8 +499,6 @@ CIPK SEP05  ADD ERROR TEST
   	                ELSE
 	                  CALL COEF2NT(N,NRX)
 	                ENDIF
-CIPK SEP05  ADD ERROR TEST
-   	                IF(JREDERR .EQ. 1) RETURN  
                     endif
 cipk jan97 end changes
         	      ELSE
@@ -534,8 +535,6 @@ C      Process one-d elements
               ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dPoly(N,NRX)
               ENDIF
-CIPK SEP05  ADD ERROR TEST
-                  IF(JREDERR .EQ. 1) RETURN  
 	          ENDIF
 	        ENDIF
 	      ENDIF
@@ -554,16 +553,12 @@ C-
               ELSE
                 CALL COEF2NT(N,NRX)
               ENDIF
-CIPK SEP05  ADD ERROR TEST
-              IF(JREDERR .EQ. 1) RETURN  
 	      ELSE
               IF(INOTR .EQ. 0) THEN
                 CALL COEF1(N,NRX)
               ELSE
                 CALL COEF1NT(N,NRX)
               ENDIF
-CIPK SEP05  ADD ERROR TEST
-              IF(JREDERR .EQ. 1) RETURN  
 	      ENDIF
           ENDIF
 cipk jan99
@@ -920,6 +915,9 @@ C      WRITE(*,6199) ADTA,SEC3
      1 'MFW IS NOT LARGE ENOUGH TO PERMIT ASSEMBLY OF THE NEXT EL'
      2,'EMENT'/'  INCREASE MFW IN PARAM.COM OR LOOK FOR ERROR IN'
      3,' ELEMENT ELIMINATION ORDER')
+     
+      !deallocate local arrays
+      deallocate (lrowent, lrpoint, r1t, ichgl)
       RETURN
   476 FORMAT(' WARNING-MATRIX SINGULAR OR ILL CONDITIONED')
       END

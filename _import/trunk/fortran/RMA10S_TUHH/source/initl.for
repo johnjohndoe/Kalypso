@@ -30,6 +30,7 @@ CIPK  LAST UPDATE mARCH 2 2001 ADD MANNING 'N' FUNCTIONS
       USE PARAKalyps
       !EFa Nov06, neues Modul für Teschke-1D-Elemente
       USE PARA1DPoly
+      use PardisoParams, ipt_Pardiso=>ipt
 !-
 
 
@@ -51,6 +52,12 @@ c     Initialisation of values
       NBSS=NBS
       LBMAX=NBSS
       MFWW=MFW
+      !pardiso solver definitions; why are they seperated from them above, although they're showing the same?
+      MFWSIZ    =2000
+      MR1SIZ   = 200000
+      NBUFFSIZ = 50000000
+
+
       MNPP=MAXP
       NLAYMX=1
       MXSEDLAY=10
@@ -83,9 +90,11 @@ cipk mar06  add call for ENDLIMIT case
       ELSEIF(ID(1:8) .EQ. 'BUFFSIZ ') THEN
         READ(DLIN,'(I8)') NBSS
         LBMAX=NBSS
+        nbuffsiz = lbmax
       ELSEIF(ID(1:8) .EQ. 'BUFFSIZL') THEN
         READ(DLIN,'(I16)') NBSS
         LBMAX=NBSS
+        nbuffsiz = lbmax
       ELSEIF(ID(1:8) .EQ. 'MAXQPTS ') THEN
 CIPK MAR06
         READ(DLIN,'(I8)') NCQOBS
@@ -140,6 +149,8 @@ C 6011 FORMAT(' MAXIMUM TIME STEPS SET TO                     ',I8)
 
       ALLOCATE (EQ(MFWW,MFWW),LHED(MFWW),QQ(MFWW),PVKOL(MFWW)
      + ,LDEST(MFWW),QR(MFWW))
+
+
       ALLOCATE (LHS(NBS),QS(NBS))
 
 

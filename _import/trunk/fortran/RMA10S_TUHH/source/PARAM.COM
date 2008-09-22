@@ -6,5 +6,4 @@ C MLAYER = Maximum number of layers in sediment
 C     +     NCQOBS = 2500,
 C     +     NHDS =5  ,NCHOBS = 3500, NELDS = 40  ,NDPTS = 2600)
 
-      PARAMETER( MMAT = 20,MFWSIZ=2000,MR1SIZ=200000,NBUFFSIZ=20000000
-     +  ,MELSIZ=10000)
+      PARAMETER( MMAT = 20, MELSIZ=10000)
