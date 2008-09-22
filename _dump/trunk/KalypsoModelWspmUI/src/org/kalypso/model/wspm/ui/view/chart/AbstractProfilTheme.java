@@ -77,7 +77,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onActiveLayerChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
@@ -87,7 +86,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerContentChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
@@ -161,42 +159,36 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     mngr.addListener( new ILayerManagerEventListener()
     {
 
-      @Override
       public void onActivLayerChanged( IChartLayer layer )
       {
         // TODO Auto-generated method stub
 
       }
 
-      @Override
       public void onLayerAdded( IChartLayer layer )
       {
         // TODO Auto-generated method stub
 
       }
 
-      @Override
       public void onLayerContentChanged( IChartLayer layer )
       {
         // TODO Auto-generated method stub
 
       }
 
-      @Override
       public void onLayerMoved( IChartLayer layer )
       {
         fireLayerContentChange();
 
       }
 
-      @Override
       public void onLayerRemoved( IChartLayer layer )
       {
         fireLayerContentChange();
 
       }
 
-      @Override
       public void onLayerVisibilityChanged( IChartLayer layer )
       {
         // TODO Auto-generated method stub
@@ -436,7 +428,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerVisibilityChanged( IChartLayer layer )
   {
     fireLayerContentChange();

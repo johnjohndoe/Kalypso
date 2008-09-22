@@ -243,7 +243,6 @@ public class TubePanel extends AbstractProfilView
     m_cmb.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      @Override
       public void selectionChanged( SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();

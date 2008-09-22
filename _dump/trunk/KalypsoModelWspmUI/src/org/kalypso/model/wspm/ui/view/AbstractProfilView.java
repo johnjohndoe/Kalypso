@@ -105,7 +105,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
    */
-  @Override
   public Object getAdapter( Class< ? > clazz )
   {
     // TODO Auto-generated method stub
@@ -115,7 +114,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
-  @Override
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     // TODO Auto-generated method stub
@@ -125,7 +123,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
-  @Override
   public ChartComposite getChartComposite( )
   {
     // TODO Auto-generated method stub
@@ -140,7 +137,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
-  @Override
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
     // TODO Auto-generated method stub
@@ -172,7 +168,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
-  @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
     // TODO Auto-generated method stub

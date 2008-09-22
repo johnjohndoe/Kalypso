@@ -77,7 +77,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onActivLayerChanged( IChartLayer layer )
   {
     if( layer.isActive() )
@@ -87,7 +86,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerAdded( IChartLayer layer )
   {
     for( final IChartLayer l : m_layerManager.getLayers() )
@@ -99,7 +97,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerContentChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
@@ -109,7 +106,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerMoved( IChartLayer layer )
   {
     // TODO Auto-generated method stub
@@ -119,7 +115,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerRemoved( IChartLayer layer )
   {
     final IChartLayer[] layers = m_layerManager.getLayers();
@@ -132,7 +127,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
-  @Override
   public void onLayerVisibilityChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
@@ -141,7 +135,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
 
   private final ScrolledCompositeCreator m_creator = new ScrolledCompositeCreator( null )
   {
-    @Override
     protected Control createContents( final Composite sc, final int style )
     {
       final Group group = new Group( sc, style );
@@ -242,7 +235,6 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener#onProfilChartViewChanged(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  @Override
   public void onProfilChartViewChanged( ProfilChartView newProfilChartView )
   {
     final ChartComposite chart = newProfilChartView == null ? null : newProfilChartView.getChart();

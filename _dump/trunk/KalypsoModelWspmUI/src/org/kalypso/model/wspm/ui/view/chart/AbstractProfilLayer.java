@@ -75,7 +75,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
    */
-  @Override
   public void setTargetComponent( String componentId )
   {
     m_targetComponent = componentId;
@@ -379,7 +378,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
    */
-  @Override
   public boolean isLocked( )
   {
     return m_isLocked;
@@ -388,7 +386,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
-  @Override
   public void lockLayer( boolean isLocked )
   {
     m_isLocked = isLocked;
@@ -430,11 +427,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  @Override
   public void setProfil( IProfil profil )
   {
     m_profil = profil;
-
   }
 
   public Point2D toNumeric( final Point point )
