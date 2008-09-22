@@ -356,7 +356,6 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTimeDependentAdditionalResult(java.lang.String, int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
    */
-  @Override
   public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines )
   {
     // TODO Auto-generated method stub

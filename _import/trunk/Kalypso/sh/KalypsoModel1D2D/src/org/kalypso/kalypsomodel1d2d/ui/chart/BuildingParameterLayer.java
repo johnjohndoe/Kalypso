@@ -481,7 +481,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
    */
-  @Override
   public boolean isLocked( )
   {
     // TODO Auto-generated method stub
@@ -491,7 +490,6 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
-  @Override
   public void lockLayer( boolean isLocked )
   {
     // TODO Auto-generated method stub

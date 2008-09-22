@@ -163,7 +163,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
       snapped.setPoints( new Point[] { new Point( spScreen.x, 10 ), new Point( spScreen.x, top ) } );
       hoverFigure = new IPaintable()
       {
-        @Override
         public void paint( GC gc )
         {
           lineFigure_move.paint( gc );

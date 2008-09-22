@@ -268,7 +268,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#hasDirection()
    */
-  @Override
   public Boolean hasDirection( )
   {
     // if( getFeature().getProperty( QNAME_P_HASDIRECTION ) == null )
@@ -280,7 +279,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setHasDirection(java.lang.Boolean)
    */
-  @Override
   public void setHasDirection( final Boolean value )
   {
     getFeature().setProperty( QNAME_P_HASDIRECTION, value );
@@ -290,7 +288,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getInflowVelocity()
    */
-  @Override
   public double getInflowVelocity( )
   {
     final boolean hasDirection = (Boolean) getFeature().getProperty( QNAME_P_HASDIRECTION );
@@ -304,7 +301,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setDirection()
    */
-  @Override
   public void setDirection( final BigInteger value )
   {
     getFeature().setProperty( QNAME_P_DIRECTION, value );
@@ -314,7 +310,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setInflowVelocity(double)
    */
-  @Override
   public void setInflowVelocity( double value )
   {
     getFeature().setProperty( QNAME_P_INFLOWVELOCITY, value );
