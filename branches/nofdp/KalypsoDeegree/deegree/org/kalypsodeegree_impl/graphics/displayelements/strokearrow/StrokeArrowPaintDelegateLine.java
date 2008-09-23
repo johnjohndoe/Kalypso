@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {

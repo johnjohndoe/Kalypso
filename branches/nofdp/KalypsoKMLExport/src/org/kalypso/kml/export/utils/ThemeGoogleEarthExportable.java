@@ -47,7 +47,7 @@ import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 
 /**
- * @author kuch collects all google earth exportable and visible themes
+ * @author Dirk Kuch collects all google earth exportable and visible themes
  */
 public class ThemeGoogleEarthExportable implements IKalypsoThemePredicate
 {

@@ -40,7 +40,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<XMLGregorianCalendar>
 {

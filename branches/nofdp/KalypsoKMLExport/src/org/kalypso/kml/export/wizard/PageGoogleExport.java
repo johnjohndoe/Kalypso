@@ -22,7 +22,7 @@ import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.kml.export.i18n.Messages;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 {

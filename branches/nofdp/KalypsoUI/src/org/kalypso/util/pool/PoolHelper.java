@@ -48,7 +48,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class PoolHelper
 {

@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class OpenArrowGeometry extends AbstractArrowGeometry
 {

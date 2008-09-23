@@ -15,7 +15,7 @@ import com.google.earth.kml.MultiGeometryType;
 import com.google.earth.kml.ObjectFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConverterMultiCurve
 {

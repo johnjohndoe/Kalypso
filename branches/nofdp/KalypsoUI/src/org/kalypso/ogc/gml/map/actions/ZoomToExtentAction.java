@@ -50,7 +50,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ZoomToExtentAction extends AbstractCommandAction
 {

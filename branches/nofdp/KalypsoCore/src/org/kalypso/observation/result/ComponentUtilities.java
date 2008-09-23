@@ -102,7 +102,7 @@ public final class ComponentUtilities
   /**
    * TODO: move into helper class of restrictions!
    * 
-   * @author kuch
+   * @author Dirk Kuch
    */
   static public boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
   {

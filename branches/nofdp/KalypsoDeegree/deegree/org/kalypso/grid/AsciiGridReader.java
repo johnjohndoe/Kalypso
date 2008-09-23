@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * CELLSIZE xxx<br>
  * NODATA_VALUE xxx<br>
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AsciiGridReader
 {

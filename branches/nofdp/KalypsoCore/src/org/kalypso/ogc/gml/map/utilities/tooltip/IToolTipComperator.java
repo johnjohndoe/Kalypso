@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * TODO: please comment
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IToolTipComperator
 {

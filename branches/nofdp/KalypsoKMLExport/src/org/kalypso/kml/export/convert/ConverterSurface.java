@@ -21,7 +21,7 @@ import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PolygonType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConverterSurface
 {

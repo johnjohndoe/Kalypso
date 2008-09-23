@@ -45,7 +45,7 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class CascadingThemeHelper
 {

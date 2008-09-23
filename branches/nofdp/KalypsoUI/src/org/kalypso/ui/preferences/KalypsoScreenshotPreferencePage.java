@@ -74,7 +74,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.i18n.Messages;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoScreenshotPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {

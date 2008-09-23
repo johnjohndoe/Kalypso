@@ -41,7 +41,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowH
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPaintDelegate
 {

@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
 {

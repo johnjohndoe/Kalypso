@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class BasePool implements IPoolListener, ICommandTarget
 {
