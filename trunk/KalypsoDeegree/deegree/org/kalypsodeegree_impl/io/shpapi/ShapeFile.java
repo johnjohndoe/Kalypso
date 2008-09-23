@@ -719,7 +719,7 @@ public class ShapeFile
       }
       else if( clazz == Boolean.class )
       {
-        fieldList.add( new FieldDescriptor( s, "L", (byte)1, (byte)0 ) );
+        fieldList.add( new FieldDescriptor( s, "L", (byte) 1, (byte) 0 ) );
       }
       else
       {
@@ -832,7 +832,7 @@ public class ShapeFile
       final SHPEnvelope mbr = shpGeom.getEnvelope();
 
       final int nbyte = shpGeom.size();
-      if( i == 0 )
+      if( i == 0 || (i > 0 && shpmbr == null) )
         shpmbr = mbr;
 
       // write bytearray to the shape file
