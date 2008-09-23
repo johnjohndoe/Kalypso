@@ -43,7 +43,7 @@ public class ControlModelAdapter implements IModelAdaptor
   public CommandableWorkspace adapt( final CommandableWorkspace workspace )
   {
     final Object property = workspace.getRootFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
-    if( property != null && property.equals( VERSION_1_0 ))
+    if( property != null && property.equals( VERSION_1_0 ) )
     {
       // no need to adapt any other models than those without the version property
       return workspace;
@@ -68,6 +68,11 @@ public class ControlModelAdapter implements IModelAdaptor
         final QName qnameProp2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
         final IRelationType controlModelCollectionPropertyType = (IRelationType) controlModelGroup.getFeatureType().getProperty( qnameProp1 );
         final Feature controlModelCollection = (Feature) controlModelGroup.getProperty( controlModelCollectionPropertyType );
+        if( controlModelCollection == null )
+        {
+          // happens if no control model is defined yet
+          return StatusUtilities.createOkStatus( "Empty control model collection, nothnig to adapt" );
+        }
 
         final IRelationType controlModelPropertyType = (IRelationType) controlModelCollection.getFeatureType().getProperty( qnameProp2 );
         final FeatureList controlModels = (FeatureList) controlModelCollection.getProperty( controlModelPropertyType );
@@ -101,7 +106,7 @@ public class ControlModelAdapter implements IModelAdaptor
           // set version
           final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
           featureChanges.add( new FeatureChange( controlModelGroup, versionProperty, VERSION_1_0 ) );
-          
+
           // create command
           final ChangeFeaturesCommand changeFeaturesCommand = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[featureChanges.size()] ) );
           cc.addCommand( changeFeaturesCommand );
