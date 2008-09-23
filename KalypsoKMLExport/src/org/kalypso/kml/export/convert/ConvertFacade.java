@@ -24,7 +24,7 @@ import com.google.earth.kml.PlacemarkType;
 import com.google.earth.kml.StyleType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConvertFacade
 {

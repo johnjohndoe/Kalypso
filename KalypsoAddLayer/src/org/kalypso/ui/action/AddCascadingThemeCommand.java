@@ -59,7 +59,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 {

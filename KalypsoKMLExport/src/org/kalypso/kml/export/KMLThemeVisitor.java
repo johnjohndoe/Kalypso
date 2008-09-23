@@ -7,7 +7,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KMLThemeVisitor extends KalypsoThemeVisitor
 {

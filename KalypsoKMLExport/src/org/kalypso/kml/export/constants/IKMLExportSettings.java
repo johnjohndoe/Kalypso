@@ -6,7 +6,7 @@ package org.kalypso.kml.export.constants;
 import java.io.File;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IKMLExportSettings
 {

@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 {

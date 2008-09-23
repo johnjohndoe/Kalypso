@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * simple textbox wrapper rendering a qname of a feature
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class WizardFeatureTextBox
 {

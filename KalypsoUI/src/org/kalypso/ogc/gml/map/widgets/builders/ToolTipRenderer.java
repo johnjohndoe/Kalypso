@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ToolTipRenderer
 {

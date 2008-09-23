@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FCVFeatureDelegate implements IFCVDelegate
 {

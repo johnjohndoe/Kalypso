@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 /**
  * useful feature utilities used by nofdp idss
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FeatureUtils
 {

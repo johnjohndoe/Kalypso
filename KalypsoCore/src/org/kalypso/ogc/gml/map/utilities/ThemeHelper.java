@@ -47,7 +47,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ThemeHelper
 {

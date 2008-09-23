@@ -63,7 +63,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 /**
  * Exports an IObservation<TupleResult> to an CSV-Spreadsheet
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
 {

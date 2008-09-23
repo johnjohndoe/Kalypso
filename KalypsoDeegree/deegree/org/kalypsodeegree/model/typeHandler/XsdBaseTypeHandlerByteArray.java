@@ -39,7 +39,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerByteArray extends XsdBaseTypeHandler<Byte[]>
 {

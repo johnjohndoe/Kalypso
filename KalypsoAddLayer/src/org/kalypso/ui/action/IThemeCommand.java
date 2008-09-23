@@ -44,7 +44,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.template.types.StyledLayerType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IThemeCommand extends ICommand
 {

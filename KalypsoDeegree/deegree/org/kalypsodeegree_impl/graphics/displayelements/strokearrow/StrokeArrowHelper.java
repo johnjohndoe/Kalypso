@@ -43,7 +43,7 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class StrokeArrowHelper
 {

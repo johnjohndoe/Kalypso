@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class CascadingThemeVisitor implements IKalypsoThemePredicate
 {

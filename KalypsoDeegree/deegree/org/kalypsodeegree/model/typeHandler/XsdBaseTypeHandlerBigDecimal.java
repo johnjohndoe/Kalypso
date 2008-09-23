@@ -39,7 +39,7 @@ import java.math.BigDecimal;
 
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
 {

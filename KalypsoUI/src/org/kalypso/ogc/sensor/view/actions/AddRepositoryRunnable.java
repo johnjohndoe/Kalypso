@@ -61,7 +61,7 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AddRepositoryRunnable implements Runnable
 {

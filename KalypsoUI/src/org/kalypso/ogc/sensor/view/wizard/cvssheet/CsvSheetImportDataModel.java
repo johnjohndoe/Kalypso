@@ -46,7 +46,7 @@ import java.util.Map;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class CsvSheetImportDataModel
 {

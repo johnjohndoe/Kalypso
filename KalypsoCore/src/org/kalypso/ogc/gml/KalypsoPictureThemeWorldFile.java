@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {

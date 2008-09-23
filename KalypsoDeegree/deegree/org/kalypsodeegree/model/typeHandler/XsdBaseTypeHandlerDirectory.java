@@ -42,7 +42,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerDirectory extends XsdBaseTypeHandler<File>
 {

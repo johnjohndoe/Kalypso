@@ -46,7 +46,7 @@ import java.net.URL;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverageGeoGrid implements IWriteableGeoGrid
 {
