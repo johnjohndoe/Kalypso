@@ -45,7 +45,7 @@ import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AtomarAddRelationCommand extends AddRelationCommand
 {

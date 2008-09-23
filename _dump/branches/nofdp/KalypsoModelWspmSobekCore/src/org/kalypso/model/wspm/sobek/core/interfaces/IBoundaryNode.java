@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IBoundaryNode extends IConnectionNode
 {

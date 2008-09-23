@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * Abstract interface of calculation model, ISobekModelMember, IBlueMModelMember, aso, should be derived from this
  * interface!
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IModelMember
 {

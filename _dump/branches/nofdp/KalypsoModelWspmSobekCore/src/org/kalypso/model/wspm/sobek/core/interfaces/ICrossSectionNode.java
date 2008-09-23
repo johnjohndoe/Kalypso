@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ICrossSectionNode extends INode
 {

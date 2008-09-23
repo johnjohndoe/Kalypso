@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.utils;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class DateUtils
 {

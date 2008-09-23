@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import javax.xml.namespace.QName;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ISobekConstants
 {

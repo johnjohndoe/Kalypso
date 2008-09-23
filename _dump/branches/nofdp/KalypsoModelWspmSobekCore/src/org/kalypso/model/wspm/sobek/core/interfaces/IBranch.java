@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IBranch
 {

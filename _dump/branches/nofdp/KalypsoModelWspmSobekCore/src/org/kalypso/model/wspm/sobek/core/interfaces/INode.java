@@ -51,7 +51,7 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * Generic Node interface, Node implementations and special interface should be derived from this interface!
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface INode
 {

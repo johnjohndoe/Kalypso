@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractFeatureWrapper implements Feature
 {

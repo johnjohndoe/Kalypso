@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FNGeoUtils
 {

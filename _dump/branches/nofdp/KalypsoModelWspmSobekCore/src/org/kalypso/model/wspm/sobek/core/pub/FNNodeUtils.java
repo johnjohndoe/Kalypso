@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FNNodeUtils
 {

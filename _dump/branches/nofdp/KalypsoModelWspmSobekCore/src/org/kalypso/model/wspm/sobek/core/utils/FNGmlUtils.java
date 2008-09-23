@@ -79,7 +79,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FNGmlUtils
 {

@@ -75,7 +75,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class Branch implements IBranch
 {

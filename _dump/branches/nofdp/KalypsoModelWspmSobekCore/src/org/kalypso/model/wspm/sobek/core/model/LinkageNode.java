@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
 {

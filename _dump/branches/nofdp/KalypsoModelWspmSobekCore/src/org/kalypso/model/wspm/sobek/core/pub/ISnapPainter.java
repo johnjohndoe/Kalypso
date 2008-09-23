@@ -49,7 +49,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ISnapPainter
 {

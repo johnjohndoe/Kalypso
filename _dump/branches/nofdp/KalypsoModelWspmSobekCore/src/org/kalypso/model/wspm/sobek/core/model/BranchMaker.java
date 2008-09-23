@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class BranchMaker implements IBranchMaker
 {

@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
 {

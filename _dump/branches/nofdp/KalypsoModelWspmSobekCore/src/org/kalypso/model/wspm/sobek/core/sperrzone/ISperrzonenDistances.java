@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.sperrzone;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ISperrzonenDistances
 {

@@ -44,7 +44,7 @@ import org.eclipse.core.resources.IProject;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IWorkspaceInterface
 {

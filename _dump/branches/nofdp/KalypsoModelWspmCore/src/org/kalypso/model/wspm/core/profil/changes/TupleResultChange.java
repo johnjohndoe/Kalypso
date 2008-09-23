@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class TupleResultChange implements IProfilChange
 {

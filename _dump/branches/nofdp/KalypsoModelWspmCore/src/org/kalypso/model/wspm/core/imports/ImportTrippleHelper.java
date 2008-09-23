@@ -68,7 +68,7 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * small refactoring Lanu and nofdp uses this helper!
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ImportTrippleHelper
 {

@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IBranchMaker
 {

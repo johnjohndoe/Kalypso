@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * Like the normal AddFeatureCommand, but not undoable Needed for an transparent gml_workspace, some actions should
  * always be saved an not be undoable
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AtomarAddFeatureCommand extends AddFeatureCommand
 {

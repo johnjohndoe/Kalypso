@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
 {
