@@ -1,9 +1,0 @@
-!* * * * * * * * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK der Subroutinen GWSP und GEBIET  *
-!* * * * * * * * * * * * * * * * * * * * * * * * *
-!*
-!*  Variablendeklaration siehe GWSP.DOC
-!*
-      REAL TGWZU(IDIM)
-
-      COMMON /TGWC/ TGWZU

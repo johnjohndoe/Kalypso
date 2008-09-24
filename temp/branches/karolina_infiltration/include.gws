@@ -1,8 +1,0 @@
-      include 'include/gw.cmn'
-      include 'include/gwl.cmn'
-      include 'include/str.cmn'
-      include 'include/qgw.cmn'
-      include 'include/tg.cmn'
-      include 'include/is.cmn'
-      include 'include/kluft.cmn'
-

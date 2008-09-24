@@ -1,9 +1,0 @@
-!* * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK      KENNGROESSEN    *
-!*                   zur Erstellung  *
-!*                   der Graphiken   *
-!* * * * * * * * * * * * * * * * * * *
-
-      CHARACTER*80   TITEL,TEXTY
-      REAL           XLEN,PMASS
-      COMMON /KENNC/ TITEL,TEXTY,XLEN,PMASS

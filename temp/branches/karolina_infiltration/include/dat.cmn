@@ -1,6 +1,0 @@
-!* * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK BEGINN- UND ENDDATUM *
-!* * * * * * * * * * * * * * * * * * *
-
-      INTEGER JAA,MOA,ITGA,JAE,MOE,ITGE
-      COMMON /DATC/ JAA,MOA,ITGA,JAE,MOE,ITGE

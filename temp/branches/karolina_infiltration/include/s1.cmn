@@ -1,8 +1,0 @@
-!* * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK DER SUBROUTINE SNOW1  *
-!* * * * * * * * * * * * * * * * * * *
-!*
-!*   Variablenerlaeuterung siehe GEBIET.DOC
-!*
-      REAL WWO,WWMAX,SNOTEM,SNORAD,H0,W0
-      COMMON /SNOW1C/ WWO,WWMAX,SNOTEM,SNORAD,H0,W0

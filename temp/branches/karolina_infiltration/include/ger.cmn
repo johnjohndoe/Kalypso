@@ -1,9 +1,0 @@
-!* * * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK DER SUBROUTINE GERINNE  *
-!* * * * * * * * * * * * * * * * * * * *
-!*
-!*
-
-      INTEGER IART
-      REAL    RK(2,NDIM),RN(2,NDIM),QRK(NDIM),C(NDIM),QFMAX
-      COMMON /KMC/ RK,RN,QRK,C,QFMAX,IART
