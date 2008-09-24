@@ -196,6 +196,9 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   private void processTheme( final FolderType parentFolderType, final IKalypsoTheme theme )
   {
+    if( !theme.isVisible() )
+      return;
+
     final ObjectFactory factory = new ObjectFactory();
     final List<JAXBElement< ? extends FeatureType>> myList = parentFolderType.getFeature();
 
@@ -211,7 +214,8 @@ public class KMLExporter implements ICoreRunnableWithProgress
       final IKalypsoTheme[] themes = inner.getAllThemes();
       for( final IKalypsoTheme t : themes )
       {
-        processTheme( folderType, t );
+        if( t.isVisible() )
+          processTheme( folderType, t );
       }
 
       myList.add( factory.createFolder( folderType ) );
