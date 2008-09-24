@@ -4,7 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kml.export.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kml.export.i18n.messages"; //$NON-NLS-1$
 
   public static String GoogleEarthExportCommandHandler_0;
 
