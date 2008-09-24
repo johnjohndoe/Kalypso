@@ -1,8 +1,0 @@
-!
-!     COMMON-BLOCK, in dem die File-Namen und Pathnames definiert sind
-!
-      CHARACTER*80 PATHN,FNAM,NAMGER
-
-      INTEGER  ILENLZ,ILENB,ILENG,ILEND
-
-      COMMON /FILES/ PATHN,FNAM,NAMGER,ILENLZ,ILENB,ILENG,ILEND
