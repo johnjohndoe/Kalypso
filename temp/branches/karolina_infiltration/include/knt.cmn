@@ -1,0 +1,9 @@
+!* * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER KNOTENNUMMERN  *
+!* * * * * * * * * * * * * * * * * *
+!*
+!*  Variablendeklaration siehe NAMODELL.DOC
+!*
+      INTEGER KNOT(IKDIM),IKMAX
+
+      COMMON /KNTC/ KNOT,IKMAX

@@ -1,0 +1,13 @@
+!*Änderung Claudia Brüning (CB) Datum: 220502 in rhb2.cmn: 
+!*jmaxcon2  5-->25, nres, xres(jmaxcon2,2-->4)*
+!* Die Anzahl der möglichen Speicher wurde von 5 auf 25 erhöht
+!***************************************************************************************
+!*  COMMONBLOCK DER ANFANGSSPEICHERINHALTE           *
+!*              PRO RUECKHALTEBECKEN (STRANGNUMMER)  *
+!* * * * * * * * * * * * * * * * * * * * * * * * * * *
+      integer jmaxcon2
+      parameter (jmaxcon2=34)
+      integer nresj(jmaxcon2,4)
+      real    xresj(jmaxcon2,4)
+
+      common /RHBC/ nresj,xresj

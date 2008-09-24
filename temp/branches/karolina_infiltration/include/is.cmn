@@ -1,0 +1,13 @@
+!* * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK MIT DEM FLAG L-/K-SIM. *
+!* * * * * * * * * * * * * * * * * * * *
+!*
+!*  Dieser Commonblock wird vom Hauptprogramm BCENA1 und
+!*  der Subroutine INPUT aufgerufen
+!*
+!* *  ISIM = PARAMETER ZUR KENNZEICHNUNG DES SIMULATIONSZEITRAUMES
+!*           ISIM = 0  BEI EINER L A N G Z E I T SIMULATION
+!*           ISIM = 1   "    "   K U R Z Z E I T     "
+!*
+      INTEGER ISIM
+      COMMON /ISC/ ISIM

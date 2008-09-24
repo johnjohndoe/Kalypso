@@ -1,0 +1,7 @@
+      include 'include/q.cmn'
+      include 'include/rhb.cmn'
+      include 'include/rhb2.cmn'
+      include 'include/knt.cmn' 
+      include 'include/is.cmn'
+      include 'include/filnm.cmn'
+

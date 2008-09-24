@@ -1,0 +1,10 @@
+!* * * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK FUR DAS HAUPTPROGRAMM    *
+!*              UND DIE SUBROUTINE INPUT *
+!* * * * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablendeklaration siehe INPUT.DOC
+!*
+      INTEGER IZKN,IZKN_VERS
+
+      COMMON /ZC/ IZKN,IZKN_VERS

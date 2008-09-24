@@ -1,0 +1,10 @@
+	include      'include\tg.cmn'
+!cccc
+!c common grundwasserspeicher
+
+	include	'include\gwl.cmn'
+	include	'include\qgw.cmn'
+	include	'include\kluft.cmn'
+	include	'include\str.cmn'
+	include	'include\ret.cmn'
+	include	'include\gw.cmn'

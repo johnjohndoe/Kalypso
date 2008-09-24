@@ -1,0 +1,18 @@
+!c include gebiet
+
+      include 'include\s1.cmn'
+      include 'include\b4n.cmn'
+      include 'include\intfl.cmn'
+      include 'include\geb.cmn'
+      include 'include\ret.cmn'
+	include 'include\anf.cmn'
+      include 'include\tg.cmn'
+      include 'include\is.cmn'
+      include 'include\gw.cmn'
+      include 'include\gwl.cmn'
+ 	include	'include\qgw.cmn'
+	include	'include\kluft.cmn'
+	include	'include\str.cmn'
+	include 'include\nad.cmn'
+      include 'include\filnm.cmn'
+      include 'include\orohyf.cmn'
