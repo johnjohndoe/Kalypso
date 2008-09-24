@@ -1,0 +1,24 @@
+      include 'include/netz.cmn'
+      include 'include/geb.cmn'
+      include 'include/q.cmn'
+      include 'include/ger.cmn'
+      include 'include/isov.cmn'
+      include 'include/anf.cmn'
+      include 'include/gw.cmn'
+      include 'include/rhb.cmn'
+      include 'include/rhb2.cmn'
+      include 'include/tg.cmn'
+      include 'include/knt.cmn'
+      include 'include/is.cmn'
+      include 'include/filnm.cmn'
+      include 'include/ztgw.cmn'
+!c common grundwasserspeicher
+	include	'include/qgw.cmn'
+	include	'include/kluft.cmn'
+	include	'include/str.cmn'
+
+      include 'include/nad.cmn'
+      include 'include/opf.cmn'
+
+
+

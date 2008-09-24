@@ -1,0 +1,8 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER SUBROUTINE ISOV  *
+!* * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerlaeuterung siehe ISOVDOC
+!*
+      REAL BETA
+      COMMON /ISOVC/ BETA

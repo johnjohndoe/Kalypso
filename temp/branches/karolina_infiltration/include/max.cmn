@@ -1,0 +1,9 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK      ABFLUSZ-MAXIMUM *
+!*                   Zeitschritt der *
+!*                   N-A-SIMULATION  *
+!* * * * * * * * * * * * * * * * * * *
+
+      INTEGER IGMAX
+      REAL    QMAX,DT
+      COMMON /MAXC/ IGMAX,QMAX,DT

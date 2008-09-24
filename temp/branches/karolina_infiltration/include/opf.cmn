@@ -1,0 +1,11 @@
+!* * * * * * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK FUER DIE SUBROUTINE BODEN4 UND  *
+!*              UND DEN STEUERDATENSATZ (HAUPT- *
+!*              PROGRAMM)                       *
+!* * * * * * * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerlaeuterung siehe NAMODELL.DOC
+!*
+        LOGICAL LOP
+        CHARACTER*6 FNAME
+        COMMON /OPFC/ LOP,FNAME

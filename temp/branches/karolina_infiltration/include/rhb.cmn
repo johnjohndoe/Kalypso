@@ -1,0 +1,10 @@
+!* * * * * * * * * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER ANFANGSSPEICHERINHALTE           *
+!*              PRO RUECKHALTEBECKEN (STRANGNUMMER)  *
+!* * * * * * * * * * * * * * * * * * * * * * * * * * *
+      INTEGER JMAXCON
+      PARAMETER (JMAXCON=50)
+      INTEGER JMAX,JNR(JMAXCON)
+      REAL    SV1(JMAXCON,3)
+
+      COMMON /RHBC/ JMAX,JNR,SV1

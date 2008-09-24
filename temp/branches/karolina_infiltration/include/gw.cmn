@@ -1,0 +1,9 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER SUBROUTINE GWSP  *
+!* * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablendeklaration siehe GWSP.DOC
+!*
+      REAL QB(IDIM)
+
+      COMMON /GWC/ QB

@@ -1,0 +1,10 @@
+!* * * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK FUR    *
+!*              UND DIE SUBROUTINE GWSP  *
+!* * * * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablendeklaration siehe NAMODELL.DOC
+!*
+      INTEGER ITLMAX,ITLZ(JDIM)
+
+      COMMON /STRC/ ITLMAX,ITLZ

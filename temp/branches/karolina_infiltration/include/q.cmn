@@ -1,0 +1,9 @@
+!* * * * * * * * * * * * * * * *
+!*  COMMONBLOCK GESAMTABFLUSZ  *
+!* * * * * * * * * * * * * * * *
+!*
+!*  Variablenerklaerung siehe NAMODELL.DOC
+!*
+      REAL QG(IKDIM,IDIMTGW)
+      COMMON /QC/ QG
+

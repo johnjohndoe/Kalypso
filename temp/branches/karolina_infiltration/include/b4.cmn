@@ -1,0 +1,10 @@
+!* * * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER SUBROUTINE BODEN4  *
+!* * * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerlaeuterung siehe GEBIET.DOC
+!*
+      REAL BMAX,BO,FKO,CINH,CIND,CEX,BIMAX,BIANF,B(IDIM),BI(IDIM), &
+             F_EVA,FINT,FTRA
+      COMMON /BDNC/ BMAX,BO,FKO,CINH,CIND,CEX,BIMAX,BIANF,B,BI,    &
+             F_EVA,FINT,FTRA
