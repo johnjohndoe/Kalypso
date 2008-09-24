@@ -1,0 +1,14 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK UEBER DIE DAUER DER  *
+!*              N-A-SIMULATION       *
+!* * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerklaerung siehe NAMODELL.DOC
+!*
+
+!*JH CHAR_IDATSA hinzugefügt (13.10.04)
+      INTEGER NATG,NAMO,NAJA,NAST,NETG,NEMO,NEJA,NEST
+      INTEGER IDATA,IDATE,IDATSA,IDATSE,IDAT
+      CHARACTER*8 CHAR_IDATSA	
+      COMMON /NADC/ NAJA,NAMO,NATG,NAST,NEJA,NEMO,NETG,NEST,   &
+                   IDATA,IDATE,IDATSA,IDATSE,IDAT,CHAR_IDATSA

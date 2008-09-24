@@ -1,0 +1,767 @@
+!     Last change:  KV   16 Sep 2008    4:19 pm
+
+!
+! This code is part of the library 'Kalypso-NA'.
+! KALYPSO-NA is a deterministic, non-linear, detailed Rainfall-Runoff-Model (RRM).
+! The model permits a complete simulation of the land bound
+! part of the global water balance as aw reaction on observed precipitation events.
+! Copyright (C) 2004  HAMBURG UNIVERSITY OF TECHNOLOGY, Department of River and
+! Coastal Engineering (in co-operation with Bjoernsen Cunsulting Engineers)
+!
+! This library is free software; you can redistribute it and/or
+! modify it under the terms of the GNU Lesser General Public License
+! as published by the Free Software Foundation, version 2.1.
+!
+! This library is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+! Lesser General Public License for more details.
+!
+! You should have received a copy of the GNU Lesser General Public
+! License along with this library; if not, write to the Free Software
+! Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+!
+! For information please contact:
+! HAMBURG UNIVERSITY OF TECHNOLOGY, Department of River and
+! Coastal Engineering. Denickestr. 22, 21073 Hamburg, Germany.
+! Dipl.-Ing. Jessica H¸bsch:   phone: +49 40 42878 4181 mail: j.huebsch@tuhh.de
+! See our web page: www.tuhh.de/wb
+!
+!
+! HAMBURG UNIVERSITY OF TECHNOLOGY, Department of River and
+! Coastal Engineering, hereby disclaims all copyright interest in
+! the library 'Kalypso-NA'.
+!
+! Jessica H¸bsch, 16 August 2004
+! Research Associate
+!
+!***********************************************************************************************
+   subroutine inf_mic(dt,pr,Imic_real,m_tief,wp,bmax,nfk,alpha,kf,n,l,ilay,nb, &
+                      bof,nn,t,perk,kcita,it,bof_end,bof_kho,cex,bof_extra,&
+                      m_retlay,diff_percc,diff_bho,bof_layer,kzif,epot,evapo,bof_ho,kunsat,&
+                      sumImic_real,kh1,itime,h_low,Imicpot,overlandflow,boderr, &
+                      bof_ilay,itime_max,sumeva,ndx)
+
+!**************************************ƒNDERUNGEN***********************************************
+
+
+!     Date      Programmer      	Description of change
+!     ====      ==========      	=====================
+!  16.09.2008   Karolina-Villagra       Infiltration in micropores by Bronstert:
+!                                       used simplified Richards equation and Van Genuchten for
+!                                       calculating unsaturated hydraulic conductivity
+
+
+!***************************************BESCHREIBUNG********************************************
+!c    Infiltration only in micropores
+!c
+!c
+!c
+!***************************************EIN-/AUSGABE********************************************
+!c    Eingabe:
+!c		kzif	=1 akt. evapotranspiration linear aus bodenfeuchte
+!c		     	=2   "     "   nach wendling entsp. DVWK-empfehltung
+!c		dt      zeitschrittweite  (h)
+!c     		pr	niederschlag abzuegl.interzeption (mm)
+!               peff    effective precipitation (mm/h)
+!c     		epot	potentielle verdunstung (mm)
+!c     		kap	kapilare aufstiegsrate (mm)
+!c              wp      wilting point (mm)
+!c     		bmax	nutzbare max.bodenfeuchte  (mm)
+!c     		nfk	nutzbare feldkapazitaet    (mm)
+!c
+!c
+!c     		bof	bodenfeuchte aus zeitschritt t-1 (mm)
+!c              m_bf0   initial soil moisture
+!               wcr     residual soil moisture (mm)
+!               wcs     saturated soil moisture (mm)
+!c              n       van Genuchten parameter
+!               l       pore connectivity (-)
+!c              alpha   van Genuchten parameter  (1/cm)
+!c              vmacro  total volume of macropores (fraction of %)
+!               r       average radial distance between macropores (cm)
+!c              wt_c    root depth  (m)
+!c              vmacro water content in macropores    (mm)
+!c              kff     saturated hydraulic conductivity (mm/d)
+!c              it      counter
+!               sumhz   sum of water content in macropores per hydrotop (mm)
+!               sumhzz  sum water content in macropores per hydrotop per layer (mm)
+!               sumtief sum of the thickness of soil profile  (mm)
+!               m_tief  thickness of soil layer  (dm)
+!               hz      water content in macropores (mm)
+!               hoo     excess water content in macropores (return flow!!) (mm)
+!
+!c
+!c    Ausgabe:
+!c
+!c     		bof	bodenfeuchte  zeitschritt t (mm)
+!c		inf     aktuelle infiltration          (mm)
+!               infm    infiltration (with macropores) (mm)
+!c		eva        "     verdunstung aus boden (mm)
+!c		perk       "     durchsickerung        (mm)
+!               Imicc_real 	real infiltration in soil matrix (mm)
+!               Imac_mic        interaction macro-micro pores (mm)
+!               Imacc_real      real infiltration in macropores (mm)
+!c
+!******************************************VARIABLEN********************************************
+
+USE generic_LOGGER
+USE Units
+
+IMPLICIT NONE
+include	'include\param.cmn'
+include      'include\is.cmn'
+
+
+ INTEGER, INTENT(IN):: kzif,t,it,itime,ilay,nn,nb
+ REAL, INTENT(IN):: n,alpha,l,pr,dt,bof,m_tief(maxlay,idimnutz2),m_retlay(maxlay,idimnutz2),  &
+                    epot,kf
+ REAL,INTENT(IN)::  wp,bmax,nfk
+ REAL:: wpdx,bmaxdx,nfkdx
+
+
+ INTEGER:: ndx,ndx1,i,itime_max
+ REAL:: pre,precip(maxndx)
+ REAL:: expo,dx,x,xx
+
+ REAL:: sumImic_pot,sumbof,sumboderr,sumeva,sumImic_real(maxlay,idimnutz2)
+ REAL:: boderrr,boderr
+ REAL:: overlandflow
+ REAL:: percc,perk,cex
+
+
+ REAL:: bof_extra,bof_extra1(maxndx),bof_extra2(maxndx),bof_extra3(maxndx),bof_extra4(maxndx)
+
+ REAL:: bofdx,bof_end(maxndx,maxlay,2*idimnutz2),bof_dx,bofho,bof_ho(maxndx,2*idimnutz2),  &
+ 	bof_kho(maxndx,maxlay,2*idimnutz2),bof_new,bof_ilay,bof_layer,bofdxx
+
+ REAL:: diff_percc(maxndx,maxlay,2*idimnutz2),diff_bho(maxlay,2*idimnutz2), &
+        diff_inf
+
+ REAL:: kunsat(maxndx,2*idimnutz2),kcita,kh1(maxndx,maxlay,2*idimnutz2)
+ REAL:: h1(maxndx),ho(maxndx),dh,hoo,h_low
+ REAL:: eva,evapo(maxndx,2*idimnutz2),rfak
+
+ REAL:: Imic_pot,Imic_reall,Imic_reall_,Imax,Imic,delta_imic,   &
+ 	Imic_real(2*idimnutz2,maxlay,idim),Imicpot(2*idimnutz2,maxlay,idim)
+
+ REAL::check,xdif
+ REAL, parameter :: abort=100
+ INTEGER::errcount
+ REAL:: fehler
+
+
+!-------------------------------------------------------------------------------------------------
+!1. Initialization of local variables
+
+  expo=(-n/(n-1.))
+  dx=0.2 !set discretization to 0,2 dm for all layers
+  ndx=m_tief(ilay,nb)/dx
+  sumImic_pot=0.
+  sumbof=0.
+  sumboderr=0.
+  eva=0.
+  overlandflow=0.
+  bof_extra=0.
+  bof_ilay=0.
+  sumeva=0.
+
+  do i=1, ndx
+
+     precip(i)=0.
+     bof_extra1(i)=0.
+     bof_extra2(i)=0.
+     bof_extra3(i)=0.
+     bof_extra4(i)=0.
+     Imic_reall=0.
+     percc=0.
+
+!2. Define precipitation for i
+
+     if (i .eq. 1) then
+         pre=pr
+     else      ! ver si pre en i>1, si interflow=0, no se le suma lo que sobra de arriba del layer??
+        pre=precip(i-1)
+     end if
+    !write (nres,*)'pre_en i', pre
+
+
+!3. Soil moisture boundary conditions
+
+if (it .eq. itime) then
+    itime_max=itime
+end if
+!write (nres,*)'itime_max',itime_max
+!write (nres,*)'itime',itime
+     if (t .eq. 1 .and. it .eq. 1) then   !soil moisture for h1 of dx for t=1
+         bofdx=(bof/m_tief(ilay,nb))*dx
+!         write (nres,*)'bofdx_a',bofdx
+     END if
+     if (t .gt. 1 .and. it .eq. 1) then
+        if (itime .eq. itime_max) then
+           bofdx=bof_end(i,ilay,itime)
+ !          write (nres,*)'bof_end(i,ilay,itime)',bof_end(i,ilay,itime)
+
+        end if
+        if (itime .ne. itime_max) then
+           x=itime_max/itime
+           xx=itime*x
+  !         write (nres,*)'x',x
+  !        write (nres,*)'xx',xx
+           bofdx=bof_end(i,ilay,xx)
+  !         write (nres,*)'bof_end(i,ilay,xx)',bof_end(i,ilay,xx)
+        end if
+     end if
+
+      if (it .gt. 1) then
+       bofdx=bof_end(i,ilay,it-1)
+  !     write (nres,*)'bofdx_b',bofdx
+     end if
+     if (bofdx .lt. wpdx) then                !!! why comes before wpdx calculation????
+        bofdx=wpdx
+   !     write (nres,*)'bofdx_c',bofdx
+     end if
+     bof_dx=bofdx
+     bofdxx=bof_dx
+     !sumboderr=bof_dx
+     wpdx=(wp/m_tief(ilay,nb))*dx
+     bmaxdx=(bmax/m_tief(ilay,nb))*dx
+     nfkdx=(nfk/m_tief(ilay,nb))*dx
+    !write (nres,*)'bofdx 3',bofdx
+    !write (nres,*)'bmax',bmaxdx
+    !write (nres,*)'wpdx',wpdx
+    !   write (nres,*)'nfk',nfkdx
+!4. If no interflow add water not percolated to actual moisture conditions
+    !Interflow when m_retlay=1.0, when m_retlay=0.0 then this option is active-----
+
+        if (m_retlay(ilay,nb) .eq. 0.) then
+          if (it .gt. 1) then
+            if (i .lt. ndx) then
+               if (diff_percc(i+1,ilay,it-1) .LT. 0.) then
+                  bof_dx=bof_dx+ABS(diff_percc(i+1,ilay,it-1))
+               end if
+            else
+               if (diff_bho(ilay+1,it-1) .gt. 0.) then
+                  bof_dx=bofdx+diff_bho(ilay+1,it-1)
+               end if
+            end if
+          end if
+        end if
+
+     !   write (nres,*)'bof_dx retlay 0',bof_dx
+
+!5.Initial Soil moisture for lower part of i(dx)
+
+    if (bof_dx .gt. bmaxdx) then
+         bof_extra1(i)=bof_dx-bmaxdx
+         bof_dx=bmaxdx
+    end if
+    !write (nres,*)'bofdx 5',bofdx
+!6. Soil tension for lower part of i(dx)
+
+    h1(i)=(((((bof_dx)/bmaxdx)**expo)-1.)**(1./n))/alpha
+    if (bof_dx .lt. wpdx) then
+    h1(i)=15000.
+    end if
+
+!7. Initial soil moisture & tension for upper part of i(dx)
+
+
+if (ilay .eq. 1 .and. i .eq. 1) then
+    if (pre .gt. 0.) then
+        bofho=bmaxdx
+        ho(i)=((((bofho/bmaxdx)**expo)-1.)**(1./n))/alpha
+    end if
+end if
+
+if (ilay .gt. 1 .and. i .eq. 1) then
+    if (bof_kho(ndx1,ilay-1,it) .gt. bmaxdx) then
+        diff_bho(ilay,it)=bof_kho(ndx1,ilay-1,it)-bmaxdx   !********************************
+        bof_kho(ndx1,ilay-1,it)=bmaxdx
+    end if
+    bofho=bof_kho(ndx1,ilay-1,it)
+    ho(i)=((((bofho/bmaxdx)**expo)-1.)**(1./n))/alpha
+end if
+
+
+if (i .gt. 1) then
+    bofho=bof_end(i-1,ilay,it)
+    ho(i)=((((bofho/bmaxdx)**expo)-1.)**(1./n))/alpha
+end if
+
+if (ilay .eq. 1 .and. i .eq. 1 .and. pre .eq. 0.) then
+   if (it .eq. 1) then
+       bofho=bofdx
+       ho(i)=((((bofho/bmaxdx)**expo)-1.)**(1./n))/alpha
+   else
+       if (kunsat(i,it-1) .lt. kunsat(i+1,it-1)) then
+           bofho=bof_ho(i,it-1)-(evapo(i,it-1)+kunsat(i,it-1)*dt)
+       else
+           bofho=bof_ho(i,it-1)-(evapo(i,it-1)+kunsat(i+1,it-1)*dt)
+       end if
+   end if
+
+END if
+bof_ho(i,it)=bofho
+if (bofho .lt. wpdx) then
+   bof_ho(i,it)=wpdx
+end if
+
+
+
+!7.1  Transpiration
+!--------------
+ if(bofho.le.0.) then
+    eva = 0.
+ elseif(kzif.eq.1) then
+   if(bofho.gt.nfkdx) then
+      eva=epot*dx/m_tief(ilay,nb)
+   else
+      eva=(epot*dx/m_tief(ilay,nb))*bofho/nfkdx
+   endif
+ else
+    rfak=(1.-wpdx/(wpdx+bofho))/(1.-wpdx/(wpdx+nfkdx))
+    eva = epot*dx/m_tief(ilay,nb)*rfak
+ endif
+
+ evapo(i,it)=eva
+ sumeva=sumeva+eva
+
+ !write (nres,*)'eva',eva
+!8. Unsaturated hydraulic conductivity
+
+
+     call unsat_cond(kcita,alpha,kf,n,l,bof_dx,bmaxdx,wpdx,ilay,i,bofho,kh1,bof_kho,ndx1,it)
+
+
+     kunsat(i,it)=kcita
+     if (bofho .lt. wpdx) then
+     ho(i)=15000.
+     end if
+
+!9. Infiltration-Richard¥s equation
+
+     dh=(h1(i)-ho(i))
+     Imic_pot=(((kcita*dh/(dx*10.))-kcita)*dt/24.)
+
+
+     if (Imic_pot .gt. bmaxdx) then
+        Imic_pot=bmaxdx
+     end if
+
+
+  !   write (nres,*)'Imic_pot',Imic_pot
+     sumImic_pot=sumImic_pot+Imic_pot       !*******************Se puede quitar
+
+ !in case there is no precipitation!
+     Imax=pre
+
+       if (m_retlay(ilay,nb) .eq. 0.) then
+          if (i .eq. 1) then
+             if (ilay .eq. 1) then
+                Imax=pre
+   !             write (nres,*)'Imax1',Imax
+             else
+                Imax=pre+diff_percc(hoo,ilay-1,it)
+   !             write (nres,*)'Imax2',Imax
+             end if
+         else
+             Imax=pre+diff_percc(i-1,ilay,it)
+    !         write (nres,*)'Imax3',Imax
+         end if
+       end if
+
+     !write (nres,*)'Imax',Imax
+     if (pre .gt. 0. .or. ho(i) .lt. h1(i) ) then
+         Imic_reall= MIN(Imax,Imic_pot)
+     else
+         if (ho(i) .gt. h1(i)) then
+         Imic_reall=0.
+         end if
+     end if
+      !write (nres,*)'Imic_real_minimos',Imic_reall
+
+!10. Percolation
+
+     if (bof_dx .lt. nfkdx) then
+        percc=0.
+       ! write (nres,*)'percc1',percc
+     else
+     cex=kf*bmaxdx/24./(bmaxdx-nfkdx)
+        percc=(cex*(bof_dx/bmaxdx - nfkdx/bmaxdx)*dt)
+         !percc=(kh1(i,ilay,it)*(bof_dx/bmaxdx - nfkdx/bmaxdx)*dt)
+        !if (percc .gt. bof_dx) then
+        ! write (nres,*)'percc2',percc
+        !   write (nres,*)'bof_dx',bof_dx
+        !    write (nres,*)'bmaxdx',bmaxdx
+        !    write (nres,*)'nfkdx',nfkdx
+        !    write (nres,*)'cex',cex
+        !    write (nres,*)'dt',dt
+        !     write (nres,*)'kf',kff
+        !end if
+        if((bof_dx-percc).lt.nfkdx) then
+	          percc=bof_dx-nfkdx
+        !          write (nres,*)'percc3',percc
+        end if
+     end if
+
+     !write (nres,*)'percc i',percc
+
+!11. Dynamics when in dx bof=bmax, then inf=perc
+Imic_reall_=Imic_reall
+
+     if (bof_dx .eq. bmaxdx) then
+        if (pre .ge. percc) then
+           Imic_reall=percc
+           bof_extra2(i)=pre-Imic_reall
+        else
+           Imic_reall=pre
+        end if
+     end if
+
+     Imic=Imic_reall
+
+     !write (nres,*)'Imic_real 2',Imic_reall
+!12. Check if inf creates higher moisture than bmax
+
+     if (bof_dx .lt. bmaxdx) then    !lo cambie de .ne. a .le.
+        if ((bof_dx+Imic_reall) .gt. bmaxdx) then
+           Imic_reall=bmaxdx-bof_dx
+           !bof_dx=bmaxdx                         !esto lo agregue el jueves 7 feb
+        end if
+        !bof_extra4(i)=pre-Imic_reall
+        delta_imic=Imic-Imic_reall
+        if (delta_imic .lt. 0.) then
+           !error
+           stop
+        end if
+     end if
+
+    !write (nres,*)'Imic_real delta',Imic_reall
+!13. Extra conditions for Imic_reall
+
+     if (percc .gt. 0.) then                                         !!a que es igual el bofdx????
+        if (bof_dx .ne. bmaxdx) then
+           if (pre .gt. 0.) then
+
+              if ((pre-Imic_reall) .ge. 0.) then
+                 diff_inf=pre-Imic_reall
+
+                 if (diff_inf .ge. percc) then
+                    Imic_reall=Imic_reall+percc
+                 else
+                    Imic_reall=Imic_reall+diff_inf
+                 end if
+              bof_extra3(i)=pre-Imic_reall
+              end if
+           end if
+        end if
+     end if
+   ! write (nres,*)'Imic_real 3',Imic_reall
+!if (i .gt. 1) then
+   if (pre .gt. Imic_reall) then
+      bof_extra4(i)=pre-Imic_reall
+   end if
+
+ !end if
+
+    !write (nres,*)'Imic_real 4',Imic_reall
+!14. New soil moisture
+if (eva .gt. bof_dx) then
+   eva=bof_dx
+end if
+
+300     bof_new=bof_dx+Imic_reall-percc-eva
+
+     bofdx=bof_new
+
+
+
+    ! write (nres,*)'bof_new',bof_new
+
+     if (bof_new .lt. 0.) then
+        write (nres,*)'t',t
+        write (nres,*)'it',it
+        write (nres,*)'bof_new',bof_new
+        write (nres,*)'i',i
+  write (nres,*)'sumboderr',sumboderr
+  write (nres,*)'pr',pre
+  write (nres,*)'Imic',Imic_reall
+  write (nres,*)'perk',percc
+  write (nres,*)'bof',bofdx
+  write (nres,*)'bof',bofdxx
+  write (nres,*)'bof_dx',bof_dx
+  write (nres,*)'bof_extra1',bof_extra1(i)
+ write (nres,*)'bmax',bmaxdx
+ write (nres,*)'nfkdx',nfkdx
+  write (nres,*)'bof_extra2',bof_extra2(i)
+  write (nres,*)'bof_extra3',bof_extra3(i)
+  write (nres,*)'bof_extra4',bof_extra4(i)
+  write (nres,*)'eva',eva
+     end if
+
+
+    !not necessary because previous step made it balance
+     !if (bofdx .gt. bmaxdx) then
+     !   bof_extra4=bofdx-bmaxdx
+     !   bofdx=bmaxdx
+     !end if
+
+!15. Recalculate tension of lower part of dx
+
+     h1(i)=(((((bofdx)/bmaxdx)**expo)-1.)**(1./n))/alpha
+
+!16. Recalculate Kh
+
+     call unsat_cond(kcita,alpha,kf,n,l,bof_dx,bmaxdx,wpdx,ilay,i,bofho,kh1,bof_kho,ndx1,it)
+
+!17. New percolation
+     !if interflow exists: bof_extra1 does not count in percolation
+
+     if (m_retlay(ilay,nb) .eq. 0.) then
+         percc=percc!+bof_extra1 !if bof was gt bmax in (5) this extra water goes down in every dx
+     end if
+
+!18. Define precipitation for next i
+
+     if (i .lt. ndx) then
+        precip(i)=percc
+     end if
+
+     if (i .eq. ndx) then
+        perk=percc
+     end if
+
+!19. Define soil moisture for upper part of ilay+1
+
+     if (i .eq. ndx) then    !this is the start moisture value for the next layer
+        ndx1=ndx
+        bof_kho(ndx1,ilay,it)=bofdx
+     end if
+
+!20. Define soil moisture upper part of dx  (in same layer)
+
+     bof_end(i,ilay,it)=bofdx
+    ! write (nres,*)'bof_end',bof_end(i,ilay,it)
+
+
+!21. Determine Imic_reall for the layer
+     !only considers what enters in dx(1) the other imic_reall is only for dynamics of the layer
+
+     if (i .eq. 1) then
+        !if (itime .gt. 1) then
+        !    sumImic_real(ilay,it)=sumImic_real(ilay,it-1)+Imic_reall
+        !else
+            sumImic_real(ilay,it)=Imic_reall
+        !end if
+
+     end if
+
+!22. Water not percolated to next layer or dx
+     !if interflow exists: sumbof_extra is added to pstau in (boden)
+     !if interflow not exist: diff_percc is added to moisture of dx in next i
+
+
+     if (m_retlay(ilay,nb) .eq. 0.) then
+        !if (bof_extra3(i) .gt. 0.) then
+           diff_percc(i,ilay,it)=bof_extra2(i)+bof_extra3(i)+bof_extra4(i)+bof_extra1(i)
+
+      !     write (nres,*)'diff_percc(i,ilay,it)',diff_percc(i,ilay,it)
+      !     write (nres,*)'bof_extra1',bof_extra1(i)
+
+  !write (nres,*)'bof_extra2',bof_extra2(i)
+  !write (nres,*)'bof_extra3',bof_extra3(i)
+  !write (nres,*)'bof_extra4',bof_extra4(i)
+
+        !else
+         !  diff_percc(i,ilay,it)=bof_extra2(i)+bof_extra4(i)+bof_extra1(i)
+        !end if
+
+
+        !if (ilay .eq. 1 .and. i .eq. 1) then                  !PORQUE SOLO ILAY=1????
+              !sumbof_extra(ilay,it)=diff_percc(i,ilay,it)+sumbof_extra(ilay,it-1)
+               bof_extra=diff_percc(i,ilay,it)+bof_extra
+
+        !end if
+
+     else
+        !if (bof_extra3(i) .gt. 0.) then
+              !sumbof_extra(ilay,it)=sumbof_extra(ilay,it)+bof_extra1(i)+bof_extra2(i)+bof_extra3(i)+diff_bho(ilay,it)    !diff_bho???
+        !      bof_extra=bof_extra+bof_extra1(i)+bof_extra2(i)+bof_extra3(i)+diff_bho(ilay,it)+overlandflow    !diff_bho???
+        !   else
+              bof_extra=bof_extra+bof_extra1(i)+bof_extra2(i)+bof_extra3(i)+bof_extra4(i)+diff_bho(ilay,it)+overlandflow
+        !end if
+     end if
+
+       boderrr=bof_dx-bof_new+Imic_reall-percc-eva!+(bof_extra1(i)+bof_extra2(i)+bof_extra3(i)+bof_extra4(i))
+
+       sumboderr=sumboderr+boderrr
+
+       if(abs(boderrr).gt.0.1) then
+         write (nres,*)'nn',nn
+  write (nres,*)'i',i
+  write (nres,*)'sumboderr',sumboderr
+  write (nres,*)'pr',pre
+  write (nres,*)'Imic',Imic_reall
+  write (nres,*)'perk',percc
+  write (nres,*)'eva',eva
+  write (nres,*)'bof',bof_new
+  write (nres,*)'bof_dx',bof_dx
+  write (nres,*)'bof_extra1',bof_extra1(i)
+ write (nres,*)'bmax',bmaxdx
+ write (nres,*)'nfkdx',nfkdx
+  write (nres,*)'bof_extra2',bof_extra2(i)
+  write (nres,*)'bof_extra3',bof_extra3(i)
+  write (nres,*)'bof_extra4',bof_extra4(i)
+
+END if
+
+
+check = bof_new - bmaxdx
+if ( check > 0.001 ) then
+    write (nerr,*)'bofdxx',bofdxx
+    write (nerr,*)'pr',pre
+    write (nerr,*)'bofnew',bof_new
+    write (nerr,*)'bmaxdx',bmaxdx
+    write (nerr,*)'nfkdx',nfkdx
+    write (nerr,*)'Imic_real_bof3',Imic_reall_
+    write (nerr,*)'Imic_reall',Imic_reall
+    write (nerr,*)'percc',percc
+    write (nerr,*)'eva',eva
+    write (nerr,*)'bof_extra1',bof_extra1(i)
+  write (nerr,*)'bof_extra2',bof_extra2(i)
+  write (nerr,*)'bof_extra3',bof_extra3(i)
+  write (nerr,*)'bof_extra4',bof_extra4(i)
+    write(nerr,*) 'xxx fehler1 in inf_mic (bofneu > bmax). kor. von inf, nach ',abort,&
+                  ' interationen abgebrochen -> differenz=',check
+
+    IF (errcount > abort) THEN
+       call writeLogIntRealReal(6,'Fehler in der Berechnung der Bodenfeuchte (bof_neu > bmax). Interationen abgebrochen.',&
+       & 'Error in calculation of the soil moisture (bof_neu > bmax). Interationen terminated!','','',0,'Differenz',check,&
+       & 'Iterationen',abort,'infmm')
+
+       stop !TODO: Fehlermanagment
+    END IF
+    xdif=bof_new-bmaxdx
+    bof_new=bmaxdx
+    Imic_reall=Imic_reall-xdif
+    if(Imic_reall.lt.0.) then
+       xdif=-Imic_reall
+       Imic_reall=0.
+       eva=eva+xdif
+        if(eva.gt.epot) then
+           xdif=eva-epot
+           eva=epot
+           if (xdif.gt.0.) then
+               write(nerr,'(a)')  'xxx fehler3 in inf_imic. kor. von perk '
+	       percc=percc+xdif
+	   endif
+	endif
+    endif
+    errcount = errcount + 1
+    goto 300
+endif
+if (bof_new.lt.0.) then
+    eva=eva+bof_new
+    bof_new=0.
+! CB 08.09.2004 Fehlermeldung bei negativer Bodenfeuchte erweitert.
+    write(nerr,1001)
+    call writeLogString( 7,'Fehler in der Berechnung der Bodenfeuchte! Bodenfeuchte negativ!', &
+              & 'Soil moisture negative!','','','','','','infmm')
+
+! CB 08.09.2004 Fehler produziert durch Schleife (goto 300) sehr groﬂe Errordatei, welche den Rechner
+! nahezu zum Absturz bringt. Daher wird nach der Fehlermeldung die Berechnung abgebrochen.
+    CLOSE(nerr)
+    stop
+
+    if(eva.gt.epot) then
+        xdif=eva-epot
+        eva=epot
+        percc=percc-xdif
+        if(percc.lt.0.) then
+           write(nerr,'(a)') 'xxx fehler4 in inf_imic. kor. von perk'
+
+           call writeLogString(6,'Fehler in der Bodenfeuchteberechnung. Korrektur der Perkolation!',&
+                   & 'Error in soil moisture calculation. correct it in percolation!','','','','','','infmm')
+
+	endif
+    endif
+    goto 300
+endif
+
+
+
+
+       sumbof=sumbof+bof_new
+
+       if (i .eq. ndx) then
+          h_low=h1(ndx)
+       end if
+
+       bof_ilay=bof_ilay+bof_new
+
+       fehler=pre-eva-bof_extra-diff_percc(i,ilay,it)-percc+(bofdxx-bof_new)
+       if (fehler .gt. 0.01) then
+       write (nres,*)'fehler',fehler
+         write (nres,*)'nn',nn
+  write (nres,*)'i',i
+  !write (nres,*)'sumboderr',sumboderr
+  write (nres,*)'pr',pre
+  !write (nres,*)'Imic',Imic_reall
+  write (nres,*)'perk',percc
+  write (nres,*)'eva',eva
+  write (nres,*)'bof',bof_new
+  write (nres,*)'bof_ini',bofdxx
+  write (nres,*)'bof_extra1',bof_extra1(i)
+ write (nres,*)'bmax',bmaxdx
+ write (nres,*)'nfkdx',nfkdx
+  write (nres,*)'bof_extra2',bof_extra2(i)
+  write (nres,*)'bof_extra3',bof_extra3(i)
+  write (nres,*)'bof_extra4',bof_extra4(i)
+  write (nres,*)'overland',overlandflow
+  write (nres,*)'diff_bho(ilay,it)',diff_bho(ilay,it)
+   write (nres,*)'bof_extra',bof_extra
+   write (nres,*)'diff_percc(i,ilay,it)',diff_percc(i,ilay,it)
+           write (nres,*)'m_retlay(ilay,nb)',m_retlay(ilay,nb)
+              write (nres,*)'Imic_reall',Imic_reall
+              write (nres,*)'Imic_pot',Imic_pot
+              write (nres,*)'Imax',Imax
+              write (nres,*)'kcita',kcita
+              write (nres,*)'dh',dh
+              write (nres,*)'dt',dt
+              write (nres,*)'dx',dx
+         stop
+       end if
+
+ if (i .eq. ndx) then
+     hoo=ndx
+ end if
+
+
+
+
+END do
+
+
+  !bof_layer=sumbof   !already bof+inf-perc
+  bof_layer=bof_ilay
+  !write (nres,*)'bof_layer1',bof_layer
+  boderr=sumboderr
+  !bof_extra=sumbof_extra(ilay,it)
+  !write (nres,*)'bof_extra',bof_extra
+  Imic_real(nn,ilay,it)=sumImic_real(ilay,it)
+  Imicpot(nn,ilay,it)=sumImic_pot
+ !write (nres,*)'Imic_real_layer',Imic_real(nn,ilay,it)
+
+   eva=sumeva
+
+!**********************************FEHLERMELDUNGEN UND FORMATE*****************************************
+1001  FORMAT (/ 1X, 'Fehler2 in bodf_n. kor. von eva!' /&
+      	      & 1X, 'Bodenfeuchte negativ!'/&
+              & 1X, 'Startwerte von aktuellem Modell erzeugt?')
+
+!******************************************************************************************************
+
+  end
+
+

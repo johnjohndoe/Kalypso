@@ -1,0 +1,30 @@
+falstart.lst	nfall
+Netzdatei		infil
+*.konfig		nin
+uh_gerinne		ngeruh
+tmp.dat			nt
+pre.dat			npin
+sch.dat			nh
+bof.dat			nbof
+bsp.dat			l3
+gws.dat			ngws
+qgs.dat			nqg
+qgg.dat			nqgg
+qna.dat			nqa
+qif.dat			nqif
+qvs.dat			nqvs
+qbs.dat			nqb
+qt1.dat			nqtg1
+qtg.dat			nqtg2
+qgw.dat			ngw
+kap.dat			nkap
+*.zft			nzf
+nmq.dat			nmq
+spi.dat			nsv
+sph.dat			nsh
+spv.dat			nsv_e
+spn.dat			nsv_p
+spb.dat			nsv_b
+sup.dat			nueb
+
+

@@ -1,0 +1,10 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER SUBROUTINE INTFL *
+!* * * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerlaeuterung siehe GEBIET.DOC
+!*
+      REAL TINT,RINTMX,AINT
+      COMMON /IFLC/ TINT,RINTMX,AINT
+
+

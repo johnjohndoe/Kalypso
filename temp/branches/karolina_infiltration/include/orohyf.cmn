@@ -1,0 +1,8 @@
+!* * * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK DER SUBROUTINEN ISOV *
+!*                            GEBIET *
+!*                             INPUT *
+!* * * * * * * * * * * * * * * * * * *
+
+      REAL OHF,VD
+      COMMON /OHYFC/ OHF,VD

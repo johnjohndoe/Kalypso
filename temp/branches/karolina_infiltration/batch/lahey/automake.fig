@@ -1,0 +1,8 @@
+QUITONERROR
+
+FILES=*.f90
+COMPILE=@lf95 -c -nap -nchk -ncover -ng -o1 -npca -trace -nsav -stchk -zero -w %fi
+
+LINK=@lf95 @%rf -exe %ex
+TARGET=kalypso.exe
+

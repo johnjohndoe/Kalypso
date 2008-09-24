@@ -1,0 +1,7 @@
+FC = g95
+LD = g95
+#FFLAGS = -g -Wall -fzero
+FFLAGS = -g
+# LDFLAGS = $(LIBS)
+# add your libraries after LIBS= , e.g. -lblas
+# LIBS = c:/mingw/lib

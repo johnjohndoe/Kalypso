@@ -1,0 +1,13 @@
+!* * * * * * * * * * * * * * * * * *
+!*  COMMONBLOCK FUER ANFANGSWERTE  *
+!*              UNTERSCHIEDLICHER  *
+!*              SUBROUTINEN        *
+!* * * * * * * * * * * * * * * * * *
+!*
+!*  Variablenerlaeuterung siehe INPUT.DOC
+!*
+      INTEGER IMAX
+      REAL NR(JDIM),H01(JDIM),W01(JDIM),BO1(MAXLAY,JDIM),    &
+            BIANF1(JDIM),AINT1(JDIM),AIGW1(JDIM)
+
+      COMMON /ANFC/ NR,IMAX,H01,W01,BO1,BIANF1,AINT1,AIGW1

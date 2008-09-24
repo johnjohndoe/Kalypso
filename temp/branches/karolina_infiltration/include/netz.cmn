@@ -1,0 +1,23 @@
+!******
+!*      common-Block zum Einlesen der Netzmatrix
+!*
+!*      Hauptprogramm BCENA1, NETAN
+!******
+      CHARACTER*80 NZUF(20)
+
+      INTEGER ISTRNG(JDIM),KNOTO(JDIM),KNOTU(JDIM),ITEIL(JDIM),    &
+             NTEIL(JDIM,IGWDIM),                                  &
+             IZUG(IKDIM),IABG(IKDIM),IUEB(IKDIM),                 &
+             IZUF(IKDIM),IVZWG(IKDIM),                            &
+             IKZIE(IKDIM),IKZUE(IKDIM),                           &
+             IKZ1(IKDIM)
+
+      REAL    QZUG(IKDIM),QABG(IKDIM),QUEB(IKDIM),ZPROZ(IKDIM)
+
+      COMMON /NETZC/ ISTRNG,KNOTO,KNOTU,ITEIL,NTEIL,               &
+              IZUG,IABG,IUEB,                                     &
+              IZUF,IVZWG,                                         &
+              IKZIE,IKZUE,IKZ1,ZPROZ,                             &
+              QZUG,QABG,QUEB,                                     &
+              NZUF
+
