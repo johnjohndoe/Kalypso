@@ -62,6 +62,10 @@ import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -243,6 +247,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
     m_provider = provider;
     m_provider.addProfilChartViewProviderListener( this );
+
     updateChartLegend();
   }
 

@@ -54,13 +54,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
 
@@ -110,8 +110,6 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     gridLayout.marginHeight = 0;
     m_control.setLayout( gridLayout );
     m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
-//TODO: KIM auskommentieren überprüfen
-    //updateControl();
 
     return m_control;
   }

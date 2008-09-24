@@ -248,17 +248,26 @@ public class TubePanel extends AbstractProfilView
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
         final IProfileObject tube = (IProfileObject) selection.getFirstElement();
+        final IProfileObject old = getProfil().getProfileObjects()[0];
 
-        if( tube != null && !tube.getId().equals( getProfil().getProfileObjects()[0].getId() ) )
+        if( tube != null && !tube.getId().equals( old.getId() ) )
         {
-          final ProfilOperation operation = new ProfilOperation( "Rohrquerschnitt ändern", getProfil(), true );
-          operation.addChange( new ProfileObjectSet( getProfil(), new IProfileObject[] { tube } ) );
+          final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
+          getProfil().addProfileObjects( new IProfileObject[] { tube } );
+          for( final IComponent cmp : tube.getObjectProperties() )
+          {
+            final IComponent oldCmp = old.getObjectProperty( cmp.getId() );
+            if( oldCmp != null )
+              operation.addChange( new ProfileObjectEdit( tube, cmp, old.getValue( oldCmp ) ) );
+          }
           new ProfilOperationJob( operation ).schedule();
+
 
         }
       }
     } );
-
+    Label spacer = new Label( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
+    spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
     createPropertyPanel();
 
     updateControls();
@@ -269,8 +278,7 @@ public class TubePanel extends AbstractProfilView
   protected void createPropertyPanel( )
   {
 
-    Label spacer = new Label( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
-    spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
+  
 
     for( final PropertyLine line : m_lines )
     {
@@ -307,7 +315,7 @@ public class TubePanel extends AbstractProfilView
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isObjectChanged() )
+    if( hint.isObjectChanged() || hint.isObjectDataChanged())
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
@@ -321,18 +329,18 @@ public class TubePanel extends AbstractProfilView
           }
         } );
     }
-    if( hint.isObjectDataChanged() )
-    {
-      final Control control = getControl();
-      if( control != null && !control.isDisposed() )
-        control.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            for( final PropertyLine line : m_lines )
-              line.updateValue();
-          }
-        } );
-    }
+//    if( hint.isObjectDataChanged() )
+//    {
+//      final Control control = getControl();
+//      if( control != null && !control.isDisposed() )
+//        control.getDisplay().asyncExec( new Runnable()
+//        {
+//          public void run( )
+//          {
+//            for( final PropertyLine line : m_lines )
+//              line.updateValue();
+//          }
+//        } );
+//    }
   }
 }

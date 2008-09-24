@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +92,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
 
+  private static final String MEM_LAYER_POS = "layerPosition"; //$NON-NLS-1$
+
   public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
 
   public static final String ID_AXIS_LEFT = "left";//$NON-NLS-1$
@@ -100,7 +104,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private final ColorRegistry m_colorRegistry; // defines the layers Line and PointStyle colors
 
-  private static final int TRASH_HOLD = 3; // mouse move pixels before start editing
+  // private static final int TRASH_HOLD = 3; // mouse move pixels before start editing
 
   private ICoordinateMapper m_mapper;
 
@@ -111,6 +115,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   private PlotDragHandlerDelegate m_plotDragHandler;
 
   private AxisDragHandlerDelegate m_axisDragHandler;
+
+  private IMemento m_memento = null;
 
   public ProfilChartView( final IProfil profile, final ColorRegistry colorRegistry )
   {
@@ -268,6 +274,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   /**
    * @deprecated use getAxis(String id)
    */
+  @Deprecated
   public IAxis getDomainRange( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_DOMAIN );
@@ -284,6 +291,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   /**
    * @deprecated use getAxis(String id)
    */
+  @Deprecated
   public IAxis getValueRangeLeft( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_LEFT );
@@ -292,6 +300,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   /**
    * @deprecated use getAxis(String id)
    */
+  @Deprecated
   public IAxis getValueRangeRight( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_RIGHT );
@@ -301,21 +310,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( id );
   }
-
-// private IChartLayer getActiveLayer( final ILayerManager mngr, final boolean canActivate )
-// {
-// for( final IChartLayer layer : mngr.getLayers() )
-// {
-// if( layer.isActive() )
-// return layer;
-// }
-// if( canActivate )
-// {
-// mngr.getLayers()[0].setActive( true );
-// return mngr.getLayers()[0];
-// }
-// return null;
-// }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
@@ -337,11 +331,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
               act = layer.getId();
           }
           createLayer();
+
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
           {
             if( act != null )
               layer.setActive( act.equals( layer.getId() ) );
           }
+
           return;
         }
         else if( hint.isPointsChanged() || hint.isMarkerDataChanged() || hint.isPointValuesChanged() || hint.isObjectDataChanged() || hint.isMarkerMoved() || hint.isProfilPropertyChanged()
@@ -349,6 +345,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
             if( layer instanceof IProfilChartLayer )
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+        sortLayer();
         redrawChart();
       }
     } );
@@ -405,6 +402,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         layer.setActive( active );
         activeLayerFound = activeLayerFound || active;
       }
+
       if( layer instanceof IExpandableChartLayer )
       {
         for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
@@ -415,8 +413,44 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         }
       }
     }
+
+    m_memento = memento;
+    sortLayer();
+
     if( !activeLayerFound )
       m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
+  }
+
+  protected final void sortLayer( )
+  {
+    if( m_memento == null )
+      return;
+    final Comparator<IMemento> memComp = new Comparator<IMemento>()
+    {
+
+      @Override
+      public int compare( IMemento o1, IMemento o2 )
+      {
+
+        final Integer pos1 = Integer.valueOf( o1.getTextData() );
+        final Integer pos2 = Integer.valueOf( o2.getTextData() );
+        if( pos1 == pos2 )
+          return 0;
+        else if( pos1 > pos2 )
+          return 1;
+        else
+          return -1;
+      }
+    };
+    final IMemento[] posMem = m_memento.getChildren( MEM_LAYER_POS );
+    Arrays.sort( posMem, memComp );
+    int j = 0;
+    for( final IMemento mem : posMem )
+    {
+      final IChartLayer layer = m_chart.getChartModel().getLayerManager().getLayerById( mem.getID() );
+      if( layer != null )
+        m_chart.getChartModel().getLayerManager().moveLayerToPosition( layer, j++ );
+    }
   }
 
   /**
@@ -427,18 +461,27 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( m_chart == null )
       return;
 
+    int pos = 0;
     for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
       if( layer != null )
       {
         final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
+
+        final IMemento layerpos = getMementoChild( memento, MEM_LAYER_POS, layer.getId(), true );
         layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
+        layerpos.putTextData( "" + pos++ ); //$NON-NLS-1$
         // nur eine Ebene tiefer
+
         if( layer instanceof IExpandableChartLayer )
         {
+          int childpos = 0;
           for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
           {
             final IMemento lmem = getMementoChild( memento, MEM_LAYER_VIS, child.getId(), true );
             lmem.putTextData( "" + child.isVisible() );
+
+            final IMemento memChPos = getMementoChild( layerpos, layer.getId(), child.getId(), true );
+            memChPos.putTextData( "" + childpos++ );
           }
         }
         final IMemento layeract = getMementoChild( memento, MEM_LAYER_ACT, layer.getId(), true );

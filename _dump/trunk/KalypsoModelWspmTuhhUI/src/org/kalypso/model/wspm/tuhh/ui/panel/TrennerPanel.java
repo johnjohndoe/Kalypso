@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -96,9 +101,9 @@ public class TrennerPanel extends AbstractProfilView
 
   protected Text m_bvr_text;
 
-  protected Combo m_fzl_combo;
+  protected ComboViewer m_fzl_combo;
 
-  protected Combo m_fzr_combo;
+  protected ComboViewer m_fzr_combo;
 
   protected Button m_db_add;
 
@@ -132,6 +137,9 @@ public class TrennerPanel extends AbstractProfilView
     final Label posrlabel = new Label( fliesszoneGroup, SWT.NONE );
     posrlabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
     posrlabel.setText( "rechts" );
+
+    final IComponent fz = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+
     m_fzl_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzl_text.addModifyListener( doubleModifyListener );
@@ -142,45 +150,86 @@ public class TrennerPanel extends AbstractProfilView
     m_fzr_text.addModifyListener( doubleModifyListener );
     m_fzr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 1 ) );
 
-    m_fzl_combo = new Combo( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
-    m_fzl_combo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzl_combo = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY );
+    m_fzl_combo.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzl_combo.setContentProvider( new ArrayContentProvider() );
+    m_fzl_combo.setInput( new Boolean[] { true, false } );
 
-    m_fzl_combo.add( "Böschungsfuß" );
-    m_fzl_combo.add( "Vorland" );
-    m_fzl_combo.addSelectionListener( new SelectionAdapter()
+    m_fzl_combo.setLabelProvider( new LabelProvider()
+    {
+
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        if( element.equals( true ) )
+          return "Böschungsfuß";
+        return "Vorland";
+      }
+    } );
+
+    m_fzl_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+
+        final Boolean value = (Boolean) selection.getFirstElement();
+
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
         if( deviders.length < 1 )
           return;
         final IProfilPointMarker devider = deviders[0];
-        final PointMarkerEdit edit = new PointMarkerEdit( devider, m_fzl_combo.getSelectionIndex() == 0 );
+        if( devider.getIntepretedValue() == value )
+          return;
+        final PointMarkerEdit edit = new PointMarkerEdit( devider, value );
 
         final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", profil, edit, true );
         new ProfilOperationJob( operation ).schedule();
       }
     } );
 
-    m_fzr_combo = new Combo( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
-    m_fzr_combo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzr_combo = new ComboViewer( fliesszoneGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_fzr_combo.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
+    m_fzr_combo.setContentProvider( new ArrayContentProvider() );
+    m_fzr_combo.setInput( new Boolean[] { true, false } );
 
-    m_fzr_combo.add( "Böschungsfuß" );
-    m_fzr_combo.add( "Vorland" );
-    m_fzr_combo.addSelectionListener( new SelectionAdapter()
+    m_fzr_combo.setLabelProvider( new LabelProvider()
+    {
+
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        if( element.equals( true ) )
+          return "Böschungsfuß";
+        return "Vorland";
+      }
+    } );
+
+    m_fzr_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+
+        final Boolean value = (Boolean) selection.getFirstElement();
+
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
         if( deviders.length < 2 )
           return;
         final IProfilPointMarker devider = deviders[1];
-
-        final PointMarkerEdit edit = new PointMarkerEdit( devider, m_fzr_combo.getSelectionIndex() == 0 );
+        if( devider.getIntepretedValue() == value )
+          return;
+        final PointMarkerEdit edit = new PointMarkerEdit( devider, value );
 
         final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", profil, edit, true );
         new ProfilOperationJob( operation ).schedule();
@@ -236,15 +285,13 @@ public class TrennerPanel extends AbstractProfilView
 
           final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
           final IComponent bordvoll = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-//          profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, db_devs[0].getPoint() );
-//          profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, db_devs[1].getPoint() );
 
- operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
- operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
- operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
+          operation.addChange( new PointPropertyAdd( profil, bordvoll ) );
+          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
+          operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
 //
- operation.addChange( new ActiveObjectEdit( profil, db_devs[1].getPoint(), bordvoll ) );
- new ProfilOperationJob( operation ).schedule();
+          operation.addChange( new ActiveObjectEdit( profil, db_devs[1].getPoint(), bordvoll ) );
+          new ProfilOperationJob( operation ).schedule();
 
         }
         else
@@ -282,52 +329,33 @@ public class TrennerPanel extends AbstractProfilView
       if( !m_fzl_text.isDisposed() )
       {
         if( fz_devs.length > 0 )
+        {
           m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[0].getPoint() ) ) );
+          m_fzl_combo.setSelection( new StructuredSelection( fz_devs[0].getIntepretedValue() ) );
+        }
         else
           m_fzl_text.setText( "unbekannt" );
       }
       if( !m_fzr_text.isDisposed() )
       {
         if( fz_devs.length > 1 )
+        {
           m_fzr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[1].getPoint() ) ) );
+          m_fzr_combo.setSelection( new StructuredSelection( fz_devs[1].getIntepretedValue() ) );
+        }
         else
           m_fzr_text.setText( "unbekannt" );
       }
-      if( !m_fzl_combo.isDisposed() )
-      {
-        if( fz_devs.length > 0 )
-        {
-          final Boolean valueFor = (Boolean) fz_devs[0].getIntepretedValue();
-          if( valueFor == null || valueFor )
-          {
-            m_fzl_combo.select( 0 );
-          }
-          else
-          {
-            m_fzl_combo.select( 1 );
-          }
-        }
-      }
-      if( !m_fzr_combo.isDisposed() && (fz_devs.length > 1) )
-      {
-        final Boolean valueFor = (Boolean) fz_devs[1].getIntepretedValue();
-        if( valueFor == null || valueFor )
-        {
-          m_fzr_combo.select( 0 );
-        }
-        else
-        {
-          m_fzr_combo.select( 1 );
-        }
-      }
 
-      if( !m_dbl_text.isDisposed() )
-      {
-        if( db_devs.length > 0 )
-          m_dbl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[0].getPoint() ) ) );
-        else
-          m_dbl_text.setText( "unbekannt" );
-      }
+      if( fz_devs.length > 0 )
+
+        if( !m_dbl_text.isDisposed() )
+        {
+          if( db_devs.length > 0 )
+            m_dbl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[0].getPoint() ) ) );
+          else
+            m_dbl_text.setText( "unbekannt" );
+        }
       if( !m_dbr_text.isDisposed() )
       {
         if( db_devs.length > 1 )

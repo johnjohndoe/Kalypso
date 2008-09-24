@@ -83,10 +83,10 @@ public class TuhhProfil extends AbstractProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
-    if( profileObjects == null || profileObjects.length > 1 )
+    if( profileObjects != null && profileObjects.length > 1 )
       throw new IllegalStateException( Messages.TuhhProfil_1 );
     setProperty( PROFILE_OBJECTS, null );
-    if( profileObjects.length > 0 )
+    if(profileObjects != null && profileObjects.length > 0 )
       return super.addProfileObjects( profileObjects );
     
     return profileObjects;
