@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -87,10 +88,10 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen.\n" + delegateTooltip );
@@ -109,7 +110,7 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
     {
       event.consume();
 
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
 
       IStatus status = DeleteFeElementsHelper.deleteSelectedFeContiLines( mapPanel );
       if( status != Status.OK_STATUS )

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -67,7 +68,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -83,7 +84,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 {
   private final class RemoveBoundaryConditionFromCalcUnitCommandExtension extends RemoveBoundaryConditionFromCalcUnitCommand
   {
-    protected RemoveBoundaryConditionFromCalcUnitCommandExtension( IBoundaryCondition boundaryCondition, ICalculationUnit calculationUnit, IFEDiscretisationModel1d2d model1d2d )
+    protected RemoveBoundaryConditionFromCalcUnitCommandExtension( final IBoundaryCondition boundaryCondition, final ICalculationUnit calculationUnit, final IFEDiscretisationModel1d2d model1d2d )
     {
       super( boundaryCondition, calculationUnit, model1d2d );
     }
@@ -101,7 +102,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   private final class AddBoundaryConditionToCalcUnitCommandExtension extends AddBoundaryConditionToCalcUnitCommand
   {
-    protected AddBoundaryConditionToCalcUnitCommandExtension( ICalculationUnit calculationUnit, IBoundaryCondition boundaryConditionToAdd )
+    protected AddBoundaryConditionToCalcUnitCommandExtension( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd )
     {
       super( calculationUnit, boundaryConditionToAdd );
     }
@@ -145,7 +146,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
@@ -191,14 +192,14 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       removeBoundaryCondition.setEnabled( true );
     }
 
-    popupMenu.show( mapPanel, p.x, p.y );
+    popupMenu.show( (Component) mapPanel, p.x, p.y );
   }
 
   private ActionListener makeRemoveBoundaryConditionListener( )
   {
     final ActionListener al = new ActionListener()
     {
-      public void actionPerformed( ActionEvent e )
+      public void actionPerformed( final ActionEvent e )
       {
         removeBoundaryConditionLines();
       }
@@ -210,8 +211,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked")//$NON-NLS-1$
-      public void actionPerformed( ActionEvent e )
+      public void actionPerformed( final ActionEvent e )
       {
         addBoundaryConditionLines();
       }
@@ -222,7 +222,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   protected void removeBoundaryConditionLines( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( mapPanel == null )
       return;
@@ -247,7 +247,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   protected void addBoundaryConditionLines( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( mapPanel == null )
       return;
@@ -271,7 +271,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
   }
 
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -279,7 +279,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   private void reinit( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     m_featureThemes = new IKalypsoFeatureTheme[m_themeElementQNames.length];
@@ -290,7 +290,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   @Override
@@ -320,10 +320,10 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie Randbedingungen in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
@@ -70,7 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.util.swt.StatusDialog;
 import org.kalypso.util.swt.StatusLabelProvider;
@@ -200,7 +200,7 @@ public class CalculationUnitLogComponent
       final IGeoStatus status = (IGeoStatus) firstElement;
       final GM_Object location = status.getLocation();
 
-      final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = m_dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
 
       if( location instanceof GM_Point )
       {

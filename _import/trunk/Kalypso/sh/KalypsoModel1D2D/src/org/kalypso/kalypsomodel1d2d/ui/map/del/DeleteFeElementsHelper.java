@@ -77,7 +77,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -95,7 +95,7 @@ public class DeleteFeElementsHelper
 {
 
   @SuppressWarnings("unchecked")
-  public static IStatus deleteSelectedFeElements( MapPanel mapPanel )
+  public static IStatus deleteSelectedFeElements( IMapPanel mapPanel )
   {
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
@@ -197,7 +197,7 @@ public class DeleteFeElementsHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static IStatus deleteSelectedFeContiLines( final MapPanel mapPanel )
+  public static IStatus deleteSelectedFeContiLines( final IMapPanel mapPanel )
   {
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();

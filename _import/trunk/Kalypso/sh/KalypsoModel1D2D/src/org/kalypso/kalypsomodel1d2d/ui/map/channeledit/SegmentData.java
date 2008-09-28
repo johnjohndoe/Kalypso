@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -1055,7 +1055,7 @@ public class SegmentData
     }
   }
 
-  public void paintSegment( final Graphics g, final MapPanel mapPanel ) throws Exception
+  public void paintSegment( final Graphics g, final IMapPanel mapPanel ) throws Exception
   {
     // g.dispose();
 
@@ -1073,7 +1073,7 @@ public class SegmentData
       paintLineString( m_bankRightInters, g, mapPanel, new Color( 100, 255, 50 ) );
   }
 
-  private void paintLineStringPoints( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color )
+  private void paintLineStringPoints( final LineString line, final Graphics g, final IMapPanel mapPanel, final Color color )
   {
     if( line == null )
       return;
@@ -1095,7 +1095,7 @@ public class SegmentData
     g.setColor( oldColor );
   }
 
-  private void paintPoint( final Point point, final Graphics g, final MapPanel mapPanel, final Color color )
+  private void paintPoint( final Point point, final Graphics g, final IMapPanel mapPanel, final Color color )
   {
     final Color oldColor = g.getColor();
     g.setColor( color );
@@ -1437,7 +1437,7 @@ public class SegmentData
   /**
    * the editable bank linestring is painted
    */
-  public void paintBankLineLineString( final MapPanel panel, final Graphics g, final int side, final Color color )
+  public void paintBankLineLineString( final IMapPanel panel, final Graphics g, final int side, final Color color )
   {
     // paint the line
     if( side == 1 )
@@ -1468,7 +1468,7 @@ public class SegmentData
   }
 
   @SuppressWarnings("unchecked")
-  private void paintLineString( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception, CoreException
+  private void paintLineString( final LineString line, final Graphics g, final IMapPanel mapPanel, final Color color ) throws GM_Exception, CoreException
   {
     if( line == null )
       return;
@@ -1515,7 +1515,7 @@ public class SegmentData
     m_bankRightOrg = bankRightInters;
   }
 
-  public void paintProfile( final CreateChannelData.PROF currentProfile, final MapPanel panel, final Graphics g, final Color color )
+  public void paintProfile( final CreateChannelData.PROF currentProfile, final IMapPanel panel, final Graphics g, final Color color )
   {
     LineString line = null;
     final GeometryFactory factory = new GeometryFactory();
@@ -1537,7 +1537,7 @@ public class SegmentData
 
   }
 
-  public void paintIntersectionPoints( final MapPanel panel, final Graphics g, final Color color, final PROF prof )
+  public void paintIntersectionPoints( final IMapPanel panel, final Graphics g, final Color color, final PROF prof )
   {
     for( int i = 0; i < m_intersPoints.size(); i++ )
       if( m_intersPoints.get( i ).getProf() == prof )

@@ -57,7 +57,7 @@ import org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -80,14 +80,14 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
 
   private final SzenarioDataProvider m_provider;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   /**
    * @param mapPanel
    *            After importing, the exctent of this mapPanel will be set to the bounding box of the imported tins. May
    *            be <code>null</code>.
    */
-  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins, final MapPanel mapPanel )
+  public ImportTinOperation( final SzenarioDataProvider provider, final IFeatureWrapperCollection<ITinReference> tins, final IMapPanel mapPanel )
   {
     m_provider = provider;
     m_tins = tins;

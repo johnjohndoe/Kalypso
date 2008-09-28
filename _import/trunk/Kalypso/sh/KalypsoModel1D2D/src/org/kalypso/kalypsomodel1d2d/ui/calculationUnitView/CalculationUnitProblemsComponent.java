@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
@@ -83,7 +83,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -97,7 +97,7 @@ public class CalculationUnitProblemsComponent
 
   private final ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener()
   {
-    public void selectionChanged( SelectionChangedEvent event )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
       handleSelectionChanged( event );
     }
@@ -205,7 +205,7 @@ public class CalculationUnitProblemsComponent
     final CalculationUnitDataModel dataModel = m_dataModel;
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor )
+      public IStatus execute( final IProgressMonitor monitor )
       {
         monitor.beginTask( "Starts Validating", 10 );
 
@@ -272,7 +272,7 @@ public class CalculationUnitProblemsComponent
     {
       final IProblem problem = (IProblem) firstElement;
 
-      final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = m_dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
       problem.navigateToProblem( mapPanel );
     }
   }

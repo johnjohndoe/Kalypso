@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -85,10 +86,10 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen.\n" + delegateTooltip );
@@ -106,7 +107,7 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
     {
       e.consume();
 
-      MapPanel mapPanel = getMapPanel();
+      IMapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 

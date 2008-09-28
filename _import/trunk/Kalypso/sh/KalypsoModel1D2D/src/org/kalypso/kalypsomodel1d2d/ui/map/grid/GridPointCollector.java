@@ -52,7 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -400,7 +400,7 @@ public class GridPointCollector /* implements IGeometryBuilder */
     return m_hasAllSides;
   }
 
-  public IStatus getAddToModelCommand( MapPanel mapPanel, IFEDiscretisationModel1d2d model, CommandableWorkspace commandableWorkspace )
+  public IStatus getAddToModelCommand( IMapPanel mapPanel, IFEDiscretisationModel1d2d model, CommandableWorkspace commandableWorkspace )
   {
     return m_tempGrid.getAddToModelCommand( mapPanel.getMapModell(), model, commandableWorkspace, 0.1 );
   }

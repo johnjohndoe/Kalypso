@@ -70,7 +70,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -127,7 +127,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -137,7 +137,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   {
     m_flowRelCollection = null;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     mapPanel.setMessage( "Klicken Sie in die Karte um einen Parameter hinzuzufügen." );
@@ -161,7 +161,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -174,7 +174,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       {
         m_modelElement = null;
 
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
       return;
     }
@@ -191,7 +191,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( flowPosition, 0.0 );
     }
 
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   /**
@@ -276,7 +276,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final GM_Position flowPositionFromElement;
     if( m_modelElement instanceof IFELine )
     {
@@ -317,7 +317,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
         if( flowRel == null )
         {
-          mapPanel.repaint();
+          mapPanel.repaintMap();
           return;
         }
 

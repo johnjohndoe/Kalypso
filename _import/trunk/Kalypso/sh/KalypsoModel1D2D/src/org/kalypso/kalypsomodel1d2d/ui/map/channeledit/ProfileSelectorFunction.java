@@ -51,7 +51,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -86,7 +86,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
    *      org.eclipse.swt.graphics.Rectangle)
    */
   @SuppressWarnings("unchecked")
-  public void execute( final MapPanel mapPanel, final Rectangle rectangle )
+  public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
 
     if( m_data.getMeshStatus() == true )

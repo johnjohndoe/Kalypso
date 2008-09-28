@@ -47,6 +47,7 @@ import java.awt.Point;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -73,9 +74,9 @@ public class PointSnapper
   @SuppressWarnings("unchecked")
   private IFE1D2DNode m_snapNode = null;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
-  public PointSnapper( final IFEDiscretisationModel1d2d discModel, final MapPanel mapPanel )
+  public PointSnapper( final IFEDiscretisationModel1d2d discModel, final IMapPanel mapPanel )
   {
     Assert.isNotNull( mapPanel );
     Assert.isNotNull( discModel );

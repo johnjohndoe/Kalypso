@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
@@ -184,9 +184,9 @@ public class DragBankLineWidget extends AbstractWidget
     if( m_handles == null )
     {
       // TODO: check if this repaint is really necessary
-      final MapPanel panel = getMapPanel();
+      final IMapPanel panel = getMapPanel();
       if( panel != null )
-        panel.repaint();
+        panel.repaintMap();
       return;
 
     }
@@ -211,9 +211,9 @@ public class DragBankLineWidget extends AbstractWidget
     m_currentPoint = p;
 
     // TODO: check if this repaint is really necessary
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -248,9 +248,9 @@ public class DragBankLineWidget extends AbstractWidget
       m_currentPoint = null;
       m_startPoint = null;
 
-      final MapPanel panel = getMapPanel();
+      final IMapPanel panel = getMapPanel();
       if( panel != null )
-        panel.repaint();
+        panel.repaintMap();
 
       return;
     }
@@ -287,9 +287,9 @@ public class DragBankLineWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**

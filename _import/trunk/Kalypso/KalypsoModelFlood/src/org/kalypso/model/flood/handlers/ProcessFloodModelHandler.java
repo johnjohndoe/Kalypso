@@ -69,7 +69,7 @@ import org.kalypso.model.flood.core.FloodModelProcess;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
@@ -105,7 +105,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       if( mapView == null )
         throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
-      final MapPanel mapPanel = mapView.getMapPanel();
+      final IMapPanel mapPanel = mapView.getMapPanel();
 
       /* wait for map to load */
       if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )

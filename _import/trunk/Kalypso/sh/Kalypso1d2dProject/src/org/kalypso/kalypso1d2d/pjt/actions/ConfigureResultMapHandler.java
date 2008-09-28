@@ -52,7 +52,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.results.AddResultThemeWizard;
@@ -77,7 +77,7 @@ public class ConfigureResultMapHandler extends AbstractHandler
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     // wait until map has loaded
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Ergebniskarte konfigurieren", "Karte wird geladen..." ) )

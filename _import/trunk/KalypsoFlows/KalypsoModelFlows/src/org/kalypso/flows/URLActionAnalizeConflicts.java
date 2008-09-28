@@ -43,7 +43,7 @@ package org.kalypso.flows;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLActionAnalizeTheme;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -62,7 +62,7 @@ public class URLActionAnalizeConflicts extends AbstractURLActionAnalizeTheme
   public boolean analyze( final String[] linkTypes, final IKalypsoTheme[] themes, final ICommandURL commandURL )
   {
     final GisMapEditor gisMapEditor = (GisMapEditor) getActiveEditor();
-    final MapPanel mapPanel = gisMapEditor.getMapPanel();
+    final IMapPanel mapPanel = gisMapEditor.getMapPanel();
 
     for( final IKalypsoTheme theme : themes )
     {

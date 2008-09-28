@@ -29,6 +29,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -71,7 +72,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     if( getMapPanel().getMapModell() == null )
@@ -98,7 +99,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
     {
       reinit();
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
     }
   }
 
@@ -106,7 +107,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -144,7 +145,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     else
       getMapPanel().setCursor( Cursor.getDefaultCursor() );
 
-    mapRepaint();
+    repaintMap();
 
     // if no line is started before, allowed selection is element 1D or element 2D
     // if 2D line is started: if selection is 2d node, add it; if selection is 1d node, ignore it
@@ -155,7 +156,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return null;
 
@@ -172,7 +173,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -198,7 +199,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     else
       m_lineType = IContinuityLine2D.QNAME;
 
-    getMapPanel().repaint();
+    getMapPanel().repaintMap();
   }
 
   /**

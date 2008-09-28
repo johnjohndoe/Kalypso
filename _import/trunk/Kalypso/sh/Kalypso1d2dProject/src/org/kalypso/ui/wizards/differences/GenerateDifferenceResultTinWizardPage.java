@@ -74,7 +74,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.KalypsoFeatureThemeHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -101,7 +101,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
   private IKalypsoFeatureTheme[] m_lineThemes;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private ComboViewer m_comboRiverLineNameField;
 
@@ -127,7 +127,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
   private IPropertyType m_propertyType;
 
-  public GenerateDifferenceResultTinWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final MapPanel mapPanel )
+  public GenerateDifferenceResultTinWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IMapPanel mapPanel )
   {
     super( pageName, title, titleImage );
     m_mapPanel = mapPanel;

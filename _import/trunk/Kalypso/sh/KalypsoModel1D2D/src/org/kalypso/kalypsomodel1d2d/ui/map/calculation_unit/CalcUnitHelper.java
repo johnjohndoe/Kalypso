@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import java.lang.reflect.Array;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,7 +58,7 @@ public class CalcUnitHelper
    * 
    * @return a {@link Feature} array containing the selected feature
    */
-  public static Feature[] getSelectedFeature( MapPanel mapPanel )
+  public static Feature[] getSelectedFeature( IMapPanel mapPanel )
   {
     if( mapPanel == null )
       return null;
@@ -72,7 +72,7 @@ public class CalcUnitHelper
     return features;
   }
 
-  public static final IFELine[] getSelectedBoundaryLine( final MapPanel mapPanel )
+  public static final IFELine[] getSelectedBoundaryLine( final IMapPanel mapPanel )
   {
     final IFELine[] bLines = getWrappedSelectedFeature( IFELine.class, mapPanel );
     if( bLines == null )
@@ -91,7 +91,7 @@ public class CalcUnitHelper
    * @return return an array containing the wrappers of the selected features
    */
   @SuppressWarnings("unchecked")
-  public static <T> T[] getWrappedSelectedFeature( final Class<T> targetWrapClass, final MapPanel mapPanel )
+  public static <T> T[] getWrappedSelectedFeature( final Class<T> targetWrapClass, final IMapPanel mapPanel )
   {
     final Feature[] selectedFeature = CalcUnitHelper.getSelectedFeature( mapPanel );
     final T[] wrappers = (T[]) Array.newInstance( targetWrapClass, selectedFeature.length );

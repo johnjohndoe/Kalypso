@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
@@ -68,7 +68,7 @@ import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
-import org.kalypso.ogc.gml.IPaintInternalDelegate;
+import org.kalypso.ogc.gml.IPaintDelegate;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -79,7 +79,6 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -122,7 +121,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
       for( final Style style : stylesList )
       {
         final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( style.getLinktype(), style.getHref(), context );
-        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, style.getStyle() );
+        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, style.getStyle(), false );
         m_gisTemplateUserStyles.add( gisTemplateUserStyle );
       }
 
@@ -166,7 +165,6 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
     if( m_gisTemplateUserStyles.isEmpty() )
     {
-      final DefaultStyleFactory defaultStyleFactory = KalypsoDeegreePlugin.getDefaultStyleFactory();
       final IFeatureType featureType = getFeatureType();
       if( featureType != null )
       {
@@ -185,7 +183,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
           if( fts == null )
           {
             System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
-            userStyle = defaultStyleFactory.createUserStyle( featureType, " - default - " ); //$NON-NLS-1$       
+            userStyle = DefaultStyleFactory.createUserStyle( featureType, " - default - " ); //$NON-NLS-1$
           }
           else
           {
@@ -199,7 +197,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
             userStyle = (UserStyle_Impl) StyleFactory.createStyle( name, title, description, fts );
           }
 
-          final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle() );
+          final GisTemplateUserStyle kus = new GisTemplateUserStyle( userStyle, userStyle.getTitle(), false );
           addStyle( kus );
         }
         catch( final StyleNotDefinedException e )
@@ -258,23 +256,25 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_theme != null )
-    {
-      m_theme.paint( g, p, scale, bbox, selected, monitor );
-    }
+      m_theme.paint( g, p, bbox, scale, selected, monitor );
   }
 
-  public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#paint(double, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor, org.kalypso.ogc.gml.IPaintDelegate)
+   */
+  @Override
+  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     if( m_theme != null )
-    {
-      m_theme.paintInternal( delegate );
-    }
+      m_theme.paint( scale, bbox, selected, monitor, delegate );
   }
 
   /**
@@ -296,7 +296,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
       return m_theme.getFeatureType();
     return null;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */

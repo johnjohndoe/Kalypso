@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.binding.IFloodPolygon;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -44,10 +44,10 @@ public class DeleteFloodPolygonWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie WSP-Anpassungen in der Karte.\n    'Del': selektierte WSP-Anpassungen löschen.\n" + delegateTooltip );
@@ -69,18 +69,18 @@ public class DeleteFloodPolygonWidget extends AbstractDelegateWidget
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
       final EasyFeatureWrapper[] eFeatures = selectionManager.getAllFeatures();
 
-      Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
+      final Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
 
       if( features.length == 0 )
         return;
 
-      CommandableWorkspace workspace = eFeatures[0].getWorkspace();
+      final CommandableWorkspace workspace = eFeatures[0].getWorkspace();
 
       try
       {
         MapUtils.removeFeature( workspace, getMapPanel(), features );
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         // TODO Auto-generated catch block
         e1.printStackTrace();

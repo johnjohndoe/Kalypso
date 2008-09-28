@@ -50,7 +50,7 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -525,7 +525,7 @@ public class LinePointCollector
   }
 
   // TODO move this method to the grid colector
-  public double getHandleWidthAsWorldDistance( final MapPanel mapPanel, final int pointRectSize )
+  public double getHandleWidthAsWorldDistance( final IMapPanel mapPanel, final int pointRectSize )
   {
     if( m_points.size() > 0 )
       return MapUtilities.calculateWorldDistance( mapPanel, m_points.get( 0 ), pointRectSize );

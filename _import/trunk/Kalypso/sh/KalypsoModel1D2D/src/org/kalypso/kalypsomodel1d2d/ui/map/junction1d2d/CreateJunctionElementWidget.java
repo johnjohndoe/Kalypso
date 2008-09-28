@@ -59,7 +59,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -100,10 +100,10 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie min. zwei Randlinien in der Karte.\n    'Enter': Einmündungselement erzeugen.\n" + delegateTooltip );
@@ -113,7 +113,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
   }
 
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -122,7 +122,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
   private void reinit( )
   {
     m_lines.clear();
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
@@ -154,7 +154,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
     m_discretisationModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   /**
@@ -168,7 +168,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
 
     else if( e.getKeyChar() == KeyEvent.VK_ENTER )
     {
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 

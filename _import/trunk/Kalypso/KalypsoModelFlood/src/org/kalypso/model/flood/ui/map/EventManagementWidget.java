@@ -137,7 +137,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -203,10 +203,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     // prepare for exception
     m_dataProvider = null;
@@ -403,7 +403,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         panel.setSize( size );
         sc.setMinHeight( size.y );
 
-        getMapPanel().repaint();
+        getMapPanel().repaintMap();
       }
     } );
 
@@ -671,7 +671,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleMove( event, -1 );
       }
@@ -684,7 +684,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleMove( event, 1 );
       }
@@ -850,7 +850,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final IInputValidator inputValidator = new IInputValidator()
     {
-      public String isValid( String newText )
+      public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
           return "Name darf nicht leer sein";

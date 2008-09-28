@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -66,7 +66,7 @@ public interface IProblem
 
   public ICalculationUnit getParentCalculationUnit( );
 
-  public void navigateToProblem( MapPanel panel );
+  public void navigateToProblem( IMapPanel panel );
 
   /**
    * Sets focus on particular Feature

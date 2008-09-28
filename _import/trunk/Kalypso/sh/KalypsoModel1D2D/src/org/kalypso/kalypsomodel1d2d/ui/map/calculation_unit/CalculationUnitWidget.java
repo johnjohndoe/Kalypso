@@ -70,7 +70,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -104,7 +104,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   private final KeyBasedDataModelChangeListener calThemeUpdater = new KeyBasedDataModelChangeListener()
   {
     @SuppressWarnings("synthetic-access")
-    public void dataChanged( String key, Object newValue )
+    public void dataChanged( final String key, final Object newValue )
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
       {
@@ -137,7 +137,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   // @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
@@ -214,7 +214,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
@@ -283,7 +283,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     }
     try
     {
-      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null && m_calcUnitTheme != null )
       {
@@ -513,7 +513,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     if( m_strategy != null )
     {
       final ICommandTarget commandPoster = (ICommandTarget) m_dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL );
-      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       m_strategy.activate( commandPoster, mapPanel );
     }
   }

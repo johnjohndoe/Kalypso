@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -114,7 +115,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -128,7 +129,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
     m_foundFeature = null;
     m_rectangleSelector = null;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
@@ -159,9 +160,9 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
     m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName );
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -174,9 +175,9 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
     {
       m_rectangleSelector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
 
-      final MapPanel panel = getMapPanel();
+      final IMapPanel panel = getMapPanel();
       if( panel != null )
-        panel.repaint();
+        panel.repaintMap();
     }
   }
 
@@ -230,7 +231,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
       final Rectangle rectangle = m_rectangleSelector.getRectangle();
       if( rectangle != null && (rectangle.width > m_grabRadius || rectangle.height > m_grabRadius) )
       {
-        final MapPanel mapPanel = getMapPanel();
+        final IMapPanel mapPanel = getMapPanel();
         try
         {
           /* Find all flow relation inside the rect */
@@ -265,7 +266,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
         finally
         {
           reinit();
-          mapPanel.repaint();
+          mapPanel.repaintMap();
         }
       }
     }
@@ -283,7 +284,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
       final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
       selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {} );
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
     }
     catch( final Throwable e )
     {
@@ -344,7 +345,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
         selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {} );
       }
 
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
     }
     catch( final Throwable e )
     {

@@ -281,7 +281,7 @@ public class ElevationModelSystemEditorComponent
       public void widgetSelected( final SelectionEvent event )
       {
         deleteElevationModel( event.display.getActiveShell() );
-        m_dataModel.getMapPanel().repaint();
+        m_dataModel.getMapPanel().repaintMap();
       }
     } );
 

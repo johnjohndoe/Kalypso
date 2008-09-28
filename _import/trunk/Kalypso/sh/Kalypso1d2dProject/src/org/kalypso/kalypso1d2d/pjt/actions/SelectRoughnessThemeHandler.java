@@ -22,7 +22,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -41,7 +41,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
     IMapModell orgMapModell = mapPanel.getMapModell();
 
     synchronized( this )

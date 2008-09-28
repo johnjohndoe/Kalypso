@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
@@ -302,7 +302,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
 
       // read interval results and remember them
       final File qintervallFile = (File) resultEater.getResult( WspmTuhhCalcJob.OUTPUT_QINTERVALL_RESULT );
-      final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qintervallFile, null, true, calcWorkspace.getFeatureProviderFactory() );
+      final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qintervallFile, calcWorkspace.getFeatureProviderFactory() );
       final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
 
       final List< ? > resultList = qResultCollection.getQResultFeatures();

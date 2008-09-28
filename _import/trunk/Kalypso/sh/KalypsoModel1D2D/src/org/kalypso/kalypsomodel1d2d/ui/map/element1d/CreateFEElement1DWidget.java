@@ -23,6 +23,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -71,7 +72,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -79,7 +80,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
   private final void reinit( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     mapPanel.setMessage( "Klicken Sie in die Karte um 1D-Elemente hinzuzufügen." );
 
@@ -103,9 +104,9 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -114,7 +115,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     /* If we have a node, take this position, else take the current one */
     final GM_Point currentPos = m_node == null ? MapUtilities.transform( mapPanel, p ) : m_node.getPoint();
@@ -165,7 +166,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         e.printStackTrace();
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-        final MapPanel mapPanel = getMapPanel();
+        final IMapPanel mapPanel = getMapPanel();
         mapPanel.setMessage( "Fehler: " + status.getMessage() );
         reinit();
       }
@@ -264,7 +265,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -284,7 +285,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
       g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
     }
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
 
     m_toolTipRenderer.setTooltip( "Generieren Sie neue 1D-Elemente durch Klicken in die Karte.\n    'Doppelklick': Generierung abschließen.\n    'Esc':               abbrechen.\n    'Del':                letzten Punkt löschen." );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
@@ -302,12 +303,12 @@ public class CreateFEElement1DWidget extends AbstractWidget
     {
       case KeyEvent.VK_ESCAPE:
         reinit();
-        getMapPanel().repaint();
+        getMapPanel().repaintMap();
         break;
 
       case KeyEvent.VK_BACK_SPACE:
         m_lineBuilder.removeLastPoint();
-        getMapPanel().repaint();
+        getMapPanel().repaintMap();
         break;
 
       default:

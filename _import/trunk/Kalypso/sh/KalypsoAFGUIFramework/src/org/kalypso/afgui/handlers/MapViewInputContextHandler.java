@@ -20,9 +20,9 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.WidgetManager;
+import org.kalypso.ogc.gml.widgets.IWidgetManager;
 import org.kalypso.ui.views.map.MapView;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -80,7 +80,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       // there is a map view and a file
 
       final MapView mapView = (MapView) view;
-      final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
+      final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
 
       // only load if the file is not currently shown
       final IFile currentFile = mapView.getFile();
@@ -107,7 +107,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       unsetActiveThemeJob.schedule();
 
       // make sure that no widget is active
-      final WidgetManager widgetManager = mapPanel.getWidgetManager();
+      final IWidgetManager widgetManager = mapPanel.getWidgetManager();
       widgetManager.setActualWidget( null );
 
       return Status.OK_STATUS;

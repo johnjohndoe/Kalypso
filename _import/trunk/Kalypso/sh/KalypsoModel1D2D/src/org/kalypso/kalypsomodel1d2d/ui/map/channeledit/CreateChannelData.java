@@ -77,7 +77,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
@@ -230,7 +230,7 @@ public class CreateChannelData
   public IKalypsoFeatureTheme[] getBankThemes( )
   {
     /* implement visitor for cascading themes in mapPanel */
-    final MapPanel panel = m_widget.getPanel();
+    final IMapPanel panel = m_widget.getPanel();
     final IMapModell mapModell = panel.getMapModell();
     if( mapModell == null )
       return null;
@@ -424,7 +424,7 @@ public class CreateChannelData
     GM_Point[][] importingGridPoints = new GM_Point[m_meshCoords.length][m_meshCoords[0].length];
     importingGridPoints = convertToGMPoints( m_meshCoords );
 
-    final MapPanel mapPanel = m_widget.getPanel();
+    final IMapPanel mapPanel = m_widget.getPanel();
     final IMapModell mapModel = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel );
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
@@ -813,7 +813,7 @@ public class CreateChannelData
     }
   }
 
-  public void paintAllSegments( final Graphics g, final MapPanel mapPanel )
+  public void paintAllSegments( final Graphics g, final IMapPanel mapPanel )
   {
     if( m_meshCoords != null )
     {
@@ -860,7 +860,7 @@ public class CreateChannelData
     return globNumBankIntersections;
   }
 
-  private void paintEdges( final Coordinate[][] coords, final Graphics g, final MapPanel mapPanel ) throws GM_Exception, CoreException
+  private void paintEdges( final Coordinate[][] coords, final Graphics g, final IMapPanel mapPanel ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
@@ -973,7 +973,7 @@ public class CreateChannelData
 
   public void drawBankLine( final int segment, final int side, final Graphics g )
   {
-    final MapPanel panel = m_widget.getPanel();
+    final IMapPanel panel = m_widget.getPanel();
     if( m_segmentList.size() < segment - 1 || m_segmentList.size() == 0 )
       return;
     m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );

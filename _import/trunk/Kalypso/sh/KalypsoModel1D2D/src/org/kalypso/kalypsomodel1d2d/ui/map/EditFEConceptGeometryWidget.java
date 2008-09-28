@@ -58,7 +58,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -118,7 +118,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
@@ -165,9 +165,9 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     if( p == null )
       return;
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
     if( m_editor.getStartNode() == null )
     {
@@ -192,7 +192,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
         }
         finally
         {
-          mapRepaint();
+          repaintMap();
         }
       }
     }
@@ -231,7 +231,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -260,7 +260,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
     super.paint( g );
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
 
     String tooltipMsg = "";
     if( m_snappingActive == true )
@@ -297,9 +297,9 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     if( p == null )
       return;
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
     final IKalypsoTheme activeTheme = getActiveTheme();
     if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
@@ -309,7 +309,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private Object checkNewNode( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return null;
 

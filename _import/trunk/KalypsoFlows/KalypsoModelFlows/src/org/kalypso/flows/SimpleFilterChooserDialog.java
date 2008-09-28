@@ -72,7 +72,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.GeometryPropertyFilter;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
@@ -104,7 +104,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
 
   ComboViewer m_geomComboViewer;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private String m_themeName;
 
@@ -137,7 +137,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
    *            the spatial operation as int from the OperationsDefines
    * @see org.kalypsodeegree_impl.filterencoding.OperationDefines
    */
-  public SimpleFilterChooserDialog( final Shell parent, final IKalypsoFeatureTheme[] kfThemes, final QName[] propertyNames, final MapPanel mapPanel, final int spatialOperationType )
+  public SimpleFilterChooserDialog( final Shell parent, final IKalypsoFeatureTheme[] kfThemes, final QName[] propertyNames, final IMapPanel mapPanel, final int spatialOperationType )
   {
     super( parent );
     m_kfThemes = kfThemes;

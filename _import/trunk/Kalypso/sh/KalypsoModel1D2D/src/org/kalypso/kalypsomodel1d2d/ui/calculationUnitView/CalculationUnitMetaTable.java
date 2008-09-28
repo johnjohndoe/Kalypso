@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
@@ -99,7 +99,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -119,7 +119,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   final private ISelectionChangedListener m_selectListener = new ISelectionChangedListener()
   {
     @SuppressWarnings("synthetic-access")
-    public void selectionChanged( SelectionChangedEvent event )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
       try
       {
@@ -138,7 +138,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           }
         }
       }
-      catch( Throwable th )
+      catch( final Throwable th )
       {
         th.printStackTrace();
       }
@@ -208,7 +208,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           public void run( )
           {
-            Object newValue = m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+            final Object newValue = m_dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
             updateOnNewInput( display, tableViewer, newValue );
           }
         };
@@ -443,7 +443,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           super.process();
           // reset with list from model
-          List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
+          final List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
           // set current selection to null
           dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
@@ -456,7 +456,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   }
 
   protected void moveSelection( @SuppressWarnings("unused")
-  final int delta )
+      final int delta )
   {
     throw new UnsupportedOperationException();
   }
@@ -489,7 +489,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
     if( boundingBox == null )
       return;
-    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     mapPanel.setBoundingBox( boundingBox );
   }
 
@@ -528,7 +528,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           tableViewer.setInput( input );
         }
-        IFeatureWrapper2 currentSelection = getCurrentSelection();
+        final IFeatureWrapper2 currentSelection = getCurrentSelection();
         updateOnNewSelection( display, tableViewer, currentSelection );
       }
     };
@@ -543,7 +543,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       public void run( )
       {
         tableViewer.refresh();
-        boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
+        final boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
         if( m_btnDeleteCalcUnit != null )
           m_btnDeleteCalcUnit.setEnabled( isEnabled );
         if( m_btnEditCalcUnit != null )

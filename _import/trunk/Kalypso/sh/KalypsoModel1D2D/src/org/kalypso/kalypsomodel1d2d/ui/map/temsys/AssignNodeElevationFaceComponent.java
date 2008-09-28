@@ -81,7 +81,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -162,7 +162,7 @@ public class AssignNodeElevationFaceComponent
           {
             try
             {
-              MapPanel mapPanel = m_dataModel.getMapPanel();
+              IMapPanel mapPanel = m_dataModel.getMapPanel();
               mapPanel.invalidateMap();
               m_nodeElevationViewer.refresh( node, true );
 
@@ -281,9 +281,9 @@ public class AssignNodeElevationFaceComponent
       m_selectionNodeList.addAll( tableSelection );
 
       m_dataModel.setSelectedNodeList( m_selectionNodeList );
-      MapPanel mapPanel = m_dataModel.getMapPanel();
+      IMapPanel mapPanel = m_dataModel.getMapPanel();
       if( mapPanel != null )
-        mapPanel.repaint();
+        mapPanel.repaintMap();
     }
 
   };

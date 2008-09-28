@@ -19,7 +19,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -56,7 +56,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
    *      1f, 1f, 0.6f, 0.70f ) );kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -98,7 +98,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -115,7 +115,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     super.paint( g );
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     m_toolTipRenderer.setTooltip( "Generieren Sie neue 2D-Elemente durch Klicken in die Karte.\n    'Doppelklick': Generierung abschließen.\n    'Esc':               abbrechen.\n    'Del':                letzten Punkt löschen." );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
@@ -153,12 +153,12 @@ public class CreateFE2DElementWidget extends AbstractWidget
     if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
     {
       reinit();
-      mapRepaint();
+      repaintMap();
     }
     else if( KeyEvent.VK_BACK_SPACE == e.getKeyChar() || KeyEvent.VK_DELETE == e.getKeyChar() )
     {
       m_builder.removeLast();
-      mapRepaint();
+      repaintMap();
     }
   }
 
@@ -180,7 +180,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     else
       getMapPanel().setCursor( Cursor.getDefaultCursor() );
 
-    mapRepaint();
+    repaintMap();
   }
 
   /**
@@ -217,7 +217,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     }
     finally
     {
-      mapRepaint();
+      repaintMap();
     }
   }
 
@@ -250,14 +250,14 @@ public class CreateFE2DElementWidget extends AbstractWidget
     finally
     {
       reinit();
-      mapRepaint();
+      repaintMap();
     }
   }
 
   @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_builder == null )
       return null;
 

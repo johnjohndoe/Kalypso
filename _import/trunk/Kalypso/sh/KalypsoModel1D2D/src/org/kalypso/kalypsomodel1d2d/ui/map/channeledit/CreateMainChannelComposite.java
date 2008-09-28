@@ -97,6 +97,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -328,7 +329,7 @@ public class CreateMainChannelComposite extends Composite
           final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
           if( mapExtend != null )
           {
-            final MapPanel panel = m_widget.getPanel();
+            final IMapPanel panel = m_widget.getPanel();
             panel.setBoundingBox( mapExtend );
           }
         }
@@ -379,13 +380,13 @@ public class CreateMainChannelComposite extends Composite
           final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
           if( mapExtend != null )
           {
-            final MapPanel panel = m_widget.getPanel();
+            final IMapPanel panel = m_widget.getPanel();
             panel.setBoundingBox( mapExtend );
             if( m_buttonEditBank1.getSelection() == true )
               editButtonUpdateBank1();
             else if( m_buttonEditBank2.getSelection() == true )
               editButtonUpdateBank2();
-            panel.repaint();
+            panel.repaintMap();
           }
         }
         if( m_buttonEditBank1.getSelection() == true )
@@ -453,7 +454,7 @@ public class CreateMainChannelComposite extends Composite
           editButtonUpdateBank1();
         else if( m_buttonEditBank2.getSelection() == true )
           editButtonUpdateBank2();
-        m_widget.getPanel().repaint();
+        m_widget.getPanel().repaintMap();
       }
     } );
 
@@ -483,7 +484,7 @@ public class CreateMainChannelComposite extends Composite
       {
         editButtonUpdateBank1();
         resetButtonGuard();
-        m_widget.getPanel().repaint();
+        m_widget.getPanel().repaintMap();
       }
     } );
 
@@ -506,7 +507,7 @@ public class CreateMainChannelComposite extends Composite
       {
         editButtonUpdateBank2();
         resetButtonGuard();
-        m_widget.getPanel().repaint();
+        m_widget.getPanel().repaintMap();
       }
     } );
 
@@ -913,7 +914,7 @@ public class CreateMainChannelComposite extends Composite
     m_profilSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.39" ) ); //$NON-NLS-1$
     m_profilSection.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.40" ) ); //$NON-NLS-1$
 
-    m_widget.getPanel().repaint();
+    m_widget.getPanel().repaintMap();
 
     final IProfil profil = m_data.getProfil();
     if( profil == null )
@@ -963,7 +964,7 @@ public class CreateMainChannelComposite extends Composite
 
           ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
           ((ProfilOverlayLayer) overlayLayer).lockLayer( false );
-          m_widget.getPanel().repaint();
+          m_widget.getPanel().repaintMap();
         }
       }
       final int zOrder = mngr.getLayerPosition( overlayLayer );

@@ -69,7 +69,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
@@ -275,7 +275,7 @@ class ApplyElevationWidgetFace
       toolkit.dispose();
     }
 
-    final MapPanel mapPanel = m_dataModel.getMapPanel();
+    final IMapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
       mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
 

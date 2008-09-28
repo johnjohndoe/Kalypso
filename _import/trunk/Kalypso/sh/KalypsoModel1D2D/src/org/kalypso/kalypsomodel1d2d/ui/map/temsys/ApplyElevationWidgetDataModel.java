@@ -57,7 +57,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -85,7 +85,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   public static final String NODE_THEME = "_NODE_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
-      SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), MapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
+    SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), IMapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
   private final boolean m_ignoreMapSelection = false;
 
@@ -209,16 +209,15 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( ELEVATION_THEME, elevationTheme );
   }
 
-  public MapPanel getMapPanel( )
+  public IMapPanel getMapPanel( )
   {
-    // return mapPanel;
-    return (MapPanel) getData( MapPanel.class.toString() );
+    return (IMapPanel) getData( IMapPanel.class.toString() );
   }
 
-  public void setMapPanel( final MapPanel mapPanel )
+  public void setMapPanel( final IMapPanel mapPanel )
   {
     mapPanel.getSelectionManager().addSelectionListener( this );
-    setData( MapPanel.class.toString(), mapPanel );
+    setData( IMapPanel.class.toString(), mapPanel );
   }
 
   /**
@@ -255,7 +254,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   }
 
   @SuppressWarnings("unchecked")
-  public void setSelectedNodeList( List<IFE1D2DNode> selectionNodeList )
+  public void setSelectedNodeList( final List<IFE1D2DNode> selectionNodeList )
   {
     m_selectedNodeList = selectionNodeList;
   }

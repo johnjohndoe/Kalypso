@@ -12,7 +12,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
@@ -36,7 +36,7 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Geländedaten verwalten", "Fehler beim Öffnen der Karte" ) )

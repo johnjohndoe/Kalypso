@@ -50,7 +50,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,7 +87,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
    *      org.eclipse.swt.graphics.Rectangle)
    */
   @SuppressWarnings("unchecked")
-  public void execute( MapPanel mapPanel, Rectangle rectangle )
+  public void execute( IMapPanel mapPanel, Rectangle rectangle )
   {
     if( m_data.getMeshStatus() == true )
     {

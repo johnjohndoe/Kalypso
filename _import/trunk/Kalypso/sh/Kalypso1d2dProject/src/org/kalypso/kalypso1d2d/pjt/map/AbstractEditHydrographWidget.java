@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
@@ -56,7 +56,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
@@ -77,7 +77,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public abstract class AbstractEditHydrographWidget extends AbstractWidget
 {
-
   private final int m_grabRadius = 20;
 
   private FeatureList m_featureList = null;
@@ -92,7 +91,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
 
   private final IKalypsoFeatureTheme m_theme;
 
-  public AbstractEditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme )
+  public AbstractEditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName geomQName, final IKalypsoFeatureTheme theme )
   {
     super( name, toolTip );
     m_allowMultipleSelection = allowMultipleSelection;
@@ -102,10 +101,10 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -134,7 +133,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
       final Rectangle rectangle = m_rectangleSelector.getRectangle();
       if( rectangle != null && (rectangle.width > m_grabRadius || rectangle.height > m_grabRadius) )
       {
-        final MapPanel mapPanel = getMapPanel();
+        final IMapPanel mapPanel = getMapPanel();
         try
         {
           /* Find all flow relation inside the rect */
@@ -169,7 +168,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
         finally
         {
           reinit();
-          mapPanel.repaint();
+          mapPanel.repaintMap();
         }
       }
     }
@@ -197,9 +196,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
     {
       m_rectangleSelector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
 
-      final MapPanel panel = getMapPanel();
-      if( panel != null )
-        panel.repaint();
+      repaintMap();
     }
   }
 
@@ -247,7 +244,7 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
     {
       featureGrabbed( m_theme.getWorkspace(), new Feature[] { m_foundFeature } );
 
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
     }
     catch( final Throwable e )
     {
@@ -281,9 +278,9 @@ public abstract class AbstractEditHydrographWidget extends AbstractWidget
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
     m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName );
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   protected abstract void featureGrabbed( CommandableWorkspace workspace, Feature[] selectedFeatures ) throws Exception;

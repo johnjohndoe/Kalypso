@@ -72,7 +72,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DO
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
@@ -103,11 +103,11 @@ public class ConfigureLengthSectionWizard extends Wizard
 
   private IFile m_selectedResultFile;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private ConfigureLengthSectionWizardPage m_lengthSectionPage;
 
-  public ConfigureLengthSectionWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel, MapPanel mapPanel )
+  public ConfigureLengthSectionWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel, IMapPanel mapPanel )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;

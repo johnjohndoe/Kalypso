@@ -54,7 +54,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard;
@@ -83,7 +83,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Differenzen erzeugen", "Fehler beim Öffnen der Karte" ) )

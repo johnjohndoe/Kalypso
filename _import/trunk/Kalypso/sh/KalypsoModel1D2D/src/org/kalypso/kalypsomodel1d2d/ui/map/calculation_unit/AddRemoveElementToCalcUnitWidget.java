@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -68,7 +69,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -167,7 +168,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
   protected void addElements( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( mapPanel == null )
       return;
@@ -186,18 +187,18 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
   protected void removeElements( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( mapPanel == null )
       return;
 
     final Feature[] selectedFeatures = CalcUnitHelper.getSelectedFeature( mapPanel );
-    Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
     if( selectedWrapper instanceof ICalculationUnit )
     {
-      ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
-      RemoveElementFromCalculationUnitWithPostCall command = new RemoveElementFromCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
+      final ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
+      final RemoveElementFromCalculationUnitWithPostCall command = new RemoveElementFromCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
       KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     }
     getMapPanel().getSelectionManager().clear();
@@ -212,7 +213,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addElement = new JMenuItem();
@@ -227,7 +228,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     // popupMenu.add( addNameDescription );
     popupMenu.add( addElement );
     popupMenu.add( removeElement );
-    popupMenu.show( mapPanel, p.x, p.y );
+    popupMenu.show( (Component) mapPanel, p.x, p.y );
   }
 
   private ActionListener makeAddElementActionListener( )
@@ -235,7 +236,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     final ActionListener al = new ActionListener()
     {
 
-      public void actionPerformed( ActionEvent e )
+      public void actionPerformed( final ActionEvent e )
       {
         addElements();
       }
@@ -244,7 +245,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
   }
 
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -252,7 +253,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
   private void reinit( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     m_featureThemes = new IKalypsoFeatureTheme[m_themeElementQNames.length];
@@ -263,14 +264,14 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   private ActionListener makeRemoveElementActionListener( )
   {
     final ActionListener al = new ActionListener()
     {
-      public void actionPerformed( ActionEvent e )
+      public void actionPerformed( final ActionEvent e )
       {
         removeElements();
       }
@@ -286,10 +287,10 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie FE-Elemente in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );

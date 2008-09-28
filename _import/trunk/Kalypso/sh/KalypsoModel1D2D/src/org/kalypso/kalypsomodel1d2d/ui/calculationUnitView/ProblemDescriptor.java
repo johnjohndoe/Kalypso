@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -87,7 +87,7 @@ public class ProblemDescriptor implements IProblem
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#navigateToProblem(org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void navigateToProblem( final MapPanel panel )
+  public void navigateToProblem( final IMapPanel panel )
   {
     // @TODO Madan - Must change the below statement to show
     // the element that should get the Focus.. using showFocusOn()

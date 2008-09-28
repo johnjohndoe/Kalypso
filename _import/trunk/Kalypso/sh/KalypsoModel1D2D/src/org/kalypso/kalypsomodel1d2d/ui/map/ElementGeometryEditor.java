@@ -64,7 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -103,11 +103,11 @@ public class ElementGeometryEditor
 
   private GM_Point m_endPoint;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private boolean m_valid;
 
-  public ElementGeometryEditor( final MapPanel panel, final IKalypsoFeatureTheme nodeTheme )
+  public ElementGeometryEditor( final IMapPanel panel, final IKalypsoFeatureTheme nodeTheme )
   {
     m_mapPanel = panel;
     m_nodeTheme = nodeTheme;

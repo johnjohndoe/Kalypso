@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -58,7 +59,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -69,13 +69,12 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Patrice Congo
@@ -132,18 +131,18 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
     // widgets and no common kalypso style...
 
-    final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     if( m_popupMenu == null )
       m_popupMenu = createMenu();
     updateMenuItem();
-    m_popupMenu.show( mapPanel, p.x, p.y );
+    m_popupMenu.show( (Component) mapPanel, p.x, p.y );
     super.clickPopup( p );
   }
 
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -177,9 +176,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
   {
     final ActionListener al = new ActionListener()
     {
-      public void actionPerformed( ActionEvent e )
+      public void actionPerformed( final ActionEvent e )
       {
-        Object source = e.getSource();
+        final Object source = e.getSource();
         if( !(source instanceof JMenuItem) )
         {
           return;
@@ -191,7 +190,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
   }
 
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -199,7 +198,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
   private void reinit( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     m_featureThemes = new IKalypsoFeatureTheme[m_themeElementQNames.length];
@@ -210,7 +209,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     selectionManager.clear();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   private void updateMenuItem( )
@@ -221,81 +220,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     }
   }
 
-  private void updateAddUpStreamMenu( final JMenuItem item )
-  {
-    final MapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    updateGeneralBadSelection( item );
-    final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-
-    final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
-
-    if( selectedBoundaryLines == null )
-      return;
-
-    for( int i = 0; i < selectedBoundaryLines.length; i++ )
-    {
-      final IFELine bLine = selectedBoundaryLines[i];
-
-      if( bLine != null && calUnit != null )
-      {
-        if( CalcUnitOps.isBoundaryLineOf( bLine, calUnit ) )
-          item.setEnabled( false );
-        else
-          item.setEnabled( true );
-      }
-    }
-  }
-
-  private void updateRemoveUpStreamMenu( final JMenuItem item )
-  {
-    final MapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    updateGeneralBadSelection( item );
-    if( item.isEnabled() )
-    {
-      final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-
-      final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
-
-      if( selectedBoundaryLines == null )
-        return;
-
-      for( int i = 0; i < selectedBoundaryLines.length; i++ )
-      {
-        final IFELine bLine = selectedBoundaryLines[i];
-
-        if( bLine == null || calUnit == null )
-          item.setEnabled( false );
-        else if( !CalcUnitOps.isBoundaryLineOf( bLine, calUnit ) )
-          item.setEnabled( false );
-      }
-    }
-  }
-
-  private void updateGeneralBadSelection( final JMenuItem item )
-  {
-    final MapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    final Feature[] selectedFeature = CalcUnitHelper.getSelectedFeature( mapPanel );
-    item.setEnabled( true );
-    if( selectedFeature == null )
-      item.setEnabled( false );
-    // else if( selectedFeature.length != 1 )
-    // item.setEnabled( false );
-    else if( m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) == null )
-      item.setEnabled( false );
-  }
-
   synchronized void doMenuAction( final String text )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -316,10 +243,8 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     if( selectedBoundaryLines == null )
       return;
 
-    for( int i = 0; i < selectedBoundaryLines.length; i++ )
+    for( final IFELine bLine : selectedBoundaryLines )
     {
-      final IFELine bLine = selectedBoundaryLines[i];
-
       final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d )
       {
         /**
@@ -347,10 +272,8 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     if( selectedBoundaryLines == null )
       return;
 
-    for( int i = 0; i < selectedBoundaryLines.length; i++ )
+    for( final IFELine bLine : selectedBoundaryLines )
     {
-      final IFELine bLine = selectedBoundaryLines[i];
-
       final RemoveBoundaryLineFromCalculationUnitCmd cmd = new RemoveBoundaryLineFromCalculationUnitCmd( calUnit, bLine, model1d2d )
       {
         /**
@@ -404,10 +327,10 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
     {
-      final Rectangle bounds = mapPanel.getBounds();
+      final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );

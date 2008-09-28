@@ -59,7 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -104,10 +104,10 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -117,7 +117,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
   {
     m_hydrographCollection = null;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
     mapPanel.setMessage( "Klicken Sie in die Karte um einen Ganglinienpunkt hinzuzufügen." );
@@ -140,7 +140,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -153,7 +153,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
       {
         m_modelElement = null;
 
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
       return;
     }
@@ -170,7 +170,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
         m_existingHydrograph = m_hydrographCollection.findHydrograph( hydroPosition, 0.0 );
     }
 
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   /**
@@ -215,7 +215,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
     final CommandableWorkspace workspace = m_hydroTheme.getWorkspace();
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final GM_Position hydroPositionFromElement;
 
     hydroPositionFromElement = HydrographUtils.getHydroPositionFromElement( m_modelElement );
@@ -232,7 +232,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
         if( hydro == null )
         {
-          mapPanel.repaint();
+          mapPanel.repaintMap();
           return;
         }
 

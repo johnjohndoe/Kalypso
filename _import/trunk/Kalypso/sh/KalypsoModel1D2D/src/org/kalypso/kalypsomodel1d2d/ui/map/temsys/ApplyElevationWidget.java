@@ -64,7 +64,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -111,7 +111,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -196,9 +196,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
     m_point = p;
 
-    final MapPanel mapPanel = m_dataModel.getMapPanel();
+    final IMapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
-      mapPanel.repaint();
+      mapPanel.repaintMap();
   }
 
   /**
@@ -255,7 +255,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       if( p == null )
         return;
 
-      final MapPanel mapPanel = m_dataModel.getMapPanel();
+      final IMapPanel mapPanel = m_dataModel.getMapPanel();
       if( mapPanel == null )
         return;
 
@@ -300,7 +300,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
         tooltipText.append( Messages.getString( "ApplyElevationWidget.10" ) ); //$NON-NLS-1$
 
       m_toolTipRenderer.setTooltip( tooltipText.toString() );
-      m_toolTipRenderer.paintToolTip( p, g, getMapPanel().getBounds() );
+      m_toolTipRenderer.paintToolTip( p, g, getMapPanel().getScreenBounds() );
 
       return;
     }
@@ -347,11 +347,11 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
     paintElevationDataTooltip( g2, m_point );
 
-    final MapPanel mapPanel = m_dataModel.getMapPanel();
+    final IMapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel == null )
       return;
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     final String delegateTooltip = getDelegate().getToolTip();
 
     m_toolTipRendererDesc.setTooltip( "Selektieren Sie FE-Knoten in der Karte.\n    'Enter': Höhen zuweisen.\n" + delegateTooltip );
@@ -361,7 +361,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   @SuppressWarnings("unchecked")
   private void paintSelecetedNodes( final Graphics2D g2, final List<IFE1D2DNode> selectedNodeList )
   {
-    final MapPanel panel = m_dataModel.getMapPanel();
+    final IMapPanel panel = m_dataModel.getMapPanel();
 
     if( panel == null )
       return;
@@ -392,7 +392,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }

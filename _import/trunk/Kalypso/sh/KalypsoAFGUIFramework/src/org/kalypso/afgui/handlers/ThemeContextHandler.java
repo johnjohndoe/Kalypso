@@ -15,7 +15,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.ActivateThemeJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -69,7 +69,7 @@ public class ThemeContextHandler extends AbstractHandler
     if( m_featureType != null && view != null && view instanceof MapView )
     {
       final MapView mapView = (MapView) view;
-      final MapPanel mapPanel = mapView.getMapPanel();
+      final IMapPanel mapPanel = mapView.getMapPanel();
 
       MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Thema aktivieren", "Warten auf Karte gescheitert" );
 

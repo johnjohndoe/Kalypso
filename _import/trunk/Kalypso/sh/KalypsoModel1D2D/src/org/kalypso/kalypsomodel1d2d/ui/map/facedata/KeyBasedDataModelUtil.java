@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
@@ -49,7 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -119,7 +119,7 @@ public class KeyBasedDataModelUtil
    * @param key
    *            the key for the map panel entry
    * @throws IllegalArgumentException
-   *             if dataModel or key is null or if the data corresponding to key is not a MapPanel; this also include
+   *             if dataModel or key is null or if the data corresponding to key is not a IMapPanel; this also include
    *             null values
    */
   public static void repaintMapPanel( final KeyBasedDataModel dataModel, final String key )
@@ -127,9 +127,9 @@ public class KeyBasedDataModelUtil
     Assert.throwIAEOnNullParam( key, "key" );
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );
     final Object mapPanelEntry = dataModel.getData( key );
-    if( !(mapPanelEntry instanceof MapPanel) )
+    if( !(mapPanelEntry instanceof IMapPanel) )
     {
-      throw new IllegalArgumentException( "Key does not correspond to a MapPanel:" + key );
+      throw new IllegalArgumentException( "Key does not correspond to a IMapPanel:" + key );
     }
 
     final Object displayEntry = dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
@@ -144,7 +144,7 @@ public class KeyBasedDataModelUtil
       {
         // TODO: probably wrong to call it from here; instead let the theme fire the corresponding event
 
-        ((MapPanel) mapPanelEntry).invalidateMap();
+        ((IMapPanel) mapPanelEntry).invalidateMap();
       }
     };
     // dataModel.getData( key )
@@ -158,7 +158,7 @@ public class KeyBasedDataModelUtil
 
   public static final CommandableWorkspace getCommandableWorkspace( final KeyBasedDataModel dataModel, final QName themeQName )
   {
-    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final IMapPanel mapPanel = dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     if( mapPanel == null )
     {
       throw new RuntimeException( "Could not found map panel" );

@@ -68,7 +68,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -144,7 +144,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     reinit();
@@ -152,9 +152,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
   private final void reinit( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
 
     m_theme = UtilMap.findEditableTheme( mapModell, IElement2D.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapModell );
@@ -191,7 +191,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       if( m_lineBuilder == null )
         return;
 
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       final Object newNode = checkNewNode( p );
       if( newNode == null )
         mapPanel.setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
@@ -223,7 +223,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -241,7 +241,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     else
       getMapPanel().setCursor( Cursor.getDefaultCursor() );
 
-    mapRepaint();
+    repaintMap();
 
   }
 
@@ -270,8 +270,8 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
-    final Rectangle bounds = mapPanel.getBounds();
+    final IMapPanel mapPanel = getMapPanel();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     final GeoTransform projection = mapPanel.getProjection();
 
     m_toolTipRenderer.setTooltip( "Verfeinern Sie bestehende 2D-Elemente mittels Digitalisieren einer Line.\n    'Doppelklick': Linie abschließen.\n    'Esc':               abbrechen.\n    'Enter':             Verfeinerung durchführen." );
@@ -459,7 +459,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
         e.printStackTrace();
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-        final MapPanel mapPanel = getMapPanel();
+        final IMapPanel mapPanel = getMapPanel();
         mapPanel.setMessage( "Fehler: " + status.getMessage() );
         reinit();
       }
@@ -546,7 +546,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     m_lineBuilder.reset();
 
-    getMapPanel().repaint();
+    getMapPanel().repaintMap();
   }
 
   private static List<Feature> doSelect( final GM_Object selectGeometry, final FeatureList featureList )
@@ -607,7 +607,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return null;
 

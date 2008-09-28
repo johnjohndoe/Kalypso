@@ -68,7 +68,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.loader.WfsLoader;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
@@ -136,7 +136,7 @@ public class URLActionFLOWSAddFilterToGMT extends AbstractURLActionAnalizeTheme
       return generateMessageDialog( "No themes to generate filter for.", IStatus.CANCEL );
     final IKalypsoFeatureTheme[] themesToFilterArray = themesToFilter.toArray( new IKalypsoFeatureTheme[themesToFilter.size()] );
     final IEditorPart activeEditor = getActiveEditor();
-    MapPanel mapPanel = null;
+    IMapPanel mapPanel = null;
     if( activeEditor instanceof GisMapEditor )
       mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
     final SimpleFilterChooserDialog dialog = new SimpleFilterChooserDialog( getShell(), themesToFilterArray, propertyNames.toArray( new QName[propertyNames.size()] ), mapPanel, operation );

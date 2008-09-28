@@ -55,7 +55,7 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -77,7 +77,7 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 

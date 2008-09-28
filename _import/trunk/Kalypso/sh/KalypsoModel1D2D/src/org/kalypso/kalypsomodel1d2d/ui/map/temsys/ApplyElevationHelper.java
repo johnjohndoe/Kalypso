@@ -49,7 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -61,7 +61,7 @@ public class ApplyElevationHelper
   @SuppressWarnings("unchecked")
   public static void assignElevationToSelectedNodes( final ApplyElevationWidgetDataModel dataModel, final List<IFE1D2DNode> nodeList ) throws Exception
   {
-    final MapPanel mapPanel = dataModel.getMapPanel();
+    final IMapPanel mapPanel = dataModel.getMapPanel();
     if( mapPanel == null )
       return;
 

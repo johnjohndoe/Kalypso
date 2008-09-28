@@ -55,7 +55,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
@@ -85,7 +85,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Längsschnitt erzeugen", "Fehler beim Öffnen der Karte" ) )
@@ -100,7 +100,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     {
       final IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
-      final MapPanel panel = mapView.getMapPanel();
+      final IMapPanel panel = mapView.getMapPanel();
 
       // open wizard
       final ConfigureLengthSectionWizard wizard = new ConfigureLengthSectionWizard( scenarioFolder, resultModel, panel );

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
@@ -70,7 +70,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -133,10 +133,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @SuppressWarnings("unchecked")
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -198,7 +198,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
@@ -254,7 +254,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
   {
     try
     {
-      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
@@ -486,7 +486,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     {
       // TODO: this is probably not always the right command target
       final ICommandTarget commandPoster = (ICommandTarget) m_dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL );
-      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       m_strategy.activate( commandPoster, mapPanel );
     }
   }

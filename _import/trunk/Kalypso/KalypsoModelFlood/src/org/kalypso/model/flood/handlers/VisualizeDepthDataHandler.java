@@ -14,7 +14,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -39,7 +39,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )

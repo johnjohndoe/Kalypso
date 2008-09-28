@@ -21,6 +21,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -83,7 +84,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -120,7 +121,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return null;
 
@@ -147,13 +148,13 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( m_gridPointCollector.getHasAllSides() )
     {
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       final GM_Point point = MapUtilities.transform( mapPanel, p );
       m_gridPointCollector.selectPoint( point, MapUtilities.calculateWorldDistance( mapPanel, point, m_radius ) );
     }
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -177,10 +178,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( p == null )
       return;
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
     {
-      panel.repaint();
+      panel.repaintMap();
 
       try
       {
@@ -238,7 +239,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
             point = MapUtilities.transform( getMapPanel(), m_currentPoint );
 
           m_gridPointCollector.changeSelectedPoint( point );
-          getMapPanel().repaint();
+          getMapPanel().repaintMap();
         }
       }
       else
@@ -248,9 +249,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
         {
           m_currentPoint = p;
           // TODO: check if this repaint is really necessary
-          final MapPanel panel = getMapPanel();
+          final IMapPanel panel = getMapPanel();
           if( panel != null )
-            panel.repaint();
+            panel.repaintMap();
 
           return;
         }
@@ -268,10 +269,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     }
 
     // TODO: check if this repaint is really necessary
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
     {
-      panel.repaint();
+      panel.repaintMap();
       // checkGrid();
     }
   }
@@ -320,7 +321,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -340,7 +341,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
         m_pointSnapper.paint( g );
     }
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     if( m_warning == true )
       m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
@@ -353,7 +354,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( e.getKeyCode() == KeyEvent.VK_SHIFT )
       m_snappingActive = false;
@@ -361,7 +362,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
 
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   /**
@@ -383,19 +384,19 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public void keyTyped( final KeyEvent e )
   {
     final char typed = e.getKeyChar();
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( typed == ESC )
     {
       if( e.isShiftDown() )
       {
         reinit();
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
       else
       {
         m_gridPointCollector.clearCurrent();
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
     }
     else if( typed == '\b' )
@@ -403,12 +404,12 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       if( e.isShiftDown() )
       {
         m_gridPointCollector.gotoPreviousSide();
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
       else
       {
         m_gridPointCollector.removeLastPoint();
-        mapPanel.repaint();
+        mapPanel.repaintMap();
       }
     }
     else if( typed == 't' )
@@ -424,9 +425,9 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public void middleClicked( final Point p )
   {
     m_gridPointCollector.selectNext();
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
-      mapPanel.repaint();
+      mapPanel.repaintMap();
   }
 
   /**
@@ -449,7 +450,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public void convertToModell( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModel = getMapPanel().getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel );
     final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );

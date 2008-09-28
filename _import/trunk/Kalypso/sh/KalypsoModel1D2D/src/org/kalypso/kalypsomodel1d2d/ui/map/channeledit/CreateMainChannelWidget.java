@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -117,7 +117,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       m_delegateWidget.activate( getCommandTarget(), getMapPanel() );
   }
 
-  public MapPanel getPanel( )
+  public IMapPanel getPanel( )
   {
     return super.getMapPanel();
   }
@@ -149,7 +149,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       paintBanks( g, CreateChannelData.SIDE.RIGHT, new Color( 255, 0, 0 ) );
       paintBanks( g, CreateChannelData.SIDE.LEFT, new Color( 0, 255, 0 ) );
 
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
 
       /* draw intersected profile */
       drawIntersProfiles( g, new Color( 0, 153, 255 ) );
@@ -247,7 +247,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
   }
@@ -264,7 +264,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
@@ -312,9 +312,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     if( m_delegateWidget != null )
       m_delegateWidget.dragged( p );
     // TODO: check if this repaint is really necessary
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
   }
 
@@ -505,7 +505,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       }
     } );
 
-    getPanel().invalidate();
+    getPanel().repaintMap();
   }
 
 }
