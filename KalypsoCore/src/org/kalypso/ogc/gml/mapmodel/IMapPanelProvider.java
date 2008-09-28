@@ -40,12 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
  * @author bce
  */
 public interface IMapPanelProvider
 {
-  public MapPanel getMapPanel();
+  public IMapPanel getMapPanel();
 }

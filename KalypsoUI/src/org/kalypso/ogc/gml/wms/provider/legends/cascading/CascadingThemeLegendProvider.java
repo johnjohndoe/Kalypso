@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.wms.provider.legends.cascading;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
@@ -48,7 +49,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider;
@@ -105,8 +105,10 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     if( m_theme == null )
       return null;
 
+    // TODO: this is too much copy paste! Reuse code from MapUtilities to paint a list of themes
+
     /* Memory for all legends. */
-    final ArrayList<Image> legends = new ArrayList<Image>();
+    final List<Image> legends = new ArrayList<Image>();
 
     /* All childs available. */
     final IKalypsoTheme[] childs = m_theme.getAllThemes();
@@ -130,19 +132,13 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     final Rectangle computeSize = computeSize( legends, legendElement );
 
     /* Create the image. */
-    final Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
+    final Image image = new Image( font.getDevice(), computeSize.width, computeSize.height );
 
     /* Need a graphical context. */
     final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
-
-    /* Change the color. */
-    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
-
-    /* Draw on the context. */
-    gc.fillRectangle( 0, 0, computeSize.width, computeSize.height );
 
     /* Change the color. */
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
@@ -154,7 +150,7 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     gc.drawImage( icon, BORDER, BORDER );
 
     /* Draw the text. */
-    gc.drawString( legendElement.getText(), BORDER + ICON_SIZE + GAP, BORDER );
+    gc.drawString( legendElement.getText(), BORDER + ICON_SIZE + GAP, BORDER, true );
 
     int heightSoFar = BORDER + legendElement.getSize().height + GAP;
     for( final Image legend : legends )
@@ -162,9 +158,15 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
       /* Draw the legend. */
       gc.drawImage( legend, BORDER + ICON_SIZE + GAP, heightSoFar );
 
+      // TODO: normally, the images should be disposed here, but
+      // this also disposed reused images... (the getLEgenGraphics() image should
+      // always be disposable (or not)
+
       /* Increase the height. */
       heightSoFar = heightSoFar + legend.getBounds().height + IMAGE_GAP;
     }
+
+    gc.dispose();
 
     return image;
   }
@@ -177,7 +179,7 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
    * @param legendElement
    *            The legend element for this theme.
    */
-  private Rectangle computeSize( final ArrayList<Image> legends, final LegendElement legendElement )
+  private Rectangle computeSize( final List<Image> legends, final LegendElement legendElement )
   {
     /* The size for this theme. */
     final Rectangle size = legendElement.getSize();

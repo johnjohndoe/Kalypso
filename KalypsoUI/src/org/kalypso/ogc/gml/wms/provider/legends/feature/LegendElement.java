@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,16 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.legends.feature;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 
 /**
  * This class wraps an object for the legend graphic.
@@ -65,22 +67,22 @@ public class LegendElement
   /**
    * The font, to use for this legend element.
    */
-  private Font m_font;
+  private final Font m_font;
 
   /**
    * The level of this legend element.
    */
-  private int m_level;
+  private final int m_level;
 
   /**
    * The object of this legend element.
    */
-  private Object m_object;
+  private final Object m_object;
 
   /**
    * The content provider will be used for determining the text for this element.
    */
-  private LabelProvider m_labelProvider;
+  private final LabelProvider m_labelProvider;
 
   /**
    * The constructor.
@@ -92,7 +94,7 @@ public class LegendElement
    * @param object
    *            The object of this legend element.
    */
-  public LegendElement( org.eclipse.swt.graphics.Font font, int level, Object object, LabelProvider labelProvider )
+  public LegendElement( final org.eclipse.swt.graphics.Font font, final int level, final Object object, final LabelProvider labelProvider )
   {
     m_font = font;
     m_level = level;
@@ -107,11 +109,12 @@ public class LegendElement
    */
   public Rectangle getSize( )
   {
-    int textWidth = 300;
-    int textHeight = 10;
+    final Point textSize = AbstractKalypsoTheme.calcTextSize( getText(), m_font );
+    final int textWidth = textSize.x;
+    final int textHeight = textSize.y;
 
     /* Width. */
-    int width = textWidth + (ICON_SIZE + GAP) + m_level * (ICON_SIZE + GAP);
+    final int width = textWidth + (ICON_SIZE + GAP) + m_level * (ICON_SIZE + GAP);
 
     /* Height. */
     int height = ICON_SIZE;

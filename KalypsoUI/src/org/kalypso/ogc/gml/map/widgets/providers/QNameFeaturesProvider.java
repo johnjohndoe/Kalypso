@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -72,7 +72,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IFeaturesProvider#getFeatures()
    */
-  public EasyFeatureWrapper[] getFeatures( final MapPanel mapPanel )
+  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
     final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
 

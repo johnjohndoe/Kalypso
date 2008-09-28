@@ -47,7 +47,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -63,7 +63,7 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 

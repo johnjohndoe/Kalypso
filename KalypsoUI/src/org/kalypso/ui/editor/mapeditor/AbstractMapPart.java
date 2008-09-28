@@ -54,13 +54,14 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
@@ -72,6 +73,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -86,7 +88,7 @@ import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -120,11 +122,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private IWorkbenchPartSite m_site;
 
-  private MapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   private GisTemplateMapModell m_mapModell;
 
-  private Control m_control;
+  private Form m_control;
 
   private boolean m_disposed = false;
 
@@ -144,7 +146,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
      * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
      */
     @Override
-    public void onMessageChanged( final MapPanel source, final String message )
+    public void onMessageChanged( final IMapPanel source, final String message )
     {
       final Display display = getSite().getShell().getDisplay();
 
@@ -160,6 +162,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   };
 
   private MapPanelSourceProvider m_mapSourceProvider;
+
+  private GM_Envelope m_initialEnv;
 
   protected AbstractMapPart( )
   {
@@ -209,10 +213,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), commandTarget.redoAction );
     actionBars.updateActionBars();
 
-    /* Register this view at the mapPanel. */
-    m_mapPanel = new MapPanel( this, m_selectionManager );
-    m_mapPanel.addMapPanelListener( m_mapPanelListener );
-
     m_resourceChangeListener = new IResourceChangeListener()
     {
       public void resourceChanged( final IResourceChangeEvent event )
@@ -245,7 +245,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       }
     };
 
-    m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
   }
 
   /**
@@ -256,12 +255,25 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final IWorkbenchPartSite site = getSite();
 
+    m_control = MapPartHelper.createMapForm( parent );
+    m_mapPanel = MapPartHelper.createMapPanelInForm( m_control, this, m_selectionManager );
+    setMapModell( m_mapModell, m_initialEnv );
+    m_mapPanel.addMapPanelListener( m_mapPanelListener );
+    m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
+
+    if( m_mapModell == null )
+      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
-    final boolean doCreateMenu = this instanceof IEditorPart;
+    if( this instanceof IEditorPart )
+    {
+      final MenuManager contextMenu = MapPartHelper.createMapContextMenu( m_control.getBody(), m_mapPanel, site );
+      site.registerContextMenu( contextMenu, m_mapPanel );
+    }
 
-    m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site, doCreateMenu );
     site.setSelectionProvider( m_mapPanel );
+
   }
 
   /**
@@ -361,7 +373,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     try
     {
       // prepare for exception
-      setMapModell( null );
+      setMapModell( null, null );
+
+      /* "Loading map..." */
+      showBusy( true );
+
+      if( m_mapPanel != null )
+        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -382,21 +400,20 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       if( !m_disposed )
       {
+        final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
         final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
         mapModell.createFromTemplate( gisview );
-        setMapModell( mapModell );
-
-        final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        m_mapPanel.setBoundingBox( env );
+        setMapModell( mapModell, env );
       }
     }
     catch( final Throwable e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
 
-      setMapModell( null );
-
+      setMapModell( null, null );
       setFile( null );
+
+      m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );//$NON-NLS-1$;
 
       throw new CoreException( status );
     }
@@ -408,6 +425,33 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( partName == null )
         partName = fileName;
       setCustomName( partName );
+
+      // At the moment, we stop after the .gmt file has loaded. One day we may change this to wait until
+      // all themes have finished loading, but this might be a little bit tricky.
+      showBusy( false );
+    }
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#showBusy(boolean)
+   */
+  @Override
+  public void showBusy( final boolean busy )
+  {
+    super.showBusy( busy );
+
+    final Form control = m_control;
+    if( control != null && !control.isDisposed() )
+    {
+      control.getDisplay().syncExec( new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          if( !control.isDisposed() )
+            control.setBusy( false );
+        }
+      } );
     }
   }
 
@@ -454,12 +498,19 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   }
 
-  protected void setMapModell( final GisTemplateMapModell mapModell )
+  protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
   {
     if( m_mapModell != null )
       m_mapModell.dispose();
 
     m_mapModell = mapModell;
+    m_initialEnv = env; // only needed, if mapPanel not yet available
+
+    final String partName;
+    if( m_mapModell == null )
+      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
+    else
+      partName = m_mapModell.getLabel( m_mapModell );
 
     final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
     if( !workbench.isClosing() )
@@ -469,16 +520,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         @SuppressWarnings("synthetic-access")
         public void run( )
         {
-          if( m_mapModell == null )
-            setPartName( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ) ); //$NON-NLS-1$
-          else
-            setPartName( m_mapModell.getLabel( m_mapModell ) );
+          setPartName( partName );
         }
       } );
     }
 
     if( m_mapPanel != null )
+    {
       m_mapPanel.setMapModell( m_mapModell );
+      if( env != null )
+        m_mapPanel.setBoundingBox( env );
+    }
   }
 
   protected GisTemplateMapModell getMapModell( )
@@ -489,7 +541,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
    */
-  public MapPanel getMapPanel( )
+  public IMapPanel getMapPanel( )
   {
     return m_mapPanel;
   }
@@ -535,13 +587,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         return ((IFileEditorInput) getEditorInput()).getFile();
     }
 
-    if( adapter == MapPanel.class )
+    if( adapter == IMapPanel.class )
       return m_mapPanel;
 
     if( adapter == ModellEventProvider.class )
       return new MapPanelModellEventProvider( m_mapPanel );
 
-    if( adapter == Control.class )
+    if( adapter == Form.class )
       return m_control;
 
     return super.getAdapter( adapter );
@@ -562,7 +614,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" ); //$NON-NLS-1$
-    final Rectangle bounds = getMapPanel().getBounds();
+    final Rectangle bounds = getMapPanel().getScreenBounds();
     final double width = bounds.width;
     final double height = bounds.height;
     final double actualWidthToHeigthRatio = width / height;
@@ -600,7 +652,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_disposed = true;
 
-    setMapModell( null );
+    setMapModell( null, null );
 
     m_mapPanel.dispose();
 

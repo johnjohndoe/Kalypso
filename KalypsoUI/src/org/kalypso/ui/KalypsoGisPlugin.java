@@ -67,7 +67,6 @@ import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -148,15 +147,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     {
       IOUtils.closeQuietly( ins );
     }
-  }
-
-  /**
-   * use {@link KalypsoDeegreePlugin#getDefaultStyleFactory()} instead
-   */
-  @Deprecated
-  public static DefaultStyleFactory getDefaultStyleFactory( )
-  {
-    return KalypsoDeegreePlugin.getDefaultStyleFactory();
   }
 
   /**

@@ -51,6 +51,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -61,7 +62,7 @@ import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -93,7 +94,7 @@ public class MapModellHelper
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
-  public static boolean waitForAndErrorDialog( final Shell shell, final MapPanel mapPanel, final String windowTitle, final String message )
+  public static boolean waitForAndErrorDialog( final Shell shell, final IMapPanel mapPanel, final String windowTitle, final String message )
   {
     final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel );
     final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( operation );
@@ -105,11 +106,11 @@ public class MapModellHelper
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
    */
-  public static ICoreRunnableWithProgress createWaitForMapOperation( final MapPanel mapPanel )
+  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapPanel mapPanel )
   {
     final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws InterruptedException
+      public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
       {
         monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.1"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
@@ -145,8 +146,8 @@ public class MapModellHelper
    * 
    * @return scale of the map
    */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused") //$NON-NLS-1$
-  final int mapHeight )
+  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused")
+      final int mapHeight )
   {
     try
     {
@@ -196,7 +197,7 @@ public class MapModellHelper
   /**
    * Create an image of a map model and keep aspection ration of displayed map and its extend
    */
-  public static BufferedImage createWellFormedImageFromModel( final MapPanel panel, final int width, final int height )
+  public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height )
   {
     final IMapModell mapModell = panel.getMapModell();
     final GM_Envelope bbox = panel.getBoundingBox();
@@ -236,21 +237,20 @@ public class MapModellHelper
       final int w = bounds.width;
       final int h = bounds.height;
 
-      p.setDestRect( x - 2, y - 2, w + x, h + y, null );
+      p.setDestRect( x, y, w + x, h + y, null );
 
       final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
       {
-        model.paint( gr, p, bbox, scale, false );
+        model.paint( gr, p, bbox, scale, null, new NullProgressMonitor() );
+
+        final HighlightGraphics highlightGraphics = new HighlightGraphics( gr );
+        model.paint( highlightGraphics, p, bbox, scale, true, new NullProgressMonitor() );
       }
       catch( final Exception e )
       {
         e.printStackTrace();
-        System.out.println( e.getMessage() );
       }
-
-      final HighlightGraphics highlightGraphics = new HighlightGraphics( gr );
-      model.paint( highlightGraphics, p, bbox, scale, true );
     }
     finally
     {

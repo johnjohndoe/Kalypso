@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.catalog;
 
@@ -54,6 +54,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -83,7 +84,7 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
       final Element documentElement = doc.getDocumentElement();
       return SLDFactory.createFeatureTypeStyle( urlResolver, documentElement );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO generate new exception type
       throw new UnsupportedOperationException( e );
@@ -91,7 +92,7 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
   }
 
   @Override
-  protected void write( FeatureTypeStyle ftStyle, OutputStream os )
+  protected void write( final FeatureTypeStyle ftStyle, final OutputStream os )
   {
     final String ftStyleAsString = ftStyle.exportAsXML();
     final Document doc;
@@ -105,7 +106,7 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
       t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       t.transform( source, new StreamResult( os ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -113,6 +114,30 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
     {
       IOUtils.closeQuietly( os );
     }
+  }
+
+  public FeatureTypeStyle getSelected( final IUrlResolver2 resolver, final IFeatureType featureType )
+  {
+    return null;
+
+    // in order to implement this, we must generate the appropriate url
+    // but this is not yet possible with this generator stuff
+    // we should get rid of this somehow
+
+// try
+// {
+// final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
+// if( generator == null )
+// return null;
+// final String defaultURN = generator.generateDefaultURNForRelated( parent );
+// return getValue( resolver, defaultURN, defaultURN );
+// }
+// catch( final Exception e )
+// {
+// final IStatus status = StatusUtilities.statusFromThrowable( e );
+// KalypsoCorePlugin.getDefault().getLog().log( status );
+// return null;
+// }
   }
 
 }

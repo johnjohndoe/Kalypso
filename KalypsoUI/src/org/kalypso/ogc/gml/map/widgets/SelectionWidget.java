@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -53,7 +53,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
@@ -130,18 +130,18 @@ public class SelectionWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
     /* Init the cursor. */
     Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
-    
-    URL resource = SelectionWidget.class.getResource( "/icons/cursor/select.gif" ); //$NON-NLS-1$
+
+    final URL resource = SelectionWidget.class.getResource( "/icons/cursor/select.gif" ); //$NON-NLS-1$
     if( resource != null )
     {
-      ImageIcon img = new ImageIcon( resource );
-      Image pointer = img.getImage();
+      final ImageIcon img = new ImageIcon( resource );
+      final Image pointer = img.getImage();
       cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" ); //$NON-NLS-1$
     }
 
@@ -161,9 +161,9 @@ public class SelectionWidget extends AbstractWidget
     }
 
     // TODO: check if this repaint is really necessary
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
   }
 
@@ -218,9 +218,9 @@ public class SelectionWidget extends AbstractWidget
 
     if( m_tooltipProvider != null )
     {
-      final MapPanel panel = getMapPanel();
+      final IMapPanel panel = getMapPanel();
       if( panel != null )
-        panel.repaint();
+        panel.repaintMap();
     }
   }
 
@@ -247,7 +247,7 @@ public class SelectionWidget extends AbstractWidget
     m_selector = null;
 
     /* Reset the cursor to default. */
-    Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+    final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
     getMapPanel().setCursor( cursor );
 
     super.finish();

@@ -50,12 +50,12 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * A pool-listener on a {@link PoolableObjectType}, which support saving/restoring of the selection state, when the
+ * A pool-listener on a {@link IPoolableObjectType}, which support saving/restoring of the selection state, when the
  * workspace gets invalidated.
  * <p>
  * The associated object must be a {@link CommandableWorkspace}.
@@ -79,9 +79,9 @@ public class RestoreSelectionHelper
   /** Stored selection */
   private String[] m_oldSelectionState = null;
 
-  private final PoolableObjectType m_key;
+  private final IPoolableObjectType m_key;
 
-  public RestoreSelectionHelper( final PoolableObjectType key, final IFeatureSelectionManager selectionManager )
+  public RestoreSelectionHelper( final IPoolableObjectType key, final IFeatureSelectionManager selectionManager )
   throws CoreException
   {
     m_key = key;
@@ -90,7 +90,7 @@ public class RestoreSelectionHelper
     saveSelection( getWorkspace( m_key ) );
   }
 
-  private CommandableWorkspace getWorkspace( final PoolableObjectType key ) throws CoreException
+  private CommandableWorkspace getWorkspace( final IPoolableObjectType key ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     return (CommandableWorkspace) pool.getObject( key );

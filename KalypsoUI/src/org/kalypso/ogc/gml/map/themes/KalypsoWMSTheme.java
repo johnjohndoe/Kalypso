@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -123,7 +124,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
      */
     @Override
-    public void aboutToRun( IJobChangeEvent event )
+    public void aboutToRun( final IJobChangeEvent event )
     {
       /* Set a status for the user. */
       setStatus( StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.0") ) ); //$NON-NLS-1$
@@ -133,10 +134,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
      */
     @Override
-    public void done( IJobChangeEvent event )
+    public void done( final IJobChangeEvent event )
     {
       /* Get the result. */
-      IStatus result = event.getResult();
+      final IStatus result = event.getResult();
 
       /* Set a status for the user. */
       setStatus( result );
@@ -214,13 +215,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform world2screen, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
   {
     /* The image can not be selected. */
-    if( selected )
+    if( selected != null && selected )
       return;
 
     if( m_buffer != null )
@@ -360,7 +362,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     }
 
     if( m_legend != null )
-      return m_legend;
+    {
+      // Clone this image, the returned image will be disposed outside!
+      return new org.eclipse.swt.graphics.Image( font.getDevice(), m_legend, SWT.IMAGE_COPY );
+    }
 
     return super.getLegendGraphic( font );
   }
@@ -423,7 +428,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param getFeatureInfoResultProcessor
    * @throws Exception
    */
-  @SuppressWarnings("unused") //$NON-NLS-1$
+  @SuppressWarnings("unused")
   public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
   {
 // KalypsoRemoteWMService remoteWMS = m_remoteWMS;

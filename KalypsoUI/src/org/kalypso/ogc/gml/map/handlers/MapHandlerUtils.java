@@ -45,7 +45,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -61,7 +61,7 @@ public class MapHandlerUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  public static void postMapCommand( final MapPanel mapPanel, final ChangeExtentCommand command, final Runnable runnable ) throws ExecutionException
+  public static void postMapCommand( final IMapPanel mapPanel, final ChangeExtentCommand command, final Runnable runnable ) throws ExecutionException
   {
     final ICommandTarget commandTarget = mapPanel.getWidgetManager().getCommandTarget();
     if( commandTarget == null )
@@ -77,9 +77,9 @@ public class MapHandlerUtils
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
-  public static MapPanel getMapPanel( final IEvaluationContext context ) throws ExecutionException
+  public static IMapPanel getMapPanel( final IEvaluationContext context ) throws ExecutionException
   {
-    final MapPanel mapPanel = (MapPanel) context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
+    final IMapPanel mapPanel = (IMapPanel) context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
     if( mapPanel == null )
       throw new ExecutionException( "No mapPanel in context." ); //$NON-NLS-1$
 
@@ -96,7 +96,7 @@ public class MapHandlerUtils
    */
   public static IMapModell getMapModell( final IEvaluationContext context ) throws ExecutionException
   {
-    final MapPanel mapPanel = getMapPanel( context );
+    final IMapPanel mapPanel = getMapPanel( context );
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       throw new ExecutionException( "No mapModell in context." ); //$NON-NLS-1$

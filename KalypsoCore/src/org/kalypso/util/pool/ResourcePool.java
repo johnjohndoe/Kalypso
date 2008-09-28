@@ -61,7 +61,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -123,19 +123,19 @@ public class ResourcePool
       KeyInfo info = m_keyInfos.get( key );
       if( info == null )
         try
-        {
+      {
           final ILoader loader = getLoader( key.getType() );
           info = new KeyInfo( key, loader );
           m_keyInfos.put( key, info );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-          e.getMessage();
-          final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
-          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
-          throw iae;
-        }
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        e.getMessage();
+        final RuntimeException iae = new IllegalArgumentException( Messages.getString( "org.kalypso.util.pool.ResourcePool.1" ) + key.getType() ); //$NON-NLS-1$
+        ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
+        throw iae;
+      }
 
       info.addListener( l );
 
@@ -259,7 +259,7 @@ public class ResourcePool
     final KeyInfo info = m_keyInfos.get( key );
     if( info != null )
       try
-      {
+    {
         // wait for info
         info.join();
 
@@ -268,13 +268,13 @@ public class ResourcePool
           throw new CoreException( result );
 
         return info.getObject();
-      }
-      catch( final InterruptedException e )
-      {
-        e.printStackTrace();
+    }
+    catch( final InterruptedException e )
+    {
+      e.printStackTrace();
 
-        throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.7" ) ) ); //$NON-NLS-1$
-      }
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.util.pool.ResourcePool.7" ) ) ); //$NON-NLS-1$
+    }
 
     // falls object nicht bereits da,
     // einfach einen key nur fürs laden erzeugen, und gleich wieder disposen

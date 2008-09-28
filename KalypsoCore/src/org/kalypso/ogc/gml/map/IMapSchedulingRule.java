@@ -47,5 +47,5 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
  */
 public interface IMapSchedulingRule extends ISchedulingRule
 {
-  public MapPanel getMapPanel( );
+  public IMapPanel getMapPanel( );
 }

@@ -40,17 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -71,7 +68,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -85,7 +82,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.xml.sax.InputSource;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
@@ -129,7 +125,6 @@ public class GmlLoader extends AbstractLoader
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
     final List<IStatus> resultList = new ArrayList<IStatus>();
 
-    InputStream is = null;
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.1" ), 1000 ); //$NON-NLS-1$
@@ -138,10 +133,7 @@ public class GmlLoader extends AbstractLoader
 
       final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
 
-      is = new BufferedInputStream( gmlURL.openStream() );
-      final InputSource inputSource = new InputSource( is );
-      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( inputSource, gmlURL, factory );
-      is.close();
+      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory );
 
       CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
@@ -214,8 +206,6 @@ public class GmlLoader extends AbstractLoader
     finally
     {
       monitor.done();
-
-      IOUtils.closeQuietly( is );
     }
   }
 

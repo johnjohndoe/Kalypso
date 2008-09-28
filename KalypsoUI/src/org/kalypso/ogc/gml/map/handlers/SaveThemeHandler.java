@@ -60,7 +60,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -77,7 +77,7 @@ public class SaveThemeHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
@@ -159,7 +159,7 @@ public class SaveThemeHandler extends AbstractHandler
     boolean bEnabled = false;
 
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-    final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
+    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
 
     if( mapPanel == null )
       return;

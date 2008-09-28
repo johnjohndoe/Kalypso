@@ -283,13 +283,13 @@
 		<factory adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
 			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
 			</adapter>
-			<adapter type="org.kalypso.ogc.gml.map.MapPanel">
+			<adapter type="org.kalypso.ogc.gml.map.IMapPanel">
 			</adapter>
 		</factory>
 		<factory adaptableType="org.kalypso.ui.views.map.MapView" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
 			<adapter type="org.eclipse.ui.views.properties.IPropertySheetPage">
 			</adapter>
-			<adapter type="org.kalypso.ogc.gml.map.MapPanel">
+			<adapter type="org.kalypso.ogc.gml.map.IMapPanel">
 			</adapter>
 		</factory>
 	</extension>
@@ -422,18 +422,46 @@
 		</propertySections>
 	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
-		<page class="org.kalypso.ui.views.properties.ThemePropertyPage" id="org.kalypso.ui.themeBasicPage" name="%page.name.1">
+		<page
+        class="org.kalypso.ui.views.properties.ThemePropertyPage"
+        id="org.kalypso.ui.views.properties.ThemePropertyPage"
+        name="%org.kalypso.ui.views.properties.ThemePropertyPage.name">
 			<enabledWhen>
 				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
 				</instanceof>
 			</enabledWhen>
 		</page>
-		<page class="org.kalypso.ui.views.properties.LegendPropertyPage" id="org.kalypso.ui.views.properties.LegendPropertyPage" name="%page.name.2">
+		<page
+        class="org.kalypso.ui.views.properties.LegendPropertyPage"
+        id="org.kalypso.ui.views.properties.LegendPropertyPage"
+        name="%org.kalypso.ui.views.properties.LegendPropertyPage.name">
 			<enabledWhen>
 				<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
 				</instanceof>
 			</enabledWhen>
 		</page>
+  <page
+        category="org.kalypso.ui.views.properties.ThemePropertyPage"
+        class="org.kalypso.ui.views.properties.WMSThemePropertyPage"
+        id="org.kalypso.ui.views.properties.WMSThemePropertyPage"
+        name="%org.kalypso.ui.views.properties.WMSThemePropertyPage.name">
+     <enabledWhen>
+        <instanceof
+              value="org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme">
+        </instanceof>
+     </enabledWhen>
+  </page>
+  <page
+        category="org.kalypso.ui.views.properties.ThemePropertyPage"
+        class="org.kalypso.ui.views.properties.FeatureThemePropertyPage"
+        id="org.kalypso.ui.views.properties.FeatureThemePropertyPage"
+        name="%org.kalypso.ui.views.properties.FeatureThemePropertyPage.name">
+     <enabledWhen>
+        <instanceof
+              value="org.kalypso.ogc.gml.GisTemplateFeatureTheme">
+        </instanceof>
+     </enabledWhen>
+  </page>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView">
@@ -1187,6 +1215,11 @@
 				<reference definitionId="mapContext" />
 			</enabledWhen>
 		</handler>
+		<handler class="org.kalypso.ogc.gml.map.handlers.PrintMapHandler" commandId="org.eclipse.ui.file.print">
+			<enabledWhen>
+				<reference definitionId="mapContext" />
+			</enabledWhen>
+		</handler>
 	</extension>
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ogc.gml.map.GISEditorIsActive">
@@ -1228,6 +1261,6 @@
 		<loader class="org.kalypso.ogc.gml.loader.WfsLoader" type="wfs" />
 	</extension>
 	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui" properties="activeThemeNotNull,activeThemeQName,activeThemeHasExtent,activeThemeIsFeatureTheme" type="org.kalypso.ogc.gml.map.MapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui" properties="activeThemeNotNull,activeThemeQName,activeThemeHasExtent,activeThemeIsFeatureTheme" type="org.kalypso.ogc.gml.map.IMapPanel" />
 	</extension>
 </plugin>

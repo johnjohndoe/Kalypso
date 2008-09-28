@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
-public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
+public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStateProvider
 {
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
@@ -84,7 +84,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
 
   public void dispose( );
 
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException;
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * returns the name of the layer

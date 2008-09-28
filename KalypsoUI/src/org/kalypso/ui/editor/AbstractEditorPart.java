@@ -161,7 +161,8 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   public final void doSave( final IProgressMonitor monitor )
   {
     // save only possible when input is a file
-    if( !(getEditorInput() instanceof FileEditorInput) )
+    final IEditorInput eInput = getEditorInput();
+    if( !(eInput instanceof FileEditorInput) )
     {
       // given user a chance to use save-as
       MessageDialog.openInformation( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.0" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.1" ) + Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.2" ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -170,27 +171,23 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       return;
     }
 
-    final IFileEditorInput input = (IFileEditorInput) getEditorInput();
-
-    if( input != null )
+    final IFileEditorInput input = (IFileEditorInput) eInput;
+    try
     {
-      try
-      {
-        m_isSaving = true;
-        doSaveInternal( monitor, input );
-        m_commandTarget.resetDirty();
-        fireDirty();
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
+      m_isSaving = true;
+      doSaveInternal( monitor, input );
+      m_commandTarget.resetDirty();
+      fireDirty();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
 
-        ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.5" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      finally
-      {
-        m_isSaving = false;
-      }
+      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.5" ), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    finally
+    {
+      m_isSaving = false;
     }
   }
 
@@ -322,9 +319,6 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     return true;
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
-   */
   protected final void setInput( final IEditorInput input )
   {
     if( !(input instanceof IStorageEditorInput) )
@@ -347,7 +341,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString( "org.kalypso.ui.editor.AbstractEditorPart.11" ), status );
     }
 
     m_commandTarget.resetDirty();
@@ -420,7 +414,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     {
       @SuppressWarnings("synthetic-access")
       @Override
-      public IStatus runInUIThread( IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         firePropertyChange( PROP_DIRTY );
         return Status.OK_STATUS;
@@ -447,13 +441,13 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   {
     setPartName( input.getName() );
     if( input instanceof IFileEditorInput )
-      setContentDescription( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
+      setTitleToolTip( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
   }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

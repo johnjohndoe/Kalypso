@@ -54,7 +54,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.editor.mapeditor.ExportableMap;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
 
@@ -95,6 +95,9 @@ public class MapScreenShotHandler extends AbstractHandler
 
     try
     {
+      // TODO: we should separate this handler into two, one, using a file dialog
+      // the other one using the preferences; everything else is too obscure
+      // The common code can just be factored out into a helper class
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
 
@@ -118,12 +121,13 @@ public class MapScreenShotHandler extends AbstractHandler
       else if( targetFile.isFile() )
         img = targetFile;
       else
-        throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" )); //$NON-NLS-1$
+        // TODO: why not just present the file dialog here, if nothing is defined?
+        throw new NotImplementedException( "targetFile must be an file or directory and have to exists" ); //$NON-NLS-1$
 
       /* generate and store img */
       os = new BufferedOutputStream( new FileOutputStream( img ) );
 
-      final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+      final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
       export.exportObject( os, new NullProgressMonitor() );

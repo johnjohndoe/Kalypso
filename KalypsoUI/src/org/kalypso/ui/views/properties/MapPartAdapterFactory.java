@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -80,7 +80,7 @@ public class MapPartAdapterFactory implements IAdapterFactory
         }
       } );
 
-    if( adapterType == MapPanel.class )
+    if( adapterType == IMapPanel.class )
       return mapPart.getMapPanel();
 
     return null;
@@ -92,7 +92,7 @@ public class MapPartAdapterFactory implements IAdapterFactory
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Class[] getAdapterList( )
   {
-    return new Class[] { IPropertySheetPage.class, MapPanel.class };
+    return new Class[] { IPropertySheetPage.class, IMapPanel.class };
   }
 
 }

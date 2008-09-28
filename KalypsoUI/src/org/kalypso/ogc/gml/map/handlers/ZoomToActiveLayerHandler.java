@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -65,7 +65,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
 
     final GM_Envelope zoomBox = activeTheme.getFullExtent();

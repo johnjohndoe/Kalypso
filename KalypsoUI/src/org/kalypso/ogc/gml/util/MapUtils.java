@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class MapUtils
 {
-  public static void paintRect( final Graphics g, final MapPanel panel, final Feature feature, final QName geomQName, final RectangleSelector rectangleSelector, final int grabRadius )
+  public static void paintRect( final Graphics g, final IMapPanel panel, final Feature feature, final QName geomQName, final RectangleSelector rectangleSelector, final int grabRadius )
   {
     /* Draw drag rect if rectangle is big enough */
     if( rectangleSelector != null )
@@ -100,7 +100,7 @@ public class MapUtils
     g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
   }
 
-  public static void removeFeature( final CommandableWorkspace workspace, final MapPanel panel, final Feature[] selectedFeatures ) throws Exception
+  public static void removeFeature( final CommandableWorkspace workspace, final IMapPanel panel, final Feature[] selectedFeatures ) throws Exception
   {
     if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.0"), Messages.getString("org.kalypso.ogc.gml.util.MapUtils.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
@@ -120,7 +120,7 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
-  public static void paintGrabbedFeature( final Graphics g, final MapPanel panel, final Feature feature, final QName geomQName )
+  public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final QName geomQName )
   {
     final Graphics2D g2 = (Graphics2D) g;
     final BasicStroke oldStroke = (BasicStroke) g2.getStroke();
@@ -151,7 +151,7 @@ public class MapUtils
   }
 
   @SuppressWarnings("unchecked")
-  private static void paintGrabbedGeometry( final MapPanel panel, final Graphics2D g2, final GM_Object geom ) throws GM_Exception
+  private static void paintGrabbedGeometry( final IMapPanel panel, final Graphics2D g2, final GM_Object geom ) throws GM_Exception
   {
     if( geom instanceof GM_Point )
       paintGrabbedPoint( panel, g2, (GM_Point) geom );
@@ -170,7 +170,7 @@ public class MapUtils
       paintGrabbedPoint( panel, g2, geom.getCentroid() );
   }
 
-  private static void drawGrabbedSurface( final MapPanel panel, final Graphics2D g2, final GM_Surface<GM_SurfacePatch> surface )
+  private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Surface<GM_SurfacePatch> surface )
   {
     final GM_SurfacePatch patch = surface.get( 0 );
 
@@ -190,7 +190,7 @@ public class MapUtils
     g2.drawPolygon( xPoints, yPoints, positions.length );
   }
 
-  private static void paintGrabbedCurve( final MapPanel panel, final Graphics2D g2, final GM_Curve curve ) throws GM_Exception
+  private static void paintGrabbedCurve( final IMapPanel panel, final Graphics2D g2, final GM_Curve curve ) throws GM_Exception
   {
     final String crs = curve.getCoordinateSystem();
     final GM_Position[] positions = curve.getAsLineString().getPositions();
@@ -208,7 +208,7 @@ public class MapUtils
     g2.drawPolyline( xPoints, yPoints, positions.length );
   }
 
-  private static void paintGrabbedPoint( final MapPanel panel, final Graphics2D g2, final GM_Point point )
+  private static void paintGrabbedPoint( final IMapPanel panel, final Graphics2D g2, final GM_Point point )
   {
     final int smallRect = 10;
 

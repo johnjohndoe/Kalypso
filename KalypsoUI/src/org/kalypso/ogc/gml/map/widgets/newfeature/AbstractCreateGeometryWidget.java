@@ -20,7 +20,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
@@ -80,7 +80,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -140,14 +140,14 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     final QName valueQName = vpt.getValueQName();
     final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
-    if( GeometryUtilities.QN_POLYGON_PROPERTY.equals( valueQName ))      
+    if( GeometryUtilities.QN_POLYGON_PROPERTY.equals( valueQName ))
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );
     else if(GeometryUtilities.QN_MULTI_POLYGON_PROPERTY.equals( valueQName ))
       m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
     else if( GeometryUtilities.QN_LINE_STRING_PROPERTY.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs );
     else if(GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY.equals( valueQName ))
-      m_builder = new LineGeometryBuilder( 0, targetCrs ); //TODO 
+      m_builder = new LineGeometryBuilder( 0, targetCrs ); //TODO
     else if( GeometryUtilities.QN_POINT_PROPERTY.equals( valueQName ) )
       m_builder = new PointGeometryBuilder( targetCrs );
     else
@@ -163,9 +163,9 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     m_currentPoint = p;
 
     // TODO: check if this repaint is necessary for the widget
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -222,7 +222,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
       case KeyEvent.VK_ESCAPE:
         e.consume();
         reinit();
-        getMapPanel().repaint();
+        getMapPanel().repaintMap();
         break;
 
       default:

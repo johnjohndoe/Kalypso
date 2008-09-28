@@ -11,7 +11,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
@@ -27,11 +27,11 @@ public final class ActivateWidgetJob extends UIJob
 {
   private final IWidget m_widget;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private final IWorkbenchPart m_activePart;
 
-  public ActivateWidgetJob( final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
+  public ActivateWidgetJob( final String name, final IWidget widget, final IMapPanel mapPanel, final IWorkbenchPart activePart )
   {
     super( name );
     m_widget = widget;

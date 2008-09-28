@@ -12,14 +12,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
-import org.kalypso.ogc.gml.IPaintInternalDelegate;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.IPaintDelegate;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 import com.google.earth.kml.FeatureType;
 import com.google.earth.kml.FolderType;
@@ -31,67 +28,20 @@ import com.google.earth.kml.StyleType;
 /**
  * @author kuch
  */
-public class KMLExportDelegate implements IPaintInternalDelegate
+public class KMLExportDelegate implements IPaintDelegate
 {
   private final FolderType m_folderType;
-
-  private final MapPanel m_mapPanel;
 
   private final ObjectFactory m_factory;
 
   private final IKMLAdapter[] m_provider;
 
-  /**
-   * @param factory
-   * @param folderType
-   */
-  public KMLExportDelegate( final IKMLAdapter[] provider, final MapPanel mapPanel, final ObjectFactory factory, final FolderType folderType )
+  public KMLExportDelegate( final IKMLAdapter[] provider, final ObjectFactory factory, final FolderType folderType )
   {
     m_provider = provider;
-    m_mapPanel = mapPanel;
     m_factory = factory;
     m_folderType = folderType;
 
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ogc.gml.IPaintInternalDelegate#getBoundingBox()
-   */
-  public GM_Envelope getBoundingBox( )
-  {
-    return m_mapPanel.getBoundingBox();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ogc.gml.IPaintInternalDelegate#getProjection()
-   */
-  public GeoTransform getProjection( )
-  {
-    return m_mapPanel.getProjection();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ogc.gml.IPaintInternalDelegate#getScale()
-   */
-  public double getScale( )
-  {
-    return m_mapPanel.getCurrentScale();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.kalypso.ogc.gml.IPaintInternalDelegate#getSelected()
-   */
-  public boolean getSelected( )
-  {
-    return false;
   }
 
   /*

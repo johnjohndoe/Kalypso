@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.handlers.parts;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -59,7 +59,7 @@ public class PanToFeaturePart
   /**
    * A view part containing a map panel.
    */
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   /**
    * The constructor.
@@ -67,7 +67,7 @@ public class PanToFeaturePart
    * @param part
    *            A view part containing a map panel.
    */
-  public PanToFeaturePart( final MapPanel mapPanel )
+  public PanToFeaturePart( final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
   }

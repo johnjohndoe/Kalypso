@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
@@ -54,7 +54,6 @@ import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
@@ -85,8 +84,6 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
 
   private final static ContentHandler EMPTY_HANLDER = new DefaultHandler();
 
-  private final boolean m_useSchemaCatalog;
-
   private final URL m_context;
 
   private final URL m_schemaLocationHint;
@@ -99,13 +96,12 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
 
   private String m_schemaLocationString = null;
 
-  public GMLDocumentContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context, final IFeatureProviderFactory providerFactory )
+  public GMLDocumentContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
   {
     super( EMPTY_HANLDER );
 
     m_xmlReader = xmlReader;
     m_schemaLocationHint = schemaLocationHint;
-    m_useSchemaCatalog = useGMLSchemaCatalog;
     m_context = context;
     m_providerFactory = providerFactory;
   }
@@ -122,7 +118,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
       // first element may have schemalocation
       m_schemaLocationString = getSchemaLocation( atts );
 
-      m_gmlSchema = initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_useSchemaCatalog, m_context );
+      m_gmlSchema = initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
       /* This must happen only for the root element. If we fail an exception MUST be thrown. */
       Assert.isNotNull( m_gmlSchema );
 
@@ -138,11 +134,11 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
    * TODO: move into helper class.
    * </p>
    */
-  private static GMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString, final URL locationHint, final boolean useSchemaCatalog, final URL context ) throws SAXException
+  private static GMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString, final URL locationHint, final URL context ) throws SAXException
   {
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
-    final GMLSchema gmlSchema = loadGMLSchema( uri, schemaLocationString, locationHint, useSchemaCatalog, context );
+    final GMLSchema gmlSchema = loadGMLSchema( uri, schemaLocationString, locationHint, context );
 
     // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
     // the main schema.
@@ -179,7 +175,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     return gmlSchema;
   }
 
-  private static GMLSchema loadGMLSchema( final String uri, final String schemaLocationString, final URL schemaLocationHint, final boolean useSchemaCatalog, final URL context ) throws SAXException
+  private static GMLSchema loadGMLSchema( final String uri, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
   {
     final MultiException schemaNotFoundExceptions = new MultiException();
 
@@ -188,20 +184,8 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     // 1. try : use hint
     if( schemaLocationHint != null )
     {
-      try
-      {
-        if( useSchemaCatalog )
-        {
-          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          schema = schemaCatalog.getSchema( null, schemaLocationHint );
-        }
-        else
-          schema = GMLSchemaFactory.createGMLSchema( null, schemaLocationHint );
-      }
-      catch( final GMLSchemaException e )
-      {
-        schemaNotFoundExceptions.addException( new SAXException( e ) );
-      }
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      schema = schemaCatalog.getSchema( null, schemaLocationHint );
     }
 
     try
@@ -212,13 +196,8 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
         final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, context );
         final URL schemaLocation = namespaces.get( uri );
 
-        if( useSchemaCatalog )
-        {
-          final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          schema = schemaCatalog.getSchema( uri, null, schemaLocation );
-        }
-        else if( schemaLocation != null )
-          schema = GMLSchemaFactory.createGMLSchema( null, schemaLocation );
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        schema = schemaCatalog.getSchema( uri, null, schemaLocation );
       }
     }
     catch( final Exception e )
@@ -231,7 +210,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     }
 
     // 3. try
-    if( schema == null && useSchemaCatalog )
+    if( schema == null )
     {
       try
       {

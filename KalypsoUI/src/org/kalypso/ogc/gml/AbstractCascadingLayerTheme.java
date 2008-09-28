@@ -430,30 +430,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.moveUp( theme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
-   */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_innerMapModel != null )
-      m_innerMapModel.paint( g, p, bbox, scale, selected );
-  }
-
-  /**
-   * @param g
-   * @param p
-   * @param bbox
-   * @param scale
-   * @param select
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, boolean)
-   */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean select )
-  {
-    m_innerMapModel.paint( g, p, bbox, scale, select );
+      m_innerMapModel.paint( g, p, bbox, scale, selected, monitor );
   }
 
   /**

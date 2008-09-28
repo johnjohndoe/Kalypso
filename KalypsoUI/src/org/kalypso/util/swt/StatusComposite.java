@@ -137,6 +137,15 @@ public class StatusComposite extends Composite
     throw new UnsupportedOperationException( Messages.getString("org.kalypso.util.swt.StatusComposite.3") ); //$NON-NLS-1$
   }
 
+  /**
+   * Sets the status of this composites and updates it to show it in the composite.
+   * 
+   * @exception SWTException
+   *              <ul>
+   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+   *              </ul>
+   */
   public void setStatus( final IStatus status )
   {
     m_status = status;

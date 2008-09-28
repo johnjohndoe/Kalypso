@@ -73,7 +73,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
@@ -480,7 +480,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( activeEditor instanceof GisMapEditor )
     {
       final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
-      final MapPanel mapPanel = gisMapEditor.getMapPanel();
+      final IMapPanel mapPanel = gisMapEditor.getMapPanel();
       final GM_Envelope boundingBox = mapPanel.getBoundingBox();
       if( boundingBox != null )
         try

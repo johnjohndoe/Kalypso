@@ -116,7 +116,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       if( oldModel != null )
         oldModel.removeMapModelListener( m_mapModellListener );
@@ -137,7 +137,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_muteRule = new MutexRule();
 
-  private MapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   private final IContextService m_contextService;
 
@@ -157,7 +157,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
    * Creates a new MapPanelSourceProvider on the given MapPanel.<br>
    * Initialises it state with the given parameters.
    */
-  public MapPanelSourceProvider( final IServiceLocator serviceLocator, final MapPanel mapPanel )
+  public MapPanelSourceProvider( final IServiceLocator serviceLocator, final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
 

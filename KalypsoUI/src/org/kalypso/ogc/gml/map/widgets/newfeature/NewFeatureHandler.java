@@ -17,7 +17,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -35,7 +35,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
 
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
 
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( applicationContext );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( applicationContext );
     final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( applicationContext );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       throw new ExecutionException( "No feature theme in context" ); //$NON-NLS-1$

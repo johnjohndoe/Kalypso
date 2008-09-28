@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
-import java.awt.Point;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -65,7 +63,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.transformation.CRSHelper;
@@ -80,30 +78,30 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Dirk Kuch
  */
-public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<MapPanel>, IMapPanelListener
+public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
 {
   private final class UpdateLabelJob extends UIJob
   {
     private GM_Point m_gmPoint;
 
-    public UpdateLabelJob( String name )
+    public UpdateLabelJob( final String name )
     {
       super( name );
     }
 
-    public void setGmPoint( GM_Point gmPoint )
+    public void setGmPoint( final GM_Point gmPoint )
     {
       m_gmPoint = gmPoint;
     }
 
     @Override
-    public IStatus runInUIThread( IProgressMonitor monitor )
+    public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       if( m_gmPoint != null && !m_label.isDisposed() ) // Have to check twice, because meanwhile it could have been
-      // disposed
+        // disposed
       {
-        double x = m_gmPoint.getX();
-        double y = m_gmPoint.getY();
+        final double x = m_gmPoint.getX();
+        final double y = m_gmPoint.getY();
 
         m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
         m_label.getParent().layout();
@@ -115,17 +113,17 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
 
   protected static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
 
-  private IAdapterFinder<MapPanel> m_closeFinder = new EditorFirstAdapterFinder<MapPanel>();
+  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  private IAdapterFinder<MapPanel> m_initFinder = m_closeFinder;
+  private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
 
-  protected AdapterPartListener<MapPanel> m_adapterListener = new AdapterPartListener<MapPanel>( MapPanel.class, this, m_initFinder, m_closeFinder );
+  protected AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
 
   protected Label m_label;
 
   private Composite m_composite;
 
-  private MapPanel m_panel;
+  private IMapPanel m_panel;
 
   private UpdateLabelJob m_updateLabelJob;
 
@@ -144,18 +142,18 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createControl( Composite parent )
+  protected Control createControl( final Composite parent )
   {
     /* The composite. */
     m_composite = new Composite( parent, SWT.NONE );
-    GridLayout gridLayout = new GridLayout( 3, false );
+    final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     m_composite.setLayout( gridLayout );
 
     /* The image. */
-    ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
-    Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
+    final ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
+    final Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
     lnk.setImage( image );
     lnk.setEnabled( false );
     lnk.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
@@ -163,14 +161,14 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     /* The label. */
     m_label = new Label( m_composite, SWT.NONE );
     m_label.setToolTipText( Messages.getString("org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1") ); //$NON-NLS-1$
-    GridData gridData = new GridData( GridData.FILL, GridData.CENTER, true, true );
+    final GridData gridData = new GridData( GridData.FILL, GridData.CENTER, true, true );
     gridData.widthHint = 175;
     m_label.setLayoutData( gridData );
 
     /* Create the info image. */
-    Label imageLabel = new Label( m_composite, SWT.NONE );
+    final Label imageLabel = new Label( m_composite, SWT.NONE );
     imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
-    Image infoImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_CRS_INFO );
+    final Image infoImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_CRS_INFO );
     imageLabel.setImage( infoImage );
 
     /* Set the CRS info. */
@@ -179,13 +177,13 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     /* Add some listeners. */
     m_composite.addDisposeListener( new DisposeListener()
     {
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         m_adapterListener.dispose();
       }
     } );
 
-    IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if( activePage != null )
       m_adapterListener.init( activePage );
 
@@ -198,7 +196,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
    *      java.lang.Object)
    */
-  public void setAdapter( IWorkbenchPart part, MapPanel adapter )
+  public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
     if( !m_composite.isDisposed() )
       m_composite.setVisible( adapter != null );
@@ -216,7 +214,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public void onExtentChanged( MapPanel source, GM_Envelope oldExtent, GM_Envelope newExtent )
+  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
   }
 
@@ -224,7 +222,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void onMapModelChanged( MapPanel source, IMapModell oldModel, IMapModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
 
@@ -232,15 +230,23 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      java.lang.String)
    */
-  public void onMessageChanged( MapPanel source, String message )
+  public void onMessageChanged( final IMapPanel source, final String message )
   {
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Point, java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public void onMouseMoveEvent( MapPanel source, final GM_Point gmPoint, Point mousePosition )
+  @Override
+  public void onStatusChanged( final IMapPanel source )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
+   */
+  public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
   {
     if( m_updateLabelJob != null )
       m_updateLabelJob.cancel();

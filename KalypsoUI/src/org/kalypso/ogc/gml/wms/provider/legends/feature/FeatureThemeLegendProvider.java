@@ -41,13 +41,18 @@
 package org.kalypso.ogc.gml.wms.provider.legends.feature;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.outline.GisMapOutlineContentProvider;
 import org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider;
@@ -97,8 +102,10 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     if( m_theme == null )
       return null;
 
+    // TODO: this is too much copy paste; reuse code from MapUtilities
+
     /* All elements in this theme. */
-    final ArrayList<LegendElement> elements = collectElements( font );
+    final List<LegendElement> elements = collectElements( font );
 
     if( elements.size() == 0 )
       return null;
@@ -107,19 +114,22 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     final Rectangle computeSize = computeSize( elements );
 
     /* Create the image. */
-    final Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
+    // HM: quite complicated to create a transparent image; any other ideas?
+    final Device device = font.getDevice();
+    final ImageData id = new ImageData( computeSize.width, computeSize.height, 32, new PaletteData( 0xFF, 0xFF00, 0xFF0000 ) );
+    id.transparentPixel = 0xfffffe;
+    final Image image = new Image( device, id );
 
     /* Need a graphical context. */
     final GC gc = new GC( image );
 
+    final Color transparentColor = new Color( device, new RGB( 0xfe, 0xff, 0xff ) );
+    gc.setBackground( transparentColor );
+    gc.fillRectangle( image.getBounds() );
+    transparentColor.dispose();
+
     /* Set the font. */
     gc.setFont( font );
-
-    /* Change the color. */
-    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
-
-    /* Draw on the context. */
-    gc.fillRectangle( 0, 0, computeSize.width, computeSize.height );
 
     /* Change the color. */
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
@@ -137,13 +147,16 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
       gc.drawImage( icon, BORDER + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar );
 
       /* Draw the text. */
-      gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar );
+      gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
+
+      // TODO: images should be disposed here (but getLEgendGeaphic returns
+      // sometimes images than can be disposed, sometimes not)
 
       /* Add the height of the element and increase by gap. */
       heightSoFar = heightSoFar + legendElement.getSize().height + GAP;
     }
 
-    /* Return the image. */
+    gc.dispose();
 
     return image;
   }
@@ -207,7 +220,7 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
    * @param elements
    *            The list of elements.
    */
-  private Rectangle computeSize( final ArrayList<LegendElement> elements )
+  private Rectangle computeSize( final List<LegendElement> elements )
   {
     /* Start width. */
     int width = 2 * BORDER;
