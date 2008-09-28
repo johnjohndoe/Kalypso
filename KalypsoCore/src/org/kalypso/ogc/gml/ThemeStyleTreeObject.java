@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 22.07.2004
@@ -52,19 +52,12 @@ import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 
 public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider, ICustomDrawHandler
 {
   private final KalypsoUserStyle m_style;
 
   private final IKalypsoFeatureTheme m_theme;
-
-  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, final UserStyle style )
-  {
-    m_theme = theme;
-    m_style = (KalypsoUserStyle) style;
-  }
 
   /**
    * @param theme
@@ -107,38 +100,20 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public Object[] getChildren( final Object o )
   {
     if( o != this )
-    {
       throw new IllegalStateException();
-    }
 
     // TODO: is this right, always taking the first one?
     final FeatureTypeStyle[] styles = m_style.getFeatureTypeStyles();
-
     final Rule[] rules;
     if( styles.length > 0 )
-    {
       rules = m_style.getFeatureTypeStyles()[0].getRules();
-    }
     else
-    {
       rules = new Rule[0];
-    }
 
-// // need to parse all rules as some might belong to a filter-rule-pattern
-// RuleFilterCollection rulePatternCollection = RuleFilterCollection.getInstance();
-// for( int i = 0; i < rules.length; i++ )
-// {
-// rulePatternCollection.addRule( rules[i] );
-// }
-// ArrayList filteredRules = rulePatternCollection.getFilteredRuleCollection();
-// final RuleTreeObject[] result = new RuleTreeObject[filteredRules.size()];
-// for( int i = 0; i < result.length; i++ )
-// result[i] = new RuleTreeObject( filteredRules.get( i ), userStyle, (IKalypsoFeatureTheme) theme );
     final RuleTreeObject[] result = new RuleTreeObject[rules.length];
     for( int i = 0; i < rules.length; i++ )
-    {
       result[i] = new RuleTreeObject( rules[i], this );
-    }
+
     return result;
   }
 

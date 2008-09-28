@@ -41,9 +41,11 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.ICheckStateProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
@@ -52,6 +54,7 @@ import org.kalypso.ogc.gml.ThemeStyleTreeObject;
  * 
  * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 {
   /**
@@ -119,4 +122,28 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 
     return input;
   }
+
+  public boolean isChecked( final Object element )
+  {
+    final ICheckStateProvider provider = getCheckStateProvider( element );
+    if( provider == null )
+      return false;
+
+    return provider.isChecked();
+  }
+
+  public boolean isGrayed( final Object element )
+  {
+    final ICheckStateProvider provider = getCheckStateProvider( element );
+    if( provider == null )
+      return true;
+
+    return provider.isGrayed();
+  }
+
+  private ICheckStateProvider getCheckStateProvider( final Object element )
+  {
+    return (ICheckStateProvider) Util.getAdapter( element, ICheckStateProvider.class );
+  }
+
 }

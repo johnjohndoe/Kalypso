@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -67,7 +67,7 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
   public void runWithEvent( final IAction action, final Event event )
   {
     final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
-    final MapPanel panel = getView().getMapPanel();
+    final IMapPanel panel = getView().getMapPanel();
 
     if( panel != null && selectedThemes.length > 0 )
     {

@@ -58,20 +58,20 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl;
  */
 public class RulePainter
 {
-  public static void paint( Rule rule, GC gc ) throws Exception
+  public static void paint( final Rule rule, final GC gc ) throws Exception
   {
-    Feature feature = Symbolizer_Impl.createPseudoFeature();
+    final Feature feature = Symbolizer_Impl.createPseudoFeature();
 
-    LegendGraphic legendGraphic = rule.getLegendGraphic();
+    final LegendGraphic legendGraphic = rule.getLegendGraphic();
     if( legendGraphic != null )
     {
-      Graphic graphic = legendGraphic.getGraphic();
+      final Graphic graphic = legendGraphic.getGraphic();
       graphic.paint( gc, feature );
     }
     else
     {
-      Symbolizer[] symbolizers = rule.getSymbolizers();
-      for( Symbolizer symbolizer : symbolizers )
+      final Symbolizer[] symbolizers = rule.getSymbolizers();
+      for( final Symbolizer symbolizer : symbolizers )
         symbolizer.paint( gc, feature );
     }
   }
@@ -85,32 +85,32 @@ public class RulePainter
    * @return The size an image should have, for showing the complete symbol without scaling. It can only check for
    *         legend graphics and point symbolizers.
    */
-  public static Rectangle getSize( Rule rule )
+  public static Rectangle getSize( final Rule rule )
   {
     try
     {
-      LegendGraphic legendGraphic = rule.getLegendGraphic();
+      final LegendGraphic legendGraphic = rule.getLegendGraphic();
       if( legendGraphic != null )
       {
         /* Get the legend graphic. */
-        Graphic graphic = legendGraphic.getGraphic();
+        final Graphic graphic = legendGraphic.getGraphic();
 
         return getSize( graphic );
       }
 
-      Symbolizer[] symbolizers = rule.getSymbolizers();
+      final Symbolizer[] symbolizers = rule.getSymbolizers();
 
       int maxWidth = 0;
       int maxHeight = 0;
-      for( Symbolizer symbolizer : symbolizers )
+      for( final Symbolizer symbolizer : symbolizers )
       {
         if( symbolizer instanceof PointSymbolizer )
         {
-          PointSymbolizer pointSymbolizer = (PointSymbolizer) symbolizer;
-          Graphic graphic = pointSymbolizer.getGraphic();
+          final PointSymbolizer pointSymbolizer = (PointSymbolizer) symbolizer;
+          final Graphic graphic = pointSymbolizer.getGraphic();
           if( graphic != null )
           {
-            Rectangle size = getSize( graphic );
+            final Rectangle size = getSize( graphic );
 
             if( maxWidth < size.width )
               maxWidth = size.width;
@@ -127,7 +127,7 @@ public class RulePainter
 
       return new Rectangle( maxWidth, maxHeight );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
       return new Rectangle( 0, 0 );
@@ -141,25 +141,24 @@ public class RulePainter
    *            The graphic, which normally contains an image or some marks.
    * @return The original size of the image.
    */
-  private static Rectangle getSize( Graphic graphic )
+  private static Rectangle getSize( final Graphic graphic )
   {
     int maxWidth = 0;
     int maxHeight = 0;
 
-    Object[] marksAndExtGraphics = graphic.getMarksAndExtGraphics();
-    for( int i = 0; i < marksAndExtGraphics.length; i++ )
+    final Object[] marksAndExtGraphics = graphic.getMarksAndExtGraphics();
+    for( final Object o : marksAndExtGraphics )
     {
-      Object o = marksAndExtGraphics[i];
       if( o instanceof ExternalGraphic )
       {
-        ExternalGraphic externalGraphic = (ExternalGraphic) o;
-        BufferedImage asImage = externalGraphic.getAsImage();
+        final ExternalGraphic externalGraphic = (ExternalGraphic) o;
+        final BufferedImage asImage = externalGraphic.getAsImage();
 
         if( asImage == null )
           continue;
 
-        int width = asImage.getWidth();
-        int height = asImage.getWidth();
+        final int width = asImage.getWidth();
+        final int height = asImage.getWidth();
 
         if( maxWidth < width )
           maxWidth = width;

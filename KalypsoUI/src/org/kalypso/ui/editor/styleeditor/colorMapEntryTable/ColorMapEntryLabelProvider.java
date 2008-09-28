@@ -57,10 +57,10 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
-  public String getColumnText( Object element, int columnIndex )
+  public String getColumnText( final Object element, final int columnIndex )
   {
     String result = ""; //$NON-NLS-1$
-    ColorMapEntry colorMapEntry = (ColorMapEntry) element;
+    final ColorMapEntry colorMapEntry = (ColorMapEntry) element;
     switch( columnIndex )
     {
       case 0:
@@ -84,15 +84,16 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
     Image image = null;
     if( columnIndex == 2 )
     {
       image = new Image( ColorMapEntryTable.table.getDisplay(), 25, 15 );
-      GC gc = new GC( image );
-      java.awt.Color color = ((ColorMapEntry) element).getColor();
+      final GC gc = new GC( image );
+      final java.awt.Color color = ((ColorMapEntry) element).getColor();
       gc.setBackground( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color.getBlue() ) );
+      gc.setAlpha( color.getAlpha() );
       gc.fillRectangle( image.getBounds() );
       gc.dispose();
     }
