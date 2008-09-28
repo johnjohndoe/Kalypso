@@ -59,8 +59,14 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
@@ -155,7 +161,9 @@ public class RainfallGenerationOp
     {
       try
       {
-        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, generatorDesc.m_from, generatorDesc.m_to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
+        final Date from = generatorDesc.m_from;
+        final Date to = generatorDesc.m_to;
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, from, to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
         if( obses == null )
         {
           final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
@@ -171,8 +179,12 @@ public class RainfallGenerationOp
           // sort by catchment
           for( int i = 0; i < obses.length; i++ )
           {
-            if( obses[i] != null )
-              results[i].add( obses[i] );
+            final IObservation e = obses[i];
+            if( e != null )
+            {
+              final IObservation resolvedObs = resolveObservation( e, from, to );
+              results[i].add( resolvedObs );
+            }
           }
         }
 
@@ -194,6 +206,29 @@ public class RainfallGenerationOp
     writeObservations( combinedObservations, targetLinks, targetContext );
 
     ProgressUtilities.worked( progress, 10 );
+  }
+
+  /**
+   * Resolves all filters etc. and creates an new SimplObservationin memory, enforcing a given date range.<br>
+   * TODO: move into ObservationUtilities
+   */
+  private IObservation resolveObservation( final IObservation o, final Date from, final Date to ) throws SensorException
+  {
+    final IRequest request = new ObservationRequest( from, to );
+
+    final String href = o.getHref();
+    final String identifier = o.getIdentifier();
+    final String name = o.getName();
+    final Object target = o.getTarget();
+    final MetadataList metadataList = new MetadataList();
+    metadataList.putAll( o.getMetadataList() );
+    final IAxis[] axisList = o.getAxisList(); // clone?
+    final ITuppleModel values = o.getValues( request );
+
+    final SimpleTuppleModel clonedValues = new SimpleTuppleModel( values, new DateRange( from, to ) );
+
+    final SimpleObservation simpleObservation = new SimpleObservation( href, identifier, name, false, target, metadataList, axisList, clonedValues );
+    return simpleObservation;
   }
 
   private IObservation[] combineObservations( final List<IObservation>[] observationLists )
