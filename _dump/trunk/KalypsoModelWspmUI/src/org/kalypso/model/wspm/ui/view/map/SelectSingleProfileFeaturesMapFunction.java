@@ -48,7 +48,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.changers.IFeatureSelectionChanger;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
@@ -75,7 +75,7 @@ public class SelectSingleProfileFeaturesMapFunction extends SelectFeaturesMapFun
    *      org.eclipse.swt.graphics.Rectangle)
    */
   @Override
-  public void execute( final MapPanel mapPanel, final Rectangle rectangle )
+  public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
     final EasyFeatureWrapper[] wrappers = getFeaturesProvider().getFeatures( mapPanel );
     final EasyFeatureWrapper[] wrappersToSelect = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, wrappers, getRadius() );

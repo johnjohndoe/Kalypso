@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.pub;
 import java.awt.Point;
 
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -59,7 +59,7 @@ public class FNGeoUtils
    * @see org.kalypso.nofdpidss.ui.application.flow.network.ISnapPainter#isSnapPoaint(org.kalypso.ogc.gml.map.MapPanel,
    *      java.awt.Point)
    */
-  public static boolean snapsOnBranch( final MapPanel panel, final GM_Curve curve, final GM_Point point, final int radius ) throws GM_Exception
+  public static boolean snapsOnBranch( final IMapPanel panel, final GM_Curve curve, final GM_Point point, final int radius ) throws GM_Exception
   {
     final Point p = MapUtilities.retransform( panel, point );
 
@@ -70,7 +70,7 @@ public class FNGeoUtils
     return false;
   }
 
-  public static boolean snapsOnPoint( final MapPanel panel, final GM_Point base, final GM_Point point, final int radius ) throws GM_Exception
+  public static boolean snapsOnPoint( final IMapPanel panel, final GM_Point base, final GM_Point point, final int radius ) throws GM_Exception
   {
     final Point p = MapUtilities.retransform( panel, point );
 
