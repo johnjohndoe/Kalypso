@@ -11,6 +11,7 @@
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:ombrometerIsUsed:rule:ombrometerOn</templ:legendicon>
             <templ:showChildren>true</templ:showChildren>
             <templ:style style="ombrometerIsUsed" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/ombrometer.sld" xlink:type="simple"/>
+			<templ:style style="ombrometerSelected" selection="true" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/ombrometer.sld" xlink:type="simple"/>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="Thiessen-Polygone" featurePath="ombrometerMember" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../ombrometer.gml" xlink:type="simple">

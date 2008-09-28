@@ -147,8 +147,6 @@
 							<ogc:Literal>false</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>stationLocation</ogc:PropertyName>
@@ -203,6 +201,82 @@
 								</Fill>
 								<Stroke>
 									<CssParameter name="stroke">#000000</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+									<CssParameter name="stroke-linejoin">round</CssParameter>
+									<CssParameter name="stroke-opacity">1.0</CssParameter>
+									<CssParameter name="stroke-linecap">square</CssParameter>
+								</Stroke>
+							</Mark>
+							<Opacity>1.0</Opacity>
+							<Size>10.0</Size>
+							<Rotation>0.0</Rotation>
+						</Graphic>
+					</PointSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		<UserStyle>
+			<Name>ombrometerSelected</Name>
+			<Title></Title>
+			<FeatureTypeStyle>
+				<Name>OmbrometerSelectedFts</Name>
+				<Rule>
+					<Name>ombrometerSelected</Name>
+					<Title>selektiert</Title>
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>stationLocation</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:PropertyName>name</ogc:PropertyName>
+						</Label>
+						<Font>
+							<CssParameter name="font-family" />
+							<CssParameter name="font-color">#ff0000</CssParameter>
+							<CssParameter name="font-size">11.0</CssParameter>
+							<CssParameter name="font-style">normal</CssParameter>
+							<CssParameter name="font-weight">normal</CssParameter>
+						</Font>
+						<LabelPlacement>
+							<PointPlacement>
+								<AnchorPoint>
+									<AnchorPointX>0.0</AnchorPointX>
+									<AnchorPointY>0.0</AnchorPointY>
+								</AnchorPoint>
+								<Displacement>
+									<DisplacementX>-10.0</DisplacementX>
+									<DisplacementY>-20.0</DisplacementY>
+								</Displacement>
+								<Rotation>0.0</Rotation>
+							</PointPlacement>
+						</LabelPlacement>
+						<Halo>
+							<Fill>
+								<CssParameter name="fill-opacity">1.0</CssParameter>
+								<CssParameter name="fill">#ffffcc</CssParameter>
+							</Fill>
+							<Stroke>
+								<CssParameter name="stroke">#ff0000</CssParameter>
+								<CssParameter name="stroke-width">1.0</CssParameter>
+								<CssParameter name="stroke-linejoin">round</CssParameter>
+								<CssParameter name="stroke-opacity">1.0</CssParameter>
+								<CssParameter name="stroke-linecap">square</CssParameter>
+							</Stroke>
+						</Halo>
+					</TextSymbolizer>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>stationLocation</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>circle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill-opacity">1.0</CssParameter>
+									<CssParameter name="fill">#ffff00</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#ff0000</CssParameter>
 									<CssParameter name="stroke-width">1.0</CssParameter>
 									<CssParameter name="stroke-linejoin">round</CssParameter>
 									<CssParameter name="stroke-opacity">1.0</CssParameter>
