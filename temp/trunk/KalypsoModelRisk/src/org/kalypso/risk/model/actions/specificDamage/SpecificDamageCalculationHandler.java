@@ -20,7 +20,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskCalcSpecificDamageRunnable;
@@ -67,7 +67,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final MapPanel mapPanel = mapView.getMapPanel();
+        final IMapPanel mapPanel = mapView.getMapPanel();
 
         /* wait for map to load */
         if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.0" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$

@@ -74,7 +74,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class StatisticResultComposite extends Composite
 {
-
   public StatisticResultComposite( final IRasterizationControlModel model, final Composite parent, final int style )
   {
     super( parent, style );
@@ -88,14 +87,14 @@ public class StatisticResultComposite extends Composite
 
     final IComponentUiHandlerProvider provider = new IComponentUiHandlerProvider()
     {
-      public Map<Integer, IComponentUiHandler> createComponentHandler( TupleResult tupleResult )
+      public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
       {
-        Map<Integer, IComponentUiHandler> myMap = new LinkedHashMap<Integer, IComponentUiHandler>();
+        final Map<Integer, IComponentUiHandler> myMap = new LinkedHashMap<Integer, IComponentUiHandler>();
 
-        IComponent[] components = tupleResult.getComponents();
+        final IComponent[] components = tupleResult.getComponents();
 
         int count = 0;
-        for( IComponent component : components )
+        for( final IComponent component : components )
         {
           final String compName = component.getName();
           final String[] compNameStrings = compName.split( "_" ); //$NON-NLS-1$
@@ -106,7 +105,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.1") + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.1" ) + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
@@ -117,7 +116,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.2") + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.2" ) + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
@@ -128,7 +127,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.3") + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.3" ) + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
@@ -138,7 +137,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.4") + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
+            final String headerName = Messages.getString( "org.kalypso.risk.widget.StatisticResultComposite.4" ) + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
@@ -162,15 +161,15 @@ public class StatisticResultComposite extends Composite
 
     };
 
-    DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
 
     final Table table = viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
-    TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
+    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
 
     viewer.setContentProvider( tupleResultContentProvider );
     viewer.setLabelProvider( tupleResultLabelProvider );

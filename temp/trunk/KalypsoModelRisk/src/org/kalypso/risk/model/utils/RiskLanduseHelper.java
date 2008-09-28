@@ -57,9 +57,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
@@ -117,7 +115,7 @@ public class RiskLanduseHelper
     return landuseClass.getStatistic( returnPeriod );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static RGB getLanduseClassDefaultColor( final String landuseClassName, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final Feature feature : predefinedLanduseColorsCollection )
@@ -154,7 +152,7 @@ public class RiskLanduseHelper
     return new RGB( new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue() );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static void handleDBImport( final String externalProjectName, final IRasterizationControlModel controlModel, final IFolder scenarioFolder )
   {
     try
@@ -219,7 +217,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
@@ -227,7 +225,7 @@ public class RiskLanduseHelper
     createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue, predefinedLanduseColorsCollection );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     // delete already existing asset values
@@ -275,7 +273,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     // delete already existing damage functions
@@ -319,7 +317,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
@@ -339,10 +337,10 @@ public class RiskLanduseHelper
       {
         final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) shpGeometryProperty).clone();
         final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
-        for( int k = 0; k < surfaces.length; k++ )
+        for( final GM_Surface< ? > surface : surfaces )
         {
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
-          polygon.setGeometry( surfaces[k] );
+          polygon.setGeometry( surface );
           polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
           polygon.getFeature().invalidEnvelope();
           createdFeatures.add( polygon.getFeature() );

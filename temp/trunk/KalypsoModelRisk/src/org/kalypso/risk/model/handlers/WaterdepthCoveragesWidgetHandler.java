@@ -14,7 +14,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -40,7 +40,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCoveragesWidgetHandler.1" ), Messages.getString( "WaterdepthCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$

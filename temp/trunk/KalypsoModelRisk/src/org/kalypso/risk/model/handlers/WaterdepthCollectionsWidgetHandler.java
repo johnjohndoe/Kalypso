@@ -11,7 +11,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -38,7 +38,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "WaterdepthCollectionsWidgetHandler.0" ) ); //$NON-NLS-1$
 
-    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCollectionsWidgetHandler.1" ), Messages.getString( "WaterdepthCollectionsWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$

@@ -98,7 +98,7 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
@@ -145,10 +145,10 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     // prepare for exception
     m_dataProvider = null;
@@ -240,7 +240,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     /* Hook Events */
     m_eventViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -272,7 +272,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
         panel.setSize( size );
         sc.setMinHeight( size.y );
 
-        getMapPanel().repaint();
+        getMapPanel().repaintMap();
       }
     } );
 
@@ -366,7 +366,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleMove( event, -1 );
       }
@@ -379,7 +379,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
        */
       @Override
-      public void runWithEvent( Event event )
+      public void runWithEvent( final Event event )
       {
         handleMove( event, 1 );
       }
@@ -576,7 +576,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     }
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   protected void handleMove( final Event event, final int step )
   {
     if( m_treeSelection == null )
