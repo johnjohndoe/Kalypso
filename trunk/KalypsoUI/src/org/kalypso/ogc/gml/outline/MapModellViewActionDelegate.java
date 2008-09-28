@@ -50,7 +50,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -73,7 +73,7 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       setMapModell( newModel );
     }
@@ -126,7 +126,7 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
 
   private ISelection m_selection;
 
-  private MapPanel m_panel;
+  private IMapPanel m_panel;
 
   private IMapModell m_modell;
 
@@ -231,7 +231,7 @@ public abstract class MapModellViewActionDelegate extends ActionDelegate impleme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellViewListener#onMapPanelChanged(org.kalypso.ogc.gml.mapmodel.IMapModellView,
    *      org.kalypso.ogc.gml.map.MapPanel, org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void onMapPanelChanged( final IMapModellView source, final MapPanel oldPanel, final MapPanel newPanel )
+  public void onMapPanelChanged( final IMapModellView source, final IMapPanel oldPanel, final IMapPanel newPanel )
   {
     /* Register as listener to the current map-modell, on every change, give actions chance to refresh */
 

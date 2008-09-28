@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -64,17 +64,17 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
    * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( Object element )
+  public Object[] getChildren( final Object element )
   {
     /* A moment please, if the theme is configured, not to show its children, then ignore them. */
     if( element instanceof AbstractKalypsoTheme )
     {
-      AbstractKalypsoTheme theme = (AbstractKalypsoTheme) element;
+      final AbstractKalypsoTheme theme = (AbstractKalypsoTheme) element;
       if( theme.shouldShowChildren() == false )
         return new Object[] {};
     }
 
-    Object[] children = super.getChildren( element );
+    final Object[] children = super.getChildren( element );
 
     /* If no childs are there, return the result. */
     if( children == null || children.length == 0 )
@@ -89,14 +89,21 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
       return children;
 
     /* It has to be a IWorkbenchAdapter. */
-    IWorkbenchAdapter child = (IWorkbenchAdapter) children[0];
+    final IWorkbenchAdapter child = (IWorkbenchAdapter) children[0];
 
     /* Get the children of the child. */
-    Object[] children2 = super.getChildren( child );
+    final Object[] children2 = super.getChildren( child );
 
     /* If there are more then one as a result, return them instead. */
     if( children2 != null && children2.length > 1 )
       return children2;
+
+    if( children2.length == 1 )
+    {
+      final Object subchild = children2[0];
+      if( subchild instanceof IWorkbenchAdapter )
+        return ((IWorkbenchAdapter) subchild).getChildren( subchild );
+    }
 
     /* Otherwise ignore it. */
     return new Object[] {};
@@ -106,20 +113,20 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
    * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     /* Only rules may jump above parents. */
     if( !(element instanceof RuleTreeObject) )
       return super.getParent( element );
 
     /* Get the parent for the rule (this would be the style). */
-    Object style = super.getParent( element );
+    final Object style = super.getParent( element );
 
     /* Get the parent of the style (this would be a theme). */
-    Object theme = super.getParent( style );
+    final Object theme = super.getParent( style );
 
     /* Get the childs of the theme (this would be all styles). */
-    Object[] styles = getChildren( theme );
+    final Object[] styles = getChildren( theme );
 
     /* Check, if there are more than one style. If so, return the normal result. */
     if( styles.length > 1 )
