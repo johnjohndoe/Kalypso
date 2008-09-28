@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,35 +35,20 @@
  */
 package org.kalypsodeegree;
 
-import java.io.File;
-import java.util.logging.Logger;
-
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypso.transformation.CRSHelper;
-import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.osgi.framework.BundleContext;
 
 public class KalypsoDeegreePlugin extends Plugin
 {
   /**
-   * The logger.
-   */
-  private static final Logger LOGGER = Logger.getLogger( KalypsoDeegreePlugin.class.getName() );
-
-  /**
    * The shared instance.
    */
   private static KalypsoDeegreePlugin m_plugin;
-
-  /**
-   * The default style factory.
-   */
-  private DefaultStyleFactory m_defaultStyleFactory;
 
   /**
    * Storage for preferences.
@@ -83,7 +68,6 @@ public class KalypsoDeegreePlugin extends Plugin
     super();
 
     m_plugin = this;
-    m_defaultStyleFactory = null;
     m_preferenceStore = null;
     m_coordinateSystem = null;
   }
@@ -106,7 +90,6 @@ public class KalypsoDeegreePlugin extends Plugin
     savePluginPreferences();
 
     m_plugin = null;
-    m_defaultStyleFactory = null;
     m_preferenceStore = null;
     m_coordinateSystem = null;
 
@@ -121,35 +104,6 @@ public class KalypsoDeegreePlugin extends Plugin
     return m_plugin;
   }
 
-  private void configureDefaultStyleFactory( )
-  {
-    final IPath stateLocation = getStateLocation();
-    final File defaultStyleDir = new File( stateLocation.toFile(), "defaultStyles" );
-    if( !defaultStyleDir.exists() )
-    {
-      defaultStyleDir.mkdir();
-    }
-    try
-    {
-      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      KalypsoDeegreePlugin.LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
-    }
-  }
-
-  public static DefaultStyleFactory getDefaultStyleFactory( )
-  {
-    final KalypsoDeegreePlugin plugin = KalypsoDeegreePlugin.getDefault();
-    if( plugin.m_defaultStyleFactory == null )
-    {
-      plugin.configureDefaultStyleFactory();
-    }
-    return plugin.m_defaultStyleFactory;
-  }
-
   /**
    * This function returns the coordinate system set in the preferences.
    * 
@@ -160,7 +114,7 @@ public class KalypsoDeegreePlugin extends Plugin
     if( m_coordinateSystem == null )
     {
       String crsName = getPluginPreferences().getString( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING );
-      boolean knownCRS = CRSHelper.isKnownCRS( crsName );
+      final boolean knownCRS = CRSHelper.isKnownCRS( crsName );
 
       if( crsName == null || !knownCRS )
       {

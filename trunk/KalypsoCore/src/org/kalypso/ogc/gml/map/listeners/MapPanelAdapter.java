@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.listeners;
 
-import java.awt.Point;
-
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -55,10 +53,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public abstract class MapPanelAdapter implements IMapPanelListener
 {
   /**
-   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
   }
 
@@ -66,22 +64,30 @@ public abstract class MapPanelAdapter implements IMapPanelListener
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
    */
-  public void onMessageChanged( final MapPanel source, final String message )
+  public void onMessageChanged( final IMapPanel source, final String message )
   {
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.eclipse.swt.graphics.Point)
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
+  @Override
+  public void onStatusChanged( final IMapPanel source )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
+   */
+  public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
   {
   }
 }

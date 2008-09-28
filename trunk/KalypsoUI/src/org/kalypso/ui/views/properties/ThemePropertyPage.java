@@ -44,8 +44,11 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -55,6 +58,9 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.command.RenameThemeCommand;
 
 /**
  * This is a page for showing some properties of a theme.
@@ -64,10 +70,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropertyPage
 {
-  /**
-   * The name of the theme.
-   */
-  private String m_themeName;
+  private String m_themeName = null;
+
+  private Boolean m_themeVisibility = null;
 
   /**
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -87,23 +92,44 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
       return composite;
     }
 
-    final Label label = new Label( composite, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.ui.views.properties.ThemePropertyPage.0") ); //$NON-NLS-1$
+    /* Theme name */
+    final Label nameLabel = new Label( composite, SWT.NONE );
+    nameLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.0" ) ); //$NON-NLS-1$
 
-    final Text text = new Text( composite, SWT.NONE );
-    text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.addModifyListener( new ModifyListener()
+    final Text nameText = new Text( composite, SWT.BORDER );
+    nameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    nameText.setText( theme.getLabel() );
+    nameText.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
-        final String name = text.getText();
+        final String name = nameText.getText();
         setThemeName( name );
       }
     } );
-    text.setText( theme.getLabel() );
+
+    /* Theme visibility */
+    final Label visibilityLabel = new Label( composite, SWT.NONE );
+    visibilityLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.2" ) ); //$NON-NLS-1$
+
+    final Button visibilityButton = new Button( composite, SWT.CHECK );
+    visibilityButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+    visibilityButton.setSelection( theme.isVisible() );
+    visibilityButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        setVisibility( visibilityButton.getSelection() );
+      }
+    } );
 
     return composite;
   }
+
 
   /**
    * This function returns the theme.
@@ -125,10 +151,59 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
   public boolean performOk( )
   {
     final IKalypsoTheme theme = getTheme();
-    if( theme != null )
-      theme.setName( new I10nString( m_themeName ) );
+    if( theme == null )
+      return false;
+
+    final CompositeCommand allCommands = new CompositeCommand( Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.1" ) ); //$NON-NLS-1$
+    if( m_themeName != null )
+      allCommands.addCommand( new RenameThemeCommand( theme, new I10nString( m_themeName ) ) );
+
+    if( m_themeVisibility != null )
+      allCommands.addCommand( new EnableThemeCommand( theme, m_themeVisibility.booleanValue() ) );
+
+    // TODO: find mapPanel!
+    try
+    {
+      allCommands.process();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
     return super.performOk();
+  }
+
+  private void checkValid( )
+  {
+    /* clear error */
+    setErrorMessage( null );
+
+    /* Revalidate and set message accoring to result */
+    final String msg = validate();
+    if( msg == null )
+      setValid( true );
+    else if( msg.length() == 0 )
+      setValid( false );
+    else
+    {
+      setValid( false );
+      setErrorMessage( msg );
+    }
+  }
+
+  private String validate( )
+  {
+    // If nothing changed, not valid, but also no mesage
+    if( m_themeName == null && m_themeVisibility == null )
+      return "";
+
+    /* No empty 'name' allowed */
+    if( m_themeName != null && m_themeName.trim().isEmpty() )
+      return Messages.getString( "org.kalypso.ui.views.properties.ThemePropertyPage.3" );
+
+    // everything else is valid
+    return null;
   }
 
   /**
@@ -141,6 +216,17 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
   {
     m_themeName = name;
 
-    setValid( true );
+    checkValid();
   }
+
+
+
+
+  protected void setVisibility( final boolean visibility )
+  {
+    m_themeVisibility = visibility;
+
+    checkValid();
+  }
+
 }

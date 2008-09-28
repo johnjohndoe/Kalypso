@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,37 +36,41 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.utilities;
 
+import java.awt.Insets;
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.RuleTreeObject;
-import org.kalypso.ogc.gml.ThemeStyleTreeObject;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -105,10 +109,10 @@ public class MapUtilities
    *            This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
-  public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, Point p, int radiusPx, SNAP_TYPE type ) throws GM_Exception
+  public static GM_Point snap( final IMapPanel mapPanel, final GM_Object geometry, final Point p, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
   {
     /* Transform the point to a GM_Point. */
-    GM_Point point = MapUtilities.transform( mapPanel, p );
+    final GM_Point point = MapUtilities.transform( mapPanel, p );
     if( point == null )
       return null;
 
@@ -129,24 +133,24 @@ public class MapUtilities
    *            This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
-  public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, GM_Point point, int radiusPx, SNAP_TYPE type ) throws GM_Exception
+  public static GM_Point snap( final IMapPanel mapPanel, final GM_Object geometry, final GM_Point point, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
   {
     /* Get the JTS geometry. */
-    Geometry geometryJTS = JTSAdapter.export( geometry );
-    com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
+    final Geometry geometryJTS = JTSAdapter.export( geometry );
+    final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
     /* Buffer the point. */
-    Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
+    final Geometry pointBuffer = pointJTS.buffer( MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx ) );
 
     if( !pointBuffer.intersects( geometryJTS ) )
       return null;
 
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
       if( snapPoint != null )
       {
-        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
          * 
@@ -159,10 +163,10 @@ public class MapUtilities
     }
     else if( geometryJTS instanceof LineString )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
       {
-        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
          * 
@@ -175,10 +179,10 @@ public class MapUtilities
     }
     else if( geometryJTS instanceof Polygon )
     {
-      com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
+      final com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
       {
-        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
          * 
@@ -201,19 +205,19 @@ public class MapUtilities
    * @param p
    *            The AWT-Point.
    */
-  public static GM_Point transform( MapPanel mapPanel, Point p )
+  public static GM_Point transform( final IMapPanel mapPanel, final Point p )
   {
-    GeoTransform projection = mapPanel.getProjection();
-    IMapModell mapModell = mapPanel.getMapModell();
+    final GeoTransform projection = mapPanel.getProjection();
+    final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return null;
 
     String coordinatesSystem = mapModell.getCoordinatesSystem();
     if( coordinatesSystem == null )
-      coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    double x = p.getX();
-    double y = p.getY();
+    final double x = p.getX();
+    final double y = p.getY();
 
     return GeometryFactory.createGM_Point( projection.getSourceX( x ), projection.getSourceY( y ), coordinatesSystem );
   }
@@ -226,12 +230,12 @@ public class MapUtilities
    * @param p
    *            The GM_Point.
    */
-  public static Point retransform( MapPanel mapPanel, GM_Point p )
+  public static Point retransform( final IMapPanel mapPanel, final GM_Point p )
   {
-    GeoTransform projection = mapPanel.getProjection();
+    final GeoTransform projection = mapPanel.getProjection();
 
-    double x = p.getX();
-    double y = p.getY();
+    final double x = p.getX();
+    final double y = p.getY();
 
     return new Point( (int) projection.getDestX( x ), (int) projection.getDestY( y ) );
   }
@@ -247,12 +251,12 @@ public class MapUtilities
    *            The distance to be calculated.
    * @return The distance in the world coords.
    */
-  public static double calculateWorldDistance( MapPanel mapPanel, GM_Point reference, int distancePx )
+  public static double calculateWorldDistance( final IMapPanel mapPanel, final GM_Point reference, final int distancePx )
   {
-    Point point = MapUtilities.retransform( mapPanel, reference );
+    final Point point = MapUtilities.retransform( mapPanel, reference );
     point.x = point.x + distancePx;
 
-    GM_Point destination = MapUtilities.transform( mapPanel, point );
+    final GM_Point destination = MapUtilities.transform( mapPanel, point );
     return destination.getX() - reference.getX();
   }
 
@@ -265,33 +269,12 @@ public class MapUtilities
    *            The distance in pixel to be calculated.
    * @return The distance in the world coordinates system.
    */
-  public static double calculateWorldDistance( MapPanel mapPanel, int distancePx )
+  public static double calculateWorldDistance( final IMapPanel mapPanel, final int distancePx )
   {
-    GM_Position minPosition = mapPanel.getBoundingBox().getMin();
-    GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
+    final GM_Position minPosition = mapPanel.getBoundingBox().getMin();
+    final GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
 
     return MapUtilities.calculateWorldDistance( mapPanel, reference, distancePx );
-  }
-
-  /**
-   * This function returns the map scale from the given map panel.
-   * 
-   * @return The map scale.
-   */
-  public static double getMapScale( MapPanel mapPanel )
-  {
-    if( mapPanel == null )
-      return 0.0;
-
-    IMapModell mapModell = mapPanel.getMapModell();
-    if( mapModell == null )
-      return 0.0;
-
-    GM_Envelope extent = mapPanel.getBoundingBox();
-    int width = mapPanel.getWidth();
-    int height = mapPanel.getHeight();
-
-    return MapModellHelper.calcScale( mapModell, extent, width, height );
   }
 
   /**
@@ -300,10 +283,10 @@ public class MapUtilities
    * @param scale
    *            The new map scale.
    */
-  public static void setMapScale( MapPanel mapPanel, double scale )
+  public static void setMapScale( final IMapPanel mapPanel, final double scale )
   {
     /* Get the current map scale. */
-    double mapScale = getMapScale( mapPanel );
+    final double mapScale = mapPanel.getCurrentScale();
 
     /* If it is the same as before, don't change anything. */
     if( mapScale == scale )
@@ -314,11 +297,11 @@ public class MapUtilities
     // Then retransform to the original CS.
 
     /* Get the current extent. */
-    GM_Envelope extent = mapPanel.getBoundingBox();
+    final GM_Envelope extent = mapPanel.getBoundingBox();
 
     /* Get the current displayed distance (meter). */
-    double width = extent.getWidth();
-    double height = extent.getHeight();
+    final double width = extent.getWidth();
+    final double height = extent.getHeight();
 
     /* Calculate the center of the extent (coordinates). */
     double x = extent.getMin().getX();
@@ -327,14 +310,14 @@ public class MapUtilities
     y = y + height / 2;
 
     /* Calculate the new extent. */
-    double newWidth = (width / mapScale) * scale;
-    double newHeight = (height / mapScale) * scale;
+    final double newWidth = (width / mapScale) * scale;
+    final double newHeight = (height / mapScale) * scale;
 
-    double newX = x - newWidth / 2;
-    double newY = y - newHeight / 2;
+    final double newX = x - newWidth / 2;
+    final double newY = y - newHeight / 2;
 
     /* Create the new extent. */
-    GM_Envelope newExtent = GeometryFactory.createGM_Envelope( newX, newY, newX + newWidth, newY + newHeight, extent.getCoordinateSystem() );
+    final GM_Envelope newExtent = GeometryFactory.createGM_Envelope( newX, newY, newX + newWidth, newY + newHeight, extent.getCoordinateSystem() );
 
     /* Set the new extent. */
     mapPanel.setBoundingBox( newExtent );
@@ -344,167 +327,135 @@ public class MapUtilities
    * This function exports the legend of the given themes to a file. It seems that it has to be run in an UI-Thread.
    * 
    * @param themes
-   *            The list of the themes.
+   *          The themes to export.
    * @param file
-   *            The file, where it should save to.
+   *          The file, where it should save to.
    * @param format
-   *            The image format (for example: SWT.IMAGE_PNG).
+   *          The image format (for example: SWT.IMAGE_PNG).
    * @param monitor
-   *            A progress monitor.
+   *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public static IStatus exportLegends( List<IKalypsoTheme> themes, File file, int format, IProgressMonitor monitor )
+  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, final IProgressMonitor monitor )
   {
     /* Monitor. */
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.0"), themes.size() * 100 + 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 100 ); //$NON-NLS-1$
 
+    Image image = null;
     try
     {
-      /* This font will be used to generate the legend. */
-      Font font = new Font( Display.getCurrent(), "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
+      // TODO: get both from outside
+      final Display current = Display.getCurrent();
+      final Insets insets = new Insets( 5, 5, 5, 5 );
 
-      /* Memory for the legends. */
-      ArrayList<Image> legends = new ArrayList<Image>();
+      image = exportLegends( themes, current, insets, null, progress.newChild( 50 ) );
+      ProgressUtilities.worked( progress, 50 );
 
-      /* Collect the legends. */
-      for( int i = 0; i < themes.size(); i++ )
-      {
-        /* Get the theme. */
-        IKalypsoTheme theme = themes.get( i );
-
-        /* Monitor. */
-        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.2") + theme.getName() + Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.3") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-        /* Get the legend. */
-        Image legend = theme.getLegendGraphic( font );
-        if( legend != null )
-          legends.add( legend );
-
-        /* Monitor. */
-        monitor.worked( 100 );
-      }
-
-      /* No legends there. Perhaps all themes did not provide legends. */
-      if( legends.size() == 0 )
-        return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.4") ); //$NON-NLS-1$
-
-      /* Calculate the size. */
-      int width = 0;
-      int height = 0;
-
-      for( Image legend : legends )
-      {
-        Rectangle bounds = legend.getBounds();
-        if( bounds.width > width )
-          width = bounds.width;
-
-        height = height + bounds.height;
-      }
-
-      /* Monitor. */
-      monitor.worked( 25 );
-
-      /* Now create the new image. */
-      Image image = new Image( Display.getCurrent(), width, height );
-
-      /* Need a GC. */
-      GC gc = new GC( image );
-
-      /* Draw on it. */
-      int heightSoFar = 0;
-      for( Image legend : legends )
-      {
-        gc.drawImage( legend, 0, heightSoFar );
-        heightSoFar = heightSoFar + legend.getBounds().height;
-      }
-
-      /* Monitor. */
-      monitor.worked( 50 );
-
-      ImageLoader imageLoader = new ImageLoader();
+      final ImageLoader imageLoader = new ImageLoader();
       imageLoader.data = new ImageData[] { image.getImageData() };
       imageLoader.save( file.toString(), format );
 
       /* Monitor. */
-      monitor.worked( 25 );
+      ProgressUtilities.worked( monitor, 50 );
 
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
     finally
     {
-      /* Monitor. */
-      monitor.done();
+      if( image != null )
+        image.dispose();
+
+      progress.done();
     }
   }
 
   /**
-   * This function checks, if a theme is out of scale.
+   * This function exports the legend of the given themes as swt image. Has to run in an UI-Thread. (TODO change this!)<br>
    * 
-   * @param mapPanel
-   *            The map panel.
-   * @param theme
-   *            The theme.
-   * @return True, if the theme is out of scale.
+   * @param themes
+   *          The themes to export.
+   * @param insets
+   *          Defines the size of an empty border around the image. Must not be <code>null</code>.
+   * @param backgroundRGB
+   *          Defines the background color of the image. If <code>null</code>, an transparent image will be returned.
+   * @param monitor
+   *          A progress monitor.
+   * @return The newly created image, must be disposed by the caller.
    */
-  public static boolean isOutOfScale( MapPanel mapPanel, IKalypsoTheme theme )
+  public static Image exportLegends( final IKalypsoTheme[] themes, final Device device, final Insets insets, final RGB backgroundRGB, final IProgressMonitor monitor ) throws CoreException
   {
-    /* Get all children. */
-    Object[] styles = theme.getChildren( theme );
-    for( int i = 0; i < styles.length; i++ )
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), themes.length * 100 + 100 ); //$NON-NLS-1$
+
+    /* This font will be used to generate the legend. */
+    // TODO: this font does not exists necessarily on every platform... use one of eclipses standard font instead or
+    // have at least a fallback
+    final Font font = new Font( device, "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
+
+    /* Memory for the legends. */
+    final List<Image> legends = new ArrayList<Image>();
+
+    /* Collect the legends. */
+    for( final IKalypsoTheme theme : themes )
     {
-      /* Get the object. */
-      Object object = styles[i];
+      progress.subTask( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.2" ) + theme.getName() + Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      if( object instanceof IKalypsoTheme )
-      {
-        /* This is a theme. */
-        IKalypsoTheme kalypsoTheme = (IKalypsoTheme) object;
+      /* Get the legend. */
+      final Image legend = theme.getLegendGraphic( font );
+      if( legend != null )
+        legends.add( legend );
 
-        /* If one is visible, return false. */
-        if( isOutOfScale( mapPanel, kalypsoTheme ) == false )
-          return false;
-      }
-
-      /* Only styles can be checked. */
-      if( !(object instanceof ThemeStyleTreeObject) )
-        return false;
-
-      /* This is a style. */
-      ThemeStyleTreeObject style = (ThemeStyleTreeObject) object;
-
-      /* Get the rules. */
-      Object[] rules = style.getChildren( style );
-      for( Object object2 : rules )
-      {
-        /* Only rules can be checked. */
-        if( !(object2 instanceof RuleTreeObject) )
-          return false;
-
-        /* This is a rule. */
-        RuleTreeObject rule = (RuleTreeObject) object2;
-
-        /* Get the scale constraints. */
-        double minScaleDenominator = rule.getRule().getMinScaleDenominator();
-        double maxScaleDenominator = rule.getRule().getMaxScaleDenominator();
-
-        /* Get the current scale. */
-        double mapScale = MapUtilities.getMapScale( mapPanel );
-
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.5") + minScaleDenominator ); //$NON-NLS-1$
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.6") + mapScale ); //$NON-NLS-1$
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.7") + maxScaleDenominator ); //$NON-NLS-1$
-
-        /* Is one rule is lying between the constraint, the theme is still visible. */
-        if( minScaleDenominator <= mapScale && mapScale <= maxScaleDenominator )
-          return false;
-      }
+      ProgressUtilities.worked( progress, 100 );
     }
 
-    /* No theme rule is visible, due to the scale constraints. */
-    return true;
+    /* No legends there. Perhaps no theme did provide a legend. */
+    if( legends.size() == 0 )
+      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.4" ) ) ); //$NON-NLS-1$
+
+    /* Calculate the size. */
+    int width = 0;
+    int height = 0;
+
+    for( final Image legend : legends )
+    {
+      final Rectangle bounds = legend.getBounds();
+      if( bounds.width > width )
+        width = bounds.width;
+
+      height = height + bounds.height;
+    }
+    width += insets.left + insets.right;
+    height += insets.top + insets.bottom;
+
+    ProgressUtilities.worked( progress, 50 );
+
+    /* Now create the new image. */
+    final Image image = new Image( device, width, height );
+
+    /* Need a GC. */
+    final GC gc = new GC( image );
+
+    final Color bgColor = new Color( device, backgroundRGB );
+    gc.setBackground( bgColor );
+    gc.fillRectangle( image.getBounds() );
+    bgColor.dispose();
+
+    /* Draw on it. */
+    int heightSoFar = insets.top;
+    for( final Image legend : legends )
+    {
+      gc.drawImage( legend, insets.left, heightSoFar );
+      heightSoFar = heightSoFar + legend.getBounds().height;
+      legend.dispose();
+    }
+
+    gc.dispose();
+
+    ProgressUtilities.worked( progress, 50 );
+    return image;
   }
+
 }

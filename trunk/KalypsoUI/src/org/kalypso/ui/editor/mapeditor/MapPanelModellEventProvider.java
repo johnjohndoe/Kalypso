@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -61,17 +61,17 @@ public class MapPanelModellEventProvider extends ModellEventProviderAdapter
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void onMapModelChanged( MapPanel source, IMapModell oldModel, IMapModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       setModel( newModel );
     }
 
     /**
-     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
+     * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
      *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
      */
     @Override
-    public void onExtentChanged( MapPanel source, GM_Envelope oldExtent, GM_Envelope newExtent )
+    public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
     {
       fireModellEvent( null );
     }
@@ -90,11 +90,11 @@ public class MapPanelModellEventProvider extends ModellEventProviderAdapter
     }
   };
 
-  private final MapPanel m_panel;
+  private final IMapPanel m_panel;
 
   private IMapModell m_mapModell;
 
-  public MapPanelModellEventProvider( final MapPanel panel )
+  public MapPanelModellEventProvider( final IMapPanel panel )
   {
     m_panel = panel;
 

@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -215,10 +215,15 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   @Override
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
-    final org.kalypsodeegree.graphics.sld.Fill fill = getFill();
-    final org.kalypsodeegree.graphics.sld.Stroke stroke = getStroke();
-    final Rectangle clipping = gc.getClipping();
+    final Fill fill = getFill();
+    final Stroke stroke = getStroke();
 
+    paintPolygonSymbol( gc, feature, fill, stroke );
+  }
+
+  public static void paintPolygonSymbol( final GC gc, final Feature feature, final Fill fill, final Stroke stroke ) throws FilterEvaluationException
+  {
+    final Rectangle clipping = gc.getClipping();
     Resource[] strokeResources = null;
     Resource[] fillResources = null;
     try
@@ -227,14 +232,13 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
       if( fill != null )
       {
         fillResources = prepareGc( gc, fill, feature );
-
         gc.fillRectangle( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
       }
 
       // only stroke outline, if Stroke-Element is given
       if( stroke != null )
       {
-        strokeResources = LineSymbolizer_Impl.prepareGc( gc, stroke, feature );
+        strokeResources = Symbolizer_Impl.prepareGc( gc, stroke, feature );
         gc.drawRectangle( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
       }
     }
@@ -244,4 +248,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
       disposeResource( fillResources );
     }
   }
+
+
+
 }

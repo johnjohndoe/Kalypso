@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -56,16 +56,16 @@ public class ChangeExtentCommand implements ICommand
 
   private final GM_Envelope m_undoBoundingBox;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private final boolean m_useHistory;
 
-  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
+  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox )
   {
     this( mapPanel, boundingBox, true );
   }
 
-  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox, final boolean useHistory )
+  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox, final boolean useHistory )
   {
     m_mapPanel = mapPanel;
     m_useHistory = useHistory;

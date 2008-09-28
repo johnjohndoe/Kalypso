@@ -46,7 +46,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -84,10 +84,10 @@ public class ActiveThemeTester extends PropertyTester
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( !(receiver instanceof MapPanel) )
+    if( !(receiver instanceof IMapPanel) )
       return false;
 
-    final MapPanel mapPanel = (MapPanel) receiver;
+    final IMapPanel mapPanel = (IMapPanel) receiver;
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return false;

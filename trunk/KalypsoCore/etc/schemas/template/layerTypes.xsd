@@ -54,6 +54,7 @@
                 <xs:extension base="xlinkext:SimpleLinkType">
                   <xs:attribute name="linktype" type="xs:string" use="required" />
                   <xs:attribute name="style" type="xs:string" use="required" />
+                  <xs:attribute name="selection" type="xs:boolean" use="optional" default="false"/>
                 </xs:extension>
               </xs:complexContent>
             </xs:complexType>

@@ -42,7 +42,7 @@ package org.kalypso.workflow.ui.browser.urlaction;
 
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
@@ -79,7 +79,7 @@ public class URLActionActivateTheme extends AbstractURLAction
     if( activePage instanceof GisMapEditor )
     {
       final GisMapEditor editor = (GisMapEditor) activePage;
-      final MapPanel mapPanel = editor.getMapPanel();
+      final IMapPanel mapPanel = editor.getMapPanel();
       if( mapPanel != null )
       {
         final IMapModell mapModell = mapPanel.getMapModell();

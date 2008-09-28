@@ -50,7 +50,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
@@ -59,7 +59,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
  * 
  * @author vdoemming
  */
-public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener
+public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener, IWidgetManager
 {
   private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
 
@@ -71,13 +71,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     }
   };
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   private final ICommandTarget m_commandTarget;
 
   private IWidget m_actualWidget = null;
 
-  public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
+  public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
     m_commandTarget = commandTarget;
@@ -144,7 +144,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
-    m_mapPanel.fireMouseMouveEvent( e );
+    m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
 
   // MouseMotionAdapter:
@@ -252,7 +252,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     fireWidgetChangeEvent( newWidget );
 
     if( m_mapPanel != null )
-      m_mapPanel.repaint();
+      m_mapPanel.repaintMap();
   }
 
   /**

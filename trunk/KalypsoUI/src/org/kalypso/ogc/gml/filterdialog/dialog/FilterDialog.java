@@ -89,7 +89,7 @@ import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite;
 import org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
@@ -109,7 +109,7 @@ import org.w3c.dom.Element;
  */
 public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciever
 {
-  private static final String EMPTY_FEATURE_LIST = Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.empty" ); //$NON-NLS-1$
+  protected static final String EMPTY_FEATURE_LIST = Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.empty" ); //$NON-NLS-1$
 
   private static final int ID_BUTTON_APPLY = 100;
 
@@ -360,7 +360,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
                   final IEditorPart activeEditor = activePage.getActiveEditor();
                   if( activeEditor instanceof GisMapEditor )
                   {
-                    final MapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
+                    final IMapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
                     final IStructuredSelection s = (IStructuredSelection) mapPanel.getSelection();
                     if( s instanceof KalypsoFeatureThemeSelection )
                     {
@@ -547,7 +547,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     @Override
     public void run( )
     {
-      IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+      final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
       if( !selection.isEmpty() )
       {
 

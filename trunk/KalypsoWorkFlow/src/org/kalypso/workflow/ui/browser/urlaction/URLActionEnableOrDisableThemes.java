@@ -44,7 +44,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
@@ -76,7 +76,7 @@ public class URLActionEnableOrDisableThemes extends AbstractURLAction
     IMapModell mapModell = null;
     if( activeEditor instanceof GisMapEditor )
     {
-      final MapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
+      final IMapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
       mapModell = mapPanel.getMapModell();
       kThemes = mapModell.getAllThemes();
     }

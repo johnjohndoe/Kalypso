@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.workflow.ui.browser.urlaction;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypso.ogc.gml.map.listeners.PointOfinterest;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
@@ -138,7 +139,7 @@ public class URLActionShowInMap extends AbstractURLAction
         if( !(editor instanceof GisMapEditor) )
           continue;
         final GisMapEditor mapEditor = (GisMapEditor) editor;
-        final MapPanel mapPanel = mapEditor.getMapPanel();
+        final IMapPanel mapPanel = mapEditor.getMapPanel();
 
         final PointOfinterest poi = new PointOfinterest( mapPanel.getProjection(), title, duration, point );
         mapPanel.addPaintListener( poi );
@@ -160,7 +161,7 @@ public class URLActionShowInMap extends AbstractURLAction
               // do nothing
             }
             mapPanel.removePaintListener( poi );
-            mapPanel.repaint();
+            mapPanel.repaintMap();
           }
         };
         thread.start();
@@ -168,7 +169,7 @@ public class URLActionShowInMap extends AbstractURLAction
         final GM_Envelope boundingBox = mapPanel.getBoundingBox();
         if( !boundingBox.contains( point.getPosition() ) )
         {
-          final GM_Envelope panToLocationBoundingBox = mapPanel.getPanToLocationBoundingBox( x, y );
+          final GM_Envelope panToLocationBoundingBox = MapPanelUtilities.calcPanToLocationBoundingBox( mapPanel, x, y );
           mapPanel.setBoundingBox( panToLocationBoundingBox );
         }
       }

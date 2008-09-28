@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * Waits for a key to load. The object-loading can be performed synchronuously, in which case the caller will not get
@@ -92,7 +92,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
-  public final void objectInvalid( IPoolableObjectType key, Object oldValue )
+  public final void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
     dispose();
   }
@@ -100,7 +100,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
-  public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+  public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub
   }

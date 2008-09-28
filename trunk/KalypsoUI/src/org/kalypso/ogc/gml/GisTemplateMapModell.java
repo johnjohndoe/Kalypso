@@ -431,11 +431,11 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, boolean)
+   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
-    m_modell.paint( g, p, bbox, scale, selected );
+    m_modell.paint( g, p, bbox, scale, selected, monitor );
   }
 
   public void removeTheme( final IKalypsoTheme theme )

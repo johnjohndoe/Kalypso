@@ -47,7 +47,8 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -61,9 +62,9 @@ public class ZoomOutHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
-    final GM_Envelope zoomBox = mapPanel.getZoomOutBoundingBox();
+    final GM_Envelope zoomBox = MapPanelUtilities.calcZoomOutBoundingBox( mapPanel );
     MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
 
     return Status.OK_STATUS;

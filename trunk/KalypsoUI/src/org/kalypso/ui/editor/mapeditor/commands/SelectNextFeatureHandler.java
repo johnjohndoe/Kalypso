@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -93,7 +93,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return null;
@@ -113,7 +113,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
 
     final Feature featureToSelect = (Feature) featureList.get( newIndex );
 
-    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( featureTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( featureTheme.getWorkspace(), featureToSelect, featureToSelect.getOwner(), featureToSelect.getParentRelation() );
 
     final Feature[] toRemove = FeatureSelectionHelper.getFeatures( selectionManager );
 

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -68,10 +68,14 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
 
   protected UserStyle m_userStyle;
 
-  public KalypsoUserStyle( final UserStyle style, final String styleName )
+  /** Flag, if this style is used for selected features or not. */
+  private final boolean m_isUsedForSelection;
+
+  public KalypsoUserStyle( final UserStyle style, final String styleName, final boolean usedForSelection )
   {
     m_userStyle = style;
     m_styleName = styleName;
+    m_isUsedForSelection = usedForSelection;
   }
 
   /**
@@ -135,7 +139,7 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
   /**
    * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
    */
-  public FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName )
+  public FeatureTypeStyle getFeatureTypeStyle( final String featureTypeStyleName )
   {
     return m_userStyle.getFeatureTypeStyle( featureTypeStyleName );
   }
@@ -228,7 +232,7 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
   }
 
   /**
-   * Runns the given runnable on every listener in a safe way.
+   * Runs the given runnable on every listener in a safe way.
    */
   public void fireStyleChanged( )
   {
@@ -245,6 +249,14 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
 
       SafeRunner.run( code );
     }
+  }
+
+  /**
+   * @return <code>true</code>, if this layer is used to draw selected features. Else, <code>false</code>.
+   */
+  public boolean isUsedForSelection( )
+  {
+    return m_isUsedForSelection;
   }
 
 }

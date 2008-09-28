@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -96,7 +96,7 @@ public class EnableThemeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.0") + (m_bEnable ? Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.1") : Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return m_bEnable ? Messages.getString( "org.kalypso.ogc.gml.command.EnableThemeCommand.0" ) : Messages.getString( "org.kalypso.ogc.gml.command.EnableThemeCommand.1" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

@@ -120,7 +120,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     // Added/commented by Dejan //symbolizers.add( StyleFactory.createRasterSymbolizer() );
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( ScrabLayerFeatureTheme.STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
     final UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( ScrabLayerFeatureTheme.STYLE_NAME, ScrabLayerFeatureTheme.STYLE_NAME, "empty Abstract", featureTypeStyle ); //$NON-NLS-1$
-    m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName() ) );
+    m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName(), false ) );
   }
 
   /**
@@ -152,7 +152,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
       return m_scrabLayerTheme.getFeatureType();
     return null;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */
@@ -229,13 +229,14 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.paint( g, p, scale, bbox, selected, monitor );
+      m_scrabLayerTheme.paint( g, p, bbox, scale, selected, monitor );
   }
 
   /**
@@ -296,11 +297,14 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#paintInternal(org.kalypso.ogc.gml.IPaintInternalDelegate)
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#paint(double, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor, org.kalypso.ogc.gml.IPaintDelegate)
    */
-  public void paintInternal( final IPaintInternalDelegate delegate )
+  @Override
+  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
-    // nothing to do
+    if( m_scrabLayerTheme != null )
+      m_scrabLayerTheme.paint( scale, bbox, selected, monitor, delegate );
   }
 
   /**
@@ -318,6 +322,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
    */
+  @Override
   public String getLabel( )
   {
     if( m_scrabLayerTheme == null )

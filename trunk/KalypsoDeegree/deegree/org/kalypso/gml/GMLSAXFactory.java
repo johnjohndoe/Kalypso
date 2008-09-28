@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -79,21 +78,15 @@ public class GMLSAXFactory
 
   private final QName m_xlinkQN;
 
-  /**
-   * (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
-   */
-  private final Map<String, String> m_idMap;
-
   private final XMLReader m_xmlReader;
 
   /**
    * @param idMap
    *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final XMLReader xmlReader, final Map<String, String> idMap ) throws SAXException
+  public GMLSAXFactory( final XMLReader xmlReader ) throws SAXException
   {
     m_xmlReader = xmlReader;
-    m_idMap = idMap;
 
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
@@ -155,10 +148,8 @@ public class GMLSAXFactory
 
     final IFeatureType featureType = feature.getFeatureType();
 
-    String id = feature.getId();
-    if( m_idMap.containsKey( id ) )
-      id = m_idMap.get( id );
-    if( (id != null) && (id.length() > 0) )
+    final String id = feature.getId();
+    if( id != null && id.length() > 0 )
     {
       final String version = featureType.getGMLSchema().getGMLVersion();
       final QName idQName = getPrefixedQName( GMLSchemaUtilities.getIdAttribute( version ) );
@@ -287,15 +278,11 @@ public class GMLSAXFactory
 
     if( (next instanceof XLinkedFeature_Impl) || (next instanceof String) )
     {
-      String fid;
+      final String fid;
       if( next instanceof String )
       {
         // local xlinks, used for backwards compability, should be changes soon
-        fid = (String) next;
-        if( m_idMap.containsKey( fid ) )
-          fid = m_idMap.get( fid );
-
-        fid = "#" + fid;
+        fid = "#" + (String) next;
       }
       else
         fid = ((XLinkedFeature_Impl) next).getHref();

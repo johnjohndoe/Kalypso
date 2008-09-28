@@ -30,7 +30,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -97,7 +97,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     final IWorkbenchWindow window = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final AbstractMapPart abstractMapPart = findMapPart( window );
-    final MapPanel mapPanel = abstractMapPart == null ? null : (MapPanel) abstractMapPart.getMapPanel();
+    final IMapPanel mapPanel = abstractMapPart == null ? null : abstractMapPart.getMapPanel();
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
@@ -246,7 +246,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     if( activePart == null )
       return;
 
-    final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
+    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
     if( mapPanel != null )
     {
       final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();

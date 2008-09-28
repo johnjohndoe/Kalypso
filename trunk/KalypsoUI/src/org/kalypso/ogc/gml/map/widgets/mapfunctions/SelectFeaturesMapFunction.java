@@ -41,7 +41,7 @@
 package org.kalypso.ogc.gml.map.widgets.mapfunctions;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.changers.IFeatureSelectionChanger;
 import org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -105,7 +105,7 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
    * @see org.kalypso.informdss.manager.util.widgets.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
-  public void execute( final MapPanel mapPanel, final Rectangle rectangle )
+  public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
     final EasyFeatureWrapper[] wrappers = m_featuresProvider.getFeatures( mapPanel );
     final EasyFeatureWrapper[] wrappersToSelect = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, wrappers, m_radius );

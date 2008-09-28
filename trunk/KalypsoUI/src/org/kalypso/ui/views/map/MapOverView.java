@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
-import java.awt.Point;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
@@ -52,7 +50,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
@@ -64,15 +62,15 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Gernot Belger
  */
-public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPanel>, IMapPanelListener, IViewPart
+public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPanel>, IMapPanelListener, IViewPart
 {
-  private final IAdapterFinder<MapPanel> m_closeFinder = new EditorFirstAdapterFinder<MapPanel>();
+  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  private final IAdapterFinder<MapPanel> m_initFinder = m_closeFinder;
+  private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
 
-  private final AdapterPartListener<MapPanel> m_adapterListener = new AdapterPartListener<MapPanel>( MapPanel.class, this, m_initFinder, m_closeFinder );
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
 
-  private MapPanel m_panel;
+  private IMapPanel m_panel;
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#init(org.eclipse.ui.IViewSite)
@@ -125,7 +123,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
    *      java.lang.Object)
    */
-  public void setAdapter( final IWorkbenchPart part, final MapPanel adapter )
+  public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
     if( m_panel != null )
       m_panel.removeMapPanelListener( this );
@@ -150,20 +148,17 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
     final IMapModell oldMapModell = getMapPanel().getMapModell();
     if( oldMapModell != modelToSet )
     {
-      setMapModell( modelToSet );
-      if( modelToSet != null )
-        getMapPanel().setBoundingBox( modelToSet.getFullExtentBoundingBox() );
+      final GM_Envelope env = modelToSet == null ? null : modelToSet.getFullExtentBoundingBox();
+      setMapModell( modelToSet, env );
     }
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
   {
-    // TODO Auto-generated method stub
-
     // TODO: update extent layer
   }
 
@@ -171,7 +166,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
    *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
     setModell( newModel );
   }
@@ -179,19 +174,23 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
   /**
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
    */
-  public void onMessageChanged( final MapPanel source, final String message )
+  public void onMessageChanged( final IMapPanel source, final String message )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Point, java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
+  @Override
+  public void onStatusChanged( final IMapPanel source )
   {
-    // TODO Auto-generated method stub
+  }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
+   */
+  public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
+  {
   }
 }

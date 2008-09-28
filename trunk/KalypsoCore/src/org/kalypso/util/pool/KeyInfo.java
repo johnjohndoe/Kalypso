@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
@@ -247,7 +247,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     return m_key;
   }
 
-  public IPoolListener[] getListeners( )
+  public IPoolListener[] getPoolListeners( )
   {
     return m_listeners.toArray( new IPoolListener[m_listeners.size()] );
   }

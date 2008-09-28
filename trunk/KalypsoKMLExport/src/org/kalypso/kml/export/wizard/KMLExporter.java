@@ -6,7 +6,6 @@ package org.kalypso.kml.export.wizard;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.junit.Assert;
@@ -40,10 +40,11 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 import com.google.earth.kml.DocumentType;
 import com.google.earth.kml.FeatureType;
@@ -60,7 +61,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   private final MapView m_view;
 
-  private MapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   private final IKMLAdapter[] m_provider;
 
@@ -75,7 +76,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
     /* get extension points for rendering geometries and adding additional geometries */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKMLAdapter.ID ); //$NON-NLS-1$
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKMLAdapter.ID );
 
     // TODO handling of several providers, which provider wins / rules, returns a special geometry, aso
     final List<IKMLAdapter> provider = new ArrayList<IKMLAdapter>( elements.length );
@@ -120,7 +121,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
    * 
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     try
     {
@@ -218,19 +219,22 @@ public class KMLExporter implements ICoreRunnableWithProgress
     /* "paint" inner themes */
     else if( theme instanceof IKalypsoFeatureTheme )
       try
-      {
+    {
         final FolderType folderType = factory.createFolderType();
         folderType.setName( theme.getName().getValue() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
-        final KMLExportDelegate delegate = new KMLExportDelegate( m_provider, m_mapPanel, factory, folderType );
-        ft.paintInternal( delegate );
+
+        final double scale = m_mapPanel.getCurrentScale();
+        final GM_Envelope bbox = m_mapPanel.getBoundingBox();
+        final KMLExportDelegate delegate = new KMLExportDelegate( m_provider, factory, folderType );
+        ft.paint( scale, bbox, null, new NullProgressMonitor(), delegate );
 
         myList.add( factory.createFolder( folderType ) );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
 
   }
 }

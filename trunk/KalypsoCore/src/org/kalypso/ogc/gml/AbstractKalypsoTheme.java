@@ -59,8 +59,11 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -506,23 +509,22 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     final int ICON_SIZE = 16;
     final int GAP = 4;
 
-    final int width = 300;
-    final int height = 16;
+    final String label = getLabel( this );
+
+    final Device device = font.getDevice();
+    final Point textExtent = calcTextSize( label, font );
+
+    final int width = BORDER + ICON_SIZE + GAP + textExtent.x;
+    final int height = Math.max( 16, textExtent.y );
 
     /* Create the image. */
-    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( Display.getCurrent(), width, height );
+    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( device, width, height );
 
     /* Need a graphical context. */
     final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
-
-    /* Change the color. */
-    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
-
-    /* Draw on the context. */
-    gc.fillRectangle( 0, 0, width, height );
 
     /* Change the color. */
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
@@ -533,11 +535,26 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     /* Draw the icon. */
     final org.eclipse.swt.graphics.Image icon = descriptor.createImage();
     gc.drawImage( icon, BORDER, 0 );
+    icon.dispose();
 
     /* Draw the text. */
-    gc.drawString( getLabel( this ), BORDER + ICON_SIZE + GAP, 0 );
+    gc.drawString( label, BORDER + ICON_SIZE + GAP, 0, true );
+
+    gc.dispose();
 
     return image;
+  }
+
+  // TODO: move into helper class
+  public static Point calcTextSize( final String label, final Font font )
+  {
+    final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
+    final GC tmpGC = new GC( tmpImage );
+    tmpGC.setFont( font );
+    final Point textExtent = tmpGC.textExtent( label );
+    tmpGC.dispose();
+    tmpImage.dispose();
+    return textExtent;
   }
 
   /**
@@ -734,5 +751,23 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public boolean shouldShowChildren( )
   {
     return m_shouldShowChildren;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.ICheckStateProvider#isChecked()
+   */
+  @Override
+  public boolean isChecked( )
+  {
+    return m_isVisible;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.ICheckStateProvider#isGrayed()
+   */
+  @Override
+  public boolean isGrayed( )
+  {
+    return false;
   }
 }

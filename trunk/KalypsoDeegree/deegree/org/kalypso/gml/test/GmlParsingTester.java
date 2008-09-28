@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.test;
 
@@ -118,7 +118,7 @@ public class GmlParsingTester extends TestCase
     // TODO: also set an error handler here
     // TODO: use progress-monitors to show progress and let the user cancel parsing
 
-    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, null, true, context, null );
+    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, null, context, null );
     xmlReader.setContentHandler( exceptionHandler );
 
     final InputSource inputSource = new InputSource( is );

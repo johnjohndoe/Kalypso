@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.kalypso.contribs.org.xml.sax.IndentingContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -64,8 +63,6 @@ public class GMLWorkspaceReader implements XMLReader
 
   private final HashMap<String, Object> m_propMap = new HashMap<String, Object>();
 
-  private final Map<String, String> m_idMap;
-
   private EntityResolver m_entityResolver;
 
   private DTDHandler m_dtdHandler;
@@ -74,13 +71,8 @@ public class GMLWorkspaceReader implements XMLReader
 
   private ErrorHandler m_errorHandler;
 
-  /**
-   * @param idMap
-   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
-   */
-  public GMLWorkspaceReader( final Map<String, String> idMap )
+  public GMLWorkspaceReader( )
   {
-    m_idMap = idMap;
   }
 
   /**
@@ -98,7 +90,7 @@ public class GMLWorkspaceReader implements XMLReader
     final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
     setContentHandler( indentHandler );
 
-    final GMLSAXFactory factory = new GMLSAXFactory( this, m_idMap );
+    final GMLSAXFactory factory = new GMLSAXFactory( this );
 
     handler.startDocument();
     factory.process( workspace );

@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 
 final class SaveAndDisposeInfoJob extends UIJob

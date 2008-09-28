@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.map;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,50 +54,51 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.awt.ComponentRepaintJob;
-import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Paints a {@link org.kalypso.ogc.gml.mapmodel.IMapModell}.
  * <p>
  * The painter draw really draw a buffered image which gets created in a background job.
  * </p>
- * In order to create the image, schedule this painter as a job.
- * </p>
+ * In order to create the image, schedule this painter as a job. </p>
  * 
  * @author Gernot Belger
  */
-public class MapModellPainter extends Job implements IPainter
+public class MapModellPainter extends Job
 {
   /**
-   * Maximum delay by wich repaints to the map are produced.
+   * Maximum delay by which repaints to the map are produced.
    * 
    * @see java.awt.Component#repaint(long)
    */
-  private static final int MAP_REPAINT_MILLIS = 500;
+  private static final long MAP_REPAINT_MILLIS = 500;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
-  private Image m_mapImage = null;
-
-  private final ThemePainter m_themePainter;
+  private BufferedImage m_mapImage = null;
 
   /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
   private final ISchedulingRule m_painterMutex = new MutexRule();
 
+  private final boolean m_paintSelection;
+
   /**
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
-   * </p>
+   * 
+   * @param paintSelection
+   *          If set to <code>true</code>, this painter paints selected features, otherwise, all feature with the normal
+   *          rendering mode are painted.
    */
-  public MapModellPainter( final MapPanel mapPanel )
+  public MapModellPainter( final IMapPanel mapPanel, final boolean paintSelection )
   {
     super( "" ); //$NON-NLS-1$
     m_mapPanel = mapPanel;
+    m_paintSelection = paintSelection;
     setRule( m_painterMutex );
-
-    m_themePainter = new ThemePainter( m_mapPanel );
   }
 
   /**
@@ -115,8 +116,13 @@ public class MapModellPainter extends Job implements IPainter
    */
   public void dispose( )
   {
+    cancel();
+
     if( m_mapImage != null )
+    {
       m_mapImage.flush();
+      m_mapImage = null;
+    }
   }
 
   /**
@@ -125,26 +131,33 @@ public class MapModellPainter extends Job implements IPainter
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.MapModellPainter.2" ), 100 ); //$NON-NLS-1$
+
     final IMapModell mapModell = m_mapPanel.getMapModell();
-    if( mapModell != null )
-      setName( Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.1") + mapModell.getName().getValue() ); //$NON-NLS-1$
+    if( mapModell == null )
+      return Status.OK_STATUS;
+
+    final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    final GeoTransform projection = m_mapPanel.getProjection();
+    final double scale = m_mapPanel.getCurrentScale();
+    if( mapModell == null )
+      return Status.OK_STATUS;
+
+    setName( Messages.format( "org.kalypso.ogc.gml.map.MapModellPainter.1", mapModell.getName().getValue() ) ); //$NON-NLS-1$
+
+    final MapPanelRepaintJob repaintJob = new MapPanelRepaintJob( m_mapPanel, MAP_REPAINT_MILLIS );
+    repaintJob.setSystem( true );
+    repaintJob.setPriority( Job.LONG );
+    repaintJob.schedule();
 
     Graphics2D gr = null;
-    Job repaintJob = null;
     try
     {
-      repaintJob = new ComponentRepaintJob( m_mapPanel, MapModellPainter.MAP_REPAINT_MILLIS );
-      repaintJob.setSystem( true );
-      repaintJob.setPriority( Job.LONG );
-      repaintJob.schedule( 500 );
-
-      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.2"), 100 ); //$NON-NLS-1$
-
       ProgressUtilities.worked( progress, 0 );
 
       final int width = m_mapPanel.getWidth();
       final int height = m_mapPanel.getHeight();
-      if( (width > 0) && (height > 0) )
+      if( width > 0 && height > 0 )
       {
         gr = createImage( progress.newChild( 10 ), width, height );
         // if image is null, wokbench is probably shutting down,
@@ -152,12 +165,12 @@ public class MapModellPainter extends Job implements IPainter
         if( gr == null )
           return Status.OK_STATUS;
 
-        gr.setClip( m_mapPanel.getBounds() );
-        m_themePainter.paintThemes( gr, false, progress.newChild( 45 ) );
+        gr.setClip( m_mapPanel.getScreenBounds() );
 
-        // TODO: replace highlightGraphics concept by highlight-style
-        final HighlightGraphics highlightGraphics = new HighlightGraphics( gr );
-        m_themePainter.paintThemes( highlightGraphics, true, progress.newChild( 45 ) );
+        if( m_paintSelection )
+          mapModell.paint( gr, projection, boundingBox, scale, true, monitor );
+        else
+          mapModell.paint( gr, projection, boundingBox, scale, null, monitor );
       }
       else
         progress.setWorkRemaining( 0 );
@@ -168,19 +181,18 @@ public class MapModellPainter extends Job implements IPainter
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.3") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( t, Messages.getString( "org.kalypso.ogc.gml.map.MapModellPainter.3" ) ); //$NON-NLS-1$
     }
     finally
     {
-      repaintJob.cancel();
-
       if( gr != null )
         gr.dispose();
 
       monitor.done();
 
       /* Force at least one repaint at the end of this operation. */
-      m_mapPanel.repaint( MapModellPainter.MAP_REPAINT_MILLIS );
+      m_mapPanel.repaintMap();
+      repaintJob.cancel();
     }
 
     return Status.OK_STATUS;
@@ -194,9 +206,9 @@ public class MapModellPainter extends Job implements IPainter
    */
   private Graphics2D createImage( final SubMonitor monitor, final int width, final int height ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.4"), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.map.MapModellPainter.4" ), 100 ); //$NON-NLS-1$
 
-    m_mapImage = m_mapPanel.createImage( width, height );
+    m_mapImage = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     if( m_mapImage == null )
       return null;
 
@@ -204,10 +216,14 @@ public class MapModellPainter extends Job implements IPainter
     gr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
     gr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
-    ProgressUtilities.worked( monitor, 0 );
-    monitor.done();
+    ProgressUtilities.done( monitor );
 
     return gr;
+  }
+
+  public BufferedImage getImage( )
+  {
+    return m_mapImage;
   }
 
 }

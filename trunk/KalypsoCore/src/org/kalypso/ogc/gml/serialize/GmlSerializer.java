@@ -47,13 +47,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,6 +64,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -117,45 +119,80 @@ public final class GmlSerializer
     serializeWorkspace( writer, workspace, writer.getEncoding() );
   }
 
+  /**
+   * Writes a {@link GMLWorkspace} into an {@link File}. If the filename ends with <code>.gz</code>, the output will be
+   * compressed with GZip.
+   */
   public static void serializeWorkspace( final File gmlFile, final GMLWorkspace gmlWorkspace, final String encoding ) throws IOException, GmlSerializeException
   {
-    OutputStreamWriter writer = null;
+    OutputStream os = null;
     try
     {
-      writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream( gmlFile ) ), encoding );
-      GmlSerializer.serializeWorkspace( writer, gmlWorkspace );
-      writer.close();
+      final BufferedOutputStream bs = new BufferedOutputStream( new FileOutputStream( gmlFile ) );
+
+      // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
+      if( gmlFile.getName().endsWith( ".gz" ) )
+        os = new GZIPOutputStream( bs );
+      else
+        os = bs;
+
+      GmlSerializer.serializeWorkspace( os, gmlWorkspace, encoding );
+      os.close();
     }
     finally
     {
-      IOUtils.closeQuietly( writer );
+      IOUtils.closeQuietly( os );
     }
   }
 
+  /**
+   * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
+   * 
+   * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
+   *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
+   */
+  @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
   {
-    serializeWorkspace( writer, gmlWorkspace, charsetEncoding, new HashMap<String, String>() );
+    serializeWorkspace( writer, gmlWorkspace, charsetEncoding, true );
+  }
+
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final boolean closeWriter ) throws GmlSerializeException
+  {
+    final GMLWorkspaceInputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
+    final StreamResult result = new StreamResult( writer );
+
+    try
+    {
+      serializeWorkspace( inputSource, result, charsetEncoding );
+    }
+    finally
+    {
+      if( closeWriter )
+        IOUtils.closeQuietly( writer );
+    }
+  }
+
+  public static void serializeWorkspace( final OutputStream is, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
+  {
+    final GMLWorkspaceInputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
+    final StreamResult result = new StreamResult( is );
+
+    serializeWorkspace( inputSource, result, charsetEncoding );
   }
 
   /**
-   * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   * Most general way to serialize the workspace. All other serialize methods should eventually cal this method.
    */
-  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
+  public static void serializeWorkspace( final GMLWorkspaceInputSource inputSource, final StreamResult result, final String charsetEncoding ) throws TransformerFactoryConfigurationError, GmlSerializeException
   {
     try
     {
-      final XMLReader reader = new GMLWorkspaceReader( idMap );
+      final XMLReader reader = new GMLWorkspaceReader();
       reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
 
-      final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
-      inputSource.setEncoding( charsetEncoding );
-
       final Source source = new SAXSource( reader, inputSource );
-
-      // TODO: change to stream instead of writer
-      final StreamResult result = new StreamResult( writer );
 
       final TransformerFactory tFac = TransformerFactory.newInstance();
       final Transformer transformer = tFac.newTransformer();
@@ -169,36 +206,36 @@ public final class GmlSerializer
     {
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
     }
-    finally
-    {
-      IOUtils.closeQuietly( writer );
-    }
   }
 
   /**
-   * Liest einen GML-Workspace aus einer URL. Es wird kein Token-Replace durchgeführt, das Encoding wird anhand des
-   * XML-Headers ermittelt. Sollte Client-Seitig nicht benutzt werden.
+   * Reads a {@link GMLWorkspace} from the contents of an {@link URL}.
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
     InputStream stream = null;
+    BufferedInputStream bis = null;
     try
     {
-      // Besser streams benutzen, da falls das encoding im reader nicht bekannt
-      // ist garantiert Mist rauskommt
-      // der XML Mechanismus decodiert so schon richtig, zumindest, wenn das
-      // richtige enconding im xml-header steht.
-      stream = new BufferedInputStream( gmlURL.openStream() );
+      bis = new BufferedInputStream( gmlURL.openStream() );
 
-      return createGMLWorkspace( new InputSource( stream ), gmlURL, factory );
+      if( gmlURL.toExternalForm().endsWith( ".gz" ) )
+        stream = new GZIPInputStream( bis );
+      else
+        stream = bis;
+      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( stream ), null, gmlURL, factory );
+      stream.close();
+      return workspace;
     }
     finally
     {
       IOUtils.closeQuietly( stream );
+      // also close <code>bis</code> separately, as GZipInputStream throws exception in constructor
+      IOUtils.closeQuietly( bis );
     }
   }
 
-  public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
 
@@ -206,19 +243,6 @@ public final class GmlSerializer
     if( doTrace )
       perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.7" ) ); //$NON-NLS-1$
 
-    final GMLWorkspace workspace = parseGml( inputSource, null, true, context, factory );
-
-    if( perfLogger != null )
-    {
-      perfLogger.takeInterimTime();
-      perfLogger.printCurrentTotal( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.8" ) ); //$NON-NLS-1$
-    }
-
-    return workspace;
-  }
-
-  public static GMLWorkspace parseGml( final InputSource inputSource, final URL schemaLocationHint, final boolean useSchemaCache, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
-  {
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
     final SAXParserFactory saxFac = SAXParserFactory.newInstance();
@@ -233,36 +257,51 @@ public final class GmlSerializer
     // TODO: also set an error handler here
     // TODO: use progress-monitors to show progress and let the user cancel parsing
 
-    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, schemaLocationHint, useSchemaCache, context, providerFactory );
+    final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, schemaLocationHint, context, providerFactory );
     xmlReader.setContentHandler( exceptionHandler );
     xmlReader.parse( inputSource );
 
     final GMLWorkspace workspace = exceptionHandler.getWorkspace();
 
+    if( perfLogger != null )
+    {
+      perfLogger.takeInterimTime();
+      perfLogger.printCurrentTotal( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.8" ) ); //$NON-NLS-1$
+    }
+
     return workspace;
   }
 
-  public static GMLWorkspace createGMLWorkspace( final File file, final URL schemaURLhint, final boolean useGMLSChemaCache, final IFeatureProviderFactory factory ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final File file, final IFeatureProviderFactory factory ) throws Exception
   {
-    BufferedInputStream is = null;
+    InputStream is = null;
+    BufferedInputStream bis = null;
 
     try
     {
-      is = new BufferedInputStream( new FileInputStream( file ) );
-      final GMLWorkspace workspace = createGMLWorkspace( is, schemaURLhint, useGMLSChemaCache, factory );
+      bis = new BufferedInputStream( new FileInputStream( file ) );
+
+      if( file.getName().endsWith( ".gz" ) )
+        is = new GZIPInputStream( bis );
+      else
+        is = bis;
+
+      final GMLWorkspace workspace = createGMLWorkspace( is, null, factory );
       is.close();
       return workspace;
     }
     finally
     {
       IOUtils.closeQuietly( is );
+      // Close <code>bis<code> separately, as GZipInputStream throws exception constructor
+      IOUtils.closeQuietly( bis );
     }
 
   }
 
-  public static GMLWorkspace createGMLWorkspace( final BufferedInputStream inputStream, final URL schemaURLHint, final boolean useGMLSchemaCache, final IFeatureProviderFactory factory ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final InputStream inputStream, final URL schemaURLHint, final IFeatureProviderFactory factory ) throws Exception
   {
-    return parseGml( new InputSource( inputStream ), schemaURLHint, useGMLSchemaCache, null, factory );
+    return createGMLWorkspace( new InputSource( inputStream ), schemaURLHint, null, factory );
   }
 
   public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException
@@ -345,16 +384,16 @@ public final class GmlSerializer
   }
 
   /**
-   * This function loads a workspace from a file.
+   * This function loads a workspace from a {@link IFile}.
    * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
    */
-  public static GMLWorkspace loadWorkspace( IFile file ) throws Exception
+  public static GMLWorkspace createGMLWorkspace( final IFile file ) throws Exception
   {
     /* Create the url of the workspace. */
-    URL url = ResourceUtilities.createURL( file );
+    final URL url = ResourceUtilities.createURL( file );
 
     /* Load the workspace and return it. */
     return GmlSerializer.createGMLWorkspace( url, null );
@@ -369,19 +408,19 @@ public final class GmlSerializer
    * @param file
    *          The file to save the workspace to. <strong>Note:</strong> The file must point to a real file.
    */
-  public static void saveWorkspace( GMLWorkspace workspace, IFile file ) throws Exception
+  public static void saveWorkspace( final GMLWorkspace workspace, final IFile file ) throws Exception
   {
     if( workspace == null || file == null )
       throw new Exception( "Either the workspace or the target file was null." );
 
     /* The default encoding is that of the file. */
-    String encoding = file.getCharset();
+    final String encoding = file.getCharset();
 
     /* Create a writer. */
-    OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file.getLocation().toFile() ), encoding );
+    final File javaFile = file.getLocation().toFile();
 
     /* Save the workspace. */
-    GmlSerializer.serializeWorkspace( writer, workspace, writer.getEncoding() );
+    serializeWorkspace( javaFile, workspace, encoding );
 
     /* Refresh the file. */
     file.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );

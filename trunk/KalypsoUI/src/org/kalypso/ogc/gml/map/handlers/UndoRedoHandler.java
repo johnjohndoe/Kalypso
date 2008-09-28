@@ -48,7 +48,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.util.command.CommandJob;
@@ -76,7 +76,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {
@@ -118,7 +118,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     if( activePart == null )
       return;
-    final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
+    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
 
     if( mapPanel == null )
       return;

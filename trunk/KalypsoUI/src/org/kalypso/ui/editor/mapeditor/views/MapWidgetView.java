@@ -61,7 +61,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 
@@ -108,19 +108,19 @@ public class MapWidgetView extends ViewPart
   /**
    * A map to remember the active widgets per map-part. For each part, there is at most one widget for this widget-view.
    */
-  private final Map<MapPanel, WidgetInfo> m_widgetInfos = new HashMap<MapPanel, WidgetInfo>();
+  private final Map<IMapPanel, WidgetInfo> m_widgetInfos = new HashMap<IMapPanel, WidgetInfo>();
 
-  private final IAdapterEater<MapPanel> m_adapterEater = new IAdapterEater<MapPanel>()
+  private final IAdapterEater<IMapPanel> m_adapterEater = new IAdapterEater<IMapPanel>()
   {
-    public void setAdapter( final IWorkbenchPart part, final MapPanel panel )
+    public void setAdapter( final IWorkbenchPart part, final IMapPanel panel )
     {
       mapActivated( panel );
     }
   };
 
-  private final IAdapterFinder<MapPanel> m_adapterFinder = new EditorFirstAdapterFinder<MapPanel>();
+  private final IAdapterFinder<IMapPanel> m_adapterFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  private final AdapterPartListener<MapPanel> m_partListener = new AdapterPartListener<MapPanel>( MapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
+  private final AdapterPartListener<IMapPanel> m_partListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
   {
     /**
      * @see org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener#partActivated(org.eclipse.ui.IWorkbenchPartReference)
@@ -198,7 +198,7 @@ public class MapWidgetView extends ViewPart
    * @param action
    *            If the given action is non-null, it will be activated if the widget is reactivated.
    */
-  public void setWidgetForPanel( final MapPanel panel, final IWidgetWithOptions widget )
+  public void setWidgetForPanel( final IMapPanel panel, final IWidgetWithOptions widget )
   {
     panel.getWidgetManager().addWidgetChangeListener( m_widgetListener );
 
@@ -227,7 +227,7 @@ public class MapWidgetView extends ViewPart
     mapActivated( panel );
   }
 
-  protected void mapActivated( final MapPanel panel )
+  protected void mapActivated( final IMapPanel panel )
   {
     if( m_group == null || m_group.isDisposed() )
       return;
@@ -277,7 +277,7 @@ public class MapWidgetView extends ViewPart
   @Override
   public void dispose( )
   {
-    for( final Entry<MapPanel, WidgetInfo> entry : m_widgetInfos.entrySet() )
+    for( final Entry<IMapPanel, WidgetInfo> entry : m_widgetInfos.entrySet() )
     {
       entry.getKey().getWidgetManager().removeWidgetChangeListener( m_widgetListener );
       final WidgetInfo info = entry.getValue();
@@ -304,7 +304,7 @@ public class MapWidgetView extends ViewPart
 
   protected void onWidgetChanged( final IWidget newWidget )
   {
-    final MapPanel panel = (MapPanel) m_stackLayout.topControl.getData( DATA_PANEL );
+    final IMapPanel panel = (IMapPanel) m_stackLayout.topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );
@@ -325,7 +325,7 @@ public class MapWidgetView extends ViewPart
     if( topControl.isDisposed() )
       return;
 
-    final MapPanel panel = (MapPanel) topControl.getData( DATA_PANEL );
+    final IMapPanel panel = (IMapPanel) topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );

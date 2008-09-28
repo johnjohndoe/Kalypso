@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
@@ -58,7 +58,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -126,9 +126,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   {
     m_movePoint = p;
     // TODO: check if this repaint is really necessary
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
   }
 
@@ -140,9 +140,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   {
     m_movePoint = null;
 // TODO: check if this repaint is necessary for the widget
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -171,7 +171,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( m_pointOfInterest != null )
     {
       final GeoTransform transform = mapPanel.getProjection();
@@ -192,7 +192,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   private void updateInfoText( )
   {
     final String themeName;
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -233,7 +233,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
           pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.10") ); //$NON-NLS-1$
           pw.print( "\n " + message ); //$NON-NLS-1$
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -321,9 +321,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
     // formats are not queryable (bug in deegree, Collection of formats does not support toArray() )
     final String[] formats = new String[] { "application/vnd.ogc.gml" //$NON-NLS-1$
-    // ,
-    // "text/plain",
-    // "text/html"
+        // ,
+        // "text/plain",
+        // "text/html"
     };
     m_formatCombo.setItems( formats );
     m_formatCombo.select( 0 );

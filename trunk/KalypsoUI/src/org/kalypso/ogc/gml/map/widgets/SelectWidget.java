@@ -47,7 +47,7 @@ import java.awt.Rectangle;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,11 +75,11 @@ public class SelectWidget extends AbstractDelegateWidget
   {
     super.paint( g );
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     final IWidget delegate = getDelegate();
     if( delegate == null )
       m_toolTipRenderer.setTooltip( "Kein Thema aktiv, Selektion nicht möglich.\nAktivieren Sie ein Thema in der Gliederung" );

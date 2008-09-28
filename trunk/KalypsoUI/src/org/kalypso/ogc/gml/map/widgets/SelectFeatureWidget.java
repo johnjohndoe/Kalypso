@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
@@ -131,7 +131,7 @@ public class SelectFeatureWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -149,9 +149,9 @@ public class SelectFeatureWidget extends AbstractWidget
     m_featureLists = null;
     m_foundFeature = null;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-    mapPanel.repaint();
+    mapPanel.repaintMap();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
@@ -196,9 +196,9 @@ public class SelectFeatureWidget extends AbstractWidget
       }
     }
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
   }
 
   /**
@@ -209,9 +209,9 @@ public class SelectFeatureWidget extends AbstractWidget
   {
     m_currentPoint = p;
 
-    final MapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaint();
+      panel.repaintMap();
 
     super.dragged( p );
   }
@@ -222,7 +222,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void leftPressed( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -253,7 +253,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -291,7 +291,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void doubleClickedLeft( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -317,7 +317,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -356,7 +356,7 @@ public class SelectFeatureWidget extends AbstractWidget
         break;
     }
 
-    mapPanel.repaint();
+    mapPanel.repaintMap();
   }
 
   /**
@@ -369,14 +369,14 @@ public class SelectFeatureWidget extends AbstractWidget
     m_addMode = false;
     m_intersectMode = false;
 
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
-      mapPanel.repaint();
+      mapPanel.repaintMap();
 
     super.keyReleased( e );
   }
 
-  private void changeGeometryBuilder( final MapPanel mapPanel )
+  private void changeGeometryBuilder( final IMapPanel mapPanel )
   {
     if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
       m_selectionTypeDelegate = new PolygonGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
@@ -392,7 +392,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -414,7 +414,7 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void leftReleased( final Point p )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -602,7 +602,7 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  public static Feature grabNextFeature( final MapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme[] themes, final QName[] qnamesToSelect, final QName geomQName )
+  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme[] themes, final QName[] qnamesToSelect, final QName geomQName )
   {
     for( final IKalypsoFeatureTheme theme : themes )
     {

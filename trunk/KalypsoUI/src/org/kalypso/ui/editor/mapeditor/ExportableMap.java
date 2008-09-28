@@ -7,10 +7,10 @@
  Institute of River and coastal engineering
  Denickestr. 22
  21073 Hamburg, Germany
- http://www.tuhh.de/wbprivate final ExportMapOptionsPage 
+ http://www.tuhh.de/wbprivate final ExportMapOptionsPage
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -67,9 +67,9 @@ public class ExportableMap implements IExportableObject
 
   private final String m_format;
 
-  private final MapPanel m_panel;
+  private final IMapPanel m_panel;
 
-  public ExportableMap( final MapPanel panel, final int width, final int height, final String format )
+  public ExportableMap( final IMapPanel panel, final int width, final int height, final String format )
   {
     m_panel = panel;
     m_width = width;
@@ -82,7 +82,7 @@ public class ExportableMap implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    // TODO besserer Name?
+    // TODO besserer Name? JA: mapModell.getName()!
     return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
   }
 

@@ -43,7 +43,8 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -101,7 +102,7 @@ public class PanToWidget extends AbstractWidget
 
   public void perform( )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
 
     if( m_startPoint != null && m_endPoint != null && !m_startPoint.equals( m_endPoint ) )
     {
@@ -112,7 +113,7 @@ public class PanToWidget extends AbstractWidget
       final double mx = mapPanel.getWidth() / 2d - (m_endPoint.getX() - m_startPoint.getX());
       final double my = mapPanel.getHeight() / 2d - (m_endPoint.getY() - m_startPoint.getY());
 
-      final GM_Envelope panBox = mapPanel.getPanToPixelBoundingBox( mx, my );
+      final GM_Envelope panBox = MapPanelUtilities.calcPanToPixelBoundingBox( mapPanel, mx, my );
 
       m_startPoint = null;
       m_endPoint = null;

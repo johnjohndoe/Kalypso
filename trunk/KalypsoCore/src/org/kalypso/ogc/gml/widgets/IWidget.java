@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets;
 
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
  * @author bce
@@ -99,7 +99,7 @@ public interface IWidget
 
   public void finish( );
 
-  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel );
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel );
 
   /**
    * Will be called:
@@ -114,5 +114,5 @@ public interface IWidget
    * This function checks and returns if the widget may be activated. This may be used by the action delegates, to
    * determine if the action should be enabled.
    */
-  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel );
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel );
 }

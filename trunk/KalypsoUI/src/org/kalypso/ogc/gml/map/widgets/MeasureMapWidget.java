@@ -46,7 +46,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
@@ -123,14 +123,14 @@ public class MeasureMapWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    final MapPanel mapPanel = getMapPanel();
+    final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
     final GeoTransform projection = mapPanel.getProjection();
     m_delegate.builder.paint( g, projection, m_currentPoint );
 
-    final Rectangle bounds = mapPanel.getBounds();
+    final Rectangle bounds = mapPanel.getScreenBounds();
     if( m_currentPoint != null )
       m_tooltip.paintToolTip( m_currentPoint, g, bounds );
   }
@@ -149,7 +149,7 @@ public class MeasureMapWidget extends AbstractWidget
       final int newIndex = (currentIndex + 1) % m_delegates.length;
       updateDelegate( newIndex );
 
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
       return;
     }
 
@@ -158,7 +158,7 @@ public class MeasureMapWidget extends AbstractWidget
       e.consume();
 
       reset();
-      getMapPanel().repaint();
+      getMapPanel().repaintMap();
       return;
     }
 
@@ -175,14 +175,14 @@ public class MeasureMapWidget extends AbstractWidget
     {
       m_currentPoint = p;
 
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 
       final GM_Point currentPoint = MapUtilities.transform( mapPanel, p );
       updateTooltip( currentPoint );
 
-      mapPanel.repaint();
+      mapPanel.repaintMap();
     }
     catch( final Exception e )
     {
@@ -230,7 +230,7 @@ public class MeasureMapWidget extends AbstractWidget
   {
     try
     {
-      final MapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 
@@ -245,7 +245,7 @@ public class MeasureMapWidget extends AbstractWidget
 
       updateTooltip( currentPoint );
 
-      mapPanel.repaint();
+      mapPanel.repaintMap();
     }
     catch( final Exception e )
     {
@@ -260,7 +260,7 @@ public class MeasureMapWidget extends AbstractWidget
   public void doubleClickedLeft( final Point p )
   {
     reset();
-    getMapPanel().repaint();
+    getMapPanel().repaintMap();
   }
 
   private void reset( )

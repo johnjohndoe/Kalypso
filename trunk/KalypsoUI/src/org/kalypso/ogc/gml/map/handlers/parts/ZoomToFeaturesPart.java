@@ -44,7 +44,7 @@ import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -71,7 +71,7 @@ public class ZoomToFeaturesPart
    */
   private final int m_percent;
 
-  private final MapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   /**
    * The constructor.
@@ -84,14 +84,14 @@ public class ZoomToFeaturesPart
    *            This value specifies the amount of the new extent used to increase it for creating a border around the
    *            new extent.
    */
-  public ZoomToFeaturesPart( final MapPanel mapPanel, final List<Feature> features, final int percent )
+  public ZoomToFeaturesPart( final IMapPanel mapPanel, final List<Feature> features, final int percent )
   {
     m_mapPanel = mapPanel;
     m_features = features.toArray( new Feature[] {} );
     m_percent = percent;
   }
 
-  public ZoomToFeaturesPart( final MapPanel mapPanel, final Feature[] features, final int percent )
+  public ZoomToFeaturesPart( final IMapPanel mapPanel, final Feature[] features, final int percent )
   {
     m_mapPanel = mapPanel;
     m_features = features;
