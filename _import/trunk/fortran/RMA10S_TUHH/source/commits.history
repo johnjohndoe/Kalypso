@@ -439,6 +439,27 @@ Version 1.1.0 (laufende Änderungen)
       
 --- Nico Schrage, 05.09.2008 (1.1.0alpha3)
 
-50.)  Delete output to unit 198 in front_mkl3.for
+050.) Delete output to unit 198 in front_mkl3.for
 
 --- Nico Schrage, 09.09.2008 (1.1.0alpha3)
+
+051.) Allocatable beahaviour of array for linear matrix storage for pardiso solver. Besides: Use the same variables for memory allocation either for Front-
+      solver or pardiso-Solver.
+052.) Introduce QCFF line for discharges with more than 8 and up to 16 digits.
+
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+053.) Do not scale improvements after iteration with the effective porosity (affected routine: update.sub)
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+
+--- Nico Schrage, 22.09.2008 (1.1.0alpha6)
+
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+054.) Put TODO to the line of 053.), because this seems to be very sensitive and has to be reworked carefully
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+055.) Catch division by zero in REWET, when dealing with HLOS
+056.) Do not allow mathematical lambda-values (i.e. values greater than 1000 are reduced to this)
+057.) nscrin is a scratch file and not really necessary, so delete it. Has still to be finished
+058.) Revert to old implementation regarding ext... in coef25nt
+059.) Catch exception, in RDKALYPSO, if middle coordinate shall be calculated for a none active element (imat == 0)
+
+--- Nico Schrage, 29.09.2008 (1.1.0alpha6)

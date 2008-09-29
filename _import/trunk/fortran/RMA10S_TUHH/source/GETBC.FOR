@@ -44,7 +44,7 @@ cipk apr96 define save parameter
 cipk apr96 keep track of data for end of time step
       if(iyend+idye+hrend .eq. 0) then
         isvs=1
-        rewind nscrin
+        !rewind nscrin
       elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
         if(abs(tet-hrend) .lt. 0.001) then
           isvs=1
@@ -86,11 +86,11 @@ CIPK SEP04 CREATE ERROR FILE
   198 CONTINUE
 cipk apr96 end changes
       IF(ID(1:2) .NE. 'DT') THEN
-          WRITE(*,6999) ID(1:8)
+        WRITE(*,6999) ID(1:8)
 CIPK SEP04 CREATE ERROR FILE
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,6999) ID(1:8)
+        CLOSE(75)
+        OPEN(75,FILE='ERROR.OUT')
+        WRITE(75,6999) ID(1:8)
         STOP 'LOOKING FOR DT'
       ENDIF
 cipk apr96 add ending time for time step
@@ -100,7 +100,7 @@ cipk mar98 remove iwind
         write(lout,6156) delt,iyend,idye,hrend
       endif
       if(isvs .eq. 1) then
-        rewind nscrin
+!        rewind nscrin
         write(nscrin,7000) id,dlin
       endif
 cc      TTT=TET+DELT

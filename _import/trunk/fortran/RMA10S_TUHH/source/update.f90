@@ -1,4 +1,4 @@
-!     Last change:  MD   12 Aug 2008    4:41 pm
+!     Last change:  WP   29 Sep 2008   12:48 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -343,6 +343,7 @@ UpdateDOFs: DO KK = 1, NDFM
           H1 = VEL (3, J)
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
 
+          !TODO
           !nis,comment: efpor is updated for every node by usage of amf.subroutine
           !EX = EX * EFPOR
         ENDIF

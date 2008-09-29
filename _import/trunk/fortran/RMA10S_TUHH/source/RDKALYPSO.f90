@@ -1182,7 +1182,8 @@ write ( * ,  107)
 
 
 ! CALCULATION OF CENTERS OF ELEMENTS  ----------------------------------------------------------------
-do i = 1, ne
+GetMiddleCoord: do i = 1, ne
+  if (imat (i) == 0) cycle getMiddleCoord
   sumx  = 0.0
   sumy  = 0.0
   !loop over all nodes, including midside nodes of an all elements
@@ -1194,7 +1195,7 @@ do i = 1, ne
   !averaging of the values
   mcord(i,1) = sumx/ncorn(i)
   mcord(i,2) = sumy/ncorn(i)
-END do
+END do GetMiddleCoord
 
 
 ! NEIGHBOURHOOD RELATIONS OF NODES -------------------------------------------------------------------

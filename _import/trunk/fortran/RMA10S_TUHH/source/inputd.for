@@ -43,7 +43,7 @@ cipk apr96 define save parameter
 cipk apr96 keep track of data for end of time step
       if(iyend+idye+hrend .eq. 0) then
         isvs=1
-        rewind nscrin
+!        rewind nscrin
       elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
 cipk mar98        if(abs(tet-hrend) .lt. 0.001) then
         if(tet .gt. hrend-0.001) then
@@ -113,7 +113,7 @@ CIPK MAR01  TEST FOR ELEVATION AND SCALE TIME STEP
         write(lout,6156) delt,iyend,idye,hrend
       endif
       if(isvs .eq. 1) then
-        rewind nscrin
+!        rewind nscrin
         write(nscrin,7000) id,dlin
       endif
 cipk sep96 add altm

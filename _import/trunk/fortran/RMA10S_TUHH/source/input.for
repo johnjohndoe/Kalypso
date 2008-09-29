@@ -124,7 +124,7 @@ CIPK APR96 ADD DEFINITIONS
       idye=0
       hrend=0
       nscrin=18
-      open(nscrin,status='scratch',form='formatted')
+!      open(nscrin,status='scratch',form='formatted')
 CIPK APR96 END ADDITIONS
       LE=MAXE
       LP=MAXP

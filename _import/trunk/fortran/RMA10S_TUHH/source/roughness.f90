@@ -107,6 +107,11 @@ endif
 
 lambda = lambdasand + lambdawald + lambdabedform
 
+!nis, prohibit mathematical lambda values
+if (lambda > 1000.0) then
+  lambda = min (1000.0, lambda)
+endif
+
 END SUBROUTINE darcy
 
 
@@ -179,7 +184,7 @@ iteration_lambda: do
 
   if ( ABS((lambda/lalt)-1.0) .LE. 0.0001 ) EXIT iteration_lambda
   IF (i .gt. 30) then
-    ! no convergence after 20 iterations
+    ! no convergence after 30 iterations
     !WRITE (14,1000) nn, lambda, lalt, h, vecq, re, dhy, ks
     !stop
     lambda = 0.05

@@ -115,7 +115,15 @@ C-
               else
 c  207         HF=1./(VEL(3,KK)-DSET)*ALOG(VEL(3,KK)/DSET)
                 HF = 1./(VEL(3,KK)-DSET)*LOG(VEL(3,KK)/DSET)
-                HLOS=HF*0.04*ELD/CHEZ(N)**2
+                !nis,sep08: catch division by zero, if chez is not set; actually this shouldn't happen,
+                !           if applied in normal way, but because RMA10Kalypso is using Darcy-Weisbach
+                !           roughnes lambda, HLOS is not covered yet.
+                if (CHEZ(N) /= 0.0) then
+                  HLOS=HF*0.04*ELD/CHEZ(N)**2
+                else
+                  HLOS = 0.0
+                endif
+                
               ENDIF
 
 

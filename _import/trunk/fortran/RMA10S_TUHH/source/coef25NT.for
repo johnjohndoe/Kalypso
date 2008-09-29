@@ -228,7 +228,8 @@ cipk nov98 adjust for top friction
 CIPK MAR0 setup switch that says salinity is active
       IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8
      +                       .OR.  ITEQV(MAXN) .EQ. 9) THEN
-        ISLP=1  !MD: for Sediment and Salinity
+        !MD: for Sediment and Salinity
+        ISLP=1
       ELSE
         ISLP=0
       ENDIF
@@ -270,7 +271,8 @@ cipk jan97          IF(IEDSW .EQ. 4)
           CX=COS(THNN)
           SA=SIN(THNN)
         ENDIF
-      ELSE  !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
+      !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
+      ELSE
         IF(IDIFSW .EQ. 9  .OR. IDIFSW .EQ. 1) THEN
           CX=COS(THNN)
           SA=SIN(THNN)
@@ -786,18 +788,21 @@ c      s=s/5.
 CIPK NOV97  275 CONTINUE
 
 CIPK DEC05
+!nis,sep08: Revert to original implementation;
+!TODO @MD: Is there anything to change?
 !MD   EXTLDEL = FLUX/AREA; Wert kommt aus LOAD
 !--------------------------------------------
 !MD Korrektur!!
-      DO M=1,NCN
-        MR=NOP(NN,M)
-        EXTL=EXTL+EXTLDEL(MR)*XN(M)
-      ENDDO
-!MDMD: EXTL=EXTL+EXTLDEL(NN)
-
+!      DO M=1,NCN
+!        MR=NOP(NN,M)
+        EXTL=EXTL+EXTLDEL(NN) !*XN(M)
+!      ENDDO
+!      EXTL=EXTL+EXTLDEL(NN)
+!
 !MDMD: testtest:
 !MDMD: EXTL=0.0
 !MDMD: testtest:
+!-
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
       IF(H+AZER .LT. ABED) THEN
@@ -847,7 +852,8 @@ CIPK AUG95 GET RATES
         DELTT=DELT
         HS=H
         CALL MKTEMP(SALT,HS,0.,SRCSNK,GRATE,DELTT,NR,NETYP(NN))
-      ELSE  !MD (ICK=6)
+      !MD (ICK=6)
+      ELSE
 C
 C     Set up sand transport variables (ICK=6)
 C
