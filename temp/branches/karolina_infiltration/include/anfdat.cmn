@@ -1,9 +1,0 @@
-!* * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK FUER DATEN DER     *
-!*              ANFANGSWERTE       *
-!* * * * * * * * * * * * * * * * * *
-!*
-!*
-      INTEGER NANF(IDIMANF),NANFSTD(IDIMANF),IANFKZ(IDIMANF),NANZANF1
-
-      COMMON /ANFDATC/ NANF,NANFSTD,IANFKZ,NANZANF1

@@ -1,8 +1,0 @@
-Änderung Claudia Brüning (CB) Datum: 220502 in rhb2.cmn: 
-Die Anzahl der möglichen Speicher wurde von 5 auf 25 erhöht
-
-aus parameter (jmaxcon2=5) wird parameter (jmaxcon2=25)
-aus 
-integer nresj(jmaxcon2,2)      real    xresj(jmaxcon2,2)
-wird
-integer nresj(jmaxcon2,4)      real    xresj(jmaxcon2,4)

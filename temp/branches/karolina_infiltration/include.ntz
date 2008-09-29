@@ -1,3 +1,0 @@
-      include 'include/str.cmn'
-      include 'include/knt.cmn'
-      include 'include/netz.cmn'

@@ -1,8 +1,0 @@
-QUITONERROR
-
-FILES=*.f90
-COMPILE=@lf95 -c -nap -nchk -ncover -g -o1 -npca -trace -nsav -stchk -nw %fi
-
-LINK=@lf95 @%rf -g -exe %ex
-TARGET=kalypso_debug.exe
-

@@ -1,8 +1,0 @@
-!* * * * * * * * * * * * * * * * * * * *
-!*  COMMONBLOCK DER SUBROUTINE GEBIET  *
-!* * * * * * * * * * * * * * * * * * * *
-!*
-!*  Variablenerlaeuterung siehe NAMODELL.DOC
-!*
-      REAL QA(IDIM),QAVS(IDIM),QAIFL(IDIM),QTGW(IDIMTGW)
-      COMMON /GEBC/ QA,QAVS,QAIFL,QTGW
