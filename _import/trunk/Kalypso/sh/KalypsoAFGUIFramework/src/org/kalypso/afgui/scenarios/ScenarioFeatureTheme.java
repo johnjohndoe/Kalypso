@@ -61,6 +61,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
@@ -78,7 +79,6 @@ import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -92,7 +92,6 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 
 /**
  * @author kurzbach
- * 
  */
 public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, IKalypsoUserStyleListener
 {

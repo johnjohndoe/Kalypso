@@ -34,16 +34,16 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.IPoolListener;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.KeyInfo;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -290,9 +290,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * TODO: probably that does not belong here, move to ScenarioHelper instead?
-   * 
-   * This method will try to find a model file in this scenario and its parent scenarios. Needs refactoring!
+   * TODO: probably that does not belong here, move to ScenarioHelper instead? This method will try to find a model file
+   * in this scenario and its parent scenarios. Needs refactoring!
    */
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
@@ -336,7 +335,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * Resets the pool-key for the given folder.
    * 
    * @param szenarioFolder
-   *            If <code>null</code>, just releases the existing key.
+   *          If <code>null</code>, just releases the existing key.
    */
   /* protected */void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
   {
@@ -387,13 +386,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#getModel(java.lang.Class)
-   * 
-   * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
-   * provider.
-   * <p>
-   * This method blocks until the gml is loaded, which may take some time!
-   * </p>.
+   * @see de.renew.workflow.connector.cases.ICaseDataProvider#getModel(java.lang.Class) Returns the feature wrapper
+   *      corresponding to the given key. The class must be one of the known classes by this data provider.
+   *      <p>
+   *      This method blocks until the gml is loaded, which may take some time!
+   *      </p>
+   *      .
    */
   @SuppressWarnings("unchecked")
   public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
