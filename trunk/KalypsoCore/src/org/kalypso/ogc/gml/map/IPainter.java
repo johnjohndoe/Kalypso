@@ -38,19 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.utilities.tooltip;
+package org.kalypso.ogc.gml.map;
 
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypsodeegree.model.feature.Feature;
+import java.awt.Graphics2D;
 
 /**
- * TODO: please comment
+ * Implementors of this class do paint onto a awt-graphics object.
  * 
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IToolTipComperator
+public interface IPainter
 {
-  Object cleanUpContent( Object data );
+  /**
+   * Paint it. The clip of the given {@link Graphics2D} object should be set to the current bounding box.
+   */
+  public void paint( final Graphics2D g );
 
-  Feature[] getFeatures( IKalypsoTheme[] allThemes );
+  /** Dispose this painter. Release any quired resources. */
+  public void dispose( );
 }

@@ -50,11 +50,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 

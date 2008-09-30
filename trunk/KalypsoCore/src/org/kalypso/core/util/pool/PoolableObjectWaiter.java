@@ -1,4 +1,4 @@
-package org.kalypso.util.pool;
+package org.kalypso.core.util.pool;
 
 import java.util.logging.Logger;
 

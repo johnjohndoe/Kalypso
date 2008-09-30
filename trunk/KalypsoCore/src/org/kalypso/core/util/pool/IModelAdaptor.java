@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.pool;
+package org.kalypso.core.util.pool;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;

@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.i18n.Messages;
 

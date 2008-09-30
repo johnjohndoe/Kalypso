@@ -67,6 +67,12 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Wasserstand */
   public final static String TYPE_WATERLEVEL = "W"; //$NON-NLS-1$
 
+  /** Wasserstand gauge in cm */
+  public final static String TYPE_WATERLEVEL_GAUGE_CM = "W_GAUGE_CM"; //$NON-NLS-1$
+
+  /** Wasserstand gauge in m */
+  public final static String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
+
   /** Normal Null */
   public final static String TYPE_NORMNULL = "NN"; //$NON-NLS-1$
 
