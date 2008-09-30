@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.map.listeners;
 import java.awt.Graphics;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IMapPanelPaintListener
 {

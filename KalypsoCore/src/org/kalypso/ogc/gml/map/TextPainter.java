@@ -38,19 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.utilities.tooltip;
+package org.kalypso.ogc.gml.map;
 
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypsodeegree.model.feature.Feature;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
- * TODO: please comment
+ * Paints a centered text.
  * 
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IToolTipComperator
+public class TextPainter implements IPainter
 {
-  Object cleanUpContent( Object data );
+  private final String m_text;
 
-  Feature[] getFeatures( IKalypsoTheme[] allThemes );
+  private final int m_width;
+
+  private final int m_height;
+
+  public TextPainter( final String text, final int width, final int height )
+  {
+    m_text = text;
+    m_width = width;
+    m_height = height;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.IPainter#paint(java.awt.Graphics2D)
+   */
+  public void paint( final Graphics2D g )
+  {
+    final int stringWidth = g.getFontMetrics().stringWidth( m_text );
+
+    g.setColor( Color.white );
+    g.fillRect( 0, 0, m_width, m_height );
+    g.setColor( Color.black );
+
+    g.drawString( m_text, (m_width - stringWidth) / 2, m_height / 2 );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.IPainter#dispose()
+   */
+  public void dispose( )
+  {
+    // nothing to dispose
+  }
 }

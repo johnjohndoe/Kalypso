@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.util.pool;
+package org.kalypso.core.util.pool;
 
 import java.util.Collection;
 import java.util.Collections;
