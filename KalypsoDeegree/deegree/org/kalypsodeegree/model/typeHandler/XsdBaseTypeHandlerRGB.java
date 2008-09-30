@@ -41,7 +41,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerRGB extends XsdBaseTypeHandler<RGB>
 {

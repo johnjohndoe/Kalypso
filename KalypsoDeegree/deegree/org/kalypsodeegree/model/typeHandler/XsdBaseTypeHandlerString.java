@@ -36,7 +36,7 @@
 package org.kalypsodeegree.model.typeHandler;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
 {

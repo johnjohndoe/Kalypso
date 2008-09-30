@@ -632,10 +632,10 @@ public class JTSUtilities
 
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
 
-      - ((a.x - b.x) * (b.y - a.y)//
-          + (b.x - c.x) * (b.y - c.y)//
+          - ((a.x - b.x) * (b.y - a.y)//
+              + (b.x - c.x) * (b.y - c.y)//
           + (a.x - c.x) * (c.y - a.y)//
-      ) / 2d;
+          ) / 2d;
     }
 
     return area;
@@ -975,7 +975,6 @@ public class JTSUtilities
     return factors;
   }
 
-
   /**
    * Calculates the part (as fraction) of one polygon covering another.
    * 
@@ -1003,4 +1002,87 @@ public class JTSUtilities
     return subArea / totalArea;
   }
 
+  public static Polygon cleanPolygonInteriorRings( Polygon poly )
+  {
+    GeometryFactory factory = new GeometryFactory();
+
+    List<LinearRing> myInnerRings = new ArrayList<LinearRing>();
+    final int rings = poly.getNumInteriorRing();
+
+    for( int i = 0; i < rings; i++ )
+    {
+      LineString lineString = poly.getInteriorRingN( i );
+      Coordinate[] coordinates = lineString.getCoordinates();
+      LinearRing ring = factory.createLinearRing( coordinates );
+
+      Polygon innerPolygon = factory.createPolygon( ring, null );
+      double area = innerPolygon.getArea();
+      if( area > 0.1 )
+      {
+        myInnerRings.add( ring );
+      }
+    }
+
+    if( myInnerRings.size() != rings )
+    {
+      LineString outer = poly.getExteriorRing();
+      Coordinate[] outerCoordinates = outer.getCoordinates();
+      LinearRing outerRing = factory.createLinearRing( outerCoordinates );
+
+      poly = factory.createPolygon( outerRing, myInnerRings.toArray( new LinearRing[] {} ) );
+    }
+
+    return poly;
+  }
+
+  public static Polygon[] cleanPolygonExteriorRing( Polygon poly )
+  {
+    throw new NotImplementedException();
+
+// List<Polygon> myPolygons = new ArrayList<Polygon>();
+// List<Coordinate> uniqueCoordinates = new ArrayList<Coordinate>();
+//
+// LineString ring = poly.getExteriorRing();
+// Coordinate[] coordinates = ring.getCoordinates();
+//
+// // idea: fill uniqueCoordinates and look if coordinate from coordinates exists in unique
+// for( int i = 0; i < coordinates.length - 1; i++ )
+// {
+// Coordinate coordinate = coordinates[i];
+//
+// final int listIndex = hasCoordinate( uniqueCoordinates.toArray( new Coordinate[] {} ), coordinate );
+//
+// if( listIndex >= 0 )
+// {
+// // TODO create child polygons from poly and remove points of child polygon from list
+//
+// // Math.abs(index -i) > 1?
+// if( Math.abs( listIndex - i ) == 1 )
+// continue;
+// else
+// {
+// List<Coordinate> subCoordinates = new ArrayList<Coordinate>();
+// Coordinate[] unique = uniqueCoordinates.toArray( new Coordinate[] {} );
+//
+// for( int sub = listIndex; sub < unique.length; sub++ )
+// {
+// subCoordinates.add( unique[sub] );
+//
+// // @hack "shift-remove"
+// uniqueCoordinates.remove( listIndex );
+// }
+// subCoordinates.add( coordinate );
+//
+// int asdfasfasdfd = 0;
+// int asdfasfd = 0;
+// }
+//
+// }
+// else
+// uniqueCoordinates.add( coordinate );
+//
+// }
+//
+// return new Polygon[] { poly };
+  }
 }

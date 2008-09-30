@@ -39,7 +39,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
 {

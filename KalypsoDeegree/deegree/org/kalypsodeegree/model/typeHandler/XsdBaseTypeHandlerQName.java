@@ -39,7 +39,7 @@ import javax.xml.namespace.QName;
 
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerQName extends XsdBaseTypeHandler<QName>
 {

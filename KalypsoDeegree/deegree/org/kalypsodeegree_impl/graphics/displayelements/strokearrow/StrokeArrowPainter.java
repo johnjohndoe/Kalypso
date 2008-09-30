@@ -46,7 +46,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowH
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class StrokeArrowPainter implements IAdditionalStrokePainter
 {

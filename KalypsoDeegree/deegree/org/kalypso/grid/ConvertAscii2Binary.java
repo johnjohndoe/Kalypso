@@ -78,7 +78,7 @@ public class ConvertAscii2Binary
 
   public ConvertAscii2Binary( final URL asciiFileURL, final File ascbinFile, final int scale, final String sourceCRS )
   {
-    Assert.isTrue( scale >= 0, "Scale must not be negative" );
+    Assert.isTrue( scale >= 0, "Scale must not be negative" ); //$NON-NLS-1$
 
     m_asciiFileURL = asciiFileURL;
     m_ascbinFile = ascbinFile;
@@ -88,9 +88,9 @@ public class ConvertAscii2Binary
 
   public void doConvert( final IProgressMonitor monitor )
   {
-    KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" );
+    KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere Raster in binäres Format", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("ConvertAscii2Binary.4"), 100 ); //$NON-NLS-1$
 
     /* Convert to binary file */
     InputStream bis = null;
@@ -145,12 +145,12 @@ public class ConvertAscii2Binary
 
       ProgressUtilities.worked( monitor, 1 );
 
-      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   done.\n" );
+      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   done.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( Exception e )
     {
       e.printStackTrace();
-      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" );
+      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
