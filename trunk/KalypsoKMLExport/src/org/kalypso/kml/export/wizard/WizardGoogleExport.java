@@ -54,7 +54,7 @@ import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.ui.views.map.MapView;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
 {

@@ -12,7 +12,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class GeoUtils
 {

@@ -7,7 +7,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IFeatureGeometryFilter
 {

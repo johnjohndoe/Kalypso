@@ -11,4 +11,3 @@ Export-Package: org.kalypso.kml.export.constants,
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
-
