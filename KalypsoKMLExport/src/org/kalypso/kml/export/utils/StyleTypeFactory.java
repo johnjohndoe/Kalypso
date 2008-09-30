@@ -32,7 +32,7 @@ import com.google.earth.kml.StyleSelectorType;
 import com.google.earth.kml.StyleType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class StyleTypeFactory
 {

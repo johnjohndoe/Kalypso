@@ -14,7 +14,7 @@ import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PointType;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConverterPoint
 {

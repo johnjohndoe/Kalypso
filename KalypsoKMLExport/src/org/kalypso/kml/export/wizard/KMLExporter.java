@@ -52,7 +52,7 @@ import com.google.earth.kml.FolderType;
 import com.google.earth.kml.ObjectFactory;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KMLExporter implements ICoreRunnableWithProgress
 {
