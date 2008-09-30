@@ -847,7 +847,7 @@ CIPK MAR01
       !reference friction slope
       ALLOCATE (qgef(maxp))
       !flow kilometer of node
-      ALLOCATE (kmx(0:maxp))
+      ALLOCATE (kmx(1:maxp))
 
       !time dependent values
       ALLOCATE (hht(1:maxp), vvt(1:maxp))
@@ -882,8 +882,6 @@ CIPK MAR01
         enddo
       enddo
 
-      !nis,aug08,quickfix
-      kmx(0) = 0.0d0
       do i = 1, MaxP
         polySplitsA (i) = 0
         polySplitsQ (i) = 0

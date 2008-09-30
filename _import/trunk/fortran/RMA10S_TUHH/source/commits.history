@@ -463,3 +463,8 @@ Ziel-Version 1.1.0 (laufende Änderungen)
 059.) Catch exception, in RDKALYPSO, if middle coordinate shall be calculated for a none active element (imat == 0)
 
 --- Nico Schrage, 29.09.2008 (1.1.0alpha6)
+
+060.) kmx of node 0 was used, for what reason ever?! It caused big problems and was therefore removed; allocation of kmx now
+      only takes place for 1:maxp (affects initl.sub)
+
+--- Nico Schrage, 30.09.2008 (1.1.0alpha6)
