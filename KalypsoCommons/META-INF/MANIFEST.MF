@@ -27,11 +27,13 @@ Bundle-ClassPath: .,
  lib/jaxb_2_1_7/jaxb-impl.jar,
  lib/jaxb_2_1_7/jaxb-xjc.jar,
  lib/jaxb_2_1_7/jaxb1-impl.jar,
- lib/jaxb_2_1_7/jsr173_1.0_api.jar
+ lib/jaxb_2_1_7/jsr173_1.0_api.jar,
+ lib/opencsv/opencsv-1.8.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: com.sun.xml.bind.marshaller,
+Export-Package: au.com.bytecode.opencsv,
+ com.sun.xml.bind.marshaller,
  com.thoughtworks.xstream,
  com.thoughtworks.xstream.alias,
  com.thoughtworks.xstream.annotations,
@@ -180,7 +182,6 @@ Export-Package: com.sun.xml.bind.marshaller,
  org.kalypso.commons.io,
  org.kalypso.commons.java.io,
  org.kalypso.commons.java.lang,
- org.kalypso.commons.java.net,
  org.kalypso.commons.java.swing.jtable,
  org.kalypso.commons.java.util,
  org.kalypso.commons.java.util.zip,
