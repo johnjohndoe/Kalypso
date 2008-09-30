@@ -214,4 +214,12 @@ public class AddThemeCommand implements IThemeCommand
     m_mapModell = model;
     return init();
   }
+
+  /**
+   * @see org.kalypso.ui.action.IThemeCommand#toStyledLayerType()
+   */
+  public StyledLayerType toStyledLayerType( )
+  {
+    return init();
+  }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-impl.jar" sourcepath="lib/jaxb_2_1_7/jaxb-impl.src.zip"/>
