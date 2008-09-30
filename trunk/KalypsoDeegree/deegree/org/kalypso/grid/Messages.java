@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,42 +36,36 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree.model.feature;
+package org.kalypso.grid;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * Intermediate Class for Feature-API refactorings. Used to declare some old, now obsolete methods of Deegree1 Feature
- * deprecated. Reason: Get nearer to the Deegree2 Feature API
- * 
  * @author Dirk Kuch
+ *
  */
-public interface KalypsoBaseFeature extends BaseFeature
+public class Messages
 {
-  // TODO: put deprecated comments into javadoc (@deprecated)
+  private static final String BUNDLE_NAME = "org.kalypso.grid.messages"; //$NON-NLS-1$
 
-  @Deprecated
-  /*
-   * use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
-   */
-  GM_Object getDefaultGeometryProperty( );
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  @Deprecated
-  // use {FeatureDeegreeTwo}.getBoundedBy() instead
-  GM_Envelope getEnvelope( );
+  private Messages( )
+  {
+  }
 
-  @Deprecated
-  // use {FeatureDeegreeTwo}.getGeometryPropertyValues instead
-  GM_Object[] getGeometryProperties( );
-
-  @Deprecated
-  // use @link{FeatureDeegreeTwo}.getOwner() instead
-  public Feature getParent( );
-
-  @Deprecated
-  // use FeatureDeegreeTwo.setEnvelopesUpdated() instead
-  public void invalidEnvelope( );
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+  }
 }

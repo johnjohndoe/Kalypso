@@ -39,7 +39,7 @@ import java.math.BigInteger;
 
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerBigInteger extends XsdBaseTypeHandler<BigInteger>
 {

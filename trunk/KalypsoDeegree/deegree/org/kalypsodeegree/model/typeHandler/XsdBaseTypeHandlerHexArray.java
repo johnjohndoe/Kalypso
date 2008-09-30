@@ -39,7 +39,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.impl.util.HexBin;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class XsdBaseTypeHandlerHexArray extends XsdBaseTypeHandler<Byte[]>
 {
