@@ -53,12 +53,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -67,9 +67,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * Introducing a second virtual property on the 2d-elements is no solution, as then the 2d-element geometry is always
  * calculated twice, such having heavy impact on the overall performance!
  * 
- * 
  * @author Dejan Antanaskovic
- * 
  */
 public class RoughnessStyleUpdateService extends Job
 {

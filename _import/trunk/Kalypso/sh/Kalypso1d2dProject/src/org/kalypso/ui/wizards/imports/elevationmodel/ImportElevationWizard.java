@@ -64,6 +64,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.core.util.pool.IPoolListener;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -72,9 +75,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationMode
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
-import org.kalypso.util.pool.IPoolListener;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -112,14 +112,16 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   /**
    * The required selection structure is:
    * <ul>
-   * <li/>Length=2 <li/>First element an instance of {@link ITerrainModel} <li/>Second element an instance of
-   * {@link IFolder} <li/>third element an instance of {@link CommandableWorkspace}
+   * <li/>Length=2
+   * <li/>First element an instance of {@link ITerrainModel}
+   * <li/>Second element an instance of {@link IFolder}
+   * <li/>third element an instance of {@link CommandableWorkspace}
    * </ul>
    * 
    * @param workbench
-   *            the current workbench
+   *          the current workbench
    * @param selection
-   *            the current object selection
+   *          the current object selection
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {

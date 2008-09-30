@@ -106,6 +106,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
@@ -133,7 +134,6 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -756,31 +756,27 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   }
 
-  protected void handleHydrographExport( @SuppressWarnings("unused") final
-      Event event )
+  protected void handleHydrographExport( @SuppressWarnings("unused") final Event event )
   {
     // TODO Auto-generated method stub
 
   }
 
-  protected void handleHydrographSelected( @SuppressWarnings("unused") final
-      Event event )
+  protected void handleHydrographSelected( @SuppressWarnings("unused") final Event event )
   {
     // set widget
     final EditHydrographWidget widget = new EditHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this );
     setDelegate( widget );
   }
 
-  protected void handleHydrographRemoved( @SuppressWarnings("unused") final
-      Event event )
+  protected void handleHydrographRemoved( @SuppressWarnings("unused") final Event event )
   {
     // set widget
     final RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen", false, IHydrograph.QNAME_PROP_LOCATION, m_theme );
     setDelegate( widget );
   }
 
-  protected void handleHydrographAdded( @SuppressWarnings("unused") final
-      Event event )
+  protected void handleHydrographAdded( @SuppressWarnings("unused") final Event event )
   {
     // set widget
     final CreateHydrographWidget widget = new CreateHydrographWidget( "Ganglinienpunkte", "Punkte für Ganglinien hinzufügen", IHydrograph.QNAME, m_theme );
