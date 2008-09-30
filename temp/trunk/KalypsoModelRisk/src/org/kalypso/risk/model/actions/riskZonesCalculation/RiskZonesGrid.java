@@ -64,6 +64,7 @@ import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -176,7 +177,11 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         return Double.NaN;
 
       final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
-      final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+
+      String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+      if( coordinateSystem == null )
+        coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
       final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
       /* Transform query position into the cs of the polygons. */
@@ -205,7 +210,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
 
           // TODO: maybe in addition we should provide the real grid values (not the ordinal numbers), too
-
           return riskZoneValue;
         }
       }

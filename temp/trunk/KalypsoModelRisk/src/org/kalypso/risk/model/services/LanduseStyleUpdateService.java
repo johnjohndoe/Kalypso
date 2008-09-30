@@ -56,6 +56,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -65,8 +67,6 @@ import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -86,7 +86,7 @@ public class LanduseStyleUpdateService extends Job
 
   public LanduseStyleUpdateService( final IFile file )
   {
-    super( Messages.getString("LanduseStyleUpdateService.0") ); //$NON-NLS-1$
+    super( Messages.getString( "LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
