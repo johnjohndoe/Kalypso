@@ -111,8 +111,12 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   public FeatureSelectionProfileProvider( final ISelectionProvider provider )
   {
     m_provider = provider;
-    m_provider.addSelectionChangedListener( this );
-    selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
+
+    if( m_provider != null )
+    {
+      m_provider.addSelectionChangedListener( this );
+      selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
+    }
   }
 
   public void dispose( )
