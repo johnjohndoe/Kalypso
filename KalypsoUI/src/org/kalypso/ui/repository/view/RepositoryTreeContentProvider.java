@@ -91,7 +91,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return new Object[0];
     }
@@ -114,7 +114,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return null;
     }
@@ -134,7 +134,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "org.kalypso.ui.repository.view.RepositoryTreeContentProvider.2" ), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
     }

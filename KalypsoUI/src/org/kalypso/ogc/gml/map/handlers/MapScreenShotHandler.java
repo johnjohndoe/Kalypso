@@ -145,7 +145,7 @@ public class MapScreenShotHandler extends AbstractHandler
     }
   }
 
-  private File getTargetImageFile( final File targetDir, final String format ) throws IOException
+  public static File getTargetImageFile( final File targetDir, final String format ) throws IOException
   {
     if( !targetDir.exists() )
       FileUtils.forceMkdir( targetDir );

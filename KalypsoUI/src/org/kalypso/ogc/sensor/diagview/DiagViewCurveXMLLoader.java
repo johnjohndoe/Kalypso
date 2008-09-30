@@ -52,6 +52,9 @@ import java.util.logging.Logger;
 
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -64,9 +67,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
  * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.

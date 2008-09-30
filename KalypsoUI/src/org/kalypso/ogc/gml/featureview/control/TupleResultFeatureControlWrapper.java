@@ -50,7 +50,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class TupleResultFeatureControlWrapper
 {
@@ -78,7 +78,7 @@ public class TupleResultFeatureControlWrapper
 
   public void draw( final Composite composite, final GridData gridData )
   {
-    m_tblControl = m_control.createControl( composite, SWT.NONE | SWT.MULTI | SWT.FULL_SELECTION );
+    m_tblControl = m_control.createControl( composite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_tblControl.setLayoutData( gridData );
   }
 

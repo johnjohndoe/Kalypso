@@ -47,7 +47,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class RemoveRepositoryRunnable implements Runnable
 {

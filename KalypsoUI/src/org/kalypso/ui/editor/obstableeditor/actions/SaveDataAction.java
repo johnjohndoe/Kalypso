@@ -54,6 +54,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -62,7 +63,6 @@ import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
-import org.kalypso.util.pool.ResourcePool;
 
 /**
  * Save data

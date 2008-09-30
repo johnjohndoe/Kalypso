@@ -55,12 +55,12 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.IPoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
  * A kind of view over observations.
