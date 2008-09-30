@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="InformDSSHydraulicV1.0">
+
+	<!-- inputs -->
+	<input id="CALC_CASE_PATH" description="The path to the CalcCase." />
+	<input id="FLOW_NETWORK_PATH" description="The path to the CalcCase." />
+
+
+	<!-- Results and logs -->
+	<output id="CALCULATION_RESULT_POINTS" description="Result of Calculation Case. (calculation points)" />
+	<output id="CALCULATION_RESULT_STRUCTURES" description="Result of Calculation Case. (structure nodes)" />
+
+	<!-- Pi2Sobek -->
+	<output id="LOG_PI2SOBEK" description="Log file of pi2sobek conversion." />
+
+	<!-- calculation -->
+	<output id="LOG_OPENMI_CONTROL" description="Control log file of OpenMI." />
+	<output id="LOG_SOBEK" description="Log file of Sobek Calculation Core." />
+
+	<!-- Sobek2Pi -->
+	<output id="LOG_SOBEK2PI_POINTS" description="Log file of sobek2pi conversion. (calculatation points)" />
+	<output id="LOG_SOBEK2PI_STRUCTURES" description="Log file of sobek2pi conversion. (structure nodes)" />
+</modelspec>

@@ -6,7 +6,7 @@
         <xs:element name="Boundaries">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="boundary" type="fews:BoundaryComplexType" maxOccurs="unbounded">
+				<xs:element name="boundary" type="fews:BoundaryComplexType" minOccurs="0" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>Tabular boundary definition for hydraulic model (e.g. QH relation)</xs:documentation>
 					</xs:annotation>

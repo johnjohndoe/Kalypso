@@ -53,7 +53,7 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.Messages;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -133,7 +133,8 @@ public abstract class AbstractProfil implements IProfil
 
     getResult().addComponent( pointProperty );
   }
-  public void addPointProperty( final IComponent pointProperty, final Object defaultValue)
+
+  public void addPointProperty( final IComponent pointProperty, final Object defaultValue )
   {
     if( pointProperty == null )
       throw new IllegalStateException( Messages.AbstractProfil_2 );
@@ -144,6 +145,7 @@ public abstract class AbstractProfil implements IProfil
 
     getResult().addComponent( pointProperty, defaultValue );
   }
+
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues )
   {
     if( pointProperty == null )
@@ -178,9 +180,10 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
-   *      override this method if you have got the org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your
-   *      m_type
+   * @see 
+   *      org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso
+   *      .observation.result.TupleResult>[]) override this method if you have got the
+   *      org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your m_type
    */
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
@@ -388,8 +391,8 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @return a pointProperty from PointPropertyProvider, see
-   *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
+   * @return a pointProperty from PointPropertyProvider, see {@code
+   *         IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
    *         you must check {@link #hasPointProperty(IComponent)}, if false you must call
    *         {@link #addPointProperty(IComponent)}

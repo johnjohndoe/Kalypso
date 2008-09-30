@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
@@ -53,7 +53,7 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNode
 {
@@ -84,21 +84,14 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public IBoundaryNodeLastfallCondition getLastfallCondition( final ILastfall lastfall ) throws Exception
   {
-    final List< ? > members = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
-    for( final Object object : members )
+    final IBoundaryNodeLastfallCondition[] conditions = getLastfallConditions();
+    for( final IBoundaryNodeLastfallCondition condition : conditions )
     {
-      if( !(object instanceof Feature) )
-        continue;
-
-      final Feature member = (Feature) object;
-
-      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
-      if( fLastfall == null )
-        throw new IllegalStateException( Messages.BoundaryNode_0 );
-
-      // $ANALYSIS-IGNORE
-      if( lastfall.getFeature().equals( fLastfall ) )
-        return new BoundaryNodeLastfallCondition( lastfall, this, member );
+      // TODO check, why features aren't equal during calculation: maybe concurrent versions of GML files are loaded
+      // into the pool?
+      // if( condition.getLastfall().getFeature().equals( lastfall.getFeature() ) )
+      if( condition.getLastfall().getFeature().getId().equals( lastfall.getFeature().getId() ) )
+        return condition;
     }
 
     final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
@@ -121,10 +114,35 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
     final IBranch[] inflowingBranches = getInflowingBranches();
     final IBranch[] outflowingBranches = getOutflowingBranches();
 
-    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
+    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
       return true;
 
     return false;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode#getLastfallConditions()
+   */
+  public IBoundaryNodeLastfallCondition[] getLastfallConditions( ) throws Exception
+  {
+    final List<BoundaryNodeLastfallCondition> conditions = new ArrayList<BoundaryNodeLastfallCondition>();
+
+    final List< ? > members = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
+    for( final Object object : members )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      final Feature member = (Feature) object;
+
+      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
+      if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue
+        // statement
+        continue;
+
+      conditions.add( new BoundaryNodeLastfallCondition( new Lastfall( getModelMember(), fLastfall ), this, member ) );
+    }
+
+    return conditions.toArray( new IBoundaryNodeLastfallCondition[] {} );
+  }
 }

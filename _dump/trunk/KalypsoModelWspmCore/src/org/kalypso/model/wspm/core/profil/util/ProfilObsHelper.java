@@ -90,7 +90,7 @@ public class ProfilObsHelper
    * @deprecated not used
    */
   @Deprecated
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
   {
 

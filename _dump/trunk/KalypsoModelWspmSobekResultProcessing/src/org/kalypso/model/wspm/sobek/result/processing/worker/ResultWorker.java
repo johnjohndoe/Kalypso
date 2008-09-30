@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.sobek.result.processing.worker;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import javax.xml.namespace.QName;
 
 import nl.wldelft.fews.pi.EventComplexType;
 import nl.wldelft.fews.pi.TimeSerieComplexType;
-import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -28,13 +26,10 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.IValuePairMember;
-import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -43,19 +38,14 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 public class ResultWorker
 {
-  private final ResultTimeSeriesHandler m_handler;
+  private final IResultTimeSeries m_handler;
 
-  private final TimeSeriesComplexType m_binding;
+  private final TimeSerieComplexType m_binding;
 
   private double m_max = Double.MIN_VALUE;
 
@@ -63,111 +53,100 @@ public class ResultWorker
 
   private double m_last = Double.NaN;
 
-  /* result table <Waterlevel, Number of Intervalls> */
+  /* result table <Waterlevel, Number of intervals> */
   private final Map<Double, Integer> m_resultTable = new TreeMap<Double, Integer>();
 
   private final CommandableWorkspace m_workspace;
 
-  private final ICrossSectionNode m_node;
+  private final INode m_node;
 
-  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSeriesComplexType binding, final ICrossSectionNode node )
+  private final GregorianCalendar m_start;
+
+  private final GregorianCalendar m_end;
+
+  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, IResultTimeSeries handler, GregorianCalendar start, GregorianCalendar end )
   {
     m_workspace = targetWorkspace;
     m_binding = binding;
     m_node = node;
-    m_handler = new ResultTimeSeriesHandler( targetWorkspace.getRootFeature() );
+    m_handler = handler;
+    m_start = start;
+    m_end = end;
   }
 
-  public void process( ) throws CoreException
+  public void process( IResultWorkerSettings settings ) throws CoreException
   {
     final IObservation<TupleResult> observation = m_handler.getObservation();
 
     /* read out time series binding and fill observation */
-    final List<TimeSerieComplexType> series = m_binding.getSeries();
-    if( series.size() != 1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Parsing / Transformation of TimeSeriesComplexType doesn't support multiple result time series." ) );
-
     final TupleResult result = observation.getResult();
 
-    for( final TimeSerieComplexType ts : series )
+    final List<EventComplexType> events = m_binding.getEvent();
+    for( final EventComplexType event : events )
     {
-      final List<EventComplexType> events = ts.getEvent();
-      for( final EventComplexType event : events )
+      /* data */
+      final XMLGregorianCalendar date = event.getDate();
+      final XMLGregorianCalendar time = event.getTime();
+
+      final GregorianCalendar calendar = new GregorianCalendar();
+      calendar.clear();
+      calendar.set( date.getYear(), date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), time.getSecond() );
+
+      if( calendar.before( m_start ) )
+        continue;
+      if( calendar.after( m_end ) )
+        continue;
+
+      final Double value = event.getValue();
+
+      /* statistic results */
+      determineMinMaxLast( value );
+
+      addResultTableValue( value );
+
+      /* new record */
+      final IRecord record = result.createRecord();
+      record.setValue( 0, new XMLGregorianCalendarImpl( calendar ) );
+      record.setValue( 1, BigDecimal.valueOf( value ) );
+
+      result.add( record );
+    }
+
+    final Object property = m_handler.getProperty( IResultTimeSeries.QN_RESULT_MEMBER );
+    if( property instanceof Feature )
+      ObservationFeatureFactory.toFeature( observation, (Feature) property );
+
+    try
+    {
+      /* intervall of timeseries */
+      final int intervall = ResultHelper.getIntervallAsSeconds( m_binding.getHeader() );
+      final Map<Duration, Double> results = getResultTable( intervall );
+      final Set<Entry<Duration, Double>> entrySet = results.entrySet();
+      for( final Entry<Duration, Double> entry : entrySet )
       {
-        /* data */
-        final XMLGregorianCalendar date = event.getDate();
-        final XMLGregorianCalendar time = event.getTime();
-
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.set( Calendar.DAY_OF_MONTH, date.getDay() );
-        calendar.set( Calendar.MONTH, date.getMonth() );
-        calendar.set( Calendar.YEAR, date.getYear() );
-        calendar.set( Calendar.HOUR_OF_DAY, time.getHour() );
-        calendar.set( Calendar.MINUTE, time.getMinute() );
-        calendar.set( Calendar.SECOND, time.getSecond() );
-
-        final Double value = event.getValue();
-
-        /* statistic results */
-        determineMinMaxLast( value );
-
-        addResultTableValue( value );
-
-        /* new record */
-        final IRecord record = result.createRecord();
-        record.setValue( 0, new XMLGregorianCalendarImpl( calendar ) );
-        record.setValue( 1, BigDecimal.valueOf( value ) );
-
-        result.add( record );
+        addValuePair( entry.getKey(), entry.getValue() );
       }
 
-      final Object property = m_handler.getProperty( IResultTimeSeries.QN_RESULT_MEMBER );
-      if( property instanceof Feature )
-        ObservationFeatureFactory.toFeature( observation, (Feature) property );
+      /* update properties */
+      final Map<QName, Object> properties = new HashMap<QName, Object>();
 
-      try
-      {
-        /* intervall of timeseries */
-        final int intervall = ResultHelper.getIntervallAsSeconds( ts.getHeader() );
-        final Map<Duration, Double> results = getResultTable( intervall );
-        final Set<Entry<Duration, Double>> entrySet = results.entrySet();
-        for( final Entry<Duration, Double> entry : entrySet )
-        {
-          addValuePair( entry.getKey(), entry.getValue() );
-        }
+      properties.put( IResultTimeSeries.QN_UNIQUE_ID, m_node.getId() ); // uniqueId
+      properties.put( IResultTimeSeries.QN_STATION_NAME, m_node.getStationName() ); // station name
+      properties.put( IResultTimeSeries.QN_NAME, m_node.getName() ); // name
+      properties.put( IResultTimeSeries.QN_PARAM_ID, settings.getParameterId() ); // parameter id
+// properties.put( IResultTimeSeries.QN_PARAM_ID, "W" ); // parameter id
 
-        /* update properties */
-        final Map<QName, Object> properties = new HashMap<QName, Object>();
+      properties.put( IResultTimeSeries.QN_UNIT, settings.getUnit() ); // unit
+// properties.put( IResultTimeSeries.QN_UNIT, "m NHN" ); // unit
+      properties.put( IResultTimeSeries.QN_MAX_VALUE, m_max );
+      properties.put( IResultTimeSeries.QN_MIN_VALUE, m_min );
+      properties.put( IResultTimeSeries.QN_LAST_VALUE, m_last );
 
-        properties.put( IResultTimeSeries.QN_UNIQUE_ID, m_node.getId() ); // uniqueId
-        properties.put( IResultTimeSeries.QN_STATION_NAME, m_node.getStationName() ); // station name
-        properties.put( IResultTimeSeries.QN_NAME, m_node.getName() ); // name
-        properties.put( IResultTimeSeries.QN_PARAM_ID, "W" ); // parameter id
-        properties.put( IResultTimeSeries.QN_UNIT, "m hNN" ); // unit
-
-        // distance on branch
-        final IBranch branch = m_node.getLinkToBranch();
-        final GM_Curve curve = branch.getGeometryProperty();
-
-        final GM_Point location = m_node.getLocation();
-
-        final LineString line = (LineString) JTSAdapter.export( curve );
-        final Point point = (Point) JTSAdapter.export( location );
-
-        final Double distance = JTSUtilities.pointDistanceOnLine( line, point );
-        properties.put( IResultTimeSeries.QN_STATION_BRANCH_POSITION, distance ); // distance
-        properties.put( IResultTimeSeries.QN_BRANCH_ID, branch.getId() ); // distance
-
-        properties.put( IResultTimeSeries.QN_MAX_VALUE, m_max );
-        properties.put( IResultTimeSeries.QN_MIN_VALUE, m_min );
-        properties.put( IResultTimeSeries.QN_LAST_VALUE, m_last );
-
-        FeatureUtils.updateProperties( m_workspace, m_handler, properties );
-      }
-      catch( final Exception e )
-      {
-        throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
-      }
+      FeatureUtils.updateProperties( m_workspace, m_handler, properties );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }
   }
 
@@ -223,7 +202,7 @@ public class ResultWorker
   private void addResultTableValue( final Double value )
   {
     // Normalise value to precision .4f
-    Double myValue = Double.valueOf( value * 10000 ).intValue() / 10000d;
+    final Double myValue = Double.valueOf( value * 10000 ).intValue() / 10000d;
 
     Integer integer = m_resultTable.get( myValue );
     if( integer == null )
@@ -239,7 +218,6 @@ public class ResultWorker
     m_min = Math.min( m_min, value );
     m_max = Math.max( m_max, value );
     m_last = value;
-
   }
 
 }

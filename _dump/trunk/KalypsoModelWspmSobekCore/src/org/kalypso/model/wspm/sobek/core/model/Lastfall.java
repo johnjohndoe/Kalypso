@@ -44,26 +44,30 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class Lastfall implements ILastfall
 {
 
-  private final ISobekModelMember m_sobekModelMember;
+  private final IModelMember m_sobekModelMember;
 
   private final Feature m_lastfall;
 
-  public Lastfall( final ISobekModelMember sobekModelMember, final Feature lastfall )
+  public Lastfall( final IModelMember model, final Feature lastfall )
   {
-    m_sobekModelMember = sobekModelMember;
+    Assert.isNotNull( model );
+    Assert.isNotNull( lastfall );
+
+    m_sobekModelMember = model;
     m_lastfall = lastfall;
   }
 
@@ -138,6 +142,15 @@ public class Lastfall implements ILastfall
   }
 
   /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return getFeature().hashCode();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getPreSimulationTime()
    */
   public Integer getPreSimulationTime( )
@@ -160,4 +173,13 @@ public class Lastfall implements ILastfall
   {
     return Integer.valueOf( getFeature().getProperty( QN_SIMULATION_TIMESTEP_MULTIPLIER ).toString() );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getValidatedLastfallDir()
+   */
+  public String getValidatedLastfallDir( )
+  {
+    return FileUtilities.validateName( getFeature().getId().replaceAll( "[a-zA-Z]", "" ), "_" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  }
+
 }

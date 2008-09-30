@@ -41,20 +41,18 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
@@ -77,7 +75,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class Branch implements IBranch
 {
@@ -110,6 +108,9 @@ public class Branch implements IBranch
 
   public Branch( final IModelMember model, final Feature branch )
   {
+    Assert.isNotNull( model );
+    Assert.isNotNull( branch );
+
     m_model = model;
     m_branch = branch;
   }
@@ -182,7 +183,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getGeometryProperty()
    */
-  public GM_Curve getGeometryProperty( )
+  public GM_Curve getCurve( )
   {
     return (GM_Curve) m_branch.getDefaultGeometryProperty();
   }
@@ -249,7 +250,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() );
   }
 
   /**
@@ -257,50 +258,24 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() );
   }
 
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getCrossSectionNodes()
    */
-  public ICrossSectionNode[] getCrossSectionNodes( ) throws CoreException
+  public ICrossSectionNode[] getCrossSectionNodes( )
   {
-    Map<Double, ICrossSectionNode> myNodes;
-    try
+    List<ICrossSectionNode> myNodes = new ArrayList<ICrossSectionNode>();
+
+    INode[] nodes = getNodes();
+    for( INode node : nodes )
     {
-      /* sort nodes by their position on line */
-      final GM_Curve branch = getGeometryProperty();
-      final LineString jtsBranch = (LineString) JTSAdapter.export( branch );
-
-      myNodes = new TreeMap<Double, ICrossSectionNode>();
-      final INode[] nodes = getNodes();
-
-      for( final INode node : nodes )
-      {
-        if( node instanceof ICrossSectionNode )
-        {
-          final ICrossSectionNode csn = (ICrossSectionNode) node;
-          final GM_Point location = csn.getLocation();
-          final Point jtsLocation = (Point) JTSAdapter.export( location );
-
-          final double distance = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLocation );
-          if( distance != Double.NaN )
-            myNodes.put( distance, csn );
-          else
-          {
-            final IStatus status = StatusUtilities.createErrorStatus( String.format( Messages.Branch_0, csn.getId(), getId() ) );
-            throw new CoreException( status );
-          }
-        }
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      final IStatus status = StatusUtilities.createErrorStatus( e.getMessage() );
-      throw new CoreException( status );
+      if( node instanceof ICrossSectionNode )
+        myNodes.add( (ICrossSectionNode) node );
     }
 
-    return myNodes.values().toArray( new ICrossSectionNode[] {} );
+    return myNodes.toArray( new ICrossSectionNode[] {} );
   }
 
   public INode[] getNodes( )
@@ -341,6 +316,44 @@ public class Branch implements IBranch
         if( equals( n.getLinkToBranch() ) )
           myNodes.add( node );
       }
+    }
+
+    /* sort nodes by their branch position */
+    try
+    {
+      final GM_Curve branch = getCurve();
+      final LineString jtsBranch = (LineString) JTSAdapter.export( branch );
+
+      Collections.sort( myNodes, new Comparator<INode>()
+      {
+
+        public int compare( INode n1, INode n2 )
+        {
+          try
+          {
+            GM_Point loc1 = n1.getLocation();
+            GM_Point loc2 = n2.getLocation();
+
+            final Point jtsLoc1 = (Point) JTSAdapter.export( loc1 );
+            final Point jtsLoc2 = (Point) JTSAdapter.export( loc2 );
+
+            final Double distance1 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc1 );
+            final Double distance2 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc2 );
+
+            return distance1.compareTo( distance2 );
+          }
+          catch( GM_Exception e )
+          {
+            e.printStackTrace();
+
+            return 0;
+          }
+        }
+      } );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
     }
 
     return myNodes.toArray( new INode[] {} );

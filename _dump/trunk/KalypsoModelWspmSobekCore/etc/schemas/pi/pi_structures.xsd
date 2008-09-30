@@ -17,7 +17,8 @@
 	<xs:element name="StructureDefinitions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="fews:structureDefinition" maxOccurs="unbounded"/>
+			<!--  bcefix: changed minoccurs to 0 instead of 1 -->
+				<xs:element ref="fews:structureDefinition" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

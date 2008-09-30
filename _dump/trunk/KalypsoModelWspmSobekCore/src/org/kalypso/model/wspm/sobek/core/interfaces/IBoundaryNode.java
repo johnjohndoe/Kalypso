@@ -41,11 +41,11 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IBoundaryNode extends IConnectionNode
 {
@@ -59,8 +59,7 @@ public interface IBoundaryNode extends IConnectionNode
     {
       final String type = (String) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE );
 
-      // $ANALYSIS-IGNORE
-      if( BOUNDARY_TYPE.eW.toString().equals( type ) )
+      if( type == null || BOUNDARY_TYPE.eW.toString().equals( type ) )
         return BOUNDARY_TYPE.eW;
       else if( BOUNDARY_TYPE.eQ.toString().equals( type ) )
         return BOUNDARY_TYPE.eQ;
@@ -112,4 +111,6 @@ public interface IBoundaryNode extends IConnectionNode
   public BOUNDARY_TYPE getBoundaryType( );
 
   public IBoundaryNodeLastfallCondition getLastfallCondition( ILastfall lastfall ) throws Exception;
+
+  public IBoundaryNodeLastfallCondition[] getLastfallConditions( ) throws Exception;
 }

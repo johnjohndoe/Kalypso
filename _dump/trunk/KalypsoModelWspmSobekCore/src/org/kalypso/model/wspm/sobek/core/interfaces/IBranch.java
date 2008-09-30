@@ -40,25 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IBranch
 {
   /**
    * @return sorted list (by their branch position) of cross section nodes
    */
-  public ICrossSectionNode[] getCrossSectionNodes( ) throws CoreException;
+  public ICrossSectionNode[] getCrossSectionNodes( );
 
   public String getDescription( );
 
   public Feature getFeature( );
 
-  public GM_Curve getGeometryProperty( );
+  public GM_Curve getCurve( );
 
   public String getId( );
 

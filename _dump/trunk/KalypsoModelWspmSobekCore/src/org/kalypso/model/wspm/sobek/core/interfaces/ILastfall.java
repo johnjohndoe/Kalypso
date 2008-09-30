@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ILastfall
 {
@@ -78,5 +78,7 @@ public interface ILastfall
   public Integer getSimulationTimeStep( );
 
   public Integer getTimeStepMultiplier( );
+
+  public String getValidatedLastfallDir( );
 
 }

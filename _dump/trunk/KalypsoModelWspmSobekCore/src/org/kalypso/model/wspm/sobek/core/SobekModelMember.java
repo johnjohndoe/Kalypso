@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,11 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
@@ -72,7 +75,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 
 public class SobekModelMember implements ISobekModelMember
@@ -141,7 +144,7 @@ public class SobekModelMember implements ISobekModelMember
     final IBoundaryNode[] allNodes = getBoundaryNodeMembers();
     final List<IBoundaryNode> boundaryCondNodes = new ArrayList<IBoundaryNode>();
     for( final IBoundaryNode node : allNodes )
-      if( !(node.getBoundaryType().equals( BOUNDARY_TYPE.eWQ )) )
+      if( !node.getBoundaryType().equals( BOUNDARY_TYPE.eWQ ) )
         boundaryCondNodes.add( node );
     return boundaryCondNodes.toArray( new IBoundaryNode[] {} );
   }
@@ -287,14 +290,22 @@ public class SobekModelMember implements ISobekModelMember
   /**
    *
    */
-  public void deleteSbkStructs( ) throws Exception
+  public MultiStatus deleteSbkStructs( )
   {
+    final MultiStatus returnStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmSobekCorePlugin.getDefault() ), IStatus.OK, "", null );//$NON-NLS-1$
 
     final ISbkStructure[] nodes = getSbkStructureTypeNodeMembers();
     for( final ISbkStructure node : nodes )
-      node.delete();
-
-    return;
+      try
+      {
+        node.delete();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        returnStatus.add( StatusUtilities.createErrorStatus( String.format( Messages.SobekModelMember_4, node.getName(), node.getId() ) ) );
+      }
+    return returnStatus;
   }
 
   /**
@@ -311,6 +322,5 @@ public class SobekModelMember implements ISobekModelMember
 
     return sbkStructNodes.toArray( new ISbkStructure[] {} );
   }
-
 
 }

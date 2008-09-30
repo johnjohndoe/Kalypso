@@ -1,0 +1,211 @@
+package org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+
+import nl.wldelft.fews.pi.HeaderComplexType;
+import nl.wldelft.fews.pi.TimeSerieComplexType;
+import nl.wldelft.fews.pi.TimeSeriesComplexType;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
+import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.WeirTimeSeriesHandler;
+import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
+import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
+import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+
+public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
+{
+  private final IFolder m_resultFolder;
+
+  private final IEmptyNode m_node;
+
+  private final IWorkspaceCache m_cache;
+
+  private final GregorianCalendar m_start;
+
+  private final GregorianCalendar m_end;
+
+  public WeirNodeResultWrapper( IEmptyNode node, IFolder resultFolder, IWorkspaceCache cache, GregorianCalendar start, GregorianCalendar end )
+  {
+    m_cache = cache;
+    m_start = start;
+    m_end = end;
+    Assert.isTrue( STRUCTURE_TYPE.eWeir.equals( node.getStructureType() ) );
+    m_node = node;
+    m_resultFolder = resultFolder;
+  }
+
+  public void init( ) throws CoreException
+  {
+    getDischarge();
+    getWaterLevelAbove();
+    getWaterLevelBelow();
+  }
+
+  public IResultTimeSeries getWaterLevelBelow( ) throws CoreException
+  {
+    return getTimeSeries( WEIR_NODE_RESULT.eWaterLevelBelow, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "W";
+      }
+
+      public String getUnit( )
+      {
+        return "m NHN";
+      }
+    } );
+  }
+
+  public IResultTimeSeries getWaterLevelAbove( ) throws CoreException
+  {
+    return getTimeSeries( WEIR_NODE_RESULT.eWaterLevelAbove, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "W";
+      }
+
+      public String getUnit( )
+      {
+        return "m NHN";
+      }
+    } );
+  }
+
+  private IResultTimeSeries getTimeSeries( WEIR_NODE_RESULT type, IResultWorkerSettings settings ) throws CoreException
+  {
+    try
+    {
+      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
+      if( cmd != null )
+        return new WeirTimeSeriesHandler( type, cmd.getRootFeature(), m_node );
+
+      /* get cross section node result file */
+      IFile iFile = ResultModelHelper.getWeirNodeResultFile( m_resultFolder, m_node, type ); //$NON-NLS-1$
+
+      boolean empty = false;
+
+      /* gml file doesn't exists - create a new empty gml (workspace) file */
+      if( !iFile.exists() )
+      {
+        final InputStream stream = ResultModelHelper.class.getResourceAsStream( "templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
+        iFile.create( stream, true, new NullProgressMonitor() );
+        stream.close();
+
+        empty = true;
+      }
+
+      /* parse gml workspace */
+      final URL url = iFile.getRawLocationURI().toURL();
+
+      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
+
+      CommandableWorkspace commandable;
+      if( gmlWorkspace instanceof CommandableWorkspace )
+        commandable = (CommandableWorkspace) gmlWorkspace;
+      else
+        commandable = new CommandableWorkspace( gmlWorkspace );
+
+      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, commandable );
+
+      /* fill empty workspace with results */
+      if( empty )
+      {
+        final TimeSerieComplexType binding = getNodeBinding( type );
+        if( binding == null )
+          return null;
+
+        WeirTimeSeriesHandler handler = new WeirTimeSeriesHandler( type, commandable.getRootFeature(), m_node );
+
+        final ResultWorker worker = new ResultWorker( commandable, binding, m_node, handler, m_start, m_end );
+        worker.process( settings );
+
+        // save changes
+        GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), commandable, "UTF-8" ); //$NON-NLS-1$
+      }
+
+      return new WeirTimeSeriesHandler( type, commandable.getRootFeature(), m_node );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
+    }
+  }
+
+  public IResultTimeSeries getDischarge( ) throws CoreException
+  {
+    return getTimeSeries( WEIR_NODE_RESULT.eDischarge, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "Q";
+      }
+
+      public String getUnit( )
+      {
+        return "m³/s";
+      }
+    } );
+  }
+
+  public TimeSerieComplexType getNodeBinding( WEIR_NODE_RESULT type ) throws CoreException
+  {
+    JAXBElement<TimeSeriesComplexType> jaxRoot = m_cache.getPiStructuresElement();
+
+    final String id = String.format( "%s", m_node.getId() );
+
+    TimeSeriesComplexType values = jaxRoot.getValue();
+    List<TimeSerieComplexType> series = values.getSeries();
+    for( TimeSerieComplexType complex : series )
+    {
+      HeaderComplexType header = complex.getHeader();
+      String locationId = header.getLocationId();
+
+      if( locationId.equals( id ) ) //$NON-NLS-1$
+      {
+
+        String parameterId = header.getParameterId();
+        String myParamId;
+        if( WEIR_NODE_RESULT.eDischarge.equals( type ) )
+        {
+          myParamId = "Discharge (m³/s)";//$NON-NLS-1$
+        }
+        else if( WEIR_NODE_RESULT.eWaterLevelAbove.equals( type ) )
+        {
+          myParamId = "Waterlevel up (m AD)";//$NON-NLS-1$
+        }
+        else if( WEIR_NODE_RESULT.eWaterLevelBelow.equals( type ) )
+        {
+          myParamId = "Waterlevel down (m AD)"; //$NON-NLS-1$
+        }
+        else
+          throw new IllegalStateException();
+
+        if( myParamId.equals( parameterId ) )
+          return complex;
+      }
+
+    }
+
+    return null;
+  }
+}

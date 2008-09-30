@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
@@ -50,7 +50,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -73,7 +72,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FNNodeUtils
 {
@@ -88,25 +87,25 @@ public class FNNodeUtils
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId );
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
 
-    if( (nodeType != null) && ((TYPE.eBoundaryNode.equals( nodeType ) || TYPE.eConnectionNode.equals( nodeType ) || TYPE.eLinkageNode.equals( nodeType ))) )
+    if( nodeType != null && (TYPE.eBoundaryNode.equals( nodeType ) || TYPE.eConnectionNode.equals( nodeType ) || TYPE.eLinkageNode.equals( nodeType )) )
       values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_CONNECTION_TYPE ), nodeType.getTypeOfConnectionNode() );
 
-    CommandableWorkspace cw;
-    final GMLWorkspace workspace = model.getFeature().getWorkspace();
+    CommandableWorkspace commandable;
+    GMLWorkspace workspace = model.getFeature().getWorkspace();
     if( workspace instanceof CommandableWorkspace )
-      cw = (CommandableWorkspace) workspace;
+      commandable = (CommandableWorkspace) workspace;
     else
-      cw = new CommandableWorkspace( workspace );
+      commandable = new CommandableWorkspace( workspace );
 
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
-    cw.postCommand( command );
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( commandable, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
+    commandable.postCommand( command );
 
     return FNNodeUtils.getNode( model, command.getNewFeature() );
   }
 
   private static String createNodeId( final IModelMember model, final IFeatureType targetFeatureType )
   {
-    int count = 0;
+    int max = 0;
 
     final INode[] nodes = model.getNodeMembers();
     for( final INode node : nodes )
@@ -116,16 +115,13 @@ public class FNNodeUtils
         if( nodeId == null )
           continue;
 
-        final String[] split = nodeId.split( "_" ); //$NON-NLS-1$
-        if( split.length != 2 )
-          throw new IllegalStateException( Messages.FNNodeUtils_1 );
+        String id = nodeId.replaceAll( "[a-zA-Z_#]", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final int branch = Integer.valueOf( id );
 
-        final Integer iBranch = new Integer( split[1] );
-        if( iBranch > count )
-          count = iBranch;
+        max = Math.max( branch, max );
       }
 
-    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++count ); //$NON-NLS-1$
+    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++max ); //$NON-NLS-1$
   }
 
   private static String getDelimiter( final IFeatureType targetFeatureType )

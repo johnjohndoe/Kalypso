@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class NodeUtils
 {
@@ -74,7 +74,7 @@ public class NodeUtils
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.setInternalLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, lastfall.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, lastfall.getFeature() );
 
     return command.getNewFeature();
   }

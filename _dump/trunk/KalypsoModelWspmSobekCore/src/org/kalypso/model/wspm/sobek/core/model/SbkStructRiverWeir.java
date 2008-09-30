@@ -63,7 +63,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -84,7 +84,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_CREST_WIDTH );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -96,7 +96,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_CORRECTION_COEFF );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -120,7 +120,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_NEG_SUBMERGE_LIMIT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -132,7 +132,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_CORRECTION_COEFF );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -156,7 +156,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR_POS_SUBMERGE_LIMIT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }

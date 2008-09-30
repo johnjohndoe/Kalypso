@@ -46,11 +46,12 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * Generic Node interface, Node implementations and special interface should be derived from this interface!
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface INode
 {
@@ -118,4 +119,6 @@ public interface INode
 
   /** sperrzone for a specific branch - needed for spacing between different flow network elements */
   public ISperrzone getSperrzone( );
+
+  public Point getJTSLocation( ) throws GM_Exception;
 }

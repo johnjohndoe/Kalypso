@@ -45,13 +45,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.model.wspm.core.Messages;
 
 /**
  * @author kimwerner
@@ -74,12 +74,13 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
 
         if( result.hasComponent( property ) )
         {
-         final Double oldValue = ProfilUtil.getDoubleValueFor( property.getId(), point );
-          final double newValue = oldValue.isNaN()?operand:oldValue * operand;
+          final Double oldValue = ProfilUtil.getDoubleValueFor( property.getId(), point );
+          final double newValue = oldValue.isNaN() ? operand : oldValue * operand;
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }
         else
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + Messages.AddPercentValueOperator_0 + point.toString() + Messages.AddPercentValueOperator_1 ) );
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + Messages.AddPercentValueOperator_0 + point.toString()
+              + Messages.AddPercentValueOperator_1 ) );
       }
     }
     return changes.toArray( new IProfilChange[changes.size()] );

@@ -33,9 +33,7 @@ public class ResultHelper
       return seconds;
     }
     else if( TimeStepUnitEnumStringType.SECOND.equals( eUnit ) )
-    {
       return multiplier;
-    }
     else
       throw new NotImplementedException();
   }

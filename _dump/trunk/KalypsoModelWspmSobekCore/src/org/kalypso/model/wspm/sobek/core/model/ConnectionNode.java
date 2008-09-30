@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
 {
@@ -81,7 +81,7 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
     final IBranch[] inflowingBranches = getInflowingBranches();
     final IBranch[] outflowingBranches = getOutflowingBranches();
 
-    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
+    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
       return true;
 
     return false;

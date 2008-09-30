@@ -41,11 +41,16 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
+import org.kalypso.contribs.java.io.MyPrintStream;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationPi2SobekWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobek2PIWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobekOpenMIWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationUpdateDataWorker;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -57,7 +62,22 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class WspmSobekCalcJob implements ISimulation
 {
-  private static final String CALCJOB_SPEC = "model_spec.xml"; //$NON-NLS-1$
+  private static final String CALCJOB_SPEC = "resources/model_spec.xml"; //$NON-NLS-1$
+
+  private final MyPrintStream m_nofdpStream;
+
+  private final MyPrintStream m_sobekStream;
+
+  public WspmSobekCalcJob( )
+  {
+    this( null, null );
+  }
+
+  public WspmSobekCalcJob( MyPrintStream nofdpStream, MyPrintStream sobekStream )
+  {
+    m_nofdpStream = nofdpStream;
+    m_sobekStream = sobekStream;
+  }
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -73,22 +93,38 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    InputStream zipStream = null;
-    zipStream = getClass().getResourceAsStream( "/org/kalypso/model/wspm/sobek/calculation/job/fake/sobek.zip" ); //$NON-NLS-1$
-    if( zipStream != null )
-    {
-      try
-      {
-        ZipUtilities.unzipApache( zipStream, tmpdir, true, "IBM850" ); //$NON-NLS-1$
-        zipStream.close();
+    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_0 );
 
-        resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
+    final SimulationBaseWorker baseWorker = new SimulationBaseWorker( m_nofdpStream );
+    baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker( m_nofdpStream );
+    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker( m_nofdpStream, m_sobekStream );
+    pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker( m_nofdpStream, m_sobekStream );
+    sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker( m_nofdpStream, m_sobekStream );
+    sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
+
+    /* add results of calculation */
+    File points = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS_PATH );
+    File structures = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES_PATH );
+
+    if( !points.exists() )
+      throw new SimulationException( Messages.WspmSobekCalcJob_1 );
+    if( !structures.exists() )
+      throw new SimulationException( Messages.WspmSobekCalcJob_2 );
+
+    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
+    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
+
+    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_3 );
+    ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
   }
-
 }

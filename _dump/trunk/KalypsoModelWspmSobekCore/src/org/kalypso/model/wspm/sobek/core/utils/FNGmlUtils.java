@@ -54,7 +54,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
+import org.kalypso.model.wspm.sobek.core.pub.EmptyNodeImplementation;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -78,7 +79,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FNGmlUtils
 {
@@ -139,7 +140,7 @@ public class FNGmlUtils
       if( node instanceof LinkageNode )
       {
         final LinkageNode ln = (LinkageNode) node;
-        if( branch.equals( ln.getLinkToBranch() ) )
+        if( branch != null && branch.equals( ln.getLinkToBranch() ) )
           NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
       }
 
@@ -216,7 +217,7 @@ public class FNGmlUtils
    * @param lowerNodeType
    *            lower node type of branch
    */
-  public static INode[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
+  public static Object[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
   {
     if( curve.getAsLineString().getNumberOfPoints() < 2 )
       throw new IllegalStateException( Messages.FNGmlUtils_0 );
@@ -237,31 +238,24 @@ public class FNGmlUtils
     final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, ftBranch, model.getFeature(), rtBranchMember, -1, null, selectionManager );
     workspace.postCommand( command );
 
-    try
-    {
-      final Feature branch = command.getNewFeature();
-      final String id = Branch.createBranchId( model );
+    final Feature branch = command.getNewFeature();
+    final String id = Branch.createBranchId( model );
 
-      final Map<QName, Object> values = new HashMap<QName, Object>();
-      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
-      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
-      values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
-      values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
+    final Map<QName, Object> values = new HashMap<QName, Object>();
+    values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
+    values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
+    values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
+    values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
 
-      FeatureUtils.updateProperties( workspace, branch, values );
+    FeatureUtils.updateProperties( workspace, branch, values );
 
-      final IBranch myBranch = new Branch( model, branch );
-      myBranch.setUpperNode( upperNode );
-      myBranch.setLowerNode( lowerNode );
+    final IBranch myBranch = new Branch( model, branch );
+    myBranch.setUpperNode( upperNode );
+    myBranch.setLowerNode( lowerNode );
 
-      FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
 
-    return new INode[] { upperNode, lowerNode };
+    return new Object[] { new Branch( model, branch ), upperNode, lowerNode };
   }
 
   public static void createInflowBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
@@ -278,6 +272,10 @@ public class FNGmlUtils
     // TODO: use query to search for nodes! Else: performance problems
     for( final INode node : nodes )
     {
+      // FIXME test - poldernode(ln, cn) -> returned (empty, cn)
+      if( node instanceof EmptyNodeImplementation )
+        continue;
+
       final GM_Point pNode = node.getLocation();
       final Point nodePoint = (Point) JTSAdapter.export( pNode );
 
@@ -295,19 +293,20 @@ public class FNGmlUtils
     FNGmlUtils.createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
   }
 
-  public static void createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
+  public static INode createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
   {
     if( branch == null || pointOnBranch == null || profile == null )
-      return;
+      return null;
 
     /* create new profile node */
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
-    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() );
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile );
 
     node.getFeature().invalidEnvelope();
+    return node;
   }
 
   public static void extendBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
@@ -316,5 +315,29 @@ public class FNGmlUtils
     final INode lowerNode = branch.getLowerNode();
 
     FNGmlUtils.createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
+
+  public static INode[] getNodes( final Object[] objects )
+  {
+    final List<INode> nodes = new ArrayList<INode>();
+
+    for( final Object obj : objects )
+    {
+      if( obj instanceof INode )
+        nodes.add( (INode) obj );
+    }
+
+    return nodes.toArray( new INode[] {} );
+  }
+
+  public static IBranch getBranch( final Object[] objects )
+  {
+    for( final Object object : objects )
+    {
+      if( object instanceof IBranch )
+        return (IBranch) object;
+    }
+
+    return null;
   }
 }

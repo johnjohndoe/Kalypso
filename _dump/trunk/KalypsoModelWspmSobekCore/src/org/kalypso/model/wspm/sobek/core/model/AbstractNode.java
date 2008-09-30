@@ -43,9 +43,10 @@ package org.kalypso.model.wspm.sobek.core.model;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -58,9 +59,10 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractNode implements INode
 {
@@ -104,6 +106,9 @@ public abstract class AbstractNode implements INode
 
   public AbstractNode( final IModelMember model, final Feature node )
   {
+    Assert.isNotNull( model );
+    Assert.isNotNull( node );
+
     m_model = model;
     m_node = node;
   }
@@ -157,6 +162,14 @@ public abstract class AbstractNode implements INode
   public GM_Point getLocation( )
   {
     return (GM_Point) getFeature().getDefaultGeometryProperty();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getJTSLocation()
+   */
+  public Point getJTSLocation( ) throws GM_Exception
+  {
+    return (Point) JTSAdapter.export( getLocation() );
   }
 
   public IModelMember getModel( )

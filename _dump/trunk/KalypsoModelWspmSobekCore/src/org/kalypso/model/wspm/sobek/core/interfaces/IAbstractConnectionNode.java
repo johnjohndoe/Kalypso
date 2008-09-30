@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IAbstractConnectionNode extends INode
 {

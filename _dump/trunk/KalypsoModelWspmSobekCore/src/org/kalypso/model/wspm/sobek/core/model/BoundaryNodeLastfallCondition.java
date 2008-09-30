@@ -40,24 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.metadata.MetadataObject;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondition
 {
@@ -162,11 +169,65 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
    */
   public IObservation<TupleResult> getTimeSeriesObservation( )
   {
-    final Feature feature = getTimeSeriesObservationFeature();
+    Feature feature = getTimeSeriesObservationFeature();
     if( feature == null )
-      return null;
+    {
+      feature = generateTimeSeriesObs();
+    }
 
     return ObservationFeatureFactory.toObservation( feature );
+  }
+
+  private Feature generateTimeSeriesObs( )
+  {
+    try
+    {
+      final Feature feature = getFeature();
+      final CommandableWorkspace workspace = m_lastfall.getModelMember().getWorkspace();
+
+      final IPropertyType property = feature.getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_OBSERVATION );
+      final IRelationType relation = (IRelationType) property;
+
+      final Feature fObs = workspace.createFeature( feature, relation, relation.getTargetFeatureType() );
+      workspace.setFeatureAsComposition( feature, relation, fObs, true );
+
+      /* new resultset */
+      final TupleResult result = new TupleResult();
+
+      /* add components to resultset */
+
+      final BOUNDARY_TYPE boundaryType = getBoundaryNode().getBoundaryType();
+      if( BOUNDARY_TYPE.eW.equals( boundaryType ) )
+      {
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_DATE ) );
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_W ) );
+      }
+      else if( BOUNDARY_TYPE.eQ.equals( boundaryType ) )
+      {
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_DATE ) );
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_Q ) );
+      }
+      else if( BOUNDARY_TYPE.eWQ.equals( boundaryType ) )
+      {
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_W ) );
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, OBS_Q ) );
+      }
+      else
+        throw new IllegalStateException();
+
+      /* add observation to workspace */
+      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      // maybe set phenomenon?
+      ObservationFeatureFactory.toFeature( obs, fObs );
+
+      return fObs;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**

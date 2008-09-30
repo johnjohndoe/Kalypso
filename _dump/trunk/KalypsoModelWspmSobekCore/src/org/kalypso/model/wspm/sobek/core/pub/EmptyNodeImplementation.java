@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
@@ -62,10 +63,12 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
-public class EmptyNodeImplementation extends AbstractNode
+public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
 {
+  private Sperrzone m_sperrzone = null;
+
   public EmptyNodeImplementation( final IModelMember model, final Feature node )
   {
     super( model, node );
@@ -104,6 +107,9 @@ public class EmptyNodeImplementation extends AbstractNode
     final Object objBranch = getFeature().getProperty( myProperty );
     final Feature feature = FeatureUtils.resolveFeature( getModel().getWorkspace(), objBranch );
 
+    if( feature == null )
+      return null;
+
     return new Branch( getModel(), feature );
   }
 
@@ -112,7 +118,8 @@ public class EmptyNodeImplementation extends AbstractNode
    */
   public boolean isEmpty( )
   {
-    if( getLinkToBranch() == null )
+    final IBranch branch = getLinkToBranch();
+    if( branch == null )
       return true;
 
     return false;
@@ -123,32 +130,54 @@ public class EmptyNodeImplementation extends AbstractNode
    */
   public ISperrzone getSperrzone( )
   {
-    final Sperrzone sperrzone = new Sperrzone( getFeature() );
-    try
+
+    if( m_sperrzone == null )
     {
-      final IBranch branch = getLinkToBranch();
-
-      final GM_Point location = getLocation();
-      final Geometry jtsLocation = JTSAdapter.export( location );
-
-      final QName name = getFeature().getFeatureType().getQName();
-
-      if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
+      m_sperrzone = new Sperrzone( getFeature() );
+      try
       {
-        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.RETARDING_BASIN_NODE );
-        sperrzone.addSperrzone( branch, buffer );
+        final IBranch branch = getLinkToBranch();
+
+        final GM_Point location = getLocation();
+        final Geometry jtsLocation = JTSAdapter.export( location );
+
+        final QName name = getFeature().getFeatureType().getQName();
+
+        if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
+        {
+          final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.RETARDING_BASIN_NODE );
+          m_sperrzone.addSperrzone( branch, buffer );
+        }
+        else
+        {
+          final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.DEFAULT_NODE );
+          m_sperrzone.addSperrzone( branch, buffer );
+        }
       }
-      else
+      catch( final GM_Exception e )
       {
-        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.DEFAULT_NODE );
-        sperrzone.addSperrzone( branch, buffer );
+        e.printStackTrace();
       }
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
+
     }
 
-    return sperrzone;
+    return m_sperrzone;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode#getStructureType()
+   */
+  public STRUCTURE_TYPE getStructureType( )
+  {
+    QName qname = getFeature().getFeatureType().getQName();
+
+    if( ISobekConstants.QN_NOFDP_POLDER_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.ePolder;
+    else if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.eRetardingBasin;
+    else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.eWeir;
+
+    throw new IllegalStateException();
   }
 }

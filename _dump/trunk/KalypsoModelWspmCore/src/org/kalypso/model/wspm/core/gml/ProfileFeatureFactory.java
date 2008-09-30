@@ -52,7 +52,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.Messages;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.observation.IObservation;
@@ -121,7 +121,7 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();

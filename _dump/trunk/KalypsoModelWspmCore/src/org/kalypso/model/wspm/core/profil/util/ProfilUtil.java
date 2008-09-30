@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.Messages;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -152,7 +152,7 @@ public class ProfilUtil
     }
     catch( IllegalArgumentException e )
     {
-      KalypsoModelWspmCorePlugin.getDefault().getLog().log(new Status(IStatus.ERROR,componentID,e.getLocalizedMessage(), null ));
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.ERROR, componentID, e.getLocalizedMessage(), null ) );
       return Double.NaN;
     }
 

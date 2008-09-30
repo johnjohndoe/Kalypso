@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class BranchMaker implements IBranchMaker
 {
@@ -73,7 +73,7 @@ public class BranchMaker implements IBranchMaker
   public void connectBranches( final IBranch[] branches, final GM_Curve curve ) throws Exception
   {
     if( branches.length != 2 )
-      throw (new IllegalStateException( Messages.BranchMaker_0 ));
+      throw new IllegalStateException( Messages.BranchMaker_0 );
 
     FNGmlUtils.connectBranches( m_model, branches, curve );
   }

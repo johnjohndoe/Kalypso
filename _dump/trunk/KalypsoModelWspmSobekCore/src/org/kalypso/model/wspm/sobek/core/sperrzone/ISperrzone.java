@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface ISperrzone
 {
