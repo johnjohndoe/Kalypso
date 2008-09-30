@@ -52,11 +52,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.util.pool.IPoolableObjectType;
 
 /**
  * This page shows the link to the data file of a {@link org.kalypso.ogc.gml.GisTemplateFeatureTheme}<br>

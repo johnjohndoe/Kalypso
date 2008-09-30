@@ -10,8 +10,7 @@ Bundle-ClassPath: lib/jcommon-0.9.6.jar,
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: au.com.bytecode.opencsv,
- com.keypoint,
+Export-Package: com.keypoint,
  org.jfree,
  org.jfree.base,
  org.jfree.base.config,
