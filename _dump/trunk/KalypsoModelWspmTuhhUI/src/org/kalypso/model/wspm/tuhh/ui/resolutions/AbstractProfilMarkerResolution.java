@@ -52,6 +52,8 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
@@ -60,8 +62,6 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -124,30 +124,30 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
         return null;
       final IFile markerFile = (IFile) markerResource;
       final URL markerURL = ResourceUtilities.createURL( markerFile );
-      
+
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL );
       return (CommandableWorkspace) pool.getObject( key );
-      
-//      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
-//      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
-//      for( final IWorkbenchWindow wbw : wbws )
-//      {
-//        final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
+
+// final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
+// final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
+// for( final IWorkbenchWindow wbw : wbws )
+// {
+// final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
 //
-//        if( editorReferences == null )
-//          return null;
-//        for( final IEditorReference editorRef : editorReferences )
-//        {
-//          if( editorRef.getId().equals( editorId ) )
-//          {
-//            final IEditorPart editor = editorRef.getEditor( false );
-//            final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-//            final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
-//            return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
-//          }
-//        }
-//      }
+// if( editorReferences == null )
+// return null;
+// for( final IEditorReference editorRef : editorReferences )
+// {
+// if( editorRef.getId().equals( editorId ) )
+// {
+// final IEditorPart editor = editorRef.getEditor( false );
+// final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
+// final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
+// return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
+// }
+// }
+// }
     }
     catch( final CoreException e )
     {
@@ -190,7 +190,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
     }
     catch( Exception e )
     {
-      throw new UnknownError(e.getLocalizedMessage());
+      throw new UnknownError( e.getLocalizedMessage() );
     }
 
   }

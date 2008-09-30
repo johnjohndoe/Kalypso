@@ -63,6 +63,8 @@ import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -74,8 +76,6 @@ import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.KeyInfo;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
