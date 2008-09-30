@@ -212,7 +212,7 @@ Version 1.0.2 (laufende Änderungen)
 28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
 -----------------------------------------------------------------------------------------------------
 
-Version 1.1.0 (laufende Änderungen)
+Ziel-Version 1.1.0 (laufende Änderungen)
 -----------------------------------
 
 001.) update automake.fig file; makefile for IntelCompiler doesn't exist yet.
@@ -403,9 +403,9 @@ Version 1.1.0 (laufende Änderungen)
       cbh   
       cbh   --- Nico Schrage 27.08.2008 (1.0.3 bf4)
       cbh: cite branch history
-      --------------------------------------------------------------------
-      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK
-      --------------------------------------------------------------------
+      ----------------------------------------------------------------------------------------------
+      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK (Revisions 5269 bis 5469)
+      ----------------------------------------------------------------------------------------------
 037.) Change compilation settings for Lahey to have default integer type (kind = 8) (affects: automake.fig)
 038.) Make MKL operatable:
       - define irwept as short integer (affects: blk10.for)
