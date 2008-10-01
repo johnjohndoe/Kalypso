@@ -53,7 +53,7 @@ import org.apache.commons.io.IOUtils;
 public class UrlUtilities
 {
   private UrlUtilities( )
-  {
+  { 
     // will not get instantiated
   }
 
