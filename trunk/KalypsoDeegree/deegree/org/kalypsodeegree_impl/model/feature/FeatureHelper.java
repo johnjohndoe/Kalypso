@@ -1445,4 +1445,27 @@ public class FeatureHelper
     return properties;
   }
 
+  /**
+   * Calculates the minimal envelope containing all envelopes of the given features.
+   * 
+   * @return <code>null</code> if none of the given features contains a valid envelope.
+   */
+  public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
+  {
+    GM_Envelope result = null;
+
+    for( final IFeatureWrapper2 feature : features )
+    {
+      final GM_Envelope envelope = feature.getFeature().getEnvelope();
+      if( envelope != null )
+        if( result == null )
+          result = envelope;
+        else
+          result = result.getMerged( envelope );
+    }
+
+    return result;
+  }
+
+
 }

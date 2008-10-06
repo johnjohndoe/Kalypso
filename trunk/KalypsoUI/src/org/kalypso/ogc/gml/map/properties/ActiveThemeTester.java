@@ -42,12 +42,14 @@ package org.kalypso.ogc.gml.map.properties;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -126,17 +128,23 @@ public class ActiveThemeTester extends PropertyTester
 
   private boolean testQName( final IKalypsoTheme theme, final Object expectedValue )
   {
-    if( theme == null )
+    if( theme == null || expectedValue == null )
       return false;
 
     // TODO: probably not yet good enough: check also for substitution, etc?
-    final QName qname;
-    if( theme instanceof IKalypsoFeatureTheme )
-      qname = ((IKalypsoFeatureTheme) theme).getFeatureList().getParentFeatureTypeProperty().getTargetFeatureType().getQName();
-    else
-      qname = null;
+    if( !(theme instanceof IKalypsoFeatureTheme) )
+      return false;
 
-    return ObjectUtils.toString( qname ).equals( expectedValue );
+    final FeatureList featureList = ((IKalypsoFeatureTheme) theme).getFeatureList();
+    if( featureList == null )
+      return false;
+
+    final IFeatureType targetFeatureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
+    if( targetFeatureType == null )
+      return false;
+
+    final QName expectedQName = QName.valueOf( expectedValue.toString() );
+    return GMLSchemaUtilities.substitutes( targetFeatureType, expectedQName );
   }
 
   private boolean testNotNull( final IKalypsoTheme theme )
