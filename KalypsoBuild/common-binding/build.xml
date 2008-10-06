@@ -38,7 +38,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<path id="binding.classpath">
 		<fileset dir="${jwsdp}">
-			<include name="lib/**/*.jar" />
+			<include name="jaxb/lib/*.jar" />
+			<include name="jwsdp-shared/lib/*.jar" />
 		</fileset>
 	</path>
 
@@ -49,14 +50,14 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	</target>
 
 	<target name="clean" description="cleans it up - totally">
-		<delete failonerror="false" includeemptydirs="true">
+		<delete includeemptydirs="true">
 			<fileset dir="${gen.srcbind}" includes="**/*" />
 		</delete>
 	</target>
 
 	<target name="generate" depends="init" description="erzeugt die sourcen">
 		<echo message="Generating binding sources für ${project}" />	
-		<xjc destdir="${gen.srcbind}" extension="true" removeoldoutput="true" source="2.0">
+		<xjc target="${gen.srcbind}" extension="true" removeoldoutput="true">
 			<!-- stackSize="60mb"> -->
 			<arg line="${xjc-args}" />
 			<schema dir="${project}">
@@ -92,9 +93,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			it here because if makes the whole deploy process much
 			faster!
 			-->
-      <!--produces file="${project}/lib/${dest.file.name}" /-->
 		</xjc>
-		
 	</target>
 
 	<target name="compile" depends="generate">
