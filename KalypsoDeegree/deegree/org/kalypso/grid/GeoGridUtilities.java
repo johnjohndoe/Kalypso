@@ -788,14 +788,12 @@ public class GeoGridUtilities
    *          if true, the envelope results from an intersection of all coverages of the collections. If false, the
    *          envelope gets calculated by union of the several envelopes.
    */
-  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, boolean intersection ) throws Exception, GeoGridException, GM_Exception
+  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, final boolean intersection ) throws Exception, GeoGridException, GM_Exception
   {
     Geometry globalEnv = null;
 
-    for( int i = 0; i < collections.length; i++ )
+    for( final ICoverageCollection collection : collections )
     {
-      final ICoverageCollection collection = collections[i];
-
       Geometry unionGeom = null;
       for( int j = 0; j < collection.size(); j++ )
       {
@@ -858,7 +856,7 @@ public class GeoGridUtilities
    *          if true, the envelope results from an intersection of all grids of the categories. If false, the envelope
    *          gets calculated by union of the several envelopes.
    */
-  public static FlattenToCategoryGrid getFlattedGrid( GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
+  public static FlattenToCategoryGrid getFlattedGrid( final GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
   {
     Geometry globalGridSurfaceBoundary = null;
     Geometry unionGeom = null;
@@ -866,15 +864,11 @@ public class GeoGridUtilities
     /* calculate min cell sizes */
     double minCellSizeX = Double.MAX_VALUE;
     double minCellSizeY = Double.MAX_VALUE;
-    for( int i = 0; i < gridCategories.length; i++ )
+    for( final GridCategoryWrapper category : gridCategories )
     {
-      final GridCategoryWrapper category = gridCategories[i];
-
       final IGeoGrid[] grids = category.getGrids();
-      for( int j = 0; j < grids.length; j++ )
+      for( final IGeoGrid grid : grids )
       {
-        final IGeoGrid grid = grids[j];
-
         minCellSizeX = Math.min( Math.abs( grid.getOffsetX().x + grid.getOffsetY().x ), minCellSizeX );
         minCellSizeY = Math.min( Math.abs( grid.getOffsetX().y + grid.getOffsetY().y ), minCellSizeY );
 
@@ -910,8 +904,8 @@ public class GeoGridUtilities
 
     /* create grid */
     // get Bounding box, +1 zelle
-    double originX = newGridEnv.getMin().getX() + minCellSizeX / 2;
-    double originY = newGridEnv.getMin().getY() + minCellSizeY / 2;
+    final double originX = newGridEnv.getMin().getX() + minCellSizeX / 2;
+    final double originY = newGridEnv.getMin().getY() + minCellSizeY / 2;
 
     /* calculate necessary number of cells */
     final double dX = newGridEnv.getMax().getX() - minCellSizeX / 2 - originX;
@@ -944,7 +938,7 @@ public class GeoGridUtilities
    *          The (cell-)coordinate y.
    * @return The cell at the given (cell-)coordinates in the grid.
    */
-  public static Polygon createCellPolygon( IGeoGrid grid, int x, int y ) throws GeoGridException
+  public static Polygon createCellPolygon( final IGeoGrid grid, final int x, final int y ) throws GeoGridException
   {
     //TODO What with offsetX.y and offsetY.x
     final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
@@ -969,5 +963,17 @@ public class GeoGridUtilities
     final LinearRing ring = factory.createLinearRing( new Coordinate[] { c1, c2, c3, c4, c1 } );
 
     return factory.createPolygon( ring, new LinearRing[] {} );
+  }
+
+  /**
+   * Returns the value of a grid at a given position. Returns {@link Double#NaN} if the coordinate is outside the
+   * bounding box.
+   * 
+   * @see IGeoGrid#getValueChecked(int, int)
+   */
+  public static double getValueChecked( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
+  {
+    final GeoGridCell cell = cellFromPosition( grid, crd );
+    return grid.getValueChecked( cell.x, cell.y );
   }
 }
