@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoServiceClientCore Plug-in
+Bundle-SymbolicName: org.kalypso.services.core.client; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: KalypsoServiceClientCore.jar
+Bundle-Activator: org.kalypso.core.client.KalypsoServiceCoreClientPlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Export-Package: org.kalypso.core.client
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.jwsdp,
+ org.kalypso.contribs.java,
+ org.junit
+Eclipse-LazyStart: true
