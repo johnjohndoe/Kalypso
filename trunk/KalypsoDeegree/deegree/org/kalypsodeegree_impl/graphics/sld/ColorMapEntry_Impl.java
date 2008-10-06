@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,8 +37,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 
-import ogc2.www.opengis.net.sld.ObjectFactory;
-
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
@@ -47,25 +45,16 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
  */
 public class ColorMapEntry_Impl implements ColorMapEntry
 {
-  private Color m_color = null;
+  private Color m_color;
 
-  private double m_opacity = 1;
+  private double m_opacity;
 
-  private double m_quantity = -9999;
+  private double m_quantity;
 
-  private String m_label = " ";
+  private String m_label;
 
-  private static final ObjectFactory OF = new ObjectFactory();
-
-  /**
-   * @param color
-   * @param opacity
-   * @param quantity
-   * @param label
-   */
   public ColorMapEntry_Impl( final Color color, final double opacity, final double quantity, final String label )
   {
-    super();
     m_color = color;
     m_opacity = opacity;
     m_quantity = quantity;
