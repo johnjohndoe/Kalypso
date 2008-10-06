@@ -109,7 +109,11 @@ public class ColorMapEntryTreeObject implements IWorkbenchAdapter
   @Override
   public String getLabel( final Object o )
   {
-    return m_entry.getLabel();
+    final String label = m_entry.getLabel().trim();
+    if( label.isEmpty() )
+      return "" + m_entry.getQuantity();
+
+    return label;
   }
 
   /**
