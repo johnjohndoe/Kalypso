@@ -625,32 +625,6 @@
 			<separator name="outlineExport" visible="true">
 			</separator>
 		</menuContribution>
-		<menuContribution locationURI="popup:org.kalypso.ui.editor.GmlEditor">
-			<menu id="imports" label="%menu.label.4">
-				<command commandId="org.kalypso.gml.ui.importGridCommand">
-					<visibleWhen checkEnabled="false">
-						<with variable="selection">
-							<iterate ifEmpty="false" operator="and">
-								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{org.kalypso.gml.common.coverage}CoverageCollection">
-								</test>
-							</iterate>
-						</with>
-					</visibleWhen>
-				</command>
-			</menu>
-			<menu id="exports" label="%menu.label.5">
-				<command commandId="org.kalypso.gml.ui.exportGridCommand">
-					<visibleWhen checkEnabled="false">
-						<with variable="selection">
-							<iterate ifEmpty="false" operator="and">
-								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{http://www.opengis.net/gml}_Coverage">
-								</test>
-							</iterate>
-						</with>
-					</visibleWhen>
-				</command>
-			</menu>
-		</menuContribution>
 	</extension>
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" icon="icons/map/zoomoutstatic.gif" />
@@ -1249,8 +1223,7 @@
 		<definition id="featureSelected">
 			<iterate ifEmpty="false" operator="or">
 				<or>
-					<instanceof value="org.kalypsodeegree_impl.model.feature.Feature_Impl">
-					</instanceof>
+					<instanceof value="org.kalypsodeegree_impl.model.feature.Feature_Impl"/>
 				</or>
 			</iterate>
 		</definition>
@@ -1263,4 +1236,12 @@
 	<extension point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui" properties="activeThemeNotNull,activeThemeQName,activeThemeHasExtent,activeThemeIsFeatureTheme" type="org.kalypso.ogc.gml.map.IMapPanel" />
 	</extension>
+   <extension
+         point="org.kalypso.ui.addlayer.WMSImageProvider">
+      <imageProvider
+            class="org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider"
+            id="org.kalypso.ui.addlayer.kalypsoImageProvider"
+            name="WMS Client">
+      </imageProvider>
+   </extension>
 </plugin>

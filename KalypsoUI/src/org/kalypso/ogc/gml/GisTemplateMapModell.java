@@ -226,12 +226,14 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
 
       /* Get the provider attribute. */
-      final String layers = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
-      final String styles = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
+      final String layerProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
+      final String styleProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
       final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
       final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
       /* Create the image provider. */
+      final String[] layers = layerProp == null ? null : layerProp.split( "," );
+      final String[] styles = styleProp == null ? null : styleProp.split( "," );
       final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
 
       return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this, legendIcon, context, showChildren );

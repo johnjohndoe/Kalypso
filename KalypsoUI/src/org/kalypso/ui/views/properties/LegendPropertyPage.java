@@ -51,12 +51,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
@@ -77,42 +78,48 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     final IKalypsoTheme theme = getTheme();
 
     /* Create a composite. */
+    final Display display = parent.getDisplay();
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 1, false ) );
 
     /* If there is no theme, no legend could be shown. */
     if( theme == null )
-      return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.0") ); //$NON-NLS-1$
+      return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
 
     /* Get the legend graphic. */
 
     try
     {
       /* Get the legend graphic. */
-      final Font font = new Font( composite.getDisplay(), "Arial", 10, SWT.NORMAL );
+      final Font font = new Font( display, "Arial", 10, SWT.NORMAL );
       final Image legendGraphic = theme.getLegendGraphic( font );
       /* No legend available. */
       if( legendGraphic == null )
-        return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.2") ); //$NON-NLS-1$
+        return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
 
       /* Create a group. */
       final Composite group = new Composite( composite, SWT.BORDER );
       group.setLayout( new GridLayout( 1, false ) );
       group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      group.setBackground( group.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      group.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
       /* Create a scrolled composite. */
       final ScrolledComposite sComposite = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL );
       sComposite.setLayout( new GridLayout( 1, false ) );
       final GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
       sComposite.setLayoutData( sCompData );
-      sComposite.setBackground( sComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      sComposite.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
-      /* And finally display it. */
-      final Canvas canvas = new Canvas( sComposite, SWT.NONE );
+      /**
+       * And finally display it. <br>
+       * REMARK: We are using an real ImageCanvas instead of just setting the background, as this will not work for
+       * transparent images
+       */
+      final ImageCanvas canvas = new ImageCanvas( sComposite, SWT.NONE );
       final Rectangle legendBounds = legendGraphic.getBounds();
       canvas.setSize( legendBounds.width, legendBounds.height );
-      canvas.setBackgroundImage( legendGraphic );
+      canvas.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+      canvas.setImage( legendGraphic );
 
       sComposite.setContent( canvas );
 
@@ -139,9 +146,9 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * This function creates an error message in the given composite.
    * 
    * @param parent
-   *            The parent composite.
+   *          The parent composite.
    * @param message
-   *            The error message.
+   *          The error message.
    */
   private Control createError( final Composite parent, final String message )
   {
