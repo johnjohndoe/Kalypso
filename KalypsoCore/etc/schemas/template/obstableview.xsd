@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="obstableview.template.kalypso.org" 
+	elementFormDefault="qualified" attributeFormDefault="unqualified" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:kalypso="types.template.kalypso.org" 
+	xmlns:myns="obstableview.template.kalypso.org">
+
+	<xs:import namespace="types.template.kalypso.org" 
+		schemaLocation="./layerTypes.xsd"/>
+
+	<xs:complexType name="typeRenderingRule">
+		<xs:sequence>
+			<xs:element name="foregroundcolor" type="xs:string" minOccurs="0" 
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional, contains the string definition 
+						of the color to use for the foreground (text). The 
+						syntax of the string representation is defined in the 
+						class org.kalypso.contribs.java.util.StringUtilities. 
+						</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="backgroundcolor" type="xs:string" minOccurs="0" 
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional, contains the string definition 
+						of the color to use for the background. The syntax of 
+						the string representation is defined in the class 
+						org.kalypso.contribs.java.util.StringUtilities. 
+						</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tooltip" type="xs:string" minOccurs="0" 
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional, the tooltip text displayed if 
+						the user stays long enough on the cell. 
+						</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="font" type="xs:string" minOccurs="0" 
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional, the font to use for the text of 
+						the cell. The syntax of the string representation is 
+						defined in the class 
+						org.kalypso.contribs.java.util.StringUtilities. 
+						</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="icon" type="xs:string" minOccurs="0" 
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>optional, the name (one of the constants 
+						for icons defined in 
+						org.kalypso.ogc.sensor.status.KalypsoStatusUtils) or 
+						the URL of an image. This is used as decorator for the 
+						text in the cell. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="mask" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>this attribute defines the bit mask for which 
+					the rendering rules will be applyed. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="typeColumn">
+		<xs:attribute name="id" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>the identifier of the column. 
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>the name or label of the column 
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="editable" type="xs:boolean" use="optional" 
+			default="false">
+			<xs:annotation>
+				<xs:documentation>true if the column is editable 
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="width" type="xs:int" use="optional" default="75">
+			<xs:annotation>
+				<xs:documentation>the width in pixel of the column 
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="axis" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>the name of the axis from the IObservation 
+					from which values are displayed in this column. 
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="format" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>the format specification of the column. Values
+					of this column will be displayed according to this format.
+					</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="typeObservation">
+		<xs:complexContent>
+			<xs:extension base="kalypso:kalypsoLinkType">
+				<xs:sequence>
+					<xs:element name="column" type="myns:typeColumn" 
+						minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="obstableview">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="features" type="xs:string" default="" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+						semicolon separated list of featurenames in the sense of obsview (not gml-feature!)
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+				<xs:element name="observation" type="myns:typeObservation" 
+					minOccurs="0" maxOccurs="unbounded" />
+				
+				<xs:element name="alphaSort" type="xs:boolean" default="true" minOccurs="0" maxOccurs="1">
+					<xs:annotation><xs:documentation>
+						when true the columns are sorted according to the alphabetical order
+						of their names. If false, the columns are sorted according to the order
+						into which the associated observations got loaded.
+					</xs:documentation></xs:annotation>
+				</xs:element>
+				
+				<xs:element name="timezone" type="xs:string" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>the timezone into which the dates are displayed in the table. When no
+							timezone is defined, KALYPSO uses the default timezone of the system.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<xs:element name="rules" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="renderingrule" 
+								type="myns:typeRenderingRule" minOccurs="0" 
+								maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
