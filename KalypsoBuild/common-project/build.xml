@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Common build file for all kalypso projects.
+
+The following targets are defined here:
+- clean: cleans all generated stuff
+- prepare: creates the required directories
+- compile: compiles the sources
+- deploy: builds a jar
+- test: runs the test classes
+- javadoc
+
+This script uses properties defined in the project.properties file.
+
+It is designed to be imported using the following syntax:
+
+ <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+<project name="commonbuild" default="deploy" basedir=".">
+
+	<dirname property="commonbuild.basedir" file="${ant.file.commonbuild}" />
+
+	<property file="${commonbuild.basedir}/../common.properties" />
+
+	<!-- Define these elements in your own project
+	
+	<property name="project" value="full path of the project"/>
+	<property name="project-name" value="used as name for jar file"/>
+	<path id="compile.classpath" ... >
+	
+	-->
+
+	<target name="prepare">
+		<mkdir dir="${project.deploy}" />
+		<mkdir dir="${project.doc}" />
+	</target>
+
+	<!--target name="compile" depends="prepare">
+		<echo message="Compiliere Sourcen für ${project-name}" />
+		<javac srcdir="${project.src}" destdir="${project.bin}" classpathref="compile.classpath" debug="${flag-debug}" optimize="${flag-optimize}" />
+	</target-->
+	
+	<target name="test" depends="prepare">
+		<junit haltonerror="false" fork="true">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir=".">
+				<fileset dir="${project.src}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="deploy" depends="prepare">
+		<echo message="Erzeuge Jar Files ..." />
+		<jar destfile="${project.deploy}/${project-name}.jar">
+			<fileset dir="${project.bin}" includes="**/*" />
+		</jar>
+		<copy todir="${project.deploy}" flatten="true">
+			<fileset dir="${project.lib}"/>
+		</copy>
+	</target>
+
+	<target name="javadoc" depends="prepare">
+		<echo message="Erzeuge die Dokumentation ..." />
+		<javadoc destdir="${project.doc}" failonerror="true" classpathref="compile.classpath">
+			<fileset dir="${project.src}" casesensitive="false">
+				<include name="**/*.java" />
+				<exclude name="**/*Test*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="clean">
+		<echo message="Raeume auf..." />
+		<delete dir="${project.bin}" failonerror="false"/>
+		<delete dir="${project.deploy}" failonerror="false"/>
+		<delete dir="${project.doc}" failonerror="false"/>
+	</target>
+
+</project>
