@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<name>Eine Test-Observation</name>
+	    <metadataList>
+	        <metadata name="Zeitzone" value="UTC"/>
+		</metadataList>
+	<!--
+	Daten im Bereich:
+		2004-11-23 13:00:00
+		  bis
+		2004-11-25 13:00:00
+	-->
+
+    <axis datatype="TYPE=integer" key="false" name="_kalypso_status_583250 (W) Gemessene" type="kalypso-status" unit="">
+        <valueArray separator=";">1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0;1.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="583250 (W) Gemessene" type="W" unit="cm">
+        <valueArray separator=";">60.0;57.99999999999999;55.00000000000001;53.0;5.0;47.0;44.0;40.0;39.0;39.0;38.0;37.0;37.0;37.0;37.0;37.0;37.0</valueArray>
+    </axis>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2004-11-23T13:00:00;2004-11-23T16:00:00;2004-11-23T19:00:00;2004-11-23T22:00:00;2004-11-24T01:00:00;2004-11-24T04:00:00;2004-11-24T07:00:00;2004-11-24T10:00:00;2004-11-24T13:00:00;2004-11-24T16:00:00;2004-11-24T19:00:00;2004-11-24T22:00:00;2004-11-25T01:00:00;2004-11-25T04:00:00;2004-11-25T07:00:00;2004-11-25T10:00:00;2004-11-25T13:00:00</valueArray>
+    </axis>
+</observation>
