@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="deegree"/>
+	<classpathentry kind="src" path="srcbind"/>
+	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/geotiff-jai/geotiff-jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jai/jai_codec.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jai/jai_core.jar" sourcepath="lib/jai/jai-1_1-mr-doc.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoDeegree/lib/jai/jai-1_1-mr-doc.zip!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar" sourcepath="lib/jts/jts-1.8_src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts/jtsio-1.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/shiftone/shiftone-cache.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xalan.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xtiff-jai/xtiff-jai.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>
