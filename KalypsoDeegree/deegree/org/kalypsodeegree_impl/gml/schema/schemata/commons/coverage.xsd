@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:coverage="org.kalypso.gml.common.coverage" targetNamespace="org.kalypso.gml.common.coverage"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<documentation xml:lang="en">
+			<![CDATA[Common schema for coverage support.]]></documentation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" />
+	<!-- utility schema for gml application schemas -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<element name="CoverageCollection" type="coverage:CoverageCollectionType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Coverages</label>
+				<tooltip>Coverages</tooltip>
+				<description>Coverages</description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="CoverageCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="coverageMember" type="coverage:CoveragePropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Coverage</label>
+								<tooltip>Coverage</tooltip>
+								<description>Coverage</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Just a reference to a coverage -->
+	<complexType name="CoveragePropertyType">
+		<sequence>
+			<element ref="gml:_Coverage" minOccurs="0" maxOccurs="1"></element>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+</schema>

@@ -1,0 +1,20 @@
+18.05.2005 Falls der centerpoint für polygone nicht im polygon selbst liegt (contain), 
+	wird nun versucht einen centerpoint zu finden, der im Polygon liegt.
+	Dies ist für alle Text und Pointsymbolizer schöner, da die visualisierung sonst blöd ist.
+	// TODO: hier sollte man zukünftig nochmal unterscheiden zwischen centoid und labelPoint.
+
+
+10.03.2005
+
+GMLSchema:
+1.
+ es werden auch feature die "abstract" sind als FeatureType erzeugt, um xlinks auf diese ft abzubilden.
+2.
+ substitutionsgroups funktionieren jetzt auch ueber schemagrenzen hinweg.
+ Jeder featureType registriert sich bei den FeatureAssociationPropertyTypes von denen er substituiert wird.
+ (Substitution...Vistor)
+3.
+ complextypes (Content der Features) können nun auch innerhalb der element-definition stehen 
+ und nicht nur ueber namen referenziert werden.
+
+ TODO "abstract" FeatureTypes markieren und sicherstellen, dass keine instanzen erzeugt werden können.
