@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.utils;
 
@@ -49,11 +49,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This is a helper class, providing functions for dealing with a WMS.
@@ -88,9 +89,9 @@ public class KalypsoWMSUtilities
    *            The client coordinate system. Will be used to initialize the image provider.
    * @return An image provider. Should never be null.
    */
-  public static IKalypsoImageProvider getImageProvider( final String themeName, final String layers, final String styles, final String service, final String providerID )
+  public static IKalypsoImageProvider getImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String providerID )
   {
-    final String localSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String localSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     /* If it is missing or null, return the default provider. */
     if( providerID == null )
@@ -152,9 +153,9 @@ public class KalypsoWMSUtilities
    *            The client coordinate system.
    * @return The default wms image provider.
    */
-  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String layers, final String styles, final String service, final String localSRS )
+  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
   {
-    final WMSImageProvider provider = new WMSImageProvider();
+    final AbstractDeegreeImageProvider provider = new WMSImageProvider();
     provider.init( themeName, layers, styles, service, localSRS );
 
     return provider;
