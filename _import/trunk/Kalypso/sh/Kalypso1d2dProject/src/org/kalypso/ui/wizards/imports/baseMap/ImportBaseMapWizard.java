@@ -77,7 +77,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -282,13 +281,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     if( !dstFilePath.exists() )
       try
-      {
+    {
         dstFilePath.create( true, true, null );
-      }
-      catch( final CoreException e1 )
-      {
-        e1.printStackTrace();
-      }
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
     final File srcFileImage = new File( m_PageImportImg.getSourceLocation().toOSString() );
     final IFile dstFileImage = dstFilePath.getFile( m_PageImportImg.getSourceLocation().lastSegment() );
     File srcFileGeoreference = null;
@@ -365,13 +364,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     if( !dstFilePath.exists() )
       try
-      {
+    {
         dstFilePath.create( true, true, null );
-      }
-      catch( final CoreException e1 )
-      {
-        e1.printStackTrace();
-      }
+    }
+    catch( final CoreException e1 )
+    {
+      e1.printStackTrace();
+    }
     final File srcFileShape = new File( m_PageImportShp.getSourceLocation().toOSString() );
     final IFile dstFileShape = dstFilePath.getFile( m_PageImportShp.getSourceLocation().lastSegment() );
     File srcFileIndex = null;
@@ -400,7 +399,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
       final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
-        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try
           {
@@ -421,7 +420,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         }
       };
 
-      IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       ErrorDialog.openError( getShell(), "", "", status );
 
       if( !status.isOK() )
@@ -505,9 +504,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
             providerID = "";
 
           final String layerTitle = layer.getTitle();
-          source.append( "#" ).append( WMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
-          source.append( "#" ).append( WMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
-          source.append( "#" ).append( WMSImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
 
           final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
           mapView.postCommand( command, null );
