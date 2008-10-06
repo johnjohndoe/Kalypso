@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.kalypso.deegree2;singleton:=true
 Bundle-Version: 2.1.0
 Bundle-Vendor: www.deegree.org
 Eclipse-LazyStart: true
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ javax.servlet;bundle-version="2.4.0"
 Bundle-ClassPath: lib/acme/acme.jar,
  lib/batik/batik-awt-util.jar,
  lib/batik/batik-bridge.jar,
@@ -59,8 +60,6 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/mail/mail.jar,
  lib/postgis/postgis100.jar,
  lib/postgis/postgresql-8.0-311.jdbc3.jar,
- lib/servlet/jsp-api.jar,
- lib/servlet/servlet-api.jar,
  lib/soap/axis.jar,
  lib/soap/jaxrpc.jar,
  lib/soap/saaj.jar,
@@ -70,7 +69,8 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/jfreechart/jcommon-1.0.12.jar,
  lib/jfreechart/jfreechart-1.0.9.jar,
  lib2/arcsde/jsde90_sdk.jar,
- build/
+ build/,
+ lib/servlet/jsp-api.jar
 Export-Package: com.vividsolutions.jts;version="1.8.0",
  com.vividsolutions.jts.algorithm;version="1.8.0",
  com.vividsolutions.jts.geom;version="1.8.0",
