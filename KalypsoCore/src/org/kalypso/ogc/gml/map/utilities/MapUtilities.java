@@ -61,7 +61,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
@@ -153,7 +152,7 @@ public class MapUtilities
         /**
          * has no crs! see
          * 
-         * @link{JTSAdapter}
+         * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
 
@@ -169,7 +168,7 @@ public class MapUtilities
         /**
          * has no crs! see
          * 
-         * @link{JTSAdapter}
+         * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
 
@@ -185,7 +184,7 @@ public class MapUtilities
         /**
          * has no crs! see
          * 
-         * @link{JTSAdapter}
+         * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
 
@@ -331,6 +330,10 @@ public class MapUtilities
    *          The file, where it should save to.
    * @param format
    *          The image format (for example: SWT.IMAGE_PNG).
+   * @param device
+   *          The device.
+   * @param insets
+   *          Defines the size of an empty border around the image. Can be <code>null</code>.
    * @param sizeWidth
    *          The width of the image, the legend is drawn onto.<br>
    *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
@@ -341,7 +344,7 @@ public class MapUtilities
    *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, int sizeWidth, int sizeHeight, final IProgressMonitor monitor )
+  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, Device device, Insets insets, int sizeWidth, int sizeHeight, final IProgressMonitor monitor )
   {
     /* Monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
@@ -349,11 +352,11 @@ public class MapUtilities
     Image image = null;
     try
     {
-      // TODO: get both from outside
-      final Display current = Display.getCurrent();
-      final Insets insets = new Insets( 5, 5, 5, 5 );
+      /* Set default insets, if none are given. */
+      if( insets == null )
+        insets = new Insets( 5, 5, 5, 5 );
 
-      image = exportLegends( themes, current, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
+      image = exportLegends( themes, device, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
       ProgressUtilities.worked( progress, 50 );
 
       final ImageLoader imageLoader = new ImageLoader();
@@ -383,10 +386,18 @@ public class MapUtilities
    * 
    * @param themes
    *          The themes to export.
+   * @param device
+   *          The device.
    * @param insets
    *          Defines the size of an empty border around the image. Must not be <code>null</code>.
    * @param backgroundRGB
    *          Defines the background color of the image. If <code>null</code>, an transparent image will be returned.
+   * @param sizeWidth
+   *          The width of the image, the legend is drawn onto.<br>
+   *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
+   * @param sizeHeight
+   *          The height of the image, the legend is drawn onto.<br>
+   *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
    * @param monitor
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
@@ -396,8 +407,8 @@ public class MapUtilities
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), themes.length * 100 + 100 ); //$NON-NLS-1$
 
     /* This font will be used to generate the legend. */
-    // TODO: this font does not exists necessarily on every platform... use one of eclipses standard font instead or
-    // have at least a fallback
+    // TODO: this font does not exists necessarily on every platform...
+    // use one of eclipses standard font instead or have at least a fallback
     final Font font = new Font( device, "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
 
     /* Memory for the legends. */
@@ -451,10 +462,13 @@ public class MapUtilities
     /* Need a GC. */
     final GC gc = new GC( image );
 
-    final Color bgColor = new Color( device, backgroundRGB );
-    gc.setBackground( bgColor );
-    gc.fillRectangle( image.getBounds() );
-    bgColor.dispose();
+    if( backgroundRGB != null )
+    {
+      final Color bgColor = new Color( device, backgroundRGB );
+      gc.setBackground( bgColor );
+      gc.fillRectangle( image.getBounds() );
+      bgColor.dispose();
+    }
 
     /* Draw on it. */
     int heightSoFar = insets.top;
