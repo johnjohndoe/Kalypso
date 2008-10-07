@@ -178,7 +178,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        return MapUtilities.exportLegends( themes, legendFile, format, -1, -1, monitor );
+        return MapUtilities.exportLegends( themes, legendFile, format, getDisplay(), null, -1, -1, monitor );
       }
     };
     job.setUser( true );
