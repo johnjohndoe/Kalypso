@@ -81,7 +81,6 @@ public class LegendExportHandler extends AbstractHandler
    */
   private static final String SETTINGS_LAST_DIR = "lastDir"; //$NON-NLS-1$
 
-
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
@@ -93,11 +92,11 @@ public class LegendExportHandler extends AbstractHandler
     /* Get the active workbench part. */
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.1" ) ); //$NON-NLS-1$
 
     /* Need a shell. */
     final Shell shell = part.getSite().getShell();
-    final String title = Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2"); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2" ); //$NON-NLS-1$
 
     /* Get the selected elements. */
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
@@ -107,7 +106,7 @@ public class LegendExportHandler extends AbstractHandler
 
     if( sel.isEmpty() )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.3") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.3" ) ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
@@ -116,7 +115,8 @@ public class LegendExportHandler extends AbstractHandler
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
     fileDialog.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.gif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8"), Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9"), Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] {
+        Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( title );
     // TODO: use map-name for default name e.g. 'mapxxx-legend.png')
     fileDialog.setFileName( Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.11" ) ); //$NON-NLS-1$
@@ -132,7 +132,7 @@ public class LegendExportHandler extends AbstractHandler
     final File legendFile = new File( result );
     if( legendFile.exists() )
     {
-      final boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.12"), Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.13") + legendFile.getName() + Messages.getString("org.kalypso.ogc.gml.outline.handler.LegendExportHandler.14") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.12" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.13" ) + legendFile.getName() + Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( !okPressed )
         return Status.CANCEL_STATUS;
     }
@@ -172,7 +172,7 @@ public class LegendExportHandler extends AbstractHandler
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        return MapUtilities.exportLegends( themes, legendFile, format, monitor );
+        return MapUtilities.exportLegends( themes, legendFile, format, -1, -1, monitor );
       }
     };
     job.setUser( true );

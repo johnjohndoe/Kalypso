@@ -64,7 +64,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
    */
   public void run( final IAction action )
   {
-    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.1") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -103,13 +103,13 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
   {
     /* Need a shell. */
     final Shell shell = event.display.getActiveShell();
-    final String title = Messages.getString("org.kalypso.ui.actions.ExportLegendAction.2"); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.2" ); //$NON-NLS-1$
 
     /* Get the selected elements. */
     final IStructuredSelection sel = (IStructuredSelection) m_selection;
     if( sel.isEmpty() )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.3") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.3" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -121,10 +121,11 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
     fileDialog.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.gif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ui.actions.ExportLegendAction.8"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.9"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.10") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] {
+        Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.8" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.9" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.10" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( title );
     // TODO: use map-name for default name e.g. 'mapxxx-legend.png')
-    fileDialog.setFileName( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.11") ); //$NON-NLS-1$
+    fileDialog.setFileName( Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.11" ) ); //$NON-NLS-1$
     if( lastDirPath != null )
       fileDialog.setFilterPath( lastDirPath );
 
@@ -137,7 +138,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
     final File legendFile = new File( result );
     if( legendFile.exists() )
     {
-      final boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.12"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.13") + legendFile.getName() + Messages.getString("org.kalypso.ui.actions.ExportLegendAction.14") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.12" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.13" ) + legendFile.getName() + Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( !okPressed )
         return;
     }
@@ -177,7 +178,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        return MapUtilities.exportLegends( themes, legendFile, format, monitor );
+        return MapUtilities.exportLegends( themes, legendFile, format, -1, -1, monitor );
       }
     };
     job.setUser( true );

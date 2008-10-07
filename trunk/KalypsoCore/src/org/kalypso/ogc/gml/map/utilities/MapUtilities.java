@@ -99,14 +99,14 @@ public class MapUtilities
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param p
-   *            The AWT-Point which should be snapped.
+   *          The AWT-Point which should be snapped.
    * @param radiusPx
-   *            This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
-   *            snapped.
+   *          This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
+   *          snapped.
    * @param type
-   *            This type of snapping will be used. {@link SNAP_TYPE}
+   *          This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
   public static GM_Point snap( final IMapPanel mapPanel, final GM_Object geometry, final Point p, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
@@ -123,14 +123,13 @@ public class MapUtilities
    * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param point
-   *            The GM_Point which should be snapped.
+   *          The GM_Point which should be snapped.
    * @param radiusPx
-   *            This radius will be converted to a world coord radius. Within this circle, the GM_Point is beeing
-   *            snapped.
+   *          This radius will be converted to a world coord radius. Within this circle, the GM_Point is beeing snapped.
    * @param type
-   *            This type of snapping will be used. {@link SNAP_TYPE}
+   *          This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
   public static GM_Point snap( final IMapPanel mapPanel, final GM_Object geometry, final GM_Point point, final int radiusPx, final SNAP_TYPE type ) throws GM_Exception
@@ -201,9 +200,9 @@ public class MapUtilities
    * This method transforms the AWT-Point to a GM_Point.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param p
-   *            The AWT-Point.
+   *          The AWT-Point.
    */
   public static GM_Point transform( final IMapPanel mapPanel, final Point p )
   {
@@ -226,9 +225,9 @@ public class MapUtilities
    * This method transforms the GM_Point to an AWT-Point.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param p
-   *            The GM_Point.
+   *          The GM_Point.
    */
   public static Point retransform( final IMapPanel mapPanel, final GM_Point p )
   {
@@ -244,11 +243,11 @@ public class MapUtilities
    * This function transforms a distance in pixel to the world distance.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param reference
-   *            The reference point.
+   *          The reference point.
    * @param distancePx
-   *            The distance to be calculated.
+   *          The distance to be calculated.
    * @return The distance in the world coords.
    */
   public static double calculateWorldDistance( final IMapPanel mapPanel, final GM_Point reference, final int distancePx )
@@ -264,9 +263,9 @@ public class MapUtilities
    * This function transforms a distance in pixel to the world distance.
    * 
    * @param mapPanel
-   *            The MapPanel of the map.
+   *          The MapPanel of the map.
    * @param distancePx
-   *            The distance in pixel to be calculated.
+   *          The distance in pixel to be calculated.
    * @return The distance in the world coordinates system.
    */
   public static double calculateWorldDistance( final IMapPanel mapPanel, final int distancePx )
@@ -281,7 +280,7 @@ public class MapUtilities
    * This function sets the map scale, if different from the given map panel.
    * 
    * @param scale
-   *            The new map scale.
+   *          The new map scale.
    */
   public static void setMapScale( final IMapPanel mapPanel, final double scale )
   {
@@ -332,14 +331,20 @@ public class MapUtilities
    *          The file, where it should save to.
    * @param format
    *          The image format (for example: SWT.IMAGE_PNG).
+   * @param sizeWidth
+   *          The width of the image, the legend is drawn onto.<br>
+   *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
+   * @param sizeHeight
+   *          The height of the image, the legend is drawn onto.<br>
+   *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
    * @param monitor
    *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, final IProgressMonitor monitor )
+  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, int sizeWidth, int sizeHeight, final IProgressMonitor monitor )
   {
     /* Monitor. */
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
 
     Image image = null;
     try
@@ -348,7 +353,7 @@ public class MapUtilities
       final Display current = Display.getCurrent();
       final Insets insets = new Insets( 5, 5, 5, 5 );
 
-      image = exportLegends( themes, current, insets, null, progress.newChild( 50 ) );
+      image = exportLegends( themes, current, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
       ProgressUtilities.worked( progress, 50 );
 
       final ImageLoader imageLoader = new ImageLoader();
@@ -386,7 +391,7 @@ public class MapUtilities
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public static Image exportLegends( final IKalypsoTheme[] themes, final Device device, final Insets insets, final RGB backgroundRGB, final IProgressMonitor monitor ) throws CoreException
+  public static Image exportLegends( final IKalypsoTheme[] themes, final Device device, final Insets insets, final RGB backgroundRGB, int sizeWidth, int sizeHeight, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), themes.length * 100 + 100 ); //$NON-NLS-1$
 
@@ -418,17 +423,25 @@ public class MapUtilities
     /* Calculate the size. */
     int width = 0;
     int height = 0;
-
-    for( final Image legend : legends )
+    if( sizeWidth > 0 && sizeHeight > 0 )
     {
-      final Rectangle bounds = legend.getBounds();
-      if( bounds.width > width )
-        width = bounds.width;
-
-      height = height + bounds.height;
+      width = sizeWidth;
+      height = sizeHeight;
     }
-    width += insets.left + insets.right;
-    height += insets.top + insets.bottom;
+    else
+    {
+      for( final Image legend : legends )
+      {
+        final Rectangle bounds = legend.getBounds();
+        if( bounds.width > width )
+          width = bounds.width;
+
+        height = height + bounds.height;
+      }
+
+      width += insets.left + insets.right;
+      height += insets.top + insets.bottom;
+    }
 
     ProgressUtilities.worked( progress, 50 );
 
@@ -457,5 +470,4 @@ public class MapUtilities
     ProgressUtilities.worked( progress, 50 );
     return image;
   }
-
 }
