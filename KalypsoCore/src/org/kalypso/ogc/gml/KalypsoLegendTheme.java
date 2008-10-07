@@ -225,7 +225,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
     final Display display = Display.getCurrent();
     final Insets insets = new Insets( m_borderWidth, m_borderWidth, m_borderWidth, m_borderWidth );
-    final org.eclipse.swt.graphics.Image image = MapUtilities.exportLegends( themes, display, insets, m_backgroundColor, monitor );
+    final org.eclipse.swt.graphics.Image image = MapUtilities.exportLegends( themes, display, insets, m_backgroundColor, -1, -1, monitor );
 
     final BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
     image.dispose();
@@ -238,7 +238,6 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     graphics.dispose();
 
     m_image = awtImage;
-
 
     invalidate( null );
   }
