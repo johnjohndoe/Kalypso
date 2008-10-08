@@ -51,7 +51,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -95,10 +94,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
-import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.mapmodel.KalypsoFeatureThemeHelper;
@@ -115,7 +112,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class CreateMainChannelComposite extends Composite
 {
-  private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay() );
+ // private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay() );
 
   final CreateChannelData m_data;
 
@@ -933,7 +930,7 @@ public class CreateMainChannelComposite extends Composite
         // here repaint!!
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
-      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0], m_colorRegistry );
+      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0]);
       profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
