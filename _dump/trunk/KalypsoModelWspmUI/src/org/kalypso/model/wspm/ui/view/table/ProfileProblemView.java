@@ -118,6 +118,7 @@ public class ProfileProblemView
       section.setText( markers.length + " " + text + Messages.TableView_5 ); //$NON-NLS-1$
 
       final Composite expanded_section = m_toolkit.createComposite( section );
+ 
       expanded_section.setLayout( new GridLayout( 2, false ) );
       expanded_section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 

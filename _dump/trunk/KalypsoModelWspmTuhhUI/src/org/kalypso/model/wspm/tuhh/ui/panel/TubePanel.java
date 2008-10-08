@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -211,7 +212,7 @@ public class TubePanel extends AbstractProfilView
    *      int)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final int style )
+  protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
     m_propPanel = new Composite( parent, SWT.NONE );
     final GridLayout gridLayout = new GridLayout( 2, true );

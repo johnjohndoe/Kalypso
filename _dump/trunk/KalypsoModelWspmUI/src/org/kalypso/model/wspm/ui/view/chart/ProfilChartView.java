@@ -45,12 +45,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
@@ -61,7 +62,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 import org.kalypso.model.wspm.ui.view.chart.handler.ClickHandler;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
@@ -90,9 +90,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 {
   private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
-  private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
-
   private static final String MEM_LAYER_POS = "layerPosition"; //$NON-NLS-1$
+
+  private static final String MEM_LAYER_DAT = "layerData"; //$NON-NLS-1$
+
+  private static final String MEM_LAYER_CLD = "layerChilds"; //$NON-NLS-1$
+
+  private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
 
   public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
 
@@ -101,10 +105,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
 
   public static final int AXIS_GAP = 5; // distance between layers and Axis
-
-  private final ColorRegistry m_colorRegistry; // defines the layers Line and PointStyle colors
-
-  // private static final int TRASH_HOLD = 3; // mouse move pixels before start editing
 
   private ICoordinateMapper m_mapper;
 
@@ -118,15 +118,14 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private IMemento m_memento = null;
 
-  public ProfilChartView( final IProfil profile, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfil profile )
   {
-    this( profile, null, colorRegistry );
+    this( profile, null );
   }
 
-  public ProfilChartView( final IProfil profile, final IStationResult[] results, final ColorRegistry colorRegistry )
+  public ProfilChartView( final IProfil profile, final IStationResult[] results )// , final ColorRegistry colorRegistry
   {
     super( profile, results );
-    m_colorRegistry = colorRegistry;
   }
 
   @SuppressWarnings("boxing")//$NON-NLS-1$
@@ -196,9 +195,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
    * @see com.bce.profil.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final int style )
+  protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-    m_chart = new ChartComposite( parent, style, new ChartModel(), m_colorRegistry.getRGB( IProfilColorSet.COLOUR_AXIS_BACKGROUND ) );
+    m_chart = new ChartComposite( parent, style, new ChartModel(), new RGB( 255, 255, 255 ) );
     m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     IMapperRegistry mr = m_chart.getChartModel().getMapperRegistry();
@@ -266,44 +265,12 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     return m_chart;
   }
 
-  public ColorRegistry getColorRegistry( )
-  {
-    return m_colorRegistry;
-  }
-
-  /**
-   * @deprecated use getAxis(String id)
-   */
-  @Deprecated
-  public IAxis getDomainRange( )
-  {
-    return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_DOMAIN );
-  }
-
   /**
    * @see org.eclipse.ui.IPersistableElement#getFactoryId()
    */
   public String getFactoryId( )
   {
     return null;
-  }
-
-  /**
-   * @deprecated use getAxis(String id)
-   */
-  @Deprecated
-  public IAxis getValueRangeLeft( )
-  {
-    return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_LEFT );
-  }
-
-  /**
-   * @deprecated use getAxis(String id)
-   */
-  @Deprecated
-  public IAxis getValueRangeRight( )
-  {
-    return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_RIGHT );
   }
 
   public IAxis getAxis( final String id )
@@ -367,58 +334,68 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   public void restoreState( final IMemento memento )
   {
-    if( m_chart == null )
-      return;
+//    if( m_chart == null )
+//      return;
+//
+//    final Map<String, Boolean> hash = new HashMap<String, Boolean>();
+//    final IMemento[] layerChildren = memento.getChildren( MEM_LAYER_VIS );
+//    for( final IMemento layermem : layerChildren )
+//    {
+//      final String name = layermem.getID();
+//      final String textData = layermem.getTextData();
+//      final Boolean visib = Boolean.valueOf( textData );
+//      hash.put( name, visib );
+//    }
+//
+//    final Map<String, Boolean> actHash = new HashMap<String, Boolean>();
+//    final IMemento[] actChildren = memento.getChildren( MEM_LAYER_ACT );
+//    for( final IMemento layermem : actChildren )
+//    {
+//      final String name = layermem.getID();
+//      final String textData = layermem.getTextData();
+//      final Boolean active = Boolean.valueOf( textData );
+//      actHash.put( name, active );
+//    }
+//
+//    Boolean activeLayerFound = false;
+//    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
+//    {
+//      final Boolean visib = hash.get( layer.getId() );
+//      final Boolean active = actHash.get( layer.getId() );
+//      if( visib != null )
+//        layer.setVisible( visib );
+//      if( active != null )
+//      {
+//        layer.setActive( active );
+//        activeLayerFound = activeLayerFound || active;
+//      }
+//
+//      final String data = memento.getString( layer.getId() );
+//      if( data != null )
+//        layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data );
+//
+//      if( layer instanceof IExpandableChartLayer )
+//      {
+//        for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
+//        {
+//          final Boolean v = hash.get( child.getId() );
+//          if( v != null )
+//            child.setVisible( v );
+//
+//          final String childData = memento.getString( layer.getId() + child.getId() );
+//          if( childData != null )
+//            child.setData( IProfilChartLayer.VIEW_DATA_KEY, childData );
+//
+//        }
+//      }
+//    }
+//
+//    m_memento = memento;
+//    sortLayer();
+//
+//    if( !activeLayerFound )
+//      m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
 
-    final Map<String, Boolean> hash = new HashMap<String, Boolean>();
-    final IMemento[] layerChildren = memento.getChildren( MEM_LAYER_VIS );
-    for( final IMemento layermem : layerChildren )
-    {
-      final String name = layermem.getID();
-      final String textData = layermem.getTextData();
-      final Boolean visib = Boolean.valueOf( textData );
-      hash.put( name, visib );
-    }
-
-    final Map<String, Boolean> actHash = new HashMap<String, Boolean>();
-    final IMemento[] actChildren = memento.getChildren( MEM_LAYER_ACT );
-    for( final IMemento layermem : actChildren )
-    {
-      final String name = layermem.getID();
-      final String textData = layermem.getTextData();
-      final Boolean active = Boolean.valueOf( textData );
-      actHash.put( name, active );
-    }
-
-    Boolean activeLayerFound = false;
-    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
-    {
-      final Boolean visib = hash.get( layer.getId() );
-      final Boolean active = actHash.get( layer.getId() );
-      if( visib != null )
-        layer.setVisible( visib );
-      if( active != null )
-      {
-        layer.setActive( active );
-        activeLayerFound = activeLayerFound || active;
-      }
-
-      if( layer instanceof IExpandableChartLayer )
-      {
-        for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
-        {
-          final Boolean v = hash.get( child.getId() );
-          if( v != null )
-            child.setVisible( v );
-        }
-      }
-    }
-
-    m_memento = memento;
-    sortLayer();
-
-    if( !activeLayerFound )
-      m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
   }
 
   protected final void sortLayer( )
@@ -453,49 +430,109 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     }
   }
 
+// /**
+// * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
+// */
+// public void saveState( final IMemento memento )
+// {
+// if( m_chart == null )
+// return;
+//
+// int pos = 0;
+// for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
+// if( layer != null )
+// {
+//        
+//
+// final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
+// final IMemento layerpos = getMementoChild( memento, MEM_LAYER_POS, layer.getId(), true );
+// final IMemento layerdat = getMementoChild( memento, MEM_LAYER_DAT, layer.getId(), true );
+//        
+//        
+//        
+//        layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
+//        layerpos.putTextData( "" + pos++ ); //$NON-NLS-1$
+// final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
+// if( data != null )
+// {
+// layerdat.putTextData( data.toString() );
+// }
+//
+// // nur eine Ebene tiefer
+// if( layer instanceof IExpandableChartLayer )
+// {
+// int childpos = 0;
+// for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
+// {
+// final IMemento lmem = getMementoChild( memento, MEM_LAYER_VIS, child.getId(), true );
+// lmem.putTextData( "" + child.isVisible() );
+//
+// final IMemento memChPos = getMementoChild( layerpos, layer.getId(), child.getId(), true );
+// memChPos.putTextData( "" + childpos++ );
+//            
+// final IMemento memChDat = getMementoChild( layerdat, layer.getId(), child.getId(), true );
+//
+// final Object childData = child.getData( IProfilChartLayer.VIEW_DATA_KEY );
+// if( childData != null )
+// {
+// memChDat.putTextData( childData.toString() );
+// }
+// }
+// }
+// final IMemento layeract = getMementoChild( memento, MEM_LAYER_ACT, layer.getId(), true );
+//        layeract.putTextData( "" + layer.isActive() ); //$NON-NLS-1$
+// }
+// }
+
   /**
    * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
    */
   public void saveState( final IMemento memento )
   {
-    if( m_chart == null )
-      return;
-
-    int pos = 0;
-    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
-      if( layer != null )
-      {
-        final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
-
-        final IMemento layerpos = getMementoChild( memento, MEM_LAYER_POS, layer.getId(), true );
-        layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
-        layerpos.putTextData( "" + pos++ ); //$NON-NLS-1$
-        // nur eine Ebene tiefer
-
-        if( layer instanceof IExpandableChartLayer )
-        {
-          int childpos = 0;
-          for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
-          {
-            final IMemento lmem = getMementoChild( memento, MEM_LAYER_VIS, child.getId(), true );
-            lmem.putTextData( "" + child.isVisible() );
-
-            final IMemento memChPos = getMementoChild( layerpos, layer.getId(), child.getId(), true );
-            memChPos.putTextData( "" + childpos++ );
-          }
-        }
-        final IMemento layeract = getMementoChild( memento, MEM_LAYER_ACT, layer.getId(), true );
-        layeract.putTextData( "" + layer.isActive() ); //$NON-NLS-1$
-      }
+//    if( m_chart == null )
+//      return;
+//
+//    int pos = 0;
+//    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
+//      if( layer != null )
+//      {
+//        final IMemento layermem = memento.createChild( layer.getId() );
+//        layermem.putBoolean( MEM_LAYER_VIS, layer.isVisible() ); //$NON-NLS-1$
+//        layermem.putBoolean( MEM_LAYER_ACT, layer.isActive() ); //$NON-NLS-1$
+//        layermem.putInteger( MEM_LAYER_POS, pos++ ); //$NON-NLS-1$
+//        final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
+//        if( data != null )
+//        {
+//          layermem.putString( MEM_LAYER_DAT, data.toString() );
+//        }
+//
+//        // nur eine Ebene tiefer
+//        if( layer instanceof IExpandableChartLayer )
+//        {
+//          int childpos = 0;
+//          final IMemento childmem = layermem.createChild( MEM_LAYER_CLD );
+//          for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
+//          {
+//            final IMemento layermemchild = childmem.createChild( child.getId() );
+//            layermemchild.putBoolean( MEM_LAYER_VIS, child.isVisible() ); //$NON-NLS-1$
+//            layermemchild.putInteger( MEM_LAYER_POS, childpos++ ); //$NON-NLS-1$
+//            final Object childdata = child.getData( IProfilChartLayer.VIEW_DATA_KEY );
+//            if( childdata != null )
+//            {
+//              layermemchild.putString( MEM_LAYER_DAT, childdata.toString() );
+//            }
+//          }
+//        }
+//      }
   }
 
-  private IMemento getMementoChild( final IMemento parent, final String siblingId, final String id, final boolean canCreate )
-  {
-    for( final IMemento children : parent.getChildren( siblingId ) )
-      if( children.getID().equals( id ) )
-        return children;
-    return canCreate ? parent.createChild( siblingId, id ) : null;
-  }
+//  private IMemento getMementoChild( final IMemento parent, final String siblingId, final String id, final boolean canCreate )
+//  {
+//    for( final IMemento children : parent.getChildren( siblingId ) )
+//      if( children.getID().equals( id ) )
+//        return children;
+//    return canCreate ? parent.createChild( siblingId, id ) : null;
+//  }
 
   public IProfilLayerProvider getLayerProvider( )
   {

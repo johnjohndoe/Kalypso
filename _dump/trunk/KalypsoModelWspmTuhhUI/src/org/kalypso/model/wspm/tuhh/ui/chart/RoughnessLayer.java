@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -93,7 +90,6 @@ public class RoughnessLayer extends AbstractProfilLayer
       return;
     final IRecord[] profilPoints = profil.getPoints();
     final int len = profilPoints.length;
-    final ArrayList<Point> points = new ArrayList<Point>(len);
 
     final int baseLine = getTargetAxis().getScreenHeight();
     final FullRectangleFigure fr = new FullRectangleFigure();
@@ -104,12 +100,12 @@ public class RoughnessLayer extends AbstractProfilLayer
     final IAxis dom = getDomainAxis();
     final IAxis tar = getTargetAxis();
     final int index = profil.indexOfProperty( getTargetComponent() );
-    final int breite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE);
+    final int breite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     for( int i = 0; i < len - 1; i++ )
     {
-      final int x1 = dom.numericToScreen( (Double)profilPoints[i].getValue( breite ) ); 
-      final int y1 = tar.numericToScreen( (Double)profilPoints[i].getValue( index ) ); 
-      final int x2 = dom.numericToScreen( (Double)profilPoints[i+1].getValue( breite ) ); 
+      final int x1 = dom.numericToScreen( (Double) profilPoints[i].getValue( breite ) );
+      final int y1 = tar.numericToScreen( (Double) profilPoints[i].getValue( index ) );
+      final int x2 = dom.numericToScreen( (Double) profilPoints[i + 1].getValue( breite ) );
       fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
     }

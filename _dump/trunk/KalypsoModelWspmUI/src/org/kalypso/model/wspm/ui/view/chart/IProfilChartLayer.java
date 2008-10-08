@@ -55,6 +55,8 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
  */
 public interface IProfilChartLayer extends IEditableChartLayer
 {
+  /** key to store  IChartLayer.getData() in ProfilViewdataObject */
+  final public static String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData";
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
   public IProfilView createLayerPanel( );
 

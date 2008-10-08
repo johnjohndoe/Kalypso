@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
@@ -61,6 +62,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public abstract class AbstractProfilView implements IProfilListener, IProfilView, IChartPart
 
 {
+
   protected final IProfil m_profile;
 
   private Control m_control;
@@ -87,7 +89,18 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    */
   public final Control createControl( final Composite parent, final int style )
   {
-    m_control = doCreateControl( parent, style );
+    m_control = doCreateControl( parent, null, style );
+    return m_control;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  public Control createControl( Composite parent, FormToolkit toolkit )
+  {
+    m_control = doCreateControl( parent, toolkit, parent.getStyle() );
     return m_control;
   }
 
@@ -100,7 +113,17 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
       m_profile.removeProfilListener( this );
   }
 
-  protected abstract Control doCreateControl( final Composite parent, final int style );
+  protected abstract Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style );
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  @Override
+  public ChartComposite getChartComposite( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
@@ -115,15 +138,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
   public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
-  public ChartComposite getChartComposite( )
   {
     // TODO Auto-generated method stub
     return null;

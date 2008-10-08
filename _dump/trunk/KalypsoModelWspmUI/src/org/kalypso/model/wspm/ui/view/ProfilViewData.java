@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -52,8 +51,6 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * <p>
@@ -74,16 +71,6 @@ public class ProfilViewData
   private final IMemento m_legendMemento;
 
   private final IMemento m_chartMemento;
-
-  protected boolean m_edithorz = false;
-
-  protected boolean m_editvert = true;
-
-  private final List<String> m_invisibleMarker = new ArrayList<String>();
-
-  private final List<String> m_invisiblePointProperties = new ArrayList<String>();
-
-  private IChartLayer m_activeLayer;
 
   private final Collection<IProfilViewDataListener> m_listener = new ArrayList<IProfilViewDataListener>();
 
@@ -111,25 +98,6 @@ public class ProfilViewData
     m_listener.clear();
   }
 
-  public boolean isVisible( final String pointProperty )
-  {
-    return !m_invisiblePointProperties.contains( pointProperty );
-  }
-
-  public void changeVisibility( final String pointProperty, final boolean visibility )
-  {
-    if( !visibility )
-    {
-      if( !m_invisiblePointProperties.contains( pointProperty ) )
-        m_invisiblePointProperties.add( pointProperty );
-    }
-    else
-    {
-      if( m_invisiblePointProperties.contains( pointProperty ) )
-        m_invisiblePointProperties.remove( pointProperty );
-    }
-  }
-
   public IMemento getLegendMemento( )
   {
     return m_legendMemento;
@@ -140,42 +108,6 @@ public class ProfilViewData
     return m_chartMemento;
   }
 
-  public boolean isEdithorz( )
-  {
-    return m_edithorz;
-  }
-
-  public void setEdithorz( final boolean edithorz )
-  {
-    m_edithorz = edithorz;
-  }
-
-  public void setMarkerVisibility( final String markerTyp, final boolean visible )
-  {
-    if( visible )
-      m_invisibleMarker.remove( markerTyp );
-    else if( !m_invisibleMarker.contains( markerTyp ) )
-      m_invisibleMarker.add( markerTyp );
-  }
-
-  /**
-   * @return true if not yet initialized
-   */
-  public boolean getMarkerVisibility( final String markerTyp )
-  {
-    return !m_invisibleMarker.contains( markerTyp );
-  }
-
-  public boolean isEditvert( )
-  {
-    return m_editvert;
-  }
-
-  public void setEditvert( final boolean editvert )
-  {
-    m_editvert = editvert;
-  }
-
   public void addProfilViewDataListener( final IProfilViewDataListener l )
   {
     m_listener.add( l );
@@ -184,28 +116,6 @@ public class ProfilViewData
   public void removeProfilViewDataListener( final IProfilViewDataListener l )
   {
     m_listener.remove( l );
-  }
-
-  private void fireChanged( )
-  {
-    final IProfilViewDataListener[] listeners = m_listener.toArray( new IProfilViewDataListener[m_listener.size()] );
-    for( final IProfilViewDataListener l : listeners )
-      l.onProfilViewDataChanged();
-  }
-
-  public IChartLayer getActiveLayer( )
-  {
-    return m_activeLayer;
-  }
-
-  public void setActiveLayer( final IChartLayer activeLayer )
-  {
-    if( activeLayer == m_activeLayer )
-      return;
-    m_activeLayer.setActive( false );
-    m_activeLayer = activeLayer;
-
-    fireChanged();
   }
 
 }

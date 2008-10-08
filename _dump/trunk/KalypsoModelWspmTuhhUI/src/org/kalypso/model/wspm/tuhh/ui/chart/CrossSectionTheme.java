@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -50,6 +51,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -69,13 +71,15 @@ public class CrossSectionTheme extends AbstractProfilTheme
 
   }
 
+ 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new GelaendePanel( getProfil() );
+
+    return new GelaendePanel( getProfil(), getLayerManager().getLayerById( IWspmConstants.POINT_PROPERTY_HOEHE ) );
   }
 
   @Override
@@ -90,7 +94,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
         final Rectangle clipping = gc.getClipping();
 
         final PolylineFigure figure = new PolylineFigure();
-        figure.setStyle( StyleUtils.getDefaultStyle(ILineStyle.class));
+        figure.setStyle( StyleUtils.getDefaultStyle( ILineStyle.class ) );
         final Point[] path = new Point[6];
         path[0] = new Point( 0, clipping.width / 2 );
         path[1] = new Point( clipping.width / 5, clipping.height / 2 );

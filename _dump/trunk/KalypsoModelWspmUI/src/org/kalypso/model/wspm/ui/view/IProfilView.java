@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * <p>
@@ -62,6 +63,8 @@ public interface IProfilView
    * </p>
    */
   public Control createControl( final Composite parent, final int style );
+  
+  public Control createControl( final Composite parent, final FormToolkit toolkit);
 
   /**
    * Return the control of this view.

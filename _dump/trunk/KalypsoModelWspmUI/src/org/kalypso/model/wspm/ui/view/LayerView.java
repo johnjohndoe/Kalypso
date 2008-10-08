@@ -40,18 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -71,87 +72,31 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author Gernot Belger
  */
 @SuppressWarnings("unchecked")
-public class LayerView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener, ILayerManagerEventListener// ,
+public class LayerView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener
 
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onActivLayerChanged( IChartLayer layer )
-  {
-    if( layer.isActive() )
-      updatePanel( layer );
-  }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerAdded( IChartLayer layer )
-  {
-    for( final IChartLayer l : m_layerManager.getLayers() )
-    {
-      l.setActive( l == layer );
-    }
-  }
+  private ScrolledForm m_form = null;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerContentChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerMoved( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerRemoved( IChartLayer layer )
-  {
-    final IChartLayer[] layers = m_layerManager.getLayers();
-    if( layers == null || layers.length < 1 )
-      return;
-    if( layer.isActive() )
-      m_layerManager.getLayers()[0].setActive( true );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerVisibilityChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  private final ScrolledCompositeCreator m_creator = new ScrolledCompositeCreator( null )
-  {
-    protected Control createContents( final Composite sc, final int style )
-    {
-      final Group group = new Group( sc, style );
-      group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      group.setLayout( new GridLayout() );
-
-      return group;
-    }
-  };
+  private FormToolkit m_toolkit;
 
   private final AdapterPartListener m_providerListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   private IProfilChartViewProvider m_provider;
 
-  private IChartLayer m_activeLayer;
-
   private ILayerManager m_layerManager = null;
+
+  private ILayerManagerEventListener m_layerListener = new AbstractLayerManagerEventListener()
+  {
+    @Override
+    public void onActivLayerChanged( IChartLayer layer )
+    {
+      if( layer.isActive() )
+        updatePanel( layer );
+    }
+  };
+
+  private IChartLayer m_activeLayer;
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
@@ -185,7 +130,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
       m_provider = null;
     }
     if( m_layerManager != null )
-      m_layerManager.removeListener( this );
+      m_layerManager.removeListener( m_layerListener );
   }
 
   /**
@@ -194,9 +139,8 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   @Override
   public void setFocus( )
   {
-    final Control control = m_creator.getContentControl();
-    if( control != null )
-      control.setFocus();
+    if( m_form != null && m_form.getBody() != null )
+      m_form.getBody().setFocus();
   }
 
   /**
@@ -205,7 +149,14 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_creator.createControl( parent, SWT.H_SCROLL | SWT.V_SCROLL, SWT.NONE );
+    m_toolkit = new FormToolkit( parent.getDisplay() );
+    m_form = m_toolkit.createScrolledForm( parent );
+    m_toolkit.decorateFormHeading( m_form.getForm() );
+    m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+    final GridLayout bodyLayout = new GridLayout();
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    m_form.getForm().getBody().setLayout( bodyLayout );
     if( m_provider != null )
       onProfilChartViewChanged( m_provider.getProfilChartView() );
   }
@@ -232,6 +183,18 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
 
   }
 
+  final private IChartLayer getActiveLayer( )
+  {
+
+    final IChartLayer[] layers = m_layerManager == null ? new IChartLayer[] {} : m_layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+      if( layer.isActive() )
+      {
+        return layer;
+      }
+    return null;
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener#onProfilChartViewChanged(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
@@ -241,168 +204,46 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
     final IChartModel model = chart == null ? null : chart.getChartModel();
     m_layerManager = model == null ? null : model.getLayerManager();
     if( m_layerManager != null )
-      m_layerManager.addListener( this );
-    final IChartLayer[] layers = m_layerManager == null ? new IChartLayer[] {} : m_layerManager.getLayers();
-    IChartLayer activeLayer = null;
-    for( final IChartLayer layer : layers )
-      if( layer.isActive() )
-      {
-        activeLayer = layer;
-        break;
-      }
-    if( m_activeLayer == activeLayer )
-      return;
-    final Group group = (Group) m_creator.getContentControl();
-    if( group == null || group.isDisposed() )
-      return;
+      m_layerManager.addListener( m_layerListener );
 
-    for( final Control c : group.getChildren() )
-    {
-      if( !c.isDisposed() )
-        c.dispose();
-    }
-    group.setText( "" ); //$NON-NLS-1$
-
-    updatePanel( activeLayer );
-
-// }
-// else
-// {
-// // alles gescheitert -> Meldung
-// final Label label = new Label( group, SWT.CENTER );
-// final GridData gridData = new GridData();
-// gridData.grabExcessHorizontalSpace = true;
-// gridData.horizontalAlignment = SWT.FILL;
-// gridData.horizontalIndent = 10;
-// gridData.grabExcessVerticalSpace = true;
-// gridData.verticalAlignment = SWT.CENTER;
-// gridData.verticalIndent = 10;
-//
-// label.setLayoutData( gridData );
-// label.setText( Messages.LayerView_1 );
-// }
-//
-// group.layout();
-// m_creator.updateControlSize( false );
+    updatePanel( getActiveLayer() );
   }
 
-// /**
-// * @see de.belger.swtchart.layer.IActiveLayerChangeListener#onActiveLayerChanged(de.belger.swtchart.layer.IChartLayer)
-// */
-// public void onActiveLayerChanged( final IChartLayer activeLayer )
-// {
-//
-// if( m_activeLayer == activeLayer )
-// return;
-// final Group group = (Group) m_creator.getContentControl();
-// if( group == null || group.isDisposed() )
-// return;
-//
-// for( final Control c : group.getChildren() )
-// {
-// if( !c.isDisposed() )
-// c.dispose();
-// }
-//    group.setText( "" ); //$NON-NLS-1$
-//
-// if( activeLayer != null )
-// {
-// group.setText( activeLayer.getTitle() );
-// final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer)
-  // activeLayer).createLayerPanel() : null;
-//
-// if( panel != null )
-// {
-// final Control control = panel.createControl( group, SWT.NONE );
-// control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-// }
-// else
-// new Label( group, SWT.NONE | SWT.WRAP );
-//
-// m_activeLayer = activeLayer;
-// }
-// else
-// {
-// // alles gescheitert -> Meldung
-// final Label label = new Label( group, SWT.CENTER );
-// final GridData gridData = new GridData();
-// gridData.grabExcessHorizontalSpace = true;
-// gridData.horizontalAlignment = SWT.FILL;
-// gridData.horizontalIndent = 10;
-// gridData.grabExcessVerticalSpace = true;
-// gridData.verticalAlignment = SWT.CENTER;
-// gridData.verticalIndent = 10;
-//
-// label.setLayoutData( gridData );
-// label.setText( Messages.LayerView_1 );
-// }
-//
-// group.layout();
-// m_creator.updateControlSize( false );
-// }
   final void updatePanel( final IChartLayer activeLayer )
   {
 
-// group.setText( activeLayer.getTitle() );
-// final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer)
-    // activeLayer).createLayerPanel() : null;
-//
-// if( panel != null )
-// {
-// final Control control = panel.createControl( group, SWT.NONE );
-// control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-// }
-// else
-// new Label( group, SWT.NONE | SWT.WRAP );
-//
-// m_activeLayer = activeLayer;
-
     if( m_activeLayer == activeLayer )
       return;
-    final Group group = (Group) m_creator.getContentControl();
-    if( group == null || group.isDisposed() )
+
+    if( m_form == null || m_form.isDisposed() || m_form.getBody() == null )
       return;
-
-    for( final Control c : group.getChildren() )
+    for( final Control ctrl : m_form.getBody().getChildren() )
     {
-      if( !c.isDisposed() )
-        c.dispose();
+      if( !ctrl.isDisposed() )
+        ctrl.dispose();
     }
-    group.setText( "" ); //$NON-NLS-1$
-
     if( activeLayer != null )
     {
-      group.setText( activeLayer.getTitle() );
+      m_form.getForm().setMessage( "", 0 );
+      m_form.getForm().setText( activeLayer.getTitle() );
       final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
 
       if( panel != null )
       {
-        final Control control = panel.createControl( group, SWT.NONE );
+        final Control control = panel.createControl( m_form.getForm().getBody(), m_toolkit );
+
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       }
-      else
-        new Label( group, SWT.NONE | SWT.WRAP );
 
       m_activeLayer = activeLayer;
     }
     else
     {
-// alles gescheitert -> Meldung
-      final Label label = new Label( group, SWT.CENTER );
-      final GridData gridData = new GridData();
-      gridData.grabExcessHorizontalSpace = true;
-      gridData.horizontalAlignment = SWT.FILL;
-      gridData.horizontalIndent = 10;
-      gridData.grabExcessVerticalSpace = true;
-      gridData.verticalAlignment = SWT.CENTER;
-      gridData.verticalIndent = 10;
-
-      label.setLayoutData( gridData );
-      label.setText( Messages.LayerView_1 );
+      m_form.getForm().setText( "" );
+      m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
     }
 
-    group.layout();
-    m_creator.updateControlSize( false );
+    m_form.getForm().layout();
 
   }
 }

@@ -56,10 +56,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
@@ -304,7 +301,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
-      return new CrossSectionTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
+      return new CrossSectionTheme( new IProfilChartLayer[] { new CrossSectionLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
           new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )

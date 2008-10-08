@@ -51,11 +51,8 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
@@ -131,7 +128,7 @@ public class TubeLayer extends AbstractProfilLayer
           final int upperY = targetAx.numericToScreen( y + h );
           final int rightX = domAx.numericToScreen( x + b / 2 );
           final int lowerY = targetAx.numericToScreen( y );
-          final int deltaX = m > 0 ? (lowerY - upperY) / m.intValue() : 0;
+          final int deltaX = m.intValue() > 0 ? (lowerY - upperY) / m.intValue() : 0;
           grc.fillPolygon( new int[] { leftX, lowerY, leftX - deltaX, upperY, rightX + deltaX, upperY, rightX, lowerY } );
         }
       };

@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -114,10 +115,11 @@ public class TrennerPanel extends AbstractProfilView
   public TrennerPanel( final IProfil profile )
   {
     super( profile );
+
   }
 
   @Override
-  protected Control doCreateControl( final Composite parent, final int style )
+  protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
     final IProfil profil = getProfil();
     final Display display = parent.getDisplay();
@@ -137,8 +139,6 @@ public class TrennerPanel extends AbstractProfilView
     final Label posrlabel = new Label( fliesszoneGroup, SWT.NONE );
     posrlabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
     posrlabel.setText( "rechts" );
-
-    final IComponent fz = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
     m_fzl_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );

@@ -106,9 +106,7 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -443,13 +441,14 @@ public class ProfilchartEditor extends EditorPart implements  IGotoMarker, IProf
   {
     final IProfil oldProfile = m_profilPart.getProfil();
     final ProfilViewData oldViewData = m_profilPart.getViewData();
-
-    if( oldProfile == null && oldViewData != null && profile != null )
-    {
-      if( profile != null )
-        for( final IComponent markerId : profile.getPointMarkerTypes() )
-          oldViewData.setMarkerVisibility( markerId.getId(), true );
-    }
+    
+ // TODO: remove this, it is deprecated
+//    if( oldProfile == null && oldViewData != null && profile != null )
+//    {
+//      if( profile != null )
+//        for( final IComponent markerId : profile.getPointMarkerTypes() )
+//          oldViewData.setMarkerVisibility( markerId.getId(), true );
+//    }
 
     m_profilPart.setProfil( profile );
 

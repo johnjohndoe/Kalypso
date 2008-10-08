@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -135,7 +136,7 @@ public class RauheitenPanel extends AbstractProfilView
    * @see com.bce.profil.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, final int style )
+  protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
     // das panel
     final Composite panel = new Composite( parent, SWT.NONE );
@@ -181,10 +182,8 @@ public class RauheitenPanel extends AbstractProfilView
         if( component != null && old != null && !m_rauheitTyp.equals( component.getId() ) )
         {
           final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfil(), true );
-
-          final Object[] oldValues = ProfilUtil.getValuesFor( getProfil(), old );
+          operation.addChange( new PointPropertyAdd( getProfil(), component, old ) );
           operation.addChange( new PointPropertyRemove( getProfil(), old ) );
-          operation.addChange( new PointPropertyAdd( getProfil(), component, oldValues ) );
           new ProfilOperationJob( operation ).schedule();
         }
       }
@@ -193,7 +192,7 @@ public class RauheitenPanel extends AbstractProfilView
     addLabel( panel, "Rauheitstyp", "Rauheitstyp" );
 
     final Group auto = new Group( panel, SWT.None );
-    auto.setText( "Rahheiten für Fliesszonen" );
+    auto.setText( "Rauhheiten für Fliesszonen" );
     auto.setLayout( new GridLayout( 2, false ) );
     auto.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) auto.getLayoutData()).horizontalSpan = 2;

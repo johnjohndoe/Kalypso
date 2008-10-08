@@ -40,66 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.PointsLineLayer;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author kimwerner
+ *
  */
-public class StationLineLayer extends AbstractProfilLayer
+public class CrossSectionLayer extends PointsLineLayer
 {
 
-  public StationLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public CrossSectionLayer( IProfil profil, String targetRangeProperty, ILayerStyleProvider styleProvider )
   {
-    super( profil, targetRangeProperty, null );
-    LineStyle ls = styleProvider.getStyleFor(  getId() + "_LINE", LineStyle.class);
-    setLineStyle( ls );
+    super( profil, targetRangeProperty, styleProvider );
   }
-
-  @Override
-  public String getId( )
-  {
-    return super.getId() + "_STATIONLINE";
-  }
-
-  @Override
-  public String getTitle( )
-  {
-    return "stationlines";
-  }
-
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void paint( GC gc )
+  public EditInfo drag( Point newPos, EditInfo dragStartData )
   {
-    final IProfil profil = getProfil();
 
-    if( profil == null )
-      return;
-    final IRecord[] profilPoints = profil.getPoints();
+    final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
+    if( o != null )
 
-    IAxis targetAxis = getCoordinateMapper().getTargetAxis();
-    final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
-    final PolylineFigure pf = new PolylineFigure();
-    ILineStyle ls = getLineStyle();
-    pf.setStyle( ls );
-    for( IRecord profilPoint : profilPoints )
-    {
-      final Point point = toScreen( profilPoint );
-      pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
-      pf.paint( gc );
-    }
+      try
+      {
+        final int i = Integer.valueOf( o.toString() );
+        if( (i & 2) == 0 )
+        {
+          newPos.y = dragStartData.m_pos.y;
+        }
+        if( (i & 1) == 0 )
+        {
+          newPos.x = dragStartData.m_pos.x;
+        }
+      }
+      catch( NumberFormatException e )
+      {
+        return super.drag( newPos, dragStartData );
+      }
+    return super.drag( newPos, dragStartData );
   }
 
 }

@@ -42,11 +42,8 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.util.ArrayList;
 
-import org.apache.tools.ant.taskdefs.Length;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;

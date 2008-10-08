@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
@@ -65,6 +67,21 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   {
     super( IWspmTuhhConstants.LAYER_TUBES, "Rohrdurchlass", chartLayers, cm );
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return;
+    if( hint.isObjectDataChanged()||hint.isObjectChanged())
+    {
+      getEventHandler().fireLayerContentChanged( this );
+    }
   }
 
   /**

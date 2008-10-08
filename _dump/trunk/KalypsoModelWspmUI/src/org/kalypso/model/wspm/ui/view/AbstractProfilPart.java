@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,14 +53,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
 import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
 
 /**
@@ -94,7 +91,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   private Composite m_control;
 
-  private ColorRegistry m_profilColorRegistry;
+// private ColorRegistry m_profilColorRegistry;
 
   protected ProfilChartView m_chartview;
 
@@ -109,7 +106,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     gridLayout.marginWidth = 0;
     gridLayout.marginHeight = 0;
     m_control.setLayout( gridLayout );
-    m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
+    // m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
 
     return m_control;
   }
@@ -124,10 +121,10 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
     m_viewdata.dispose();
 
-    m_profilColorRegistry = null;
+    // m_profilColorRegistry = null;
 
-    //TODO: KIM undo implementieren
-    
+    // TODO: KIM undo implementieren
+
     if( m_profile != null )
     {
       // die undo queue für dieses profil löschen
@@ -139,20 +136,20 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public void updateControl( )
   {
-//TODO:KIM viewdata verhalten überprüfen
+// TODO:KIM viewdata verhalten überprüfen
     if( m_chartview != null )
     {
       m_chartview.saveState( m_viewdata.getChartMemento() );
-  m_chartview.dispose();
+      m_chartview.dispose();
       m_chartview = null;
     }
-  //TODO:KIM viewdata verhalten überprüfen
+    // TODO:KIM viewdata verhalten überprüfen
     if( m_control == null || m_control.isDisposed() )
       return;
 
     final Control[] children = m_control.getChildren();
     for( final Control c : children )
-     c.dispose();
+      c.dispose();
 
     if( m_profile == null )
     {
@@ -174,7 +171,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       // PROFIL_PROPERTY.KOMMENTAR );
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
-      m_chartview = new ProfilChartView( m_profile,  m_profilColorRegistry );
+      m_chartview = new ProfilChartView( m_profile );// , m_profilColorRegistry );
       m_chartview.setLayerProvider( m_layerProvider );
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );
@@ -188,8 +185,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     fireOnProfilChartViewChanged();
   }
 
-  
-  //TODO: Kim undoContext nur für IProfile ??
+  // TODO: Kim undoContext nur für IProfile ??
   public ProfilUndoContext getUndoContext( )
   {
     return m_profile == null ? null : new ProfilUndoContext( m_profile );
@@ -199,7 +195,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   {
     return PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
   }
-  //TODO: Kim undoContext nur für IProfile ??
+
+  // TODO: Kim undoContext nur für IProfile ??
   public void setFocus( )
   {
     if( m_control != null )
@@ -242,7 +239,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public ProfilViewData getViewData( )
   {
-    //TODO: KIM überprüfen 
+    // TODO: KIM überprüfen
     return m_viewdata;
   }
 
@@ -251,8 +248,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     return m_profile;
   }
 
-  
-  //TODO: kim remove this, only used in ChartEditor
+  // TODO: kim remove this, only used in ChartEditor
   public ChartLegend createChartLegend( final Composite control, final int style )
   {
     if( m_chartview == null || m_chartview.getChart() == null )
@@ -266,18 +262,19 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   /**
    * @param chartlegend
    */
-//TODO: kim remove this, only used in ChartEditor
+// TODO: kim remove this, only used in ChartEditor
   public void saveLegend( final ChartLegend chartlegend )
   {
     if( chartlegend != null )
       chartlegend.saveState( m_viewdata.getLegendMemento() );
   }
-//TODO: kim remove this, only used in ChartEditor
-//  public void runChartAction( final ProfilChartActionsEnum chartAction )
-//  {
-//    if( m_chartview != null )
-//      m_chartview.runChartAction( chartAction );
-//  }
+
+// TODO: kim remove this, only used in ChartEditor
+// public void runChartAction( final ProfilChartActionsEnum chartAction )
+// {
+// if( m_chartview != null )
+// m_chartview.runChartAction( chartAction );
+// }
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#getProfilChartView()
