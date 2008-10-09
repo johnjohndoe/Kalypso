@@ -40,15 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -131,19 +131,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @SuppressWarnings("boxing")//$NON-NLS-1$
   protected void createLayer( )
   {
-    final ILayerManager lm = m_chart.getChartModel().getLayerManager();
 
-    String activeLayer = "";
-    // get visibility and clear layer
-    final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
+    final ILayerManager lm = m_chart.getChartModel().getLayerManager();
+    if( m_memento != null )
+      saveState( m_memento, lm );
 
     for( final IChartLayer layer : lm.getLayers() )
-    {
-      visibility.put( layer.getId(), layer.isVisible() );
-      if( layer.isActive() )
-        activeLayer = layer.getId();
       lm.removeLayer( layer );
-    }
 
     final IProfil profil = getProfil();
     if( profil != null )
@@ -158,22 +152,18 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       }
       // call provider
       final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
-      if( activeLayer.equals( "" ) )
-        activeLayer = requieredLayer[0];
+
       for( final String layerId : requieredLayer )
       {
         final IProfilChartLayer layer = m_layerProvider.createLayer( layerId, this );
         if( layer != null )
         {
-          final Boolean visible = visibility.get( layer.getId() );
-          layer.setVisible( visible == null ? layer.isVisible() : visible );
-          if( activeLayer.equals( layer.getId() ) )
-            layer.setActive( true );
           lm.addLayer( layer );
         }
       }
     }
-
+    if( m_memento != null )
+      restoreState( m_memento, lm );
   }
 
   /**
@@ -197,6 +187,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
+   
+    
     m_chart = new ChartComposite( parent, style, new ChartModel(), new RGB( 255, 255, 255 ) );
     m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -312,7 +304,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
             if( layer instanceof IProfilChartLayer )
               ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-        sortLayer();
         redrawChart();
       }
     } );
@@ -332,207 +323,95 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       } );
   }
 
-  public void restoreState( final IMemento memento )
+  private void restoreState( final IMemento memento, final ILayerManager mngr )
   {
-//    if( m_chart == null )
-//      return;
-//
-//    final Map<String, Boolean> hash = new HashMap<String, Boolean>();
-//    final IMemento[] layerChildren = memento.getChildren( MEM_LAYER_VIS );
-//    for( final IMemento layermem : layerChildren )
-//    {
-//      final String name = layermem.getID();
-//      final String textData = layermem.getTextData();
-//      final Boolean visib = Boolean.valueOf( textData );
-//      hash.put( name, visib );
-//    }
-//
-//    final Map<String, Boolean> actHash = new HashMap<String, Boolean>();
-//    final IMemento[] actChildren = memento.getChildren( MEM_LAYER_ACT );
-//    for( final IMemento layermem : actChildren )
-//    {
-//      final String name = layermem.getID();
-//      final String textData = layermem.getTextData();
-//      final Boolean active = Boolean.valueOf( textData );
-//      actHash.put( name, active );
-//    }
-//
-//    Boolean activeLayerFound = false;
-//    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
-//    {
-//      final Boolean visib = hash.get( layer.getId() );
-//      final Boolean active = actHash.get( layer.getId() );
-//      if( visib != null )
-//        layer.setVisible( visib );
-//      if( active != null )
-//      {
-//        layer.setActive( active );
-//        activeLayerFound = activeLayerFound || active;
-//      }
-//
-//      final String data = memento.getString( layer.getId() );
-//      if( data != null )
-//        layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data );
-//
-//      if( layer instanceof IExpandableChartLayer )
-//      {
-//        for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
-//        {
-//          final Boolean v = hash.get( child.getId() );
-//          if( v != null )
-//            child.setVisible( v );
-//
-//          final String childData = memento.getString( layer.getId() + child.getId() );
-//          if( childData != null )
-//            child.setData( IProfilChartLayer.VIEW_DATA_KEY, childData );
-//
-//        }
-//      }
-//    }
-//
-//    m_memento = memento;
-//    sortLayer();
-//
-//    if( !activeLayerFound )
-//      m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
-
-  }
-
-  protected final void sortLayer( )
-  {
-    if( m_memento == null )
-      return;
-    final Comparator<IMemento> memComp = new Comparator<IMemento>()
+    final SortedMap<Integer, String> sorted = new TreeMap<Integer, String>();
+    int i = 0;
+    for( final IChartLayer layer : mngr.getLayers() )
     {
-
-      @Override
-      public int compare( IMemento o1, IMemento o2 )
+      String id = layer.getId().replace( '#', '_' );//$NON-NLS-1$
+      id = id.replace( ' ', '_' );//$NON-NLS-1$
+      final IMemento layermem = memento.getChild( id );
+      if( layermem != null )
       {
-
-        final Integer pos1 = Integer.valueOf( o1.getTextData() );
-        final Integer pos2 = Integer.valueOf( o2.getTextData() );
-        if( pos1 == pos2 )
-          return 0;
-        else if( pos1 > pos2 )
-          return 1;
-        else
-          return -1;
+        final Boolean visible = layermem.getBoolean( MEM_LAYER_VIS );
+        if( visible != null )
+          layer.setVisible( visible );
+        final Boolean active = layermem.getBoolean( MEM_LAYER_ACT );
+        if( active != null )
+          layer.setActive( active );
+        final String data = layermem.getString( MEM_LAYER_DAT );
+        if( data != null )
+          layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data );
+        final Integer position = layermem.getInteger( MEM_LAYER_POS );
+        if( position != null )
+          sorted.put( position * 1000 + i++, layer.getId() );
+        final IMemento childMem = layermem.getChild( MEM_LAYER_CLD );
+        if( childMem != null && layer instanceof IExpandableChartLayer )
+          restoreState( childMem, ((IExpandableChartLayer) layer).getLayerManager() );
       }
-    };
-    final IMemento[] posMem = m_memento.getChildren( MEM_LAYER_POS );
-    Arrays.sort( posMem, memComp );
-    int j = 0;
-    for( final IMemento mem : posMem )
+    }
+    int pos = 0;
+    for( final String layerId : sorted.values() )
     {
-      final IChartLayer layer = m_chart.getChartModel().getLayerManager().getLayerById( mem.getID() );
-      if( layer != null )
-        m_chart.getChartModel().getLayerManager().moveLayerToPosition( layer, j++ );
+      mngr.moveLayerToPosition( mngr.getLayerById( layerId ), pos++ );
     }
   }
 
-// /**
-// * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
-// */
-// public void saveState( final IMemento memento )
-// {
-// if( m_chart == null )
-// return;
-//
-// int pos = 0;
-// for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
-// if( layer != null )
-// {
-//        
-//
-// final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
-// final IMemento layerpos = getMementoChild( memento, MEM_LAYER_POS, layer.getId(), true );
-// final IMemento layerdat = getMementoChild( memento, MEM_LAYER_DAT, layer.getId(), true );
-//        
-//        
-//        
-//        layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
-//        layerpos.putTextData( "" + pos++ ); //$NON-NLS-1$
-// final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
-// if( data != null )
-// {
-// layerdat.putTextData( data.toString() );
-// }
-//
-// // nur eine Ebene tiefer
-// if( layer instanceof IExpandableChartLayer )
-// {
-// int childpos = 0;
-// for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
-// {
-// final IMemento lmem = getMementoChild( memento, MEM_LAYER_VIS, child.getId(), true );
-// lmem.putTextData( "" + child.isVisible() );
-//
-// final IMemento memChPos = getMementoChild( layerpos, layer.getId(), child.getId(), true );
-// memChPos.putTextData( "" + childpos++ );
-//            
-// final IMemento memChDat = getMementoChild( layerdat, layer.getId(), child.getId(), true );
-//
-// final Object childData = child.getData( IProfilChartLayer.VIEW_DATA_KEY );
-// if( childData != null )
-// {
-// memChDat.putTextData( childData.toString() );
-// }
-// }
-// }
-// final IMemento layeract = getMementoChild( memento, MEM_LAYER_ACT, layer.getId(), true );
-//        layeract.putTextData( "" + layer.isActive() ); //$NON-NLS-1$
-// }
-// }
+  public void restoreState( final IMemento memento )
+  {
+    if( m_chart == null )
+      return;
+    m_memento = memento;
+    restoreState( memento, m_chart.getChartModel().getLayerManager() );
+  }
+
+  private IMemento getOrCreate( final IMemento memento, final String id )
+  {
+    final IMemento childNode = memento.getChild( id );
+    return childNode == null ? memento.createChild( id ) : childNode;
+  }
+
+  private void saveState( final IMemento memento, final ILayerManager mngr )
+  {
+    int pos = 0;
+    for( final IChartLayer layer : mngr.getLayers() )
+      if( layer != null )
+      {
+        /**
+         * you mustn't use invalid characters
+         * 
+         * @see com.sun.org.apache.xerces.internal.util.CoreDocumentImpl#isXMLName(String)
+         */
+        String sibling_ID = layer.getId().replace( '#', '_' );//$NON-NLS-1$
+        sibling_ID = sibling_ID.replace( ' ', '_' );//$NON-NLS-1$
+
+        final IMemento layermem = getOrCreate( memento, sibling_ID );
+        layermem.putBoolean( MEM_LAYER_VIS, layer.isVisible() ); //$NON-NLS-1$
+        layermem.putBoolean( MEM_LAYER_ACT, layer.isActive() ); //$NON-NLS-1$
+        layermem.putInteger( MEM_LAYER_POS, pos++ ); //$NON-NLS-1$
+        final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
+        if( data != null )
+        {
+          layermem.putString( MEM_LAYER_DAT, data.toString() );
+        }
+        if( layer instanceof IExpandableChartLayer )
+        {
+          final IMemento childmem = getOrCreate( layermem, MEM_LAYER_CLD );
+          saveState( childmem, ((IExpandableChartLayer) layer).getLayerManager() );
+        }
+      }
+  }
 
   /**
    * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
    */
   public void saveState( final IMemento memento )
   {
-//    if( m_chart == null )
-//      return;
-//
-//    int pos = 0;
-//    for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
-//      if( layer != null )
-//      {
-//        final IMemento layermem = memento.createChild( layer.getId() );
-//        layermem.putBoolean( MEM_LAYER_VIS, layer.isVisible() ); //$NON-NLS-1$
-//        layermem.putBoolean( MEM_LAYER_ACT, layer.isActive() ); //$NON-NLS-1$
-//        layermem.putInteger( MEM_LAYER_POS, pos++ ); //$NON-NLS-1$
-//        final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
-//        if( data != null )
-//        {
-//          layermem.putString( MEM_LAYER_DAT, data.toString() );
-//        }
-//
-//        // nur eine Ebene tiefer
-//        if( layer instanceof IExpandableChartLayer )
-//        {
-//          int childpos = 0;
-//          final IMemento childmem = layermem.createChild( MEM_LAYER_CLD );
-//          for( final IChartLayer child : ((IExpandableChartLayer) layer).getLayerManager().getLayers() )
-//          {
-//            final IMemento layermemchild = childmem.createChild( child.getId() );
-//            layermemchild.putBoolean( MEM_LAYER_VIS, child.isVisible() ); //$NON-NLS-1$
-//            layermemchild.putInteger( MEM_LAYER_POS, childpos++ ); //$NON-NLS-1$
-//            final Object childdata = child.getData( IProfilChartLayer.VIEW_DATA_KEY );
-//            if( childdata != null )
-//            {
-//              layermemchild.putString( MEM_LAYER_DAT, childdata.toString() );
-//            }
-//          }
-//        }
-//      }
+    if( m_chart == null )
+      return;
+    saveState( memento, m_chart.getChartModel().getLayerManager() );
   }
-
-//  private IMemento getMementoChild( final IMemento parent, final String siblingId, final String id, final boolean canCreate )
-//  {
-//    for( final IMemento children : parent.getChildren( siblingId ) )
-//      if( children.getID().equals( id ) )
-//        return children;
-//    return canCreate ? parent.createChild( siblingId, id ) : null;
-//  }
 
   public IProfilLayerProvider getLayerProvider( )
   {

@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.Messages;
@@ -137,10 +138,11 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   public void updateControl( )
   {
 // TODO:KIM viewdata verhalten überprüfen
+      
     if( m_chartview != null )
     {
       m_chartview.saveState( m_viewdata.getChartMemento() );
-      m_chartview.dispose();
+       m_chartview.dispose();
       m_chartview = null;
     }
     // TODO:KIM viewdata verhalten überprüfen
@@ -171,6 +173,10 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       // PROFIL_PROPERTY.KOMMENTAR );
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
+      
+     
+      
+      
       m_chartview = new ProfilChartView( m_profile );// , m_profilColorRegistry );
       m_chartview.setLayerProvider( m_layerProvider );
       m_chartview.createControl( m_control, SWT.BORDER );
