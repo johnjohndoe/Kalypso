@@ -177,7 +177,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   * 
+   *
    * @param context
    * @throws Exception
    */
@@ -207,7 +207,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   * 
+   *
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
