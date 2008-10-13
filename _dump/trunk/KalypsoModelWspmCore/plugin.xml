@@ -9,5 +9,12 @@
    <extension-point id="reparatorrule" name="reparatorrule" schema="schema/reparatorrule.exsd"/>
    <extension-point id="profilPointMarkerProvider" name="profilPointMarkerProvider" schema="schema/profilPointMarkerProvider.exsd"/>
    <extension-point id="profileObjectProvider" name="profileObjectProvider" schema="schema/profileObjectProvider.exsd"/>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.wspm.core.gml.ProfileFeatureBinding"
+            qname="{org.kalypso.model.wspmprofile}Profile">
+      </feature>
+   </extension>
    
 </plugin>

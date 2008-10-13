@@ -41,6 +41,8 @@
 package org.kalypso.model.wspm.core.profil.util;
 
 import java.awt.geom.Point2D;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -94,6 +97,16 @@ public class ProfilUtil
       i++;
     }
     return values;
+  }
+
+  /**
+   * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
+   * 
+   * @see #STATION_SCALE
+   */
+  public static BigDecimal stationToBigDecimal( final double station )
+  {
+    return new BigDecimal( station ).setScale( IProfileFeature.STATION_SCALE, RoundingMode.HALF_UP );
   }
 
   /**
