@@ -69,7 +69,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) ) //$NON-NLS-1$
       return new KalypsoPictureThemeGml( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
 
-    throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.5") + layerType.getLinktype() ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.5" ) + layerType.getLinktype() ); //$NON-NLS-1$
   }
 
   private TiledImage m_image = null;
@@ -137,7 +137,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     catch( final Exception e2 )
     {
       e2.printStackTrace();
-      KalypsoPictureTheme.LOGGER.warning( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.9") ); //$NON-NLS-1$
+      KalypsoPictureTheme.LOGGER.warning( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.9" ) ); //$NON-NLS-1$
     }
     return bbox;
   }
@@ -189,6 +189,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   protected void setImage( final TiledImage image )
   {
+    if( m_image != null )
+      m_image.dispose();
+
     m_image = image;
   }
 
