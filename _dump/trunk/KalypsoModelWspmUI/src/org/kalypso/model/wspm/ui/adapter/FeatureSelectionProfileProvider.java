@@ -53,9 +53,9 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -127,7 +127,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   }
 
   /* find all results connected to this water */
-  private IStationResult[] findResults( final WspmProfile profileMember )
+  private IStationResult[] findResults( final IProfileFeature profileMember )
   {
     final WspmWaterBody water = profileMember.getWater();
     if( water == null )
@@ -270,7 +270,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final EasyFeatureWrapper[] features = fs.getAllFeatures();
 
-    WspmProfile profileMember = null;
+    IProfileFeature profileMember = null;
     try
     {
       for( final EasyFeatureWrapper eft : features )
@@ -302,9 +302,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     }
 
     // Check if this is the current feature, if true, do not set the profile agin
-    final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
-
-    if( ObjectUtils.equals( m_feature, profileFeature ) )
+    if( ObjectUtils.equals( m_feature, profileMember ) )
       return;
 
     if( profileMember == null )
@@ -313,14 +311,13 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       return;
     }
 
-    final Feature feature = profileMember.getFeature();
-    final CommandableWorkspace workspace = fs.getWorkspace( feature );
+    final CommandableWorkspace workspace = fs.getWorkspace( profileMember );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
-    IProfil profile = ProfileFeatureFactory.toProfile( profileFeature );
+    IProfil profile = ProfileFeatureFactory.toProfile( profileMember );
     IStationResult[] results = findResults( profileMember );
-    setProfile( profile, results, profileFeature, workspace );
+    setProfile( profile, results, profileMember, workspace );
   }
 
   private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
