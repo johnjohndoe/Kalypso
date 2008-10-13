@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -41,6 +41,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.deegree.model.spatialschema.GeometryException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -124,7 +125,7 @@ public class Feature_Impl extends AbstractFeature
 
   /**
    * Accesses a property value of this feature.
-   * 
+   *
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -349,8 +350,8 @@ public class Feature_Impl extends AbstractFeature
 
   /**
    * REMARK: only for internal use. Is used to determine if a property is a function property. Function properties do
-   * not get transformed during load.<br/> This is needed in order to prohibit loading of xlinked-workspaces during
-   * gml-loading, in order to avoid dead-locks.
+   * not get transformed during load.<br/>
+   * This is needed in order to prohibit loading of xlinked-workspaces during gml-loading, in order to avoid dead-locks.
    */
   public boolean isFunctionProperty( final IPropertyType pt )
   {
@@ -475,8 +476,7 @@ public class Feature_Impl extends AbstractFeature
   @Override
   public void setFeatureType( IFeatureType ft )
   {
-    m_featureType = ft;
-
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -485,7 +485,7 @@ public class Feature_Impl extends AbstractFeature
   @Override
   public void setId( String fid )
   {
-    m_id = fid;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -539,5 +539,34 @@ public class Feature_Impl extends AbstractFeature
   public void setLocation( final GM_Object location )
   {
     setProperty( NamedFeatureHelper.GML_LOCATION, location );
+  }
+
+  /**
+   * feature given the property {@link QName}
+   *
+   * @param propertyQName
+   *          the {@link QName} of the property to get.
+   */
+  @SuppressWarnings("unchecked")
+  protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
+  {
+    final Object prop = getProperty( propertyQName );
+    try
+    {
+      if( prop == null )
+        return null;
+
+      if( propClass.isAssignableFrom( prop.getClass() ) )
+        return (T) prop;
+
+      if( prop instanceof IAdaptable )
+        return (T) ((IAdaptable) prop).getAdapter( propClass );
+
+      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
+    }
+    catch( final ClassCastException e )
+    {
+      throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
+    }
   }
 }

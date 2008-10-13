@@ -65,7 +65,7 @@
                   Implementing class of this feature binding. Must Implement &lt;code&gt;org.kalypsodeegree.model.feature.IFeatureBinding&lt;/code&gt;. Must have an constructor identical to Feature_Impl.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypsodeegree.model.feature.IFeatureBinding"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypsodeegree.model.feature.Feature"/>
                </appinfo>
             </annotation>
          </attribute>
