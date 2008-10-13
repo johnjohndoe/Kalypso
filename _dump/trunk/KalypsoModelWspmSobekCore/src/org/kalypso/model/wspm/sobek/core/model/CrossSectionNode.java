@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
@@ -97,7 +97,7 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
    */
   public IProfil getProfile( )
   {
-    final WspmProfile wspmProfile = getWspmProfile();
+    IProfileFeature wspmProfile = getLinkedProfile();
     final IProfil profil = wspmProfile.getProfil();
 
     return profil;
@@ -109,16 +109,6 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   public TYPE getType( )
   {
     return TYPE.eCrossSectionNode;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getWspmProfile()
-   */
-  public WspmProfile getWspmProfile( )
-  {
-    final Feature f = getLinkedProfile();
-
-    return new WspmProfile( f );
   }
 
   /**
@@ -138,7 +128,7 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode#getLinkedProfile()
    */
-  public Feature getLinkedProfile( )
+  public IProfileFeature getLinkedProfile( )
   {
     Feature f = null;
 
@@ -155,7 +145,7 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
     else
       f = feature.getWorkspace().getFeature( (String) objCsData );
 
-    return f;
+    return (IProfileFeature) f;
   }
 
   public enum DEFAULT_ROUGHNESS

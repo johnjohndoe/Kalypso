@@ -40,9 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
@@ -53,7 +52,6 @@ public interface ICrossSectionNode extends INode
 
   public IProfil getProfile( );
 
-  public Feature getLinkedProfile( );
+  public IProfileFeature getLinkedProfile( );
 
-  public WspmProfile getWspmProfile( );
 }
