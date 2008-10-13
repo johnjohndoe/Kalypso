@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
@@ -67,8 +67,8 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -201,7 +201,7 @@ public class WspWinImporter
       // /////////////// //
       // import profiles //
       // /////////////// //
-      final Map<String, WspmProfile> importedProfiles = new HashMap<String, WspmProfile>();
+      final Map<String, IProfileFeature> importedProfiles = new HashMap<String, IProfileFeature>();
       try
       {
         final ProfileBean[] commonProfiles = wspCfgBean.readProfproj( wspwinDirectory );
@@ -263,7 +263,7 @@ public class WspWinImporter
    * Adds the profile beans as profiles to the tuhh-project. For each profile bean, a new profile file is generated and
    * the profile is added as reference to it.
    */
-  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, WspmProfile> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
+  private static IStatus importProfiles( final File profDir, final TuhhWspmProject tuhhProject, final ProfileBean[] commonProfiles, final Map<String, IProfileFeature> addedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject )
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Fehler beim Importieren der Profile", null );
 
@@ -271,7 +271,7 @@ public class WspWinImporter
     {
       try
       {
-        final WspmProfile profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, isNotTuhhProject );
+        final IProfileFeature profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, isNotTuhhProject );
 
         final BigDecimal profStation = profile.getBigStation();
         final BigDecimal beanStation = new BigDecimal( bean.getStation() );
@@ -304,14 +304,14 @@ public class WspWinImporter
    * Imports a single profile according to the given ProfileBean. If the map already contains a profile with the same id
    * (usually the filename), we return this instead.
    */
-  private static WspmProfile importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, WspmProfile> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException, CoreException
+  private static IProfileFeature importProfile( final File profDir, final TuhhWspmProject tuhhProject, final Map<String, IProfileFeature> knownProfiles, final ProfileBean bean, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws GMLSchemaException, IOException, CoreException
   {
     final String fileName = bean.getFileName();
 
     if( knownProfiles.containsKey( fileName ) )
       return knownProfiles.get( fileName );
 
-    final WspmProfile prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
+    final IProfileFeature prof = tuhhProject.createNewProfile( bean.getWaterName(), isDirectionUpstreams );
 
     final File prfFile = new File( profDir, fileName );
 
@@ -328,7 +328,7 @@ public class WspWinImporter
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
     final IProfil profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
 
-    ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
+    ProfileFeatureFactory.toFeature( profile, prof );
     /* Set state as default name for profile. */
     prof.setName( bean.getStateName() );
 
@@ -345,7 +345,7 @@ public class WspWinImporter
    * importedPRofilesMap.
    * </p>
    */
-  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, WspmProfile> importedProfiles, final boolean isDirectionUpstreams, boolean isNotTuhhProject ) throws IOException, ParseException
+  private static IStatus importTuhhZustand( final TuhhWspmProject tuhhProject, final WspCfgBean wspCfg, final ZustandBean zustandBean, final Map<String, IProfileFeature> importedProfiles, final boolean isDirectionUpstreams, final boolean isNotTuhhProject ) throws IOException, ParseException
   {
     final MultiStatus status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, "Import " + zustandBean.getFileName(), null );
 
@@ -382,7 +382,7 @@ public class WspWinImporter
       try
       {
         final ProfileBean fromBean = new ProfileBean( waterName, name, bean.getStationFrom(), bean.getFileNameFrom(), new HashMap<String, String>() );
-        final WspmProfile fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
+        final IProfileFeature fromProf = importProfile( profDir, tuhhProject, importedProfiles, fromBean, isDirectionUpstreams, isNotTuhhProject );
 
         reach.createProfileSegment( fromProf, bean.getStationFrom() );
 
@@ -390,7 +390,7 @@ public class WspWinImporter
         {
           // also add last profile
           final ProfileBean toBean = new ProfileBean( waterName, name, bean.getStationTo(), bean.getFileNameTo(), new HashMap<String, String>() );
-          final WspmProfile toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
+          final IProfileFeature toProf = importProfile( profDir, tuhhProject, importedProfiles, toBean, isDirectionUpstreams, isNotTuhhProject );
 
           reach.createProfileSegment( toProf, bean.getStationTo() );
         }
@@ -616,8 +616,8 @@ public class WspWinImporter
 
     final IComponent stationComp;
     final IComponent valueComp;
-//    if( components.length < 1 )
-//      return;
+// if( components.length < 1 )
+// return;
     if( components[0].getName().startsWith( "Station" ) )
     {
       stationComp = components[0];

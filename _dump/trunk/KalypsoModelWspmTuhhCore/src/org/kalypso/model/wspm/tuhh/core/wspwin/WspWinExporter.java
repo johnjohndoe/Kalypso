@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.wspwin;
 
@@ -70,8 +70,8 @@ import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -183,7 +183,7 @@ public class WspWinExporter
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
    * 
    * @param context
-   *            Context to resolve links inside the gml structure.
+   *          Context to resolve links inside the gml structure.
    */
   public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException
   {
@@ -421,7 +421,7 @@ public class WspWinExporter
         if( stationRange.isOutside( station ) )
           continue;
 
-        final WspmProfile profileMember = segment.getProfileMember();
+        final IProfileFeature profileMember = segment.getProfileMember();
 
         final String prfName = "Profil_" + fileCount++ + ".prf";
 
@@ -430,7 +430,7 @@ public class WspWinExporter
         // TODO mindestens 4, besser 5 Nachkommastellen?
         zustWriter.println( station );
 
-        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember );
         profil.setStation( station.doubleValue() );
 
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );
