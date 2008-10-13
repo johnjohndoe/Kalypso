@@ -214,10 +214,15 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public void executeClick( EditInfo clickInfo )
   {
-    final int pos = ((Integer) clickInfo.m_data);
-    final IProfil profil = getProfil();
-    profil.setActivePoint( profil.getPoint( pos ) );
-    profil.setActivePointProperty( getTargetComponent() );
+    final Object data = clickInfo.m_data;
+    final Integer pos = data instanceof Integer ? (Integer) data : null;
+    final IComponent cmp = getTargetComponent();
+    if( cmp != null && pos != null )
+    {
+      final IProfil profil = getProfil();
+      profil.setActivePoint( profil.getPoint( pos ) );
+      profil.setActivePointProperty( cmp );
+    }
   }
 
   /**
@@ -420,8 +425,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public void removeYourself( )
   {
-    // TODO Auto-generated method stub
-
+    // override this method
+    throw new UnsupportedOperationException();
   }
 
   /**
