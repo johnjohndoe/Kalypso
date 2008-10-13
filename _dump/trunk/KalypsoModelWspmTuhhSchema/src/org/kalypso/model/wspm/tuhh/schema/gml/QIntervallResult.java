@@ -51,7 +51,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -149,16 +149,16 @@ public class QIntervallResult extends AbstractFeatureBinder
    * Also sets the building-phenomenon
    * </p>
    */
-  public void setProfileLink( final WspmProfile profile )
+  public void setProfileLink( final IProfileFeature profile )
   {
     final Feature feature = getFeature();
     final IGMLSchema schema = feature.getWorkspace().getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
 
-    final IFeatureType ftProfile = schema.getFeatureType( WspmProfile.QNAME_PROFILE );
+    final IFeatureType ftProfile = schema.getFeatureType( IProfileFeature.QNAME_PROFILE );
     final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_profileMember );
 
-    final String href = "project:/modell.gml#" + profile.getGmlID();
+    final String href = "project:/modell.gml#" + profile.getId();
     final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" );
     feature.setProperty( profileRelation, profileFeatureRef );
 

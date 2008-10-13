@@ -73,7 +73,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.FormatterUtils;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.tuhh.core.gml.PolynomeProperties;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -121,9 +121,9 @@ public class PolynomeHelper
    * Prepares the input files for the polynome process
    * 
    * @param tmpDir
-   *            any tmp dir, must be empty before start, may be deleted after end
+   *          any tmp dir, must be empty before start, may be deleted after end
    * @param dathDir
-   *            Directory containing the laengsschnitt.txt and the beiwerte.aus files.
+   *          Directory containing the laengsschnitt.txt and the beiwerte.aus files.
    * @return The polynom input dir (01Eingang), if preparation was succesful, else <code>null</code>.
    */
   private static File preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
@@ -367,7 +367,7 @@ public class PolynomeHelper
       return results;
     }
 
-    final SortedMap<BigDecimal, WspmProfile> profileIndex = indexProfiles( calculation );
+    final SortedMap<BigDecimal, IProfileFeature> profileIndex = indexProfiles( calculation );
 
     for( final File profFile : profFiles )
     {
@@ -392,7 +392,7 @@ public class PolynomeHelper
         qresult.setSlope( slope );
 
         /* Link to profile */
-        final WspmProfile profile = profileForStation( profileIndex, station );
+        final IProfileFeature profile = profileForStation( profileIndex, station );
         if( profile != null )
           qresult.setProfileLink( profile );
 
@@ -416,9 +416,9 @@ public class PolynomeHelper
     return results;
   }
 
-  private static WspmProfile profileForStation( final SortedMap<BigDecimal, WspmProfile> profileIndex, final BigDecimal station )
+  private static IProfileFeature profileForStation( final SortedMap<BigDecimal, IProfileFeature> profileIndex, final BigDecimal station )
   {
-    return (WspmProfile) forStation( profileIndex, station );
+    return (IProfileFeature) forStation( profileIndex, station );
   }
 
   public static Object forStation( final SortedMap<BigDecimal, ? extends Object> stationIndex, final BigDecimal station )
@@ -457,14 +457,14 @@ public class PolynomeHelper
     return null;
   }
 
-  private static SortedMap<BigDecimal, WspmProfile> indexProfiles( final TuhhCalculation calculation )
+  private static SortedMap<BigDecimal, IProfileFeature> indexProfiles( final TuhhCalculation calculation )
   {
     final TuhhReach reach = calculation.getReach();
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-    final SortedMap<BigDecimal, WspmProfile> index = new TreeMap<BigDecimal, WspmProfile>();
+    final SortedMap<BigDecimal, IProfileFeature> index = new TreeMap<BigDecimal, IProfileFeature>();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
-      final WspmProfile profileMember = segment.getProfileMember();
+      final IProfileFeature profileMember = segment.getProfileMember();
       index.put( segment.getStation(), profileMember );
     }
 

@@ -59,8 +59,8 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -233,9 +233,8 @@ public class BreakLinesHelper implements IWspmConstants
         if( geometry == null ) // ignore profiles without geometry
           continue;
 
-        final WspmProfile profileMember = reach.getProfileMember();
-
-        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
+        final IProfileFeature profileMember = reach.getProfileMember();
+        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember );
 
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
