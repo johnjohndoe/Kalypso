@@ -55,7 +55,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -130,9 +130,9 @@ public class SegmentData
   // original data
   private final Map<Feature, CreateChannelData.SIDE> m_bankLines;
 
-  private final WspmProfile m_upProfile;
+  private final IProfileFeature m_upProfile;
 
-  private final WspmProfile m_DownProfile;
+  private final IProfileFeature m_DownProfile;
 
   private LineString m_upProfLineString;
 
@@ -151,7 +151,7 @@ public class SegmentData
 
   private double m_areaDownIntersProfile;
 
-  public SegmentData( final CreateChannelData channelData, final WspmProfile upProfile, final WspmProfile downProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
+  public SegmentData( final CreateChannelData channelData, final IProfileFeature upProfile, final IProfileFeature downProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
   {
     m_channelData = channelData;
     m_upProfile = upProfile;
@@ -312,11 +312,11 @@ public class SegmentData
    * same as the area of the cropped original IProfil (targetArea)
    * 
    * @param profile
-   *            intersected profile for which the area adjustment shall be done
+   *          intersected profile for which the area adjustment shall be done
    * @param targetArea
-   *            area of the original cropped profile
+   *          area of the original cropped profile
    * @param currentArea
-   *            current area of the intersected profile
+   *          current area of the intersected profile
    */
   private IProfil adjustProfileArea( final IProfil profile, final double targetArea, final double currentArea )
   {
@@ -463,12 +463,13 @@ public class SegmentData
   }
 
   /**
-   * initial intersection of an IProfil. There are two ways of intersection:<br> - if there are more profile points
-   * than the wished number of intersection points, the intersection is done by Douglas-Peucker<br> - if there are not
-   * enough profile points, the intersection is done with an equidistant approach.
+   * initial intersection of an IProfil. There are two ways of intersection:<br>
+   * - if there are more profile points than the wished number of intersection points, the intersection is done by
+   * Douglas-Peucker<br>
+   * - if there are not enough profile points, the intersection is done with an equidistant approach.
    * 
    * @param profile
-   *            input profile to be intersected.
+   *          input profile to be intersected.
    */
   private IProfil createIntersectedIProfile( final IProfil profile ) throws Exception
   {
@@ -600,9 +601,9 @@ public class SegmentData
    * this method is used for intersecting the banklines (Linestrings)
    * 
    * @param linestring
-   *            input linestring to be intersected
+   *          input linestring to be intersected
    * @param numIntersects
-   *            number of intersections of the linestring
+   *          number of intersections of the linestring
    */
   private LineString intersectLineString( final LineString linestring, final int numIntersects )
   {
@@ -660,11 +661,11 @@ public class SegmentData
    * the geographical data is interpolated from the original profile data.
    * 
    * @param wspmprofile
-   *            original profile (WSPMProfile) to be intersected
+   *          original profile (WSPMProfile) to be intersected
    * @param prof
-   *            additional informations of the corresponding intersection points of that profile (upstream / downstream)
+   *          additional informations of the corresponding intersection points of that profile (upstream / downstream)
    */
-  private IProfil createCroppedIProfile( final WspmProfile wspmprofile, final CreateChannelData.PROF prof ) throws Exception
+  private IProfil createCroppedIProfile( final IProfileFeature wspmprofile, final CreateChannelData.PROF prof ) throws Exception
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( wspmprofile.getProfil().getType() );
 
@@ -783,13 +784,13 @@ public class SegmentData
    * gets the profile width coordinate of a specific intersection point corresponding to that profile
    * 
    * @param profile
-   *            input profile
+   *          input profile
    * @param prof
-   *            additional infos concerning the intersection point (profile (up/down))
+   *          additional infos concerning the intersection point (profile (up/down))
    * @param widthorder
-   *            additional infos concerning the intersection point (First/Last)
+   *          additional infos concerning the intersection point (First/Last)
    */
-  private double calcWidthCoord( final WspmProfile profile, final CreateChannelData.PROF prof, final CreateChannelData.WIDTHORDER widthorder )
+  private double calcWidthCoord( final IProfileFeature profile, final CreateChannelData.PROF prof, final CreateChannelData.WIDTHORDER widthorder )
   {
     // get the intersection point for the profile
     final Point point = getIntersPoint( prof, widthorder );
@@ -814,13 +815,13 @@ public class SegmentData
    * crops the WSPM profile at the intersection points and converts it to a LineString
    * 
    * @param profile
-   *            input profile to be cropped
+   *          input profile to be cropped
    * @param prof
-   *            additional infos about the intersection points (wether it is the upstream / downstream profile of the
-   *            current segment)
+   *          additional infos about the intersection points (wether it is the upstream / downstream profile of the
+   *          current segment)
    * @see JTSUtilities.createLineSegment
    */
-  private LineString createCroppedProfileLineString( final WspmProfile profile, final CreateChannelData.PROF prof ) throws GM_Exception
+  private LineString createCroppedProfileLineString( final IProfileFeature profile, final CreateChannelData.PROF prof ) throws GM_Exception
   {
     final LineString lsProfile = (LineString) JTSAdapter.export( profile.getLine() );
     final LineString intersProfile;
@@ -1037,9 +1038,9 @@ public class SegmentData
    * converts a WSPM profile into an linestring
    * 
    * @param profile
-   *            Input profile to be converted.
+   *          Input profile to be converted.
    */
-  private LineString convertProfilesToLineStrings( final WspmProfile profile )
+  private LineString convertProfilesToLineStrings( final IProfileFeature profile )
   {
     // get the profile line
     final GM_Curve profCurve = profile.getLine();

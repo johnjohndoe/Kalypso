@@ -89,7 +89,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -302,9 +303,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     /* =========== calculate the geometry ============= */
 
     /*
-     * right here, all element objects should have been created by the arcHandler
-     * 
-     * IT IS NECESSARY, THAT THE ELEMENTS ARE STANDING BELOW THE ARCS IN THE 2D-RESULT FILE!!
+     * right here, all element objects should have been created by the arcHandler IT IS NECESSARY, THAT THE ELEMENTS ARE
+     * STANDING BELOW THE ARCS IN THE 2D-RESULT FILE!!
      */
     if( m_elemIndex.containsKey( id ) == true )
     {
@@ -495,10 +495,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private IStatus handleLengthSectionData( final INodeResult nodeResult, final IFlowRelation1D flowRelation1d, final ICalculationUnit1D calcUnit )
   {
-    final WspmProfile profile = flowRelation1d.getProfile();
+    final IProfileFeature profile = flowRelation1d.getProfile();
     final double profileStation = profile.getStation();
     // station
-    final BigDecimal station = WspmProfile.stationToBigDecimal( profileStation );
+    final BigDecimal station = ProfilUtil.stationToBigDecimal( profileStation );
 
     // thalweg
     final BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -569,7 +569,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
 
-      final WspmProfile profile = flowRelation1d.getProfile();
+      final IProfileFeature profile = flowRelation1d.getProfile();
 
       // get the profile Curves of the two nodes defining the current element
       curves[i] = NodeResultHelper.getProfileCurveFor1dNode( profile );
@@ -926,9 +926,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * Splits the element into triangles.
-   * 
-   * There are 6 / 8 triangles to be built. For each midside node there are two triangles to be built. <br>
+   * Splits the element into triangles. There are 6 / 8 triangles to be built. For each midside node there are two
+   * triangles to be built. <br>
    * We begin with the first corner node, the first midside node and the center node.<br>
    * The second triangle is the second corner node, the first midside node and the center node.<br>
    */
@@ -1020,7 +1019,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /*
          * nodeList.add( elementResult.getMidsideNodes( i ) ); if( i < numMidsideNodes - 1 ) nodeList.add(
          * elementResult.getCornerNodes( i + 1 ) ); else nodeList.add( elementResult.getCornerNodes( 0 ) );
-         * 
          * nodeList.add( elementResult.getCenterNode() );
          */
         /* check, if the triangle is partially flooded */
@@ -1085,7 +1083,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * the node list
    * 
    * @param nodes
-   *            node list of the triangle to split. In this list the split nodes are added.
+   *          node list of the triangle to split. In this list the split nodes are added.
    */
   private void splitTriangle( final List<INodeResult> nodes )
   {
@@ -1368,14 +1366,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   /**
    * One corner node is part of the inundation line and one arc is split => two triangles.<br>
-   * There are three possibilities depending on the split arc.<br> - the inserted node lies between node0 and node1.<br> -
-   * the inserted node lies between node1 and node2.<br> - the inserted node lies between node2 and node0.<br>
+   * There are three possibilities depending on the split arc.<br>
+   * - the inserted node lies between node0 and node1.<br>
+   * - the inserted node lies between node1 and node2.<br>
+   * - the inserted node lies between node2 and node0.<br>
    * 
    * @param nodes
-   *            list of all nodes of the triangle to split
+   *          list of all nodes of the triangle to split
    * @param splitArcs
-   *            list of the split arc numbers (here just one)
-   * 
+   *          list of the split arc numbers (here just one)
    */
   private void splitIntoTwoTriangles( final List<INodeResult> nodes, final Integer splitArc )
   {
@@ -1896,7 +1895,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         if( teschkeRelation == null )
           break;
 
-        final WspmProfile profile = teschkeRelation.getProfile();
+        final IProfileFeature profile = teschkeRelation.getProfile();
 
         // get the profile Curves of the two nodes defining the current element
         final GM_Curve curve = NodeResultHelper.getProfileCurveFor1dNode( profile );

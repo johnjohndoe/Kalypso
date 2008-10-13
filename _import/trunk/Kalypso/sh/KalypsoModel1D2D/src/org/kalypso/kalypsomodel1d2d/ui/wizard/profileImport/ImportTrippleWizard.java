@@ -62,8 +62,8 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -177,7 +177,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
    * Converts the profiles in GML (-> terrain model).
    * 
    * @param networkCollection
-   *            the GML river network, in which the profiles will be stored
+   *          the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
   protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final List<IProfil> profiles ) throws Exception
@@ -199,10 +199,10 @@ public class ImportTrippleWizard extends Wizard implements IWizard
 
     for( final IProfil profile : profiles )
     {
-      final Feature profileFeature = FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
+      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
       profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
-      new WspmProfile( profileFeature ).setSrsName( crs );
+      profileFeature.setSrsName( crs );
       addedFeatures.add( profileFeature );
     }
 

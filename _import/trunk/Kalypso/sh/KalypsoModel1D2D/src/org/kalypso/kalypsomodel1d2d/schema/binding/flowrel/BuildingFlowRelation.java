@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -195,10 +195,10 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
    */
-  public WspmProfile getProfile( )
+  public IProfileFeature getProfile( )
   {
-    final Feature profileFeature = FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
-    return profileFeature == null ? null : new WspmProfile( profileFeature );
+    final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    return profileFeature;
   }
 
   /**
@@ -219,7 +219,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
    */
   public BigDecimal getStation( )
   {
-    final WspmProfile profile = getProfile();
+    final IProfileFeature profile = getProfile();
     if( profile == null )
       return null;
 
@@ -231,7 +231,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
    */
   public void setStation( final BigDecimal station )
   {
-    final WspmProfile profile = getProfile();
+    final IProfileFeature profile = getProfile();
     if( profile == null )
       return;
 

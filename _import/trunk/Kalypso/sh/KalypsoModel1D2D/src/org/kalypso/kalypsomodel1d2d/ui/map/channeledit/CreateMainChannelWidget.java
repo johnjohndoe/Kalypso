@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -138,7 +138,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
       for( final Feature feature : selectedProfiles )
       {
-        final WspmProfile profile = new WspmProfile( feature );
+        final IProfileFeature profile = (IProfileFeature) (feature);
         final GM_Curve line = profile.getLine();
 
         final LineSymbolizer symb = getProfilLineSymbolizer( new Color( 255, 255, 0 ) );

@@ -71,7 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -170,7 +170,7 @@ public class Restart1DImporter
     final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
-      final WspmProfile profileMember = segment.getProfileMember();
+      final IProfileFeature profileMember = segment.getProfileMember();
       String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
       final IProfil profil = profileMember.getProfil();

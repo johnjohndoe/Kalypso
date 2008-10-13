@@ -73,7 +73,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -216,7 +216,7 @@ public class CreateChannelData
         final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
         final IFeatureType featureType = fTheme.getFeatureType();
 
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, WspmProfile.QNAME_PROFILE ) )
+        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QNAME_PROFILE ) )
           goodThemes.add( fTheme );
       }
     }
@@ -303,7 +303,7 @@ public class CreateChannelData
 
   /**
    * @param side
-   *            false: left, true: right
+   *          false: left, true: right
    */
   public void addSelectedBanks( final Feature[] bankFeatures, final SIDE side )
   {
@@ -775,17 +775,17 @@ public class CreateChannelData
     monitor.beginTask( "Processing profiles", profileFeatures.length );
 
     final Feature firstFeature = profileFeatures[0];
-    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( WspmProfile.QNAME_STATION );
+    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QNAME_STATION );
     Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getParent(), stationProperty ) );
 
     // loop over all profiles
     // take two neighbouring profiles create a segment for them
 
-    WspmProfile lastProfile = null;
+    IProfileFeature lastProfile = null;
     for( final Feature profileFeature : profileFeatures )
     {
       // get the profile line
-      final WspmProfile profile = new WspmProfile( profileFeature );
+      final IProfileFeature profile = (IProfileFeature) (profileFeature);
 
       monitor.subTask( "Station km " + profile.getStation() );
 

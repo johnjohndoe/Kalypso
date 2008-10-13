@@ -52,7 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -73,7 +73,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class NodeResultHelper
 {
@@ -82,11 +81,11 @@ public class NodeResultHelper
    * sets the mid-side node's water level and depth by interpolation between the corner nodes.
    * 
    * @param nodeDown
-   *            first node of the corresponding arc.
+   *          first node of the corresponding arc.
    * @param nodeUp
-   *            second node of the corresponding arc.
+   *          second node of the corresponding arc.
    * @param midsideNode
-   *            the mid-side node
+   *          the mid-side node
    */
   public static void checkMidsideNodeData( final INodeResult nodeDown, final INodeResult nodeUp, final INodeResult midsideNode )
   {
@@ -124,11 +123,11 @@ public class NodeResultHelper
    * calculated as well, using the interpolated water level.
    * 
    * @param nodeDown
-   *            first node of the arc on which the corner node lies.
+   *          first node of the arc on which the corner node lies.
    * @param nodeUp
-   *            second node
+   *          second node
    * @param midsideNode
-   *            the midside node
+   *          the midside node
    */
   private static void interpolateMidsideNodeData( final INodeResult nodeDown, final INodeResult nodeUp, final INodeResult midsideNode )
   {
@@ -219,10 +218,9 @@ public class NodeResultHelper
    * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
    * 
    * @param nodeResult
-   *            1d-node
-   * 
+   *          1d-node
    */
-  public static GM_Curve getProfileCurveFor1dNode( final WspmProfile profile ) throws GM_Exception
+  public static GM_Curve getProfileCurveFor1dNode( final IProfileFeature profile ) throws GM_Exception
   {
     final IProfil profil = profile.getProfil();
 
@@ -294,11 +292,11 @@ public class NodeResultHelper
    * x-coordinates (x2-x1) = dx12.
    * 
    * @param dx12
-   *            distance between x1 and x2.
+   *          distance between x1 and x2.
    * @param y1
-   *            the y-value of point 1 of the line. It has to be always > 0!
+   *          the y-value of point 1 of the line. It has to be always > 0!
    * @param y2
-   *            the y-value of point 2 of the line. It has to be always < 0!
+   *          the y-value of point 2 of the line. It has to be always < 0!
    */
   public static double getZeroPoint( final double dx12, final double y1, final double y2 )
   {

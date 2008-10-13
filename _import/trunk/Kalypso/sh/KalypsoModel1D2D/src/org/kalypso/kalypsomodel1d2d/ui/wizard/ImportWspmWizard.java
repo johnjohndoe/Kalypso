@@ -100,7 +100,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -159,7 +159,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
-    public void pageChanged( PageChangedEvent event )
+    public void pageChanged( final PageChangedEvent event )
     {
       handlePageChanged( event );
     }
@@ -245,7 +245,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           IDialogConstants.CANCEL_LABEL }, 1 );
       final int open = messageDialog.open();
       System.out.println( "open: " + open );
-      if( open == 2 || open == -1 )
+      if( (open == 2) || (open == -1) )
         return false;
 
       if( open == 0 )
@@ -272,7 +272,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
             /* Import reach into profile collection */
             monitor.subTask( Messages.getString( "ImportWspmWizard.6" ) ); //$NON-NLS-1$
 
-            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, segments, profNetworkColl, existingNetwork );
+            final SortedMap<BigDecimal, IProfileFeature> profilesByStation = doImportNetwork( reach, segments, profNetworkColl, existingNetwork );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
@@ -338,9 +338,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
    * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
    * 
    * @param elements
-   *            by station Must be sorted in the order of the flow direction
+   *          by station Must be sorted in the order of the flow direction
    */
-  protected static IStatus doReadResults( final TuhhCalculation calculation, final TuhhReachProfileSegment[] segments, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws MalformedURLException, Exception
+  protected static IStatus doReadResults( final TuhhCalculation calculation, final TuhhReachProfileSegment[] segments, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, IProfileFeature> profilesByStation ) throws MalformedURLException, Exception
   {
     try
     {
@@ -387,7 +387,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           // REMARK: it is important that elementsByStation is sorted in upstream direction
           final IFE1D2DNode downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
           final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
-          if( downStreamNode == null || upStreamNode == null )
+          if( (downStreamNode == null) || (upStreamNode == null) )
           {
             throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kann Bauwerke nicht ohne die anliegenden Profile importieren.", null ) );
           }
@@ -425,7 +425,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
-  private static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws Exception
+  private static IFlowRelation1D addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, IProfileFeature> profilesByStation ) throws Exception
   {
     final BigDecimal station = qresult.getStation();
 
@@ -457,9 +457,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
     }
 
     /* relink profile to corresponding profile in profile network */
-    final WspmProfile wspmProfile = profilesByStation.get( station );
+    final IProfileFeature wspmProfile = profilesByStation.get( station );
     if( wspmProfile != null )
-      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
+      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getId() );
 
     /* copy results into new flow relation */
 
@@ -598,11 +598,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* add complex-element to model: Automatically create a calculation unit 1d */
 
     /*
-     * NO, this is not the right way to do it!
-     * 
-     * During the creation of calculation unit, control model for that unit should be created as well.
-     * 
-     * Use CreateCalculationUnitCmd
+     * NO, this is not the right way to do it! During the creation of calculation unit, control model for that unit
+     * should be created as well. Use CreateCalculationUnitCmd
      */
 
     // final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew(
@@ -621,7 +618,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     IFE1D2DNode lastNode = null;
     for( final TuhhReachProfileSegment segment : segments )
     {
-      final WspmProfile profileMember = segment.getProfileMember();
+      final IProfileFeature profileMember = segment.getProfileMember();
       if( profileMember == null )
         continue;
 
@@ -712,7 +709,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       }
       lastNode = node;
 
-      final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
+      final BigDecimal stationDecimal = ProfilUtil.stationToBigDecimal( station );
       nodesByStation.put( stationDecimal, lastNode );
     }
 
@@ -727,12 +724,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
   /**
    * @param existingNetwork
-   *            If non-<code>null</code>, this network will be filled (and cleared before) instead of creating a new
-   *            one.
+   *          If non-<code>null</code>, this network will be filled (and cleared before) instead of creating a new one.
    */
-  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final TuhhReachProfileSegment[] segments, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
+  protected static SortedMap<BigDecimal, IProfileFeature> doImportNetwork( final TuhhReach reach, final TuhhReachProfileSegment[] segments, final IRiverProfileNetworkCollection networkCollection, final IRiverProfileNetwork existingNetwork ) throws Exception
   {
-    final SortedMap<BigDecimal, WspmProfile> result = new TreeMap<BigDecimal, WspmProfile>();
+    final SortedMap<BigDecimal, IProfileFeature> result = new TreeMap<BigDecimal, IProfileFeature>();
 
     final IRiverProfileNetwork network;
     if( existingNetwork == null )
@@ -755,7 +751,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Clone all profiles into network */
     for( final TuhhReachProfileSegment segment : segments )
     {
-      final WspmProfile profileMember = segment.getProfileMember();
+      final IProfileFeature profileMember = segment.getProfileMember();
 
       if( profileMember == null )
         continue;
@@ -763,9 +759,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final BigDecimal station = segment.getStation();
 
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
-      final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember.getFeature() );
+      final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember );
 
-      result.put( station, new WspmProfile( clonedProfileFeature ) );
+      result.put( station, (IProfileFeature) (clonedProfileFeature) );
     }
 
     // We fire the add event, even if the network was not added, this should be enough to refresh anything with is
