@@ -509,9 +509,20 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public TimeZone getDisplayTimeZone( )
   {
 
-    final String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
+    String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
     try
     {
+      // BUG!!! Bug, bug, bug, nasty bug!
+      
+      // Etc/GMT+1 is not the same as GMT+1
+      // Etc/GMT+1 has offset of -3600000
+      // GMT+1 has offset of 3600000
+      // i.e. Etc/GMT+1 is actually GMT-1 !!!
+      
+      // As TimeZone.getAvailableIDs() does NOT offer GMT+1, only Etc/GMT+1, users will probably select Etc/GMT+1 which is wrong
+      
+      if(timeZoneID.startsWith( "Etc/" ))
+        timeZoneID=timeZoneID.substring( 4 );
       return TimeZone.getTimeZone( timeZoneID );
     }
     catch( final Exception e )
