@@ -258,7 +258,6 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
    *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
   public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_theme != null )
@@ -269,7 +268,6 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#paint(double, org.kalypsodeegree.model.geometry.GM_Envelope,
    *      java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor, org.kalypso.ogc.gml.IPaintDelegate)
    */
-  @Override
   public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     if( m_theme != null )
