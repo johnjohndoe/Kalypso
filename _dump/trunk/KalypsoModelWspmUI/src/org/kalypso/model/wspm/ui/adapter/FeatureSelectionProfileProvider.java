@@ -185,7 +185,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   /**
    * If the feature changes, write it back to the profile.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   public void onModellChange( final ModellEvent modellEvent )
@@ -222,7 +222,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   /**
    * If the profile changes, write it back to the feature.
-   * 
+   *
    * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
    *      com.bce.eind.core.profil.IProfilChange[])
    */
@@ -282,13 +282,12 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
           profileMember = ProfileFeatureProvider.findProfile( feature );
           if( profileMember != null )
           {
-            final Feature pf = profileMember.getFeature();
 
             // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
             // and directly set the prefered type.
-            if( ProfileFeatureFactory.getProfileType( pf ) == null )
-              ProfileFeatureFactory.setProfileType( pf, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+            if( ProfileFeatureFactory.getProfileType(profileMember) == null )
+              ProfileFeatureFactory.setProfileType( profileMember, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
             break;
           }
