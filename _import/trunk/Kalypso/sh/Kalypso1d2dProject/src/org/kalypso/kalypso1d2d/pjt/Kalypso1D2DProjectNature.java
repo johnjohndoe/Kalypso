@@ -101,7 +101,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     // does nothing by default
   }
 
-  // TODO does that really belong here? Move somewhere else...
+  // TODO does that really belong here? Move somewhere else... Use ModelNature stuff instead, refaktor!
   public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "Kalypso1D2DProjectNature.10" ), 5 ); //$NON-NLS-1$
