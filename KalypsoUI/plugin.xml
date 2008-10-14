@@ -465,23 +465,18 @@
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView">
-			<separator name="actions" visible="true" />
-			<separator name="mapExport" visible="true" />
-		</menuContribution>
-		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
+			<separator name="widgets" visible="false">
+				<!-- Add new tools BEFORE this separator; especially if they are not always visible
+				this prohibits that the toolbar gets smaller/bigger when changing windows -->
+			</separator>
 			<command commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip" />
 			<command commandId="org.kalypso.ogc.gml.map.PanToCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip" />
 			<command commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand" style="radio" />
-		</menuContribution>
-		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
-			<dynamic id="org.kalypso.ogc.gml.map.zoom">
-				<class class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
-					<parameter name="command1" value="org.kalypso.ogc.gml.map.FullExtentCommand" />
-					<parameter name="command2" value="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" />
-					<parameter name="command3" value="org.kalypso.ogc.gml.map.ZoomInStaticCommand" />
-					<parameter name="command4" value="org.kalypso.ogc.gml.map.ZoomOutCommand" />
-				</class>
-			</dynamic>
+			<separator name="actions" visible="true" />
+			<command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push" />
+			<command commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" style="push" />
+			<command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push" />
+			<command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push" />
 			<dynamic id="org.kalypso.ogc.gml.map.move">
 				<class class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
 					<parameter name="command1" value="org.kalypso.ogc.gml.map.MoveLeftCommand" />
@@ -490,6 +485,12 @@
 					<parameter name="command4" value="org.kalypso.ogc.gml.map.MoveRightCommand" />
 				</class>
 			</dynamic>
+			<separator name="mapExport" visible="true" />
+			<command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push" tooltip="%org.kalypso.ogc.gml.map.Screenshot.description" />
+			<command commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" label="%command.label.1" style="push" tooltip="%command.tooltip.1" />
+			<!--  TODO: does not really belong here, as it introduces a hidden dependency to a non-dependent plug-in (KML-Export) -->
+			<command commandId="org.kalypso.kml.export.command" label="kml Export" style="push" tooltip="kml Export"/>
+			<separator name="mapExportAdditions" visible="false" />
 		</menuContribution>
 		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=additions">
 			<menu id="org.kalypso.ui.menus.mapMenu" label="%org.kalypso.ui.editors.mapeditor.menu" tooltip="%menu.tooltip.0">
@@ -530,15 +531,12 @@
 			</menu>
 		</menuContribution>
 		<menuContribution locationURI="toolbar:org.eclipse.ui.trim.status">
-			<toolbar id="org.eclipse.ui.examples.contributions.contributedTrim">
-				<control class="org.kalypso.ui.views.map.MapCoordinateStatusLineItem">
-				</control>
-			</toolbar>
-		</menuContribution>
-		<menuContribution locationURI="toolbar:org.eclipse.ui.trim.status">
 			<toolbar id="org.kalypso.ui.views.map.MapScaleStatusLineItem">
-				<control class="org.kalypso.ui.views.map.MapScaleStatusLineItem">
-				</control>
+				<visibleWhen>
+					<reference definitionId="mapContext" />
+				</visibleWhen>
+				<control class="org.kalypso.ui.views.map.MapCoordinateStatusLineItem"/>
+				<control class="org.kalypso.ui.views.map.MapScaleStatusLineItem"/>
 			</toolbar>
 		</menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.repository.view.RepositoryExplorerPart">
@@ -582,12 +580,6 @@
 			<command commandId="org.kalypso.ui.command.repositoryShowWQ"></command>
 			<separator name="additions" visible="true">
 			</separator>
-		</menuContribution>
-		<menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView?after=mapExport">
-			<command commandId="org.kalypso.ogc.gml.map.Screenshot" style="push" tooltip="%org.kalypso.ogc.gml.map.Screenshot.description" />
-			<command commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand" label="%command.label.1" style="push" tooltip="%command.tooltip.1" />
-			<!--  TODO: does not really belong here, as it introduces a hidden dependency to a non-dependent plug-in (KML-Export) -->
-			<command commandId="org.kalypso.kml.export.command" label="kml Export" style="push" tooltip="kml Export"/>
 		</menuContribution>
 		<menuContribution locationURI="menu:org.kalypso.ui.views.outline?after=outlineExport">
 			<command commandId="org.kalypso.ui.views.outline.ShapeExport" icon="icons/full/obj16/exportGml2Shp.gif" label="%command.label.2" style="push" tooltip="%command.tooltip.2">
@@ -884,6 +876,10 @@
 						</with>
 					</visibleWhen>
 				</dynamic>
+				<separator name="widgetAdditions" visible="false">
+					<!-- Additional widgets (especially those whichs visibility depends on a certain layer/datatype) should be
+					added before this separator  -->
+				</separator>
 				<separator name="klickNavigation" visible="true" />
 				<command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push" tooltip="%org.kalypso.ogc.gml.map.FullExtentCommand.description">
 					<visibleWhen checkEnabled="false">
