@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  * <p>
  * A Feature is adaptable, thus allowing Adapter Factories and/or Subclasses to provide another "view" over a feature
  * object. For instance, an observation-feature can be directly represented as an observation.
- * 
+ *
  * @author doemming this class extends the deegree feature interface and implements methods to handle properties that
  *         have maxOccurs > 1
  */
@@ -56,14 +56,14 @@ public interface BaseFeature extends DeegreeFeature, IAdaptable
 
   /**
    * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
-   * 
+   *
    * @see #getParentRelation()
    */
   public Feature getParent( );
 
   /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
-   * 
+   *
    * @see #getParent()
    */
   public IRelationType getParentRelation( );

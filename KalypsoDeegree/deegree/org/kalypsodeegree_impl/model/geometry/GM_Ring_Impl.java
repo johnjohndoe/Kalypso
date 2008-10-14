@@ -38,7 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;

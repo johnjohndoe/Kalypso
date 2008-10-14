@@ -42,7 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.deegree.crs.transformations.CRSTransformation;
 import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
