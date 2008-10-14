@@ -173,7 +173,6 @@ public class TrennerPanel extends AbstractProfilView
     m_fzl_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -216,7 +215,6 @@ public class TrennerPanel extends AbstractProfilView
     m_fzr_combo.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
