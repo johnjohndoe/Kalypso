@@ -109,6 +109,10 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Velocity [m/s] */
   public static final String TYPE_VELOCITY = "v"; //$NON-NLS-1$
 
+  public static final String TYPE_ORDINAL_NUMBER = "ordinalNr"; //$NON-NLS-1$
+  public static final String TYPE_NODEID = "nodeID"; //$NON-NLS-1$
+  public static final String TYPE_PEGEL = "pegel"; //$NON-NLS-1$
+  
   public static final String[] TYPES_ALL;
 
   /**
