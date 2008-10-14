@@ -181,7 +181,6 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   /**
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
    */
-  @Override
   public void onStatusChanged( final IMapPanel source )
   {
   }

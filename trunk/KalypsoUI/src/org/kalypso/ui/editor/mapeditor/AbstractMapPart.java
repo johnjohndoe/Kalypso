@@ -445,7 +445,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       control.getDisplay().syncExec( new Runnable()
       {
-        @Override
         public void run( )
         {
           if( !control.isDisposed() )

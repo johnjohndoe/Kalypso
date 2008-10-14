@@ -69,7 +69,6 @@ public class NewFeatureWidget extends AbstractCreateGeometryWidget
     m_command = service.getCommand( NewFeatureToolbarContribution.CMD_ID_NEW_FEATURE );
     m_commandListener = new ICommandListener()
     {
-      @Override
       public void commandChanged( final CommandEvent commandEvent )
       {
         // It is necessary to cancel this widget as soon as anything changes,
