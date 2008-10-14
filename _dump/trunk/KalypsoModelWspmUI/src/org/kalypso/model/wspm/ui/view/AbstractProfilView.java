@@ -97,7 +97,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
-  @Override
   public Control createControl( Composite parent, FormToolkit toolkit )
   {
     m_control = doCreateControl( parent, toolkit, parent.getStyle() );
@@ -118,7 +117,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
-  @Override
   public ChartComposite getChartComposite( )
   {
     // TODO Auto-generated method stub
