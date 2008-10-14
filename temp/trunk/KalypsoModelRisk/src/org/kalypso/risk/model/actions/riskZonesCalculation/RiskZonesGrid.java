@@ -51,7 +51,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -240,7 +240,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   /**
    * returns the flow depth value for a given position.
-   * 
+   *
    * @param collection
    *            grid collection of water depth grids
    * @param x
