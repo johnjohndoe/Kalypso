@@ -34,8 +34,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.kalypso.ui.KalypsoGisPlugin;
-
 /**
  * provides unique time(zone)-setting for the rainfall runoff simulation kernel
  * 
@@ -43,6 +41,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class NATimeSettings
 {
+  public static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC";
 
   private static NATimeSettings m_instance = null;
 
@@ -52,9 +51,7 @@ public class NATimeSettings
 
   private NATimeSettings( )
   {
-    m_timeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
-// m_timeZone = TimeZone.getTimeZone( "GMT+1" );
-    // new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
+    m_timeZone = TimeZone.getTimeZone( CALCULATION_CORE_TIMEZONE );
     m_calendar = Calendar.getInstance( m_timeZone );
   }
 

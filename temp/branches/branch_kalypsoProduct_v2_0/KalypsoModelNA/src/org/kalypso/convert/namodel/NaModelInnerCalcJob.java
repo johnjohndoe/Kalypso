@@ -71,6 +71,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.logging.XMLFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -152,7 +154,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe";
 
-  private final String EXE_FILE_2_08 = "start/kalypso_2_0_8_build20080904.exe";
+  private final String EXE_FILE_2_08 = "start/kalypso_2.0.8.exe";
 
   private final String EXE_FILE_TEST = "start/kalypso_test.exe";
 
@@ -287,6 +289,9 @@ public class NaModelInnerCalcJob implements ISimulation
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
         loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, conf );
+        monitor.setMessage( "Results loaded - postprocessing started" );
+        logger.log( Level.FINEST, "Results loaded - postprocessing started" );
+        createStatistics( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, conf );
         loadLogs( tmpdir, logger, modellWorkspace, conf, resultDir );
       }
       else
@@ -877,7 +882,7 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_07;
     else if( kalypsoNAVersion.equals( "v2.0.8" ) )
       m_kalypsoKernelPath = EXE_FILE_2_08;
-    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
+    else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) ) // latest stable is 2.0.8
       m_kalypsoKernelPath = EXE_FILE_2_08;
     else
     {
@@ -1223,6 +1228,123 @@ public class NaModelInnerCalcJob implements ISimulation
           IOUtils.closeQuietly( stream );
         }
       }
+    }
+  }
+
+  private void createStatistics( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
+  {
+    final String nodeResultFileNamePattern = "Gesamtabfluss.zml";
+    final String reportPathZML = "Ergebnisse/Aktuell/Reports/nodesMax.zml";
+    final String reportPathCSV = "Ergebnisse/Aktuell/Reports/nodesMax.csv";
+    final String separatorCSV = ",";
+    final Pattern stationNodePattern = Pattern.compile( "([0-9]+).*" ); //$NON-NLS-1$
+    final Pattern stationNamePattern = Pattern.compile( ".+_(.+)\\.zml" ); //$NON-NLS-1$
+
+    final File reportFileZML = new File( resultDir.getAbsolutePath(), reportPathZML );
+    final File reportFileCSV = new File( resultDir.getAbsolutePath(), reportPathCSV );
+    reportFileZML.getParentFile().mkdirs();
+    final List<Object[]> resultValuesList = new ArrayList<Object[]>();
+    final List<IAxis> resultAxisList = new ArrayList<IAxis>();
+    resultAxisList.add( new DefaultAxis( "Knoten - Nr.", TimeserieConstants.TYPE_NODEID, "", Integer.class, true ) );
+    resultAxisList.add( new DefaultAxis( "Stationierung", TimeserieConstants.TYPE_PEGEL, "", String.class, false ) );
+    resultAxisList.add( new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, false ) );
+    resultAxisList.add( new DefaultAxis( "max. Abfluss", TimeserieConstants.TYPE_RUNOFF, TimeserieUtils.getUnit( TimeserieConstants.TYPE_RUNOFF ), Double.class, false ) );
+
+    for( final String resultFileRelativePath : m_resultMap )
+    {
+      boolean isNodeResult = resultFileRelativePath.endsWith( nodeResultFileNamePattern );
+      final File resultFile = new File( resultDir.getAbsolutePath(), "/Ergebnisse/Aktuell/" + resultFileRelativePath );
+      final IObservation observation = ZmlFactory.parseXML( resultFile.toURL(), null );
+      final IAxis[] axisList = observation.getAxisList();
+      IAxis dateAxis = null;
+      IAxis valueAxis = null;
+      final ITuppleModel tuppleModel = observation.getValues( null );
+      for( final IAxis axis : axisList )
+      {
+        if( axis.getType().equals( TimeserieConstants.TYPE_DATE ) )
+          dateAxis = axis;
+        else if( axis.getType().equals( TimeserieConstants.TYPE_RUNOFF ) )
+          valueAxis = axis;
+      }
+      if( dateAxis == null || valueAxis == null )
+        continue;
+      double maxValue = Double.MIN_VALUE;
+      Date maxValueDate = null;
+      for( int i = 0; i < tuppleModel.getCount(); i++ )
+      {
+        final double value = (Double) tuppleModel.getElement( i, valueAxis );
+        if( maxValue < value )
+        {
+          maxValue = value;
+          maxValueDate = (Date) tuppleModel.getElement( i, dateAxis );
+        }
+      }
+      if( maxValueDate == null )
+      {
+        logger.log( Level.WARNING, "Statistical report: unable to determine maximum value in result file '" + resultFileRelativePath + "'" );
+        continue;
+      }
+      if( isNodeResult )
+      {
+        final Matcher nodeMatcher = stationNodePattern.matcher( observation.getName() );
+        if( nodeMatcher.matches() )
+          resultValuesList.add( new Object[] { nodeMatcher.group( 1 ), " ", maxValueDate, maxValue } );
+        else
+          logger.log( Level.WARNING, "Statistical report: unable to parse node result '" + observation.getName() + "' in result file '" + resultFileRelativePath + "'" );
+      }
+      else
+      {
+        final Matcher stationNodeMatcher = stationNodePattern.matcher( observation.getName() );
+        final Matcher stationNameMatcher = stationNamePattern.matcher( resultFileRelativePath );
+        if( stationNodeMatcher.matches() && stationNameMatcher.matches() )
+          resultValuesList.add( new Object[] { stationNodeMatcher.group( 1 ), stationNameMatcher.group( 1 ), maxValueDate, maxValue } );
+        else
+          logger.log( Level.WARNING, "Statistical report: unable to parse station result '" + observation.getName() + "' in result file '" + resultFileRelativePath + "'" );
+      }
+    }
+    final IAxis[] axis = resultAxisList.toArray( new IAxis[0] );
+    final ITuppleModel resultTuppleModel = new SimpleTuppleModel( axis, resultValuesList.toArray( new Object[0][] ) );
+    final IObservation resultObservation = new SimpleObservation( reportPathZML, "ID", "Statistical report", false, null, new MetadataList(), axis, resultTuppleModel );
+    final Observation observation = ZmlFactory.createXML( resultObservation, null );
+    final Marshaller marshaller = ZmlFactory.getMarshaller();
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+    FileOutputStream streamZML = null;
+    OutputStreamWriter writerZML = null;
+    FileOutputStream streamCSV = null;
+    OutputStreamWriter writerCSV = null;
+    final SimpleDateFormat dateFormat = new SimpleDateFormat( "MM/dd/yy" );
+    try
+    {
+      streamCSV = new FileOutputStream( reportFileCSV );
+      writerCSV = new OutputStreamWriter( streamCSV, "UTF-8" );
+      Object currentElement;
+      for( int i = 0; i < resultTuppleModel.getCount(); i++ )
+      {
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 0 ) );
+        writerCSV.write( currentElement.toString() );
+        writerCSV.write( separatorCSV );
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 1 ) );
+        writerCSV.write( currentElement.toString() );
+        writerCSV.write( separatorCSV );
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 2 ) );
+        writerCSV.write( dateFormat.format( currentElement ) );
+        writerCSV.write( separatorCSV );
+        currentElement = resultTuppleModel.getElement( i, resultAxisList.get( 3 ) );
+        writerCSV.write( currentElement.toString().replaceFirst( ",", "." ) );
+        writerCSV.write( "\n" );
+      }
+      writerCSV.flush();
+      streamZML = new FileOutputStream( reportFileZML );
+      writerZML = new OutputStreamWriter( streamZML, "UTF-8" );
+      marshaller.marshal( observation, writerZML );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writerZML );
+      IOUtils.closeQuietly( streamZML );
+      IOUtils.closeQuietly( writerCSV );
+      IOUtils.closeQuietly( streamCSV );
     }
   }
 

@@ -100,8 +100,8 @@ public class BlockTimeSeries
    */
   public BlockTimeSeries( )
   {
-    this( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
-// this( TimeZone.getTimeZone( "GMT+1" ) );
+// this( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+    this( TimeZone.getTimeZone( NATimeSettings.CALCULATION_CORE_TIMEZONE ) );
   }
 
   /**
