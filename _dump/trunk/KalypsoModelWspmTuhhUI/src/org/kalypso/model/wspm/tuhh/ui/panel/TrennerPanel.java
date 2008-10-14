@@ -126,26 +126,26 @@ public class TrennerPanel extends AbstractProfilView
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
-    final Composite panel = new Composite( parent, style );
+    final Composite panel = toolkit.createComposite( parent, style );
     panel.setLayout( new GridLayout( 1, true ) );
 
     final Group fliesszoneGroup = new Group( panel, SWT.NONE );
     fliesszoneGroup.setText( "Trennflächen" );
     fliesszoneGroup.setLayout( new GridLayout( 2, false ) );
     fliesszoneGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    final Label posllabel = new Label( fliesszoneGroup, SWT.NONE );
+    toolkit.adapt( fliesszoneGroup );
+    final Label posllabel = toolkit.createLabel( fliesszoneGroup, "links", SWT.NONE );
     posllabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
-    posllabel.setText( "links" );
-    final Label posrlabel = new Label( fliesszoneGroup, SWT.NONE );
-    posrlabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
-    posrlabel.setText( "rechts" );
 
-    m_fzl_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    final Label posrlabel = toolkit.createLabel( fliesszoneGroup, "rechts", SWT.NONE );
+    posrlabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
+
+    m_fzl_text = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzl_text.addModifyListener( doubleModifyListener );
     m_fzl_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 0 ) );
 
-    m_fzr_text = new Text( fliesszoneGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_fzr_text = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_fzr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_fzr_text.addModifyListener( doubleModifyListener );
     m_fzr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 1 ) );
@@ -234,16 +234,21 @@ public class TrennerPanel extends AbstractProfilView
       }
     } );
 
+    toolkit.adapt( m_fzr_combo.getCombo() );
+    toolkit.adapt( m_fzl_combo.getCombo() );
+
     final Group durchstroemteGroup = new Group( panel, SWT.NONE );
     durchstroemteGroup.setText( "Durchströmter Bereich" );
     durchstroemteGroup.setLayout( new GridLayout( 2, false ) );
     durchstroemteGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_dbl_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    toolkit.adapt( durchstroemteGroup );
+
+    m_dbl_text = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbl_text.addModifyListener( doubleModifyListener );
     m_dbl_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 ) );
 
-    m_dbr_text = new Text( durchstroemteGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_dbr_text = toolkit.createText( durchstroemteGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_dbr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_dbr_text.addModifyListener( doubleModifyListener );
     m_dbr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 1 ) );
@@ -252,17 +257,19 @@ public class TrennerPanel extends AbstractProfilView
     bordvollGroup.setText( "Bordvollpunkte" );
     bordvollGroup.setLayout( new GridLayout( 2, false ) );
     bordvollGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
-    m_bvl_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    toolkit.adapt( bordvollGroup );
+    m_bvl_text = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvl_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvl_text.addModifyListener( doubleModifyListener );
     m_bvl_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 0 ) );
 
-    m_bvr_text = new Text( bordvollGroup, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    m_bvr_text = toolkit.createText( bordvollGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     m_bvr_text.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_bvr_text.addModifyListener( doubleModifyListener );
     m_bvr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 1 ) );
 
-    m_bv_add = new Button( bordvollGroup, SWT.NONE );
+    m_bv_add = toolkit.createButton( bordvollGroup, "mit Bordvollpunkten", SWT.CHECK );
+    m_bv_add.setSelection( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL )!=null );
     final GridData bv_addData = new GridData( GridData.FILL_HORIZONTAL );
     bv_addData.horizontalSpan = 2;
     m_bv_add.setLayoutData( bv_addData );
@@ -372,18 +379,10 @@ public class TrennerPanel extends AbstractProfilView
           m_bvr_text.setVisible( false );
         }
 
-        if( !m_bv_add.isDisposed() )
-        {
-          m_bv_add.setText( "Bordvollpunkte einfügen" );
-        }
       }
       else
       {
 
-        if( !m_bv_add.isDisposed() )
-        {
-          m_bv_add.setText( "Bordvollpunkte entfernen" );
-        }
         if( !m_bvl_text.isDisposed() )
         {
           if( bv_devs.length > 0 )

@@ -43,12 +43,10 @@ package org.kalypso.model.wspm.ui.view.chart;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -187,8 +185,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-   
-    
+
     m_chart = new ChartComposite( parent, style, new ChartModel(), new RGB( 255, 255, 255 ) );
     m_chart.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -323,6 +320,16 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       } );
   }
 
+  private final IChartLayer getActiveLayer( ILayerManager mngr )
+  {
+    for( final IChartLayer layer : mngr.getLayers() )
+    {
+      if( layer.isActive() )
+        return layer;
+    }
+    return null;
+  }
+
   private void restoreState( final IMemento memento, final ILayerManager mngr )
   {
     final SortedMap<Integer, String> sorted = new TreeMap<Integer, String>();
@@ -339,7 +346,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           layer.setVisible( visible );
         final Boolean active = layermem.getBoolean( MEM_LAYER_ACT );
         if( active != null )
+        {
           layer.setActive( active );
+        }
         final String data = layermem.getString( MEM_LAYER_DAT );
         if( data != null )
           layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data );
@@ -363,7 +372,17 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( m_chart == null )
       return;
     m_memento = memento;
-    restoreState( memento, m_chart.getChartModel().getLayerManager() );
+    final ILayerManager manager = m_chart.getChartModel().getLayerManager();
+    restoreState( memento, manager );
+    if( getActiveLayer( manager ) == null )
+      for( final IChartLayer layer : manager.getLayers() )
+      {
+        if( layer.isVisible() )
+        {
+          layer.setActive( true );
+          return;
+        }
+      }
   }
 
   private IMemento getOrCreate( final IMemento memento, final String id )

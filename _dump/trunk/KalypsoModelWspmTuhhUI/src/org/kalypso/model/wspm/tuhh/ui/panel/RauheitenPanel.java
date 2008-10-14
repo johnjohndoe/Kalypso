@@ -139,10 +139,9 @@ public class RauheitenPanel extends AbstractProfilView
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
     // das panel
-    final Composite panel = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 2, false );
-    panel.setLayout( gridLayout );
-    panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    final Composite panel = toolkit.createComposite( parent, style );
+    panel.setLayout( new GridLayout( 2, false ) );
 
     // RauheitsTyp Combo
     m_rauheitCombo = new ComboViewer( panel, SWT.DROP_DOWN | SWT.BORDER | SWT.READ_ONLY );
@@ -167,9 +166,7 @@ public class RauheitenPanel extends AbstractProfilView
       }
     } );
     m_rauheitCombo.setInput( m_RauheitTypes.values() );
-
     m_rauheitCombo.setSelection( new StructuredSelection( m_RauheitTypes.get( m_rauheitTyp ) ) );
-
     m_rauheitCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
@@ -188,27 +185,27 @@ public class RauheitenPanel extends AbstractProfilView
         }
       }
     } );
-
-    addLabel( panel, "Rauheitstyp", "Rauheitstyp" );
+    toolkit.adapt( m_rauheitCombo.getCombo() );
+    addLabel( toolkit, panel, "Rauheitstyp", "Rauheitstyp" );
 
     final Group auto = new Group( panel, SWT.None );
     auto.setText( "Rauhheiten für Fliesszonen" );
     auto.setLayout( new GridLayout( 2, false ) );
     auto.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) auto.getLayoutData()).horizontalSpan = 2;
-
+    toolkit.adapt( auto );
     // automatisches übernehmen wenn Marker geschoben werden
     final GridData checkData = new GridData( SWT.FILL, SWT.FILL, true, false );
     checkData.horizontalSpan = 2;
-    m_updateOnDeviderMove = new Button( auto, SWT.CHECK );
+    m_updateOnDeviderMove = toolkit.createButton(  auto,null, SWT.CHECK );
     m_updateOnDeviderMove.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) m_updateOnDeviderMove.getLayoutData()).horizontalSpan = 2;
     m_updateOnDeviderMove.setText( "aktualisieren bei Trenneränderung" );
     m_updateOnDeviderMove.setSelection( checkValues() );
     // Rauheitswerte Vorland links
 
-    addLabel( auto, "Vorland links", "" );
-    final Text t_li = addText( auto, m_li );
+    addLabel( toolkit, auto, "Vorland links", "" );
+    final Text t_li = addText( toolkit, auto, m_li );
 
     t_li.addFocusListener( new FocusAdapter()
     {
@@ -245,8 +242,8 @@ public class RauheitenPanel extends AbstractProfilView
 
     // Rauheitswerte Hauptöffnung
 
-    addLabel( auto, "Flußschlauch", "" );
-    final Text t_hf = addText( auto, m_hf );
+    addLabel( toolkit, auto, "Flußschlauch", "" );
+    final Text t_hf = addText( toolkit, auto, m_hf );
     t_hf.addFocusListener( new FocusAdapter()
     {
       @Override
@@ -281,8 +278,8 @@ public class RauheitenPanel extends AbstractProfilView
     } );
     // Rauheitswerte Vorland rechts
 
-    addLabel( auto, "Vorland rechts", "" );
-    final Text t_re = addText( auto, m_re );
+    addLabel( toolkit, auto, "Vorland rechts", "" );
+    final Text t_re = addText( toolkit, auto, m_re );
     t_re.addFocusListener( new FocusAdapter()
     {
       @Override
@@ -352,7 +349,7 @@ public class RauheitenPanel extends AbstractProfilView
     new ProfilOperationJob( operation ).schedule();
   }
 
-  private Text addText( final Composite panel, final Double value )
+  private Text addText( final FormToolkit toolkit, final Composite panel, final Double value )
   {
     final Display display = panel.getDisplay();
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
@@ -361,18 +358,16 @@ public class RauheitenPanel extends AbstractProfilView
     final GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-    final Text t = new Text( panel, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-    t.setText( "" + value );
+    final Text t = toolkit.createText( panel, "" + value, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     t.setLayoutData( data );
     t.addModifyListener( doubleModifyListener );
 
     return t;
   }
 
-  private void addLabel( final Composite parent, final String text, final String toolTip )
+  private void addLabel( final FormToolkit toolkit, final Composite parent, final String text, final String toolTip )
   {
-    final Label label = new Label( parent, SWT.CENTER );
-    label.setText( text );
+    final Label label = toolkit.createLabel( parent, text, SWT.CENTER );
     label.setToolTipText( toolTip );
     final GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -429,6 +424,7 @@ public class RauheitenPanel extends AbstractProfilView
     return true;
   }
 
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final Control control = getControl();

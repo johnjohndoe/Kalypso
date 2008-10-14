@@ -68,7 +68,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
@@ -87,6 +86,8 @@ public class TubePanel extends AbstractProfilView
 {
   protected ArrayList<PropertyLine> m_lines = new ArrayList<PropertyLine>( 8 );
 
+  private FormToolkit m_toolkit = null;
+
   protected Composite m_propPanel;
 
   private ComboViewer m_cmb = null;
@@ -98,7 +99,7 @@ public class TubePanel extends AbstractProfilView
     super( profile );
   }
 
-  private class PropertyLine extends Composite
+  private class PropertyLine
   {
     protected final IComponent m_property;
 
@@ -106,28 +107,19 @@ public class TubePanel extends AbstractProfilView
 
     protected final Label m_label;
 
-    public PropertyLine( final Composite parent, final IComponent property )
+    public PropertyLine( final FormToolkit toolkit, final Composite parent, final IComponent property )
     {
-      super( parent, SWT.NONE );
       m_property = property;
-      GridLayout layout = new GridLayout( 2, false );
-      layout.marginWidth = 0;
-      layout.marginHeight = 0;
-      setLayout( layout );
-      setLayoutData( new GridData( GridData.FILL, GridData.CENTER, false, false, 2, 1 ) );
 
       final Display display = parent.getDisplay();
       final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_label = new Label( this, SWT.NONE );
-      m_label.setText( getLabel( m_property ) );
-      m_label.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+      m_label = toolkit.createLabel( parent, getLabel( m_property ) );
 
-      m_text = new Text( this, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-      m_text.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, false ) );
-
+      m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+      m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
       m_text.addModifyListener( doubleModifyListener );
       m_text.addFocusListener( new FocusAdapter()
       {
@@ -159,16 +151,16 @@ public class TubePanel extends AbstractProfilView
             final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
-            layout();
           }
         }
       } );
+
     }
 
     public void updateValue( )
     {
       m_label.setText( getLabel( m_property ) );
-      if( m_text == null || m_text.isDisposed() )// || m_label == null || m_label.isDisposed() )
+      if( m_text == null || m_text.isDisposed() )
         return;
 
       final IProfil profil = getProfil();
@@ -178,6 +170,16 @@ public class TubePanel extends AbstractProfilView
         return;
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
+    }
+
+    public void layout()
+    {
+      
+    }
+    public void dispose( )
+    {
+      m_text.dispose();
+      m_label.dispose();
     }
   }
 
@@ -214,15 +216,11 @@ public class TubePanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-    m_propPanel = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 2, true );
-    gridLayout.verticalSpacing = 15;
-    m_propPanel.setLayout( gridLayout );
-    m_propPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_toolkit = toolkit;
+    m_propPanel = m_toolkit.createComposite( parent );
+    m_propPanel.setLayout( new GridLayout( 2, false ) );
 
-    final Label cmbL = new Label( m_propPanel, SWT.NONE );
-    cmbL.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, false, false ) );
-    cmbL.setText( "Querschnittsform" );
+    m_toolkit.createLabel( m_propPanel, "Querschnittsform", style );
 
     m_cmb = new ComboViewer( m_propPanel );
     m_cmb.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, false, false ) );
@@ -240,7 +238,6 @@ public class TubePanel extends AbstractProfilView
         return ((IProfileObject) element).getObservation().getDescription();
       }
     } );
-
     m_cmb.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
@@ -263,23 +260,20 @@ public class TubePanel extends AbstractProfilView
           }
           new ProfilOperationJob( operation ).schedule();
 
-
         }
       }
     } );
-    Label spacer = new Label( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
+    m_toolkit.adapt( m_cmb.getCombo() );
+
+    Label spacer = m_toolkit.createSeparator( m_propPanel, SWT.SEPARATOR | SWT.HORIZONTAL );
     spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
     createPropertyPanel();
-
     updateControls();
-
     return m_propPanel;
   }
 
   protected void createPropertyPanel( )
   {
-
-  
 
     for( final PropertyLine line : m_lines )
     {
@@ -293,8 +287,9 @@ public class TubePanel extends AbstractProfilView
       return;
     for( final IComponent property : building.getObjectProperties() )
     {
-      m_lines.add( new PropertyLine( m_propPanel, property ) );
+      m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
     }
+    m_propPanel.layout();
   }
 
   protected void updateControls( )
@@ -311,12 +306,13 @@ public class TubePanel extends AbstractProfilView
         m_cmb.setSelection( new StructuredSelection( tube ) );
     for( final PropertyLine line : m_lines )
       line.updateValue();
+    m_propPanel.layout();
   }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isObjectChanged() || hint.isObjectDataChanged())
+    if( hint.isObjectChanged() || hint.isObjectDataChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
@@ -325,23 +321,9 @@ public class TubePanel extends AbstractProfilView
           public void run( )
           {
             createPropertyPanel();
-            m_propPanel.layout();
-            updateControls();
+             updateControls();
           }
         } );
     }
-//    if( hint.isObjectDataChanged() )
-//    {
-//      final Control control = getControl();
-//      if( control != null && !control.isDisposed() )
-//        control.getDisplay().asyncExec( new Runnable()
-//        {
-//          public void run( )
-//          {
-//            for( final PropertyLine line : m_lines )
-//              line.updateValue();
-//          }
-//        } );
-//    }
   }
 }
