@@ -369,7 +369,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
-    String partName = null;
     try
     {
       // prepare for exception
@@ -421,10 +420,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
-      if( partName == null )
-        partName = fileName;
-      setCustomName( partName );
+      final IFile file = getFile();
+      if( m_partName == null )
+      {
+        final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
+        setCustomName( fileName );
+      }
+      if( file != null )
+        setTitleToolTip( file.getFullPath().toPortableString() );
 
       // At the moment, we stop after the .gmt file has loaded. One day we may change this to wait until
       // all themes have finished loading, but this might be a little bit tricky.
@@ -510,19 +513,20 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
     else
       partName = m_mapModell.getLabel( m_mapModell );
-
-    final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-    if( !workbench.isClosing() )
-    {
-      workbench.getDisplay().asyncExec( new Runnable()
-      {
-        @SuppressWarnings("synthetic-access")
-        public void run( )
-        {
-          setPartName( partName );
-        }
-      } );
-    }
+    setCustomName( partName );
+//
+// final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+// if( !workbench.isClosing() )
+// {
+// workbench.getDisplay().asyncExec( new Runnable()
+// {
+// @SuppressWarnings("synthetic-access")
+// public void run( )
+// {
+// setPartName( partName );
+// }
+// } );
+// }
 
     if( m_mapPanel != null )
     {
