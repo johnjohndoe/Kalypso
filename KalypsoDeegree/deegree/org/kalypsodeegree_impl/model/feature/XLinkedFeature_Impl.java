@@ -414,7 +414,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
    */
-  @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     final Feature feature = getFeature();
@@ -427,7 +426,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
    */
-  @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return getFeature().getDefaultGeometryPropertyValue();
@@ -436,7 +434,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
    */
-  @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return getFeature().getGeometryPropertyValues();
@@ -445,7 +442,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
    */
-  @Override
   public Feature getOwner( )
   {
     return m_parentFeature;
@@ -454,7 +450,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
    */
-  @Override
   public QName getQualifiedName( )
   {
     return getFeatureType().getQName();
@@ -463,7 +458,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
    */
-  @Override
   public void setEnvelopesUpdated( )
   {
     final Feature feature = getFeature();
@@ -474,7 +468,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
-  @Override
   public void setFeatureType( IFeatureType ft )
   {
     m_featureType = ft;
@@ -483,7 +476,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
-  @Override
   public void setId( String fid )
   {
     m_featureId = fid;
@@ -508,7 +500,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
    */
-  @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( getFeature() );
