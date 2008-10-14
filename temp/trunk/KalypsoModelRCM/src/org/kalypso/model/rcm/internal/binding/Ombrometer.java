@@ -57,12 +57,12 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.AbstractFeatureBinding;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  */
-public class Ombrometer extends AbstractFeatureBinding implements IOmbrometer
+public class Ombrometer extends Feature_Impl implements IOmbrometer
 {
   public Ombrometer( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {

@@ -43,13 +43,13 @@ package org.kalypso.model.rcm.internal.binding;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IOmbrometerCollection;
-import org.kalypsodeegree_impl.gml.binding.AbstractFeatureBinding;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Gernot Belger
  * @see IOmbrometerCollection
  */
-public class OmbrometerCollection extends AbstractFeatureBinding implements IOmbrometerCollection
+public class OmbrometerCollection extends Feature_Impl implements IOmbrometerCollection
 {
   public OmbrometerCollection( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {

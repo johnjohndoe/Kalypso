@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypsodeegree.model.feature.IFeatureBinding;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * 
  * @author Gernot Belger
  */
-public interface IOmbrometer extends IFeatureBinding
+public interface IOmbrometer extends Feature
 {
   final static QName QNAME_FEATURE_OMBROMETER = new QName( UrlCatalogRcm.NS_OMBROMETER, "Ombrometer" );
 

@@ -71,9 +71,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.AbstractFeatureBinding;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Polygon;
@@ -83,7 +83,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  * @author Gernot Belger
  */
-public class OmbrometerRainfallGenerator extends AbstractFeatureBinding implements IRainfallGenerator
+public class OmbrometerRainfallGenerator extends Feature_Impl implements IRainfallGenerator
 {
   public static final QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
 

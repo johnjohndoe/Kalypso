@@ -43,6 +43,7 @@ package org.kalypso.model.rcm.binding;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Collection of ombrometers, binding for ombr:OmbrometerCollection.<br>
@@ -51,7 +52,7 @@ import org.kalypso.model.rcm.internal.UrlCatalogRcm;
  * 
  * @author Gernot Belger
  */
-public interface IOmbrometerCollection
+public interface IOmbrometerCollection extends Feature
 {
   final static QName QNAME_FEATURE_OMBROMETERCollection = new QName( UrlCatalogRcm.NS_OMBROMETER, "OmbrometerCollection" );
 
