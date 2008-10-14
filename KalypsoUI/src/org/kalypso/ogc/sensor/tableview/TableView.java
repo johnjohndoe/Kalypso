@@ -73,7 +73,7 @@ public class TableView extends ObsView
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.tableview.TableView.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.sensor.tableview.TableView.0" ); //$NON-NLS-1$
   }
 
   public ITableViewRules getRules( )
@@ -131,7 +131,12 @@ public class TableView extends ObsView
 
           if( !ignoreTypeList.contains( valueAxis.getType() ) )
           {
-            final TableViewColumn col = new TableViewColumn( this, provider.copy(), ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis ), data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
+            // if axis has no name, default name will be generated (defined by tokenizedName)
+            // otherwise, user defined axis name should take precedence
+            String name = valueAxis.getName();
+            if( name == null || name.length() == 0 )
+              name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis );
+            final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeserieUtils.getDefaultFormatString( valueAxis.getType() ) );
 
             addItem( col );
           }

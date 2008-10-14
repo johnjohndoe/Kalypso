@@ -57,7 +57,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -70,6 +69,7 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
@@ -90,7 +90,7 @@ public class TimeserieUtils
 
   private TimeserieUtils( )
   {
-    // no instanciation
+    // no instantiation
   }
 
   /**
@@ -112,7 +112,7 @@ public class TimeserieUtils
   /**
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
-   * This is for instance usefull for the Alarmstufen
+   * This is for instance useful for the Alarmstufen
    * 
    * @param obs
    * @param mdPrefix
@@ -146,7 +146,7 @@ public class TimeserieUtils
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-    return findOutMDBeginningWith( obs, Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2") ); //$NON-NLS-1$
+    return findOutMDBeginningWith( obs, Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -156,7 +156,7 @@ public class TimeserieUtils
    */
   public final static Color getColorForAlarmLevel( final String mdAlarm )
   {
-    final String strColor = getProperties().getProperty( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3") + mdAlarm ); //$NON-NLS-1$
+    final String strColor = getProperties().getProperty( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3" ) + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
       return Color.RED;
 
@@ -357,6 +357,14 @@ public class TimeserieUtils
     if( nf != null )
       return nf;
 
+    if( format.equals( "%d" ) )
+    {
+      final NumberFormat wf = NumberFormat.getIntegerInstance();
+      wf.setGroupingUsed( false );
+      m_formatMap.put( format, wf );
+      return wf;
+    }
+
     // parse the format spec and only take the min-fraction-digit part
     final String regex = "%([0-9]*)\\.?([0-9]*)f"; //$NON-NLS-1$
     final Pattern pattern = Pattern.compile( regex );
@@ -396,7 +404,7 @@ public class TimeserieUtils
     }
     catch( final ClassNotFoundException e )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.19") + type ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.19" ) + type ); //$NON-NLS-1$
     }
   }
 
@@ -473,7 +481,8 @@ public class TimeserieUtils
   {
     final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
     if( crsName == null )
-      KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+//      KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     return crsName;
   }
@@ -496,6 +505,6 @@ public class TimeserieUtils
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) || axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
       return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
 
-    throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22") + axisType + Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23") ); //$NON-NLS-1$ //$NON-NLS-2$
+    throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22" ) + axisType + Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }
