@@ -49,7 +49,7 @@ import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
-import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
