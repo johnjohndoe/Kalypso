@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -93,7 +94,7 @@ public class SplitSort implements FeatureList
       }
       else if( object instanceof GM_Object )
       {
-        GM_Object geometry = (GM_Object) object;
+        final GM_Object geometry = (GM_Object) object;
         return GeometryUtilities.getEnvelope( geometry );
       }
 
@@ -301,7 +302,13 @@ public class SplitSort implements FeatureList
       final Envelope bbox = m_index.getBoundingBox();
       if( bbox == null )
         return null;
-      return JTSAdapter.wrap( bbox );
+      final GM_Envelope env = JTSAdapter.wrap( bbox );
+      // REMARK: we just set here the default crs, as we assume, that all geometries already have been translated to
+      // this one.
+      // To be more precise, we should set a crs in the constructor of the SplitSort, and transform all added envelopes
+      // to this one.
+      env.setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      return env;
     }
   }
 
