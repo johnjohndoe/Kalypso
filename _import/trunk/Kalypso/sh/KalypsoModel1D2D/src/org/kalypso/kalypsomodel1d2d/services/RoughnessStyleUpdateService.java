@@ -53,12 +53,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -71,12 +71,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class RoughnessStyleUpdateService extends Job
 {
-  private static final IPath ROUGHNESS_SLD_PATH = new Path( ".metadata/roughness.sld" ); //$NON-NLS-1$     
+  private static final IPath ROUGHNESS_SLD_PATH = new Path( ".metadata/roughness.sld" ); //$NON-NLS-1$
 
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
-  private static final String STYLE_NAME = "Roughness style"; //$NON-NLS-1$     
+  private static final String STYLE_NAME = "Roughness style"; //$NON-NLS-1$
 
-  private static final String STYLE_TITLE = "Roughness style"; //$NON-NLS-1$     
+  private static final String STYLE_TITLE = "Roughness style"; //$NON-NLS-1$
 
   private final IFile m_roughnessDBFile;
 
@@ -100,7 +100,7 @@ public class RoughnessStyleUpdateService extends Job
       final URL roughnessUrl = ResourceUtilities.createURL( m_roughnessDBFile );
       final PoolableObjectType poolKey = new PoolableObjectType( "gml", roughnessUrl.toExternalForm(), roughnessUrl );
 
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       GMLWorkspace roughnessWorkspace;
 
       // Here happens a NPE (roughnessWorkspace == null) after creating a new 1d2d model
