@@ -59,9 +59,10 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -70,15 +71,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class RestartNodes
 {
-  private static final String COORDINATE_SYSTEM = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
   public static RestartNodes createRestartNodes( final IContainer scenarioFolder, final IControlModel1D2D controlModel ) throws CoreException
   {
     final List<IRestartInfo> restartInfos = controlModel.getRestartInfos();
 
     final RestartNodes restartNodes = new RestartNodes();
-
-    // TODO: check if a restart is checked in the control wizard
 
     for( final IRestartInfo restartInfo : restartInfos )
     {
@@ -93,7 +90,7 @@ public class RestartNodes
 
         restartNodes.addResultUrl( restartURL );
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -121,7 +118,9 @@ public class RestartNodes
     try
     {
       final GMLWorkspace resultWorkspace = GmlSerializer.createGMLWorkspace( restartURL, null );
+      final TransformVisitor visitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final Feature rootFeature = resultWorkspace.getRootFeature();
+      resultWorkspace.accept( visitor, rootFeature, FeatureVisitor.DEPTH_INFINITE );
       final INodeResultCollection nodeResults = (INodeResultCollection) rootFeature.getAdapter( INodeResultCollection.class );
       for( final INodeResult node : nodeResults )
         m_nodes.add( node.getFeature() );
@@ -136,9 +135,8 @@ public class RestartNodes
   /**
    * Returns parameters for node at certain position, or nearest (depends on search distance)
    */
-  public INodeResult getNodeResultAtPosition( final double x, final double y )
+  public INodeResult getNodeResultAtPosition( final GM_Point point )
   {
-    final GM_Point point = GeometryFactory.createGM_Point( x, y, COORDINATE_SYSTEM );
     return getNodeResult( point );
   }
 
