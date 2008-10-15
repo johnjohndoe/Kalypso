@@ -88,7 +88,6 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -96,7 +95,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Converts discretisation model to RMA10s model
@@ -527,7 +525,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         final GM_Point position = node.getPoint();
         final String msg = "Modellknoten ohne Höhe.";
-        IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
+        final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
         throw new CoreException( status );
       }
 
@@ -548,8 +546,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         if( relationship == null )
         {
           final String msg = "Keine Knotenparameter für 1D-Knoten vorhanden";
-          GM_Object location = node.getPoint();
-          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+          final GM_Object location = node.getPoint();
+          final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
         }
 
@@ -582,8 +580,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
           if( polyArea == null )
           {
             final String msg = "Knotenparameter enthält kein Flächenpolynom.";
-            GM_Object location = node.getPoint();
-            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            final GM_Object location = node.getPoint();
+            final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
           writePolynomialRanges( formatter, "PRA", nodeID, min, polyArea );
@@ -596,8 +594,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
           if( polyRunoff == null )
           {
             final String msg = "Knotenparameter enthält kein Abflusspolynom.";
-            GM_Object location = node.getPoint();
-            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            final GM_Object location = node.getPoint();
+            final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
 
@@ -611,8 +609,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
           if( polyAlpha == null )
           {
             final String msg = "Knotenparameter enthält kein Alphapolynom.";
-            GM_Object location = node.getPoint();
-            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            final GM_Object location = node.getPoint();
+            final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
 
@@ -626,8 +624,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           final String msg = Messages.getString( "Gml2RMA10SConv.26" ) + relationship;
-          GM_Object location = node.getLocation();
-          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+          final GM_Object location = node.getLocation();
+          final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
         }
       }
@@ -666,7 +664,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
 
-    writeRestartLines( formatter, nodeID, x, y, isMidside );
+    writeRestartLines( formatter, nodeID, point, isMidside );
   }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue ) throws IOException
@@ -711,7 +709,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( elementsInBBox.size() == 0 )
     {
       final String msg = "Das Modell enthält keine Elemente. Berechnung nicht möglich.";
-      IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
+      final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
       throw new CoreException( status );
     }
 
@@ -753,7 +751,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           // TODO: give hint what 1D-element is was?
           final String msg = Messages.getString( "Gml2RMA10SConv.43" ) + element1D.getGmlID();
-          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
+          final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
           throw new CoreException( status );
         }
 
@@ -852,7 +850,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     throw new UnsupportedOperationException();
   }
 
-  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final boolean isMidside ) throws IOException
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final GM_Point point, final boolean isMidside ) throws IOException
   {
     if( m_restartNodes == null )
       return;
@@ -860,15 +858,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restartNodes.getSize() == 0 )
       return;
 
-    final INodeResult node = m_restartNodes.getNodeResultAtPosition( x, y );
+    final INodeResult node = m_restartNodes.getNodeResultAtPosition( point );
     if( node == null )
     {
       // we check only corner nodes, because in 1d it could be the case that there are midside nodes without restart
       // data
       if( !isMidside )
       {
-        final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", point, null );
       }
       return;
     }
@@ -880,7 +877,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     double velYComp = 0;
     List<Double> velTotal = new ArrayList<Double>();
     double virtDepth = 0;
-    final List<LINE_CASES> restartCases  = new ArrayList<LINE_CASES>();
+    final List<LINE_CASES> restartCases = new ArrayList<LINE_CASES>();
 
     restartCases.add( LINE_CASES.VA );
     restartCases.add( LINE_CASES.GA );
@@ -892,7 +889,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     // information, i.e.
     // enough information for restart with steady state, but not enough for unsteady calculations.
     // -------------------------------------------------------------------------------------------
-    for( LINE_CASES restartCase : restartCases )
+    for( final LINE_CASES restartCase : restartCases )
     {
 
       switch( restartCase )
