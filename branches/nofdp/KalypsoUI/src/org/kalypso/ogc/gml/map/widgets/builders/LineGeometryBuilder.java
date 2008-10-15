@@ -238,6 +238,14 @@ public class LineGeometryBuilder implements IGeometryBuilder
       m_points.remove( m_points.size() - 1 );
   }
 
+  public boolean hasPoints( )
+  {
+    if( m_points.size() > 0 )
+      return true;
+
+    return false;
+  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
    */
@@ -248,5 +256,13 @@ public class LineGeometryBuilder implements IGeometryBuilder
     m_result = null;
     if( m_extender != null )
       m_extender.setCursor( CROSSHAIR_CURSOR );
+  }
+
+  public GM_Point getStartPoint( )
+  {
+    if( m_points.size() > 0 )
+      return m_points.get( 0 );
+
+    return null;
   }
 }
