@@ -20,18 +20,18 @@
             class="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
             description="nur Profilpunkte links ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
-            name="nur Vorland links"/>
+            name="Vorland links"/>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
             description="nur Profilpunkte innerhalb der Hauptöffnung innerhalb der Trennflächen)"
             id="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
-            name="nur Flussschlauch">
+            name="Flussschlauch">
       </filter>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             description="nur Profilpunkte rechts ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
-            name="nur Vorland rechts">
+            name="Vorland rechts">
       </filter>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
