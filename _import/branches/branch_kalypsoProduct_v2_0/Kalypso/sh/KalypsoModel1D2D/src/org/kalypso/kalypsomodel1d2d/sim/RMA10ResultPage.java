@@ -78,7 +78,6 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.util.swt.StatusComposite;
@@ -90,8 +89,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
 {
-  
-  private final ResultManager m_resultManager; 
+
+  private final ResultManager m_resultManager;
 
   private IStatus m_simulationStatus;
 
@@ -112,9 +111,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   private Date[] m_selection = null;
 
   private final RMA10CalculationWizard m_parentWizard;
-  
 
-  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard  )
+  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard )
   {
     super( pageName );
 
@@ -201,7 +199,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       {
         if( element instanceof Date )
         {
-          Date date = (Date) element;
+          final Date date = (Date) element;
           if( date.equals( MAXI_DATE ) )
             return "Maximale Lösung";
           else if( date.equals( STEADY_DATE ) )
@@ -269,8 +267,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     spinNumStepProcessing.setDigits( 0 );
     spinNumStepProcessing.setMinimum( 1 );
     spinNumStepProcessing.setMaximum( 100 );
-    Integer resultIncrement = m_parentWizard.getResultIntervalFromCalcPage();
-    spinNumStepProcessing.setSelection( resultIncrement);
+    final Integer resultIncrement = m_parentWizard.getResultIntervalFromCalcPage();
+    spinNumStepProcessing.setSelection( resultIncrement );
     updateTableSelection( resultProcessViewer, spinNumStepProcessing );
     updateSelection();
 
@@ -293,19 +291,19 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   protected void updateTableSelection( TableViewer resultProcessViewer, Spinner spinNumStepProcessing )
   {
-    TableItem[] items = resultProcessViewer.getTable().getItems();
+    final TableItem[] items = resultProcessViewer.getTable().getItems();
     final int selection = spinNumStepProcessing.getSelection();
 
-    int length = items.length;
+    final int length = items.length;
     int start = 0;
 
     // TODO: handle only unsteady time steps
     for( int i = 0; i < length; i++ )
     {
-      Object data = items[i].getData();
+      final Object data = items[i].getData();
       if( data instanceof Date )
       {
-        Date date = (Date) data;
+        final Date date = (Date) data;
         if( date == MAXI_DATE || date == STEADY_DATE )
         {
           start++;
@@ -322,8 +320,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
         items[i].setChecked( true );
       else
         items[i].setChecked( false );
-      
-      if (i == length - 1)
+
+      if( i == length - 1 )
         items[i].setChecked( true );
     }
   }
@@ -423,7 +421,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   protected void updateSelection( )
   {
-    Object[] selection = m_resultProcessViewer.getCheckedElements();
+    final Object[] selection = m_resultProcessViewer.getCheckedElements();
 
     final List<Date> dateList = new ArrayList<Date>();
     for( int i = 0; i < selection.length; i++ )

@@ -44,7 +44,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -110,6 +112,8 @@ public class ResultManager implements ISimulation1D2DConstants
   private final IFEDiscretisationModel1d2d m_discModel;
 
   private File[] m_stepsToProcess;
+
+  private Map<Date, File> m_dateFileMap;
 
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
   {
@@ -237,9 +241,9 @@ public class ResultManager implements ISimulation1D2DConstants
     if( resultFileName.startsWith( "mini" ) || resultFileName.startsWith( "model" ) )
       return null;
 
-    int index = resultFileName.length();
-    CharSequence sequence = resultFileName.subSequence( 1, index );
-    String string = sequence.toString();
+    final int index = resultFileName.length();
+    final CharSequence sequence = resultFileName.subSequence( 1, index );
+    final String string = sequence.toString();
 
     final int step = Integer.parseInt( string );
 
@@ -294,11 +298,13 @@ public class ResultManager implements ISimulation1D2DConstants
   public void setStepsToProcess( Date[] dates, final IControlModel1D2D controlModel )
   {
     final List<File> fileList = new ArrayList<File>();
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+
+    if( m_dateFileMap == null )
+      fillStepMap( controlModel );
 
     for( final Date date : dates )
     {
-      final File stepFile = findStepFile( date, existing2dFiles, controlModel );
+      final File stepFile = m_dateFileMap.get( date );
       if( stepFile != null )
         fileList.add( stepFile );
     }
@@ -307,23 +313,32 @@ public class ResultManager implements ISimulation1D2DConstants
 
   }
 
-  private File findStepFile( final Date date, final File[] existing2dFiles, final IControlModel1D2D controlModel )
+  public File[] getStepsToProcess( )
   {
-    for( File file : existing2dFiles )
-    {
-      if( date.equals( STEADY_DATE ) && file.getName().equals( "steady.2d" ) )
-        return file;
+    return m_stepsToProcess;
+  }
 
-      if( date.equals( MAXI_DATE ) && file.getName().equals( "maxi.2d" ) )
-        return file;
+  private void fillStepMap( final IControlModel1D2D controlModel )
+  {
+    m_dateFileMap = new HashMap<Date, File>();
+
+    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+
+    for( final File file : existing2dFiles )
+    {
+      if( file.getName().equals( "steady.2d" ) )
+        m_dateFileMap.put( STEADY_DATE, file );
+
+      if( file.getName().equals( "maxi.2d" ) )
+        m_dateFileMap.put( MAXI_DATE, file );
 
       if( file.getName().equals( "steady.2d" ) || file.getName().equals( "maxi.2d" ) || file.getName().equals( "mini.2d" ) || file.getName().equals( "model.2d" ) )
         continue;
 
       final String resultFileName = file.getName();
-      int index = resultFileName.indexOf( "." );
-      CharSequence sequence = resultFileName.subSequence( 1, index );
-      String string = sequence.toString();
+      final int index = resultFileName.indexOf( "." );
+      final CharSequence sequence = resultFileName.subSequence( 1, index );
+      final String string = sequence.toString();
       final int step = Integer.parseInt( string );
 
       final IObservation<TupleResult> obs = controlModel.getTimeSteps();
@@ -332,14 +347,7 @@ public class ResultManager implements ISimulation1D2DConstants
       final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
       final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
       final Date fileDate = DateUtilities.toDate( stepCal );
-      if( date.equals( fileDate ) )
-        return file;
+      m_dateFileMap.put( fileDate, file );
     }
-    return null;
-  }
-
-  public File[] getStepsToProcess( )
-  {
-    return m_stepsToProcess;
   }
 }
