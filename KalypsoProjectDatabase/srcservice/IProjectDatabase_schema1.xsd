@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://sei.database.project.kalypso.org/" xmlns:tns="http://sei.database.project.kalypso.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="getProjects" type="tns:getProjects"/>
+
+  <xs:element name="getProjectsResponse" type="tns:getProjectsResponse"/>
+
+  <xs:element name="testMethod" type="tns:testMethod"/>
+
+  <xs:element name="testMethodResponse" type="tns:testMethodResponse"/>
+
+  <xs:complexType name="testMethod">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="testMethodResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getProjects">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getProjectsResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:kalypsoProjectBean" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="kalypsoProjectBean">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
