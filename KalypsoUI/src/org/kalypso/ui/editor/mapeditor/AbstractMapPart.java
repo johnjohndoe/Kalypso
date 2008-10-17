@@ -426,8 +426,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         final String fileName = file != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
         setCustomName( fileName );
       }
-      if( file != null )
-        setTitleToolTip( file.getFullPath().toPortableString() );
+      // TODO: always call in SWT thread (or move into setCustomName)
+// if( file != null )
+// setTitleToolTip( file.getFullPath().toPortableString() );
 
       // At the moment, we stop after the .gmt file has loaded. One day we may change this to wait until
       // all themes have finished loading, but this might be a little bit tricky.
