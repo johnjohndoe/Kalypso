@@ -40,27 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.sei.beans;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
 /**
  * @author Dirk Kuch
  */
+
 @Entity
-@Table(name = "projects")
 public class KalypsoProjectBean implements IKalypsoProject
 {
   @Id
   @GeneratedValue
-  @Column(name = "project_id")
   private Long m_id;
 
-  @Column(name = "project_name")
   private String m_name;
 
   public KalypsoProjectBean( )

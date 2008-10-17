@@ -43,11 +43,10 @@ package org.kalypso.project.database.server;
 import javax.jws.WebService;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
-import org.kalypso.project.database.server.model.HibernateUtil;
 
 /**
  * @author kuch
@@ -55,6 +54,7 @@ import org.kalypso.project.database.server.model.HibernateUtil;
 @WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")
 public class ProjectDatabase implements IProjectDatabase
 {
+
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#testMethod()
    */
@@ -63,11 +63,11 @@ public class ProjectDatabase implements IProjectDatabase
   {
     /* test storing and reading of projects */
     /** Getting the Session Factory and session */
-    SessionFactory session = HibernateUtil.getSessionFactory();
-    Session sess = session.getCurrentSession();
+    Session sess = KalypsoProjectDatabase.getSessionFactory().getCurrentSession();
+
     /** Starting the Transaction */
     Transaction tx = sess.beginTransaction();
-    /** Creating Pojo */
+
     KalypsoProjectBean project = new KalypsoProjectBean( "TestProject" );
 
     /** Saving POJO */
@@ -76,8 +76,9 @@ public class ProjectDatabase implements IProjectDatabase
     /** Commiting the changes */
     tx.commit();
     System.out.println( "Record Inserted" );
+
     /** Closing Session */
-    session.close();
+    KalypsoProjectDatabase.getSessionFactory().close();
 
     return "blub";
   }
