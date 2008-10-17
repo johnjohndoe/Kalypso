@@ -12,7 +12,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/slf4j-api-1.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/ejb3-persistence.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/hibernate-annotations.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/hibernate3.jar" sourcepath="lib/hibernate/core/src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/FastInfoset.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/http.jar"/>

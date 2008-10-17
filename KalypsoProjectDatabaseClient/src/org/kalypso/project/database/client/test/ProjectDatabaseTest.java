@@ -68,8 +68,7 @@ public class ProjectDatabaseTest
 
     for( KalypsoProjectBean project : projects )
     {
-      String name = project.getName();
-      System.out.println( String.format( "Project: %s", name ) );
+      System.out.println( String.format( "Project: %s ", project.getName() ) );
     }
   }
 
