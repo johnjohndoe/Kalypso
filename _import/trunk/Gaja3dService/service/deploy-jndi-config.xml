@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jndiConfig xmlns="http://wsrf.globus.org/jndi/config">
+
+<!-- Instance service -->
+	<service name="Gaja3dService">
+		<resource name="home"
+			type="org.kalypso.gaja3d.service.impl.Gaja3dResourceHome">
+			<resourceParams>
+				<parameter>
+					<name>resourceClass</name>
+					<value>org.kalypso.gaja3d.service.impl.Gaja3dResource
+					</value>
+				</parameter>
+				<parameter>
+					<name>resourceKeyType</name>
+					<value>java.lang.Integer</value>
+				</parameter>
+				<parameter>
+					<name>resourceKeyName</name>
+					<value>
+						{http://org.kalypso.gaja3d.service}Gaja3dResourceKey
+					</value>
+				</parameter>
+				<parameter>
+					<name>factory</name>
+					<value>org.globus.wsrf.jndi.BeanFactory
+					</value>
+				</parameter>
+			</resourceParams>
+		</resource>
+	</service>
+
+<!-- Factory service -->
+	<service name="Gaja3dResourceFactoryService">
+		<resourceLink name="home"
+			target="java:comp/env/services/Gaja3dService/home" />
+	</service>
+</jndiConfig>

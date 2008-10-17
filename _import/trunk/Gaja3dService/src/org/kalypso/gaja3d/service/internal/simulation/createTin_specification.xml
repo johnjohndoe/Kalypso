@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="Gaja3d_createTin">
+
+  <!-- Input -->
+  <input id="Boundary" type="xs:anyURI" description="The boundary for restricting the points." />
+  <input id="Breaklines" type="xs:anyURI" description="The breaklines for the model tin." />
+  <input id="MaxArea" type="double" optional="true" description="" />
+  <input id="MinAngle" type="double" optional="true" description="" />
+
+  <!-- Output -->
+  <input id="_ModelTin" type="string" description="File name for tin output."/>
+  <output id="ModelTin" type="xs:anyURI" description="The created model tin." />
+  
+  <!-- Logging -->
+  <output id="stdout" type="xs:anyURI" description="Standard out" />
+  <output id="stderr" type="xs:anyURI" description="Standard err" />
+</modelspec>

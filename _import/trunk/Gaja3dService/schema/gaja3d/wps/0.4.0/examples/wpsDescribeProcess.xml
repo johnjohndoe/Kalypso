@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DescribeProcess service="WPS" version="0.4.0" xmlns="http://www.opengeospatial.net/wps" xmlns:ows="http://www.opengeospatial.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengeospatial.net/wps
+..\wpsDescribeProcess.xsd">
+	<ows:Identifier>intersection</ows:Identifier>
+	<ows:Identifier>union</ows:Identifier>
+</DescribeProcess>

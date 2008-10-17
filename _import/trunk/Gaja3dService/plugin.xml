@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.globus.ws.core.wsdd">
+      <descriptor
+            jndi="service/deploy-jndi-config.xml"
+            wsdd="service/deploy-server.wsdd">
+      </descriptor>
+   </extension>
+   <extension
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
+            simulationClass="org.kalypso.gaja3d.service.internal.simulation.CreateGridSimulation"
+            typeID="Gaja3d_createGrid">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.gaja3d.service.internal.simulation.DetectBreaklinesSimulation"
+            typeID="Gaja3d_detectBreaklines">
+      </simulation>
+      <simulation
+            simulationClass="org.kalypso.gaja3d.service.internal.simulation.CreateTinSimulation"
+            typeID="Gaja3d_createTin">
+      </simulation>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/org.globus.ws.core/service/build/schema"
+            base-name="/service/build/schema"
+            httpcontextId="org.globus.ws.core.httpcontext">
+      </resource>
+   </extension>
+
+</plugin>
