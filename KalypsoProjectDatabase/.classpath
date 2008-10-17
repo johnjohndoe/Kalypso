@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/ejb3-persistence.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/hibernate-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/hibernate3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/FastInfoset.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/http.jar"/>

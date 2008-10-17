@@ -46,12 +46,11 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author kuch
- *
  */
 @WebService
 public interface IProjectDatabase
 {
-  KalypsoProjectBean[] getProjects();
+  KalypsoProjectBean[] getProjects( );
 
-  String testMethod();
+  String testMethod( );
 }

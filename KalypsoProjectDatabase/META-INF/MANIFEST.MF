@@ -8,7 +8,6 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.core.runtime,
  org.junit4,
  org.eclipse.equinox.http.registry,
- org.kalypso.lib.hibernate;bundle-version="1.0.0",
  org.kalypso.lib.hsqldb;bundle-version="1.0.0",
  javax.servlet;bundle-version="2.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -38,4 +37,7 @@ Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/jax-ws-2.1.7/sjsxp.jar,
  lib/jax-ws-2.1.7/stax-ex.jar,
  lib/jax-ws-2.1.7/streambuffer.jar,
+ lib/hibernate/annotations/hibernate-annotations.jar,
+ lib/hibernate/core/hibernate3.jar,
+ lib/hibernate/annotations/lib/ejb3-persistence.jar,
  .
