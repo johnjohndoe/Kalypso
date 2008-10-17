@@ -84,7 +84,7 @@ ToDo: Help-Ids setzen!!! -->
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
                 </arg>
                 <arg name="zmlTableShow" value="all"/>
-                <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
+                <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Niederschlag#linkColumn=Niederschlag_rechnung"/>
                 <arg name="buttonText" value="Neuberechnung Gebietsniederschlag"/>
                 <arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen"/>
                 <arg name="buttonLaunch" value="gebietsniederschlag"/>
