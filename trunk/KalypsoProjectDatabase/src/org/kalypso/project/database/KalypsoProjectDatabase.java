@@ -1,11 +1,6 @@
 package org.kalypso.project.database;
 
-import java.net.URL;
-
 import org.eclipse.core.runtime.Plugin;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -13,38 +8,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoProjectDatabase extends Plugin
 {
-
-  private static SessionFactory FACTORY = null;
-  static
-  {
-    if( FACTORY == null )
-    {
-      try
-      {
-        URL url = KalypsoProjectDatabase.class.getResource( "server/conf/hibernate.cfg.xml" ).toURI().toURL();
-        AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader( KalypsoProjectDatabase.class.getClassLoader() );
-
-        configure.addAnnotatedClass( KalypsoProjectBean.class );
-
-        Thread.currentThread().setContextClassLoader( classLoader );
-
-        FACTORY = configure.buildSessionFactory();
-
-      }
-      catch( Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static SessionFactory getSessionFactory( )
-  {
-    return FACTORY;
-  }
 
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.project.database";
