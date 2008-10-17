@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/test/log4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/test/slf4j-log4j12.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/slf4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/hibernate-commons-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/antlr-2.7.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/commons-collections-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/dom4j-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/javassist-3.4.GA.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/jta-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/lib/required/slf4j-api-1.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/lib/ejb3-persistence.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/annotations/hibernate-annotations.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate/core/hibernate3.jar"/>

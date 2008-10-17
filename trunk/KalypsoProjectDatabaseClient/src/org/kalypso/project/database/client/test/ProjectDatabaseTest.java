@@ -41,7 +41,7 @@
 package org.kalypso.project.database.client.test;
 
 import org.junit.Test;
-import org.kalypso.project.database.KalypsoProjectDatabase;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -53,7 +53,7 @@ public class ProjectDatabaseTest
   @Test
   public void testMethod( )
   {
-    IProjectDatabase service = KalypsoProjectDatabase.getService();
+    IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     String result = service.testMethod();
     System.out.println( result );
   }
@@ -61,7 +61,7 @@ public class ProjectDatabaseTest
   @Test
   public void testGetListOfProjects( )
   {
-    IProjectDatabase service = KalypsoProjectDatabase.getService();
+    IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     KalypsoProjectBean[] projects = service.getProjects();
 
     System.out.println( "testGetListOfProjects()" );
