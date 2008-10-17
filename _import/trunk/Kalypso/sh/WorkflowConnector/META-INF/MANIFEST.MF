@@ -18,7 +18,7 @@ Require-Bundle: de.renew.workflow.model,
  org.eclipse.ui.navigator,
  org.eclipse.ui.ide,
  org.kalypso.contribs.eclipseplatform
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.renew.workflow.connector.WorkflowConnectorPlugin
 Import-Package: de.renew.access,
  de.renew.access.entitylayer,
@@ -36,3 +36,4 @@ Import-Package: de.renew.access,
  javax.xml.bind.attachment,
  javax.xml.bind.helpers,
  javax.xml.bind.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
