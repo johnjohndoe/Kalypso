@@ -1,17 +1,11 @@
 package org.kalypso.project.database;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 import org.eclipse.core.runtime.Plugin;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
-import org.kalypso.project.database.server.ProjectDatabase;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -45,36 +39,6 @@ public class KalypsoProjectDatabase extends Plugin
         e.printStackTrace();
       }
     }
-  }
-
-  private static IProjectDatabase m_service;
-
-  static
-  {
-    try
-    {
-      final String namespaceURI = "http://server.database.project.kalypso.org/";
-      final String serviceImplName = ProjectDatabase.class.getSimpleName();
-
-// final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" );
-      // TODO: get from outside
-      final String wsdlLocationProperty = "http://localhost/projectdb?wsdl";
-      final URL wsdlLocation = new URL( wsdlLocationProperty );
-      final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
-      final Service service = Service.create( wsdlLocation, serviceName );
-
-      m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
-    }
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-
-  }
-
-  public static IProjectDatabase getService( )
-  {
-    return m_service;
   }
 
   public static SessionFactory getSessionFactory( )
