@@ -7,11 +7,14 @@
 	<session-factory>
 
 		<!-- local connection properties -->
-		<property name="hibernate.connection.url">jdbc:hsqldb:/sdk/work/db/projects</property>
+		<property name="hibernate.connection.url">jdbc:hsqldb:file:c:\sdk\work\db\projects</property>
 		<property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
-		<!-- property name="hibernate.connection.pool_size"></property -->
+		<property name="hibernate.connection.pool_size">1</property>
 		<property name="hibernate.connection.autocommit">true</property>
-		<property name="hibernate.hbm2ddl.auto">create-drop</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
 
 		<!-- dialect for HypersonicSQL -->
 		<property name="dialect">org.hibernate.dialect.HSQLDialect</property>
@@ -19,6 +22,8 @@
 		<property name="hibernate.show_sql">true</property>
 		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		<property name="hibernate.current_session_context_class">thread</property>
+
+		<property name=""></property>
 
 	</session-factory>
 </hibernate-configuration>

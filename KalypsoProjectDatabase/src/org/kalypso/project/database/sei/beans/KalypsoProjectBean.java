@@ -69,11 +69,6 @@ public class KalypsoProjectBean implements IKalypsoProject
     m_name = name;
   }
 
-  public Long getId( )
-  {
-    return m_id;
-  }
-
   /**
    * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getName()
    */

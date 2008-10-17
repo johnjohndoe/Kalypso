@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.server;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jws.WebService;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.kalypso.project.database.KalypsoProjectDatabase;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -54,6 +59,33 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 @WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")
 public class ProjectDatabase implements IProjectDatabase
 {
+  private SessionFactory FACTORY = null;
+
+  public ProjectDatabase( )
+  {
+    try
+    {
+      URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" ).toURI().toURL();
+      AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
+
+      configure.addAnnotatedClass( KalypsoProjectBean.class );
+      FACTORY = configure.buildSessionFactory();
+
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public void dispose( )
+  {
+    if( FACTORY != null )
+    {
+      FACTORY.close();
+    }
+
+  }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#testMethod()
@@ -63,22 +95,19 @@ public class ProjectDatabase implements IProjectDatabase
   {
     /* test storing and reading of projects */
     /** Getting the Session Factory and session */
-    Session sess = KalypsoProjectDatabase.getSessionFactory().getCurrentSession();
+
+    Session session = FACTORY.getCurrentSession();
 
     /** Starting the Transaction */
-    Transaction tx = sess.beginTransaction();
+    Transaction tx = session.beginTransaction();
 
     KalypsoProjectBean project = new KalypsoProjectBean( "TestProject" );
 
     /** Saving POJO */
-    sess.save( project );
+    session.save( project );
 
     /** Commiting the changes */
     tx.commit();
-    System.out.println( "Record Inserted" );
-
-    /** Closing Session */
-    KalypsoProjectDatabase.getSessionFactory().close();
 
     return "blub";
   }
@@ -89,6 +118,24 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public KalypsoProjectBean[] getProjects( )
   {
-    return new KalypsoProjectBean[] { new KalypsoProjectBean( "Test Project" ) };
+    /** Getting the Session Factory and session */
+    Session session = FACTORY.getCurrentSession();
+
+    /** Starting the Transaction */
+    Transaction tx = session.beginTransaction();
+
+    List list = session.createQuery( "from KalypsoProjectBean" ).list();
+    tx.commit();
+
+    List<KalypsoProjectBean> myProjects = new ArrayList<KalypsoProjectBean>();
+
+    System.out.println( list.size() );
+    for( Object object : list )
+    {
+      if( object instanceof KalypsoProjectBean )
+        myProjects.add( (KalypsoProjectBean) object );
+    }
+
+    return myProjects.toArray( new KalypsoProjectBean[] {} );
   }
 }
