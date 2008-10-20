@@ -12,7 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "createProject", namespace = "http://sei.database.project.kalypso.org/", propOrder = {
     "arg0",
     "arg1",
-    "arg2"
+    "arg2",
+    "arg3"
 })
 public class CreateProject {
 
@@ -22,6 +23,8 @@ public class CreateProject {
     private String arg1;
     @XmlElement(name = "arg2", namespace = "")
     private Integer arg2;
+    @XmlElement(name = "arg3", namespace = "")
+    private String arg3;
 
     /**
      * 
@@ -75,6 +78,24 @@ public class CreateProject {
      */
     public void setArg2(Integer arg2) {
         this.arg2 = arg2;
+    }
+
+    /**
+     * 
+     * @return
+     *     returns String
+     */
+    public String getArg3() {
+        return this.arg3;
+    }
+
+    /**
+     * 
+     * @param arg3
+     *     the value for the arg3 property
+     */
+    public void setArg3(String arg3) {
+        this.arg3 = arg3;
     }
 
 }

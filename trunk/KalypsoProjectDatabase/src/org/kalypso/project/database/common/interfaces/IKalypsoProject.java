@@ -55,9 +55,9 @@ public interface IKalypsoProject extends Serializable
 
   public void setName( String name );
 
-  public String getUrl( );
+  public String getUnixName( );
 
-  public void setUrl( String url );
+  public void setUnixName( final String unixName );
 
   public Integer getProjectVersion( );
 
@@ -66,4 +66,6 @@ public interface IKalypsoProject extends Serializable
   public void setChildren( KalypsoProjectBean[] children );
 
   public KalypsoProjectBean[] getChildren( );
+
+  public String getUrl( );
 }

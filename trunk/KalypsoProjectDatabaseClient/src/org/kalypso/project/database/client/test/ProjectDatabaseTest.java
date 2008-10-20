@@ -60,8 +60,8 @@ public class ProjectDatabaseTest
   @Test
   public void testMethod( )
   {
-    IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    String result = service.testMethod();
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    final String result = service.testMethod();
     System.out.println( result );
   }
 
@@ -75,32 +75,31 @@ public class ProjectDatabaseTest
     }
   }
 
-  public void createProject( String name, int version )
+  public void createProject( final String name, final int version )
   {
     try
     {
-
       // copy project.zip to server incoming directory
-      URL project = ProjectDatabaseTest.class.getResource( "data/project.zip" );
-      FileSystemManager manager = VFSUtilities.getManager();
-      FileObject src = manager.resolveFile( project.toExternalForm() );
+      final URL project = ProjectDatabaseTest.class.getResource( "data/project.zip" );
+      final FileSystemManager manager = VFSUtilities.getManager();
+      final FileObject src = manager.resolveFile( project.toExternalForm() );
 
-      IProjectDatabaseAccess access = KalypsoProjectDatabaseClient.getDefault().getIncomingAccessData();
-      String url = access.getUrl( "test.zip" );
+      final IProjectDatabaseAccess access = KalypsoProjectDatabaseClient.getDefault().getIncomingAccessData();
+      final String url = access.getUrl( "test.zip" );
 
-      FileObject destination = manager.resolveFile( url );
+      final FileObject destination = manager.resolveFile( url );
       VFSUtilities.copy( src, destination );
 
       /* create project */
-      IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      KalypsoProjectBean bean = service.createProject( url, name, version );
+      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+      final KalypsoProjectBean bean = service.createProject( name, name, version, url );
       Assert.assertNotNull( bean );
 
 // KalypsoProjectBeanWrapper wrapper = new KalypsoProjectBeanWrapper( bean );
 // FileObject dest = wrapper.getFileObject( access );
 // Assert.assertTrue( dest.exists() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -109,10 +108,10 @@ public class ProjectDatabaseTest
   @Test
   public void testGetProjects( )
   {
-    IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    KalypsoProjectBean[] projects = service.getProjectHeads();
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    final KalypsoProjectBean[] projects = service.getProjectHeads();
 
-    for( KalypsoProjectBean project : projects )
+    for( final KalypsoProjectBean project : projects )
     {
       System.out.println( String.format( "Project: %s ", project.getName() ) );
     }
