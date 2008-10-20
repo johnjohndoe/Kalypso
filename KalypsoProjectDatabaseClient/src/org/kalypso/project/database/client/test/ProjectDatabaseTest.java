@@ -40,8 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.test;
 
+import java.net.URL;
+
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
+import org.junit.Assert;
 import org.junit.Test;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -59,10 +66,10 @@ public class ProjectDatabaseTest
   }
 
   @Test
-  public void testGetListOfProjects( )
+  public void testGetProjects( )
   {
     IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    KalypsoProjectBean[] projects = service.getProjects();
+    KalypsoProjectBean[] projects = service.getHeadProjects();
 
     System.out.println( "testGetListOfProjects()" );
 
@@ -72,4 +79,35 @@ public class ProjectDatabaseTest
     }
   }
 
+  @Test
+  public void testCreateProject( )
+  {
+    try
+    {
+      // copy project.zip to server incoming directory
+      URL project = ProjectDatabaseTest.class.getResource( "data/project.zip" );
+
+      FileSystemManager manager = VFSUtilities.getManager();
+
+      FileObject src = manager.resolveFile( project.toExternalForm() );
+
+      IProjectDatabaseAccess access = KalypsoProjectDatabaseClient.getDefault().getIncomingAccessData();
+      String url = access.getUrl( "test.zip" );
+
+      FileObject destination = manager.resolveFile( url );
+
+      VFSUtilities.copy( src, destination );
+
+      /* create project */
+      IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+
+      KalypsoProjectBean bean = service.createProject( url, "unit test" );
+
+      Assert.assertNotNull( bean );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
 }

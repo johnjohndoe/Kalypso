@@ -38,36 +38,33 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.sei;
+package org.kalypso.commons;
 
-import java.io.IOException;
-
-import javax.jws.WebService;
-
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.eclipse.core.runtime.Platform;
 
 /**
- * Facade of the ProjectDatabase
+ * This class is a helper for debugging.
  * 
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-@WebService
-public interface IProjectDatabase
+public class Debug
 {
   /**
-   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
-   *         project)
+   * The constructor.
    */
-  KalypsoProjectBean[] getHeadProjects( );
+  private Debug( )
+  {
+  }
 
   /**
-   * @param url
-   *          location of incoming project zip
-   * @param name
-   *          of project
-   * @return newly created project
+   * This function will print a given Message on the console, if the tracing option is set to true.
+   * 
+   * @param message
+   *          The debug message.
    */
-  KalypsoProjectBean createProject( String url, String name ) throws IOException;
-
-  String testMethod( );
+  public static void println( String message )
+  {
+    if( "true".equals( Platform.getDebugOption( "org.kalypso.commons/debug" ) ) )
+      System.out.println( "DEBUG: " + message );
+  }
 }

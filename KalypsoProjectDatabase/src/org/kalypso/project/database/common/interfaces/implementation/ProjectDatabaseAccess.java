@@ -38,36 +38,65 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.sei;
+package org.kalypso.project.database.common.interfaces.implementation;
 
-import java.io.IOException;
-
-import javax.jws.WebService;
-
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
 
 /**
- * Facade of the ProjectDatabase
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-@WebService
-public interface IProjectDatabase
+public class ProjectDatabaseAccess implements IProjectDatabaseAccess
 {
-  /**
-   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
-   *         project)
-   */
-  KalypsoProjectBean[] getHeadProjects( );
+  private String m_protocol;
+
+  private String m_username;
+
+  private String m_password;
+
+  private String m_url;
+
+  public void setProtocol( String protocol )
+  {
+    Assert.isNotNull( protocol );
+    Assert.isTrue( !"".equals( protocol.trim() ) );
+
+    m_protocol = protocol;
+  }
+
+  public void setUsername( String username )
+  {
+    Assert.isNotNull( username );
+    Assert.isTrue( !"".equals( username.trim() ) );
+
+    m_username = username;
+  }
+
+  public void setPassword( String password )
+  {
+    Assert.isNotNull( password );
+    Assert.isTrue( !"".equals( password.trim() ) );
+
+    m_password = password;
+  }
+
+  public void setUrl( String url )
+  {
+    Assert.isNotNull( url );
+    Assert.isTrue( !"".equals( url.trim() ) );
+
+    m_url = url;
+  }
 
   /**
-   * @param url
-   *          location of incoming project zip
-   * @param name
-   *          of project
-   * @return newly created project
+   * @see org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess#getUrl(java.lang.String)
    */
-  KalypsoProjectBean createProject( String url, String name ) throws IOException;
+  @Override
+  public String getUrl( String local )
+  {
+    // "webdav://planer:client@localhost:8888/webdav/incoming/test.zip";
+    String url = String.format( "%s%s:%s@%s%s", m_protocol, m_username, m_password, m_url, local );
 
-  String testMethod( );
+    return url;
+  }
 }

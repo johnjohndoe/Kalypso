@@ -57,15 +57,20 @@ public class KalypsoProjectBean implements IKalypsoProject
   @GeneratedValue
   private Long m_id;
 
+  private String m_url;
+
   private String m_name;
+
+  // TODO Description
 
   public KalypsoProjectBean( )
   {
     // Needed in order to make this class a java bean
   }
 
-  public KalypsoProjectBean( String name )
+  public KalypsoProjectBean( String url, String name )
   {
+    m_url = url;
     m_name = name;
   }
 
