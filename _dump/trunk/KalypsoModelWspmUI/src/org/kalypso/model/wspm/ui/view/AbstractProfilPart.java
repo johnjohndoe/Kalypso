@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
  */
 public class AbstractProfilPart extends PlatformObject implements IProfilChartViewProvider
 {
+ 
   private final List<IProfilChartViewProviderListener> m_listener = new ArrayList<IProfilChartViewProviderListener>();
 
   private final ProfilViewData m_viewdata = new ProfilViewData();

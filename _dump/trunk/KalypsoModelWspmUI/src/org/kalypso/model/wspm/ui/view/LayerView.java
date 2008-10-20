@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
