@@ -40,16 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.server;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -61,21 +66,15 @@ public class ProjectDatabase implements IProjectDatabase
 {
   private SessionFactory FACTORY = null;
 
+  private final String BASE_PROJECT_URL = "webdav://planer:client@localhost:8888/webdav/projects/";
+
   public ProjectDatabase( )
   {
-    try
-    {
-      URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" ).toURI().toURL();
-      AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
+    URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
+    AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
 
-      configure.addAnnotatedClass( KalypsoProjectBean.class );
-      FACTORY = configure.buildSessionFactory();
-
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
+    configure.addAnnotatedClass( KalypsoProjectBean.class );
+    FACTORY = configure.buildSessionFactory();
   }
 
   public void dispose( )
@@ -93,21 +92,21 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public String testMethod( )
   {
-    /* test storing and reading of projects */
-    /** Getting the Session Factory and session */
-
-    Session session = FACTORY.getCurrentSession();
-
-    /** Starting the Transaction */
-    Transaction tx = session.beginTransaction();
-
-    KalypsoProjectBean project = new KalypsoProjectBean( "TestProject" );
-
-    /** Saving POJO */
-    session.save( project );
-
-    /** Commiting the changes */
-    tx.commit();
+// /* test storing and reading of projects */
+// /** Getting the Session Factory and session */
+//
+// Session session = FACTORY.getCurrentSession();
+//
+// /** Starting the Transaction */
+// Transaction tx = session.beginTransaction();
+//
+// KalypsoProjectBean project = new KalypsoProjectBean( "TestProject" );
+//
+// /** Saving POJO */
+// session.save( project );
+//
+// /** Commiting the changes */
+// tx.commit();
 
     return "blub";
   }
@@ -116,7 +115,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjects()
    */
   @Override
-  public KalypsoProjectBean[] getProjects( )
+  public KalypsoProjectBean[] getHeadProjects( )
   {
     /** Getting the Session Factory and session */
     Session session = FACTORY.getCurrentSession();
@@ -137,5 +136,46 @@ public class ProjectDatabase implements IProjectDatabase
     }
 
     return myProjects.toArray( new KalypsoProjectBean[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
+   */
+  @Override
+  public KalypsoProjectBean createProject( String incoming, String name ) throws IOException
+  {
+    FileSystemManager manager = VFSUtilities.getManager();
+    FileObject src = manager.resolveFile( incoming );
+
+    try
+    {
+      if( !src.exists() )
+        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming ) );
+
+      /* destination of incoming file */
+      String urlDestination = BASE_PROJECT_URL + name + "/project.zip";
+      FileObject destination = manager.resolveFile( urlDestination );
+
+      VFSUtilities.copyFileTo( src, destination );
+
+      KalypsoProjectBean bean = new KalypsoProjectBean( urlDestination, name );
+
+      /* store project bean in database */
+      Session session = FACTORY.getCurrentSession();
+      Transaction tx = session.beginTransaction();
+      session.save( bean );
+
+      tx.commit();
+
+      return bean;
+    }
+    catch( Exception e )
+    {
+      throw new IOException( e.getMessage() );
+    }
+    finally
+    {
+      src.delete();
+    }
   }
 }

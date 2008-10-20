@@ -4,7 +4,19 @@
   <import namespace="http://sei.database.project.kalypso.org/" location="IProjectDatabase.wsdl"/>
   <binding name="ProjectDatabasePortBinding" type="ns1:IProjectDatabase" xmlns:ns1="http://sei.database.project.kalypso.org/">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-    <operation name="getProjects">
+    <operation name="createProject">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="IOException">
+        <soap:fault name="IOException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="testMethod">
       <soap:operation soapAction=""/>
       <input>
         <soap:body use="literal"/>
@@ -13,7 +25,7 @@
         <soap:body use="literal"/>
       </output>
     </operation>
-    <operation name="testMethod">
+    <operation name="getHeadProjects">
       <soap:operation soapAction=""/>
       <input>
         <soap:body use="literal"/>

@@ -38,36 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.sei;
-
-import java.io.IOException;
-
-import javax.jws.WebService;
+package org.kalypso.project.database.common.wrappers;
 
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * Facade of the ProjectDatabase
+ * Handles client / server interactions of KalypsoProjectBeans
  * 
  * @author Dirk Kuch
  */
-@WebService
-public interface IProjectDatabase
+public class KalypsoProjectBeanWrapper
 {
-  /**
-   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
-   *         project)
-   */
-  KalypsoProjectBean[] getHeadProjects( );
+  private final KalypsoProjectBean m_bean;
 
-  /**
-   * @param url
-   *          location of incoming project zip
-   * @param name
-   *          of project
-   * @return newly created project
-   */
-  KalypsoProjectBean createProject( String url, String name ) throws IOException;
-
-  String testMethod( );
+  public KalypsoProjectBeanWrapper( KalypsoProjectBean bean )
+  {
+    m_bean = bean;
+  }
 }
