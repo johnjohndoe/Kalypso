@@ -7,7 +7,7 @@
 
 	<path id="jaxws.classpath">
 		<pathelement location="${java.home}/../lib/tools.jar" />
-		<fileset dir="${workspace}/KalypsoProjectDatabase/lib" includes="**/*.jar" />
+		<fileset dir="${workspace}/KalypsoServiceObs/lib" includes="**/*.jar" />
 	</path>
 
 	<taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
@@ -38,7 +38,9 @@
 
 		<wsgen description="Wsgenning" sei="${service.endpoint.interface}" destdir="${wsgen.tmp}" resourcedestdir="${project.srcservice}" sourcedestdir="${project.srcservice}" keep="true" verbose="true" genwsdl="true">
 			<classpath>
-				<pathelement location="${workspace}/KalypsoProjectDatabase/build/bin" />
+				<pathelement location="${workspace}/KalypsoServiceObs/build/bin" />
+				<pathelement location="${workspace}/KalypsoRepository/build/bin" />
+				<pathelement location="${workspace}/KalypsoCore/build/bin" />
 				<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.equinox.common*.jar" />
 				<fileset dir="${eclipse.home}/plugins" includes="org.eclipse.core.jobs*.jar" />
 			</classpath>
