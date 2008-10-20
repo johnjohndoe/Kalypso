@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="obsdiagview.template.kalypso.org" elementFormDefault="qualified"
+	attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:kalypso="types.template.kalypso.org" xmlns:myns="obsdiagview.template.kalypso.org">
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+
+	<xs:simpleType name="typeDirection">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="vertical"/>
+			<xs:enumeration value="horizontal"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="typePosition">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="right"/>
+			<xs:enumeration value="left"/>
+			<xs:enumeration value="bottom"/>
+			<xs:enumeration value="top"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="typeAxis">
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="datatype" type="xs:string" use="required"/>
+		<xs:attribute name="label" type="xs:string" use="required"/>
+		<xs:attribute name="unit" type="xs:string" use="optional" default=""/>
+		<xs:attribute name="direction" type="myns:typeDirection" use="required"/>
+		<xs:attribute name="position" type="myns:typePosition" use="required"/>
+		<xs:attribute name="inverted" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>an axis can be inverted, thus elements are displayed in reverse
+					order</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="lowerMargin" type="xs:double" use="optional">
+			<xs:annotation>
+				<xs:documentation>the lower margin defines the margin or space between the origin of
+					the axis' display space and the begin of the axis'
+				value-range</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="upperMargin" type="xs:double" use="optional">
+			<xs:annotation>
+				<xs:documentation>the upper margin defines the margin or space between the end of
+					the axis' display space and the end of the axis' value-range</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="typeAxisMapping">
+		<xs:attribute name="observation-axis" type="xs:string"/>
+		<xs:attribute name="diagram-axis" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="typeCurve">
+		<xs:sequence>
+			<xs:element name="mapping" type="myns:typeAxisMapping" minOccurs="2" maxOccurs="2"/>
+			<xs:element name="stroke" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="width" type="xs:float" use="required"/>
+					<xs:attribute name="dash">
+						<xs:simpleType>
+							<xs:list itemType="xs:float"/>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="color" type="xs:string" use="optional"/>
+		<xs:attribute name="shown" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+
+	<xs:complexType name="typeObservation">
+		<xs:complexContent>
+			<xs:extension base="kalypso:kalypsoLinkType">
+				<xs:sequence>
+					<xs:element name="curve" type="myns:typeCurve" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>curve elements are optional, if no curve specified,
+								then all axes from the observation are displayed</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="obsdiagview">
+		<xs:annotation>
+			<xs:documentation>Root Element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" type="xs:string" default="" minOccurs="0"/>
+				<xs:element name="legend" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="title" type="xs:string" use="optional" default=""/>
+						<xs:attribute name="visible" type="xs:boolean" use="optional" default="true"
+						/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="features" type="xs:string" default="" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>semicolon separated list of featurenames in the sense of
+							obsview</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="axis" type="myns:typeAxis" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="observation" type="myns:typeObservation" minOccurs="0"
+					maxOccurs="unbounded"/>
+				<xs:element name="timezone" type="xs:string" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>the timezone into which the dates are displayed in the diagram. When no
+						timezone is defined, KALYPSO uses the default timezone of the system.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
