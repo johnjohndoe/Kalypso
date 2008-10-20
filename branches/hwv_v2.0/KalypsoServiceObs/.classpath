@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="srcservice"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/FastInfoset.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/http.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxws-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxws-rt.jar" sourcepath="lib/jax-ws-2.1.7/jaxws_ri-20080425_src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jaxws-tools.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jsr173_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jsr181-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/jsr250-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/mimepull.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/resolver.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/sjsxp.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/stax-ex.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jax-ws-2.1.7/streambuffer.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="build/bin"/>
+</classpath>
