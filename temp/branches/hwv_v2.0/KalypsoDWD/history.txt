@@ -1,0 +1,4 @@
+--------------------
+Deploy vom 24.2.2005
+--------------------
+- Batch Datei geändert, so dass stdout und stderr jedesmal rausgeschrieben werden
