@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.sei.beans;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
@@ -51,27 +54,39 @@ import org.kalypso.project.database.common.interfaces.IKalypsoProject;
  */
 
 @Entity
+@Table(name = "PROJECT")
 public class KalypsoProjectBean implements IKalypsoProject
 {
+  // TODO FIXME map name and version as primary key!
+
   @Id
   @GeneratedValue
-  private Long m_id;
+  private Integer m_id;
 
+  @Column(name = "projectUrl")
   private String m_url;
 
+  @Column(name = "projectName")
   private String m_name;
 
-  // TODO Description
+  @Column(name = "projectVersion")
+  private Integer m_projectVersion;
+
+  // TODO description
+
+  @Transient
+  KalypsoProjectBean[] m_children;
 
   public KalypsoProjectBean( )
   {
     // Needed in order to make this class a java bean
   }
 
-  public KalypsoProjectBean( String url, String name )
+  public KalypsoProjectBean( String url, String name, Integer projectVersion )
   {
     m_url = url;
     m_name = name;
+    m_projectVersion = projectVersion;
   }
 
   /**
@@ -87,4 +102,33 @@ public class KalypsoProjectBean implements IKalypsoProject
     m_name = name;
   }
 
+  public String getUrl( )
+  {
+    return m_url;
+  }
+
+  public void setUrl( String url )
+  {
+    m_url = url;
+  }
+
+  public Integer getProjectVersion( )
+  {
+    return m_projectVersion;
+  }
+
+  public void setProjectVersion( Integer projectVersion )
+  {
+    m_projectVersion = projectVersion;
+  }
+
+  public void setChildren( KalypsoProjectBean[] children )
+  {
+    m_children = children;
+  }
+
+  public KalypsoProjectBean[] getChildren( )
+  {
+    return m_children;
+  }
 }
