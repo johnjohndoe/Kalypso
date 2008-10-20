@@ -67,7 +67,7 @@ public interface IProjectDatabase
    *          of project
    * @return newly created project
    */
-  KalypsoProjectBean createProject( String urlIncoming, String name, Integer version ) throws IOException;
+  KalypsoProjectBean createProject( final String unixName, final String name, final Integer version, final String urlIncoming ) throws IOException;
 
   String testMethod( );
 }

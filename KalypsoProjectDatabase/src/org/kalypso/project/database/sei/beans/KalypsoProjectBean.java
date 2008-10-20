@@ -63,8 +63,8 @@ public class KalypsoProjectBean implements IKalypsoProject
   @GeneratedValue
   private Integer m_id;
 
-  @Column(name = "projectUrl")
-  private String m_url;
+  @Column(name = "unixName")
+  private String m_unixName;
 
   @Column(name = "projectName")
   private String m_name;
@@ -82,9 +82,9 @@ public class KalypsoProjectBean implements IKalypsoProject
     // Needed in order to make this class a java bean
   }
 
-  public KalypsoProjectBean( String url, String name, Integer projectVersion )
+  public KalypsoProjectBean( final String unixName, final String name, final Integer projectVersion )
   {
-    m_url = url;
+    m_unixName = unixName;
     m_name = name;
     m_projectVersion = projectVersion;
   }
@@ -97,19 +97,19 @@ public class KalypsoProjectBean implements IKalypsoProject
     return m_name;
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
   }
 
-  public String getUrl( )
+  public String getUnixName( )
   {
-    return m_url;
+    return m_unixName;
   }
 
-  public void setUrl( String url )
+  public void setUnixName( final String unixName )
   {
-    m_url = url;
+    m_unixName = unixName;
   }
 
   public Integer getProjectVersion( )
@@ -117,12 +117,12 @@ public class KalypsoProjectBean implements IKalypsoProject
     return m_projectVersion;
   }
 
-  public void setProjectVersion( Integer projectVersion )
+  public void setProjectVersion( final Integer projectVersion )
   {
     m_projectVersion = projectVersion;
   }
 
-  public void setChildren( KalypsoProjectBean[] children )
+  public void setChildren( final KalypsoProjectBean[] children )
   {
     m_children = children;
   }
@@ -130,5 +130,15 @@ public class KalypsoProjectBean implements IKalypsoProject
   public KalypsoProjectBean[] getChildren( )
   {
     return m_children;
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUrl()
+   */
+  @Override
+  public String getUrl( )
+  {
+    // TODO FIXME
+    return null;
   }
 }

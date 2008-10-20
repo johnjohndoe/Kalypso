@@ -192,15 +192,15 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean createProject( final String incoming, final String name, final Integer version ) throws IOException
+  public KalypsoProjectBean createProject( final String unixName, final String name, final Integer version, final String urlIncoming ) throws IOException
   {
     final FileSystemManager manager = VFSUtilities.getManager();
-    final FileObject src = manager.resolveFile( incoming );
+    final FileObject src = manager.resolveFile( urlIncoming );
 
     try
     {
       if( !src.exists() )
-        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming ) );
+        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", urlIncoming ) );
 
       /* destination of incoming file */
       final String urlDestination = BASE_PROJECT_URL + name + "/project.zip";
@@ -208,7 +208,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       VFSUtilities.copyFileTo( src, destination );
 
-      final KalypsoProjectBean bean = new KalypsoProjectBean( urlDestination, name, version );
+      final KalypsoProjectBean bean = new KalypsoProjectBean( unixName, name, version );
 
       /* store project bean in database */
       final Session session = FACTORY.getCurrentSession();
