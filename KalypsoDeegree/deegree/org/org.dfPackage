@@ -1,0 +1,40 @@
+package id3yfgdd6kqs8tbd6kqsviv;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id1k85jd9aa8hhpd9acbqny.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree_impl:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id2oxtjcye8mjuscye8sbb0.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.opengis:oiref> 
+*/
+class reference1 {
+}/**
+@__ref <oiref:design#Class#idvyjkcyhb6xq7cyhe3qeb.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree:oiref> 
+*/
+class reference2 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}
