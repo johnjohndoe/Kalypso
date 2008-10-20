@@ -86,6 +86,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ProfilChartView extends AbstractProfilView implements IPersistableElement
 {
+
   private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
   private static final String MEM_LAYER_POS = "layerPosition"; //$NON-NLS-1$
@@ -240,6 +241,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
+    
+   
 
     return m_chart;
   }
@@ -443,7 +446,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   }
 
   /**
-   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#getAdapter(java.lang.Class)
    */
   @Override
   public Object getAdapter( Class< ? > clazz )

@@ -41,21 +41,22 @@
 package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
@@ -86,77 +87,72 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private ChartEditorTreeOutlinePage m_chartlegend;
+  private Form m_composite;
 
-  private Composite m_composite;
+  private FormToolkit m_toolkit;
 
   private IProfilChartViewProvider m_provider;
 
-  private Control createContent( final Composite parent )
+  private void createContent( )
   {
+    if( m_composite == null || m_composite.isDisposed() )
+      return;
     final ProfilChartView chartView = getProfilChartView();
-
     if( chartView == null )
     {
-      final Label label = new Label( parent, SWT.CENTER );
-      final GridData gridData = new GridData();
-      gridData.grabExcessHorizontalSpace = true;
-      gridData.horizontalAlignment = SWT.FILL;
-      gridData.horizontalIndent = 10;
-      gridData.grabExcessVerticalSpace = true;
-      gridData.verticalAlignment = SWT.CENTER;
-      gridData.verticalIndent = 10;
-      label.setLayoutData( gridData );
-      label.setText( Messages.LegendView_1 );
-      return label;
+      m_composite.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
     }
     else
     {
-      m_chartlegend = new ChartEditorTreeOutlinePage( this.getProfilChartView() );
+      createChartLegend( m_composite.getBody(), chartView );
+      m_composite.layout();
+    }
+  }
 
-      m_chartlegend.createControl( parent );
-      m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
+  private final void createChartLegend( final Composite parent, final ProfilChartView chartView )
+  {
+    final ChartEditorTreeOutlinePage chartlegend = new ChartEditorTreeOutlinePage( chartView );
+    chartlegend.createControl( parent );
+    chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      public void selectionChanged( SelectionChangedEvent event )
       {
-        /**
-         * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-         */
-        public void selectionChanged( SelectionChangedEvent event )
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final Object firstElement = selection.getFirstElement();
+        if( firstElement instanceof IExpandableChartLayer )
         {
-          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-          final Object firstElement = selection.getFirstElement();
-          if( firstElement instanceof IExpandableChartLayer )
+          final IChartLayer activeLayer = (IChartLayer) firstElement;
+          final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
+          for( final IChartLayer layer : mngr.getLayers() )
           {
-            final IChartLayer activeLayer = (IChartLayer) firstElement;
-            final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
-            for( final IChartLayer layer : mngr.getLayers() )
-            {
-              layer.setActive( activeLayer == layer );
-            }
+            layer.setActive( activeLayer == layer );
           }
         }
-      } );
-
-      final Control control = m_chartlegend.getControl();
-      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-      control.addMouseListener( new MouseAdapter()
-      {
-        @Override
-        public void mouseDoubleClick( final MouseEvent e )
-        {
-          showLayerProperties();
-        }
-      } );
-      final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
-      for( final IChartLayer layer : mngr.getLayers() )
-      {
-        if( layer.isActive() )
-        {
-          m_chartlegend.setSelection( new StructuredSelection( layer ) );
-          m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
-          break;
-        }
       }
-      return control;
+    } );
+
+    final Control control = chartlegend.getControl();
+    control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    control.addMouseListener( new MouseAdapter()
+    {
+      @Override
+      public void mouseDoubleClick( final MouseEvent e )
+      {
+        showLayerProperties();
+      }
+    } );
+    final ILayerManager mngr = chartView.getChart().getChartModel().getLayerManager();
+    for( final IChartLayer layer : mngr.getLayers() )
+    {
+      if( layer.isActive() )
+      {
+        chartlegend.setSelection( new StructuredSelection( layer ) );
+        chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
+        break;
+      }
     }
   }
 
@@ -166,11 +162,15 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_composite = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    m_composite.setLayout( gridLayout );
+    m_toolkit = new FormToolkit( parent.getDisplay() );
+    m_composite = m_toolkit.createForm( parent );
+    m_toolkit.decorateFormHeading( m_composite );
+
+    final GridLayout bodyLayout = new GridLayout();
+    bodyLayout.marginHeight = 10;
+    bodyLayout.marginWidth = 0;
+    m_composite.getBody().setLayout( bodyLayout );
+
     updateChartLegend();
   }
 
@@ -199,7 +199,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   public Object getAdapter( final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
-      return m_chartlegend;
+      return m_composite.getBody();// m_chartlegend;
 
     return super.getAdapter( adapter );
   }
@@ -250,9 +250,9 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   @Override
   public void setFocus( )
   {
-    if( m_chartlegend != null )
+    if( m_composite != null )
     {
-      final Control control = m_chartlegend.getControl();
+      final Control control = m_composite.getBody();
       if( control != null && !control.isDisposed() )
         control.setFocus();
     }
@@ -285,11 +285,15 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   {
     if( m_composite != null && !m_composite.isDisposed() )
     {
-      for( final Control control : m_composite.getChildren() )
-        control.dispose();
-      createContent( m_composite );
-      m_composite.layout();
+      m_composite.setMessage( null );
+      for( final Control control : m_composite.getBody().getChildren() )
+      {
+        if( !control.isDisposed() )
+          control.dispose();
+      }
     }
+    createContent();
+
   }
 
 }

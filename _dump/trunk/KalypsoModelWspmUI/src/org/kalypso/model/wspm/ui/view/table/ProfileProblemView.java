@@ -45,14 +45,16 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -74,19 +76,29 @@ public class ProfileProblemView
 
   final private FormToolkit m_toolkit;
 
-  final private Form m_form;
-
   protected boolean errors_expanded = false;
 
   protected boolean warnings_expanded = false;
 
   protected boolean infos_expanded = false;
+  
+  protected final int m_MaxHeight;
 
-  public ProfileProblemView( final FormToolkit toolkit, final Form form )
+  protected final ScrolledComposite m_scrolledComposite;
+
+  public ProfileProblemView( final FormToolkit toolkit, final Composite parent, final int maxHeight )
   {
 
-    m_form = form;
     m_toolkit = toolkit;
+    m_MaxHeight = maxHeight;
+    // Create the ScrolledComposite to scroll horizontally and vertically
+    m_scrolledComposite = new ScrolledComposite( parent, SWT.V_SCROLL );
+    m_scrolledComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    final GridLayout scLayout = new GridLayout( 1, false );
+    scLayout.marginWidth = 0;
+    scLayout.marginHeight = 0;
+    m_scrolledComposite.setLayout( scLayout );
+    m_toolkit.adapt( m_scrolledComposite );
   }
 
   private IProfilMarkerResolution[] getResolutions( final IMarker marker )
@@ -107,29 +119,28 @@ public class ProfileProblemView
   private final Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String text )
   {
     Composite container = parent;
-    Section section = null;
+    Section result = null;
     if( markers.length > 1 )
     {
-      section = m_toolkit.createSection( parent, Section.TWISTIE );
-      section.setLayout( new GridLayout() );
-      section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 1 ) );
+      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );
+      section.setLayout( new GridLayout( 2, false ) );
+      section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false,2,1 ) );
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
       section.setToggleColor( section.getDisplay().getSystemColor( color ) );
       section.setText( markers.length + " " + text + Messages.TableView_5 ); //$NON-NLS-1$
 
       final Composite expanded_section = m_toolkit.createComposite( section );
- 
+
       expanded_section.setLayout( new GridLayout( 2, false ) );
-      expanded_section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
+      expanded_section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      section.setClient( expanded_section );
+      
       container = expanded_section;
-      section.setClient( container );
-
+      result = section;
     }
 
     for( final IMarker marker : markers )
     {
-
       final ImageHyperlink quickFix = m_toolkit.createImageHyperlink( container, SWT.WRAP );
       final IProfilMarkerResolution[] markerRes = getResolutions( marker );
       if( markerRes == null || markerRes.length < 1 )
@@ -184,7 +195,8 @@ public class ProfileProblemView
       link.setImage( JFaceResources.getResources().createImageWithDefault( getImageDescriptor( marker ) ) );
       link.setForeground( container.getDisplay().getSystemColor( color ) );
     }
-    return section;
+    return result;
+
   }
 
   private ImageDescriptor getImageDescriptor( final IMarker marker )
@@ -203,23 +215,33 @@ public class ProfileProblemView
     }
   }
 
-  private final Composite createSections( final IProfil profil )
+  protected void updateParentSize()
   {
+    final Control cmp = m_scrolledComposite.getContent();
+    final Point size = cmp.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    cmp.setSize( size );
+    final int height = Math.min( size.y,50);
+    ((GridData) m_scrolledComposite.getParent().getLayoutData()).heightHint = height;
+    ((GridData) m_scrolledComposite.getLayoutData()).heightHint = height;
+    m_scrolledComposite.getParent().getParent().layout();
+  }
+
+  private final boolean createSections( final Composite parent, final IProfil profil )
+  {
+
     final MarkerIndex markerIndex = profil.getProblemMarker();
     if( !(markerIndex != null && markerIndex.hasMarkers()) )
-      return null;
-
-    final Composite container = m_toolkit.createComposite( m_form.getHead() );
-    final Section errSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_ERROR ), SWT.COLOR_RED, Messages.TableView_1 );
-    final Section warnSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_WARNING ), SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
-    final Section infSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_INFO ), SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
+    {
+      return false;
+    }
+    final Section errSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_ERROR ), SWT.COLOR_RED, Messages.TableView_1 );
+    final Section warnSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_WARNING ), SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
+    final Section infSec = createSection( profil, parent, markerIndex.get( IMarker.SEVERITY_INFO ), SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
     if( errSec != null )
     {
-      if( errSec.isExpanded() != errors_expanded )
-        errSec.setExpanded( errors_expanded );
+      errSec.setExpanded( errors_expanded );
       errSec.addExpansionListener( new ExpansionAdapter()
       {
-
         /**
          * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
          */
@@ -227,16 +249,16 @@ public class ProfileProblemView
         public void expansionStateChanged( ExpansionEvent e )
         {
           errors_expanded = errSec.isExpanded();
+          updateParentSize(  );
         }
+
       } );
     }
     if( warnSec != null )
     {
-      if( warnSec.isExpanded() != warnings_expanded )
-        warnSec.setExpanded( warnings_expanded );
+      warnSec.setExpanded( warnings_expanded );
       warnSec.addExpansionListener( new ExpansionAdapter()
       {
-
         /**
          * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
          */
@@ -244,13 +266,13 @@ public class ProfileProblemView
         public void expansionStateChanged( ExpansionEvent e )
         {
           warnings_expanded = warnSec.isExpanded();
+          updateParentSize();
         }
       } );
     }
     if( infSec != null )
     {
-      if( infSec.isExpanded() != infos_expanded )
-        infSec.setExpanded( infos_expanded );
+      infSec.setExpanded( infos_expanded );
       infSec.addExpansionListener( new ExpansionAdapter()
       {
 
@@ -261,35 +283,39 @@ public class ProfileProblemView
         public void expansionStateChanged( ExpansionEvent e )
         {
           infos_expanded = infSec.isExpanded();
+          updateParentSize( );
         }
       } );
     }
-    container.setLayout( new GridLayout( 2, false ) );
-    container.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_form.setHeadClient( container );
-    return container;
+    return true;
   }
 
-  public final void updateSections( final IProfil profil )
+  public final int updateSections( final IProfil profil)
   {
-    if( m_form == null || m_form.isDisposed() )
-      return;
-    if( m_form.getHeadClient() != null )
-    {
-      m_form.getHeadClient().dispose();
-      m_form.setHeadClient( null );
-    }
+
+    if( m_scrolledComposite == null || m_scrolledComposite.isDisposed() )
+      return -1;
+    if( m_scrolledComposite.getContent() != null && !m_scrolledComposite.getContent().isDisposed() )
+      m_scrolledComposite.getContent().dispose();
+
     if( profil == null )
-      return;
-    Composite form = createSections( profil );
+      return -1;
 
-    if( form != null )
+    // Create a child composite to hold the controls
+    Composite child = m_toolkit.createComposite( m_scrolledComposite );
+
+    // Set the child as the scrolled content of the ScrolledComposite
+    m_scrolledComposite.setContent( child );
+    child.setLayout( new GridLayout( 2, false ) );
+    child.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    if( createSections( (Composite)m_scrolledComposite.getContent(), profil ) )
     {
-      form.setLayout( new GridLayout( 2, false ) );
-      form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      m_form.setHeadClient( form );
+      final Point size = child.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+      child.setSize( size );
+      ((GridData) (m_scrolledComposite.getLayoutData())).heightHint = Math.min( size.y, m_MaxHeight );
+      return size.y;
     }
-
+    return -1;
   }
-
 }

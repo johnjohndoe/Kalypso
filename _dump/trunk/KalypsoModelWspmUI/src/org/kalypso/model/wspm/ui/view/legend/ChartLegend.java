@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.model.wspm.ui.view.chart.IChartCanvasListener;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;

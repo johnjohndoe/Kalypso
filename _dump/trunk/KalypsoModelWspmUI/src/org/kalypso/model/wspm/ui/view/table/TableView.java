@@ -119,6 +119,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected ProfileProblemView m_problemView = null;
 
+  protected Composite m_outlineContainer;
+
+  private final static int MAX_OUTLINE_HEIGHT = 70;
+
   protected final UIJob m_markerRefreshJob = new UIJob( Messages.TableView_0 )
   {
     @Override
@@ -127,8 +131,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       final IRecord[] points = m_profile.getPoints();
       if( points.length > 0 )
         m_view.update( points, new String[] { "" } );
-      m_problemView.updateSections( m_profile );
-
+      updateProblemView();
       return Status.OK_STATUS;
     }
   };
@@ -237,6 +240,16 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     bodyLayout.marginWidth = 0;
     m_form.getBody().setLayout( bodyLayout );
 
+    m_outlineContainer = m_toolkit.createComposite( m_form.getBody() );
+    final GridLayout outlineLayout = new GridLayout( 1, false );
+    outlineLayout.marginHeight = 0;
+    outlineLayout.marginWidth = 0;
+    m_outlineContainer.setLayout( outlineLayout );
+    final GridData outlineData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    outlineData.exclude = true;
+    m_outlineContainer.setLayoutData( outlineData );
+    m_problemView = new ProfileProblemView(m_toolkit,m_outlineContainer,MAX_OUTLINE_HEIGHT);
+
     m_view = new DefaultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
@@ -259,7 +272,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         }
       }
     } );
-    m_problemView = new ProfileProblemView( m_toolkit, m_form );
 
     updateControl();
   }
@@ -288,8 +300,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_profile == null || pvd == null )
     {
       m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
+
       m_view.getTable().setVisible( false );
 
       return;
@@ -319,7 +333,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     else
       m_view.setInput( null );
     m_form.setMessage( null );
+
     m_view.getControl().getParent().layout();
+
   }
 
   /** Must be called in the swt thread */
@@ -371,8 +387,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       {
         public void run( )
         {
+
           updateControl();
-          m_problemView.updateSections( m_profile );
+          updateProblemView();
         }
       } );
 
@@ -381,6 +398,25 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   public IProfil getProfil( )
   {
     return m_profile;
+  }
+
+  protected final void updateProblemView( )
+  {
+    if( m_problemView == null )
+      return;
+    final int height = m_problemView.updateSections( m_profile);
+    if( height < 0 )
+    {
+      ((GridData) (m_outlineContainer.getLayoutData())).exclude = true;
+      m_outlineContainer.setVisible( false );
+    }
+    else
+    {
+      ((GridData) (m_outlineContainer.getLayoutData())).exclude = false;
+      m_outlineContainer.setVisible( true );
+      ((GridData) (m_outlineContainer.getLayoutData())).heightHint = Math.min( height, MAX_OUTLINE_HEIGHT );
+    }
+    m_view.getControl().getParent().layout();
   }
 
   /**

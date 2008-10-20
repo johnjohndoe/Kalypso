@@ -60,8 +60,8 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
   {
     // welche layer-typen können hinzugefügt werden?
 
-    final ProfilChartView profilChartView = getView().getProfilChartView();
-    final IProfil profil = profilChartView.getProfil();
+    final ProfilChartView chartView = getView().getProfilChartView();
+    final IProfil profil = chartView.getProfil();
     if( profil == null )
     {
       handleError( Messages.AddLayerActionDelegate_0 );
@@ -74,9 +74,9 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
     if( layerProvider != null )
     {
-      for( final String al : layerProvider.getAddableLayers( profilChartView ) )
+      for( final String al : layerProvider.getAddableLayers( chartView ) )
       {
-        final IProfilChartLayer layer = layerProvider.createLayer( al, profilChartView );
+        final IProfilChartLayer layer = layerProvider.createLayer( al, chartView );
         if( layer != null )
           addables.add( layer );
       }
@@ -105,11 +105,12 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
       return;
     // TODO: reset undo + message to user
     final String layerToAdd = ((IProfilChartLayer) result[0]).getId();
+
     if( layerProvider != null )
     {
       if( layerProvider.providesLayer( layerToAdd ) )
       {
-        layerProvider.addLayerToChart( profilChartView, layerToAdd );
+        layerProvider.addLayerToChart( chartView, layerToAdd );
       }
     }
   }
