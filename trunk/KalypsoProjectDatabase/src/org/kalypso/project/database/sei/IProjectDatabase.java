@@ -58,7 +58,7 @@ public interface IProjectDatabase
    * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
    *         project)
    */
-  KalypsoProjectBean[] getHeadProjects( );
+  KalypsoProjectBean[] getProjectHeads( );
 
   /**
    * @param url
@@ -67,7 +67,7 @@ public interface IProjectDatabase
    *          of project
    * @return newly created project
    */
-  KalypsoProjectBean createProject( String url, String name ) throws IOException;
+  KalypsoProjectBean createProject( String urlIncoming, String name, Integer version ) throws IOException;
 
   String testMethod( );
 }

@@ -40,6 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.wrappers;
 
+import java.io.FileNotFoundException;
+
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -54,5 +62,20 @@ public class KalypsoProjectBeanWrapper
   public KalypsoProjectBeanWrapper( KalypsoProjectBean bean )
   {
     m_bean = bean;
+  }
+
+  public FileObject getFileObject( IProjectDatabaseAccess access ) throws FileSystemException, FileNotFoundException
+  {
+    FileSystemManager manager = VFSUtilities.getManager();
+    String local = m_bean.getUrl();
+    Assert.isNotNull( local );
+
+    String url = access.getUrl( local );
+    FileObject file = manager.resolveFile( url );
+
+    if( !file.exists() )
+      throw new FileNotFoundException( String.format( "File not found: %s", url ) );
+
+    return file;
   }
 }

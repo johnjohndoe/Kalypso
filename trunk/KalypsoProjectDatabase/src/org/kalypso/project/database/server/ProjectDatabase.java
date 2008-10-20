@@ -44,10 +44,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.jws.WebService;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
 import org.hibernate.Session;
@@ -70,8 +76,8 @@ public class ProjectDatabase implements IProjectDatabase
 
   public ProjectDatabase( )
   {
-    URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
-    AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
+    final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
+    final AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
 
     configure.addAnnotatedClass( KalypsoProjectBean.class );
     FACTORY = configure.buildSessionFactory();
@@ -115,37 +121,81 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjects()
    */
   @Override
-  public KalypsoProjectBean[] getHeadProjects( )
+  public KalypsoProjectBean[] getProjectHeads( )
   {
     /** Getting the Session Factory and session */
-    Session session = FACTORY.getCurrentSession();
+    final Session session = FACTORY.getCurrentSession();
 
     /** Starting the Transaction */
-    Transaction tx = session.beginTransaction();
+    final Transaction tx = session.beginTransaction();
 
-    List list = session.createQuery( "from KalypsoProjectBean" ).list();
+    /* names of exsting projects */
+    final List< ? > names = session.createQuery( "select m_name from KalypsoProjectBean" ).list();
     tx.commit();
 
-    List<KalypsoProjectBean> myProjects = new ArrayList<KalypsoProjectBean>();
+    final Set<String> projects = new HashSet<String>();
 
-    System.out.println( list.size() );
-    for( Object object : list )
+    for( final Object object : names )
     {
-      if( object instanceof KalypsoProjectBean )
-        myProjects.add( (KalypsoProjectBean) object );
+      if( !(object instanceof String) )
+        continue;
+
+      final String name = object.toString();
+      projects.add( name );
     }
 
-    return myProjects.toArray( new KalypsoProjectBean[] {} );
+    final List<KalypsoProjectBean> projectBeans = new ArrayList<KalypsoProjectBean>();
+
+    for( final String project : projects )
+    {
+      final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<Integer, KalypsoProjectBean>();
+
+      final Session mySession = FACTORY.getCurrentSession();
+      final Transaction myTx = mySession.beginTransaction();
+      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_name = '%s'", project ) ).list();
+      myTx.commit();
+
+      for( final Object object : beans )
+      {
+        if( !(object instanceof KalypsoProjectBean) )
+          continue;
+
+        final KalypsoProjectBean b = (KalypsoProjectBean) object;
+        myBeans.put( b.getProjectVersion(), b );
+      }
+
+      final Integer[] keys = myBeans.keySet().toArray( new Integer[] {} );
+
+      /* determine head */
+      final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
+
+      KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
+      values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
+
+      Arrays.sort( values, new Comparator<KalypsoProjectBean>()
+      {
+        @Override
+        public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
+        {
+          return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
+        }
+      } );
+
+      head.setChildren( values );
+      projectBeans.add( head );
+    }
+
+    return projectBeans.toArray( new KalypsoProjectBean[] {} );
   }
 
   /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean createProject( String incoming, String name ) throws IOException
+  public KalypsoProjectBean createProject( final String incoming, final String name, final Integer version ) throws IOException
   {
-    FileSystemManager manager = VFSUtilities.getManager();
-    FileObject src = manager.resolveFile( incoming );
+    final FileSystemManager manager = VFSUtilities.getManager();
+    final FileObject src = manager.resolveFile( incoming );
 
     try
     {
@@ -153,23 +203,23 @@ public class ProjectDatabase implements IProjectDatabase
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming ) );
 
       /* destination of incoming file */
-      String urlDestination = BASE_PROJECT_URL + name + "/project.zip";
-      FileObject destination = manager.resolveFile( urlDestination );
+      final String urlDestination = BASE_PROJECT_URL + name + "/project.zip";
+      final FileObject destination = manager.resolveFile( urlDestination );
 
       VFSUtilities.copyFileTo( src, destination );
 
-      KalypsoProjectBean bean = new KalypsoProjectBean( urlDestination, name );
+      final KalypsoProjectBean bean = new KalypsoProjectBean( urlDestination, name, version );
 
       /* store project bean in database */
-      Session session = FACTORY.getCurrentSession();
-      Transaction tx = session.beginTransaction();
+      final Session session = FACTORY.getCurrentSession();
+      final Transaction tx = session.beginTransaction();
       session.save( bean );
 
       tx.commit();
 
       return bean;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IOException( e.getMessage() );
     }
