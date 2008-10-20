@@ -46,8 +46,10 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -66,7 +68,6 @@ import org.xml.sax.InputSource;
  */
 public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 {
-
   private IWorkbenchPart m_part = null;
 
   private ISelection m_selection;
@@ -91,7 +92,8 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
     {
       file = (IFile) object;
     }
-    String wqString = null;
+    String wqTabelle = null;
+    String wqWechmann = null;
 
     if( file != null )
     {
@@ -99,8 +101,9 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       {
         final URL url = ResourceUtilities.createURL( file );
         final IObservation obs = ZmlFactory.parseXML( url, "" );
-        wqString = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-        action.setEnabled( wqString != null );
+        wqTabelle = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+        wqWechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
+        action.setEnabled( wqTabelle != null );
       }
       catch( final Exception ignored )
       {
@@ -108,13 +111,25 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       }
     }
 
-    if( wqString != null )
+    Shell shell = m_part.getSite().getShell();
+
+    if( wqTabelle == null )
+    {
+      String msg = "Datei enthält keine WQ-Tabelle";
+      if( wqWechmann != null )
+        msg += " (Anzeige von Wechmannparametern nicht möglich)";
+      
+      MessageDialog.openWarning( shell, action.getText(), msg );
+      return;
+    }
+    
+    if( wqTabelle != null )
     {
       try
       {
-        final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqString ) ) );
+        final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqTabelle ) ) );
 
-        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0" ), set );
+        final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0" ), set );
         dlg.open();
       }
       catch( final Exception e )
