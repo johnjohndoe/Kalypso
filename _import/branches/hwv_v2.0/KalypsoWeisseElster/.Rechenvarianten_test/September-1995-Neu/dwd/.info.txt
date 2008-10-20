@@ -1,0 +1,2 @@
+Dieses Verzeichnis ist fuer die DWD-Rasterdatei (LM-Vorhersage) vorgesehen.
+ 
