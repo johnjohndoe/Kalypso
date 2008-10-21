@@ -31,9 +31,9 @@ public class Gaja3dGridJobSubmitter extends SimulationGridJobSubmitter {
 	 * (zip) and script (sh).
 	 */
 	private static final URL EXEC_ZIP_URL = Gaja3dGridJobSubmitter.class
-			.getResource("resources/Gaja3dService.zip");
+			.getResource("Gaja3dService.zip");
 	private static final URL EXEC_SCRIPT_URL = Gaja3dGridJobSubmitter.class
-			.getResource("resources/Gaja3dService.sh");
+			.getResource("Gaja3dService.sh");
 
 	/**
 	 * The working directory of Gaja3d
