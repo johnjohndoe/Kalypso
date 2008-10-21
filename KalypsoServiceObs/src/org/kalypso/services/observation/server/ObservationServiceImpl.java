@@ -129,7 +129,7 @@ public class ObservationServiceImpl implements IObservationService
     m_observationServiceJob.addJobChangeListener( m_listener );
     // TRICKY: give a bit of time for first schedule, as this will access a HttpResource,
     // which may not be accessible right now
-    m_observationServiceJob.schedule( 3000 );
+    m_observationServiceJob.schedule( 5000 );
   }
 
   /**
