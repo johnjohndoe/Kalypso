@@ -204,7 +204,7 @@ public class ProjectDatabase implements IProjectDatabase
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", delegate.getIncomingUrl() ) );
 
       /* destination of incoming file */
-      final String urlDestination = BASE_PROJECT_URL + delegate.getUnixName() + "/project.zip";
+      final String urlDestination = String.format( "%s%s/%d/project.zip", BASE_PROJECT_URL, delegate.getUnixName(), delegate.getVersion() );
       final FileObject destination = manager.resolveFile( urlDestination );
 
       VFSUtilities.copyFileTo( src, destination );
