@@ -9,21 +9,6 @@
       </descriptor>
    </extension>
    <extension
-         point="org.kalypso.simulation.core.simulation">
-      <simulation
-            simulationClass="org.kalypso.gaja3d.service.internal.simulation.CreateGridSimulation"
-            typeID="Gaja3d_createGrid">
-      </simulation>
-      <simulation
-            simulationClass="org.kalypso.gaja3d.service.internal.simulation.DetectBreaklinesSimulation"
-            typeID="Gaja3d_detectBreaklines">
-      </simulation>
-      <simulation
-            simulationClass="org.kalypso.gaja3d.service.internal.simulation.CreateTinSimulation"
-            typeID="Gaja3d_createTin">
-      </simulation>
-   </extension>
-   <extension
          point="org.eclipse.equinox.http.registry.resources">
       <resource
             alias="/org.globus.ws.core/service/build/schema"

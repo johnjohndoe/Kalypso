@@ -58,7 +58,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.gaja3d.service.internal.simulation.DetectBreaklinesSimulation;
+import org.kalypso.gaja3d.simulation.DetectBreaklinesSimulation;
 import org.kalypso.service.wps.client.WPSRequest;
 
 /**
