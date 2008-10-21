@@ -44,6 +44,7 @@ import java.io.IOException;
 
 import javax.jws.WebService;
 
+import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -54,11 +55,14 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 @WebService
 public interface IProjectDatabase
 {
+
   /**
+   * @param projectType
+   *          of {@link KalypsoProjectBean}
    * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
    *         project)
    */
-  KalypsoProjectBean[] getProjectHeads( );
+  KalypsoProjectBean[] getProjectHeads( String projectType );
 
   /**
    * @param url
@@ -67,7 +71,7 @@ public interface IProjectDatabase
    *          of project
    * @return newly created project
    */
-  KalypsoProjectBean createProject( final String unixName, final String name, final Integer version, final String urlIncoming ) throws IOException;
+  KalypsoProjectBean createProject( KalypsoProjectBeanCreationDelegate delegate ) throws IOException;
 
   String testMethod( );
 }

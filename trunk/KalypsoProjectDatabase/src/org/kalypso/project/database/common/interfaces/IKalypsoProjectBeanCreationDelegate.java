@@ -40,36 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.interfaces;
 
-import java.io.Serializable;
-
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
-
 /**
- * Project managed by KalypsoProjectDatabase
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IKalypsoProject extends Serializable
+public interface IKalypsoProjectBeanCreationDelegate extends IKalypsoProjectBeanSettings
 {
-  public String getName( );
+  /**
+   * @return url of project.zip in incoming folder
+   */
+  public String getIncomingUrl( );
 
-  public void setName( String name );
-
-  public String getUnixName( );
-
-  public void setUnixName( final String unixName );
-
-  public Integer getProjectVersion( );
-
-  public void setProjectVersion( Integer projectVersion );
-
-  public void setChildren( KalypsoProjectBean[] children );
-
-  public KalypsoProjectBean[] getChildren( );
-
-  public String getUrl( );
-
-  public String getProjectType( );
-
-  public void setProjectType( final String projectType );
+  public void setIncomingUrl( final String incomingUrl );
 }

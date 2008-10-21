@@ -48,6 +48,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanSettings;
 
 /**
  * @author Dirk Kuch
@@ -59,34 +60,48 @@ public class KalypsoProjectBean implements IKalypsoProject
 {
   // TODO FIXME map name and version as primary key!
 
+  @Transient
+  KalypsoProjectBean[] m_children;
+
   @Id
   @GeneratedValue
   private Integer m_id;
 
-  @Column(name = "unixName")
-  private String m_unixName;
-
   @Column(name = "projectName")
   private String m_name;
+
+  @Column(name = "projectType")
+  private String m_projectType;
 
   @Column(name = "projectVersion")
   private Integer m_projectVersion;
 
   // TODO description
 
-  @Transient
-  KalypsoProjectBean[] m_children;
+  @Column(name = "unixName")
+  private String m_unixName;
 
   public KalypsoProjectBean( )
   {
     // Needed in order to make this class a java bean
   }
 
-  public KalypsoProjectBean( final String unixName, final String name, final Integer projectVersion )
+  /**
+   * @param delegate
+   *          *narf* interface won't work, so we have a duplicated settings class. makes extension of settings (and
+   *          handling of calling functions) easier
+   */
+  public KalypsoProjectBean( final KalypsoProjectBeanSettings delegate )
   {
-    m_unixName = unixName;
-    m_name = name;
-    m_projectVersion = projectVersion;
+    m_unixName = delegate.getUnixName();
+    m_name = delegate.getName();
+    m_projectVersion = delegate.getVersion();
+    m_projectType = delegate.getProjectType();
+  }
+
+  public KalypsoProjectBean[] getChildren( )
+  {
+    return m_children;
   }
 
   /**
@@ -97,19 +112,9 @@ public class KalypsoProjectBean implements IKalypsoProject
     return m_name;
   }
 
-  public void setName( final String name )
+  public String getProjectType( )
   {
-    m_name = name;
-  }
-
-  public String getUnixName( )
-  {
-    return m_unixName;
-  }
-
-  public void setUnixName( final String unixName )
-  {
-    m_unixName = unixName;
+    return m_projectType;
   }
 
   public Integer getProjectVersion( )
@@ -117,19 +122,9 @@ public class KalypsoProjectBean implements IKalypsoProject
     return m_projectVersion;
   }
 
-  public void setProjectVersion( final Integer projectVersion )
+  public String getUnixName( )
   {
-    m_projectVersion = projectVersion;
-  }
-
-  public void setChildren( final KalypsoProjectBean[] children )
-  {
-    m_children = children;
-  }
-
-  public KalypsoProjectBean[] getChildren( )
-  {
-    return m_children;
+    return m_unixName;
   }
 
   /**
@@ -140,5 +135,30 @@ public class KalypsoProjectBean implements IKalypsoProject
   {
     // TODO FIXME
     return null;
+  }
+
+  public void setChildren( final KalypsoProjectBean[] children )
+  {
+    m_children = children;
+  }
+
+  public void setName( final String name )
+  {
+    m_name = name;
+  }
+
+  public void setProjectType( final String projectType )
+  {
+    m_projectType = projectType;
+  }
+
+  public void setProjectVersion( final Integer projectVersion )
+  {
+    m_projectVersion = projectVersion;
+  }
+
+  public void setUnixName( final String unixName )
+  {
+    m_unixName = unixName;
   }
 }

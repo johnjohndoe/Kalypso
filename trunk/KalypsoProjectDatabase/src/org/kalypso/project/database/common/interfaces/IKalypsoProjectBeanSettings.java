@@ -40,36 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.interfaces;
 
-import java.io.Serializable;
-
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
-
 /**
- * Project managed by KalypsoProjectDatabase
- * 
  * @author Dirk Kuch
  */
-public interface IKalypsoProject extends Serializable
+public interface IKalypsoProjectBeanSettings
 {
-  public String getName( );
-
-  public void setName( String name );
-
+  /**
+   * @return internal project name, for handeling the project (no whitespace, special chars, etc)
+   */
   public String getUnixName( );
 
   public void setUnixName( final String unixName );
 
-  public Integer getProjectVersion( );
+  /**
+   * @return ui name
+   */
+  public String getName( );
 
-  public void setProjectVersion( Integer projectVersion );
+  public void setName( final String projectName );
 
-  public void setChildren( KalypsoProjectBean[] children );
+  /**
+   * @return version of this project (mapped by unixname)
+   */
+  public Integer getVersion( );
 
-  public KalypsoProjectBean[] getChildren( );
+  public void setVersion( final Integer version );
 
-  public String getUrl( );
-
+  /**
+   * @return what kind of project
+   */
   public String getProjectType( );
 
-  public void setProjectType( final String projectType );
+  public void setProjectType( final String type );
 }
