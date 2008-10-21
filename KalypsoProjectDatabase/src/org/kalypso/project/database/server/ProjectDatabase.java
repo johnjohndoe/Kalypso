@@ -61,6 +61,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -121,7 +122,7 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjects()
    */
   @Override
-  public KalypsoProjectBean[] getProjectHeads( )
+  public KalypsoProjectBean[] getProjectHeads( final String projectType )
   {
     /** Getting the Session Factory and session */
     final Session session = FACTORY.getCurrentSession();
@@ -130,7 +131,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* names of exsting projects */
-    final List< ? > names = session.createQuery( "select m_name from KalypsoProjectBean" ).list();
+    final List< ? > names = session.createQuery( String.format( "select m_name from KalypsoProjectBean where m_projectType = '%s'", projectType ) ).list();
     tx.commit();
 
     final Set<String> projects = new HashSet<String>();
@@ -192,23 +193,23 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean createProject( final String unixName, final String name, final Integer version, final String urlIncoming ) throws IOException
+  public KalypsoProjectBean createProject( final KalypsoProjectBeanCreationDelegate delegate ) throws IOException
   {
     final FileSystemManager manager = VFSUtilities.getManager();
-    final FileObject src = manager.resolveFile( urlIncoming );
+    final FileObject src = manager.resolveFile( delegate.getIncomingUrl() );
 
     try
     {
       if( !src.exists() )
-        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", urlIncoming ) );
+        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", delegate.getIncomingUrl() ) );
 
       /* destination of incoming file */
-      final String urlDestination = BASE_PROJECT_URL + name + "/project.zip";
+      final String urlDestination = BASE_PROJECT_URL + delegate.getUnixName() + "/project.zip";
       final FileObject destination = manager.resolveFile( urlDestination );
 
       VFSUtilities.copyFileTo( src, destination );
 
-      final KalypsoProjectBean bean = new KalypsoProjectBean( unixName, name, version );
+      final KalypsoProjectBean bean = new KalypsoProjectBean( delegate );
 
       /* store project bean in database */
       final Session session = FACTORY.getCurrentSession();

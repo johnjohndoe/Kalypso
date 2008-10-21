@@ -16,7 +16,9 @@
   <xs:element name="testMethodResponse" type="tns:testMethodResponse"/>
 
   <xs:complexType name="getProjectHeads">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="getProjectHeadsResponse">
@@ -29,6 +31,7 @@
     <xs:sequence>
       <xs:element name="children" type="tns:kalypsoProjectBean" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="projectType" type="xs:string" minOccurs="0"/>
       <xs:element name="projectVersion" type="xs:int" minOccurs="0"/>
       <xs:element name="unixName" type="xs:string" minOccurs="0"/>
     </xs:sequence>
@@ -46,10 +49,26 @@
 
   <xs:complexType name="createProject">
     <xs:sequence>
-      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
-      <xs:element name="arg1" type="xs:string" minOccurs="0"/>
-      <xs:element name="arg2" type="xs:int" minOccurs="0"/>
-      <xs:element name="arg3" type="xs:string" minOccurs="0"/>
+      <xs:element name="arg0" type="tns:kalypsoProjectBeanCreationDelegate" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="kalypsoProjectBeanCreationDelegate">
+    <xs:complexContent>
+      <xs:extension base="tns:kalypsoProjectBeanSettings">
+        <xs:sequence>
+          <xs:element name="incomingUrl" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="kalypsoProjectBeanSettings">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="projectType" type="xs:string" minOccurs="0"/>
+      <xs:element name="unixName" type="xs:string" minOccurs="0"/>
+      <xs:element name="version" type="xs:int" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 

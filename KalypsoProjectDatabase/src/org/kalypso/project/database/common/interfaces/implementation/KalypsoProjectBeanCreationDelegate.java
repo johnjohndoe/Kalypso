@@ -38,38 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces;
+package org.kalypso.project.database.common.interfaces.implementation;
 
-import java.io.Serializable;
-
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.kalypso.project.database.common.interfaces.IKalypsoProjectBeanCreationDelegate;
 
 /**
- * Project managed by KalypsoProjectDatabase
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IKalypsoProject extends Serializable
+public class KalypsoProjectBeanCreationDelegate extends KalypsoProjectBeanSettings implements IKalypsoProjectBeanCreationDelegate
 {
-  public String getName( );
+  private String m_incomingUrl;
 
-  public void setName( String name );
+  public KalypsoProjectBeanCreationDelegate( )
+  {
+    super();
+  }
 
-  public String getUnixName( );
+  public KalypsoProjectBeanCreationDelegate( final String unixName, final String projectName, final Integer projectVersion, final String projectType, final String incomingUrl )
+  {
+    super( unixName, projectName, projectVersion, projectType );
+    m_incomingUrl = incomingUrl;
+  }
 
-  public void setUnixName( final String unixName );
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProjectBeanCreationDelegate#getIncomingUrl()
+   */
+  @Override
+  public String getIncomingUrl( )
+  {
+    return m_incomingUrl;
+  }
 
-  public Integer getProjectVersion( );
-
-  public void setProjectVersion( Integer projectVersion );
-
-  public void setChildren( KalypsoProjectBean[] children );
-
-  public KalypsoProjectBean[] getChildren( );
-
-  public String getUrl( );
-
-  public String getProjectType( );
-
-  public void setProjectType( final String projectType );
+  public void setIncomingUrl( final String incomingUrl )
+  {
+    m_incomingUrl = incomingUrl;
+  }
 }
