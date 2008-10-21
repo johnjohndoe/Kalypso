@@ -133,8 +133,9 @@ public class KalypsoProjectBean implements IKalypsoProject
   @Override
   public String getUrl( )
   {
-    // TODO FIXME
-    return null;
+    final String localUrl = String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() );
+
+    return localUrl;
   }
 
   public void setChildren( final KalypsoProjectBean[] children )

@@ -61,6 +61,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.project.database.KalypsoProjectDatabase;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
 import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -131,7 +133,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* names of exsting projects */
-    final List< ? > names = session.createQuery( String.format( "select m_name from KalypsoProjectBean where m_projectType = '%s'", projectType ) ).list();
+    final List< ? > names = session.createQuery( String.format( "select m_name from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list();
     tx.commit();
 
     final Set<String> projects = new HashSet<String>();
@@ -153,7 +155,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       final Session mySession = FACTORY.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
-      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_name = '%s'", project ) ).list();
+      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_name = '%s'  ORDER by m_projectVersion", project ) ).list();
       myTx.commit();
 
       for( final Object object : beans )
@@ -173,6 +175,7 @@ public class ProjectDatabase implements IProjectDatabase
       KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
       values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
 
+      // TODO check needed? - order by clauses
       Arrays.sort( values, new Comparator<KalypsoProjectBean>()
       {
         @Override
@@ -204,7 +207,9 @@ public class ProjectDatabase implements IProjectDatabase
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", delegate.getIncomingUrl() ) );
 
       /* destination of incoming file */
-      final String urlDestination = String.format( "%s%s/%d/project.zip", BASE_PROJECT_URL, delegate.getUnixName(), delegate.getVersion() );
+      final IProjectDatabaseAccess access = KalypsoProjectDatabase.getDefault().getProjectAccessData();
+      final String urlDestination = access.getUrl( String.format( "%s/%d/project.zip", delegate.getUnixName(), delegate.getVersion() ) );
+
       final FileObject destination = manager.resolveFile( urlDestination );
 
       VFSUtilities.copyFileTo( src, destination );

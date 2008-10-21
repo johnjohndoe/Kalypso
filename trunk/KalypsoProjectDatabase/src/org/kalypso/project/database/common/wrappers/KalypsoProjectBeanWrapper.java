@@ -40,14 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.wrappers;
 
-import java.io.FileNotFoundException;
-
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
+import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -55,27 +49,114 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  * 
  * @author Dirk Kuch
  */
-public class KalypsoProjectBeanWrapper
+// TODO perhaps extends from KalypsoProjectBean
+public class KalypsoProjectBeanWrapper implements IKalypsoProject
 {
   private final KalypsoProjectBean m_bean;
 
-  public KalypsoProjectBeanWrapper( KalypsoProjectBean bean )
+  public KalypsoProjectBeanWrapper( final KalypsoProjectBean bean )
   {
+    Assert.isNotNull( bean );
+
     m_bean = bean;
   }
 
-  public FileObject getFileObject( IProjectDatabaseAccess access ) throws FileSystemException, FileNotFoundException
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getChildren()
+   */
+  @Override
+  public KalypsoProjectBean[] getChildren( )
   {
-    FileSystemManager manager = VFSUtilities.getManager();
-    String local = m_bean.getUrl();
-    Assert.isNotNull( local );
+    return m_bean.getChildren();
+  }
 
-    String url = access.getUrl( local );
-    FileObject file = manager.resolveFile( url );
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    return m_bean.getName();
+  }
 
-    if( !file.exists() )
-      throw new FileNotFoundException( String.format( "File not found: %s", url ) );
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getProjectType()
+   */
+  @Override
+  public String getProjectType( )
+  {
+    return m_bean.getProjectType();
+  }
 
-    return file;
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getProjectVersion()
+   */
+  @Override
+  public Integer getProjectVersion( )
+  {
+    return m_bean.getProjectVersion();
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUnixName()
+   */
+  @Override
+  public String getUnixName( )
+  {
+    return m_bean.getUnixName();
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUrl()
+   */
+  @Override
+  public String getUrl( )
+  {
+    return m_bean.getUrl();
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setChildren(org.kalypso.project.database.sei.beans.KalypsoProjectBean[])
+   */
+  @Override
+  public void setChildren( final KalypsoProjectBean[] children )
+  {
+    m_bean.setChildren( children );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setName(java.lang.String)
+   */
+  @Override
+  public void setName( final String name )
+  {
+    m_bean.setName( name );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setProjectType(java.lang.String)
+   */
+  @Override
+  public void setProjectType( final String projectType )
+  {
+    m_bean.setProjectType( projectType );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setProjectVersion(java.lang.Integer)
+   */
+  @Override
+  public void setProjectVersion( final Integer projectVersion )
+  {
+    m_bean.setProjectVersion( projectVersion );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setUnixName(java.lang.String)
+   */
+  @Override
+  public void setUnixName( final String unixName )
+  {
+    m_bean.setUnixName( unixName );
   }
 }
