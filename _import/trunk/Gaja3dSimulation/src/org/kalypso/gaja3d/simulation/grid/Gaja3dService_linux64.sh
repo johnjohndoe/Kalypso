@@ -5,7 +5,7 @@
 #MCRROOT=/home/uhgd0008/MCR/v78
 MCRROOT=/home/uhgd0034/MCR/v78
 echo unzipping...
-unzip -o Gaja3dService.zip
+unzip -o Gaja3dService_linux64.zip
 unzip -o triangle.zip -d exec
 echo building...
 . build.sh
