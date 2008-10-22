@@ -83,7 +83,7 @@ public class Intervall
   /**
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, final int[] status, final double[] value )
+  public Intervall( final Calendar start, final Calendar end, final int[] status, final double[] value )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -94,7 +94,7 @@ public class Intervall
   /*
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end )
+  public Intervall( final Calendar start, final Calendar end )
   {
     m_start = (Calendar) start.clone();
     m_end = (Calendar) end.clone();
@@ -105,7 +105,7 @@ public class Intervall
   /*
    * @author doemming
    */
-  public Intervall( Calendar start, Calendar end, Integer[] status, Double[] values )
+  public Intervall( final Calendar start, final Calendar end, final Integer[] status, final Double[] values )
   {
     m_start = start;
     m_end = end;
@@ -152,7 +152,7 @@ public class Intervall
     return m_end.getTimeInMillis() - m_start.getTimeInMillis();
   }
 
-  public int calcIntersectionMatrix( Intervall other )
+  public int calcIntersectionMatrix( final Intervall other )
   {
     int result = 0;
     if( getStart().before( other.getStart() ) )
@@ -166,13 +166,13 @@ public class Intervall
     return result;
   }
 
-  public boolean intersects( Intervall other )
+  public boolean intersects( final Intervall other )
   {
     final int matrix = calcIntersectionMatrix( other );
     return !(matrix == STATUS_INTERSECTION_NONE_AFTER || matrix == STATUS_INTERSECTION_NONE_BEFORE);
   }
 
-  public Intervall getIntersection( Intervall other, int mode )
+  public Intervall getIntersection( final Intervall other, final int mode )
   {
     final Intervall result;
     final int matrix = calcIntersectionMatrix( other );
@@ -196,7 +196,7 @@ public class Intervall
       default:
         return null;
     }
-    // calculate intervalöl values;
+    // calculate intervall values;
     final double[] values = getValue();
     final double[] intervallValues = new double[values.length];
     final double factor = calcFactorIntersect( result, mode );
@@ -208,7 +208,7 @@ public class Intervall
     return result;
   }
 
-  public void merge( Intervall other, int mode )
+  public void merge( final Intervall other, final int mode )
   {
     final double factor = calcFactorMerge( other, mode );
     for( int i = 0; i < other.getValue().length; i++ )
@@ -217,19 +217,26 @@ public class Intervall
       m_status[i] |= other.getStatus()[i];
   }
 
-  private double calcFactorIntersect( Intervall other, int mode )
+  private double calcFactorIntersect( final Intervall other, final int mode )
   {
     switch( mode )
     {
       case IntervallFilter.MODE_SUM:
-        return (double) other.getDurationInMillis() / (double) getDurationInMillis();
+      {
+        /* If target interval length is 0; factor is 0 (the empty sum) */
+        final long durationInMillis = getDurationInMillis();
+        if( durationInMillis == 0 )
+          return 0d;
+
+        return (double) other.getDurationInMillis() / (double) durationInMillis;
+      }
       case IntervallFilter.MODE_INTENSITY:
       default:
         return 1d;
     }
   }
 
-  private double calcFactorMerge( Intervall other, int mode )
+  private double calcFactorMerge( final Intervall other, final int mode )
   {
     switch( mode )
     {
@@ -251,15 +258,15 @@ public class Intervall
     if( m_value != null )
     {
       result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.6") ); //$NON-NLS-1$
-      for( int i = 0; i < m_value.length; i++ )
-        result.append( "  " + m_value[i] ); //$NON-NLS-1$
+      for( final double element : m_value )
+        result.append( "  " + element ); //$NON-NLS-1$
       result.append( "\n" ); //$NON-NLS-1$
     }
     if( m_status != null )
     {
       result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.9") ); //$NON-NLS-1$
-      for( int i = 0; i < m_status.length; i++ )
-        result.append( "  " + m_status[i] ); //$NON-NLS-1$
+      for( final int m_statu : m_status )
+        result.append( "  " + m_statu ); //$NON-NLS-1$
       result.append( "\n" ); //$NON-NLS-1$
     }
     return result.toString();
