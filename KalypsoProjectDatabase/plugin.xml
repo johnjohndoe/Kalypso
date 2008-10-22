@@ -8,5 +8,14 @@
             class="org.kalypso.project.database.server.WSProxyServlet">
       </servlet>
    </extension>
+   <extension
+         id="id1"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.project.database.common.nature.RemoteKalypsoProjectNature">
+         </run>
+      </runtime>
+   </extension>
 
 </plugin>
