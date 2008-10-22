@@ -40,11 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.project.ProjectDatabaseProjectHandler;
+import org.kalypso.project.database.client.core.project.ProjectWrapper;
+import org.kalypso.project.database.client.ui.project.internal.IProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.internal.LocalProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.internal.RemoteProjectRowBuilder;
 
 /**
  * Composite for rendering and handling remote and local projects
@@ -66,7 +73,7 @@ public class ProjectDatabaseComposite extends Composite
    * @param parent
    *          composite
    * @param localProjectNatures
-   *          handle project with these project nature ids
+   *          handle project with these project nature ids TODO perhaps delegate.getProjects()
    * @param remoteProjectTypes
    *          handle remote projects with these type ids
    */
@@ -100,7 +107,31 @@ public class ProjectDatabaseComposite extends Composite
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    m_toolkit.createLabel( m_body, "blub" );
+    // TODO handle status
+    final ProjectDatabaseProjectHandler handler = new ProjectDatabaseProjectHandler( m_natures, m_remote );
+    final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+
+    final ProjectWrapper[] projects = handler.getProjects();
+    for( final ProjectWrapper project : projects )
+    {
+      final IProjectRowBuilder builder = getBuilder( project );
+      builder.render( m_body, m_toolkit );
+    }
   }
 
+  private IProjectRowBuilder getBuilder( final ProjectWrapper project )
+  {
+    // TODO perhaps define an extension point? for getting special builders
+    if( project.isLocal() )
+    {
+      return new LocalProjectRowBuilder( project.getProject() );
+    }
+    else if( project.isRemote() )
+    {
+      return new RemoteProjectRowBuilder( project.getBean() );
+    }
+    else
+      throw new IllegalStateException();
+
+  }
 }

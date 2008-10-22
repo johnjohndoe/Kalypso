@@ -55,4 +55,9 @@ public class RemoteWorkspaceProjectHandler implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
+  public KalypsoProjectBean[] getBeans( )
+  {
+    return m_beans;
+  }
+
 }
