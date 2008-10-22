@@ -361,6 +361,8 @@ public class WeirPanel extends AbstractProfilView
     m_wehrarten.put( IWspmTuhhConstants.WEHR_TYP_BEIWERT, new Wehrart( IWspmTuhhConstants.WEHR_TYP_BEIWERT, "Überfallbeiwert", "Überfallbeiwert pro Feld" ) );
   }
 
+  
+
   @Override
   public void dispose( )
   {
@@ -377,15 +379,15 @@ public class WeirPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
+    final Composite panel = toolkit.createComposite( parent );
     final GridLayout gridLayout = new GridLayout( 2, false );
     panel.setLayout( gridLayout );
 
     // Wehrart ComboBox
     final String tooltip = "";/* TODO:Kim getLabelProvider; */
-    final Label label = new Label( panel, style );
+    final Label label =toolkit.createLabel( panel, "Wehrart:" ,style);
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label.setText( "Wehrart:" );
+
     label.setToolTipText( tooltip );
     m_Wehrart = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER );
     m_Wehrart.getCombo().setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
@@ -426,7 +428,8 @@ public class WeirPanel extends AbstractProfilView
         new ProfilOperationJob( operation ).schedule();
       }
     } );
-    m_parameterLabel = new Label( panel, style );
+    toolkit.adapt( m_Wehrart.getCombo() );
+    m_parameterLabel = toolkit.createLabel(  panel,"", style );
     final GridData plGridData = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     plGridData.horizontalSpan = 2;
     m_parameterLabel.setLayoutData( plGridData );
@@ -437,7 +440,7 @@ public class WeirPanel extends AbstractProfilView
 
     m_wehrStart = new DeviderLine( panel, -1 );
     // Wehrparameter Group
-    m_deviderGroup = new Composite( panel, SWT.NONE );
+    m_deviderGroup = toolkit.createComposite( panel );
     final GridLayout layout4 = new GridLayout( 1, false );
     // layout4.marginHeight=0;
     m_deviderGroup.setLayout( layout4 );

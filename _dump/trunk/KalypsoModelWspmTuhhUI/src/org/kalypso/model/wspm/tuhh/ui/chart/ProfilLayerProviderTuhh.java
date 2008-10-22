@@ -301,7 +301,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
-      return new CrossSectionTheme( new IProfilChartLayer[] { new CrossSectionLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
+      return new CrossSectionTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
           new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ) }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )

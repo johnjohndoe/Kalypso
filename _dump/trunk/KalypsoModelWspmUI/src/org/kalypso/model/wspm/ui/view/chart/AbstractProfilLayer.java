@@ -258,7 +258,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public EditInfo getHover( Point pos )
   {
-    if( getProfil() == null )
+    if( !isVisible()||getProfil() == null )
       return null;
     final IRecord[] profilPoints = getProfil().getPoints();
     final int len = profilPoints.length;

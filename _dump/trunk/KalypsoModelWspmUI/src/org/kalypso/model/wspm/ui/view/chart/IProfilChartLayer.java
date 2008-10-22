@@ -55,8 +55,14 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
  */
 public interface IProfilChartLayer extends IEditableChartLayer
 {
-  /** key to store  IChartLayer.getData() in ProfilViewdataObject */
+  /** key to store IChartLayer.getData() in ProfilViewdataObject */
   final public static String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData";
+
+  /** values to store */
+  final public static Integer ALLOW_HORIZONTAL_EDITING = 1;
+
+  final public static Integer ALLOW_VERTICAL_EDITING = 2;
+
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
   public IProfilView createLayerPanel( );
 
@@ -66,7 +72,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
    * 
    * @throws IllegalProfileOperationException
    * @throws UnsupportedOperationException
-   *             Falls diese Art von Layer nicht gelöscht werden kann.
+   *           Falls diese Art von Layer nicht gelöscht werden kann.
    */
 
   public void removeYourself( );
@@ -74,8 +80,8 @@ public interface IProfilChartLayer extends IEditableChartLayer
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
   public IProfil getProfil( );
-  
-  public void setProfil(final IProfil profil );
+
+  public void setProfil( final IProfil profil );
 
   public IComponent getTargetComponent( );
 
@@ -83,8 +89,8 @@ public interface IProfilChartLayer extends IEditableChartLayer
 
   public void executeDrop( Point point, EditInfo dragStartData );
 
-  public void executeClick(EditInfo dragStartData );
-  
-  public void setTargetComponent(final String componentId);
- 
+  public void executeClick( EditInfo dragStartData );
+
+  public void setTargetComponent( final String componentId );
+
 }

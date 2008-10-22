@@ -93,6 +93,8 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   private IProfilChartViewProvider m_provider;
 
+  private ChartEditorTreeOutlinePage m_chartlegend;
+
   private void createContent( )
   {
     if( m_composite == null || m_composite.isDisposed() )
@@ -111,9 +113,9 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   private final void createChartLegend( final Composite parent, final ProfilChartView chartView )
   {
-    final ChartEditorTreeOutlinePage chartlegend = new ChartEditorTreeOutlinePage( chartView );
-    chartlegend.createControl( parent );
-    chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
+    m_chartlegend = new ChartEditorTreeOutlinePage( chartView );
+    m_chartlegend.createControl( parent );
+    m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -125,7 +127,10 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
         if( firstElement instanceof IExpandableChartLayer )
         {
           final IChartLayer activeLayer = (IChartLayer) firstElement;
-          final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
+          final ProfilChartView pcv = getProfilChartView();
+          if( pcv == null )
+            return;
+          final ILayerManager mngr = pcv.getChart().getChartModel().getLayerManager();
           for( final IChartLayer layer : mngr.getLayers() )
           {
             layer.setActive( activeLayer == layer );
@@ -134,7 +139,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
       }
     } );
 
-    final Control control = chartlegend.getControl();
+    final Control control = m_chartlegend.getControl();
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     control.addMouseListener( new MouseAdapter()
     {
@@ -149,8 +154,8 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     {
       if( layer.isActive() )
       {
-        chartlegend.setSelection( new StructuredSelection( layer ) );
-        chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
+        m_chartlegend.setSelection( new StructuredSelection( layer ) );
+        m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
         break;
       }
     }
@@ -199,7 +204,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   public Object getAdapter( final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
-      return m_composite.getBody();// m_chartlegend;
+      return m_chartlegend;
 
     return super.getAdapter( adapter );
   }
@@ -238,6 +243,8 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
     unhookProvider();
 
+    if( provider == null )
+      return;
     m_provider = provider;
     m_provider.addProfilChartViewProviderListener( this );
 

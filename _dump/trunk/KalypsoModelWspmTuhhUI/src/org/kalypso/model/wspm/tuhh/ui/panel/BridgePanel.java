@@ -42,13 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.panel;
 
 import java.util.ArrayList;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -68,13 +61,8 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
-import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -87,18 +75,16 @@ public class BridgePanel extends AbstractProfilView
 {
   protected ArrayList<PropertyLine> m_lines = new ArrayList<PropertyLine>( 8 );
 
+  private FormToolkit m_toolkit = null;
+
   protected Composite m_propPanel;
-
-  private ComboViewer m_cmb = null;
-
-  private final IProfileObject[] m_tubes = new IProfileObject[] { new BuildingKreis( null ), new BuildingTrapez( null ), new BuildingMaul( null ), new BuildingEi( null ) };
 
   public BridgePanel( final IProfil profile )
   {
     super( profile );
   }
 
-  private class PropertyLine extends Composite
+  private class PropertyLine
   {
     protected final IComponent m_property;
 
@@ -106,28 +92,19 @@ public class BridgePanel extends AbstractProfilView
 
     protected final Label m_label;
 
-    public PropertyLine( final Composite parent, final IComponent property )
+    public PropertyLine( final FormToolkit toolkit, final Composite parent, final IComponent property )
     {
-      super( parent, SWT.NONE );
       m_property = property;
-      GridLayout layout = new GridLayout( 2, false );
-      layout.marginWidth = 0;
-      layout.marginHeight = 0;
-      setLayout( layout );
-      setLayoutData( new GridData( GridData.FILL, GridData.CENTER, false, false, 2, 1 ) );
 
       final Display display = parent.getDisplay();
       final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
       final Color badColor = display.getSystemColor( SWT.COLOR_RED );
       final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
-      m_label = new Label( this, SWT.NONE );
-      m_label.setText( getLabel( m_property ) );
-      m_label.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
+      m_label = toolkit.createLabel( parent, getLabel( m_property ) );
 
-      m_text = new Text( this, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-      m_text.setLayoutData( new GridData( GridData.END, GridData.CENTER, true, false ) );
-
+      m_text = toolkit.createText( parent, null, SWT.FILL | SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+      m_text.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, true ) );
       m_text.addModifyListener( doubleModifyListener );
       m_text.addFocusListener( new FocusAdapter()
       {
@@ -159,16 +136,16 @@ public class BridgePanel extends AbstractProfilView
             final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
-            layout();
           }
         }
       } );
+
     }
 
     public void updateValue( )
     {
       m_label.setText( getLabel( m_property ) );
-      if( m_text == null || m_text.isDisposed() )// || m_label == null || m_label.isDisposed() )
+      if( m_text == null || m_text.isDisposed() )
         return;
 
       final IProfil profil = getProfil();
@@ -179,11 +156,35 @@ public class BridgePanel extends AbstractProfilView
       final Double val = ProfilUtil.getDoubleValueFor( m_property.getId(), building );
       m_text.setText( val.toString() );
     }
+
+    public void layout( )
+    {
+
+    }
+
+    public void dispose( )
+    {
+      m_text.dispose();
+      m_label.dispose();
+    }
   }
 
+  @SuppressWarnings("finally")
   protected String getLabel( final IComponent property )
   {
-    return property.getName() + " [" + property.getUnit() + "]";
+    String label = property.getName();
+    try
+    {
+// TUHH Hack
+      if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
+        label = "größte Breite";
+      if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( property.getId() ) )
+        label = "Pfeilerformbeiwert";
+    }
+    finally
+    {
+      return label + " [" + property.getUnit() + "]";
+    }
   }
 
   /**
@@ -193,16 +194,12 @@ public class BridgePanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-    m_propPanel = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 2, true );
-    gridLayout.verticalSpacing = 15;
-    m_propPanel.setLayout( gridLayout );
-    m_propPanel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_toolkit = toolkit;
+    m_propPanel = m_toolkit.createComposite( parent );
+    m_propPanel.setLayout( new GridLayout( 2, false ) );
 
     createPropertyPanel();
-
     updateControls();
-
     return m_propPanel;
   }
 
@@ -221,8 +218,9 @@ public class BridgePanel extends AbstractProfilView
       return;
     for( final IComponent property : building.getObjectProperties() )
     {
-      m_lines.add( new PropertyLine( m_propPanel, property ) );
+      m_lines.add( new PropertyLine( m_toolkit, m_propPanel, property ) );
     }
+    m_propPanel.layout();
   }
 
   protected void updateControls( )
@@ -233,18 +231,15 @@ public class BridgePanel extends AbstractProfilView
     {
       return;
     }
-    final String t_id = obj[0].getId();
-    for( final IProfileObject tube : m_tubes )
-      if( t_id.equals( tube.getId() ) )
-        m_cmb.setSelection( new StructuredSelection( tube ) );
     for( final PropertyLine line : m_lines )
       line.updateValue();
+    m_propPanel.layout();
   }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isObjectChanged() )
+    if( hint.isObjectChanged() || hint.isObjectDataChanged() )
     {
       final Control control = getControl();
       if( control != null && !control.isDisposed() )
@@ -253,21 +248,7 @@ public class BridgePanel extends AbstractProfilView
           public void run( )
           {
             createPropertyPanel();
-            m_propPanel.layout();
             updateControls();
-          }
-        } );
-    }
-    if( hint.isObjectDataChanged() )
-    {
-      final Control control = getControl();
-      if( control != null && !control.isDisposed() )
-        control.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            for( final PropertyLine line : m_lines )
-              line.updateValue();
           }
         } );
     }

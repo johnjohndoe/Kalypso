@@ -402,7 +402,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected final void updateProblemView( )
   {
-    if( m_problemView == null )
+    if( m_problemView == null|| m_outlineContainer==null||m_outlineContainer.isDisposed() )
       return;
     final int height = m_problemView.updateSections( m_profile);
     if( height < 0 )
@@ -416,7 +416,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       m_outlineContainer.setVisible( true );
       ((GridData) (m_outlineContainer.getLayoutData())).heightHint = Math.min( height, MAX_OUTLINE_HEIGHT );
     }
+    
     m_view.getControl().getParent().layout();
+
+ 
   }
 
   /**

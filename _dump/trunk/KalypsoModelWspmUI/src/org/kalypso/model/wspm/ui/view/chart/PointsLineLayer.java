@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import java.awt.geom.Point2D;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -60,10 +62,10 @@ public class PointsLineLayer extends AbstractProfilLayer
 {
 
   
-
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );
+    setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
 
   }
 
@@ -75,6 +77,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public void executeDrop( Point point, EditInfo dragStartData )
   {
+    final Point newPoint = verifyPos( dragStartData.m_pos, point );
     Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
     if( pos > -1 )
     {
@@ -83,8 +86,8 @@ public class PointsLineLayer extends AbstractProfilLayer
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
       final Integer breite = profil.indexOfProperty( getDomainComponent() );
       final ICoordinateMapper cm = getCoordinateMapper();
-      final Double x = cm.getDomainAxis().screenToNumeric( point.x ).doubleValue();
-      final Double y = cm.getTargetAxis().screenToNumeric( point.y ).doubleValue();
+      final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
+      final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
       profilPoint.setValue( breite, x );
       profilPoint.setValue( hoehe, y );
       profil.setActivePoint( profilPoint );
@@ -112,13 +115,11 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final PolylineFigure pf = new PolylineFigure();
 
-    
-      pf.setStyle( getLineStyle() );
-      pf.setPoints( points );
-      pf.paint( gc );
-    
-    
-    if(active < len - 1 )
+    pf.setStyle( getLineStyle() );
+    pf.setPoints( points );
+    pf.paint( gc );
+
+    if( active < len - 1 )
     {
       pf.setStyle( getLineStyle_active() );
       pf.setPoints( new Point[] { points[active], points[active + 1] } );
@@ -146,16 +147,19 @@ public class PointsLineLayer extends AbstractProfilLayer
   public EditInfo drag( Point newPos, EditInfo dragStartData )
   {
 
+    final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
     final Integer index = (Integer) dragStartData.m_data;
     final IRecord[] profilPoints = getProfil().getPoints();
-    final Point next = index == profilPoints.length - 1 ? newPos : toScreen( profilPoints[index + 1] );
-    final Point previous = index == 0 ? newPos : toScreen( profilPoints[index - 1] );
+    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
+    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
 
     final PolylineFigure infoFigure = new PolylineFigure();
-    infoFigure.setPoints( new Point[] { previous, newPos, next } );
+    infoFigure.setPoints( new Point[] { previous, newPoint, next } );
     infoFigure.setStyle( getLineStyle_hover() );
 
-    return new EditInfo( this, null, infoFigure, dragStartData.m_data, getTooltipInfo(  profilPoints[index]  ), newPos );
+    final Point2D point = toNumeric( newPoint );
+    return new EditInfo( this, null, infoFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
+        point.getY(), getTargetComponent().getUnit() } ), newPos );
 
   }
 
@@ -168,6 +172,31 @@ public class PointsLineLayer extends AbstractProfilLayer
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
+  }
+  
+  private final Point verifyPos( final Point oldPos, final Point newPos )
+  {
+    final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
+    if( o != null )
+
+      try
+      {
+        final int i = Integer.valueOf( o.toString() );
+        if( (i & 2) == 0 )
+        {
+          newPos.y = oldPos.y;
+        }
+        if( (i & 1) == 0 )
+        {
+          newPos.x = oldPos.x;
+        }
+      }
+
+      catch( NumberFormatException e )
+      {
+        return oldPos;
+      }
+    return newPos;
   }
 
 }
