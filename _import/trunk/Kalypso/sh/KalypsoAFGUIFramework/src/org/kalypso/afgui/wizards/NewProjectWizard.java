@@ -81,7 +81,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 {
   private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
   {
-    public void handlePageChanging( PageChangingEvent event )
+    public void handlePageChanging( final PageChangingEvent event )
     {
       doHandlePageChangeing( event );
     }
@@ -91,13 +91,19 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
   /**
    * @param categoryId
-   *            If non-<code>null</code>, only project templates with this categoryId are shown.
+   *          If non-<code>null</code>, only project templates with this categoryId are shown.
    */
   public NewProjectWizard( final String categoryId, final boolean showTemplatePage )
   {
-    m_templateProjectPage = new ProjectTemplatePage( "demoProjectPage", categoryId );
+    m_templateProjectPage = new ProjectTemplatePage( categoryId );
     if( showTemplatePage )
       addPage( m_templateProjectPage );
+  }
+
+  public NewProjectWizard( final ProjectTemplatePage page )
+  {
+    m_templateProjectPage = page;
+    addPage( m_templateProjectPage );
   }
 
   /**
@@ -157,7 +163,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
   }
 
   @Override
-  /**
+  /*
    * This method was overridden in order to get rid of the 'select dependent projects' page from the
    * BasicNewProjectResourceWizard.
    */
