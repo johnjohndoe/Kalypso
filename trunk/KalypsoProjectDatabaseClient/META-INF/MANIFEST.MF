@@ -10,4 +10,5 @@ Require-Bundle: org.kalypso.project.database;bundle-version="1.0.0",
  org.kalypso.commons;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.project.database.client
+Export-Package: org.kalypso.project.database.client,
+ org.kalypso.project.database.client.ui.project

@@ -51,7 +51,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  * 
  * @author Dirk Kuch
  */
-public interface IKalypsoProject extends Serializable
+public interface IKalypsoProject extends Serializable, Comparable<KalypsoProjectBean>
 {
   public String getName( );
 
