@@ -44,4 +44,11 @@ public class ProjectWrapper
 
     return m_bean;
   }
+
+  public IProject getProject( )
+  {
+    Assert.isNotNull( m_local );
+
+    return m_local;
+  }
 }
