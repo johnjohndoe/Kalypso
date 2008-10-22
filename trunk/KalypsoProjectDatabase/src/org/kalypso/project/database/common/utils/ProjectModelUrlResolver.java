@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProjectModelUrlResolver
 {
