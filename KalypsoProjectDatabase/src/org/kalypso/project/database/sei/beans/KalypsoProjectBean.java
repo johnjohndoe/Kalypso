@@ -188,4 +188,38 @@ public class KalypsoProjectBean implements IKalypsoProject
     m_description = description;
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof KalypsoProjectBean )
+    {
+      final KalypsoProjectBean other = (KalypsoProjectBean) obj;
+
+      return getUnixName().equals( other.getUnixName() );
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return getUnixName().hashCode();
+
+  }
+
+  /**
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  @Override
+  public int compareTo( final KalypsoProjectBean o )
+  {
+    return getName().compareTo( o.getName() );
+  }
 }
