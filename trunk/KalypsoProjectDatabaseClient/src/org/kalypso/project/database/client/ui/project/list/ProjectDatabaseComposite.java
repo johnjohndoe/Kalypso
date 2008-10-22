@@ -117,6 +117,9 @@ public class ProjectDatabaseComposite extends Composite
       final IProjectRowBuilder builder = getBuilder( project );
       builder.render( m_body, m_toolkit );
     }
+
+    m_toolkit.adapt( this );
+    this.layout();
   }
 
   private IProjectRowBuilder getBuilder( final ProjectWrapper project )
