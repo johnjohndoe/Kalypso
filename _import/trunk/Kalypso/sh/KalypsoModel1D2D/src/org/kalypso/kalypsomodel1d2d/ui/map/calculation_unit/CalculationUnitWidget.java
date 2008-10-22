@@ -500,7 +500,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    * Sets a new strategy for this widget
    * 
    * @param strategy
-   *            the new strategy to set or null if the actual strategy is to be removed
+   *          the new strategy to set or null if the actual strategy is to be removed
    */
   public void setStrategy( final IWidget strategy )
   {
@@ -516,5 +516,14 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       final IMapPanel mapPanel = (IMapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       m_strategy.activate( commandPoster, mapPanel );
     }
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
   }
 }

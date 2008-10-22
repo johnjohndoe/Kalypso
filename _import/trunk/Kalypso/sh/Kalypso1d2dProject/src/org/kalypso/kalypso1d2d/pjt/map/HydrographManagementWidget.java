@@ -1035,4 +1035,13 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       }
     } );
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }

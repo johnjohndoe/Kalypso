@@ -490,4 +490,13 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       m_strategy.activate( commandPoster, mapPanel );
     }
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }

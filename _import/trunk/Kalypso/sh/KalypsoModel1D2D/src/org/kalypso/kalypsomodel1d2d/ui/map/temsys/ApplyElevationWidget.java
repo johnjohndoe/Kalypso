@@ -396,4 +396,13 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   {
     return true;
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }

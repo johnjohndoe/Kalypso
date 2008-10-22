@@ -508,4 +508,12 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     getPanel().repaintMap();
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }

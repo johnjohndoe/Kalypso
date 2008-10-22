@@ -1173,4 +1173,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       }
     }
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  public String getPartName( )
+  {
+    return null;
+  }
 }
