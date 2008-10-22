@@ -83,7 +83,6 @@ public class RemoteKalypsoProjectNature implements IProjectNature
   public void configure( ) throws CoreException
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -93,7 +92,6 @@ public class RemoteKalypsoProjectNature implements IProjectNature
   public void deconfigure( ) throws CoreException
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -112,7 +110,6 @@ public class RemoteKalypsoProjectNature implements IProjectNature
   public void setProject( final IProject project )
   {
     m_project = project;
-
   }
 
 }
