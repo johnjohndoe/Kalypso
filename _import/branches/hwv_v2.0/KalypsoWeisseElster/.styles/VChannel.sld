@@ -13,8 +13,6 @@
 					<Name>default</Name>
 					<Title>default</Title>
 					<Abstract>default</Abstract>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>99999999</MaxScaleDenominator>
 					<LineSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -22,10 +20,6 @@
 						<Stroke>
 							<CssParameter name="stroke">#0000ff</CssParameter>
 							<CssParameter name="stroke-width">2.0</CssParameter>
-							<CssParameter name="stroke-linejoin">mitre</CssParameter>
-							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-dasharray">1.0,0.0</CssParameter>
-							<CssParameter name="stroke-linecap">butt</CssParameter>
 						</Stroke>
 					</LineSymbolizer>
 				</Rule>
