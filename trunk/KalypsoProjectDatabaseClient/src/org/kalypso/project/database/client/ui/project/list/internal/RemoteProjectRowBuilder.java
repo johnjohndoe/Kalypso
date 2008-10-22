@@ -38,24 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.internal;
+package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
 /**
  * @author Dirk Kuch
  */
-public class LocalProjectRowBuilder implements IProjectRowBuilder
+public class RemoteProjectRowBuilder implements IProjectRowBuilder
 {
-  private final IProject m_project;
+  private final IKalypsoProject m_bean;
 
-  public LocalProjectRowBuilder( final IProject project )
+  public RemoteProjectRowBuilder( final IKalypsoProject bean )
   {
-    m_project = project;
+    m_bean = bean;
   }
 
   /**
@@ -65,9 +65,8 @@ public class LocalProjectRowBuilder implements IProjectRowBuilder
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    final Label label = toolkit.createLabel( body, String.format( "local: %s", m_project.getName() ) );
+    final Label label = toolkit.createLabel( body, String.format( "remote: %s", m_bean.getName() ) );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
   }
 
 }

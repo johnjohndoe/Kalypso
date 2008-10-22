@@ -38,15 +38,36 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.internal;
+package org.kalypso.project.database.client.ui.project.list.internal;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public interface IProjectRowBuilder
+public class LocalProjectRowBuilder implements IProjectRowBuilder
 {
-  void render( Composite body, FormToolkit toolkit );
+  private final IProject m_project;
+
+  public LocalProjectRowBuilder( final IProject project )
+  {
+    m_project = project;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.ui.project.internal.IProjectRowBuilder#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  public void render( final Composite body, final FormToolkit toolkit )
+  {
+    final Label label = toolkit.createLabel( body, String.format( "local: %s", m_project.getName() ) );
+    label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+  }
+
 }
