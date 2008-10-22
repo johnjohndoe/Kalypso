@@ -38,65 +38,33 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces.implementation;
+package org.kalypso.project.database.common.utils;
 
-import org.eclipse.core.runtime.Assert;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author kuch
  */
-public class ProjectDatabaseAccess implements IProjectDatabaseAccess
+public class ProjectModelUrlResolver
 {
-  private String m_protocol;
-
-  private String m_username;
-
-  private String m_password;
-
-  private String m_url;
-
-  public void setProtocol( String protocol )
+  public interface IResolverInterface
   {
-    Assert.isNotNull( protocol );
-    Assert.isTrue( !"".equals( protocol.trim() ) );
-
-    m_protocol = protocol;
+    public String getPath( );
   }
 
-  public void setUsername( String username )
+  public static String getUrlAsWebdav( final IResolverInterface delegate, final String localPath )
   {
-    Assert.isNotNull( username );
-    Assert.isTrue( !"".equals( username.trim() ) );
-
-    m_username = username;
-  }
-
-  public void setPassword( String password )
-  {
-    Assert.isNotNull( password );
-    Assert.isTrue( !"".equals( password.trim() ) );
-
-    m_password = password;
-  }
-
-  public void setUrl( String url )
-  {
-    Assert.isNotNull( url );
-    Assert.isTrue( !"".equals( url.trim() ) );
-
-    m_url = url;
-  }
-
-  /**
-   * @see org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess#getUrl(java.lang.String)
-   */
-  @Override
-  public String getUrl( String local )
-  {
-    // "webdav://planer:client@localhost:8888/webdav/incoming/test.zip";
-    String url = String.format( "%s%s:%s@%s%s", m_protocol, m_username, m_password, m_url, local );
+    final String url = String.format( "%s%s", delegate.getPath(), localPath );
 
     return url;
   }
+
+  public static URL getUrlAsHttp( final IResolverInterface delegate, final String localPath ) throws MalformedURLException
+  {
+    final String url = String.format( "%s%s", delegate.getPath(), localPath );
+
+    return new URL( url );
+  }
+
 }

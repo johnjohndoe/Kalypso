@@ -61,9 +61,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.project.database.KalypsoProjectDatabase;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
+import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
+import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -74,8 +74,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 public class ProjectDatabase implements IProjectDatabase
 {
   private SessionFactory FACTORY = null;
-
-  private final String BASE_PROJECT_URL = "webdav://planer:client@localhost:8888/webdav/projects/";
 
   public ProjectDatabase( )
   {
@@ -199,7 +197,7 @@ public class ProjectDatabase implements IProjectDatabase
   public KalypsoProjectBean createProject( final KalypsoProjectBeanCreationDelegate delegate ) throws IOException
   {
     final FileSystemManager manager = VFSUtilities.getManager();
-    final FileObject src = manager.resolveFile( delegate.getIncomingUrl() );
+    final FileObject src = manager.resolveFile( delegate.getIncomingUrl().toExternalForm() );
 
     try
     {
@@ -207,8 +205,14 @@ public class ProjectDatabase implements IProjectDatabase
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", delegate.getIncomingUrl() ) );
 
       /* destination of incoming file */
-      final IProjectDatabaseAccess access = KalypsoProjectDatabase.getDefault().getProjectAccessData();
-      final String urlDestination = access.getUrl( String.format( "%s/%d/project.zip", delegate.getUnixName(), delegate.getVersion() ) );
+      final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
+      {
+        @Override
+        public String getPath( )
+        {
+          return System.getProperty( IProjectDataBaseServerConstant.SERVER_WRITEABLE_PATH );
+        }
+      }, String.format( "%s/%d/project.zip", delegate.getUnixName(), delegate.getVersion() ) );
 
       final FileObject destination = manager.resolveFile( urlDestination );
 
@@ -228,10 +232,6 @@ public class ProjectDatabase implements IProjectDatabase
     catch( final Exception e )
     {
       throw new IOException( e.getMessage() );
-    }
-    finally
-    {
-      src.delete();
     }
   }
 }

@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.sei.beans;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,8 +50,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanSettings;
+import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
 /**
  * @author Dirk Kuch
@@ -76,10 +81,11 @@ public class KalypsoProjectBean implements IKalypsoProject
   @Column(name = "projectVersion")
   private Integer m_projectVersion;
 
-  // TODO description
-
   @Column(name = "unixName")
   private String m_unixName;
+
+  @Column(name = "projectDescription")
+  private String m_description;
 
   public KalypsoProjectBean( )
   {
@@ -97,6 +103,7 @@ public class KalypsoProjectBean implements IKalypsoProject
     m_name = delegate.getName();
     m_projectVersion = delegate.getVersion();
     m_projectType = delegate.getProjectType();
+    m_description = delegate.getDescription();
   }
 
   public KalypsoProjectBean[] getChildren( )
@@ -131,11 +138,19 @@ public class KalypsoProjectBean implements IKalypsoProject
    * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUrl()
    */
   @Override
-  public String getUrl( )
+  public URL getUrl( ) throws MalformedURLException
   {
-    final String localUrl = String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() );
+    /* destination of incoming file */
+    final URL url = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
+    {
+      @Override
+      public String getPath( )
+      {
+        return System.getProperty( IProjectDataBaseServerConstant.SERVER_READABLE_PATH );
+      }
+    }, String.format( "%s/%d/project.zip", getUnixName(), getProjectVersion() ) );
 
-    return localUrl;
+    return url;
   }
 
   public void setChildren( final KalypsoProjectBean[] children )
@@ -162,4 +177,15 @@ public class KalypsoProjectBean implements IKalypsoProject
   {
     m_unixName = unixName;
   }
+
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public void setDescription( final String description )
+  {
+    m_description = description;
+  }
+
 }

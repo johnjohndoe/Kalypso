@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.interfaces.implementation;
 
+import java.net.URL;
+
 import org.kalypso.project.database.common.interfaces.IKalypsoProjectBeanCreationDelegate;
 
 /**
@@ -47,16 +49,16 @@ import org.kalypso.project.database.common.interfaces.IKalypsoProjectBeanCreatio
  */
 public class KalypsoProjectBeanCreationDelegate extends KalypsoProjectBeanSettings implements IKalypsoProjectBeanCreationDelegate
 {
-  private String m_incomingUrl;
+  private URL m_incomingUrl;
 
   public KalypsoProjectBeanCreationDelegate( )
   {
     super();
   }
 
-  public KalypsoProjectBeanCreationDelegate( final String unixName, final String projectName, final Integer projectVersion, final String projectType, final String incomingUrl )
+  public KalypsoProjectBeanCreationDelegate( final String unixName, final String projectName, final String description, final Integer projectVersion, final String projectType, final URL incomingUrl )
   {
-    super( unixName, projectName, projectVersion, projectType );
+    super( unixName, projectName, description, projectVersion, projectType );
     m_incomingUrl = incomingUrl;
   }
 
@@ -64,12 +66,12 @@ public class KalypsoProjectBeanCreationDelegate extends KalypsoProjectBeanSettin
    * @see org.kalypso.project.database.common.interfaces.IKalypsoProjectBeanCreationDelegate#getIncomingUrl()
    */
   @Override
-  public String getIncomingUrl( )
+  public URL getIncomingUrl( )
   {
     return m_incomingUrl;
   }
 
-  public void setIncomingUrl( final String incomingUrl )
+  public void setIncomingUrl( final URL incomingUrl )
   {
     m_incomingUrl = incomingUrl;
   }

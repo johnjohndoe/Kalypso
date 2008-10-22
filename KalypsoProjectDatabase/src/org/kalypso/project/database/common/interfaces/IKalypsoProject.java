@@ -41,6 +41,8 @@
 package org.kalypso.project.database.common.interfaces;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -67,9 +69,13 @@ public interface IKalypsoProject extends Serializable
 
   public KalypsoProjectBean[] getChildren( );
 
-  public String getUrl( );
+  public URL getUrl( ) throws MalformedURLException;
 
   public String getProjectType( );
 
   public void setProjectType( final String projectType );
+
+  public String getDescription( );
+
+  public void setDescription( final String description );
 }

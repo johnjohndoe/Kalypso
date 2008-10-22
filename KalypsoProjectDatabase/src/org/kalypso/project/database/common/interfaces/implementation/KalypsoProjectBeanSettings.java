@@ -55,15 +55,18 @@ public class KalypsoProjectBeanSettings implements IKalypsoProjectBeanSettings
 
   private String m_projectType;
 
+  private String m_description;
+
   public KalypsoProjectBeanSettings( )
   {
 
   }
 
-  public KalypsoProjectBeanSettings( final String unixName, final String projectName, final Integer projectVersion, final String projectType )
+  public KalypsoProjectBeanSettings( final String unixName, final String projectName, final String description, final Integer projectVersion, final String projectType )
   {
     m_unixName = unixName;
     m_projectName = projectName;
+    m_description = description;
     m_projectVersion = projectVersion;
     m_projectType = projectType;
   }
@@ -118,5 +121,15 @@ public class KalypsoProjectBeanSettings implements IKalypsoProjectBeanSettings
   public void setProjectType( final String type )
   {
     m_projectType = type;
+  }
+
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  public void setDescription( final String description )
+  {
+    m_description = description;
   }
 }
