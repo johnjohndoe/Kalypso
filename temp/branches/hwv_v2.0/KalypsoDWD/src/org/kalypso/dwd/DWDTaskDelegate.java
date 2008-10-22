@@ -226,7 +226,7 @@ public class DWDTaskDelegate
         {
           targetObservation = ZmlFactory.parseXML( sourceURL, title );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // nothing, if target is not existing it will be ignored
         }
