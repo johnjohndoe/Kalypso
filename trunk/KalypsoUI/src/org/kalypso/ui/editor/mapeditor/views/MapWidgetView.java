@@ -183,7 +183,7 @@ public class MapWidgetView extends ViewPart
     m_stackLayout = new StackLayout();
     m_group.setLayout( m_stackLayout );
 
-    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2"), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
+    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2" ), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
 
     m_stackLayout.topControl = m_noWidgetText;
 
@@ -196,7 +196,7 @@ public class MapWidgetView extends ViewPart
    * Sets to widget to show in this view for the given panel.
    * 
    * @param action
-   *            If the given action is non-null, it will be activated if the widget is reactivated.
+   *          If the given action is non-null, it will be activated if the widget is reactivated.
    */
   public void setWidgetForPanel( final IMapPanel panel, final IWidgetWithOptions widget )
   {
@@ -243,13 +243,19 @@ public class MapWidgetView extends ViewPart
       {
         // no widget at all active, just show a message
         controlToShow = m_noWidgetText;
-        m_group.setText( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3") ); //$NON-NLS-1$
+        m_group.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3" ) ); //$NON-NLS-1$
         m_group.setToolTipText( null );
+        // TODO: Evt. reset part name.
       }
       else
       {
         m_group.setText( widget.getName() );
         m_group.setToolTipText( widget.getToolTip() );
+
+        /* If the widget desires a different title, set it. */
+        String partName = widget.getPartName();
+        if( partName != null && partName.length() > 0 )
+          setPartName( partName );
 
         final Composite widgetParent = m_toolkit.createComposite( m_group, SWT.NONE );
         widgetParent.setLayout( new FillLayout() );
@@ -311,7 +317,7 @@ public class MapWidgetView extends ViewPart
       final IWidgetWithOptions widget = info == null ? null : info.getWidget();
       if( newWidget == null || !newWidget.equals( widget ) )
       {
-        setContentDescription( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4") ); //$NON-NLS-1$
+        setContentDescription( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4" ) ); //$NON-NLS-1$
       }
     }
   }

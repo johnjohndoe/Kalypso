@@ -322,4 +322,13 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
 
     return m_topLevel;
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }
