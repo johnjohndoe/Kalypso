@@ -160,6 +160,7 @@ public class CreateProjectComposite extends Composite
       }
     } );
 
-    getParent().layout();
+    m_toolkit.adapt( this );
+    this.layout();
   }
 }
