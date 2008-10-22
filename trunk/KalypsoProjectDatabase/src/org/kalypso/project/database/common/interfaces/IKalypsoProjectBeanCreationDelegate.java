@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.interfaces;
 
+import java.net.URL;
+
 /**
  * @author kuch
  */
@@ -48,7 +50,7 @@ public interface IKalypsoProjectBeanCreationDelegate extends IKalypsoProjectBean
   /**
    * @return url of project.zip in incoming folder
    */
-  public String getIncomingUrl( );
+  public URL getIncomingUrl( );
 
-  public void setIncomingUrl( final String incomingUrl );
+  public void setIncomingUrl( final URL incomingUrl );
 }

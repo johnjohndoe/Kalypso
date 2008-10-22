@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.wrappers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -110,7 +113,7 @@ public class KalypsoProjectBeanWrapper implements IKalypsoProject
    * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUrl()
    */
   @Override
-  public String getUrl( )
+  public URL getUrl( ) throws MalformedURLException
   {
     return m_bean.getUrl();
   }
@@ -158,5 +161,24 @@ public class KalypsoProjectBeanWrapper implements IKalypsoProject
   public void setUnixName( final String unixName )
   {
     m_bean.setUnixName( unixName );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return m_bean.getDescription();
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#setDescription(java.lang.String)
+   */
+  @Override
+  public void setDescription( final String description )
+  {
+    m_bean.setDescription( description );
+
   }
 }

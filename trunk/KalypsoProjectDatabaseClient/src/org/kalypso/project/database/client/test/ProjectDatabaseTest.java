@@ -47,9 +47,10 @@ import org.apache.commons.vfs.FileSystemManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseAccess;
 import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
+import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -87,8 +88,15 @@ public class ProjectDatabaseTest
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject src = manager.resolveFile( project.toExternalForm() );
 
-      final IProjectDatabaseAccess access = KalypsoProjectDatabaseClient.getDefault().getIncomingAccessData();
-      final String url = access.getUrl( "test.zip" );
+      final String url = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
+      {
+        @Override
+        public String getPath( )
+        {
+          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
+        }
+
+      }, "test.zip" );
 
       final FileObject destination = manager.resolveFile( url );
       VFSUtilities.copy( src, destination );
@@ -96,9 +104,21 @@ public class ProjectDatabaseTest
       /* create project */
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
-      final KalypsoProjectBeanCreationDelegate delegate = new KalypsoProjectBeanCreationDelegate( name, name, version, PROJECT_TYPE, url );
+      final URL myUrl = ProjectModelUrlResolver.getUrlAsHttp( new ProjectModelUrlResolver.IResolverInterface()
+      {
+        @Override
+        public String getPath( )
+        {
+          return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
+        }
+
+      }, "test.zip" );
+
+      final KalypsoProjectBeanCreationDelegate delegate = new KalypsoProjectBeanCreationDelegate( name, name, name, version, PROJECT_TYPE, myUrl );
       final KalypsoProjectBean bean = service.createProject( delegate );
       Assert.assertNotNull( bean );
+
+      destination.delete();
 
 // KalypsoProjectBeanWrapper wrapper = new KalypsoProjectBeanWrapper( bean );
 // FileObject dest = wrapper.getFileObject( access );
