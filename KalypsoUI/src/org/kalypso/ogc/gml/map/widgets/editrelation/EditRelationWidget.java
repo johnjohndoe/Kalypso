@@ -671,4 +671,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
     refreshSettings();
   }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }

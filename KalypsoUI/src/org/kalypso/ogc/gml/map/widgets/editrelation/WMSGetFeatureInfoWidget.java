@@ -94,7 +94,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    */
   public WMSGetFeatureInfoWidget( )
   {
-    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.1"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.1" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -202,7 +202,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     if( activeTheme != null )
       themeName = activeTheme.getLabel();
     else
-      themeName = Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.3"); //$NON-NLS-1$
+      themeName = Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.3" ); //$NON-NLS-1$
     final Point pointOfInterest = m_pointOfInterest;
 
     final IGetFeatureInfoResultProcessor processor = new IGetFeatureInfoResultProcessor()
@@ -219,10 +219,10 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
         try
         {
           final PrintWriter pw = new PrintWriter( stringWriter );
-          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.4") + themeName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.6") ); //$NON-NLS-1$
+          pw.print( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.4" ) + themeName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          pw.print( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.6" ) ); //$NON-NLS-1$
           if( pointOfInterest == null )
-            pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.7") ); //$NON-NLS-1$
+            pw.print( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.7" ) ); //$NON-NLS-1$
           else
           {
             pw.print( "\n  " ); //$NON-NLS-1$
@@ -230,7 +230,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
             pw.print( " / " ); //$NON-NLS-1$
             pw.printf( Locale.US, COORD_FORMAT, y1 );
           }
-          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.10") ); //$NON-NLS-1$
+          pw.print( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.10" ) ); //$NON-NLS-1$
           pw.print( "\n " + message ); //$NON-NLS-1$
         }
         catch( final Exception e )
@@ -261,9 +261,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     };
 
     if( pointOfInterest == null )
-      processor.write( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.12") ); //$NON-NLS-1$
+      processor.write( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.12" ) ); //$NON-NLS-1$
     else if( !(activeTheme instanceof KalypsoWMSTheme) )
-      processor.write( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.13") ); //$NON-NLS-1$
+      processor.write( Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.13" ) ); //$NON-NLS-1$
     else
     {
       final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) activeTheme;
@@ -321,16 +321,25 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
     // formats are not queryable (bug in deegree, Collection of formats does not support toArray() )
     final String[] formats = new String[] { "application/vnd.ogc.gml" //$NON-NLS-1$
-        // ,
-        // "text/plain",
-        // "text/html"
+    // ,
+    // "text/plain",
+    // "text/html"
     };
     m_formatCombo.setItems( formats );
     m_formatCombo.select( 0 );
 
-    m_textInfo = toolkit.createText( m_topLevel, Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.15"), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
+    m_textInfo = toolkit.createText( m_topLevel, Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.15" ), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
   }
 }
