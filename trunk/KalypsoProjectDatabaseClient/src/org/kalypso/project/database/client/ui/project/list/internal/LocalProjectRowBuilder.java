@@ -41,17 +41,32 @@
 package org.kalypso.project.database.client.ui.project.list.internal;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
+import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
 /**
  * @author Dirk Kuch
  */
-public class LocalProjectRowBuilder implements IProjectRowBuilder
+public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  private final IProject m_project;
+
+  protected final IProject m_project;
 
   public LocalProjectRowBuilder( final IProject project )
   {
@@ -63,11 +78,66 @@ public class LocalProjectRowBuilder implements IProjectRowBuilder
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  public void render( final Composite body, final FormToolkit toolkit )
+  public void render( final Composite parent, final FormToolkit toolkit )
   {
-    final Label label = toolkit.createLabel( body, String.format( "local: %s", m_project.getName() ) );
-    label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( new GridLayout( 4, false ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    lnk.setImage( IMG_LOCAL_PROJECT );
+    lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_project.getName() ) );
+    lnk.setText( m_project.getName() );
+
+    /* export */
+    final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkExport.setImage( IMG_EXPORT_LOCAL );
+    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", m_project.getName() ) );
+
+    lnkExport.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final WizardProjectExport wizard = new WizardProjectExport( m_project );
+        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( m_project ) );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+      }
+    } );
+
+    // spacer
+    toolkit.createLabel( body, "    " ); //$NON-NLS-1$
+
+    /* delete */
+    final ImageHyperlink lnkDelete = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkDelete.setImage( IMG_DELETE_LOCAL );
+    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", m_project.getName() ) );
+
+    lnkDelete.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+
+        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", m_project.getName() ) ) )
+        {
+          final DeleteLocalProjectHandler handler = new DeleteLocalProjectHandler( m_project );
+          final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+
+          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          if( !shell.isDisposed() )
+            ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+        }
+      }
+    } );
   }
-
 }

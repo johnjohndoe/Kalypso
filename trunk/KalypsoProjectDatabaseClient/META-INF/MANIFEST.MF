@@ -15,5 +15,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.ui.project.list,
- org.kalypso.project.database.client.ui.project.wizard
+ org.kalypso.project.database.client.ui.project.wizard.create
 Import-Package: org.junit

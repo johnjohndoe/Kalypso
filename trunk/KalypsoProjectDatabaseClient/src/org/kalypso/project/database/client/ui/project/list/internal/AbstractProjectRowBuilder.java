@@ -40,14 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public interface IProjectRowBuilder
+public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 {
+  protected static Image IMG_LOCAL_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
 
-  void render( Composite body, FormToolkit toolkit );
+  protected static Image IMG_DELETE_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+
+  protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+
+  protected static Image IMG_REMOTE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
 }

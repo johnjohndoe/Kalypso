@@ -38,16 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.core.project.export;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import java.io.File;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.project.database.client.core.utils.ZipUtils;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public interface IProjectRowBuilder
+public class ProjectExportHandler implements ICoreRunnableWithProgress
 {
+  private final File m_target;
 
-  void render( Composite body, FormToolkit toolkit );
+  private final IProject m_project;
+
+  public ProjectExportHandler( final IProject project, final File target )
+  {
+    m_project = project;
+    m_target = target;
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      m_project.close( monitor );
+
+      ZipUtils.pack( m_target, m_project.getLocation().toFile() );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+    finally
+    {
+      m_project.open( monitor );
+    }
+
+    return Status.OK_STATUS;
+  }
 }

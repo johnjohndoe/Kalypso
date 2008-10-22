@@ -38,38 +38,49 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.core.project.workspace;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
+ * Deletes an local IProject
+ * 
  * @author Dirk Kuch
  */
-public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
+public class DeleteLocalProjectHandler implements ICoreRunnableWithProgress
 {
-  private final IKalypsoProject m_bean;
+  private final IProject m_project;
 
-  public RemoteProjectRowBuilder( final IKalypsoProject bean )
+  public DeleteLocalProjectHandler( final IProject project )
   {
-    m_bean = bean;
+    m_project = project;
   }
 
   /**
-   * @see org.kalypso.project.database.client.ui.project.internal.IProjectRowBuilder#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void render( final Composite body, final FormToolkit toolkit )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    lnk.setImage( IMG_REMOTE_PROJECT );
-    lnk.setText( m_bean.getName() );
+    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, String.format( "Lösche Projekt %s", m_project.getName() ), true );
+    try
+    {
+      return operation.execute( monitor, null );
+    }
+    catch( final ExecutionException e )
+    {
+      return StatusUtilities.createErrorStatus( e.getMessage() );
+    }
   }
 
 }
