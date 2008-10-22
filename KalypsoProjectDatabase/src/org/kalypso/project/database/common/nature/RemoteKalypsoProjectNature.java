@@ -80,7 +80,7 @@ public class RemoteKalypsoProjectNature implements IProjectNature
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
   @Override
-  public void configure( ) throws CoreException
+  public void configure( )
   {
     // TODO Auto-generated method stub
   }
@@ -89,7 +89,7 @@ public class RemoteKalypsoProjectNature implements IProjectNature
    * @see org.eclipse.core.resources.IProjectNature#deconfigure()
    */
   @Override
-  public void deconfigure( ) throws CoreException
+  public void deconfigure( )
   {
     // TODO Auto-generated method stub
   }

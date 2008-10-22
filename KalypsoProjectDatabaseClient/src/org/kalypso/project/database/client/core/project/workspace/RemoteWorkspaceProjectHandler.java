@@ -1,10 +1,8 @@
 package org.kalypso.project.database.client.core.project.workspace;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,7 +33,7 @@ public class RemoteWorkspaceProjectHandler implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 

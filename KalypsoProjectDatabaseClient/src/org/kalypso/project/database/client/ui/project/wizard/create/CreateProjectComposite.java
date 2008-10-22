@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.swt.SWT;
@@ -75,7 +76,7 @@ public class CreateProjectComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  private final String[] m_remote;
+  protected final String[] m_remote;
 
   protected final String[] m_natures;
 
@@ -118,9 +119,9 @@ public class CreateProjectComposite extends Composite
       {
         try
         {
-          // TODO handle status
           final RemoteWorkspaceProjectHandler remote = new RemoteWorkspaceProjectHandler( m_remote );
           final IStatus status = ProgressUtilities.busyCursorWhile( remote );
+          ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler beim Abfragen der entferneten Projekt-Datenbasis", "Konnte Liste der entfernten Projekte nicht bereitstellen.", status );
 
           final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
