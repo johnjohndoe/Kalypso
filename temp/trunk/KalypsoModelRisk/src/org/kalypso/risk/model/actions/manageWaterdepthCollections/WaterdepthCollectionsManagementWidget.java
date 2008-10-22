@@ -656,4 +656,12 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     return feature.getAdapter( ICoverage.class );
   }
 
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
+   */
+  @Override
+  public String getPartName( )
+  {
+    return null;
+  }
 }
