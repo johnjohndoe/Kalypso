@@ -9,9 +9,10 @@
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Teilgebiete</Name>
+				<!-- Remark: we need two rules, else the labels will not always be drawn (the next feature covers parts of the label) -->
 				<Rule>
-					<Name>default</Name>
-					<Title>Teilgebiete</Title>
+					<Name>ruleArea</Name>
+					<Title>Flächen</Title>
 					<PolygonSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -25,6 +26,10 @@
 							<CssParameter name="stroke-width">1.0</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
+				</Rule>
+				<Rule>
+					<Name>ruleLabels</Name>
+					<Title>Label</Title>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
