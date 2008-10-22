@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.project.workspace;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
@@ -70,7 +67,7 @@ public class DeleteLocalProjectHandler implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, String.format( "Lösche Projekt %s", m_project.getName() ), true );
     try

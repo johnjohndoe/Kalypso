@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.project;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -82,7 +81,7 @@ public class ProjectDatabaseProjectHandler implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final LocalWorkspaceProjectHandler local = new LocalWorkspaceProjectHandler( m_local );
     local.execute( monitor );

@@ -1,6 +1,5 @@
 package org.kalypso.project.database.client.core.project.workspace;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class LocalWorkspaceProjectHandler implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final Set<IProject> myProjects = new LinkedHashSet<IProject>();
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

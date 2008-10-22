@@ -41,10 +41,12 @@
 package org.kalypso.project.database.client.ui.project.list;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.project.ProjectDatabaseProjectHandler;
@@ -110,6 +112,8 @@ public class ProjectDatabaseComposite extends Composite
     // TODO handle status
     final ProjectDatabaseProjectHandler handler = new ProjectDatabaseProjectHandler( m_natures, m_remote );
     final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+
+    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler beim Abfragen der Projekt-Datenbasis", "Fehler beim Auslesen der vorhandenen Projekte.", status );
 
     final ProjectWrapper[] projects = handler.getProjects();
     for( final ProjectWrapper project : projects )
