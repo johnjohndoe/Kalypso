@@ -8,11 +8,17 @@
 	<input id="Parameter" description="Modelldaten - Parameter" optional="false"/>
 	<input id="Control" description="Steuerdaten - Ausgabe" />
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
-	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>	
+	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>
+
+	<!-- Zeitreihen als Verzeichnisse -->
+    <input id="NiederschlagDir" description="description" optional="true"/>
+    <input id="KlimaDir" description="description" optional="true"/>
+    <input id="PegelDir" description="description" optional="true"/>
+    <input id="ErgebnisDir" description="description" optional="true"/>
 
 	<!--  TODO: some optional parameters are not specified (like 'ErgebnisDir' ) -->
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML" description="Verzeichnis aller Berechnungsergebnisse und Logs"/>
-	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
+	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei" optional="true"/>
 </modelspec>
