@@ -235,10 +235,10 @@ public class MapWidgetView extends ViewPart
     final WidgetInfo widgetInfo = m_widgetInfos.get( panel );
 
     Control controlToShow = widgetInfo == null ? null : widgetInfo.getComposite();
+    final IWidgetWithOptions widget = widgetInfo == null ? null : widgetInfo.getWidget();
     if( controlToShow == null )
     {
       // was not yet created, create it now
-      final IWidgetWithOptions widget = widgetInfo == null ? null : widgetInfo.getWidget();
       if( widget == null )
       {
         // no widget at all active, just show a message
@@ -273,6 +273,8 @@ public class MapWidgetView extends ViewPart
 
     m_stackLayout.topControl = controlToShow;
     controlToShow.setData( DATA_PANEL, panel );
+
+    onWidgetChanged( widget );
 
     m_group.layout();
   }
@@ -316,9 +318,9 @@ public class MapWidgetView extends ViewPart
       final WidgetInfo info = m_widgetInfos.get( panel );
       final IWidgetWithOptions widget = info == null ? null : info.getWidget();
       if( newWidget == null || !newWidget.equals( widget ) )
-      {
         setContentDescription( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4" ) ); //$NON-NLS-1$
-      }
+      else
+        setContentDescription( "" ); //$NON-NLS-1$
     }
   }
 
@@ -338,7 +340,7 @@ public class MapWidgetView extends ViewPart
       if( info != null )
       {
         /* Activate my widget if not already done so */
-        /* Check if already presetn, in order to suppress map repaint */
+        /* Check if already present, in order to suppress map repaint */
         final IWidgetWithOptions widget = info.getWidget();
         if( widget != null && widget != panel.getWidgetManager().getActualWidget() )
         {
@@ -347,6 +349,5 @@ public class MapWidgetView extends ViewPart
         }
       }
     }
-
   }
 }
