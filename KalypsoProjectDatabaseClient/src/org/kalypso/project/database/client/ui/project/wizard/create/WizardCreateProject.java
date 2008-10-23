@@ -65,6 +65,12 @@ public class WizardCreateProject extends NewProjectWizard
 
   final protected String[] m_natures;
 
+  /**
+   * @param templates
+   *          list of project templates
+   * @param natures
+   *          list of natures which will be added to the downloaded project
+   */
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures )
   {
     super( new ProjectTemplatePage( templates ) );

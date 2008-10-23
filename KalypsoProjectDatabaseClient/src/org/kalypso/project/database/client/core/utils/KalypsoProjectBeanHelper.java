@@ -38,25 +38,45 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.core.utils;
 
-import org.eclipse.swt.graphics.Image;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
+public class KalypsoProjectBeanHelper
 {
-  protected static Image IMG_LOCAL_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
 
-  protected static Image IMG_DELETE_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+  /**
+   * @param headBean
+   *          Head of {@link IKalypsoProject}
+   * @return sorted list of beans of one project [head, head-1, head-2, ... head-n]
+   */
+  public static IKalypsoProject[] getSortedBeans( final IKalypsoProject headBean )
+  {
+    final Set<IKalypsoProject> beans = new TreeSet<IKalypsoProject>( new Comparator<IKalypsoProject>()
+    {
+      @Override
+      public int compare( final IKalypsoProject o1, final IKalypsoProject o2 )
+      {
+        return o2.getProjectVersion().compareTo( o1.getProjectVersion() );
+      }
+    } );
+    beans.add( headBean );
 
-  protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+    final KalypsoProjectBean[] children = headBean.getChildren();
+    for( final KalypsoProjectBean child : children )
+    {
+      beans.add( child );
+    }
 
-  protected static Image IMG_IMPORT_REMOTE = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) );
-
-  protected static Image IMG_REMOTE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
-
-  protected static Image IMG_REMOTE_INFO = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+    return beans.toArray( new IKalypsoProject[] {} );
+  }
 
 }
