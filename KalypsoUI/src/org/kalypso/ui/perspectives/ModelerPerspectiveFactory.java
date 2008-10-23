@@ -49,7 +49,6 @@ import org.eclipse.ui.IPerspectiveFactory;
  * 
  * @author schlienger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
   public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
@@ -67,27 +66,24 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
         "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
 
     setContentsOfShowViewMenu( layout );
 
-    // next lines are defined in a different plugin, this causes errors in a deploy without riskmodelmodule!
-    // use extensionpoint for this
-    // layout.addActionSet( "org.kalypso.actionSet.model" );
-    // layout.addActionSet( "KalypsoFloodRiskAnalysis.Start" );
+    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" );
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
   }
 
   /**
-   * Sets the intial contents of the "Show View" menu
+   * Sets the initial contents of the "Show View" menu
    * 
    * @param layout
    */
-  protected void setContentsOfShowViewMenu( IPageLayout layout )
+  protected void setContentsOfShowViewMenu( final IPageLayout layout )
   {
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
