@@ -7,8 +7,8 @@
       plugin="org.kalypso.hwv.product">
    <install-handler/>
 
-   <description url="[Enter Feature URL here.]">
-      [Enter Feature Description here.]
+   <description url="http://dev.bjoernsen.de/prognose">
+      Kalypso Hcohwasservorhersage - Sachsen
    </description>
 
    <copyright url="[Enter Copyright URL here.]">
@@ -861,13 +861,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.ide.application"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.variables.nl-de"
          download-size="0"
          install-size="0"
@@ -1068,14 +1061,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.ide.application.nl-de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ui.ide.nl-de"
          download-size="0"
          install-size="0"
@@ -1148,20 +1133,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.sdk"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.sdk.nl-de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.jsp.jasper.registry"
          download-size="0"
          install-size="0"
@@ -1176,21 +1147,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ui.cheatsheets"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.cheatsheets.nl-de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.update.configurator"
          download-size="0"
          install-size="0"
@@ -1199,29 +1155,6 @@
 
    <plugin
          id="org.eclipse.update.configurator.nl-de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core.nl-de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.core.win32"
          download-size="0"
          install-size="0"
          version="0.0.0"
