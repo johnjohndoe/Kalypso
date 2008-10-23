@@ -73,5 +73,23 @@ public interface IProjectDatabase
    */
   KalypsoProjectBean createProject( KalypsoProjectBeanCreationDelegate delegate ) throws IOException;
 
-  String testMethod( );
+  /**
+   * Locks a project for editing to a single client
+   * 
+   * @param projectUnixName
+   *          unique unix name of project
+   * @return lock ticket
+   */
+  String acquireProjectEditLock( String projectUnixName );
+
+  /**
+   * Release project edit lock
+   * 
+   * @param projectUnixName
+   *          unique unix name of project
+   * @param ticketId
+   *          ticket of lock
+   * @return lock released?
+   */
+  Boolean releaseProjectEditLock( String projectUnixName, String ticketId );
 }
