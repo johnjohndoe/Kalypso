@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -86,9 +86,9 @@ public class IterationInfo
     public final IStatus status;
 
     public IterationBean( @SuppressWarnings("hiding")
-    final String name, @SuppressWarnings("hiding")
-    final File file, @SuppressWarnings("hiding")
-    final IStatus status )
+        final String name, @SuppressWarnings("hiding")
+        final File file, @SuppressWarnings("hiding")
+        final IStatus status )
     {
       this.file = file;
       this.name = name;
@@ -125,7 +125,7 @@ public class IterationInfo
 
   private final IControlModel1D2D m_controlModel;
 
-  public IterationInfo( final File file, final File outputDir, final IControlModel1D2D controlModel ) throws Exception
+  public IterationInfo( final File file, final File outputDir, final IControlModel1D2D controlModel )
   {
     m_itrFile = file;
     m_outputDir = outputDir;
@@ -133,7 +133,17 @@ public class IterationInfo
 
     /* Create observation from template */
     final URL obsTemplate = getClass().getResource( "resource/template/iterObs.gml" );
-    m_workspace = GmlSerializer.createGMLWorkspace( obsTemplate, null );
+    try
+    {
+      m_workspace = GmlSerializer.createGMLWorkspace( obsTemplate, null );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      // TODO: error handling!
+
+    }
     final Feature obsFeature = m_workspace.getRootFeature();
     m_obs = ObservationFeatureFactory.toObservation( obsFeature );
 

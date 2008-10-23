@@ -268,6 +268,16 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     resultDir.mkdirs();
     itrDir.mkdirs();
 
+    // The iteration job (and its info) monitor the content of the output.itr file
+    // and inform the user about the current progress of the process.
+    // TODO: this is too deep inside this code and should probably be moved further away...
+    m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
+
+    final IterationInfoJob iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel, progress );
+
+    iterationJob.setSystem( true );
+    iterationJob.schedule();
+
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try
@@ -281,29 +291,15 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) );
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
-      final Runnable idleRunnable = new Runnable()
-      {
-        public void run( )
-        {
-          updateIteration( progress );
-        }
-      };
-
-      /* Initialize Iteration Job */
-      m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
 
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, null );
 
       // TODO: specific error message if exe was not found
 
       // TODO: read other outputs:
       // - error-log
       // - border conditions-log
-
-      /* Update the iteration one last time, it should be complete now... */
-      updateIteration( progress );
-      m_iterationInfo.finish(); // save the last observation
 
       // Check for success
       final File errorFile = findErrorFile( m_tmpDir );
@@ -330,6 +326,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
 
+      iterationJob.cancel();
+
       ProgressUtilities.done( progress );
     }
   }
@@ -354,29 +352,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
     final String exeMissingMsg = String.format( "Die Ausführbare Datei (%s) ist nicht vorhanden.\nRMA10SK ist nicht Teil von Kalypso sondern muss gesondert erworden werden. Weitere Informationen finden Sie unter http://kalypso.sourceforge.net.", exeFile.getAbsolutePath() );
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
-  }
-
-  /**
-   * Will be called while the rma10s process is running.<br>
-   * Updates the calculation progress monitor and reads the Output.itr.
-   */
-  protected void updateIteration( final IProgressMonitor monitor )
-  {
-    final int oldStepNr = m_iterationInfo.getStepNr();
-
-    m_iterationInfo.readIterFile();
-
-    final int stepNr = m_iterationInfo.getStepNr();
-    if( oldStepNr != stepNr )
-    {
-      String msg = "";
-      if( stepNr == 0 )
-        msg = String.format( "RMA10s wird ausgeführt - stationärer Schritt" );
-      else
-        msg = String.format( "RMA10s wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
-      monitor.subTask( msg );
-      monitor.worked( stepNr - oldStepNr );
-    }
   }
 
   /**

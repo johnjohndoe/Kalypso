@@ -29,7 +29,7 @@ Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.jface.text,
  de.openali.odysseus.chart.ui,
  de.openali.odysseus.chart.ext.base
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,
  org.kalypso.kalypsomodel1d2d.conv.results,
