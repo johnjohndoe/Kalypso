@@ -41,9 +41,6 @@
 package org.kalypso.project.database.client.ui.project.wizard.info.pages;
 
 import java.net.MalformedURLException;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -62,8 +59,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
@@ -83,23 +80,7 @@ public class PageRemoteProjektInfo extends WizardPage
     setTitle( "Projektinformationen" );
     setDescription( "Wählen Sie eine Version aus der Auswahlbox, um nähere Information zu dieser zu erfahren." );
 
-    final Set<IKalypsoProject> beans = new TreeSet<IKalypsoProject>( new Comparator<IKalypsoProject>()
-    {
-      @Override
-      public int compare( final IKalypsoProject o1, final IKalypsoProject o2 )
-      {
-        return o2.getProjectVersion().compareTo( o1.getProjectVersion() );
-      }
-    } );
-    beans.add( bean );
-
-    final KalypsoProjectBean[] children = bean.getChildren();
-    for( final KalypsoProjectBean child : children )
-    {
-      beans.add( child );
-    }
-
-    m_beans = beans.toArray( new IKalypsoProject[] {} );
+    m_beans = KalypsoProjectBeanHelper.getSortedBeans( bean );
   }
 
   /**

@@ -40,15 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
+import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
@@ -73,7 +89,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
   {
 
     final Composite body = toolkit.createComposite( parent );
-    body.setLayout( new GridLayout( 2, false ) );
+    body.setLayout( new GridLayout( 3, false ) );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
@@ -101,6 +117,80 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
       }
     } );
 
-  }
+    /* import */
+    final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkImport.setImage( IMG_IMPORT_REMOTE );
+    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", m_bean.getName() ) );
 
+    lnkImport.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+
+        try
+        {
+          /* sort beans */
+          final IKalypsoProject[] beans = KalypsoProjectBeanHelper.getSortedBeans( m_bean );
+
+          final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
+
+          for( final IKalypsoProject bean : beans )
+          {
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+
+            templates.add( template );
+          }
+
+          final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), new String[] {} );
+          wizard.init( PlatformUI.getWorkbench(), null );
+
+          final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+          dialog.setRememberSize( true );
+
+          dialog.addPageChangedListener( new IPageChangedListener()
+          {
+            public void pageChanged( final PageChangedEvent event )
+            {
+              final Object page = event.getSelectedPage();
+
+              if( page instanceof IUpdateable )
+              {
+                final IUpdateable update = (IUpdateable) page;
+                update.update();
+              }
+              else if( page instanceof WizardNewProjectCreationPage )
+              {
+                final WizardNewProjectCreationPage myPage = (WizardNewProjectCreationPage) page;
+                final Composite myParent = (Composite) myPage.getControl();
+                final Control[] children = myParent.getChildren();
+
+                /* project name */
+                final Composite subChildOne = (Composite) children[0];
+                final Control[] subChildrenOne = subChildOne.getChildren();
+                subChildrenOne[1].setEnabled( false );
+
+                /* working sets */
+                final Composite subChildTwo = (Composite) children[2];
+                final Control[] subChildrenTwo = subChildTwo.getChildren();
+                final Composite subSubChildTwo = (Composite) subChildrenTwo[0];
+                final Control[] subSubChildrenTwo = subSubChildTwo.getChildren();
+                subSubChildrenTwo[0].setEnabled( false );
+              }
+            }
+          } );
+
+          dialog.open();
+        }
+        catch( final MalformedURLException e1 )
+        {
+          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+        }
+      }
+    } );
+
+  }
 }
