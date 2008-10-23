@@ -38,23 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.ui.project.wizard.info;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.project.database.client.ui.project.wizard.info.pages.PageRemoteProjektInfo;
+import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
 /**
+ * Wizard to create a new local Planer Client Project
+ * 
  * @author Dirk Kuch
  */
-public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
+public class WizardInfoRemoteProject extends Wizard
 {
-  protected static Image IMG_LOCAL_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
 
-  protected static Image IMG_DELETE_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+  private final IKalypsoProject m_bean;
 
-  protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+  public WizardInfoRemoteProject( final IKalypsoProject bean )
+  {
+    super();
+    m_bean = bean;
 
-  protected static Image IMG_REMOTE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
+    setWindowTitle( "Projektinformationen" );
+    setNeedsProgressMonitor( true );
+  }
 
-  protected static Image IMG_REMOTE_INFO = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  @Override
+  public void addPages( )
+  {
+    addPage( new PageRemoteProjektInfo( m_bean ) );
+  }
+
+  /**
+   * @see org.kalypso.afgui.wizards.NewProjectWizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+
+    return true;
+  }
 
 }

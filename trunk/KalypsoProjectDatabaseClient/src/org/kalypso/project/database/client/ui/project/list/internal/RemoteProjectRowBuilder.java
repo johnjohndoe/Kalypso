@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
 import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 
 /**
@@ -52,7 +57,7 @@ import org.kalypso.project.database.common.interfaces.IKalypsoProject;
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  private final IKalypsoProject m_bean;
+  protected final IKalypsoProject m_bean;
 
   public RemoteProjectRowBuilder( final IKalypsoProject bean )
   {
@@ -64,12 +69,38 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
    *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  public void render( final Composite body, final FormToolkit toolkit )
+  public void render( final Composite parent, final FormToolkit toolkit )
   {
+
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( new GridLayout( 2, false ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_REMOTE_PROJECT );
     lnk.setText( m_bean.getName() );
+
+    /* info */
+    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkInfo.setImage( IMG_REMOTE_INFO );
+    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", m_bean.getName() ) );
+
+    lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( m_bean );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+      }
+    } );
+
   }
 
 }
