@@ -94,31 +94,6 @@ public class ProjectDatabase implements IProjectDatabase
   }
 
   /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#testMethod()
-   */
-  @Override
-  public String testMethod( )
-  {
-// /* test storing and reading of projects */
-// /** Getting the Session Factory and session */
-//
-// Session session = FACTORY.getCurrentSession();
-//
-// /** Starting the Transaction */
-// Transaction tx = session.beginTransaction();
-//
-// KalypsoProjectBean project = new KalypsoProjectBean( "TestProject" );
-//
-// /** Saving POJO */
-// session.save( project );
-//
-// /** Commiting the changes */
-// tx.commit();
-
-    return "blub";
-  }
-
-  /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#getProjects()
    */
   @Override
@@ -233,5 +208,23 @@ public class ProjectDatabase implements IProjectDatabase
     {
       throw new IOException( e.getMessage() );
     }
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#acquireProjectEditLock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
+   */
+  @Override
+  public String acquireProjectEditLock( final String projectUnixName )
+  {
+    return "blub";
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#releaseProjectEditLock(java.lang.String, java.lang.String)
+   */
+  @Override
+  public Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
+  {
+    return false;
   }
 }
