@@ -67,7 +67,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class PageRemoteProjektInfo extends WizardPage
 {
-
   private final KalypsoProjectBean[] m_beans;
 
   private final KalypsoProjectBean m_bean;
@@ -115,7 +114,7 @@ public class PageRemoteProjektInfo extends WizardPage
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          return String.format( "Version: %d vom %s", project.getProjectVersion(), "TODO" );
+          return String.format( "Version: %d vom %tF", project.getProjectVersion(), project.getCreationDate() );
         }
 
         return super.getText( element );
@@ -184,7 +183,7 @@ public class PageRemoteProjektInfo extends WizardPage
 
             name.setText( project.getName() );
             description.setText( project.getDescription() );
-            version.setText( String.format( "Version %d erstellt am %s", project.getProjectVersion(), "TODO" ) );
+            version.setText( String.format( "Version %d erstellt am  %tc", project.getProjectVersion(), project.getCreationDate() ) );
             type.setText( project.getProjectType() );
             unix.setText( project.getUnixName() );
             url.setText( project.getUrl().toExternalForm() );

@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -193,6 +194,8 @@ public class ProjectDatabase implements IProjectDatabase
       VFSUtilities.copyFileTo( src, destination );
 
       /* store project bean in database */
+      bean.setCreationDate( Calendar.getInstance().getTime() );
+
       final Session session = FACTORY.getCurrentSession();
       final Transaction tx = session.beginTransaction();
       session.save( bean );
