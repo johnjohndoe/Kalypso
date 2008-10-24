@@ -50,9 +50,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IRecord;
 
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -61,11 +64,42 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class PointsLineLayer extends AbstractProfilLayer
 {
 
-  
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    LegendEntry le = new LegendEntry( this, toString() )
+    {
+      @Override
+      public void paintSymbol( GC gc, Point size )
+      {
+
+        final Rectangle clipping = gc.getClipping();
+
+        final PolylineFigure figure = new PolylineFigure();
+        figure.setStyle( getLineStyle() );
+        final Point[] path = new Point[6];
+        path[0] = new Point( 0, clipping.width / 2 );
+        path[1] = new Point( clipping.width / 5, clipping.height / 2 );
+        path[2] = new Point( clipping.width / 5 * 2, clipping.height / 4 );
+        path[3] = new Point( clipping.width / 5 * 3, clipping.height / 4 * 3 );
+        path[4] = new Point( clipping.width / 5 * 4, clipping.height / 2 );
+        path[5] = new Point( clipping.width, clipping.height / 2 );
+        figure.setPoints( path );
+        figure.paint( gc );
+      }
+    };
+
+    return new ILegendEntry[] { le };
 
   }
 
@@ -153,12 +187,29 @@ public class PointsLineLayer extends AbstractProfilLayer
     final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
     final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
 
-    final PolylineFigure infoFigure = new PolylineFigure();
-    infoFigure.setPoints( new Point[] { previous, newPoint, next } );
-    infoFigure.setStyle( getLineStyle_hover() );
+    final PolylineFigure lineFigure = new PolylineFigure();
+    lineFigure.setPoints( new Point[] { previous, newPoint, next } );
+    lineFigure.setStyle( getLineStyle_hover() );
+
+    final PointFigure pointFigure = new PointFigure();
+
+    pointFigure.setStyle( getPointStyle_hover() );
+    pointFigure.setPoints( new Point[] { newPoint } );
+
+    final IPaintable dragFigure = new IPaintable()
+    {
+
+      @Override
+      public void paint( GC gc )
+      {
+        lineFigure.paint( gc );
+        pointFigure.paint( gc );
+
+      }
+    };
 
     final Point2D point = toNumeric( newPoint );
-    return new EditInfo( this, null, infoFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
+    return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
         point.getY(), getTargetComponent().getUnit() } ), newPos );
 
   }
@@ -173,7 +224,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     final ICoordinateMapper cm = getCoordinateMapper();
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
   }
-  
+
   private final Point verifyPos( final Point oldPos, final Point newPos )
   {
     final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );

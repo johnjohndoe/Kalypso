@@ -63,8 +63,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -72,20 +71,9 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
-   */
-  public void setTargetComponent( String componentId )
-  {
-    m_targetComponent = componentId;
-
-  }
-
-  private IProfil m_profil;
-
-  private String m_targetComponent;
-
   private final String m_domainComponent;
+
+  private boolean m_isLocked = false;
 
   private ILineStyle m_LineStyle = null;
 
@@ -99,9 +87,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IPointStyle m_pointStyle_hover = null;
 
-  private boolean m_isLocked = false;
+  private IProfil m_profil;
 
-  protected static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]";
+  private String m_targetComponent;
 
   public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
@@ -111,43 +99,16 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( styleProvider != null )
     {
       final String id = getId();
-      setLineStyle( styleProvider.getStyleFor( id + "_LINE", LineStyle.class ) );
-      setLineStyle_active( styleProvider.getStyleFor( id + "_LINE_ACTIVE", LineStyle.class ) );
-      setLineStyle_hover( styleProvider.getStyleFor( id + "_LINE_HOVER", LineStyle.class ) );
-      setPointStyle( styleProvider.getStyleFor( id + "_POINT", PointStyle.class ) );
-      setPointStyle_active( styleProvider.getStyleFor( id + "_POINT_ACTIVE", PointStyle.class ) );
-      setPointStyle_hover( styleProvider.getStyleFor( id + "_POINT_HOVER", PointStyle.class ) );
+
+      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", null );
+      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null );
+
+      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null );
+      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null );
+
+      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null );
+      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null );
     }
-  }
-
-  public void setLineStyle( ILineStyle lineStyle )
-  {
-    m_LineStyle = lineStyle;
-  }
-
-  public void setLineStyle_active( ILineStyle lineStyle_active )
-  {
-    m_LineStyle_active = lineStyle_active;
-  }
-
-  public void setLineStyle_hover( ILineStyle lineStyle_hover )
-  {
-    m_LineStyle_hover = lineStyle_hover;
-  }
-
-  public void setPointStyle( IPointStyle pointStyle )
-  {
-    m_pointStyle = pointStyle;
-  }
-
-  public void setPointStyle_active( IPointStyle pointStyle_active )
-  {
-    m_pointStyle_active = pointStyle_active;
-  }
-
-  public void setPointStyle_hover( IPointStyle pointStyle_hover )
-  {
-    m_pointStyle_hover = pointStyle_hover;
   }
 
   /**
@@ -258,7 +219,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public EditInfo getHover( Point pos )
   {
-    if( !isVisible()||getProfil() == null )
+    if( !isVisible() || getProfil() == null )
       return null;
     final IRecord[] profilPoints = getProfil().getPoints();
     final int len = profilPoints.length;
@@ -292,16 +253,28 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   protected ILineStyle getLineStyle( )
   {
+    if( m_LineStyle == null )
+      m_LineStyle = StyleUtils.getDefaultLineStyle();
     return m_LineStyle;
   }
 
   protected ILineStyle getLineStyle_active( )
   {
+    if( m_LineStyle_active == null )
+    {
+      m_LineStyle_active = getLineStyle().copy();
+      m_LineStyle_active.setColor( COLOR_ACTIVE );
+    }
     return m_LineStyle_active;
   }
 
   protected ILineStyle getLineStyle_hover( )
   {
+    if( m_LineStyle_hover == null )
+    {
+      m_LineStyle_hover = getLineStyle().copy();
+      m_LineStyle_hover.setDash( 0F, HOVER_DASH );
+    }
     return m_LineStyle_hover;
   }
 
@@ -314,16 +287,36 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   protected IPointStyle getPointStyle( )
   {
+    if( m_pointStyle == null )
+    {
+      m_pointStyle = StyleUtils.getDefaultPointStyle();
+      m_pointStyle.setStroke( getLineStyle().copy() );
+      m_pointStyle.setInlineColor( getLineStyle().getColor() );
+      m_pointStyle.setWidth( POINT_STYLE_WIDTH );
+      m_pointStyle.setHeight( POINT_STYLE_WIDTH );
+    }
     return m_pointStyle;
   }
 
   protected IPointStyle getPointStyle_active( )
   {
+    if( m_pointStyle_active == null )
+    {
+      m_pointStyle_active = getPointStyle().copy();
+      m_pointStyle_active.setStroke( getLineStyle_active().copy() );
+      m_pointStyle_active.setInlineColor( getLineStyle_active().getColor() );
+    }
     return m_pointStyle_active;
   }
 
   protected IPointStyle getPointStyle_hover( )
   {
+    if( m_pointStyle_hover == null )
+    {
+      m_pointStyle_hover = getPointStyle().copy();
+      m_pointStyle_hover.setStroke( getLineStyle_hover().copy() );
+      m_pointStyle_hover.setFillVisible( false );
+    }
     return m_pointStyle_hover;
   }
 
@@ -429,12 +422,51 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     throw new UnsupportedOperationException();
   }
 
+  public void setLineStyle( ILineStyle lineStyle )
+  {
+    m_LineStyle = lineStyle;
+  }
+
+  public void setLineStyle_active( ILineStyle lineStyle_active )
+  {
+    m_LineStyle_active = lineStyle_active;
+  }
+
+  public void setLineStyle_hover( ILineStyle lineStyle_hover )
+  {
+    m_LineStyle_hover = lineStyle_hover;
+  }
+
+  public void setPointStyle( IPointStyle pointStyle )
+  {
+    m_pointStyle = pointStyle;
+  }
+
+  public void setPointStyle_active( IPointStyle pointStyle_active )
+  {
+    m_pointStyle_active = pointStyle_active;
+  }
+
+  public void setPointStyle_hover( IPointStyle pointStyle_hover )
+  {
+    m_pointStyle_hover = pointStyle_hover;
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
    */
   public void setProfil( IProfil profil )
   {
     m_profil = profil;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
+   */
+  public void setTargetComponent( String componentId )
+  {
+    m_targetComponent = componentId;
+
   }
 
   public Point2D toNumeric( final Point point )

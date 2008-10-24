@@ -234,6 +234,16 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       public void paintSymbol( GC gc, Point size )
       {
         drawClippingRect( gc );
+        for( final IChartLayer layer : getLayerManager().getLayers() )
+        {
+          final ILegendEntry[] les = layer.getLegendEntries();
+          if( les == null )
+            continue;
+          for( final ILegendEntry l : les )
+          {
+            ((LegendEntry) l).paintSymbol( gc, size );
+          }
+        }
       }
     };
     return new ILegendEntry[] { le };
@@ -251,14 +261,14 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return null;
   }
 
-  protected final void drawClippingRect( final GC gc )
+  public final void drawClippingRect( final GC gc )
   {
     final EmptyRectangleFigure rf = new EmptyRectangleFigure();
     rf.setStyle( StyleUtils.getDefaultStyle( ILineStyle.class ) );
     Rectangle clipping = gc.getClipping();
     rf.setRectangle( clipping );
     rf.paint( gc );
-    gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+    gc.setClipping( clipping.x + 2, clipping.y + 2, clipping.width - 4, clipping.height - 4 );
   }
 
   /**

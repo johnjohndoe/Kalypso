@@ -455,7 +455,7 @@
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.maximize"
-                  style="radio">
+                  style="push">
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.edit"

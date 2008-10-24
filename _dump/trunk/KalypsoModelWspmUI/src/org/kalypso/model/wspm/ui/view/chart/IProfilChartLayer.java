@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -62,6 +63,14 @@ public interface IProfilChartLayer extends IEditableChartLayer
   final public static Integer ALLOW_HORIZONTAL_EDITING = 1;
 
   final public static Integer ALLOW_VERTICAL_EDITING = 2;
+
+  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]";
+
+  final public RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
+
+  final public float[] HOVER_DASH = new float[] { 1, 1, 1 };
+  
+  final public int POINT_STYLE_WIDTH = 5;
 
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
   public IProfilView createLayerPanel( );

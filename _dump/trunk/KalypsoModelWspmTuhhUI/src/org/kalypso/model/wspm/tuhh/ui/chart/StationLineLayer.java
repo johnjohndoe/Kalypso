@@ -42,27 +42,42 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author kimwerner
  */
-public class StationLineLayer extends AbstractProfilLayer
+public class StationLineLayer extends ComponentLayer
 {
 
-  public StationLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public StationLineLayer( final IProfil profil, final String targetRangeProperty )
   {
-    super( profil, targetRangeProperty, null );
-    LineStyle ls = styleProvider.getStyleFor(  getId() + "_LINE", LineStyle.class);
-    setLineStyle( ls );
+    super( profil, targetRangeProperty );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    LegendEntry le = new LegendEntry( this, toString() )
+    {
+      @Override
+      public void paintSymbol( GC gc, Point size )
+      {
+        drawLine( gc, gc.getClipping() );
+      }
+    };
+    return new ILegendEntry[] { le };
   }
 
   @Override
@@ -91,15 +106,19 @@ public class StationLineLayer extends AbstractProfilLayer
 
     IAxis targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
-    final PolylineFigure pf = new PolylineFigure();
-    ILineStyle ls = getLineStyle();
-    pf.setStyle( ls );
     for( IRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
-      pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
-      pf.paint( gc );
+      drawLine( gc, new Rectangle( point.x, point.y, 0, baseLine ) );
     }
+  }
+
+  protected void drawLine( GC gc, final Rectangle clipping )
+  {
+    final PolylineFigure pf = new PolylineFigure();
+    pf.setStyle( getLineStyle_hover() );
+    pf.setPoints( new Point[] { new Point( clipping.x + clipping.width / 2, clipping.y + clipping.height ), new Point( clipping.x + clipping.width / 2, clipping.y ) } );
+    pf.paint( gc );
   }
 
 }

@@ -72,6 +72,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     createRoughnessSytles();
     createBridgeSytles();
     createWeirSytles();
+    createVegetationStyle();
   }
 
   private void createPointMarkerSytles( )
@@ -95,73 +96,30 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
-    final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class );
-    lsT.setColor( col );
-
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", LineStyle.class );
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class );
     ls.setColor( col );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE_ACTIVE", ls.copy() );
-
-    final IPointStyle ps = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_POINT", PointStyle.class );
-    ps.setInlineColor( col );
-    ps.getStroke().setColor( col );
-    ps.setWidth( 5 );
-    ps.setHeight( 5 );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_POINT_ACTIVE", ps.copy() );
+    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() );
   }
 
   private void createCrossSectionSytles( )
   {
-    final RGB yellow = new RGB( 255, 150, 0 );
-    final RGB red = new RGB( 255, 0, 0 );
-
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE", LineStyle.class );
-    ls.setColor( yellow );
+    ls.setColor( new RGB( 255, 150, 0 ) );
+  }
 
-    final ILineStyle ls_A = ls.copy();
-    ls_A.setColor( red );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE_ACTIVE", ls_A );
-
-    final IPointStyle ps = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_POINT", PointStyle.class );
-    ps.setInlineColor( yellow );
-    ps.getStroke().setColor( yellow );
-    ps.setWidth( 5 );
-    ps.setHeight( 5 );
-
-    final IPointStyle ps_A = ps.copy();
-    ps_A.setInlineColor( red );
-    ps_A.getStroke().setColor( red );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_POINT_ACTIVE", ps_A );
-
-    ((ILineStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_STATIONLINE_LINE", LineStyle.class )).setDash( 0f, new float[] { 1, 1, 1 } );
+  private void createVegetationStyle( )
+  {
+    getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", LineStyle.class ).setColor( new RGB( 0, 255, 0 ) );
   }
 
   private void createBridgeSytles( )
   {
-    final RGB green = new RGB( 0, 128, 0 );
-    final RGB blue = new RGB( 0, 128, 179 );
+    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE", LineStyle.class );
+    lsO.setColor( new RGB( 0, 128, 0 ) );
 
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE", LineStyle.class );
-    ls.setColor( green );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE_ACTIVE", ls.copy() );
-
-    final IPointStyle ps = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_POINT", PointStyle.class );
-    ps.setInlineColor( green );
-    ps.getStroke().setColor( green );
-    ps.setWidth( 5 );
-    ps.setHeight( 5 );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_POINT_ACTIVE", ps.copy() );
-
-    final ILineStyle lsU = ls.copy();
-    lsU.setColor( blue );
+    final ILineStyle lsU = lsO.copy();
+    lsU.setColor( new RGB( 0, 128, 179 ) );
     m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE_ACTIVE", lsU.copy() );
-
-    final IPointStyle psU = ps.copy();
-    psU.setInlineColor( blue );
-    psU.getStroke().setColor( blue );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_POINT", psU );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_POINT_ACTIVE", psU.copy() );
   }
 
   private void createRoughnessSytles( )

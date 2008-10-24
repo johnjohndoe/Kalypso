@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -59,9 +59,11 @@ import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author kimwerner
@@ -71,6 +73,86 @@ public class VegetationTheme extends AbstractProfilTheme
 {
 
   /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#createLegendEntries()
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+
+    {
+      LegendEntry le = new LegendEntry( this, toString() )
+      {
+        @Override
+        public void paintSymbol( GC gc, Point size )
+        {
+          drawClippingRect( gc );
+          final Rectangle clipping = gc.getClipping();
+          drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height / 2, clipping.width, clipping.height ) );
+        }
+      };
+
+      return new ILegendEntry[] { le };
+    }
+  }
+
+  private Rectangle getHoverRectInternal( final IRecord pp1, final IRecord pp2 )
+  {
+    if( segmenthasVegetation( pp1 ) )
+    {
+      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, pp1 );
+      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, pp2 );
+      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, pp1 );
+      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, pp2 );
+
+      final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) - 3 );
+      final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
+
+      final int width = p2.x - p1.x;
+      final int midX = p1.x + width / 2;
+      final int height = Math.abs( p1.y - p2.y );
+      final int midY = Math.min( p1.y, p2.y ) + height / 2;
+
+      return new Rectangle( midX, midY, width, height );
+
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getHover(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    final IProfil profil = getProfil();
+    final IRecord[] profilPoints = profil.getPoints();
+    final int len = profilPoints.length - 2;
+
+    for( int i = 0; i < len; i++ )
+    {
+      final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
+      if( hover == null )
+        continue;
+      final int size = Math.min( hover.height / 2, Math.min( hover.width / 2, 10 ) );
+      if( (pos.x >= hover.x - size) && (pos.y >= hover.y - size) && (pos.x < hover.x + size) && (pos.y < hover.y + size) )
+        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), pos );
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public String getTooltipInfo( IRecord point )
+  {
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#removeYourself()
    */
   @Override
@@ -78,8 +160,8 @@ public class VegetationTheme extends AbstractProfilTheme
   {
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", getProfil(), true );
-    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[]{} ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX) ) );
+    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) ) );
     new ProfilOperationJob( operation ).schedule();
@@ -88,9 +170,7 @@ public class VegetationTheme extends AbstractProfilTheme
   public VegetationTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
-    final ILineStyle lineStyle = styleProvider.getStyleFor( chartLayers[0].getId() + "_LINE", LineStyle.class );
-    lineStyle.setColor( new RGB( 0, 255, 0 ) );
-    setLineStyle( lineStyle );
+    setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) );
   }
 
   /**
@@ -121,20 +201,29 @@ public class VegetationTheme extends AbstractProfilTheme
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      if( segmenthasVegetation( profilPoints[i] ) )
-      {
-        final Double y1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, profilPoints[i] );
-        final Double y2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, profilPoints[i + 1] );
-        final Double x1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, profilPoints[i] );
-        final Double x2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, profilPoints[i + 1] );
+      final Rectangle hover = getHoverRectInternal( profilPoints[i], profilPoints[i + 1] );
+      if( hover == null )
+        continue;
+      drawIcon( gc, hover );
+    }
+  }
 
-        final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) -3  );
-        final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
+  protected void drawIcon( final GC gc, final Rectangle clipping )
+  {
+    getLineStyle().apply( gc );
+    if( clipping.width < 12 || clipping.height < 12 )
+      gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
+    else
+    {
+      final int size = Math.min( Math.min( clipping.width, clipping.height ), 20 );
+      final int left = clipping.x - size / 2;
+      final int top = clipping.y - size / 2;
+      final int right = left + size;
+      final int bottom = top + +size;
 
-        pf.setPoints( new Point[] { p1, p2 } );
-        pf.paint( gc );
-
-      }
+      gc.drawLine( clipping.x - 3, bottom, clipping.x + 3, bottom );
+      gc.drawLine( clipping.x, bottom, clipping.x, clipping.y );
+      gc.drawOval( left + 2, top, right - left - 4, bottom - clipping.y + 4 );
     }
   }
 
