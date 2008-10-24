@@ -122,8 +122,10 @@ public class IterationInfoJob extends Job
     }
   }
 
-  public IterationInfo getIterationInfo( )
+  public IterationInfo finish( )
   {
+    cancel();
+
     /* Update the iteration one last time, it should be complete now... */
     updateIteration();
     if( m_iterationInfo != null )

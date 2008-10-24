@@ -41,9 +41,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
@@ -57,7 +59,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.process.IProcess;
+import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -268,6 +272,14 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     resultDir.mkdirs();
     itrDir.mkdirs();
 
+    // Generate the process-factory-id
+    // TODO: at the moment, this is hard wired.... later we should get it from System.properties and/or from our own
+    // simulation-id (as we are no simulation, this does not work yet).
+    // Example1: org.kalypso.simulation.process.factory.<simulation-id>=<factory-id>
+    // For the moment, we could also provide it directly from outside or from a system-property
+    // (fall-back should always be the default factory)
+    final String processFactoryId = IProcessFactory.DEFAULT_PROCESS_FACTORY_ID;
+
     // The iteration job (and its info) monitor the content of the output.itr file
     // and inform the user about the current progress of the process.
     // TODO: this is too deep inside this code and should probably be moved further away...
@@ -278,8 +290,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     iterationJob.setSystem( true );
     iterationJob.schedule();
 
-    FileOutputStream logOS = null;
-    FileOutputStream errorOS = null;
+    OutputStream logOS = null;
+    OutputStream errorOS = null;
     try
     {
       final File exeFile = findRma10skExe();
@@ -287,17 +299,18 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final String commandString = exeFile.getAbsolutePath();
 
       // Run the Calculation
-      logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) );
-      errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) );
+      logOS = new BufferedOutputStream( new FileOutputStream( new File( m_tmpDir, "exe.log" ) ) );
+      errorOS = new BufferedOutputStream( new FileOutputStream( new File( m_tmpDir, "exe.err" ) ) );
+
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
 
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, null );
-
+      final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, m_tmpDir, exeFile.toURI().toURL(), null );
+      process.startProcess( logOS, errorOS, null, progressCancelable );
       // TODO: specific error message if exe was not found
 
-      // TODO: read other outputs:
+      // TODO: read other outputs
       // - error-log
       // - border conditions-log
 
@@ -326,7 +339,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
 
-      iterationJob.cancel();
+      iterationJob.finish();
+
 
       ProgressUtilities.done( progress );
     }
@@ -361,6 +375,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private static File findErrorFile( final File dir )
   {
+    // TODO: @Nico: we should stick to one defined error file in the future; whic one is it?
     final File errorDatFile = new File( dir, "ERROR.DAT" );
     final File errorOutFile = new File( dir, "ERROR.OUT" );
     final File errorErrFile = new File( dir, "exe.err" );
