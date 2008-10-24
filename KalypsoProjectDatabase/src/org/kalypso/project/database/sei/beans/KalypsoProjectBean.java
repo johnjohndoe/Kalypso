@@ -42,6 +42,7 @@ package org.kalypso.project.database.sei.beans;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,6 +85,9 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
 
   @Column(name = "projectDescription")
   private String m_description;
+
+  @Column(name = "creationDate")
+  private Date m_creationDate;
 
   /**
    * @return previous versions of this bean
@@ -238,5 +242,23 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public int compareTo( final KalypsoProjectBean o )
   {
     return getName().compareTo( o.getName() );
+  }
+
+  /**
+   * @return date the project (here version!) was created
+   */
+  public Date getCreationDate( )
+  {
+    return m_creationDate;
+  }
+
+  /**
+   * @param creationDate
+   *          date of creation. will be automatically set by {@link org.kalypso.project.database.server.ProjectDatabase}
+   *          .createProject()
+   */
+  public void setCreationDate( final Date creationDate )
+  {
+    m_creationDate = creationDate;
   }
 }
