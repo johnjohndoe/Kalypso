@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
@@ -68,11 +68,11 @@ import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 public class PageRemoteProjektInfo extends WizardPage
 {
 
-  private final IKalypsoProject[] m_beans;
+  private final KalypsoProjectBean[] m_beans;
 
-  private final IKalypsoProject m_bean;
+  private final KalypsoProjectBean m_bean;
 
-  public PageRemoteProjektInfo( final IKalypsoProject bean )
+  public PageRemoteProjektInfo( final KalypsoProjectBean bean )
   {
     super( "KalypsoProjectBean" ); //$NON-NLS-1$
     m_bean = bean;
@@ -111,9 +111,9 @@ public class PageRemoteProjektInfo extends WizardPage
       @Override
       public String getText( final Object element )
       {
-        if( element instanceof IKalypsoProject )
+        if( element instanceof KalypsoProjectBean )
         {
-          final IKalypsoProject project = (IKalypsoProject) element;
+          final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
           return String.format( "Version: %d vom %s", project.getProjectVersion(), "TODO" );
         }
@@ -176,11 +176,11 @@ public class PageRemoteProjektInfo extends WizardPage
         final IStructuredSelection selection = (IStructuredSelection) viewerVersions.getSelection();
         final Object element = selection.getFirstElement();
 
-        if( element instanceof IKalypsoProject )
+        if( element instanceof KalypsoProjectBean )
         {
           try
           {
-            final IKalypsoProject project = (IKalypsoProject) element;
+            final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
             name.setText( project.getName() );
             description.setText( project.getDescription() );

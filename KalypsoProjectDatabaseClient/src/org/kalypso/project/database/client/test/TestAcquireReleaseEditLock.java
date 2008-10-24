@@ -38,38 +38,49 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces;
+package org.kalypso.project.database.client.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.sei.IProjectDatabase;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
+ * UnitTest for acquiring and releasing a project edit lock
+ * 
  * @author Dirk Kuch
  */
-public interface IKalypsoProjectBeanSettings
+public class TestAcquireReleaseEditLock
 {
-  /**
-   * @return internal project name, for handeling the project (no whitespace, special chars, etc)
-   */
-  public String getUnixName( );
+  private static final String PROJECT_TYPE = "PlanerClientProject";
 
-  public void setUnixName( final String unixName );
+  private static String TICKET = null;
 
-  /**
-   * @return ui name
-   */
-  public String getName( );
+  private static String PROJECT_NAME = null;
 
-  public void setName( final String projectName );
+  @Test
+  public void testAcquireLock( )
+  {
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+    final KalypsoProjectBean[] projects = service.getProjectHeads( PROJECT_TYPE );
+    Assert.assertTrue( projects.length > 0 );
 
-  /**
-   * @return version of this project (mapped by unixname)
-   */
-  public Integer getVersion( );
+    PROJECT_NAME = projects[0].getUnixName();
+    Assert.assertNotNull( PROJECT_NAME );
+    TICKET = service.acquireProjectEditLock( projects[0].getUnixName() );
+    Assert.assertNotNull( TICKET );
+  }
 
-  public void setVersion( final Integer version );
+  @Test
+  public void testReleaseLock( )
+  {
+    Assert.assertNotNull( PROJECT_NAME );
+    Assert.assertNotNull( TICKET );
+    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
 
-  /**
-   * @return what kind of project
-   */
-  public String getProjectType( );
+    final Boolean released = service.releaseProjectEditLock( PROJECT_NAME, TICKET );
+    Assert.assertTrue( released );
+  }
 
-  public void setProjectType( final String type );
 }

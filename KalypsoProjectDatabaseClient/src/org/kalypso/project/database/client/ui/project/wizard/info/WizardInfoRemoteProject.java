@@ -42,7 +42,7 @@ package org.kalypso.project.database.client.ui.project.wizard.info;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.project.database.client.ui.project.wizard.info.pages.PageRemoteProjektInfo;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Wizard to create a new local Planer Client Project
@@ -52,9 +52,9 @@ import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 public class WizardInfoRemoteProject extends Wizard
 {
 
-  private final IKalypsoProject m_bean;
+  private final KalypsoProjectBean m_bean;
 
-  public WizardInfoRemoteProject( final IKalypsoProject bean )
+  public WizardInfoRemoteProject( final KalypsoProjectBean bean )
   {
     super();
     m_bean = bean;

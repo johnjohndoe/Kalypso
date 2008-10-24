@@ -44,7 +44,6 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -58,12 +57,12 @@ public class KalypsoProjectBeanHelper
    *          Head of {@link IKalypsoProject}
    * @return sorted list of beans of one project [head, head-1, head-2, ... head-n]
    */
-  public static IKalypsoProject[] getSortedBeans( final IKalypsoProject headBean )
+  public static KalypsoProjectBean[] getSortedBeans( final KalypsoProjectBean headBean )
   {
-    final Set<IKalypsoProject> beans = new TreeSet<IKalypsoProject>( new Comparator<IKalypsoProject>()
+    final Set<KalypsoProjectBean> beans = new TreeSet<KalypsoProjectBean>( new Comparator<KalypsoProjectBean>()
     {
       @Override
-      public int compare( final IKalypsoProject o1, final IKalypsoProject o2 )
+      public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
       {
         return o2.getProjectVersion().compareTo( o1.getProjectVersion() );
       }
@@ -76,7 +75,7 @@ public class KalypsoProjectBeanHelper
       beans.add( child );
     }
 
-    return beans.toArray( new IKalypsoProject[] {} );
+    return beans.toArray( new KalypsoProjectBean[] {} );
   }
 
 }

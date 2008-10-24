@@ -51,8 +51,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
-import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanSettings;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
 /**
@@ -61,7 +59,7 @@ import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
 @Entity
 @Table(name = "PROJECT")
-public class KalypsoProjectBean implements IKalypsoProject
+public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
 {
   // TODO FIXME map name and version as primary key!
 
@@ -87,57 +85,49 @@ public class KalypsoProjectBean implements IKalypsoProject
   @Column(name = "projectDescription")
   private String m_description;
 
-  public KalypsoProjectBean( )
-  {
-    // Needed in order to make this class a java bean
-  }
-
   /**
-   * @param delegate
-   *          *narf* interface won't work, so we have a duplicated settings class. makes extension of settings (and
-   *          handling of calling functions) easier
+   * @return previous versions of this bean
    */
-  public KalypsoProjectBean( final KalypsoProjectBeanSettings delegate )
-  {
-    m_unixName = delegate.getUnixName();
-    m_name = delegate.getName();
-    m_projectVersion = delegate.getVersion();
-    m_projectType = delegate.getProjectType();
-    m_description = delegate.getDescription();
-  }
-
   public KalypsoProjectBean[] getChildren( )
   {
     return m_children;
   }
 
   /**
-   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getName()
+   * @return label name of this bean
    */
   public String getName( )
   {
     return m_name;
   }
 
+  /**
+   * @return type of project
+   */
   public String getProjectType( )
   {
     return m_projectType;
   }
 
+  /**
+   * @return version number of this bean (each project has its own version numbers, starting from 0 (intial commit))
+   */
   public Integer getProjectVersion( )
   {
     return m_projectVersion;
   }
 
+  /**
+   * @return unique unix name of this project. use this name to handle project / beans!
+   */
   public String getUnixName( )
   {
     return m_unixName;
   }
 
   /**
-   * @see org.kalypso.project.database.common.interfaces.IKalypsoProject#getUrl()
+   * @return public url (http at the moment) of project data (zipped project)
    */
-  @Override
   public URL getUrl( ) throws MalformedURLException
   {
     /* destination of incoming file */
@@ -153,36 +143,63 @@ public class KalypsoProjectBean implements IKalypsoProject
     return url;
   }
 
+  /**
+   * @param children
+   *          previous version of this project
+   */
   public void setChildren( final KalypsoProjectBean[] children )
   {
     m_children = children;
   }
 
+  /**
+   * @param name
+   *          label name
+   */
   public void setName( final String name )
   {
     m_name = name;
   }
 
+  /**
+   * @param projectType
+   *          project model data project type
+   */
   public void setProjectType( final String projectType )
   {
     m_projectType = projectType;
   }
 
+  /**
+   * @param projectVersion
+   *          project version of this bean ( projectXyz[0,1,... n] )
+   */
   public void setProjectVersion( final Integer projectVersion )
   {
     m_projectVersion = projectVersion;
   }
 
+  /**
+   * @param unixName
+   *          unique project (unix) name
+   */
   public void setUnixName( final String unixName )
   {
     m_unixName = unixName;
   }
 
+  /**
+   * @return description of project (can differ with each version of project!)
+   */
   public String getDescription( )
   {
     return m_description;
   }
 
+  /**
+   * @param description
+   *          description of project
+   */
   public void setDescription( final String description )
   {
     m_description = description;

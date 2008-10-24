@@ -66,16 +66,16 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  protected final IKalypsoProject m_bean;
+  protected final KalypsoProjectBean m_bean;
 
-  public RemoteProjectRowBuilder( final IKalypsoProject bean )
+  public RemoteProjectRowBuilder( final KalypsoProjectBean bean )
   {
     m_bean = bean;
   }
@@ -134,11 +134,11 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
         try
         {
           /* sort beans */
-          final IKalypsoProject[] beans = KalypsoProjectBeanHelper.getSortedBeans( m_bean );
+          final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( m_bean );
 
           final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
-          for( final IKalypsoProject bean : beans )
+          for( final KalypsoProjectBean bean : beans )
           {
             final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
 
