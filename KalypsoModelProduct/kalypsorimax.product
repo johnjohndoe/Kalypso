@@ -19,7 +19,7 @@
 
    <launcherArgs>
       <programArgs>-nl
-de_DE</programArgs>
+en_EN</programArgs>
       <vmArgs>-Xmx1024m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
    </launcherArgs>
 
