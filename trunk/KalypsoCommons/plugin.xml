@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="i18n" name="i18n" schema="schema/i18n.exsd"/>
+   <extension-point id="process" name="process" schema="schema/process.exsd"/>
 
    <extension
          point="org.kalypso.commons.i18n">
@@ -15,5 +16,13 @@
             id="commons.local"
             label="Local Translator">
       </translator>
+   </extension>
+   <extension
+         point="org.kalypso.commons.process">
+      <factory
+            class="org.kalypso.commons.process.internal.DefaultProcessFactory"
+            id="org.kalypso.commons.process.defaultProcessFactory"
+            label="Default Process Factory">
+      </factory>
    </extension>
 </plugin>
