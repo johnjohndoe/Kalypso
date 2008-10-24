@@ -62,7 +62,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
-import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -169,15 +168,15 @@ public class ProjectDatabase implements IProjectDatabase
    * @see org.kalypso.project.database.sei.IProjectDatabase#createProject(java.lang.String)
    */
   @Override
-  public KalypsoProjectBean createProject( final KalypsoProjectBeanCreationDelegate delegate ) throws IOException
+  public KalypsoProjectBean createProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
   {
     final FileSystemManager manager = VFSUtilities.getManager();
-    final FileObject src = manager.resolveFile( delegate.getIncomingUrl().toExternalForm() );
+    final FileObject src = manager.resolveFile( incoming.toExternalForm() );
 
     try
     {
       if( !src.exists() )
-        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", delegate.getIncomingUrl() ) );
+        throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
 
       /* destination of incoming file */
       final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
@@ -187,13 +186,11 @@ public class ProjectDatabase implements IProjectDatabase
         {
           return System.getProperty( IProjectDataBaseServerConstant.SERVER_WRITEABLE_PATH );
         }
-      }, String.format( "%s/%d/project.zip", delegate.getUnixName(), delegate.getVersion() ) );
+      }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
 
       final FileObject destination = manager.resolveFile( urlDestination );
 
       VFSUtilities.copyFileTo( src, destination );
-
-      final KalypsoProjectBean bean = new KalypsoProjectBean( delegate );
 
       /* store project bean in database */
       final Session session = FACTORY.getCurrentSession();

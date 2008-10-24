@@ -2,7 +2,6 @@ package org.kalypso.project.database.client.core.project;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.project.database.common.interfaces.IKalypsoProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 public class ProjectWrapper
@@ -38,7 +37,7 @@ public class ProjectWrapper
     return false;
   }
 
-  public IKalypsoProject getBean( )
+  public KalypsoProjectBean getBean( )
   {
     Assert.isNotNull( m_bean );
 

@@ -49,7 +49,6 @@ import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -60,14 +59,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 public class ProjectDatabaseTest
 {
   private static final String PROJECT_TYPE = "PlanerClientProject";
-
-  @Test
-  public void testMethod( )
-  {
-    final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final String result = service.testMethod();
-    System.out.println( result );
-  }
 
   @Test
   public void testCreateProjects( )
@@ -114,9 +105,15 @@ public class ProjectDatabaseTest
 
       }, "test.zip" );
 
-      final KalypsoProjectBeanCreationDelegate delegate = new KalypsoProjectBeanCreationDelegate( name, name, name, version, PROJECT_TYPE, myUrl );
-      final KalypsoProjectBean bean = service.createProject( delegate );
-      Assert.assertNotNull( bean );
+      final KalypsoProjectBean bean = new KalypsoProjectBean();
+      bean.setName( name );
+      bean.setDescription( name );
+      bean.setUnixName( name );
+      bean.setProjectVersion( version );
+      bean.setProjectType( PROJECT_TYPE );
+
+      final KalypsoProjectBean myBean = service.createProject( bean, myUrl );
+      Assert.assertNotNull( myBean );
 
       destination.delete();
 

@@ -41,10 +41,10 @@
 package org.kalypso.project.database.sei;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.jws.WebService;
 
-import org.kalypso.project.database.common.interfaces.implementation.KalypsoProjectBeanCreationDelegate;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -65,13 +65,11 @@ public interface IProjectDatabase
   KalypsoProjectBean[] getProjectHeads( String projectType );
 
   /**
-   * @param url
-   *          location of incoming project zip
-   * @param name
-   *          of project
+   * @param KalypsoCreationProjectBean
+   *          bean which will be stored into project model database
    * @return newly created project
    */
-  KalypsoProjectBean createProject( KalypsoProjectBeanCreationDelegate delegate ) throws IOException;
+  KalypsoProjectBean createProject( KalypsoProjectBean bean, URL incoming ) throws IOException;
 
   /**
    * Locks a project for editing to a single client
