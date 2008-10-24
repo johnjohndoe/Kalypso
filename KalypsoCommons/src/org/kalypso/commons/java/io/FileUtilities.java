@@ -198,8 +198,10 @@ public class FileUtilities
     }
     else
     {
-      final BufferedInputStream in = new BufferedInputStream( ins );
       final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
+      // Call this after the file-access, as this one will seldom throw an exception; if we put it first,
+      // the stream wil not be closed in case of errors.
+      final BufferedInputStream in = new BufferedInputStream( ins );
 
       StreamUtilities.streamCopy( in, out );
     }
@@ -688,9 +690,9 @@ public class FileUtilities
    * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
    *         replaced by the given replacement-string
    */
-  public static String validateName( IFolder baseFolder, String name, String replacement )
+  public static String validateName( final IFolder baseFolder, final String name, final String replacement )
   {
-    String myBaseName = validateName( name, replacement );
+    final String myBaseName = validateName( name, replacement );
     String myName = myBaseName;
 
     int count = 0;

@@ -196,6 +196,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.parser.impl,
  org.kalypso.commons.parser.impl.test,
  org.kalypso.commons.performance,
+ org.kalypso.commons.process,
  org.kalypso.commons.resources,
  org.kalypso.commons.runtime,
  org.kalypso.commons.serializer,
@@ -213,3 +214,4 @@ Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.contribs.eclipseplatform;visibility:=reexport,
  org.apache.commons.vfs;visibility:=reexport
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
