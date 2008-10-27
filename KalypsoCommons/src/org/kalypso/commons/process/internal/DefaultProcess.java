@@ -55,6 +55,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
@@ -160,6 +161,7 @@ public class DefaultProcess implements IProcess
       process = m_processBuilder.start();
 
       procCtrlThread = new ProcessControlJob( process, cancelable, m_timeout );
+      procCtrlThread.setSystem( true );
       procCtrlThread.schedule();
 
       outStream = new BufferedInputStream( process.getInputStream() );
@@ -186,15 +188,14 @@ public class DefaultProcess implements IProcess
       IOUtils.closeQuietly( outStream );
     }
 
+    if( cancelable.isCanceled() )
+      throw new OperationCanceledException();
+
     if( procCtrlThread != null )
     {
       final IStatus result = procCtrlThread.getResult();
       if( result != null && result.matches( IStatus.ERROR ) )
         throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + m_commandLabel + "'" );
-
-      // TODO: what to do?
-      if( result != null && result.matches( IStatus.CANCEL ) )
-        return -1;
     }
 
     return iRetVal;

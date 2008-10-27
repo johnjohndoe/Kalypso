@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
@@ -86,5 +87,5 @@ public interface IProcess
    *@throws ProcessTimeoutException
    *           If a timeout was set (see {@link #setTimeout(long)}) and the process run longer than this specified time.
    */
-  public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException;
+  public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException, OperationCanceledException;
 }
