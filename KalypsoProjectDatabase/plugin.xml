@@ -13,7 +13,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="org.kalypso.project.database.common.nature.RemoteKalypsoProjectNature">
+               class="org.kalypso.project.database.common.nature.RemoteProjectNature">
          </run>
       </runtime>
    </extension>

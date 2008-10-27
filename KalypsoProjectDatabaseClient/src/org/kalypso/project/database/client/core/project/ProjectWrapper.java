@@ -6,7 +6,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 public class ProjectWrapper
 {
-
   private KalypsoProjectBean m_bean = null;
 
   private IProject m_local = null;
@@ -23,7 +22,7 @@ public class ProjectWrapper
 
   public boolean isLocal( )
   {
-    if( m_local != null && m_bean == null )
+    if( m_local != null )
       return true;
 
     return false;
@@ -31,7 +30,7 @@ public class ProjectWrapper
 
   public boolean isRemote( )
   {
-    if( m_local == null && m_bean != null )
+    if( m_bean != null )
       return true;
 
     return false;
@@ -49,5 +48,15 @@ public class ProjectWrapper
     Assert.isNotNull( m_local );
 
     return m_local;
+  }
+
+  public void setProject( final IProject project )
+  {
+    m_local = project;
+  }
+
+  public void setBean( final KalypsoProjectBean bean )
+  {
+    m_bean = bean;
   }
 }

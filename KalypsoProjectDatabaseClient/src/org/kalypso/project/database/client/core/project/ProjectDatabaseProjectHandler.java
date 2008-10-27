@@ -104,9 +104,16 @@ public class ProjectDatabaseProjectHandler implements ICoreRunnableWithProgress
     for( final IProject project : local.getProjects() )
     {
       final String name = project.getName();
-      final ProjectWrapper handler = new ProjectWrapper( project );
 
-      projects.put( name, handler );
+      ProjectWrapper wrapper = projects.get( name );
+      if( wrapper != null )
+      {
+        wrapper.setProject( project );
+      }
+      else
+        wrapper = new ProjectWrapper( project );
+
+      projects.put( name, wrapper );
     }
 
     m_projects = projects.values().toArray( new ProjectWrapper[] {} );

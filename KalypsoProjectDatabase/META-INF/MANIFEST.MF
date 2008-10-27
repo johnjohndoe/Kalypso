@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.project.database,
+ org.kalypso.project.database.common.nature,
  org.kalypso.project.database.common.utils,
  org.kalypso.project.database.sei,
  org.kalypso.project.database.sei.beans,
