@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.project.commit.CommitProjectWorker;
 import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
@@ -188,13 +189,22 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            // TODO commit action //FIXME
-            System.out.println( "FAILURE - Commit Action not implemented" );
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
+            /* commit */
+            final CommitProjectWorker commit = new CommitProjectWorker( m_project, m_bean );
+            final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
+
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
+
+            if( !commitStatus.isOK() )
+              return;
+
+            /* release */
             final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_project, m_bean, p );
             final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
-            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
               ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
           }
