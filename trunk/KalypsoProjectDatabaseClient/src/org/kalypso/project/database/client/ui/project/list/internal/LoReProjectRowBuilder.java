@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -78,10 +79,13 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
 
   protected final KalypsoProjectBean m_bean;
 
-  public LoReProjectRowBuilder( final IProject project, final KalypsoProjectBean bean )
+  private final IPreferenceChangeListener m_listener;
+
+  public LoReProjectRowBuilder( final IProject project, final KalypsoProjectBean bean, final IPreferenceChangeListener listener )
   {
     m_project = project;
     m_bean = bean;
+    m_listener = listener;
   }
 
   /**
@@ -168,7 +172,7 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
     if( nature instanceof RemoteProjectNature )
     {
       final RemoteProjectNature myNature = (RemoteProjectNature) nature;
-      final IRemoteProjectPreferences p = myNature.getRemotePreferences( m_project );
+      final IRemoteProjectPreferences p = myNature.getRemotePreferences( m_project, m_listener );
 
       if( p.isLocked() )
       {
@@ -187,7 +191,7 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
             // TODO commit action //FIXME
             System.out.println( "FAILURE - Commit Action not implemented" );
 
-            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_project, m_bean );
+            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_project, m_bean, p );
             final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
@@ -210,7 +214,7 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean );
+            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean, p );
             final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();

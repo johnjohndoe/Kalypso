@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -48,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.project.ProjectDatabaseProjectHandler;
 import org.kalypso.project.database.client.core.project.ProjectWrapper;
@@ -61,7 +66,7 @@ import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjec
  * 
  * @author Dirk Kuch
  */
-public class ProjectDatabaseComposite extends Composite
+public class ProjectDatabaseComposite extends Composite implements IPreferenceChangeListener
 {
 
   private final String[] m_remote;
@@ -132,7 +137,7 @@ public class ProjectDatabaseComposite extends Composite
     // TODO perhaps define an extension point? for getting special builders
     if( project.isLocal() && project.isRemote() )
     {
-      return new LoReProjectRowBuilder( project.getProject(), project.getBean() );
+      return new LoReProjectRowBuilder( project.getProject(), project.getBean(), this );
     }
     else if( project.isLocal() )
     {
@@ -144,6 +149,25 @@ public class ProjectDatabaseComposite extends Composite
     }
     else
       throw new IllegalStateException();
+
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
+   */
+  @Override
+  public void preferenceChange( final PreferenceChangeEvent event )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        update();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule( 250 );
 
   }
 }
