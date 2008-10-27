@@ -253,7 +253,7 @@ public class MapWidgetView extends ViewPart
         m_group.setToolTipText( widget.getToolTip() );
 
         /* If the widget desires a different title, set it. */
-        String partName = widget.getPartName();
+        final String partName = widget.getPartName();
         if( partName != null && partName.length() > 0 )
           setPartName( partName );
 
@@ -276,7 +276,7 @@ public class MapWidgetView extends ViewPart
 
     onWidgetChanged( widget );
 
-    m_group.layout();
+    m_group.layout( true, true );
   }
 
   /**
