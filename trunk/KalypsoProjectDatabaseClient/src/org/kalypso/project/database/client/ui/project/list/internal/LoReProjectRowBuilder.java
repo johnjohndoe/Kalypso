@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
@@ -60,6 +59,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -75,7 +75,7 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
 {
   protected final IProject m_project;
 
-  private final KalypsoProjectBean m_bean;
+  protected final KalypsoProjectBean m_bean;
 
   public LoReProjectRowBuilder( final IProject project, final KalypsoProjectBean bean )
   {
@@ -183,8 +183,15 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
+            // TODO commit action //FIXME
+            System.out.println( "FAILURE - Commit Action not implemented" );
 
-            throw new NotImplementedException();
+            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean );
+            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
           }
         } );
       }
@@ -202,8 +209,12 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
+            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean );
+            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
-            throw new NotImplementedException();
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
           }
         } );
       }

@@ -41,9 +41,15 @@
 package org.kalypso.project.database.common.nature;
 
 /**
- * @author kuch
+ * Settings of a {@link RemoteProjectNature}
+ * 
+ * @author Dirk Kuch
  */
 public interface IRemoteProjectPreferences
 {
-  boolean isLocked( );
+  public boolean isLocked( );
+
+  public void setEditTicket( String ticket );
+
+  public String getEditTicket( );
 }

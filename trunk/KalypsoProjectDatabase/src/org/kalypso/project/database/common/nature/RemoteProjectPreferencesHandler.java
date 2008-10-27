@@ -64,11 +64,29 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   @Override
   public boolean isLocked( )
   {
-    final String ticket = m_node.get( PROJECT_LOCK_TICKET, null );
+    final String ticket = getEditTicket();
     if( ticket == null || "".equals( ticket.trim() ) )
       return false;
 
     return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setEditTicket(java.lang.String)
+   */
+  @Override
+  public void setEditTicket( final String ticket )
+  {
+    m_node.put( PROJECT_LOCK_TICKET, ticket );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#getEditTicket()
+   */
+  @Override
+  public String getEditTicket( )
+  {
+    return m_node.get( PROJECT_LOCK_TICKET, null );
   }
 
 }
