@@ -91,33 +91,21 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
     lnk.setText( m_project.getName() );
 
     /* export */
-    final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkExport.setImage( IMG_EXPORT_LOCAL );
-    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", m_project.getName() ) );
-
-    lnkExport.addHyperlinkListener( new HyperlinkAdapter()
-    {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
-      @Override
-      public void linkActivated( final HyperlinkEvent e )
-      {
-        final WizardProjectExport wizard = new WizardProjectExport( m_project );
-        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( m_project ) );
-
-        final WizardDialog dialog = new WizardDialog( null, wizard );
-        dialog.open();
-      }
-    } );
+    getExportLink( m_project, body, toolkit );
 
     // spacer
     toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
     /* delete */
+    getDeleteLink( m_project, body, toolkit );
+
+  }
+
+  protected static void getDeleteLink( final IProject project, final Composite body, final FormToolkit toolkit )
+  {
     final ImageHyperlink lnkDelete = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkDelete.setImage( IMG_DELETE_LOCAL );
-    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", m_project.getName() ) );
+    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", project.getName() ) );
 
     lnkDelete.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -128,9 +116,9 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
       public void linkActivated( final HyperlinkEvent e )
       {
 
-        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", m_project.getName() ) ) )
+        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", project.getName() ) ) )
         {
-          final DeleteLocalProjectHandler handler = new DeleteLocalProjectHandler( m_project );
+          final DeleteLocalProjectHandler handler = new DeleteLocalProjectHandler( project );
           final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
           final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
@@ -139,5 +127,30 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
         }
       }
     } );
+
+  }
+
+  protected static void getExportLink( final IProject project, final Composite body, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkExport.setImage( IMG_EXPORT_LOCAL );
+    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", project.getName() ) );
+
+    lnkExport.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final WizardProjectExport wizard = new WizardProjectExport( project );
+        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( project ) );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+      }
+    } );
+
   }
 }
