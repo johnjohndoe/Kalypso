@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
@@ -45,8 +45,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent;
@@ -65,9 +65,12 @@ public class CalculationUnitPerformWidgetFace
 
   public Composite createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final ScrolledForm form = toolkit.createScrolledForm( parent );
-    form.setExpandHorizontal( true );
-    form.setExpandVertical( true );
+    final Form form = toolkit.createForm( parent );
+    // REMARK: now using form instead of scrolled-form, as with all these scrolling subcomponents,
+    // the overall layout effect is ugly. Now we only have the problem, that sometimes thing are hidden....
+    // form.setExpandHorizontal( false );
+    // form.setExpandVertical( true );
+    // form.setDelayedReflow( true );
     final Composite body = form.getBody();
     body.setLayout( new GridLayout() );
 
