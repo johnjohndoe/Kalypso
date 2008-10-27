@@ -61,13 +61,13 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  * 
  * @author Dirk Kuch
  */
-public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
+public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
 {
   private final KalypsoProjectBean m_bean;
 
   private final IProject m_project;
 
-  public AcquireProjectLockWorker( final IProject project, final KalypsoProjectBean bean )
+  public ReleaseProjectLockWorker( final IProject project, final KalypsoProjectBean bean )
   {
     Assert.isNotNull( project );
     Assert.isNotNull( bean );
@@ -98,8 +98,8 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
     Assert.isTrue( released );
 
     /* reset edit ticket */
-    preferences.setEditTicket( null );
-    Assert.isTrue( preferences.getEditTicket() == null );
+    preferences.setEditTicket( "" );
+    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) );
 
     return Status.OK_STATUS;
   }
