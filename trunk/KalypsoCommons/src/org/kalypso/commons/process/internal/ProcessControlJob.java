@@ -24,7 +24,7 @@ public class ProcessControlJob extends Job
 
   public ProcessControlJob( final Process proc, final ICancelable cancelable, final long lTimeout )
   {
-    super( "Process-Control: " + proc.toString() );
+    super( "Process-Control" );
 
     m_proc = proc;
     m_cancelable = cancelable;
