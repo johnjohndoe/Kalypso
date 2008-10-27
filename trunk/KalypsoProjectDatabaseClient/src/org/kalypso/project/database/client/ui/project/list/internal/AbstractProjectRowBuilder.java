@@ -49,6 +49,8 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 {
   protected static Image IMG_LOCAL_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
 
+  protected static Image IMG_LORE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
+
   protected static Image IMG_DELETE_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
 
   protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
@@ -59,4 +61,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
   protected static Image IMG_REMOTE_INFO = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
 
+  protected static Image IMG_LORE_LOCKED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
+
+  protected static Image IMG_LORE_LOCK = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
+
+  protected static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) );
 }

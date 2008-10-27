@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.project.ProjectDatabaseProjectHandler;
 import org.kalypso.project.database.client.core.project.ProjectWrapper;
 import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.list.internal.LoReProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjectRowBuilder;
 
@@ -129,7 +130,11 @@ public class ProjectDatabaseComposite extends Composite
   private IProjectRowBuilder getBuilder( final ProjectWrapper project )
   {
     // TODO perhaps define an extension point? for getting special builders
-    if( project.isLocal() )
+    if( project.isLocal() && project.isRemote() )
+    {
+      return new LoReProjectRowBuilder( project.getProject(), project.getBean() );
+    }
+    else if( project.isLocal() )
     {
       return new LocalProjectRowBuilder( project.getProject() );
     }

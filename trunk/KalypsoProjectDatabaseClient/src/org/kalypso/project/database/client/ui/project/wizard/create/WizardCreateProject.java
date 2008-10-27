@@ -53,6 +53,7 @@ import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -102,7 +103,8 @@ public class WizardCreateProject extends NewProjectWizard
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
 
-        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
+        String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
+        natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), new String[] { RemoteProjectNature.NATURE_ID } );
 
         description.setNatureIds( natures );
         description.setComment( newProject.getName() );

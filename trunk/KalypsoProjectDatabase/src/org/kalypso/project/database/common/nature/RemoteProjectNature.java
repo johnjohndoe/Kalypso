@@ -42,7 +42,9 @@ package org.kalypso.project.database.common.nature;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 
 /**
@@ -50,9 +52,11 @@ import org.kalypso.project.database.KalypsoProjectDatabase;
  * 
  * @author Dirk Kuch
  */
-public class RemoteKalypsoProjectNature implements IProjectNature
+public class RemoteProjectNature implements IProjectNature
 {
-  private static final String NATURE_ID = "org.kalypso.project.database.project.nature";
+  public static final String NATURE_ID = "org.kalypso.project.database.project.nature";
+
+  public static final String PREFERENCES = "org.kalypso.project.database";
 
   IProject m_project = null;
 
@@ -61,11 +65,11 @@ public class RemoteKalypsoProjectNature implements IProjectNature
    * 
    * @return The nature or null.
    */
-  public static RemoteKalypsoProjectNature getNature( final IProject project )
+  public static RemoteProjectNature getNature( final IProject project )
   {
     try
     {
-      return (RemoteKalypsoProjectNature) project.getNature( NATURE_ID );
+      return (RemoteProjectNature) project.getNature( NATURE_ID );
     }
     catch( final CoreException ex )
     {
@@ -110,6 +114,14 @@ public class RemoteKalypsoProjectNature implements IProjectNature
   public void setProject( final IProject project )
   {
     m_project = project;
+  }
+
+  public IRemoteProjectPreferences getRemotePreferences( final IProject project )
+  {
+    final ProjectScope projectScope = new ProjectScope( project );
+    final IEclipsePreferences node = projectScope.getNode( PREFERENCES );
+
+    return new RemoteProjectPreferencesHandler( node );
   }
 
 }
