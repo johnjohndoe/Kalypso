@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
+import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -186,12 +187,12 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
             // TODO commit action //FIXME
             System.out.println( "FAILURE - Commit Action not implemented" );
 
-            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean );
+            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_project, m_bean );
             final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
+              ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
           }
         } );
       }
