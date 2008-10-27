@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -324,6 +325,10 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final IStatus errorStatus = errorToStatus( errorMessage );
 
       return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, "Fehlermeldung vom Rechenkern (ERROR.DAT)", null );
+    }
+    catch( final OperationCanceledException e )
+    {
+      throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch der Berechnung durch Benutzer", e ) );
     }
     catch( final CoreException ce )
     {

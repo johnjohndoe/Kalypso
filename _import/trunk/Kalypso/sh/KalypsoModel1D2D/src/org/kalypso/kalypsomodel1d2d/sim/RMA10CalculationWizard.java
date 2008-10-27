@@ -74,7 +74,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 {
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
-    public void pageChanged( PageChangedEvent event )
+    public void pageChanged( final PageChangedEvent event )
     {
       handlePageChanged( event );
     }
@@ -316,7 +316,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   {
     if( m_calcPage.getSimulationStatus() != null )
     {
-      /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
+      /* If calculation was made, but user cancelled this dialog before result processing, put a message in the log. */
       m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, "Ergebnisauswertung durch Benutzer abgebrochen.", null, null );
     }
 
