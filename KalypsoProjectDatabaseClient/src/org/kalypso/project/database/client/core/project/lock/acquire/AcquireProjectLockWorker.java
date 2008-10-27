@@ -67,8 +67,11 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
 
   private final IProject m_project;
 
-  public AcquireProjectLockWorker( final IProject project, final KalypsoProjectBean bean )
+  private final IRemoteProjectPreferences m_preferences;
+
+  public AcquireProjectLockWorker( final IProject project, final KalypsoProjectBean bean, final IRemoteProjectPreferences preferences )
   {
+    m_preferences = preferences;
     Assert.isNotNull( project );
     Assert.isNotNull( bean );
 
@@ -91,9 +94,7 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
     if( !(nature instanceof RemoteProjectNature) )
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_project ) ) );
 
-    final RemoteProjectNature remote = (RemoteProjectNature) nature;
-    final IRemoteProjectPreferences preferences = remote.getRemotePreferences( m_project );
-    preferences.setEditTicket( ticket );
+    m_preferences.setEditTicket( ticket );
 
     return Status.OK_STATUS;
   }

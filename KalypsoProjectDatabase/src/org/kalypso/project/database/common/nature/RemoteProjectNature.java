@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.nature;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 
 /**
@@ -54,6 +58,10 @@ import org.kalypso.project.database.KalypsoProjectDatabase;
  */
 public class RemoteProjectNature implements IProjectNature
 {
+  private static Map<IProject, ProjectScope> SCOPES = new HashMap<IProject, ProjectScope>();
+
+  private static Map<IProject, IPreferenceChangeListener> LISTENER = new HashMap<IProject, IPreferenceChangeListener>();
+
   public static final String NATURE_ID = "org.kalypso.project.database.project.nature";
 
   public static final String PREFERENCES = "org.kalypso.project.database";
@@ -116,10 +124,28 @@ public class RemoteProjectNature implements IProjectNature
     m_project = project;
   }
 
-  public IRemoteProjectPreferences getRemotePreferences( final IProject project )
+  public IRemoteProjectPreferences getRemotePreferences( final IProject project, final IPreferenceChangeListener listener )
   {
-    final ProjectScope projectScope = new ProjectScope( project );
-    final IEclipsePreferences node = projectScope.getNode( PREFERENCES );
+    ProjectScope scope = SCOPES.get( project );
+    if( scope == null )
+    {
+      scope = new ProjectScope( project );
+      SCOPES.put( project, scope );
+
+      final IEclipsePreferences node = scope.getNode( PREFERENCES );
+      node.addPreferenceChangeListener( listener );
+    }
+
+    final IEclipsePreferences node = scope.getNode( PREFERENCES );
+
+    final IPreferenceChangeListener oldListener = LISTENER.get( project );
+    if( oldListener != null )
+    {
+      node.removePreferenceChangeListener( oldListener );
+    }
+
+    node.addPreferenceChangeListener( listener );
+    LISTENER.put( project, listener );
 
     return new RemoteProjectPreferencesHandler( node );
   }

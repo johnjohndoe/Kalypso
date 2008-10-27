@@ -67,8 +67,11 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
 
   private final IProject m_project;
 
-  public ReleaseProjectLockWorker( final IProject project, final KalypsoProjectBean bean )
+  private final IRemoteProjectPreferences m_preferences;
+
+  public ReleaseProjectLockWorker( final IProject project, final KalypsoProjectBean bean, final IRemoteProjectPreferences preferences )
   {
+    m_preferences = preferences;
     Assert.isNotNull( project );
     Assert.isNotNull( bean );
 
@@ -87,10 +90,7 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     if( !(nature instanceof RemoteProjectNature) )
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_project ) ) );
 
-    final RemoteProjectNature remote = (RemoteProjectNature) nature;
-    final IRemoteProjectPreferences preferences = remote.getRemotePreferences( m_project );
-
-    final String ticket = preferences.getEditTicket();
+    final String ticket = m_preferences.getEditTicket();
     Assert.isNotNull( ticket );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
@@ -98,8 +98,8 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     Assert.isTrue( released );
 
     /* reset edit ticket */
-    preferences.setEditTicket( "" );
-    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) );
+    m_preferences.setEditTicket( "" );
+    Assert.isTrue( "".equals( m_preferences.getEditTicket().trim() ) );
 
     return Status.OK_STATUS;
   }
