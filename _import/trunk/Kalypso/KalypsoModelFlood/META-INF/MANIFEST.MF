@@ -20,4 +20,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.kalypso.gml.processes,
  org.kalypso.risk
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
