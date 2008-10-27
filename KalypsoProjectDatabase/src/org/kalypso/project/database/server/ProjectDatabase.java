@@ -244,6 +244,19 @@ public class ProjectDatabase implements IProjectDatabase
   }
 
   /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#updateProject(java.lang.String)
+   */
+  @Override
+  public KalypsoProjectBean udpateProject( final KalypsoProjectBean bean, final URL incoming ) throws IOException
+  {
+    /* get head */
+    final KalypsoProjectBean head = getProject( bean.getUnixName() );
+    bean.setProjectVersion( head.getProjectVersion() + 1 );
+
+    return createProject( bean, incoming );
+  }
+
+  /**
    * @see org.kalypso.project.database.sei.IProjectDatabase#acquireProjectEditLock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
    */
   @Override

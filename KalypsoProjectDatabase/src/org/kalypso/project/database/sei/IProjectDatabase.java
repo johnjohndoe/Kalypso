@@ -72,6 +72,13 @@ public interface IProjectDatabase
   KalypsoProjectBean createProject( KalypsoProjectBean bean, URL incoming ) throws IOException;
 
   /**
+   * @param KalypsoCreationProjectBean
+   *          bean which will be stored into project model database
+   * @return newly updated project
+   */
+  KalypsoProjectBean udpateProject( KalypsoProjectBean bean, URL incoming ) throws IOException;
+
+  /**
    * Locks a project for editing to a single client
    * 
    * @param projectUnixName
