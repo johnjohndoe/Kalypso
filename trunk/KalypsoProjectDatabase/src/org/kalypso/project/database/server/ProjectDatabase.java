@@ -106,7 +106,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* names of exsting projects */
-    final List< ? > names = session.createQuery( String.format( "select m_name from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list();
+    final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list();
     tx.commit();
 
     final Set<String> projects = new HashSet<String>();
@@ -128,7 +128,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       final Session mySession = FACTORY.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
-      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_name = '%s'  ORDER by m_projectVersion", project ) ).list();
+      final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list();
       myTx.commit();
 
       for( final Object object : beans )
@@ -163,6 +163,39 @@ public class ProjectDatabase implements IProjectDatabase
     }
 
     return projectBeans.toArray( new KalypsoProjectBean[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#getProject()
+   */
+  @Override
+  public KalypsoProjectBean getProject( final String projectUnixName )
+  {
+    /** Getting the Session Factory and session */
+    final Session session = FACTORY.getCurrentSession();
+
+    /** Starting the Transaction */
+    final Transaction tx = session.beginTransaction();
+
+    /* names of exsting projects */
+    final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list();
+    tx.commit();
+
+    if( projects.size() <= 0 )
+      return null;
+
+    /* determine head */
+    final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
+
+    final List<KalypsoProjectBean> beans = new ArrayList<KalypsoProjectBean>();
+    for( int i = 1; i < projects.size(); i++ )
+    {
+      beans.add( (KalypsoProjectBean) projects.get( i ) );
+    }
+
+    head.setChildren( beans.toArray( new KalypsoProjectBean[] {} ) );
+
+    return head;
   }
 
   /**
@@ -216,7 +249,30 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public String acquireProjectEditLock( final String projectUnixName )
   {
-    return "blub";
+    // TODO lock already acquired
+
+    final Session mySession = FACTORY.getCurrentSession();
+    final Transaction myTx = mySession.beginTransaction();
+
+    final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() );
+    final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s' where m_unixName = '%s'", ticket, projectUnixName ) ).executeUpdate();
+    myTx.commit();
+
+    if( updated == 0 )
+      return null;
+
+    final KalypsoProjectBean project = getProject( projectUnixName );
+    if( !project.isProjectLockedForEditing() )
+      throw new IllegalStateException( "Updating edit lock of projects failed." );
+
+    final KalypsoProjectBean[] children = project.getChildren();
+    for( final KalypsoProjectBean child : children )
+    {
+      if( !child.isProjectLockedForEditing() )
+        throw new IllegalStateException( "Updating edit lock of projects failed." );
+    }
+
+    return ticket;
   }
 
   /**
@@ -225,6 +281,25 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public Boolean releaseProjectEditLock( final String projectUnixName, final String ticketId )
   {
-    return false;
+    // TODO lock already released
+
+    final Session mySession = FACTORY.getCurrentSession();
+    final Transaction myTx = mySession.beginTransaction();
+
+    final int executeUpdate = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate();
+    myTx.commit();
+
+    final KalypsoProjectBean project = getProject( projectUnixName );
+    if( project.isProjectLockedForEditing() )
+      return false;
+
+    final KalypsoProjectBean[] children = project.getChildren();
+    for( final KalypsoProjectBean child : children )
+    {
+      if( child.isProjectLockedForEditing() )
+        return false;
+    }
+
+    return true;
   }
 }
