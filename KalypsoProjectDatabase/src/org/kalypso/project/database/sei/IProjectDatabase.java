@@ -90,4 +90,12 @@ public interface IProjectDatabase
    * @return lock released?
    */
   Boolean releaseProjectEditLock( String projectUnixName, String ticketId );
+
+  /**
+   * @param projectUnixName
+   *          of {@link KalypsoProjectBean}
+   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
+   *         project)
+   */
+  KalypsoProjectBean getProject( String projectUnixName );
 }

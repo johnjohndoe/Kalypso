@@ -89,12 +89,41 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Column(name = "creationDate")
   private Date m_creationDate;
 
+  @Column(name = "editLockLock")
+  private String m_editLockTicket;
+
   /**
    * @return previous versions of this bean
    */
   public KalypsoProjectBean[] getChildren( )
   {
     return m_children;
+  }
+
+  /**
+   * @param editLock
+   *          set or release edit lock of project final
+   */
+  public void setEditLockTicket( final String editTicket )
+  {
+    m_editLockTicket = editTicket;
+  }
+
+  /**
+   * @return is project locked for editing?
+   */
+  public String getEditLockTicket( )
+  {
+    return m_editLockTicket;
+  }
+
+  public Boolean isProjectLockedForEditing( )
+  {
+    final String ticket = getEditLockTicket();
+    if( ticket == null || !"".equals( ticket.trim() ) )
+      return false;
+
+    return true;
   }
 
   /**
