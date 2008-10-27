@@ -98,29 +98,19 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
     lnk.setText( m_bean.getName() );
 
     /* info */
-    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setImage( IMG_REMOTE_INFO );
-    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", m_bean.getName() ) );
-
-    lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
-    {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
-      @Override
-      public void linkActivated( final HyperlinkEvent e )
-      {
-        final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( m_bean );
-
-        final WizardDialog dialog = new WizardDialog( null, wizard );
-        dialog.open();
-      }
-    } );
+    getInfoLink( m_bean, body, toolkit );
 
     /* import */
+    getImportLink( m_bean, body, toolkit );
+
+  }
+
+  protected static void getImportLink( final KalypsoProjectBean bean, final Composite body, final FormToolkit toolkit )
+  {
+
     final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkImport.setImage( IMG_IMPORT_REMOTE );
-    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", m_bean.getName() ) );
+    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", bean.getName() ) );
 
     lnkImport.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -134,13 +124,12 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
         try
         {
           /* sort beans */
-          final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( m_bean );
-
+          final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( bean );
           final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
-          for( final KalypsoProjectBean bean : beans )
+          for( final KalypsoProjectBean b : beans )
           {
-            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
 
             templates.add( template );
           }
@@ -189,6 +178,29 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
         {
           KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
         }
+      }
+    } );
+
+  }
+
+  protected static void getInfoLink( final KalypsoProjectBean bean, final Composite body, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkInfo.setImage( IMG_REMOTE_INFO );
+    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", bean.getName() ) );
+
+    lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( bean );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
       }
     } );
 
