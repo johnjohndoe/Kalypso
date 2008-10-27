@@ -43,7 +43,9 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -79,6 +81,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class Branch implements IBranch
 {
+  protected Map<INode, Double> DISTANCE_CACHE = new HashMap<INode, Double>();
+
   public static String createBranchId( final IModelMember model )
   {
     int count = 0;
@@ -329,16 +333,29 @@ public class Branch implements IBranch
 
         public int compare( INode n1, INode n2 )
         {
+
+          Double distance1 = DISTANCE_CACHE.get( n1 );
+          Double distance2 = DISTANCE_CACHE.get( n2 );
+
           try
           {
-            GM_Point loc1 = n1.getLocation();
-            GM_Point loc2 = n2.getLocation();
+            if( distance1 == null )
+            {
+              GM_Point loc1 = n1.getLocation();
+              final Point jtsLoc1 = (Point) JTSAdapter.export( loc1 );
 
-            final Point jtsLoc1 = (Point) JTSAdapter.export( loc1 );
-            final Point jtsLoc2 = (Point) JTSAdapter.export( loc2 );
+              distance1 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc1 );
+              DISTANCE_CACHE.put( n1, distance1 );
+            }
 
-            final Double distance1 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc1 );
-            final Double distance2 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc2 );
+            if( distance2 == null )
+            {
+              GM_Point loc2 = n2.getLocation();
+              final Point jtsLoc2 = (Point) JTSAdapter.export( loc2 );
+              distance2 = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLoc2 );
+
+              DISTANCE_CACHE.put( n2, distance2 );
+            }
 
             return distance1.compareTo( distance2 );
           }
