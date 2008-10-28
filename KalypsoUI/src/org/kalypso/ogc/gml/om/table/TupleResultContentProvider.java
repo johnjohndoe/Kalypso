@@ -194,7 +194,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public Object[] getElements( final Object inputElement )
   {
-    if( inputElement != null && inputElement instanceof TupleResult )
+    if( (inputElement != null) && (inputElement instanceof TupleResult) )
     {
       final TupleResult result = (TupleResult) inputElement;
 
@@ -247,13 +247,11 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     final DefaultTableViewer tableViewer = m_tableViewer;
     final Control control = tableViewer.getControl();
     if( !control.isDisposed() )
-    {
       control.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {
           if( !control.isDisposed() )
-          {
             switch( type )
             {
               case ADDED:
@@ -284,10 +282,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
               }
                 break;
             }
-          }
         }
       } );
-    }
   }
 
   /**
