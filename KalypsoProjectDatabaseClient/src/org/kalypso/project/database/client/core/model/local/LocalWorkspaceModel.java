@@ -1,6 +1,7 @@
 package org.kalypso.project.database.client.core.model.local;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -43,7 +44,7 @@ public class LocalWorkspaceModel
    */
   private Set<IProject> m_projects = null;
 
-  protected final Set<ILocalWorkspaceListener> m_listener = new HashSet<ILocalWorkspaceListener>();
+  protected final Set<ILocalWorkspaceListener> m_listener = new LinkedHashSet<ILocalWorkspaceListener>();
 
   public LocalWorkspaceModel( )
   {
