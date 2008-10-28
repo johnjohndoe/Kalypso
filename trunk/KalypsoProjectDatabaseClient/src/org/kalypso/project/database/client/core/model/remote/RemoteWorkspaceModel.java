@@ -1,6 +1,7 @@
 package org.kalypso.project.database.client.core.model.remote;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,7 +30,7 @@ public class RemoteWorkspaceModel
 
   protected Set<KalypsoProjectBean> m_beans = new TreeSet<KalypsoProjectBean>();
 
-  protected Set<IRemoteWorkspaceListener> m_listener = new HashSet<IRemoteWorkspaceListener>();
+  protected Set<IRemoteWorkspaceListener> m_listener = new LinkedHashSet<IRemoteWorkspaceListener>();
 
   protected final WorkspaceJob UPDATE_JOB;
 

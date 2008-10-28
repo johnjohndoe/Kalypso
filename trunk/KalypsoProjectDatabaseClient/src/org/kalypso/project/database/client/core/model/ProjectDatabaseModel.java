@@ -42,7 +42,7 @@ package org.kalypso.project.database.client.core.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -67,7 +67,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private Set<ProjectHandler> m_projects = null;
 
-  private final Set<IProjectDatabaseListener> m_listener = new HashSet<IProjectDatabaseListener>();
+  private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
 
   /**
    * @param localIds
