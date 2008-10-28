@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceException;
 
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
@@ -19,33 +20,33 @@ public class KalypsoProjectDatabaseClient extends Plugin
 {
   private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
-  private static IProjectDatabase m_service;
+  private static IProjectDatabase m_service = null;
 
-  static
+  public static IProjectDatabase getService( ) throws WebServiceException
   {
-    try
+    if( m_service == null )
     {
-      final String namespaceURI = "http://server.database.project.kalypso.org/";
-      final String serviceImplName = ProjectDatabase.class.getSimpleName();
+      try
+      {
+        final String namespaceURI = "http://server.database.project.kalypso.org/";
+        final String serviceImplName = ProjectDatabase.class.getSimpleName();
 
-// final String wsdlLocationProperty = System.getProperty( "kalypso.hwv.observation.service.client.wsdl.location" );
-      // TODO: get from outside
-      final String wsdlLocationProperty = "http://localhost/projectdb?wsdl";
-      final URL wsdlLocation = new URL( wsdlLocationProperty );
-      final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
-      final Service service = Service.create( wsdlLocation, serviceName );
+        // final String wsdlLocationProperty = System.getProperty(
+        // "kalypso.hwv.observation.service.client.wsdl.location" );
+        // TODO: get from outside
+        final String wsdlLocationProperty = "http://localhost/projectdb?wsdl";
+        final URL wsdlLocation = new URL( wsdlLocationProperty );
+        final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
+        final Service service = Service.create( wsdlLocation, serviceName );
 
-      m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
+        m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
     }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
 
-  }
-
-  public static IProjectDatabase getService( )
-  {
     return m_service;
   }
 
