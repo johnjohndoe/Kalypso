@@ -70,9 +70,12 @@ public class KalypsoProjectBeanHelper
     beans.add( headBean );
 
     final KalypsoProjectBean[] children = headBean.getChildren();
-    for( final KalypsoProjectBean child : children )
+    if( children != null )
     {
-      beans.add( child );
+      for( final KalypsoProjectBean child : children )
+      {
+        beans.add( child );
+      }
     }
 
     return beans.toArray( new KalypsoProjectBean[] {} );

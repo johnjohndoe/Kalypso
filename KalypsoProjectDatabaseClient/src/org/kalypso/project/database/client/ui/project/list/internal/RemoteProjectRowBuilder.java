@@ -119,7 +119,6 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-
         try
         {
           /* sort beans */
@@ -128,7 +127,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
 
           for( final KalypsoProjectBean b : beans )
           {
-            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), b.getProjectVersion() ), b.getUnixName(), b.getDescription(), null, b.getUrl() );
 
             templates.add( template );
           }
