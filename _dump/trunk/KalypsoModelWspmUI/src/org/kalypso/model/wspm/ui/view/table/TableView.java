@@ -83,6 +83,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.featureview.control.TupleResultTableViewer;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
@@ -240,6 +241,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     bodyLayout.marginWidth = 0;
     m_form.getBody().setLayout( bodyLayout );
 
+    m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_outlineContainer = m_toolkit.createComposite( m_form.getBody() );
     final GridLayout outlineLayout = new GridLayout( 1, false );
     outlineLayout.marginHeight = 0;
@@ -250,7 +252,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_outlineContainer.setLayoutData( outlineData );
     m_problemView = new ProfileProblemView(m_toolkit,m_outlineContainer,MAX_OUTLINE_HEIGHT);
 
-    m_view = new DefaultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
     m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -285,19 +286,19 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_view != null )
     {
       final Control control = m_view.getControl();
-      if( control != null && !control.isDisposed() )
+      if( (control != null) && !control.isDisposed() )
         control.setFocus();
     }
   }
 
   protected void updateControl( )
   {
-    if( m_form == null || m_form.isDisposed() )
+    if( (m_form == null) || m_form.isDisposed() )
       return;
 
     final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
 
-    if( m_profile == null || pvd == null )
+    if( (m_profile == null) || (pvd == null) )
     {
       m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
 
@@ -351,7 +352,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
    */
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider2 provider )
   {
-    if( m_provider == provider && provider != null )
+    if( (m_provider == provider) && (provider != null) )
       return;
 
     unhookProvider();
@@ -382,7 +383,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_profile != null )
       m_profile.addProfilListener( m_profileListener );
 
-    if( m_form != null && !m_form.isDisposed() )
+    if( (m_form != null) && !m_form.isDisposed() )
       m_form.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
