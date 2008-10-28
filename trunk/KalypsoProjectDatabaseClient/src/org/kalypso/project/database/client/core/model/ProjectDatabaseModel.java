@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IProject;
+import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
@@ -170,5 +171,20 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public void removeListener( final IProjectDatabaseListener listener )
   {
     m_listener.remove( listener );
+  }
+
+  public ProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
+  {
+    final Set<ProjectHandler> myProjects = new TreeSet<ProjectHandler>();
+
+    final ProjectHandler[] projects = getProjects();
+    for( final ProjectHandler handler : projects )
+    {
+      if( filter.select( handler ) )
+        myProjects.add( handler );
+
+    }
+
+    return myProjects.toArray( new ProjectHandler[] {} );
   }
 }

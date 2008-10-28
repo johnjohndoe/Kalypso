@@ -107,7 +107,6 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
 
   protected static void getImportLink( final KalypsoProjectBean bean, final Composite body, final FormToolkit toolkit )
   {
-
     final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkImport.setImage( IMG_IMPORT_REMOTE );
     lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", bean.getName() ) );
