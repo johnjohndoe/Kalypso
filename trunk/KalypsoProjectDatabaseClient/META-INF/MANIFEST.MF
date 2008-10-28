@@ -17,5 +17,6 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core.interfaces,
  org.kalypso.project.database.client.core.model,
  org.kalypso.project.database.client.ui.project.list,
+ org.kalypso.project.database.client.ui.project.status,
  org.kalypso.project.database.client.ui.project.wizard.create
 Import-Package: org.junit

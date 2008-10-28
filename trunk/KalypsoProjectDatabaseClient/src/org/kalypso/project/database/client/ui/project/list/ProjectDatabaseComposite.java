@@ -92,8 +92,20 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_filter = filter;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    m_model.addListener( this );
 
     update();
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+
+    m_model.removeListener( this );
   }
 
   /**

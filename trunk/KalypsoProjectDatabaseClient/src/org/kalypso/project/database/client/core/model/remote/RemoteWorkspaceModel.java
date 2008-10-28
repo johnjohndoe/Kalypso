@@ -4,12 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.xml.ws.WebServiceException;
+
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -28,8 +31,6 @@ public class RemoteWorkspaceModel
 
   protected Set<IRemoteWorkspaceListener> m_listener = new HashSet<IRemoteWorkspaceListener>();
 
-  protected IProjectDatabase SERVICE;
-
   protected final WorkspaceJob UPDATE_JOB;
 
   public RemoteWorkspaceModel( )
@@ -41,20 +42,37 @@ public class RemoteWorkspaceModel
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
       {
-        final KalypsoProjectBean[] beans = SERVICE.getAllProjectHeads();
-
-        final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
-        for( final KalypsoProjectBean bean : beans )
+        try
         {
-          myBeans.add( bean );
+          final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+          final KalypsoProjectBean[] beans = service.getAllProjectHeads();
+
+          final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
+          for( final KalypsoProjectBean bean : beans )
+          {
+            myBeans.add( bean );
+          }
+
+          if( !myBeans.equals( m_beans ) )
+          {
+            m_beans = myBeans;
+
+            for( final IRemoteWorkspaceListener listener : m_listener )
+            {
+              listener.remoteWorkspaceChanged();
+            }
+          }
         }
-
-        if( !myBeans.equals( m_beans ) )
+        catch( final WebServiceException e )
         {
-          m_beans = myBeans;
+          m_beans = new HashSet<KalypsoProjectBean>();
 
-          // TODO fire update changed
-          final int asdfsdf = 0;
+          for( final IRemoteWorkspaceListener listener : m_listener )
+          {
+            listener.remoteWorkspaceChanged();
+          }
+
+          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         }
 
         return Status.OK_STATUS;
@@ -78,12 +96,19 @@ public class RemoteWorkspaceModel
 
   private void init( )
   {
-    SERVICE = KalypsoProjectDatabaseClient.getService();
-
-    final KalypsoProjectBean[] beans = SERVICE.getAllProjectHeads();
-    for( final KalypsoProjectBean bean : beans )
+    try
     {
-      m_beans.add( bean );
+      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+
+      final KalypsoProjectBean[] beans = service.getAllProjectHeads();
+      for( final KalypsoProjectBean bean : beans )
+      {
+        m_beans.add( bean );
+      }
+    }
+    catch( final WebServiceException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
   }
