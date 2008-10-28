@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
@@ -68,15 +69,13 @@ import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjec
 public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener
 {
 
-  private final String[] m_remote;
-
-  private final String[] m_natures;
-
   private final FormToolkit m_toolkit;
 
   private Composite m_body = null;
 
   private final ProjectDatabaseModel m_model;
+
+  private final IProjectDatabaseFilter m_filter;
 
   /**
    * @param parent
@@ -86,13 +85,11 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param remoteProjectTypes
    *          handle remote projects with these type ids //TODO filter
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final String[] localProjectNatures, final String[] remoteProjectTypes )
+  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
-
-    m_natures = localProjectNatures;
-    m_remote = remoteProjectTypes;
+    m_filter = filter;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
 
@@ -118,7 +115,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final ProjectHandler[] projects = m_model.getProjects();
+    final ProjectHandler[] projects = m_model.getProjects( m_filter );
     for( final ProjectHandler project : projects )
     {
       final IProjectRowBuilder builder = getBuilder( project );

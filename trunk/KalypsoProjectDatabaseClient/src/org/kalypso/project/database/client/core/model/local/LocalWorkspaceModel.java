@@ -26,21 +26,28 @@ public class LocalWorkspaceModel
       // TODO add newly created projects
       // TODO remove removed projects
 
-      System.out.print( "TODO LocalWorkspaceListener" );
-      final int adsfasfd = 0;
+      if( IResourceChangeEvent.POST_CHANGE == event.getType() )
+      {
+        update();
+
+        for( final ILocalWorkspaceListener listener : m_listener )
+        {
+          listener.localWorkspaceChanged();
+        }
+      }
     }
   };
 
   /**
    * if m_natures == null -> handle (return) all local projects
    */
-  private final Set<IProject> m_projects = new HashSet<IProject>();
+  private Set<IProject> m_projects = null;
 
-  private final Set<ILocalWorkspaceListener> m_listener = new HashSet<ILocalWorkspaceListener>();
+  protected final Set<ILocalWorkspaceListener> m_listener = new HashSet<ILocalWorkspaceListener>();
 
   public LocalWorkspaceModel( )
   {
-
+    update();
   }
 
   public void dispose( )
@@ -52,8 +59,10 @@ public class LocalWorkspaceModel
     m_listener.clear();
   }
 
-  public void init( )
+  protected void update( )
   {
+    m_projects = new HashSet<IProject>();
+
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.addResourceChangeListener( RESOURCE_LISTENER );
 
