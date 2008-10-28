@@ -1,21 +1,21 @@
-package org.kalypso.project.database.client.core.project;
+package org.kalypso.project.database.client.core.model;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
-public class ProjectWrapper
+public class ProjectHandler implements Comparable<ProjectHandler>
 {
   private KalypsoProjectBean m_bean = null;
 
   private IProject m_local = null;
 
-  public ProjectWrapper( final KalypsoProjectBean bean )
+  public ProjectHandler( final KalypsoProjectBean bean )
   {
     m_bean = bean;
   }
 
-  public ProjectWrapper( final IProject local )
+  public ProjectHandler( final IProject local )
   {
     m_local = local;
   }
@@ -58,5 +58,22 @@ public class ProjectWrapper
   public void setBean( final KalypsoProjectBean bean )
   {
     m_bean = bean;
+  }
+
+  public String getName( )
+  {
+    if( isLocal() )
+      return m_local.getName();
+    else
+      return m_bean.getName();
+  }
+
+  /**
+   * @see java.lang.Comparable#compareTo(java.lang.Object)
+   */
+  @Override
+  public int compareTo( final ProjectHandler o )
+  {
+    return getName().compareTo( o.getName() );
   }
 }

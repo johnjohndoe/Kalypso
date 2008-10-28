@@ -45,17 +45,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.project.database.client.core.project.ProjectDatabaseProjectHandler;
-import org.kalypso.project.database.client.core.project.ProjectWrapper;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
+import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LoReProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
@@ -66,7 +65,7 @@ import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjec
  * 
  * @author Dirk Kuch
  */
-public class ProjectDatabaseComposite extends Composite implements IPreferenceChangeListener
+public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener
 {
 
   private final String[] m_remote;
@@ -77,13 +76,15 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
 
   private Composite m_body = null;
 
+  private final ProjectDatabaseModel m_model;
+
   /**
    * @param parent
    *          composite
    * @param localProjectNatures
    *          handle project with these project nature ids TODO perhaps delegate.getProjects()
    * @param remoteProjectTypes
-   *          handle remote projects with these type ids
+   *          handle remote projects with these type ids //TODO filter
    */
   public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final String[] localProjectNatures, final String[] remoteProjectTypes )
   {
@@ -92,6 +93,8 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
 
     m_natures = localProjectNatures;
     m_remote = remoteProjectTypes;
+
+    m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
 
     update();
   }
@@ -115,14 +118,8 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    // TODO handle status
-    final ProjectDatabaseProjectHandler handler = new ProjectDatabaseProjectHandler( m_natures, m_remote );
-    final IStatus status = ProgressUtilities.busyCursorWhile( handler );
-
-    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler beim Abfragen der Projekt-Datenbasis", "Fehler beim Auslesen der vorhandenen Projekte.", status );
-
-    final ProjectWrapper[] projects = handler.getProjects();
-    for( final ProjectWrapper project : projects )
+    final ProjectHandler[] projects = m_model.getProjects();
+    for( final ProjectHandler project : projects )
     {
       final IProjectRowBuilder builder = getBuilder( project );
       builder.render( m_body, m_toolkit );
@@ -132,7 +129,7 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
     this.layout();
   }
 
-  private IProjectRowBuilder getBuilder( final ProjectWrapper project )
+  private IProjectRowBuilder getBuilder( final ProjectHandler project )
   {
     // TODO perhaps define an extension point? for getting special builders
     if( project.isLocal() && project.isRemote() )
@@ -153,6 +150,24 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
   }
 
   /**
+   * @see org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener#projectModelChanged()
+   */
+  @Override
+  public void projectModelChanged( )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        update();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule( 250 );
+  }
+
+  /**
    * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
    */
   @Override
@@ -168,6 +183,6 @@ public class ProjectDatabaseComposite extends Composite implements IPreferenceCh
         return Status.OK_STATUS;
       }
     }.schedule( 250 );
-
   }
+
 }

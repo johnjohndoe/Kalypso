@@ -51,6 +51,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.jws.WebService;
 
@@ -105,7 +106,7 @@ public class ProjectDatabase implements IProjectDatabase
     /** Starting the Transaction */
     final Transaction tx = session.beginTransaction();
 
-    /* names of exsting projects */
+    /* names of existing projects */
     final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list();
     tx.commit();
 
@@ -299,7 +300,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Session mySession = FACTORY.getCurrentSession();
     final Transaction myTx = mySession.beginTransaction();
 
-    final int executeUpdate = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate();
+    mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate();
     myTx.commit();
 
     final KalypsoProjectBean project = getProject( projectUnixName );
@@ -314,5 +315,46 @@ public class ProjectDatabase implements IProjectDatabase
     }
 
     return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectTypes()
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public String[] getProjectTypes( )
+  {
+    /** Getting the Session Factory and session */
+    final Session session = FACTORY.getCurrentSession();
+
+    /** Starting the Transaction */
+    final Transaction tx = session.beginTransaction();
+
+    /* list of project types */
+    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list();
+    tx.commit();
+
+    return projects.toArray( new String[] {} );
+  }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectHeads()
+   */
+  @Override
+  public KalypsoProjectBean[] getAllProjectHeads( )
+  {
+    final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
+
+    final String[] types = getProjectTypes();
+    for( final String type : types )
+    {
+      final KalypsoProjectBean[] beans = getProjectHeads( type );
+      for( final KalypsoProjectBean bean : beans )
+      {
+        myBeans.add( bean );
+      }
+    }
+
+    return myBeans.toArray( new KalypsoProjectBean[] {} );
   }
 }

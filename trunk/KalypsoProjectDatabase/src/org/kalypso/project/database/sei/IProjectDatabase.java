@@ -57,12 +57,23 @@ public interface IProjectDatabase
 {
 
   /**
+   * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
+   *         project)
+   */
+  KalypsoProjectBean[] getAllProjectHeads( );
+
+  /**
    * @param projectType
    *          of {@link KalypsoProjectBean}
    * @return list of existing projects (head versions of projects - contains a list of subprojects (versions of one
    *         project)
    */
   KalypsoProjectBean[] getProjectHeads( String projectType );
+
+  /**
+   * @return list of existing project types in db
+   */
+  String[] getProjectTypes( );
 
   /**
    * @param KalypsoCreationProjectBean
@@ -105,4 +116,5 @@ public interface IProjectDatabase
    *         project)
    */
   KalypsoProjectBean getProject( String projectUnixName );
+
 }
