@@ -270,7 +270,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Override
   public int compareTo( final KalypsoProjectBean o )
   {
-    return getName().compareTo( o.getName() );
+    return getUnixName().compareTo( o.getUnixName() );
   }
 
   /**

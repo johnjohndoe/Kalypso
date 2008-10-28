@@ -40,30 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.create;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.project.workspace.RemoteWorkspaceProjectHandler;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Composite for calling the new project wizard
@@ -117,47 +101,53 @@ public class CreateProjectComposite extends Composite
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        try
-        {
-          final RemoteWorkspaceProjectHandler remote = new RemoteWorkspaceProjectHandler( m_remote );
-          final IStatus status = ProgressUtilities.busyCursorWhile( remote );
-          ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler beim Abfragen der entferneten Projekt-Datenbasis", "Konnte Liste der entfernten Projekte nicht bereitstellen.", status );
+// try
+// {
+        throw new NotImplementedException();
 
-          final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
-
-          for( final KalypsoProjectBean bean : remote.getBeans() )
-          {
-            final ProjectTemplate template = new ProjectTemplate( bean.getName(), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
-
-            templates.add( template );
-          }
-
-          final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), m_natures );
-          wizard.init( PlatformUI.getWorkbench(), null );
-
-          final WizardDialog2 dialog = new WizardDialog2( null, wizard );
-          dialog.setRememberSize( true );
-
-          dialog.addPageChangedListener( new IPageChangedListener()
-          {
-
-            public void pageChanged( final PageChangedEvent event )
-            {
-              final Object page = event.getSelectedPage();
-              if( page instanceof IUpdateable )
-              {
-                final IUpdateable update = (IUpdateable) page;
-                update.update();
-              }
-            }
-          } );
-
-          dialog.open();
-        }
-        catch( final MalformedURLException e1 )
-        {
-          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-        }
+// final RemoteWorkspaceModel remote = new RemoteWorkspaceModel( m_remote );
+// final IStatus status = ProgressUtilities.busyCursorWhile( remote );
+// ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+        // "Fehler beim Abfragen der entferneten Projekt-Datenbasis",
+        // "Konnte Liste der entfernten Projekte nicht bereitstellen.", status );
+//
+// final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
+//
+// for( final KalypsoProjectBean bean : remote.getBeans() )
+// {
+// final ProjectTemplate template = new ProjectTemplate( bean.getName(), bean.getUnixName(), bean.getDescription(),
+        // null, bean.getUrl() );
+//
+// templates.add( template );
+// }
+//
+// final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), m_natures
+        // );
+// wizard.init( PlatformUI.getWorkbench(), null );
+//
+// final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+// dialog.setRememberSize( true );
+//
+// dialog.addPageChangedListener( new IPageChangedListener()
+// {
+//
+// public void pageChanged( final PageChangedEvent event )
+// {
+// final Object page = event.getSelectedPage();
+// if( page instanceof IUpdateable )
+// {
+// final IUpdateable update = (IUpdateable) page;
+// update.update();
+// }
+// }
+// } );
+//
+// dialog.open();
+// }
+// catch( final MalformedURLException e1 )
+// {
+// KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+// }
       }
     } );
 

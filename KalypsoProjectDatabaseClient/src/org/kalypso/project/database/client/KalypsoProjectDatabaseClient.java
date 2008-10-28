@@ -7,6 +7,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.server.ProjectDatabase;
 import org.osgi.framework.BundleContext;
@@ -16,6 +17,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoProjectDatabaseClient extends Plugin
 {
+  private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
   private static IProjectDatabase m_service;
 
@@ -90,5 +92,14 @@ public class KalypsoProjectDatabaseClient extends Plugin
   public static KalypsoProjectDatabaseClient getDefault( )
   {
     return plugin;
+  }
+
+  public ProjectDatabaseModel getProjectDatabaseModel( )
+  {
+    /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
+    if( PROJECT_DATABASE_MODEL == null )
+      PROJECT_DATABASE_MODEL = new ProjectDatabaseModel();
+
+    return PROJECT_DATABASE_MODEL;
   }
 }
