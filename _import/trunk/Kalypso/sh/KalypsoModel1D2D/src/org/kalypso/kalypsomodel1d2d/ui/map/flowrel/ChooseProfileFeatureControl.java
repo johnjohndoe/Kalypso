@@ -68,7 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
@@ -159,7 +159,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
     else
     {
       m_button.setText( FeatureHelper.getAnnotationValue( linkedProfileFeature, IAnnotation.ANNO_LABEL ) );
-      m_button.setToolTipText( FeatureHelper.getAnnotationValue( linkedProfileFeature.getParent(), IAnnotation.ANNO_LABEL ) );
+      m_button.setToolTipText( FeatureHelper.getAnnotationValue( linkedProfileFeature.getOwner(), IAnnotation.ANNO_LABEL ) );
     }
   }
 
@@ -196,7 +196,7 @@ public class ChooseProfileFeatureControl extends AbstractFeatureControl
       final Feature newProfileLink = (Feature) treeSelectionDialog.getResult()[0];
 
       // TODO: check, if the chosen profile is suitable for this relation
-      final IProfil profile = ProfileFeatureFactory.toProfile( newProfileLink );
+      final IProfil profile = ((IProfileFeature)newProfileLink).getProfil( );
 
       final String profileRef = "terrain.gml#" + newProfileLink.getId();
       if( flowRel instanceof ITeschkeFlowRelation )
