@@ -58,6 +58,7 @@ import org.kalypso.project.database.KalypsoProjectDatabase;
  */
 public class RemoteProjectNature implements IProjectNature
 {
+
   private static Map<IProject, ProjectScope> SCOPES = new HashMap<IProject, ProjectScope>();
 
   private static Map<IProject, IPreferenceChangeListener> LISTENER = new HashMap<IProject, IPreferenceChangeListener>();
@@ -135,10 +136,10 @@ public class RemoteProjectNature implements IProjectNature
       final IEclipsePreferences node = scope.getNode( PREFERENCES );
       if( listener != null )
         node.addPreferenceChangeListener( listener );
+
     }
 
     final IEclipsePreferences node = scope.getNode( PREFERENCES );
-
     final IPreferenceChangeListener oldListener = LISTENER.get( project );
     if( oldListener != null )
     {

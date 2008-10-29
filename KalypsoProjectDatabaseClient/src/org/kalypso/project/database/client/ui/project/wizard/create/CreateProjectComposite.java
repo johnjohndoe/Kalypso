@@ -42,9 +42,7 @@ package org.kalypso.project.database.client.ui.project.wizard.create;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
@@ -149,9 +147,6 @@ public class CreateProjectComposite extends Composite
 
         final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
-        // bad hack - to determine which project was newly created
-        final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
-
         for( final ProjectHandler handler : projects )
         {
           if( handler.isRemote() )
@@ -161,7 +156,6 @@ public class CreateProjectComposite extends Composite
               final KalypsoProjectBean bean = handler.getBean();
               final ProjectTemplate template = new ProjectTemplate( bean.getName(), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
 
-              mapping.put( template, bean );
               templates.add( template );
             }
             catch( final MalformedURLException e1 )
@@ -198,9 +192,6 @@ public class CreateProjectComposite extends Composite
           final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
           if( nature instanceof RemoteProjectNature )
           {
-            // bad hack
-            final KalypsoProjectBean bean = mapping.get( wizard.getSelectedTemplate() );
-
             final RemoteProjectNature remote = (RemoteProjectNature) nature;
             final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
             preferences.setVersion( -1 );

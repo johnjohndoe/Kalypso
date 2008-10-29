@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.create;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -103,10 +106,17 @@ public class WizardCreateProject extends NewProjectWizard
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
 
-        String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
-        natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), new String[] { RemoteProjectNature.NATURE_ID } );
+        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
+        ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
 
-        description.setNatureIds( natures );
+        // unique natures
+        final Set<String> myNatures = new HashSet<String>();
+        for( final String nature : natures )
+        {
+          myNatures.add( nature );
+        }
+
+        description.setNatureIds( myNatures.toArray( new String[] {} ) );
         description.setComment( newProject.getName() );
 
         newProject.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
