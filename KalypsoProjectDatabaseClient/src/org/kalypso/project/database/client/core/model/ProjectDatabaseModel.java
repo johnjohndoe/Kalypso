@@ -182,9 +182,13 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     {
       if( filter.select( handler ) )
         myProjects.add( handler );
-
     }
 
     return myProjects.toArray( new ProjectHandler[] {} );
+  }
+
+  public void setRemoteProjectsDirty( )
+  {
+    m_remote.setDirty();
   }
 }
