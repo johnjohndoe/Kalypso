@@ -42,9 +42,14 @@ package org.kalypso.project.database.client.ui.project.wizard.create;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.swt.SWT;
@@ -63,6 +68,8 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -80,18 +87,23 @@ public class CreateProjectComposite extends Composite
 
   protected final String[] m_natures;
 
+  protected final String m_remoteCommitType;
+
   /**
    * @param remote
    *          project templates (project type ids) hosted by the project model data service
    * @param natures
    *          natures which will be added to the new create project
+   * @param remoteCommitType
+   *          as which {@link KalypsoProjectBean}.m_projectType will a newly created project committed
    */
-  public CreateProjectComposite( final Composite parent, final FormToolkit toolkit, final String[] remote, final String[] natures )
+  public CreateProjectComposite( final Composite parent, final FormToolkit toolkit, final String[] remote, final String[] natures, final String remoteCommitType )
   {
     super( parent, SWT.NULL );
     m_toolkit = toolkit;
     m_remote = remote;
     m_natures = natures;
+    m_remoteCommitType = remoteCommitType;
 
     update();
   }
@@ -137,6 +149,9 @@ public class CreateProjectComposite extends Composite
 
         final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
+        // bad hack - to determine which project was newly created
+        final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+
         for( final ProjectHandler handler : projects )
         {
           if( handler.isRemote() )
@@ -146,6 +161,7 @@ public class CreateProjectComposite extends Composite
               final KalypsoProjectBean bean = handler.getBean();
               final ProjectTemplate template = new ProjectTemplate( bean.getName(), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
 
+              mapping.put( template, bean );
               templates.add( template );
             }
             catch( final MalformedURLException e1 )
@@ -175,6 +191,28 @@ public class CreateProjectComposite extends Composite
         } );
 
         dialog.open();
+
+        try
+        {
+          final IProject project = wizard.getNewProject();
+          final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
+          if( nature instanceof RemoteProjectNature )
+          {
+            // bad hack
+            final KalypsoProjectBean bean = mapping.get( wizard.getSelectedTemplate() );
+
+            final RemoteProjectNature remote = (RemoteProjectNature) nature;
+            final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+            preferences.setVersion( -1 );
+            preferences.setIsOnServer( Boolean.FALSE );
+            preferences.setProjectType( m_remoteCommitType );
+          }
+        }
+        catch( final CoreException e1 )
+        {
+          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+        }
+
       }
     } );
 
