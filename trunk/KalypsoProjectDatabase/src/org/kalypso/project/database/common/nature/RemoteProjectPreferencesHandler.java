@@ -41,6 +41,9 @@
 package org.kalypso.project.database.common.nature;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.KalypsoProjectDatabase;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Remote project settings of {@link org.eclipse.core.resources.IProjectNature} -> {@link RemoteProjectNature}
@@ -84,6 +87,7 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public void setEditTicket( final String ticket )
   {
     m_node.put( PROJECT_LOCK_TICKET, ticket );
+    flush();
   }
 
   /**
@@ -120,6 +124,19 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public void setIsOnServer( final boolean onServer )
   {
     m_node.putBoolean( PROJECT_IS_ON_SERVER, Boolean.valueOf( onServer ) );
+    flush();
+  }
+
+  private void flush( )
+  {
+    try
+    {
+      m_node.flush();
+    }
+    catch( final BackingStoreException e )
+    {
+      KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   /**
@@ -129,6 +146,7 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public void setVersion( final Integer version )
   {
     m_node.put( PROJECT_DOWNLOADED_VERSION, version.toString() );
+    flush();
   }
 
   /**
@@ -147,7 +165,7 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public void setProjectType( final String projectType )
   {
     m_node.put( REMOTE_PROJECT_TYPE, projectType );
-
+    flush();
   }
 
 }
