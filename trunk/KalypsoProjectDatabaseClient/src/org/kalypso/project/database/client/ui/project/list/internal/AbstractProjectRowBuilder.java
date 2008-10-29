@@ -47,32 +47,35 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  protected static Image IMG_LOCAL_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
+  protected static Image IMG_LOCAL_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
 
-  protected static Image IMG_LORE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
+  protected static Image IMG_LORE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
 
-  protected static Image IMG_DELETE_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+  protected static Image IMG_DELETE_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
 
-  protected static Image IMG_EXPORT_LOCAL = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+  protected static Image IMG_EXPORT_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
 
-  protected static Image IMG_IMPORT_REMOTE = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) );
+  protected static Image IMG_IMPORT_REMOTE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) );
 
-  protected static Image IMG_IMPORT_REMOTE_DISABLED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/import_remote_disabled.gif" ) );
+  protected static Image IMG_IMPORT_REMOTE_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote_disabled.gif" ) );
 
-  protected static Image IMG_REMOTE_PROJECT = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
+  protected static Image IMG_REMOTE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
 
-  protected static Image IMG_REMOTE_INFO = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+  protected static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
 
-  protected static Image IMG_REMOTE_INFO_DISABLED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
+  protected static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
 
-  protected static Image IMG_LORE_LOCKED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
+  protected static Image IMG_LORE_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
 
-  protected static Image IMG_LORE_LOCK = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
+  protected static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
 
-  protected static Image IMG_LORE_LOCK_DISABLED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
+  protected static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
 
-  protected static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) );
+  protected static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) );
 
-  protected static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, LocalProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) );
+  protected static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) );
 
+  protected static Image IMG_LOCAL_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
+
+  protected static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) );
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
@@ -59,6 +61,7 @@ import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalRemoteProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.list.internal.LocalServerProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjectRowBuilder;
 
 /**
@@ -130,18 +133,31 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     final ProjectHandler[] projects = m_model.getProjects( m_filter );
     for( final ProjectHandler project : projects )
     {
-      final IProjectRowBuilder builder = getBuilder( project );
-      builder.render( m_body, m_toolkit );
+
+      try
+      {
+        final IProjectRowBuilder builder = getBuilder( project );
+        builder.render( m_body, m_toolkit );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     m_toolkit.adapt( this );
     this.layout();
   }
 
-  private IProjectRowBuilder getBuilder( final ProjectHandler handler )
+  private IProjectRowBuilder getBuilder( final ProjectHandler handler ) throws CoreException
   {
     if( handler.isLocalRemoteProject() )
     {
+      if( handler.getRemotePreferences().isOnServer() )
+      {
+        return new LocalServerProjectRowBuilder( handler );
+      }
+
       return new LocalRemoteProjectRowBuilder( handler );
     }
     else if( handler.isLocal() )
@@ -154,7 +170,6 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     }
     else
       throw new IllegalStateException();
-
   }
 
   /**
