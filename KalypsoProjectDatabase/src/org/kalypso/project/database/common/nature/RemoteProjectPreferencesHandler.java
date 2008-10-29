@@ -55,6 +55,8 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 
   private static final String PROJECT_DOWNLOADED_VERSION = "project.downloaded.version";
 
+  private static final String REMOTE_PROJECT_TYPE = "project.remote.type";
+
   private final IEclipsePreferences m_node;
 
   public RemoteProjectPreferencesHandler( final IEclipsePreferences node )
@@ -127,6 +129,25 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public void setVersion( final Integer version )
   {
     m_node.put( PROJECT_DOWNLOADED_VERSION, version.toString() );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#getProjectType()
+   */
+  @Override
+  public String getProjectType( )
+  {
+    return m_node.get( REMOTE_PROJECT_TYPE, "blub" );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setProjectType(java.lang.String)
+   */
+  @Override
+  public void setProjectType( final String projectType )
+  {
+    m_node.put( REMOTE_PROJECT_TYPE, projectType );
+
   }
 
 }

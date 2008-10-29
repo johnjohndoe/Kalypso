@@ -64,4 +64,11 @@ public interface IRemoteProjectPreferences
   public void setIsOnServer( boolean onServer );
 
   public void setVersion( Integer version );
+
+  public void setProjectType( String projectType );
+
+  /**
+   * @return remote projectType of {@link org.kalypso.project.database.sei.beans.KalypsoProjectBean}
+   */
+  public String getProjectType( );
 }
