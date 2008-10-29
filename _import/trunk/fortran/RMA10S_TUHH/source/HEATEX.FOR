@@ -50,7 +50,10 @@ CIPK MAR98        IF(TOFDAY .GT. 24.0) THEN
 CIPK MAR98
           IF(TOFDAY .GT. 23.999) THEN
             TOFDAY=TOFDAY-24.
-            TET=TOFDAY
+            !nis,oct08: TET describes the ongoing time in hours and should not be changed in any subroutine
+            !           Line deactivated.
+            !TET=TOFDAY
+            !-
             DAYOFY=DAYOFY+1.
             IF(MOD(IYRR,4) .EQ. 0) THEN
               IYDAYS=366
