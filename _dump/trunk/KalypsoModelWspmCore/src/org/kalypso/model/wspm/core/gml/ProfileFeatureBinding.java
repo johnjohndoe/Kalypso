@@ -1,6 +1,8 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -10,14 +12,17 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeature
 {
-
   public ProfileFeatureBinding( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -49,7 +54,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
   {
     try
     {
-      return ProfileFeatureFactory.toProfile( this );
+      return toProfile( );
     }
     catch( final Exception e )
     {
@@ -86,7 +91,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
   @Override
   public WspmWaterBody getWater( )
   {
-    final Feature parent = getFeature().getParent();
+    final Feature parent = getFeature().getOwner();
     if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) ) //$NON-NLS-1$
       return new WspmWaterBody( parent );
 
@@ -140,4 +145,67 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
     return this.getId();
   }
 
+  public String getProfileType(  )
+  {
+    return getProperty( ProfileFeatureFactory.QNAME_TYPE, String.class );
+  }
+
+  public void setProfileType( final String type )
+  {
+    setProperty( ProfileFeatureFactory.QNAME_TYPE, type );
+  }
+
+  
+  private IProfil toProfile(  )
+  {
+    /* profile type */
+    final String type = getProfileType(  );
+    if( type == null )
+      return null;
+
+    /* observation of profile */
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
+
+    final IProfil profil = ProfilFactory.createProfil( type, observation );
+    
+    /* station of profile */
+    final BigDecimal bigStation = (BigDecimal) getProperty( ProfileFeatureFactory.QNAME_STATION );
+    if( bigStation != null )
+    {
+      final double station = bigStation.doubleValue();
+      profil.setStation( station );
+    }
+
+    /* Some metadata */
+    final String crs = getSrsName();
+    profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
+    
+    /* building of profile */
+    // REMARK: handle buildings before table, because the setBuilding method resets the
+    // corresponding table properties.
+    final IObservation<TupleResult>[] profileObjects = getProfileObjects(  );
+    if( profileObjects.length > 0 )
+      profil.createProfileObjects( profileObjects );
+
+    return profil;
+  }
+  
+  @SuppressWarnings("unchecked")
+  private IObservation<TupleResult>[] getProfileObjects(  )
+  {
+    final List< ? > objects = (List< ? >) getProperty( QNAME_OBS_MEMBERS );
+    if( objects.size() == 0 )
+      return new IObservation[] {};
+
+    final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
+
+    // iterate over all profile objects and create its IProfileObject representation
+    for( final Object obj : objects )
+    {
+      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( (Feature) obj );
+      myResults.add( obs );
+    }
+
+    return myResults.toArray( new IObservation[] {} );
+  }
 }

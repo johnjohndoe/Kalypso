@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -129,7 +130,7 @@ public class FlipProfileAction extends ActionDelegate
         {
           final Feature feature = features.get( i );
 
-          final IProfil profile = ProfileFeatureFactory.toProfile( feature );
+          final IProfil profile = ((IProfileFeature)feature).getProfil();
           ProfilUtil.flipProfile( profile );
 
           monitor.worked( 1 );
@@ -165,7 +166,7 @@ public class FlipProfileAction extends ActionDelegate
   /**
    * @return profiles
    */
-  @SuppressWarnings( { "unchecked", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
+  @SuppressWarnings( { "unchecked" }) //$NON-NLS-1$
   private final List<Feature> getProfiles( )
   {
     /* retrieve selected profiles, abort if none */

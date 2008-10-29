@@ -40,22 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Profile Observation Helper<br>
@@ -66,51 +54,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class ProfilObsHelper
 {
-  private static final QName QNAME_PROFIL_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
-
-  /**
-   * @deprecated {@link IProfil} use {@link IRecord[]} instead.
-   */
-  @Deprecated
-  public static LinkedList<IRecord> toProfilPoints( final TupleResult result )
-  {
-    final LinkedList<IRecord> myPoints = new LinkedList<IRecord>();
-
-    final Object[] arObjects = result.toArray();
-    for( final Object objRecord : arObjects )
-    {
-      if( objRecord instanceof IRecord )
-        myPoints.add( (IRecord) objRecord );
-    }
-
-    return myPoints;
-  }
-
-  /**
-   * @deprecated not used
-   */
-  @Deprecated
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public static IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
-  {
-
-    final List< ? > objects = (List< ? >) profileFeature.getProperty( QNAME_PROFIL_OBS_MEMBERS );
-    if( objects.size() == 0 )
-      return new IObservation[] {};
-
-    final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
-
-    // iterate over all profile objects and create its IProfileObject representation
-    for( final Object obj : objects )
-    {
-      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( (Feature) obj );
-      myResults.add( obs );
-    }
-
-    return myResults.toArray( new IObservation[] {} );
-
-  }
-
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
@@ -152,85 +95,9 @@ public class ProfilObsHelper
     return null;
   }
 
-  /**
-   * @deprecated Use {@link IProfil#getPointProperties()} instead.
-   */
-  @Deprecated
-  public static IComponent[] getPropertyFromId( final IProfil profil, final String[] ids )
-  {
-    final List<IComponent> list = new ArrayList<IComponent>();
-    for( final String id : ids )
-    {
-      list.add( getPropertyFromId( profil, id ) );
-    }
+  
 
-    return list.toArray( new IComponent[] {} );
-  }
-
-  /**
-   * @deprecated
-   * @Use {@link IComponent#getPrecision()} instead.
-   */
-  @Deprecated
-  public static double getPrecision( final IComponent property )
-  {
-    return property.getPrecision();
-  }
-
-  /**
-   * @deprecated Use {@link IProfileObject#getObjectProperty(String)} instead.
-   */
-  @Deprecated
-  public static IComponent getPropertyFromId( final IProfileObject building, final String id )
-  {
-    if( id == null )
-      return null;
-
-    final IComponent[] objectProperties = building.getObjectProperties();
-    for( final IComponent property : objectProperties )
-    {
-      if( id.equals( property.getId() ) )
-        return property;
-    }
-
-    final IComponent[] properties = building.getPointProperties();
-
-    for( final IComponent property : properties )
-    {
-      if( id.equals( property.getId() ) )
-        return property;
-    }
-
-    return null;
-  }
-
-  /**
-   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
-   */
-  @Deprecated
-  public static IComponent getPropertyFromId( final IProfilPointPropertyProvider[] provider, final String property )
-  {
-    for( final IProfilPointPropertyProvider ppp : provider )
-    {
-      if( ppp.providesPointProperty( property ) )
-        return ppp.getPointProperty( property );
-    }
-
-    return null;
-  }
-
-  /**
-   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
-   */
-  @Deprecated
-  public static IComponent getComponentById( final IComponent[] components, final String id )
-  {
-    for( final IComponent component : components )
-    {
-      if( component.getId().equals( id ) )
-        return component;
-    }
-
-    return null;
-  }
+ 
+  
+  
 }

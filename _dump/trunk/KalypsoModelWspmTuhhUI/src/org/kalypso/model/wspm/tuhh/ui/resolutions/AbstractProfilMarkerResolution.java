@@ -52,8 +52,10 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
@@ -61,7 +63,6 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -125,7 +126,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
       final IFile markerFile = (IFile) markerResource;
       final URL markerURL = ResourceUtilities.createURL( markerFile );
 
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL );
       return (CommandableWorkspace) pool.getObject( key );
 
@@ -176,7 +177,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
       if( feature != null )
       {
-        final IProfil profil = ProfileFeatureFactory.toProfile( feature );
+        final IProfil profil = ((IProfileFeature)feature).getProfil();
         if( profil != null )
         {
           if( resolve( profil ) )

@@ -85,8 +85,6 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
-  private final static ProfileFeatureManager m_profileManager = new ProfileFeatureManager();
-
   private ProfileFeatureFactory( )
   {
     // private: never instatiate
@@ -211,21 +209,6 @@ public class ProfileFeatureFactory implements IWspmConstants
     observation.setPhenomenon( new Phenomenon( observation.getName(), null, null ) );
 
     return observation;
-  }
-
-  public synchronized static IProfil toProfile( final Feature profileFeature )
-  {
-    return m_profileManager.getProfile( profileFeature );
-  }
-
-  public static String getProfileType( final Feature profileFeature )
-  {
-    return (String) profileFeature.getProperty( ProfileFeatureFactory.QNAME_TYPE );
-  }
-
-  public static void setProfileType( final Feature profileFeature, final String type )
-  {
-    profileFeature.setProperty( ProfileFeatureFactory.QNAME_TYPE, type );
   }
 
 }

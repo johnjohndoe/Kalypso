@@ -204,7 +204,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     {
       try
       {
-        final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
+        final IProfil profil = ((IProfileFeature)m_feature).getProfil();
         /**
          * TODO implement IStationResult to profiles
          */
@@ -286,8 +286,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
             // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
             // and directly set the prefered type.
-            if( ProfileFeatureFactory.getProfileType(profileMember) == null )
-              ProfileFeatureFactory.setProfileType( profileMember, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+            if( profileMember.getProfileType() == null )
+              profileMember.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
             break;
           }
@@ -314,7 +314,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
-    IProfil profile = ProfileFeatureFactory.toProfile( profileMember );
+    IProfil profile = profileMember.getProfil();
     IStationResult[] results = findResults( profileMember );
     setProfile( profile, results, profileMember, workspace );
   }

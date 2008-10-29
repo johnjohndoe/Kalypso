@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
@@ -212,7 +213,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
         final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
         final String filename = convertToWspwinFilename( label ) + ".prf"; //$NON-NLS-1$
 
-        final IProfil profile = ProfileFeatureFactory.toProfile( feature );
+        final IProfil profile = ((IProfileFeature)feature).getProfil();
 
         profiles.put( profile, filename );
       }

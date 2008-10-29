@@ -90,12 +90,12 @@ public class WspmProfileHelper
    * </p>
    * 
    * @param geoPoint
-   *            The geo point. It does not have to lie on the profile.
+   *          The geo point. It does not have to lie on the profile.
    * @param profile
-   *            The profile.
+   *          The profile.
    * @param srsName
-   *            The coordinate system, in which the profile lies (or null, but this can behave strange, since it assumes
-   *            one).
+   *          The coordinate system, in which the profile lies (or null, but this can behave strange, since it assumes
+   *          one).
    * @return The width (X-Direction) of the geo point projected on the profile.
    */
   public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, String srsName ) throws Exception
@@ -196,12 +196,33 @@ public class WspmProfileHelper
    * returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
    * 
    * @param width
-   *            width coordinate
+   *          width coordinate
    * @param profile
-   *            profile
-   * @return geo position as GM_Point
+   *          profile
+   * @return Geo position as GM_Point (untransformed).
    */
   public static GM_Point getGeoPosition( final double width, final IProfil profile ) throws Exception
+  {
+    final GM_Point gmPoint = getGeoPositionInternal( width, profile );
+    if( gmPoint == null )
+      return null;
+
+    if( gmPoint.getCoordinateSystem() == null )
+      return gmPoint;
+
+    return (GM_Point) WspmGeometryUtilities.GEO_TRANSFORMER.transform( gmPoint );
+  }
+
+  /**
+   * returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
+   * 
+   * @param width
+   *          width coordinate
+   * @param profile
+   *          profile
+   * @return Geo position as GM_Point (untransformed).
+   */
+  private static GM_Point getGeoPositionInternal( final double width, final IProfil profile ) throws Exception
   {
     final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
 
@@ -252,6 +273,7 @@ public class WspmProfileHelper
       else if( widthValueTwo == width )
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, srsName );
     }
+
     return null;
   }
 
@@ -260,9 +282,9 @@ public class WspmProfileHelper
    * first / last point height is returned.
    * 
    * @param width
-   *            width coordinate
+   *          width coordinate
    * @param profile
-   *            profile
+   *          profile
    * @return The height
    */
   public static Double getHeigthPositionByWidth( final double width, final IProfil profile ) throws Exception
@@ -302,9 +324,9 @@ public class WspmProfileHelper
    * gets the geo-points of the intersect between profile and water level
    * 
    * @param profil
-   *            input profile
+   *          input profile
    * @param wspHoehe
-   *            water level
+   *          water level
    */
   public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe, String srsName )
   {
@@ -402,11 +424,11 @@ public class WspmProfileHelper
    * cuts an IProfil at defined geo-points, that have to lie on the profile-line.
    * 
    * @param profile
-   *            the profile
+   *          the profile
    * @param firstPoint
-   *            first geo point
+   *          first geo point
    * @param lastPoint
-   *            last geo point
+   *          last geo point
    */
   public static IProfil cutIProfile( final IProfil profile, final GM_Point firstPoint, final GM_Point lastPoint ) throws Exception
   {
@@ -492,7 +514,7 @@ public class WspmProfileHelper
         final IComponent[] properties = orgIProfil.getPointProperties();
         for( final IComponent property : properties )
         {
-          final int iProp = point.getOwner().indexOfComponent(  property );
+          final int iProp = point.getOwner().indexOfComponent( property );
           final Object value = point.getValue( iProp );
           pt.setValue( iProp, value );
         }

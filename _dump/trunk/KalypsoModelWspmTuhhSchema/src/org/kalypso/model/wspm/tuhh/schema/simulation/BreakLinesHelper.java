@@ -60,7 +60,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -234,7 +233,7 @@ public class BreakLinesHelper implements IWspmConstants
           continue;
 
         final IProfileFeature profileMember = reach.getProfileMember();
-        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember );
+        final IProfil profil = profileMember.getProfil();
 
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );

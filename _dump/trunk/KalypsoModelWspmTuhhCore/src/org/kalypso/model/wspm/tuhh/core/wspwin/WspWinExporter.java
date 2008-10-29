@@ -71,7 +71,6 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -430,7 +429,7 @@ public class WspWinExporter
         // TODO mindestens 4, besser 5 Nachkommastellen?
         zustWriter.println( station );
 
-        final IProfil profil = ProfileFeatureFactory.toProfile( profileMember );
+        final IProfil profil = profileMember.getProfil();
         profil.setStation( station.doubleValue() );
 
         final File outPrfFile = new File( zustFile.getParentFile(), prfName );

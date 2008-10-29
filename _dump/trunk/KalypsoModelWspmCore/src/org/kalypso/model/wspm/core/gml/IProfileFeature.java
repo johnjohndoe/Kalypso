@@ -66,6 +66,8 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
+  public static final QName QNAME_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+  
   /**
    * The scale (i.e. fraction digits) for station values.
    *
@@ -99,4 +101,8 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
   public void setSrsName( final String srsName );
 
   public WspmWaterBody getWater( );
+  
+  public String getProfileType(  );
+
+  public void setProfileType( final String type );
 }
