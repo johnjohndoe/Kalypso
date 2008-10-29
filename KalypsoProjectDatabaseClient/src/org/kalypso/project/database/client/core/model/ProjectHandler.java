@@ -94,9 +94,7 @@ public class ProjectHandler implements Comparable<ProjectHandler>
         if( nature == null )
           return false;
 
-        final IRemoteProjectPreferences preferences = m_local.getRemotePreferences();
-
-        return preferences.isOnServer();
+        return true;
       }
       catch( final CoreException e )
       {

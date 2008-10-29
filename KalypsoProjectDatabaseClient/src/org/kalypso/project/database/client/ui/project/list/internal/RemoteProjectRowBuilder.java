@@ -78,6 +78,8 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
+ * Projects hosted at the project database model server
+ * 
  * @author Dirk Kuch
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder

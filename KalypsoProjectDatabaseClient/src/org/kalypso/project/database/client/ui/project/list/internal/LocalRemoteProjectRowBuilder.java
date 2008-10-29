@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -55,20 +57,20 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.core.project.commit.CommitProjectWorker;
-import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
-import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
+import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
 /**
- * Row builder for projects, which existing locally and remote
+ * UI builder for projects, which can be committed ( nature
+ * {@link org.kalypso.project.database.common.nature.RemoteProjectNature}) to the project data model server
  * 
  * @author Dirk Kuch
  */
 public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  private final ProjectHandler m_handler;
+
+  protected final ProjectHandler m_handler;
 
   public LocalRemoteProjectRowBuilder( final ProjectHandler handler )
   {
@@ -82,128 +84,127 @@ public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder impl
   @Override
   public void render( final Composite parent, final FormToolkit toolkit )
   {
-    try
-    {
-      /* settings */
-      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    final Composite body = toolkit.createComposite( parent );
+    body.setLayout( new GridLayout( 5, false ) );
+    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-      final Composite body = toolkit.createComposite( parent );
-      body.setLayout( new GridLayout( 6, false ) );
-      body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    lnk.setImage( IMG_LOCAL_PROJECT );
+    lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
+    lnk.setText( m_handler.getName() );
 
-      final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    /* commit */
+    getCommitLink( m_handler, body, toolkit );
 
-      if( preferences.isLocked() )
-        lnk.setImage( IMG_LORE_LOCKED );
-      else
-        lnk.setImage( IMG_LORE_PROJECT );
+    /* export */
+    getExportLink( m_handler, body, toolkit );
 
-      lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
-      lnk.setText( m_handler.getName() );
+    // spacer
+    toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
-      // lock project
-      createLockHyperlink( body, toolkit, preferences );
+    /* delete */
+    getDeleteLink( m_handler, body, toolkit );
 
-      // info
-      RemoteProjectRowBuilder.getInfoLink( m_handler, body, toolkit );
-
-      // export
-      LocalProjectRowBuilder.getExportLink( m_handler, body, toolkit );
-
-      // spacer
-      toolkit.createLabel( body, "    " ); //$NON-NLS-1$
-
-      /* delete */
-      LocalProjectRowBuilder.getDeleteLink( m_handler, body, toolkit );
-    }
-    catch( final CoreException e1 )
-    {
-      e1.printStackTrace();
-    }
   }
 
-  private void createLockHyperlink( final Composite body, final FormToolkit toolkit, final IRemoteProjectPreferences preferences ) throws CoreException
+  private void getCommitLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
   {
+    final ImageHyperlink lnkCommit = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkCommit.setToolTipText( String.format( "Übtrage Projekt \"%s\" in Modelldaten-Basis.", m_handler.getName() ) );
 
-    if( preferences.isLocked() )
+    if( ProjectDatabaseServerUtils.isServerOnline() )
     {
-      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", m_handler.getName() ) );
+      lnkCommit.setImage( IMG_LOCAL_COMMIT );
 
-      if( ProjectDatabaseServerUtils.isServerOnline() )
+      lnkCommit.addHyperlinkListener( new HyperlinkAdapter()
       {
-        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK );
-
-        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
         {
-          /**
-           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-           */
-          @Override
-          public void linkActivated( final HyperlinkEvent e )
-          {
-            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-
-            /* commit */
-            final CommitProjectWorker commit = new CommitProjectWorker( m_handler );
-            final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
-
-            if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
-
-            if( !commitStatus.isOK() )
-              return;
-
-            /* release */
-            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_handler );
-            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
-
-            if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
-          }
-        } );
-
-      }
-      else
-      {
-        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK_DISABLED );
-        lnkLock.setEnabled( false );
-      }
+// final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+//
+// /* commit */
+// final CommitProjectWorker commit = new CommitProjectWorker( m_handler );
+// final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
+//
+// if( !shell.isDisposed() )
+// ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
+//
+// if( !commitStatus.isOK() )
+// return;
+//
+// /* release */
+// final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_handler );
+// final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+//
+// if( !shell.isDisposed() )
+// ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
+        }
+      } );
 
     }
     else
     {
-      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_handler.getName() ) );
-
-      if( ProjectDatabaseServerUtils.isServerOnline() )
-      {
-        lnkLock.setImage( IMG_LORE_LOCK );
-
-        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
-        {
-          /**
-           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-           */
-          @Override
-          public void linkActivated( final HyperlinkEvent e )
-          {
-            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_handler );
-            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
-
-            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-            if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
-          }
-        } );
-      }
-      else
-      {
-        lnkLock.setImage( IMG_LORE_LOCK_DISABLED );
-        lnkLock.setEnabled( false );
-      }
+      lnkCommit.setImage( IMG_LOCAL_COMMIT_DISABLED );
+      lnkCommit.setEnabled( false );
     }
+
+  }
+
+  protected static void getDeleteLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnkDelete = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkDelete.setImage( IMG_DELETE_LOCAL );
+    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", handler.getName() ) );
+
+    lnkDelete.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+
+        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", handler.getName() ) ) )
+        {
+          final DeleteLocalProjectHandler delete = new DeleteLocalProjectHandler( handler.getProject() );
+          final IStatus status = ProgressUtilities.busyCursorWhile( delete );
+
+          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          if( !shell.isDisposed() )
+            ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+        }
+      }
+    } );
+
+  }
+
+  protected static void getExportLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkExport.setImage( IMG_EXPORT_LOCAL );
+    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", handler.getName() ) );
+
+    lnkExport.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final WizardProjectExport wizard = new WizardProjectExport( handler.getProject() );
+        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( handler.getProject() ) );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+      }
+    } );
 
   }
 }

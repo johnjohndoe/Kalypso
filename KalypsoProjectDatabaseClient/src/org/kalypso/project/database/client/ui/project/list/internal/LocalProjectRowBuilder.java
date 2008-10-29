@@ -60,7 +60,11 @@ import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
+//TODO ask gernot, this kind of projects will always be stored locally? commit action?
+
 /**
+ * Projects, without any remote project nature
+ * 
  * @author Dirk Kuch
  */
 public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
