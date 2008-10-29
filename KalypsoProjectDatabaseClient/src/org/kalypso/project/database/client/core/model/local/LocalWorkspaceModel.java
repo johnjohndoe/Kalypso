@@ -30,11 +30,7 @@ public class LocalWorkspaceModel
       if( IResourceChangeEvent.POST_CHANGE == event.getType() )
       {
         update();
-
-        for( final ILocalWorkspaceListener listener : m_listener )
-        {
-          listener.localWorkspaceChanged();
-        }
+        fireLocalUpdateEvent();
       }
     }
   };
@@ -42,13 +38,21 @@ public class LocalWorkspaceModel
   /**
    * if m_natures == null -> handle (return) all local projects
    */
-  private Set<IProject> m_projects = null;
+  private Set<ILocalProject> m_projects = null;
 
   protected final Set<ILocalWorkspaceListener> m_listener = new LinkedHashSet<ILocalWorkspaceListener>();
 
   public LocalWorkspaceModel( )
   {
     update();
+  }
+
+  protected void fireLocalUpdateEvent( )
+  {
+    for( final ILocalWorkspaceListener listener : m_listener )
+    {
+      listener.localWorkspaceChanged();
+    }
   }
 
   public void dispose( )
@@ -62,7 +66,7 @@ public class LocalWorkspaceModel
 
   protected void update( )
   {
-    m_projects = new HashSet<IProject>();
+    m_projects = new HashSet<ILocalProject>();
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.addResourceChangeListener( RESOURCE_LISTENER );
@@ -75,7 +79,7 @@ public class LocalWorkspaceModel
       if( !project.isAccessible() || !project.isOpen() )
         continue;
 
-      m_projects.add( project );
+      m_projects.add( new LocalProjectHandler( project, this ) );
     }
   }
 
@@ -89,8 +93,8 @@ public class LocalWorkspaceModel
     m_listener.remove( listener );
   }
 
-  public IProject[] getProjects( )
+  public ILocalProject[] getProjects( )
   {
-    return m_projects.toArray( new IProject[] {} );
+    return m_projects.toArray( new ILocalProject[] {} );
   }
 }

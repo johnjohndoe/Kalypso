@@ -129,7 +129,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite
     try
     {
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      service.getProjectTypes();
+      service.ping();
 
       final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
       img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

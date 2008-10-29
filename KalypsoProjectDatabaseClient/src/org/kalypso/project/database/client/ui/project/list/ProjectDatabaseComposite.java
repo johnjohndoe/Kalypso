@@ -57,8 +57,8 @@ import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListe
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.list.internal.LoReProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.list.internal.LocalRemoteProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjectRowBuilder;
 
 /**
@@ -138,20 +138,19 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     this.layout();
   }
 
-  private IProjectRowBuilder getBuilder( final ProjectHandler project )
+  private IProjectRowBuilder getBuilder( final ProjectHandler handler )
   {
-    // TODO perhaps define an extension point? for getting special builders
-    if( project.isLocal() && project.isRemote() )
+    if( handler.isLocalRemoteProject() )
     {
-      return new LoReProjectRowBuilder( project.getProject(), project.getBean(), this );
+      return new LocalRemoteProjectRowBuilder( handler );
     }
-    else if( project.isLocal() )
+    else if( handler.isLocal() )
     {
-      return new LocalProjectRowBuilder( project.getProject() );
+      return new LocalProjectRowBuilder( handler );
     }
-    else if( project.isRemote() )
+    else if( handler.isRemote() )
     {
-      return new RemoteProjectRowBuilder( project.getBean() );
+      return new RemoteProjectRowBuilder( handler );
     }
     else
       throw new IllegalStateException();

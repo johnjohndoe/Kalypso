@@ -357,4 +357,13 @@ public class ProjectDatabase implements IProjectDatabase
 
     return myBeans.toArray( new KalypsoProjectBean[] {} );
   }
+
+  /**
+   * @see org.kalypso.project.database.sei.IProjectDatabase#ping()
+   */
+  @Override
+  public Boolean ping( )
+  {
+    return Boolean.TRUE;
+  }
 }
