@@ -68,7 +68,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
  */
 public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  private final ProjectHandler m_handler;
+  protected final ProjectHandler m_handler;
 
   public LocalServerProjectRowBuilder( final ProjectHandler handler )
   {

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.project.commit;
+package org.kalypso.project.database.client.core.project.create;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +47,8 @@ import java.net.URL;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -58,17 +60,21 @@ import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public class CommitProjectWorker implements ICoreRunnableWithProgress
+public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 {
+
   private final ProjectHandler m_handler;
 
-  public CommitProjectWorker( final ProjectHandler handler )
+  public CreateRemoteProjectWorker( final ProjectHandler handler )
   {
     m_handler = handler;
   }
@@ -84,7 +90,8 @@ public class CommitProjectWorker implements ICoreRunnableWithProgress
 
     try
     {
-      final ProjectExportHandler worker = new ProjectExportHandler( m_handler.getProject(), src );
+      final IProject project = m_handler.getProject();
+      final ProjectExportHandler worker = new ProjectExportHandler( project, src );
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
@@ -117,7 +124,25 @@ public class CommitProjectWorker implements ICoreRunnableWithProgress
       }, "update.zip" );
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      service.udpateProject( m_handler.getBean(), myDestinationUrl );
+      final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
+      if( nature instanceof RemoteProjectNature )
+      {
+        final RemoteProjectNature remote = (RemoteProjectNature) nature;
+        final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+
+        final KalypsoProjectBean bean = new KalypsoProjectBean();
+        bean.setName( project.getName() );
+        bean.setDescription( project.getName() );
+        bean.setUnixName( project.getName() ); // TODO generate unixName
+        bean.setProjectVersion( 0 );
+        bean.setProjectType( preferences.getProjectType() );
+
+        service.createProject( bean, myDestinationUrl );
+
+        m_handler.setBean( bean );
+        preferences.setVersion( 0 );
+        preferences.setIsOnServer( true );
+      }
 
       destination.delete();
     }

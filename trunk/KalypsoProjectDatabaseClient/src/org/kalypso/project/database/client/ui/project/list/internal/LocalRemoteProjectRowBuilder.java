@@ -57,6 +57,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
@@ -125,24 +126,15 @@ public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder impl
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
-// final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-//
-// /* commit */
-// final CommitProjectWorker commit = new CommitProjectWorker( m_handler );
-// final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
-//
-// if( !shell.isDisposed() )
-// ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
-//
-// if( !commitStatus.isOK() )
-// return;
-//
-// /* release */
-// final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_handler );
-// final IStatus status = ProgressUtilities.busyCursorWhile( handler );
-//
-// if( !shell.isDisposed() )
-// ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
+          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+
+          /* commit */
+          final CreateRemoteProjectWorker commit = new CreateRemoteProjectWorker( m_handler );
+          final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
+
+          if( !shell.isDisposed() )
+            ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", commitStatus );
+
         }
       } );
 
