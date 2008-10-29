@@ -56,8 +56,8 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.model.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
@@ -106,7 +106,6 @@ public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder impl
 
     /* delete */
     getDeleteLink( m_handler, body, toolkit );
-
   }
 
   private void getCommitLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
@@ -126,15 +125,11 @@ public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder impl
         @Override
         public void linkActivated( final HyperlinkEvent e )
         {
+          final IStatus status = ProjectDataBaseController.createRemoteProject( handler );
+
           final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-
-          /* commit */
-          final CreateRemoteProjectWorker commit = new CreateRemoteProjectWorker( m_handler );
-          final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
-
           if( !shell.isDisposed() )
-            ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", commitStatus );
-
+            ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", status );
         }
       } );
 

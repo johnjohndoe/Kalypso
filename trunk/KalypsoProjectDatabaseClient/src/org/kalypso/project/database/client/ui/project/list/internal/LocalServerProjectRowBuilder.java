@@ -53,11 +53,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.model.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.core.project.commit.CommitProjectWorker;
-import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
-import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -103,7 +100,7 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
       lnk.setText( m_handler.getName() );
 
       // lock project
-      createLockHyperlink( body, toolkit, preferences );
+      createLockHyperlink( body, toolkit );
 
       // info
       RemoteProjectRowBuilder.getInfoLink( m_handler, body, toolkit );
@@ -123,8 +120,10 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
     }
   }
 
-  private void createLockHyperlink( final Composite body, final FormToolkit toolkit, final IRemoteProjectPreferences preferences ) throws CoreException
+  private void createLockHyperlink( final Composite body, final FormToolkit toolkit ) throws CoreException
   {
+
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
 
     if( preferences.isLocked() )
     {
@@ -146,9 +145,7 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
             /* commit */
-            final CommitProjectWorker commit = new CommitProjectWorker( m_handler );
-            final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
-
+            final IStatus commitStatus = ProjectDataBaseController.updateProject( m_handler );
             if( !shell.isDisposed() )
               ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
 
@@ -156,14 +153,11 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
               return;
 
             /* release */
-            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_handler );
-            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
-
+            final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_handler );
             if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
+              ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", lockStatus );
           }
         } );
-
       }
       else
       {
@@ -189,12 +183,11 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_handler );
-            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+            final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( m_handler );
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
           }
         } );
       }

@@ -62,13 +62,13 @@ import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public class CommitProjectWorker implements ICoreRunnableWithProgress
+public class UpdateProjectWorker implements ICoreRunnableWithProgress
 {
   private final ProjectHandler m_handler;
 
-  public CommitProjectWorker( final ProjectHandler handler )
+  public UpdateProjectWorker( final ProjectHandler handler )
   {
     m_handler = handler;
   }

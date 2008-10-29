@@ -51,6 +51,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
@@ -248,7 +250,13 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
     {
       final KalypsoProjectBean other = (KalypsoProjectBean) obj;
 
-      return getUnixName().equals( other.getUnixName() );
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getUnixName(), other.getUnixName() );
+      builder.append( getProjectType(), other.getProjectType() );
+      builder.append( getProjectVersion(), other.getProjectVersion() );
+      builder.append( getEditLockTicket(), other.getEditLockTicket() );
+
+      return builder.isEquals();
     }
 
     return super.equals( obj );
@@ -260,8 +268,13 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Override
   public int hashCode( )
   {
-    return getUnixName().hashCode();
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getUnixName() );
+    builder.append( getProjectType() );
+    builder.append( getProjectVersion() );
+    builder.append( getEditLockTicket() );
 
+    return builder.toHashCode();
   }
 
   /**

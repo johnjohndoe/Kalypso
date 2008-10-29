@@ -80,6 +80,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private final IProjectDatabaseFilter m_filter;
 
+  protected UIJob m_updateJob = null;
+
   /**
    * @param parent
    *          composite
@@ -115,7 +117,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override
-  public void update( )
+  public synchronized void update( )
   {
     if( this.isDisposed() )
       return;
@@ -178,16 +180,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   @Override
   public void projectModelChanged( )
   {
-    new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        update();
-
-        return Status.OK_STATUS;
-      }
-    }.schedule( 250 );
+    updateUI();
   }
 
   /**
@@ -196,16 +189,27 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   @Override
   public void preferenceChange( final PreferenceChangeEvent event )
   {
-    new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        update();
+    updateUI();
+  }
 
-        return Status.OK_STATUS;
-      }
-    }.schedule( 250 );
+  private synchronized void updateUI( )
+  {
+    if( m_updateJob == null )
+    {
+      m_updateJob = new UIJob( "" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          update();
+          m_updateJob = null;
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_updateJob.schedule( 750 );
+    }
   }
 
 }
