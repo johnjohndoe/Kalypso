@@ -42,8 +42,13 @@ package org.kalypso.project.database.client.ui.project.list.internal;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -63,9 +68,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
+import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -73,11 +82,11 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  protected final KalypsoProjectBean m_bean;
+  protected final ProjectHandler m_handler;
 
-  public RemoteProjectRowBuilder( final KalypsoProjectBean bean )
+  public RemoteProjectRowBuilder( final ProjectHandler handler )
   {
-    m_bean = bean;
+    m_handler = handler;
   }
 
   /**
@@ -87,7 +96,6 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
   @Override
   public void render( final Composite parent, final FormToolkit toolkit )
   {
-
     final Composite body = toolkit.createComposite( parent );
     body.setLayout( new GridLayout( 3, false ) );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -95,112 +103,155 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_REMOTE_PROJECT );
-    lnk.setText( m_bean.getName() );
+    lnk.setText( m_handler.getName() );
 
     /* info */
-    getInfoLink( m_bean, body, toolkit );
+    getInfoLink( m_handler, body, toolkit );
 
     /* import */
-    getImportLink( m_bean, body, toolkit );
-
+    getImportLink( m_handler, body, toolkit );
   }
 
-  protected static void getImportLink( final KalypsoProjectBean bean, final Composite body, final FormToolkit toolkit )
+  protected static void getImportLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkImport.setImage( IMG_IMPORT_REMOTE );
-    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", bean.getName() ) );
+    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", handler.getName() ) );
 
-    lnkImport.addHyperlinkListener( new HyperlinkAdapter()
+    if( handler.isRemote() && ProjectDatabaseServerUtils.isServerOnline() )
     {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
-      @Override
-      public void linkActivated( final HyperlinkEvent e )
+      lnkImport.setImage( IMG_IMPORT_REMOTE );
+
+      lnkImport.addHyperlinkListener( new HyperlinkAdapter()
       {
-        try
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
         {
-          /* sort beans */
-          final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( bean );
-          final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
-
-          for( final KalypsoProjectBean b : beans )
+          try
           {
-            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), b.getProjectVersion() ), b.getUnixName(), b.getDescription(), null, b.getUrl() );
+            /* sort beans */
+            final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( handler.getBean() );
+            final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
 
-            templates.add( template );
-          }
+            // bad hack - to determine which project was newly created
+            final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
 
-          final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), new String[] {} );
-          wizard.init( PlatformUI.getWorkbench(), null );
-
-          final WizardDialog2 dialog = new WizardDialog2( null, wizard );
-          dialog.setRememberSize( true );
-
-          dialog.addPageChangedListener( new IPageChangedListener()
-          {
-            public void pageChanged( final PageChangedEvent event )
+            for( final KalypsoProjectBean b : beans )
             {
-              final Object page = event.getSelectedPage();
+              final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), b.getProjectVersion() ), b.getUnixName(), b.getDescription(), null, b.getUrl() );
+              mapping.put( template, b );
 
-              if( page instanceof IUpdateable )
+              templates.add( template );
+            }
+
+            final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), new String[] {} );
+            wizard.init( PlatformUI.getWorkbench(), null );
+
+            final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+            dialog.setRememberSize( true );
+
+            dialog.addPageChangedListener( new IPageChangedListener()
+            {
+              public void pageChanged( final PageChangedEvent event )
               {
-                final IUpdateable update = (IUpdateable) page;
-                update.update();
+                final Object page = event.getSelectedPage();
+
+                if( page instanceof IUpdateable )
+                {
+                  final IUpdateable update = (IUpdateable) page;
+                  update.update();
+                }
+                else if( page instanceof WizardNewProjectCreationPage )
+                {
+                  final WizardNewProjectCreationPage myPage = (WizardNewProjectCreationPage) page;
+                  final Composite myParent = (Composite) myPage.getControl();
+                  final Control[] children = myParent.getChildren();
+
+                  /* project name */
+                  final Composite subChildOne = (Composite) children[0];
+                  final Control[] subChildrenOne = subChildOne.getChildren();
+                  subChildrenOne[1].setEnabled( false );
+
+                  /* working sets */
+                  final Composite subChildTwo = (Composite) children[2];
+                  final Control[] subChildrenTwo = subChildTwo.getChildren();
+                  final Composite subSubChildTwo = (Composite) subChildrenTwo[0];
+                  final Control[] subSubChildrenTwo = subSubChildTwo.getChildren();
+                  subSubChildrenTwo[0].setEnabled( false );
+                }
               }
-              else if( page instanceof WizardNewProjectCreationPage )
+            } );
+
+            dialog.open();
+
+            try
+            {
+              final IProject project = wizard.getNewProject();
+              final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
+              if( nature instanceof RemoteProjectNature )
               {
-                final WizardNewProjectCreationPage myPage = (WizardNewProjectCreationPage) page;
-                final Composite myParent = (Composite) myPage.getControl();
-                final Control[] children = myParent.getChildren();
+                // bad hack
+                final KalypsoProjectBean bean = mapping.get( wizard.getSelectedTemplate() );
 
-                /* project name */
-                final Composite subChildOne = (Composite) children[0];
-                final Control[] subChildrenOne = subChildOne.getChildren();
-                subChildrenOne[1].setEnabled( false );
-
-                /* working sets */
-                final Composite subChildTwo = (Composite) children[2];
-                final Control[] subChildrenTwo = subChildTwo.getChildren();
-                final Composite subSubChildTwo = (Composite) subChildrenTwo[0];
-                final Control[] subSubChildrenTwo = subSubChildTwo.getChildren();
-                subSubChildrenTwo[0].setEnabled( false );
+                final RemoteProjectNature remote = (RemoteProjectNature) nature;
+                final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+                preferences.setVersion( bean.getProjectVersion() );
+                preferences.setIsOnServer( Boolean.TRUE );
               }
             }
-          } );
+            catch( final CoreException e1 )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+            }
 
-          dialog.open();
+          }
+          catch( final MalformedURLException e1 )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          }
         }
-        catch( final MalformedURLException e1 )
-        {
-          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-        }
-      }
-    } );
+      } );
+
+    }
+    else
+    {
+      lnkImport.setImage( IMG_IMPORT_REMOTE_DISABLED );
+      lnkImport.setEnabled( false );
+    }
 
   }
 
-  protected static void getInfoLink( final KalypsoProjectBean bean, final Composite body, final FormToolkit toolkit )
+  protected static void getInfoLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setImage( IMG_REMOTE_INFO );
-    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", bean.getName() ) );
+    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", handler.getName() ) );
 
-    lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+    if( handler.isRemote() && ProjectDatabaseServerUtils.isServerOnline() )
     {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
-      @Override
-      public void linkActivated( final HyperlinkEvent e )
-      {
-        final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( bean );
+      lnkInfo.setImage( IMG_REMOTE_INFO );
 
-        final WizardDialog dialog = new WizardDialog( null, wizard );
-        dialog.open();
-      }
-    } );
+      lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( handler.getBean() );
+
+          final WizardDialog dialog = new WizardDialog( null, wizard );
+          dialog.open();
+        }
+      } );
+    }
+    else
+    {
+      lnkInfo.setImage( IMG_REMOTE_INFO_DISABLED );
+      lnkInfo.setEnabled( false );
+    }
 
   }
 }

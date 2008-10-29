@@ -51,6 +51,10 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 {
   private static final String PROJECT_LOCK_TICKET = "project.lock";
 
+  private static final String PROJECT_IS_ON_SERVER = "project.is.on.server";
+
+  private static final String PROJECT_DOWNLOADED_VERSION = "project.downloaded.version";
+
   private final IEclipsePreferences m_node;
 
   public RemoteProjectPreferencesHandler( final IEclipsePreferences node )
@@ -87,6 +91,42 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   public String getEditTicket( )
   {
     return m_node.get( PROJECT_LOCK_TICKET, null );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#isOnServer()
+   */
+  @Override
+  public boolean isOnServer( )
+  {
+    return m_node.getBoolean( PROJECT_IS_ON_SERVER, false );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#isOnServer()
+   */
+  @Override
+  public Integer getVersion( )
+  {
+    return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setIsOnServer(boolean)
+   */
+  @Override
+  public void setIsOnServer( final boolean onServer )
+  {
+    m_node.putBoolean( PROJECT_IS_ON_SERVER, Boolean.valueOf( onServer ) );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setVersion(java.lang.Integer)
+   */
+  @Override
+  public void setVersion( final Integer version )
+  {
+    m_node.put( PROJECT_DOWNLOADED_VERSION, version.toString() );
   }
 
 }

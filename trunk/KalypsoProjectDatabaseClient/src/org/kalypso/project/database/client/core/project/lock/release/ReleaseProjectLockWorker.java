@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.project.lock.release;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,10 +48,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
-import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.IProjectDatabase;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Acquires a project lock (lock ticket) in the model base and update
@@ -63,20 +60,12 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
 {
-  private final KalypsoProjectBean m_bean;
 
-  private final IProject m_project;
+  private final ProjectHandler m_handler;
 
-  private final IRemoteProjectPreferences m_preferences;
-
-  public ReleaseProjectLockWorker( final IProject project, final KalypsoProjectBean bean, final IRemoteProjectPreferences preferences )
+  public ReleaseProjectLockWorker( final ProjectHandler handler )
   {
-    m_preferences = preferences;
-    Assert.isNotNull( project );
-    Assert.isNotNull( bean );
-
-    m_project = project;
-    m_bean = bean;
+    m_handler = handler;
   }
 
   /**
@@ -86,20 +75,20 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     /* project preferences */
-    final IProjectNature nature = m_project.getNature( RemoteProjectNature.NATURE_ID );
-    if( !(nature instanceof RemoteProjectNature) )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_project ) ) );
+    if( !m_handler.isLocalRemoteProject() )
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
 
-    final String ticket = m_preferences.getEditTicket();
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    final String ticket = preferences.getEditTicket();
     Assert.isNotNull( ticket );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final Boolean released = service.releaseProjectEditLock( m_bean.getUnixName(), ticket );
+    final Boolean released = service.releaseProjectEditLock( m_handler.getUnixName(), ticket );
     Assert.isTrue( released );
 
     /* reset edit ticket */
-    m_preferences.setEditTicket( "" );
-    Assert.isTrue( "".equals( m_preferences.getEditTicket().trim() ) );
+    preferences.setEditTicket( "" );
+    Assert.isTrue( "".equals( preferences.getEditTicket().trim() ) );
 
     return Status.OK_STATUS;
   }

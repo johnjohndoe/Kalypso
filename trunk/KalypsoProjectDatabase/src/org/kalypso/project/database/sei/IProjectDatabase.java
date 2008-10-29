@@ -117,4 +117,9 @@ public interface IProjectDatabase
    */
   KalypsoProjectBean getProject( String projectUnixName );
 
+  /**
+   *
+   */
+  public Boolean ping( );
+
 }

@@ -121,4 +121,10 @@ public class WizardCreateProject extends NewProjectWizard
     return status.isOK();
   }
 
+  public ProjectTemplate getSelectedTemplate( )
+  {
+    final ProjectTemplatePage page = (ProjectTemplatePage) getPage( "projectTemplatePage" );
+    return page.getSelectedProject();
+  }
+
 }

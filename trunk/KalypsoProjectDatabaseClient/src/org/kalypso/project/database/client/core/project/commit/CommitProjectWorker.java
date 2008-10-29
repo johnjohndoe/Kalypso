@@ -47,7 +47,6 @@ import java.net.URL;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,24 +56,22 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author kuch
  */
 public class CommitProjectWorker implements ICoreRunnableWithProgress
 {
-  private final IProject m_project;
 
-  private final KalypsoProjectBean m_bean;
+  private final ProjectHandler m_handler;
 
-  public CommitProjectWorker( final IProject project, final KalypsoProjectBean bean )
+  public CommitProjectWorker( final ProjectHandler handler )
   {
-    m_project = project;
-    m_bean = bean;
+    m_handler = handler;
   }
 
   /**
@@ -88,7 +85,7 @@ public class CommitProjectWorker implements ICoreRunnableWithProgress
 
     try
     {
-      final ProjectExportHandler worker = new ProjectExportHandler( m_project, src );
+      final ProjectExportHandler worker = new ProjectExportHandler( m_handler.getProject(), src );
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
@@ -121,7 +118,7 @@ public class CommitProjectWorker implements ICoreRunnableWithProgress
       }, "update.zip" );
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      service.udpateProject( m_bean, myDestinationUrl );
+      service.udpateProject( m_handler.getBean(), myDestinationUrl );
 
       destination.delete();
     }

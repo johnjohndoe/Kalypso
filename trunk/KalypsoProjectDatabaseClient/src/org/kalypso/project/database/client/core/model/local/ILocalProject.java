@@ -38,30 +38,18 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.nature;
+package org.kalypso.project.database.client.core.model.local;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
- * Settings of a {@link RemoteProjectNature}
- * 
  * @author Dirk Kuch
  */
-public interface IRemoteProjectPreferences
+public interface ILocalProject
 {
-  public boolean isLocked( );
+  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
 
-  public void setEditTicket( String ticket );
-
-  public String getEditTicket( );
-
-  /**
-   * newly created local project or is project already hosted on server
-   */
-  public boolean isOnServer( );
-
-  /** downloaded version of the local project */
-  public Integer getVersion( );
-
-  public void setIsOnServer( boolean onServer );
-
-  public void setVersion( Integer version );
+  public IProject getProject( );
 }

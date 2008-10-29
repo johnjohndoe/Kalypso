@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.project.lock.acquire;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,10 +47,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
-import org.kalypso.project.database.common.nature.RemoteProjectNature;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.sei.IProjectDatabase;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Acquires a project lock (lock ticket) in the model base and update
@@ -63,20 +58,11 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
 {
-  private final KalypsoProjectBean m_bean;
+  private final ProjectHandler m_handler;
 
-  private final IProject m_project;
-
-  private final IRemoteProjectPreferences m_preferences;
-
-  public AcquireProjectLockWorker( final IProject project, final KalypsoProjectBean bean, final IRemoteProjectPreferences preferences )
+  public AcquireProjectLockWorker( final ProjectHandler handler )
   {
-    m_preferences = preferences;
-    Assert.isNotNull( project );
-    Assert.isNotNull( bean );
-
-    m_project = project;
-    m_bean = bean;
+    m_handler = handler;
   }
 
   /**
@@ -86,15 +72,14 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final String ticket = service.acquireProjectEditLock( m_bean.getUnixName() );
+    final String ticket = service.acquireProjectEditLock( m_handler.getUnixName() );
     if( ticket == null || "".equals( ticket.trim() ) )
-      StatusUtilities.createErrorStatus( String.format( "Acquiring project locked for project \"%s\" failed", m_bean.getName() ) );
+      StatusUtilities.createErrorStatus( String.format( "Acquiring project locked for project \"%s\" failed", m_handler.getName() ) );
 
-    final IProjectNature nature = m_project.getNature( RemoteProjectNature.NATURE_ID );
-    if( !(nature instanceof RemoteProjectNature) )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_project ) ) );
+    if( !m_handler.isLocalRemoteProject() )
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
 
-    m_preferences.setEditTicket( ticket );
+    m_handler.getRemotePreferences().setEditTicket( ticket );
 
     return Status.OK_STATUS;
   }

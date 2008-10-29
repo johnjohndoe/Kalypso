@@ -47,9 +47,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.core.resources.IProject;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
+import org.kalypso.project.database.client.core.model.local.ILocalProject;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteWorkspaceListener;
@@ -100,27 +100,27 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
     final Map<String, ProjectHandler> projects = new HashMap<String, ProjectHandler>();
 
-    final IProject[] local = m_local.getProjects();
+    final ILocalProject[] local = m_local.getProjects();
     final KalypsoProjectBean[] remote = m_remote.getBeans();
 
     for( final KalypsoProjectBean bean : remote )
     {
-      final ProjectHandler handler = new ProjectHandler( bean );
+      final ProjectHandler handler = new ProjectHandler();
+      handler.setBean( bean );
       projects.put( bean.getUnixName(), handler );
     }
 
-    for( final IProject project : local )
+    for( final ILocalProject project : local )
     {
-      final ProjectHandler handler = projects.get( project.getName() );
-      if( handler != null )
+      ProjectHandler handler = projects.get( project.getProject().getName() );
+      if( handler == null )
       {
-        handler.setProject( project );
+        handler = new ProjectHandler();
       }
-      else
-      {
-        final ProjectHandler h = new ProjectHandler( project );
-        projects.put( project.getName(), h );
-      }
+
+      handler.setProject( project );
+
+      projects.put( project.getProject().getName(), handler );
     }
 
     final Collection<ProjectHandler> collection = projects.values();

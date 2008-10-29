@@ -133,7 +133,8 @@ public class RemoteProjectNature implements IProjectNature
       SCOPES.put( project, scope );
 
       final IEclipsePreferences node = scope.getNode( PREFERENCES );
-      node.addPreferenceChangeListener( listener );
+      if( listener != null )
+        node.addPreferenceChangeListener( listener );
     }
 
     final IEclipsePreferences node = scope.getNode( PREFERENCES );
@@ -144,8 +145,11 @@ public class RemoteProjectNature implements IProjectNature
       node.removePreferenceChangeListener( oldListener );
     }
 
-    node.addPreferenceChangeListener( listener );
-    LISTENER.put( project, listener );
+    if( listener != null )
+    {
+      node.addPreferenceChangeListener( listener );
+      LISTENER.put( project, listener );
+    }
 
     return new RemoteProjectPreferencesHandler( node );
   }

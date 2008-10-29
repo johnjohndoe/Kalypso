@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,6 +56,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 
@@ -66,11 +66,11 @@ import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjec
 public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
 
-  protected final IProject m_project;
+  protected final ProjectHandler m_handler;
 
-  public LocalProjectRowBuilder( final IProject project )
+  public LocalProjectRowBuilder( final ProjectHandler handler )
   {
-    m_project = project;
+    m_handler = handler;
   }
 
   /**
@@ -87,25 +87,25 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_LOCAL_PROJECT );
-    lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_project.getName() ) );
-    lnk.setText( m_project.getName() );
+    lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
+    lnk.setText( m_handler.getName() );
 
     /* export */
-    getExportLink( m_project, body, toolkit );
+    getExportLink( m_handler, body, toolkit );
 
     // spacer
     toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
     /* delete */
-    getDeleteLink( m_project, body, toolkit );
+    getDeleteLink( m_handler, body, toolkit );
 
   }
 
-  protected static void getDeleteLink( final IProject project, final Composite body, final FormToolkit toolkit )
+  protected static void getDeleteLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkDelete = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkDelete.setImage( IMG_DELETE_LOCAL );
-    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", project.getName() ) );
+    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", handler.getName() ) );
 
     lnkDelete.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -116,10 +116,10 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
       public void linkActivated( final HyperlinkEvent e )
       {
 
-        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", project.getName() ) ) )
+        if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", handler.getName() ) ) )
         {
-          final DeleteLocalProjectHandler handler = new DeleteLocalProjectHandler( project );
-          final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+          final DeleteLocalProjectHandler delete = new DeleteLocalProjectHandler( handler.getProject() );
+          final IStatus status = ProgressUtilities.busyCursorWhile( delete );
 
           final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
           if( !shell.isDisposed() )
@@ -130,11 +130,11 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
 
   }
 
-  protected static void getExportLink( final IProject project, final Composite body, final FormToolkit toolkit )
+  protected static void getExportLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkExport.setImage( IMG_EXPORT_LOCAL );
-    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", project.getName() ) );
+    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", handler.getName() ) );
 
     lnkExport.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -144,8 +144,8 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final WizardProjectExport wizard = new WizardProjectExport( project );
-        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( project ) );
+        final WizardProjectExport wizard = new WizardProjectExport( handler.getProject() );
+        wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( handler.getProject() ) );
 
         final WizardDialog dialog = new WizardDialog( null, wizard );
         dialog.open();

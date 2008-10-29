@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -57,31 +54,25 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.commit.CommitProjectWorker;
 import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
+import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
-import org.kalypso.project.database.common.nature.RemoteProjectNature;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Row builder for projects, which existing locally and remote
  * 
  * @author Dirk Kuch
  */
-public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
+public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  protected final IProject m_project;
+  private final ProjectHandler m_handler;
 
-  protected final KalypsoProjectBean m_bean;
-
-  private final IPreferenceChangeListener m_listener;
-
-  public LoReProjectRowBuilder( final IProject project, final KalypsoProjectBean bean, final IPreferenceChangeListener listener )
+  public LocalRemoteProjectRowBuilder( final ProjectHandler handler )
   {
-    m_project = project;
-    m_bean = bean;
-    m_listener = listener;
+    m_handler = handler;
   }
 
   /**
@@ -94,9 +85,7 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
     try
     {
       /* settings */
-      final IProjectNature nature = m_project.getNature( RemoteProjectNature.NATURE_ID );
-      final RemoteProjectNature myNature = (RemoteProjectNature) nature;
-      final IRemoteProjectPreferences preferences = myNature.getRemotePreferences( m_project, m_listener );
+      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
 
       final Composite body = toolkit.createComposite( parent );
       body.setLayout( new GridLayout( 6, false ) );
@@ -110,23 +99,23 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
       else
         lnk.setImage( IMG_LORE_PROJECT );
 
-      lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_project.getName() ) );
-      lnk.setText( m_project.getName() );
+      lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
+      lnk.setText( m_handler.getName() );
 
       // lock project
       createLockHyperlink( body, toolkit, preferences );
 
       // info
-      RemoteProjectRowBuilder.getInfoLink( m_bean, body, toolkit );
+      RemoteProjectRowBuilder.getInfoLink( m_handler, body, toolkit );
 
       // export
-      LocalProjectRowBuilder.getExportLink( m_project, body, toolkit );
+      LocalProjectRowBuilder.getExportLink( m_handler, body, toolkit );
 
       // spacer
       toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
       /* delete */
-      LocalProjectRowBuilder.getDeleteLink( m_project, body, toolkit );
+      LocalProjectRowBuilder.getDeleteLink( m_handler, body, toolkit );
     }
     catch( final CoreException e1 )
     {
@@ -140,60 +129,80 @@ public class LoReProjectRowBuilder extends AbstractProjectRowBuilder implements 
     if( preferences.isLocked() )
     {
       final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK );
-      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", m_project.getName() ) );
+      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", m_handler.getName() ) );
 
-      lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+      if( ProjectDatabaseServerUtils.isServerOnline() )
       {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( final HyperlinkEvent e )
+        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK );
+
+        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
         {
-          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          /**
+           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+           */
+          @Override
+          public void linkActivated( final HyperlinkEvent e )
+          {
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
-          /* commit */
-          final CommitProjectWorker commit = new CommitProjectWorker( m_project, m_bean );
-          final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
+            /* commit */
+            final CommitProjectWorker commit = new CommitProjectWorker( m_handler );
+            final IStatus commitStatus = ProgressUtilities.busyCursorWhile( commit );
 
-          if( !shell.isDisposed() )
-            ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
 
-          if( !commitStatus.isOK() )
-            return;
+            if( !commitStatus.isOK() )
+              return;
 
-          /* release */
-          final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_project, m_bean, preferences );
-          final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+            /* release */
+            final ReleaseProjectLockWorker handler = new ReleaseProjectLockWorker( m_handler );
+            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
 
-          if( !shell.isDisposed() )
-            ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
-        }
-      } );
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", status );
+          }
+        } );
+
+      }
+      else
+      {
+        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK_DISABLED );
+        lnkLock.setEnabled( false );
+      }
+
     }
     else
     {
       final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setImage( IMG_LORE_LOCK );
-      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_project.getName() ) );
+      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_handler.getName() ) );
 
-      lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+      if( ProjectDatabaseServerUtils.isServerOnline() )
       {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( final HyperlinkEvent e )
-        {
-          final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_project, m_bean, preferences );
-          final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+        lnkLock.setImage( IMG_LORE_LOCK );
 
-          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-          if( !shell.isDisposed() )
-            ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
-        }
-      } );
+        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+        {
+          /**
+           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+           */
+          @Override
+          public void linkActivated( final HyperlinkEvent e )
+          {
+            final AcquireProjectLockWorker handler = new AcquireProjectLockWorker( m_handler );
+            final IStatus status = ProgressUtilities.busyCursorWhile( handler );
+
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", status );
+          }
+        } );
+      }
+      else
+      {
+        lnkLock.setImage( IMG_LORE_LOCK_DISABLED );
+        lnkLock.setEnabled( false );
+      }
     }
 
   }

@@ -38,30 +38,28 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.nature;
+package org.kalypso.project.database.client.core.utils;
+
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
- * Settings of a {@link RemoteProjectNature}
- * 
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IRemoteProjectPreferences
+public class ProjectDatabaseServerUtils
 {
-  public boolean isLocked( );
+  public static boolean isServerOnline( )
+  {
+    try
+    {
+      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+      service.ping();
 
-  public void setEditTicket( String ticket );
-
-  public String getEditTicket( );
-
-  /**
-   * newly created local project or is project already hosted on server
-   */
-  public boolean isOnServer( );
-
-  /** downloaded version of the local project */
-  public Integer getVersion( );
-
-  public void setIsOnServer( boolean onServer );
-
-  public void setVersion( Integer version );
+      return true;
+    }
+    catch( final Exception e )
+    {
+      return false;
+    }
+  }
 }
