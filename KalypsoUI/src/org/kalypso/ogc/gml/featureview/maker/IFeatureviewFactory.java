@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface IFeatureviewFactory
 {
   /**
-   * Return a {@link FeatureviewType} vor the given featureType. The template may also depend on the (optional) given
+   * Return a {@link FeatureviewType} for the given featureType. The template may also depend on the (optional) given
    * feature.
    * 
    * @throws NullPointerException
