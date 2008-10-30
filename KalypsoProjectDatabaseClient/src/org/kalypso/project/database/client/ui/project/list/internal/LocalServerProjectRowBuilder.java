@@ -103,6 +103,8 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
 
       if( preferences.isLocked() )
         lnk.setImage( IMG_LORE_LOCKED );
+      else if( !ProjectDatabaseServerUtils.isServerOnline() )
+        lnk.setImage( IMG_LORE_PROJECT_DISABLED );
       else if( m_handler.getBean().isProjectLockedForEditing() )
         lnk.setImage( IMG_LORE_OTHER_LOCK );
       else
