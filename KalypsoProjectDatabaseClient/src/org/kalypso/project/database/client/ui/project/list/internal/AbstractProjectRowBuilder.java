@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Dirk Kuch
@@ -61,6 +66,8 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
   protected static Image IMG_REMOTE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
 
+  protected static Image iMG_REMOTE_PROJECT_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote_locked.gif" ) );
+
   protected static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
 
   protected static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
@@ -68,6 +75,8 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected static Image IMG_LORE_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
 
   protected static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
+
+  protected static Image IMG_LORE_OTHER_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_other_locked.gif" ) );
 
   protected static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
 
@@ -78,4 +87,17 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected static Image IMG_LOCAL_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
 
   protected static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) );
+
+  protected static Image IMG_LORE_UPDATEABLE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_update.gif" ) );
+
+  protected void getSpacer( final Composite parent, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( parent, SWT.NONE );
+    lnk.setText( "" );
+    final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
+    data.minimumWidth = data.widthHint = 18;
+    lnk.setLayoutData( data );
+    lnk.setEnabled( false );
+    lnk.setUnderlined( false );
+  }
 }

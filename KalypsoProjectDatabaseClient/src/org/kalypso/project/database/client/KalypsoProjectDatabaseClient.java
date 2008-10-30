@@ -34,7 +34,7 @@ public class KalypsoProjectDatabaseClient extends Plugin
         // final String wsdlLocationProperty = System.getProperty(
         // "kalypso.hwv.observation.service.client.wsdl.location" );
         // TODO: get from outside
-        final String wsdlLocationProperty = "http://localhost/projectdb?wsdl";
+        final String wsdlLocationProperty = "http://128.1.100.87/projectdb?wsdl";
         final URL wsdlLocation = new URL( wsdlLocationProperty );
         final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
         final Service service = Service.create( wsdlLocation, serviceName );

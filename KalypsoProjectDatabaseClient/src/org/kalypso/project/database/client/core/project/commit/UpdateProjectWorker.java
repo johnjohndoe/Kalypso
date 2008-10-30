@@ -58,6 +58,7 @@ import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -79,6 +80,11 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    // remove local project lock
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    final String ticket = preferences.getEditTicket();
+    preferences.setEditTicket( "" );
+
     final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) );
     final File src = new File( urlTempDir, "update.zip" );
 
@@ -131,6 +137,9 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
     }
     finally
     {
+      // add local project lock
+      preferences.setEditTicket( ticket );
+
       src.delete();
     }
 
