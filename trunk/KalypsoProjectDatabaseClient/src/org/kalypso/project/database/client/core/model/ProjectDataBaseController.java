@@ -56,14 +56,12 @@ import org.kalypso.project.database.client.core.project.lock.release.ReleaseProj
  */
 public class ProjectDataBaseController
 {
-
   protected static WorkspaceJob JOB = null;
 
   public static IStatus createRemoteProject( final ProjectHandler handler )
   {
     final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-
     setDirty();
 
     return status;
@@ -102,7 +100,6 @@ public class ProjectDataBaseController
   {
     final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-
     setDirty();
 
     return status;
@@ -112,7 +109,6 @@ public class ProjectDataBaseController
   {
     final ReleaseProjectLockWorker worker = new ReleaseProjectLockWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-
     setDirty();
 
     return status;
@@ -122,7 +118,6 @@ public class ProjectDataBaseController
   {
     final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
-
     setDirty();
 
     return status;

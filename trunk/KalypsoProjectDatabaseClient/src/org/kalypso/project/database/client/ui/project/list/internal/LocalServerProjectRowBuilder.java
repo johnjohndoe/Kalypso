@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -53,10 +57,16 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Row builder for projects, which existing locally and remote
@@ -93,30 +103,31 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
 
       if( preferences.isLocked() )
         lnk.setImage( IMG_LORE_LOCKED );
+      else if( m_handler.getBean().isProjectLockedForEditing() )
+        lnk.setImage( IMG_LORE_OTHER_LOCK );
       else
         lnk.setImage( IMG_LORE_PROJECT );
 
       lnk.setToolTipText( String.format( "Öffne Projekt: %s", m_handler.getName() ) );
       lnk.setText( m_handler.getName() );
 
-      // lock project
-      createLockHyperlink( body, toolkit );
-
       // info
       RemoteProjectRowBuilder.getInfoLink( m_handler, body, toolkit );
 
+      // lock project
+      createLockHyperlink( body, toolkit );
+
+      getSpacer( body, toolkit );
+
       // export
       LocalProjectRowBuilder.getExportLink( m_handler, body, toolkit );
-
-      // spacer
-      toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
       /* delete */
       LocalProjectRowBuilder.getDeleteLink( m_handler, body, toolkit );
     }
     catch( final CoreException e1 )
     {
-      e1.printStackTrace();
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
     }
   }
 
@@ -168,35 +179,115 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
     }
     else
     {
-      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_handler.getName() ) );
 
       if( ProjectDatabaseServerUtils.isServerOnline() )
       {
-        lnkLock.setImage( IMG_LORE_LOCK );
-
-        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+        if( m_handler.getBean().isProjectLockedForEditing() )
         {
-          /**
-           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-           */
-          @Override
-          public void linkActivated( final HyperlinkEvent e )
+          if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
           {
-            final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( m_handler );
-
-            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-            if( !shell.isDisposed() )
-              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
+            getUpdateLink( body, toolkit );
           }
-        } );
+          else
+          {
+            getSpacer( body, toolkit );
+          }
+
+        }
+        else
+        {
+          if( ProjectDatabaseServerUtils.isUpdateAvailable( m_handler ) )
+          {
+            getUpdateLink( body, toolkit );
+          }
+          else
+          {
+
+            final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
+            lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_handler.getName() ) );
+            lnkLock.setImage( IMG_LORE_LOCK );
+
+            lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+            {
+              /**
+               * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+               */
+              @Override
+              public void linkActivated( final HyperlinkEvent e )
+              {
+                final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( m_handler );
+
+                final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+                if( !shell.isDisposed() )
+                  ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
+              }
+            } );
+          }
+        }
       }
       else
       {
+        final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
         lnkLock.setImage( IMG_LORE_LOCK_DISABLED );
         lnkLock.setEnabled( false );
       }
+
     }
 
+  }
+
+  private void getUpdateLink( final Composite body, final FormToolkit toolkit )
+  {
+    try
+    {
+      final Integer remoteVersion = m_handler.getBean().getProjectVersion();
+      final Integer localVersion = m_handler.getRemotePreferences().getVersion();
+
+      final ImageHyperlink lnkUpdate = toolkit.createImageHyperlink( body, SWT.NONE );
+      lnkUpdate.setImage( IMG_LORE_UPDATEABLE );
+      lnkUpdate.setToolTipText( String.format( "Neue Version des Projektes auf dem Server verfügbar. Lokale Version: %d Server Version: %d", localVersion, remoteVersion ) );
+
+      lnkUpdate.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          // delete local project
+          final DeleteLocalProjectHandler delete = new DeleteLocalProjectHandler( m_handler.getProject() );
+          final IStatus status = ProgressUtilities.busyCursorWhile( delete );
+
+          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          if( !shell.isDisposed() )
+            ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+
+          // import head version of project from server
+          try
+          {
+            /* sort beans */
+
+            // bad hack - to determine which project was newly created
+            final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+
+            final KalypsoProjectBean bean = m_handler.getBean();
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+            mapping.put( template, bean );
+
+            RemoteProjectHelper.importRemoteProject( new ProjectTemplate[] { template }, mapping );
+          }
+          catch( final MalformedURLException e1 )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          }
+        }
+      } );
+
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 }

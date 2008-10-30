@@ -98,11 +98,10 @@ public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder impl
     /* commit */
     getCommitLink( m_handler, body, toolkit );
 
+    getSpacer( body, toolkit );
+
     /* export */
     getExportLink( m_handler, body, toolkit );
-
-    // spacer
-    toolkit.createLabel( body, "    " ); //$NON-NLS-1$
 
     /* delete */
     getDeleteLink( m_handler, body, toolkit );
