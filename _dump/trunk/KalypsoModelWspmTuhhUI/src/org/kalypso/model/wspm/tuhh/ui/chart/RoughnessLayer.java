@@ -81,7 +81,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public void paint( GC gc )
   {
-    if( getTargetRange() == null )
+    if( getTargetComponent() == null )
       return;
 
     final IProfil profil = getProfil();

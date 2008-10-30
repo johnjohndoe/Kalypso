@@ -204,9 +204,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
-  public IDataRange<Number> getDomainRange( )
+  @Override
+  public IDataRange<Number> getDomainRange()
   {
-
+    if( getCoordinateMapper() == null  )
+      return null;
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
     if( (min == null) || (max == null) )
@@ -336,9 +338,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
-  public IDataRange<Number> getTargetRange( )
+  @Override
+  public IDataRange<Number> getTargetRange()
   {
-
+    if(getCoordinateMapper() == null )
+      return null;
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
     if( (min == null) || (max == null) )

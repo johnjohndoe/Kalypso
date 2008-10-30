@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -90,13 +91,5 @@ public class BuildingWeirTheme extends AbstractProfilTheme
     return new WeirPanel( getProfil() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
-   */
-  @Override
-  public IDataRange<Number> getTargetRange( )
-  {
-    // this theme will not be painted, so supress the dimension of GeoCoordinates
-    return null;
-  }
+ 
 }

@@ -46,6 +46,8 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -54,6 +56,16 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class RoughnessTheme extends AbstractProfilTheme
 
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
+   */
+  @Override
+  public IDataRange<Number> getTargetRange()
+  {
+    // TODO Auto-generated method stub
+    return super.getTargetRange( );
+  }
 
   public RoughnessTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {

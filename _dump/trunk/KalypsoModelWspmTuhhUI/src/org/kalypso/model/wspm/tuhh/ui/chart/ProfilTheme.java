@@ -41,43 +41,41 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author kimwerner
  */
-public class GeoCoordinateTheme extends AbstractProfilTheme
+public class ProfilTheme extends AbstractProfilTheme
 
 {
 
-  public GeoCoordinateTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  
+
+  public ProfilTheme( final String name, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_GEOKOORDINATEN, "Geokoordinaten", chartLayers, cm );
+    super( IWspmConstants.NS_WSPM, name, null, cm );
 
   }
 
- 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#createLayerPanel()
    */
   @Override
-  public void removeYourself( )
+  public IProfilView createLayerPanel( )
   {
-    final IProfil profil = getProfil();
-
-    final ProfilOperation operation = new ProfilOperation( "Brücke entfernen", getProfil(), true );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
-    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
-    new ProfilOperationJob( operation ).schedule();
+    for (final IChartLayer layer : getLayerManager().getLayers())
+    {
+      if (layer.isActive()&&layer instanceof IProfilChartLayer)
+        return ((IProfilChartLayer)layer).createLayerPanel();
+    }
+    return null;
   }
+
+  
 }

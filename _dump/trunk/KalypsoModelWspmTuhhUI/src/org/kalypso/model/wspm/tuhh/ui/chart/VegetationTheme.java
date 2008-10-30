@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
@@ -174,12 +175,12 @@ public class VegetationTheme extends AbstractProfilTheme
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilTheme#getTargetRange()
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
   @Override
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange()
   {
-    // this theme will not be calculated, so supress the dimension of vegetation
+    // don't calculate axis size and ticks
     return null;
   }
 

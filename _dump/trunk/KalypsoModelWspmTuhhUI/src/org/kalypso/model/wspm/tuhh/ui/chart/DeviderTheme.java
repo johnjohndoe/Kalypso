@@ -59,6 +59,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -83,15 +84,7 @@ public class DeviderTheme extends AbstractProfilTheme
     return new TrennerPanel( getProfil() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
-   */
-  @Override
-  public IDataRange<Number> getTargetRange( )
-  {
-    // this theme will not be painted, so supress the dimension of pointMarkers
-    return null;
-  }
+  
 
   @Override
   public ILegendEntry[] createLegendEntries( )

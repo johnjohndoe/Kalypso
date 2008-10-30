@@ -67,6 +67,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
@@ -132,6 +133,26 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
 
     final ILayerManager lm = m_chart.getChartModel().getLayerManager();
+    lm.addListener( new AbstractLayerManagerEventListener()
+    {
+
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onActivLayerChanged( IChartLayer layer )
+      {
+        // if layer is deactivated do nothing
+        if( !layer.isActive() )
+          return;
+        for( final IChartLayer l : lm.getLayers() )
+        {
+          if( l != layer )
+            l.setActive( false );
+        }
+      }
+    } );
+
     if( m_memento != null )
       saveState( m_memento, lm );
 
@@ -241,8 +262,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
-    
-   
 
     return m_chart;
   }

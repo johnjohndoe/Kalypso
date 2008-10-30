@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,6 +67,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
+import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -240,8 +243,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     m_form.getBody().setLayout( bodyLayout );
-
-    m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_outlineContainer = m_toolkit.createComposite( m_form.getBody() );
     final GridLayout outlineLayout = new GridLayout( 1, false );
     outlineLayout.marginHeight = 0;
@@ -252,6 +253,18 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_outlineContainer.setLayoutData( outlineData );
     m_problemView = new ProfileProblemView(m_toolkit,m_outlineContainer,MAX_OUTLINE_HEIGHT);
 
+    m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+
+    ExcelTableCursor m_cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    ControlEditor m_controlEditor = new ControlEditor( m_cursor );
+    m_controlEditor.grabHorizontal = true;
+    m_controlEditor.grabVertical = true;
+
+    m_cursor.setVisible( true );
+    m_cursor.setEnabled( true );
+    
+    
+    
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
     m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );

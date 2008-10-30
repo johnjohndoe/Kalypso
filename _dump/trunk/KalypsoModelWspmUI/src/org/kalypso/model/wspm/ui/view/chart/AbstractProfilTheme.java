@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -50,8 +48,8 @@ import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -68,75 +66,39 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer, ILayerEventListener
+public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer
 {
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onActiveLayerChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onLayerContentChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
-  @Override
-  public void removeYourself( )
-  {
-    throw new UnsupportedOperationException( "Dieser layer kann nicht entfernt werden." );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
-   */
-  @Override
-  public void lockLayer( boolean isLocked )
-  {
-    if( isLocked != isLocked() )
-      for( final IEditableChartLayer layer : getLayerManager().getEditableLayers() )
-      {
-        layer.lockLayer( isLocked );
-      }
-    super.lockLayer( isLocked );
-
-  }
-
-  private final ILayerManager m_layerManager = new LayerManager()
+  private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
   {
 
     /**
-     * @see de.openali.odysseus.chart.framework.model.layer.impl.LayerManager#getLayers()
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
-    public IChartLayer[] getLayers( )
+    public void onActivLayerChanged( IChartLayer layer )
     {
-      final ArrayList<IChartLayer> layers = new ArrayList<IChartLayer>( super.getLayers().length );
-      for( final IChartLayer layer : super.getLayers() )
+      // if layer is deactivated do nothing
+      if( !layer.isActive() )
+        return;
+      if( !isActive() )
+        setActive( true );
+      for( final IChartLayer l : getLayerManager().getLayers() )
       {
-        if( ((IProfilChartLayer) layer).getTargetComponent() != null )
-          layers.add( layer );
+        if( l != layer )
+          l.setActive( false );
       }
-      return layers.toArray( new IChartLayer[] {} );
+
     }
   };
 
-  private IProfilChartLayer m_hovering = null;
-
-  private final String m_title;
+  // private IProfilChartLayer m_hovering = null;
 
   private final String m_id;
+
+  private final ILayerManager m_layerManager = new LayerManager();
+
+  private final String m_title;
 
   public AbstractProfilTheme( final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -144,63 +106,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     m_title = title;
     m_id = id;
     setCoordinateMapper( cm );
-    ILayerManager mngr = getLayerManager();
-
-    for( final IChartLayer layer : chartLayers )
-    {
-      mngr.addLayer( layer );
-      layer.setCoordinateMapper( cm );
-      layer.addListener( this );
-    }
-
-    mngr.addListener( new ILayerManagerEventListener()
-    {
-
-      public void onActivLayerChanged( IChartLayer layer )
+    m_layerManager.addListener( m_eventListener );
+    if( chartLayers != null )
+      for( final IChartLayer layer : chartLayers )
       {
-        // TODO Auto-generated method stub
-
+        m_layerManager.addLayer( layer );
+        layer.setCoordinateMapper( cm );
       }
-
-      public void onLayerAdded( IChartLayer layer )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-      public void onLayerContentChanged( IChartLayer layer )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-      public void onLayerMoved( IChartLayer layer )
-      {
-        fireLayerContentChange();
-
-      }
-
-      public void onLayerRemoved( IChartLayer layer )
-      {
-        fireLayerContentChange();
-
-      }
-
-      public void onLayerVisibilityChanged( IChartLayer layer )
-      {
-        // TODO Auto-generated method stub
-
-      }
-    } );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
-   */
-  @Override
-  public String getId( )
-  {
-    return m_id;
   }
 
   /**
@@ -213,11 +125,14 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
     if( getTargetComponent() != null )
       getProfil().setActivePointProperty( getTargetComponent() );
+    final IProfilChartLayer layer = getActiveLayer();
+    if( layer == null )
+      return null;
 
     if( dragStartData.m_pos == point )
-      m_hovering.executeClick( dragStartData );
+      layer.executeClick( dragStartData );
     else
-      m_hovering.executeDrop( point, dragStartData );
+      layer.executeDrop( point, dragStartData );
 
     return null;
   }
@@ -256,8 +171,19 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public EditInfo drag( Point newPos, EditInfo dragStartData )
   {
-    if( m_hovering != null && !isLocked() )
-      return m_hovering.drag( newPos, dragStartData );
+    final IProfilChartLayer layer = getActiveLayer();
+    if( layer == null || layer.isLocked() )
+      return null;
+    return layer.drag( newPos, dragStartData );
+  }
+
+  private final IProfilChartLayer getActiveLayer( )
+  {
+    for( final IChartLayer l : getLayerManager().getLayers() )
+    {
+      if( l.isActive() && l instanceof IProfilChartLayer )
+        return (IProfilChartLayer) l;
+    }
     return null;
   }
 
@@ -278,9 +204,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public void executeClick( EditInfo clickInfo )
   {
-    if( m_hovering != null )
-      m_hovering.executeClick( clickInfo );
-    m_hovering = null;
+    final IProfilChartLayer layer = getActiveLayer();
+    if( layer != null )
+      layer.executeClick( clickInfo );
   }
 
   /**
@@ -291,9 +217,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public void executeDrop( Point point, EditInfo dragStartData )
   {
-    if( m_hovering != null )
-      m_hovering.executeDrop( point, dragStartData );
-    m_hovering = null;
+    final IProfilChartLayer layer = getActiveLayer();
+    if( layer != null )
+      layer.executeDrop( point, dragStartData );
   }
 
   /**
@@ -303,7 +229,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public IComponent getDomainComponent( )
   {
-    return m_hovering == null ? null : m_hovering.getDomainComponent();
+    final IProfilChartLayer layer = getActiveLayer();
+    return layer == null ? null : layer.getDomainComponent();
   }
 
   /**
@@ -351,13 +278,23 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         final EditInfo info = pLayer.getHover( pos );
         if( info != null )
         {
-          m_hovering = pLayer;
+          if( !pLayer.isActive() )
+            pLayer.setActive( true );
           return info;
         }
       }
     }
     return null;
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return m_id;
   }
 
   public final ILayerManager getLayerManager( )
@@ -391,7 +328,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public IComponent getTargetComponent( )
   {
-    return m_hovering == null ? null : m_hovering.getTargetComponent();
+    final IProfilChartLayer layer = getActiveLayer();
+    return layer != null ? null : layer.getTargetComponent();
 
   }
 
@@ -433,17 +371,18 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
    */
-  public void onLayerVisibilityChanged( IChartLayer layer )
+  @Override
+  public void lockLayer( boolean isLocked )
   {
-    fireLayerContentChange();
+    if( isLocked != isLocked() )
+      for( final IEditableChartLayer layer : getLayerManager().getEditableLayers() )
+      {
+        layer.lockLayer( isLocked );
+      }
+    super.lockLayer( isLocked );
 
-  }
-
-  protected void fireLayerContentChange( )
-  {
-    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**
@@ -455,5 +394,14 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     for( final IChartLayer layer : getLayerManager().getLayers() )
       if( layer.isVisible() )
         layer.paint( gc );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   */
+  @Override
+  public void removeYourself( )
+  {
+    throw new UnsupportedOperationException( "Dieser layer kann nicht entfernt werden." );
   }
 }
