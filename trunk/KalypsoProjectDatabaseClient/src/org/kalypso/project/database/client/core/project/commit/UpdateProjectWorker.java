@@ -61,6 +61,7 @@ import org.kalypso.project.database.client.core.project.export.ProjectExportHand
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
@@ -123,8 +124,10 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       }, "update.zip" );
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      service.udpateProject( m_handler.getBean(), myDestinationUrl );
+      final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), myDestinationUrl );
+      preferences.setVersion( bean.getProjectVersion() );
 
+      destination.close();
       destination.delete();
     }
     catch( final FileSystemException e )

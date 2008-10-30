@@ -144,6 +144,9 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
         preferences.setIsOnServer( true );
       }
 
+      // bad @hack if the client has committed a large file, it can happen, that the client looses the http connection.
+      // file.close() reestablish this http-connection
+      destination.close();
       destination.delete();
     }
     catch( final FileSystemException e )
