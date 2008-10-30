@@ -117,7 +117,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
 
-    // REMARK: it is importent that the maker is re-created each time. as the makers sometimes
+    // REMARK: it is important that the maker is re-created each time. as the makers sometimes
     // do store state information
     final IControlMaker controlMaker = createControlMaker();
     // PARANOIA: createControlMaker may have been overwritten and so may return null.
@@ -126,7 +126,6 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
     final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
     for( final IPropertyType ftp : featureType.getProperties() )
-    {
       try
       {
         controlMaker.addControls( controlList, gridLayout, featureType, ftp, feature );
@@ -135,13 +134,12 @@ public class FeatureviewHelper implements IFeatureviewFactory
       {
         // just eat the exception, nothing shall be added for this property
       }
-    }
 
     return featureview;
   }
 
   /**
-   * Creates the control maker, ready to be overwritten by reimplementors.
+   * Creates the control maker, ready to be overwritten by re-implementors.
    * <p>
    * The default implementation creates a {@link DefaultControlMakerStrategy}.
    */
