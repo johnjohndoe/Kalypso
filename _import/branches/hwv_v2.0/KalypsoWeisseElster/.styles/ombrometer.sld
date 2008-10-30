@@ -4,14 +4,13 @@
 		<Name>deegree style definition</Name>
 		<UserStyle>
 			<Name>Ombrometer_Label</Name>
-			<Title>Ombrometer</Title>
+			<Title>Text</Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
-				<Name>Ombrometer</Name>
+				<Name>Ombrometer_Label</Name>
 				<Rule>
 					<Name>default</Name>
 					<Title>default</Title>
-					<Abstract>default</Abstract>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -52,20 +51,18 @@
 								<CssParameter name="stroke-linecap">square</CssParameter>
 							</Stroke>
 						</Halo>
-					</TextSymbolizer>					
+					</TextSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
 		<UserStyle>
 			<Name>Ombrometer_Points</Name>
-			<Title>Ombrometer</Title>
-			<IsDefault>1</IsDefault>
+			<Title>Lage</Title>
 			<FeatureTypeStyle>
 				<Name>Ombrometer_Points</Name>
 				<Rule>
-					<Name>default</Name>
+					<Name>Ort</Name>
 					<Title>default</Title>
-					<Abstract>default</Abstract>
 					<PointSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
