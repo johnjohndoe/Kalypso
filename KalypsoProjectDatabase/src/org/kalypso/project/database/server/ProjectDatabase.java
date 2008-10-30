@@ -224,8 +224,7 @@ public class ProjectDatabase implements IProjectDatabase
       }, String.format( "%s/%d/project.zip", bean.getUnixName(), bean.getProjectVersion() ) );
 
       final FileObject destination = manager.resolveFile( urlDestination );
-
-      VFSUtilities.copyFileTo( src, destination );
+      VFSUtilities.copy( src, destination );
 
       /* store project bean in database */
       bean.setCreationDate( Calendar.getInstance().getTime() );
