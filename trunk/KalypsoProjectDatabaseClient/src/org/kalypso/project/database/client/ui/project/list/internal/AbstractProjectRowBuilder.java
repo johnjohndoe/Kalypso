@@ -56,6 +56,8 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
   protected static Image IMG_LORE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
 
+  protected static Image IMG_LORE_PROJECT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_disabled.gif" ) );
+
   protected static Image IMG_DELETE_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
 
   protected static Image IMG_EXPORT_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );

@@ -52,11 +52,15 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.sei.IProjectDatabase;
+import org.kalypso.util.swt.StatusDialog;
 
 /**
  * Composite which displays the current project model database server state
@@ -144,8 +148,22 @@ public class ProjectDatabaseServerStatusComposite extends Composite
       img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       img.setText( "Server Status: offline" );
       img.setImage( IMG_SERVER_ERROR );
-      img.setEnabled( false );
+
       img.setUnderlined( false );
+
+      img.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e1 )
+        {
+          final StatusDialog dialog = new StatusDialog( img.getShell(), StatusUtilities.statusFromThrowable( e ), "Modelldatendienst Fehler" );
+          dialog.open();
+        }
+      } );
+
     }
 
     m_toolkit.adapt( this );
