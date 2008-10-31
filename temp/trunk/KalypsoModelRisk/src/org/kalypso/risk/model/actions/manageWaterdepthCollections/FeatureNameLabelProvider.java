@@ -1,5 +1,7 @@
 package org.kalypso.risk.model.actions.manageWaterdepthCollections;
 
+import ogc31.www.opengis.net.gml.FileType;
+
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -35,7 +37,11 @@ public class FeatureNameLabelProvider extends GMLLabelProvider
       {
         final StringBuffer label = new StringBuffer();
         final String name = coverage.getName();
-        final String mimeType = ((RectifiedGridCoverage) coverage).getRangeSet().getFile().getMimeType();
+        final Object rangeSet = ((RectifiedGridCoverage) coverage).getRangeSet();
+        if( !(rangeSet instanceof FileType) )
+          throw new UnsupportedOperationException( "Only FileType rangeSets supported by now" );
+
+        final String mimeType = ((FileType) rangeSet).getMimeType();
         if( name == null || name.length() == 0 )
           label.append( NAME_NOT_DEFINED );
         else

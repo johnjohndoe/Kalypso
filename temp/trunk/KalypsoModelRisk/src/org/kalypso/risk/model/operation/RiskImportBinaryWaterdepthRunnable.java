@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -71,11 +70,8 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
         final String binFileName = "platform:/resource//" + iFile.getProject().getName() + "/" + iFile.getProjectRelativePath().toString() + "." + BIN_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
+        rangeSetFile.setFileName( binFileName );
         rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
-
-        final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-        rangeSet.setFile( rangeSetFile );
 
         // remove existing (invalid) coverage collections from the model
         final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
@@ -95,7 +91,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
 
         final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-        coverage.setRangeSet( rangeSet );
+        coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( raster.getGridDomain() );
         coverage.setName( binFileName );
         coverage.setDescription( org.kalypso.risk.Messages.getString( "RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$

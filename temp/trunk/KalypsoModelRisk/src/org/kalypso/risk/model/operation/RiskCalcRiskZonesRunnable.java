@@ -1,7 +1,6 @@
 package org.kalypso.risk.model.operation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -82,7 +80,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     monitor.beginTask( Messages.getString( "RiskZonesCalculationHandler.7" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     if( m_rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
-      return StatusUtilities.createErrorStatus( Messages.getString( "RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$ 
+      return StatusUtilities.createErrorStatus( Messages.getString( "RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
 
     try
     {
@@ -166,7 +164,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     fillResultWithData( result, controlModel, vectorModel );
 
     /* add observation to workspace */
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
     // maybe set phenomenon?
     ObservationFeatureFactory.toFeature( obs, fObs );
   }
@@ -366,7 +364,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       {
         final String eventName = split[1];
 
-        RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
+        final RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
         if( statisticTableValues == null )
           System.out.println( "error while comupting risk statistic table" );
 
@@ -380,7 +378,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     }
 
     // at last we calculate the average annual damage value
-    int index = columnSize - 1;
+    final int index = columnSize - 1;
 
     final IComponent rowComp = result.getComponent( index );
     final String phenName = rowComp.getPhenomenon().getName();
@@ -391,7 +389,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       final Map<Double, RiskStatisticTableValues> periodSortedMap = getPeriods( columnSize, result, eventMap );
 
       /* calculate the average annual damage by integrating the specific average damage values */
-      double averageSum = calculateAverageDamageValue( periodSortedMap );
+      final double averageSum = calculateAverageDamageValue( periodSortedMap );
 
       // calculate the sum for average annual damage
       lastRecord.setValue( index, averageSum );
@@ -440,7 +438,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     return averageSum;
   }
 
-  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, Map<String, RiskStatisticTableValues> eventMap )
+  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, final Map<String, RiskStatisticTableValues> eventMap )
   {
     final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<Double, RiskStatisticTableValues>();
 
@@ -472,7 +470,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   }
 
-  private static BigDecimal calculateColumnSum( final TupleResult result, int index )
+  private static BigDecimal calculateColumnSum( final TupleResult result, final int index )
   {
     BigDecimal sum = new BigDecimal( 0.0 );
     for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
