@@ -2,11 +2,6 @@
 <mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns5="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns6="obstableview.template.kalypso.org">
     <mapv:extent srs="EPSG:31467" bottom="5640205.216291782" top="5752793.536958235" right="3949616.7956352625" left="3819077.699340863"/>
     <mapv:layers active="ID_0">
-        <mapv:layer visible="true" name="DWD-Vorhersage" featurePath="#fid#rasterGenerator/entryMember[RasterServiceEntry]" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../rainfallCatchment.gml" xlink:type="simple">
-            <templ:showChildren>true</templ:showChildren>
-            <templ:style style="rasterVorschau" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/dwdPrognose.sld" xlink:type="simple"/>
-            <templ:property name="deleteable">true</templ:property>
-        </mapv:layer>
         <mapv:layer visible="true" name="Ombrometer" featurePath="ombrometerMember" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../ombrometer.gml" xlink:type="simple">
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:ombrometerIsUsed:rule:ombrometerOn</templ:legendicon>
             <templ:showChildren>true</templ:showChildren>
