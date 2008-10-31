@@ -24,12 +24,12 @@
   <spi>false</spi>
   <sup/>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//:Catchment[@fid="Catchment7204" or @fid="Catchment7203" or @fid="Catchment7202" or @fid="Catchment7201" or @fid="Catchment7200"]]]></Catchments>
+  <Catchments><![CDATA[//rrm:Catchment[@gml:fid="Catchment7204" or @gml:fid="Catchment7203" or @gml:fid="Catchment7202" or @gml:fid="Catchment7201" or @gml:fid="Catchment7200"]]]></Catchments>
   <CatchmentsBianf>1.0</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.0</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.0</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.0</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//:KMChannel[@fid="KMChannel7200" or @fid="KMChannel7201" or @fid="KMChannel7202" or @fid="KMChannel7203" or @fid="KMChannel7204"]]]></KMChannels>
+  <KMChannels><![CDATA[//rrm:KMChannel[@gml:fid="KMChannel7200" or @gml:fid="KMChannel7201" or @gml:fid="KMChannel7202" or @gml:fid="KMChannel7203" or @gml:fid="KMChannel7204"]]]></KMChannels>
   <KMChannelsFaktorRkf>1.0</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>1.0</KMChannelsFaktorRnf>
   <rootNode>Node7200</rootNode>

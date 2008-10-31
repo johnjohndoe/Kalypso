@@ -24,12 +24,12 @@
   <spi>false</spi>
   <sup/>
   <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//:Catchment[@fid="Catchment7306" or @fid="Catchment7305" or @fid="Catchment7302" or @fid="Catchment7303" or @fid="Catchment7304" or @fid="Catchment7300"]]]></Catchments>
+  <Catchments><![CDATA[//rrm:Catchment[@gml:fid="Catchment7306" or @gml:fid="Catchment7305" or @gml:fid="Catchment7302" or @gml:fid="Catchment7303" or @gml:fid="Catchment7304" or @gml:fid="Catchment7300"]]]></Catchments>
   <CatchmentsBianf>0.5012313244319353</CatchmentsBianf>
   <CatchmentsFaktorRetobTetint>1.2551059727466938</CatchmentsFaktorRetobTetint>
   <CatchmentsFaktn>1.4610516598506247</CatchmentsFaktn>
   <CatchmentsFaktorAigw>1.583913423302949</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//:KMChannel[@fid="KMChannel7300" or @fid="KMChannel7302" or @fid="KMChannel7303" or @fid="KMChannel7304" or @fid="KMChannel7305" or @fid="KMChannel7306"]]]></KMChannels>
+  <KMChannels><![CDATA[//rrm:KMChannel[@gml:fid="KMChannel7300" or @gml:fid="KMChannel7302" or @gml:fid="KMChannel7303" or @gml:fid="KMChannel7304" or @gml:fid="KMChannel7305" or @gml:fid="KMChannel7306"]]]></KMChannels>
   <KMChannelsFaktorRkf>1.3007802377439055</KMChannelsFaktorRkf>
   <KMChannelsFaktorRnf>0.7204084957349067</KMChannelsFaktorRnf>
   <rootNode>Node7300</rootNode>
