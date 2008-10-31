@@ -47,10 +47,10 @@ import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 
 /**
- * The NSPrefixProvider is a singelton to ensures that namespaces are allways prefixed the same way. This is not
- * neccesary, but very nice.
+ * The NSPrefixProvider is a singleton to ensures that namespaces are always prefixed the same way. This is not
+ * necessary, but very nice.
  * <p>
- * Suggestion: Retrieve preffered namespaces via catalog mechanism, so new plugins can contribute new namesapce
+ * Suggestion: Retrieve preferred namespaces via catalogue mechanism, so new plugins can contribute new namesapce
  * prefixes.
  * </p>
  * 
@@ -95,11 +95,16 @@ public class NSPrefixProvider
       m_catalog = JavaApiContributionsExtension.getAllRegisteredCatalogs();
   }
 
+  public boolean hasPrefix( final String namespaceURI )
+  {
+    return m_prefixMap.containsKey( namespaceURI );
+  }
+
   /**
    * @param namespaceUri
    * @param suggestion
-   *            a suggestion for prefix or <code>null</code>
-   * @return allways a valid prefix for given namespaceURI
+   *          a suggestion for prefix or <code>null</code>
+   * @return always a valid prefix for given namespaceURI
    */
   public String getPreferredPrefix( final String namespaceURI, final String suggestion )
   {

@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -81,11 +82,14 @@ public class GMLSAXFactory
 {
   private final NSPrefixProvider m_nsMapper = NSUtilities.getNSProvider();
 
-  private final List<String> m_usedPrefixes = new ArrayList<String>();
+  /** Namespace -> prefix: Contains the namespaces, whose prefix was already registered in the content handler. */
+  private final Map<String, String> m_usedPrefixes = new HashMap<String, String>();
+
+  private final XMLReader m_xmlReader;
 
   private final QName m_xlinkQN;
 
-  private final XMLReader m_xmlReader;
+  private final String x_linkElementQname;
 
   /**
    * @param idMap
@@ -97,6 +101,7 @@ public class GMLSAXFactory
 
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
+    x_linkElementQname = m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart();
   }
 
   public void process( final GMLWorkspace workspace ) throws SAXException
@@ -105,20 +110,30 @@ public class GMLSAXFactory
 
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
-    // handle prefixes...
-    // these are mandatory
+    // handle mandatory prefixes...
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
 
-    final IGMLSchema gmlSchema = workspace.getGMLSchema();
+    final IFeatureType rootFT = rootFeature.getFeatureType();
+    final QName rootQName = rootFT.getQName();
 
+    final String rootNamespace = rootQName.getNamespaceURI();
+    final boolean noRootPrefix = !m_nsMapper.hasPrefix( rootNamespace );
+    if( noRootPrefix )
+    {
+      contentHandler.startPrefixMapping( "", rootNamespace );
+      m_usedPrefixes.put( rootNamespace, "" );
+    }
+
+    // generate used prefixes
+    final IGMLSchema gmlSchema = workspace.getGMLSchema();
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
     {
       final QName qName = element.getQName();
-      // generate used prefixes
-      getPrefixedQName( qName );
+      if( !noRootPrefix || !qName.getNamespaceURI().equals( rootNamespace ) )
+        getPrefixedQName( qName );
     }
 
     // TODO: bug... this may cause too much namespaces to bee written into the gml-file
@@ -141,7 +156,7 @@ public class GMLSAXFactory
     // Add schemalocation string: wouldn't it be better to create it?
     final AttributesImpl a = new AttributesImpl();
     final String schemaLocationString = workspace.getSchemaLocationString();
-    if( (schemaLocationString != null) && (schemaLocationString.length() > 0) )
+    if( schemaLocationString != null && schemaLocationString.length() > 0 )
     {
       final String qName = m_nsMapper.getPreferredPrefix( NS.XSD, null ) + ":" + "schemaLocation";
       a.addAttribute( NS.XSD, "schemaLocation", qName, "CDATA", schemaLocationString );
@@ -152,10 +167,18 @@ public class GMLSAXFactory
   private QName getPrefixedQName( final QName qName ) throws SAXException
   {
     final String uri = qName.getNamespaceURI();
-    final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
-    if( !(m_usedPrefixes.contains( prefix )) )
+    // Check if already registered; return the qname from the map, because qName is not prefixed
+    final String prefix;
+    if( m_usedPrefixes.containsKey( uri ) )
+      prefix = m_usedPrefixes.get( uri );
+    else
+    {
+      // Create new prefix and register it
+      prefix = m_nsMapper.getPreferredPrefix( uri, null );
       m_xmlReader.getContentHandler().startPrefixMapping( prefix, uri );
-    m_usedPrefixes.add( prefix );
+      m_usedPrefixes.put( uri, prefix );
+    }
+
     return new QName( qName.getNamespaceURI(), qName.getLocalPart(), prefix );
   }
 
@@ -180,7 +203,8 @@ public class GMLSAXFactory
     final QName prefixedQName = getPrefixedQName( feature.getFeatureType().getQName() );
     final String localPart = prefixedQName.getLocalPart();
     final String uri = prefixedQName.getNamespaceURI();
-    contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
+    final String qname = elementQName( prefixedQName );
+    contentHandler.startElement( uri, localPart, qname, a );
 
     /* Write properties */
     final IPropertyType[] properties = featureType.getProperties();
@@ -212,7 +236,16 @@ public class GMLSAXFactory
     }
 
     /* Write closing tag */
-    contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+    contentHandler.endElement( uri, localPart, qname );
+  }
+
+  private String elementQName( final QName prefixedQName )
+  {
+    final String prefix = prefixedQName.getPrefix();
+    if( prefix.isEmpty() )
+      return prefixedQName.getLocalPart();
+
+    return prefix + ":" + prefixedQName.getLocalPart();
   }
 
   /**
@@ -231,7 +264,8 @@ public class GMLSAXFactory
     final Attributes atts = attributeForProperty( pt, propertyValue );
 
     /* Write starting tag */
-    contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
+    final String qname = elementQName( prefixedQName );
+    contentHandler.startElement( uri, localPart, qname, atts );
 
     if( pt instanceof IRelationType )
     {
@@ -246,7 +280,7 @@ public class GMLSAXFactory
       throw new UnsupportedOperationException();
 
     /* Write ending tag */
-    contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+    contentHandler.endElement( uri, localPart, qname );
   }
 
   private Attributes attributeForProperty( final IPropertyType pt, final Object propertyValue )
@@ -264,7 +298,7 @@ public class GMLSAXFactory
         href = null;
 
       if( href != null )
-        atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", href );
+        atts.addAttribute( NS.XLINK, "href", x_linkElementQname, "CDATA", href );
     }
 
     return atts;
