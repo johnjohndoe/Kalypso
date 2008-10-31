@@ -3,14 +3,7 @@ package org.kalypso.auth;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.auth.login.DefaultAuthenticator;
-import org.kalypso.auth.login.IAuthenticator;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.Scenario;
 import org.kalypso.auth.user.IKalypsoUser;
@@ -106,7 +99,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   /**
    * @return current user
    * @throws IllegalStateException
-   *             if login procedure was not started
+   *           if login procedure was not started
    */
   public IKalypsoUser getCurrentUser( )
   {
@@ -114,66 +107,6 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       throw new IllegalStateException( "No user" );
 
     return m_user;
-  }
-
-  /**
-   * Starts the login procedure. Goes through the extensions for IAuthenticator and lets the first available one
-   * authenticate the user. As last resort the DefaultAuthenticator is used.
-   * 
-   * @throws InterruptedException
-   *             means user cancels the login procedure
-   * @throws CoreException
-   *             means error while retrieving the extensions for org.kalypso.auth.login.IAuthenticator
-   */
-  public void startLoginProcedure( final Display display ) throws InterruptedException, CoreException
-  {
-    // important: once login procedure is started, directly set user to null.
-    // Kalypso should be started using the product "org.kalypso.product.product"
-    // which uses the KalypsoApplication which, in turn, calls this method.
-    // During development, one might want to bypass the login stuff. So by default,
-    // the user is set to some default one.
-    m_user = null;
-
-    final Shell shell = new Shell( display, SWT.SYSTEM_MODAL );
-    shell.setImage( ImageProvider.IMAGE_KALYPSO_ICON.createImage() );
-
-    try
-    {
-      final IAuthenticator[] authenticators = AuthenticatorExtensions.retrieveExtensions();
-      for( final IAuthenticator element : authenticators )
-      {
-        try
-        {
-          m_user = element.authenticate( shell );
-          return;
-        }
-        catch( final InterruptedException e )
-        {
-          // cancelled by user, so stop
-          m_user = null;
-
-          throw e;
-        }
-        catch( final Exception e )
-        {
-          // just stack trace
-          e.printStackTrace();
-        }
-      }
-
-      // no authentication succeeded till now, so let's give a last chance
-      // using the default authenticator
-      m_user = new DefaultAuthenticator().authenticate( shell );
-
-      // if user is still null, then inform user
-      if( m_user == null )
-        MessageDialog.openWarning( shell, "Kalypso-Login", "Login fehlgeschlagen." );
-    }
-    finally
-    {
-      if( shell != null )
-        shell.dispose();
-    }
   }
 
   /**
