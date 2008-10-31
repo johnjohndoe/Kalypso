@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -63,7 +63,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
 {
   public GenericGM_ObjectBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class< ? > gm_objectClass, final boolean isGeometry )
   {
-    super( jaxbContextProvider, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false, true );
+    super( jaxbContextProvider, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry );
   }
 
   /**
@@ -87,7 +87,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
             final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
             geometryValue = bindingToGM_ObjectAdapter.wrapFromBinding( bindingGeometry, geometryClass );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             // try to load with other gml version
             if( gmlVersion.startsWith( "2" ) )
@@ -119,7 +119,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
   @Override
-  public void marshal( final QName propQName, final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
     {
@@ -127,7 +127,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
       final Object geomObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Object) geometry );
       final JAXBElement< ? extends Object> geomElement = valueToGMLBindingAdapter.createJAXBGeometryElement( geomObject );
 
-      super.marshal( propQName, geomElement, reader, gmlVersion );
+      super.marshal( geomElement, reader, gmlVersion );
     }
     catch( final GM_Exception e )
     {

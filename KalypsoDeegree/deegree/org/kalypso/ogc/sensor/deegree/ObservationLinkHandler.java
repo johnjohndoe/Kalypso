@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.deegree;
 
@@ -51,15 +51,14 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @author belger
@@ -93,21 +92,22 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
-   *      java.net.URL)
+   * @see org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter#marshall(java.lang.Object,
+   *      org.w3c.dom.Document, java.net.URL)
    */
+  @Deprecated
   @Override
-  public void marshall( final Object object, final Node node, URL context ) throws TypeRegistryException
+  public Element marshall( final Object object, final Document document, final URL context ) throws TypeRegistryException
   {
     try
     {
       final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       final JAXBElement<TimeseriesLinkType> value = m_factory.createTimeseriesLink( (TimeseriesLinkType) object );
-      /* String debugNode = */XMLHelper.toString( node );
-      marshaller.marshal( value, node );
+      marshaller.marshal( value, document );
+      return document.getDocumentElement();
     }
-    catch( JAXBException e )
+    catch( final JAXBException e )
     {
       throw new TypeRegistryException( e );
     }
@@ -117,26 +117,17 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
    *      org.kalypso.contribs.java.net.IUrlResolver)
    */
+  @Deprecated
   @Override
-  public Object unmarshall( final Node node, URL context, IUrlResolver urlResolver ) throws TypeRegistryException
+  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
   {
     try
     {
-      final Element element = (Element) node;
-      // String elementTXT = XMLHelper.toString(element);
-      final NodeList childNodes = (element).getElementsByTagNameNS( NAMESPACE, "TimeseriesLink" );
-      // String childNodesTXT = XMLHelper.toString(childNodes);
-      for( int i = 0; i < childNodes.getLength(); i++ )
+      // child namespace may be null
+      if( NAMESPACE.equals( node.getNamespaceURI() ) && "TimeseriesLink".equals( node.getLocalName() ) )
       {
-        final Node child = childNodes.item( i );
-        // String childTXT = XMLHelper.toString(child);
-
-        // child namespace may be null
-        if( NAMESPACE.equals( child.getNamespaceURI() ) && "TimeseriesLink".equals( child.getLocalName() ) )
-        {
-          final JAXBElement valueElement = (JAXBElement) JC.createUnmarshaller().unmarshal( child );
-          return valueElement.getValue();
-        }
+        final JAXBElement<TimeseriesLinkType> valueElement = (JAXBElement<TimeseriesLinkType>) JC.createUnmarshaller().unmarshal( node );
+        return valueElement.getValue();
       }
       return null;
     }
@@ -157,7 +148,7 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
   /**
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
    */
-  public Object cloneObject( Object objectToClone, final String gmlVersion )
+  public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
     final TimeseriesLinkType link = (TimeseriesLinkType) objectToClone;
     final TimeseriesLinkType clone = m_factory.createTimeseriesLinkType();

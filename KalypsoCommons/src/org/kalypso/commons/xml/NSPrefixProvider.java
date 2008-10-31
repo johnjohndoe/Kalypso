@@ -81,7 +81,7 @@ public class NSPrefixProvider
       // THE_NS_MAPPER.getPreferredPrefix( NS.GML2, "gml2" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_RRM, "rrm" );
       THE_NS_MAPPER.getPreferredPrefix( NS.KALYPSO_OBSLINK, "obslink" );
-      THE_NS_MAPPER.getPreferredPrefix( NS.ADV, "adv" );
+      THE_NS_MAPPER.getPreferredPrefix( NS.ADV_NAS, "adv" );
       THE_NS_MAPPER.getPreferredPrefix( NS.CATALOG, "catalog" );
 
       // TODO add here all the well known namespaces...

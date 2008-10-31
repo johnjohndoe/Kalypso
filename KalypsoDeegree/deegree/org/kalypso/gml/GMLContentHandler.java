@@ -54,9 +54,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
@@ -65,7 +65,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -90,6 +89,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   private Feature m_scopeFeature = null;
 
   private IPropertyType m_scopeProperty = null;
+
+  /** Buffer for simple content, if this is about to be parsed */
+  private StringBuffer m_simpleContent = null;
 
   private Feature m_rootFeature;
 
@@ -149,22 +151,24 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType pt = featureType.getProperty( qname );
     if( pt == null )
-      throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qname );
+    {
+      final String msg = String.format( "Found unknwon property '%s' for FeatureType '%s'", qname, featureType.getQName() );
+      throw new SAXException( msg );
+    }
 
     /* Go into scope with that feature */
     m_scopeProperty = pt;
 
-    // TODO: normally this should be enough. We should now activate a delegate contentHandler which parses the content
-    // of a property
-
     if( pt instanceof IValuePropertyType )
     {
-      startValueProperty( uri, localName, qName, atts, (IValuePropertyType) pt );
+      final IValuePropertyType vpt = (IValuePropertyType) pt;
+      if( vpt.getTypeHandler() instanceof ISimpleMarshallingTypeHandler )
+        m_simpleContent = new StringBuffer();
+      else
+        startValueProperty( uri, localName, qName, atts, vpt );
     }
     else if( pt instanceof IRelationType )// its a relation
-    {
       startXLinkedFeature( atts, feature, (IRelationType) pt );
-    }
     else
     {
       /* Should never happen. either its a value or a relation. */
@@ -192,11 +196,6 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       try
       {
         final String gmlVersion = m_schema.getGMLVersion();
-        // TODO hack, check if there is a better way to set the attributes (maybe in
-        // IMarshallingTypeHandler.unmarshall()
-        // ?)
-        if( typeHandler.getClass() == GenericBindingTypeHandler.class )
-          ((GenericBindingTypeHandler) typeHandler).setAttributes( atts );
 
         // TODO: we SHOULD provide here the full information to the handler: qname, att, ...
         typeHandler.unmarshal( m_xmlReader, m_context, this, gmlVersion );
@@ -244,7 +243,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
      * property type as scope.</p>
      */
 
-    // TODO: We should make sure that this element has no futher content.
+    // TODO: We should make sure that this element has no further content.
   }
 
   private void startFeature( final Attributes atts, final QName qname ) throws SAXException
@@ -273,19 +272,29 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   {
     /* First check, if a current scope is closing */
 
-    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
+    final String localUri = uri == null || uri.isEmpty() ? m_schema.getTargetNamespace() : uri;
+
+    if( m_simpleContent != null )
+    {
+      endSimpleContent( localUri, localName );
+      m_scopeProperty = null;
+      return;
+    }
 
     if( m_scopeProperty != null && QNameUtilities.equals( m_scopeProperty.getQName(), localUri, localName ) )
     {
+      // REMARK: this case happens, after the type-marshaler has already read the content of the element
+
       /* Closing current property */
       m_scopeProperty = null;
       setDelegate( null );
       return;
     }
-    else if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
+
+    if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
     {
       /* Closing current feature, scope changes back to parent feature. */
-      final Feature parent = m_scopeFeature.getParent();
+      final Feature parent = m_scopeFeature.getOwner();
       /* If the root gets closed we know the result feature. */
       if( parent == null )
         m_rootFeature = m_scopeFeature;
@@ -301,6 +310,28 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       super.endElement( uri, localName, qName );
       return;
     }
+  }
+
+  /**
+   * @see org.kalypso.contribs.org.xml.sax.DelegateContentHandler#characters(char[], int, int)
+   */
+  @Override
+  public void characters( final char[] ch, final int start, final int length ) throws SAXException
+  {
+    if( m_simpleContent == null )
+      super.characters( ch, start, length );
+    else
+      m_simpleContent.append( ch, start, length );
+  }
+
+  /**
+   * @see org.kalypso.contribs.org.xml.sax.DelegateContentHandler#ignorableWhitespace(char[], int, int)
+   */
+  @Override
+  public void ignorableWhitespace( final char[] ch, final int start, final int len )
+  {
+    if( m_simpleContent != null )
+      m_simpleContent.append( ch, start, len );
   }
 
   public Feature getRootFeature( ) throws GMLException
@@ -330,6 +361,45 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       return atts.getValue( id4 );
 
     return null;
+  }
+
+  /**
+   * Will be called, if simple content was parsed.
+   */
+  private void endSimpleContent( final String uri, final String localName ) throws SAXException
+  {
+    if( m_scopeProperty == null )
+      throw new SAXException( "Simple Content found outside of a property." );
+
+    if( !(m_scopeProperty instanceof IValuePropertyType) )
+      throw new SAXException( String.format( "Tried to parse simple content for non simple type: ", m_scopeProperty.getQName() ) );
+
+    if( !QNameUtilities.equals( m_scopeProperty.getQName(), uri, localName ) )
+      throw new SAXException( String.format( "Unbalanced XML at </{%s}%s>", uri, localName ) );
+
+    final IValuePropertyType valuePT = (IValuePropertyType) m_scopeProperty;
+    final ISimpleMarshallingTypeHandler< ? > simpleHandler = (ISimpleMarshallingTypeHandler< ? >) valuePT.getTypeHandler();
+    final String simpleString = m_simpleContent.toString();
+
+    try
+    {
+      final Object value = simpleHandler.convertToJavaValue( simpleString );
+      if( m_scopeProperty.isList() )
+        ((List) m_scopeFeature.getProperty( m_scopeProperty )).add( value );
+      else
+        m_scopeFeature.setProperty( m_scopeProperty, value );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final String msg = String.format( "Failed to parsed simple type. Content was '%s' for property '%s'", simpleString, m_scopeProperty.getQName() );
+      throw new SAXParseException( msg, getLocator(), e );
+    }
+    finally
+    {
+      // Always delete; simple content always stops at the next tag
+      m_simpleContent = null;
+    }
   }
 
   /**
@@ -364,14 +434,5 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       // equivalent to endElement( -property-qname- ); but we do not have that information at the moment
       m_scopeProperty = null;
     }
-  }
-
-  /**
-   * @see org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator)
-   */
-  @Override
-  public void setDocumentLocator( final Locator locator )
-  {
-    super.setDocumentLocator( locator );
   }
 }

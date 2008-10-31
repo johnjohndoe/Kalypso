@@ -7,7 +7,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
@@ -38,7 +37,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   private final String m_sourceCRS;
 
-  private final RangeSetType m_rangeSet;
+  private final Object m_rangeSet;
 
   private final URL m_context;
 
@@ -65,7 +64,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
       m_context = context;
 
     final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
-    m_rangeSet = (RangeSetType) rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
+    m_rangeSet = rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
     final GM_Point origin = domain.getOrigin( null );
     m_origin = new Coordinate( origin.getX(), origin.getY() );
     m_offsetX = new Coordinate( domain.getOffsetX().getGeoX(), domain.getOffsetX().getGeoY() );
@@ -94,12 +93,14 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     {
       try
       {
-        final FileType file = m_rangeSet.getFile();
-        if( file != null )
+        if( m_rangeSet instanceof FileType )
         {
+          final FileType file = (FileType) m_rangeSet;
           final URL url = new URL( m_context, file.getFileName() );
           m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
         }
+        else
+          throw new UnsupportedOperationException( "Only FileSet rangeSets supported by now" );
       }
       catch( final IOException e )
       {

@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,7 +37,7 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.RangeSetType;
+import ogc31.www.opengis.net.gml.FileType;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
@@ -100,19 +100,22 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
   }
 
   /**
-   * @return Returns the rangeSet.
+   * @return Returns the rangeSet. Can be one of {@link FileType}; TODO: support others
    */
-  public RangeSetType getRangeSet( )
+  public Object getRangeSet( )
   {
-    return (RangeSetType) getFeature().getProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET );
+    return getFeature().getProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET );
   }
 
   /**
    * @param rangeSet
-   *            The rangeSet to set.
+   *          Choice can be a {@link ogc31.www.opengis.net.gml.FileType} or XXX TODO, not yet supported
    */
-  public void setRangeSet( final RangeSetType rangeSet )
+  public void setRangeSet( final Object rangeSet )
   {
+    if( !(rangeSet instanceof FileType) )
+      throw new IllegalArgumentException();
+
     getFeature().setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
   }
 

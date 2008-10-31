@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -77,23 +77,11 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
    *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
-  public void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    final ContentHandler contentHandler = reader.getContentHandler();
-
-    final String propNamespace = propQName.getNamespaceURI();
-
-    final String propLocalPart = propQName.getLocalPart();
-    final String propPrefix = propQName.getPrefix();
-    final String propQname = propPrefix + ":" + propLocalPart;
-
-    contentHandler.startElement( propNamespace, propLocalPart, propQname, null );
-
     final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) value;
 
     new TriangulatedSurfaceMarshaller( reader, surface ).marshal();
-
-    contentHandler.endElement( propNamespace, propLocalPart, propQname );
   }
 
   /**

@@ -48,7 +48,6 @@ import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -116,15 +115,18 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
           final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
 
           /* imgFile */
-          final RangeSetType rangeSet = coverage2.getRangeSet();
-          final FileType type = rangeSet.getFile();
+          final Object rangeSet = coverage2.getRangeSet();
+          if( rangeSet instanceof FileType )
+          {
+            final FileType type = (FileType) rangeSet;
 
-          final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
+            final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
 
-          final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
-          final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
-          setImage( new TiledImage( image, true ) );
-          image.dispose();
+            final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
+            final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
+            setImage( new TiledImage( image, true ) );
+            image.dispose();
+          }
 
           // HACK: we assume, that we only have exactly ONE coverage per picture-theme
 

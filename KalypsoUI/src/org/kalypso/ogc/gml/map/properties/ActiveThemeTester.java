@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -138,7 +139,11 @@ public class ActiveThemeTester extends PropertyTester
     if( featureList == null )
       return false;
 
-    final IFeatureType targetFeatureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
+    final IRelationType parentFTP = featureList.getParentFeatureTypeProperty();
+    if( parentFTP == null )
+      return false;
+
+    final IFeatureType targetFeatureType = parentFTP.getTargetFeatureType();
     if( targetFeatureType == null )
       return false;
 

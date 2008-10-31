@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.io.sax;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,8 +105,6 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
   private static String parseCrsFromAttributes( final Attributes attributes, final String parentCS )
   {
     final String srsName = AttributesUtilities.getAttributeValue( attributes, "", "srsName", null );
-
-    // TODO: move into helper class
     if( srsName == null )
       return parentCS;
 
@@ -240,11 +237,10 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
         m_poses.add( GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ) ) );
       else
         throw new SAXParseException( "Not enough coords in pos element: " + coordsString, m_locator );
-
     }
-    catch( final ParseException e )
+    catch( final NumberFormatException nfe )
     {
-      throw new SAXParseException( "Unable to parse pos-content: " + coordsString, m_locator, e );
+      throw new SAXParseException( "Failed to parse coordinates: " + coordsString, m_locator, nfe );
     }
     finally
     {

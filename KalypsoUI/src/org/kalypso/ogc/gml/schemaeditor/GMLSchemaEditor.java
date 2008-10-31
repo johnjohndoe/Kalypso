@@ -27,6 +27,7 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -109,7 +110,7 @@ public class GMLSchemaEditor extends EditorPart
 
   private void load( )
   {
-    new Job( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.0") ) //$NON-NLS-1$
+    new Job( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.0" ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -130,7 +131,7 @@ public class GMLSchemaEditor extends EditorPart
         }
         catch( final Exception e )
         {
-          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.1") ); //$NON-NLS-1$
+          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.1" ) ); //$NON-NLS-1$
 
           KalypsoGisPlugin.getDefault().getLog().log( statusFromThrowable );
 
@@ -177,7 +178,7 @@ public class GMLSchemaEditor extends EditorPart
       }
       catch( final IOException e )
       {
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2"), e ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2" ), e ); //$NON-NLS-1$
       }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
@@ -201,24 +202,27 @@ public class GMLSchemaEditor extends EditorPart
     }
 
     // if we have a context, load the schema via the cache
-    if( context != null )
+    try
     {
-      // this does not load the schema from the cache but puts it at least into the cache
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      return schemaCatalog.getSchema( null, context );
-    }
-    else if( contents != null )
-    {
-      try
+      if( context != null )
+      {
+        // this does not load the schema from the cache but puts it at least into the cache
+        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+        final GMLSchema schema = schemaCatalog.getSchema( null, context );
+        if( schema == null )
+          throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Unable to load schema: " + context.toExternalForm(), null ) );
+        return schema;
+      }
+      else if( contents != null )
       {
         return GMLSchemaFactory.createGMLSchema( contents, null, null );
       }
-      finally
-      {
-        IOUtils.closeQuietly( contents );
-      }
+    }
+    finally
+    {
+      IOUtils.closeQuietly( contents );
     }
 
-    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3") ); //$NON-NLS-1$
+    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3" ) ); //$NON-NLS-1$
   }
 }

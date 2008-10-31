@@ -412,7 +412,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setMapModell( null, null );
       setFile( null );
 
-      m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );//$NON-NLS-1$;
+      if( m_mapPanel != null )
+        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );//$NON-NLS-1$;
 
       throw new CoreException( status );
     }
