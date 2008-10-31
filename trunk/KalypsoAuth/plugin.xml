@@ -2,6 +2,5 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="authenticator" name="Kalypso Authenticator" schema="schema/authenticator.exsd"/>
 
 </plugin>
