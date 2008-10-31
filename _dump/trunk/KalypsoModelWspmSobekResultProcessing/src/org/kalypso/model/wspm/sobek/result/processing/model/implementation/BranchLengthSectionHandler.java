@@ -1,10 +1,7 @@
 package org.kalypso.model.wspm.sobek.result.processing.model.implementation;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -29,6 +26,7 @@ public class BranchLengthSectionHandler extends AbstractFeatureWrapper implement
     return (String) getProperty( QN_BRANCH );
   }
 
+  @Override
   public String getName( )
   {
     return (String) getProperty( QN_NAME );
@@ -59,7 +57,7 @@ public class BranchLengthSectionHandler extends AbstractFeatureWrapper implement
         result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObservation, DICT_OBS_NODE_TYPE ) );
 
         /* add observation to workspace */
-        final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
 
         // maybe set phenomenon?
         ObservationFeatureFactory.toFeature( obs, fObservation );

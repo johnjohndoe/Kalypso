@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
@@ -216,7 +214,7 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
         throw new IllegalStateException();
 
       /* add observation to workspace */
-      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // maybe set phenomenon?
       ObservationFeatureFactory.toFeature( obs, fObs );

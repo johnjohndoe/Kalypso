@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,10 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 
-import java.util.ArrayList;
-
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
@@ -65,12 +62,12 @@ public class BuildingWehr extends AbstractObservationBuilding
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     final IRecord emptyRecord = result.createRecord();
-    
+
     emptyRecord.setValue( 0, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
     emptyRecord.setValue( 1, 0.0 );
     result.add( emptyRecord );
 
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result );
 
     m_profil = profil;
     m_observation = observation;

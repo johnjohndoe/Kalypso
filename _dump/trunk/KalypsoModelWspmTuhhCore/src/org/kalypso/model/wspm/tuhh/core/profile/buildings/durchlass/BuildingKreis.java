@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,10 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 
-import java.util.ArrayList;
-
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
@@ -66,7 +63,7 @@ public class BuildingKreis extends AbstractObservationBuilding
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Kreis", result, new ArrayList<MetadataObject>() );
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Kreis", result );
 
     init( profil, observation );
   }

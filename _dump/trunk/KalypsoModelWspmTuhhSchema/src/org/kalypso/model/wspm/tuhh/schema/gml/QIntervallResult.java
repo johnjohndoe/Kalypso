@@ -41,12 +41,10 @@
 package org.kalypso.model.wspm.tuhh.schema.gml;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -133,7 +131,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     final IComponent[] pointsComponents = createPointsComponents( obsFeature );
 
     final TupleResult tupleResult = new TupleResult( pointsComponents );
-    return new Observation<TupleResult>( "", "", tupleResult, new ArrayList<MetadataObject>() );
+    return new Observation<TupleResult>( "", "", tupleResult );
   }
 
   public void setPointsObservation( final IObservation<TupleResult> observation )
@@ -232,7 +230,7 @@ public class QIntervallResult extends AbstractFeatureBinder
     // Sort by discharge and then downstream waterlevel
     tupleResult.setSortComponents( new IComponent[] { pointsComponents[0], pointsComponents[1] } );
 
-    return new Observation<TupleResult>( "", "", tupleResult, new ArrayList<MetadataObject>() );
+    return new Observation<TupleResult>( "", "", tupleResult );
   }
 
   public void setWeirObservation( final IObservation<TupleResult> observation )

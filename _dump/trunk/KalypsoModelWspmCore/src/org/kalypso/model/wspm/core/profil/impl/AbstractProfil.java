@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
@@ -49,7 +49,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -99,8 +98,6 @@ public abstract class AbstractProfil implements IProfil
   private String m_description;
 
   private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
-
-  private List<MetadataObject> m_metaDataList = new ArrayList<MetadataObject>();
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
@@ -161,7 +158,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
     if( m_additionalProfileSettings.get( PROFILE_OBJECTS ) == null )
@@ -180,7 +177,7 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
-   * @see 
+   * @see
    *      org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso
    *      .observation.result.TupleResult>[]) override this method if you have got the
    *      org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your m_type
@@ -218,7 +215,7 @@ public abstract class AbstractProfil implements IProfil
 
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( changes == null && changes.length == 0 )
+    if( changes == null || changes.length == 0 )
       return;
 
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
@@ -282,14 +279,6 @@ public abstract class AbstractProfil implements IProfil
       if( getPointMarkerFor( record ).length > 0 )
         records.add( record );
     return records.toArray( new IRecord[] {} );
-  }
-
-  /**
-   * @see org.kalypso.observation.IObservation#getMetadataList()
-   */
-  public List<MetadataObject> getMetadataList( )
-  {
-    return m_metaDataList;
   }
 
   public String getName( )
@@ -436,7 +425,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public IProfileObject[] getProfileObjects( )
   {
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
@@ -550,7 +539,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
@@ -604,15 +593,6 @@ public abstract class AbstractProfil implements IProfil
   public void setDescription( final String desc )
   {
     m_description = desc;
-  }
-
-  /**
-   * @see org.kalypso.observation.IObservation#setMedataList(java.util.List)
-   */
-  public void setMedataList( final List<MetadataObject> metaDataList )
-  {
-    m_metaDataList = metaDataList;
-
   }
 
   public void setName( final String name )

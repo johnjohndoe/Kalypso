@@ -1,9 +1,6 @@
 package org.kalypso.model.wspm.sobek.result.processing.model.implementation;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -19,7 +16,7 @@ public class WeirTimeSeriesHandler extends ResultTimeSeriesHandler
 {
   private final WEIR_NODE_RESULT m_type;
 
-  public WeirTimeSeriesHandler( WEIR_NODE_RESULT type, Feature feature, INode node )
+  public WeirTimeSeriesHandler( final WEIR_NODE_RESULT type, final Feature feature, final INode node )
   {
     super( feature, node );
     m_type = type;
@@ -60,7 +57,7 @@ public class WeirTimeSeriesHandler extends ResultTimeSeriesHandler
           throw new IllegalStateException();
 
         /* add observation to workspace */
-        final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result ); //$NON-NLS-1$ //$NON-NLS-2$
 
         // maybe set phenomenon?
         ObservationFeatureFactory.toFeature( obs, fObservation );
