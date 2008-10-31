@@ -81,6 +81,8 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Aktualisiere Projekt", 4 );
+
     // remove local project lock
     final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
     final String ticket = preferences.getEditTicket();
@@ -89,10 +91,14 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
     final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) );
     final File src = new File( urlTempDir, "update.zip" );
 
+    monitor.worked( 1 );
+
     try
     {
+      monitor.subTask( "Exportiere Projekt in lokales, temporäres Verzeichnis" );
       final ProjectExportHandler worker = new ProjectExportHandler( m_handler.getProject(), src );
       final IStatus status = worker.execute( monitor );
+      monitor.worked( 1 );
 
       if( !status.isOK() )
         throw new CoreException( StatusUtilities.createErrorStatus( "Creating archive of project failed." ) );
@@ -110,6 +116,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
       }, "update.zip" );
 
+      monitor.subTask( "Übertrage Projekt auf Server" );
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
 
@@ -142,8 +149,9 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
     {
       // add local project lock
       preferences.setEditTicket( ticket );
-
       src.delete();
+
+      monitor.done();
     }
 
     return Status.OK_STATUS;

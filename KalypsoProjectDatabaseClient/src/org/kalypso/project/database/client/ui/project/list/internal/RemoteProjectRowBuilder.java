@@ -40,29 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
-import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
 
 /**
  * Projects hosted at the project database model server
@@ -71,11 +56,9 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  protected final ProjectHandler m_handler;
-
-  public RemoteProjectRowBuilder( final ProjectHandler handler )
+  public RemoteProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker )
   {
-    m_handler = handler;
+    super( handler, locker );
   }
 
   /**
@@ -92,111 +75,31 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    if( m_handler.getBean().isProjectLockedForEditing() )
+    if( getHandler().getBean().isProjectLockedForEditing() )
     {
-      lnk.setImage( iMG_REMOTE_PROJECT_LOCKED );
-      lnk.setToolTipText( String.format( "Projekt: \"%s\" befindet sich aktuell in Bearbeitung.", m_handler.getName() ) );
+      lnk.setImage( IMG_REMOTE_PROJECT_LOCKED );
+      lnk.setToolTipText( String.format( "Projekt: \"%s\" befindet sich aktuell in Bearbeitung.", getHandler().getName() ) );
     }
     else
     {
       lnk.setImage( IMG_REMOTE_PROJECT );
-      lnk.setToolTipText( String.format( "Projekt: %s", m_handler.getName() ) );
+      lnk.setToolTipText( String.format( "Projekt: %s", getHandler().getName() ) );
     }
 
-    lnk.setText( m_handler.getName() );
+    lnk.setUnderlined( false );
+    lnk.setEnabled( false );
+
+    lnk.setText( getHandler().getName() );
 
     /* info */
-    getInfoLink( m_handler, body, toolkit );
+    getInfoLink( body, toolkit );
 
     /* import */
-    getImportLink( m_handler, body, toolkit );
+    getImportLink( body, toolkit );
 
     getSpacer( body, toolkit );
     getSpacer( body, toolkit );
     getSpacer( body, toolkit );
   }
 
-  protected static void getImportLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
-  {
-    final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", handler.getName() ) );
-
-    if( handler.isRemote() && ProjectDatabaseServerUtils.isServerOnline() )
-    {
-      lnkImport.setImage( IMG_IMPORT_REMOTE );
-      lnkImport.addHyperlinkListener( new HyperlinkAdapter()
-      {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( final HyperlinkEvent e )
-        {
-          try
-          {
-            /* sort beans */
-            final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( handler.getBean() );
-            final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
-
-            // bad hack - to determine which project was newly created
-            final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
-
-            for( final KalypsoProjectBean b : beans )
-            {
-              final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), b.getProjectVersion() ), b.getUnixName(), b.getDescription(), null, b.getUrl() );
-              mapping.put( template, b );
-
-              templates.add( template );
-            }
-
-            RemoteProjectHelper.importRemoteProject( templates.toArray( new ProjectTemplate[] {} ), mapping );
-          }
-          catch( final MalformedURLException e1 )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-          }
-
-        }
-      } );
-
-    }
-    else
-    {
-      lnkImport.setImage( IMG_IMPORT_REMOTE_DISABLED );
-      lnkImport.setEnabled( false );
-    }
-
-  }
-
-  protected static void getInfoLink( final ProjectHandler handler, final Composite body, final FormToolkit toolkit )
-  {
-    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", handler.getName() ) );
-
-    if( handler.isRemote() && ProjectDatabaseServerUtils.isServerOnline() )
-    {
-      lnkInfo.setImage( IMG_REMOTE_INFO );
-
-      lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
-      {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( final HyperlinkEvent e )
-        {
-          final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( handler.getBean() );
-
-          final WizardDialog dialog = new WizardDialog( null, wizard );
-          dialog.open();
-        }
-      } );
-    }
-    else
-    {
-      lnkInfo.setImage( IMG_REMOTE_INFO_DISABLED );
-      lnkInfo.setEnabled( false );
-    }
-
-  }
 }
