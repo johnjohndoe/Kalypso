@@ -74,7 +74,7 @@
    						<annotation>
 							<documentation xml:lang="de">
 								<label>Beschreibung</label>
-								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<tooltip>Kurzbeschreibung dieser Rechenvariante</tooltip>
 								<description></description>
 							</documentation>
 						</annotation>
@@ -83,7 +83,7 @@
    						<annotation>
 							<documentation xml:lang="de">
 								<label>Kommentar</label>
-								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<tooltip>Langbeschreibung dieser Rechenvariante</tooltip>
 								<description></description>
 							</documentation>
 						</annotation>
@@ -92,7 +92,7 @@
                        	<annotation>
 							<documentation xml:lang="de">
 								<label>Erstellungszeitpunkt</label>
-								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<tooltip>Zeitpunkt der Erstellung der Rechenvariante</tooltip>
 								<description></description>
 							</documentation>
 						</annotation>

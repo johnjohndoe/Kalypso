@@ -1,4 +1,5 @@
-<schema targetNamespace="org.kalypso.wavos.control" version="0.1" xmlns:wavos="org.kalypso.wavos.control" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:wavos="org.kalypso.wavos.control" elementFormDefault="qualified" targetNamespace="org.kalypso.wavos.control" version="0.1">
         <import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
         <element name="WavosControl" type="wavos:_WavosControlType"/>
         <complexType name="_WavosControlBaseType">
@@ -10,7 +11,7 @@
                 <complexContent>
                         <extension base="wavos:_WavosControlBaseType">
                                 <sequence>
-                                        <element name="scenarioId" type="string" minOccurs="0" maxOccurs="1">
+                                        <element name="scenarioId" type="string" maxOccurs="1" minOccurs="0" >
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Szenario Id</label>
@@ -19,7 +20,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="scenarioName" type="string" minOccurs="0" maxOccurs="1">
+                                        <element  name="scenarioName" type="string" maxOccurs="1" minOccurs="0">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Szenario</label>
@@ -28,7 +29,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="scenarioDescription" type="string" minOccurs="0" maxOccurs="1">
+                                        <element name="scenarioDescription" type="string" maxOccurs="1" minOccurs="0" >
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Szenario Beschreibung</label>
@@ -47,7 +48,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="startforecast" type="dateTime" nillable="false">
+                                        <element name="startforecast" nillable="false" type="dateTime">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Start der Vorhersage</label>
@@ -56,7 +57,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="simulationDuration" type="int" nillable="false">
+                                        <element name="simulationDuration" nillable="false" type="int">
                                                 <annotation>
                                                         <documentation xml:lang="de"> startsimulation = Tagesanfang(startforecast - simulationDuration) <label>Simulationszeitraum [d]</label>
                                                                 <tooltip>Dauer der Simulationsrechnung [d]</tooltip>
@@ -64,7 +65,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="forecastDuration" type="int" nillable="false">
+                                        <element name="forecastDuration" nillable="false" type="int">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Vorhersagezeitraum [h]</label>
@@ -73,7 +74,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="editor" type="string" nillable="true">
+                                        <element name="editor" nillable="true" type="string">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Ersteller</label>
@@ -82,29 +83,29 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="description" type="string" nillable="true">
+                                        <element name="description" nillable="true" type="string">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Beschreibung</label>
-                                                                <tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+                                                                <tooltip>Kurzbeschreibung dieser Rechenvariante</tooltip>
                                                                 <description/>
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="comment" type="string" nillable="true">
+                                        <element name="comment" nillable="true" type="string">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Kommentar</label>
-                                                                <tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+                                                                <tooltip>Langbeschreibung dieser Rechenvariante</tooltip>
                                                                 <description/>
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="calctime" type="dateTime" nillable="true">
+                                        <element name="calctime" nillable="true" type="dateTime">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Erstellungszeitpunkt</label>
-                                                                <tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+                                                                <tooltip>Zeitpunkt der Erstellung der Rechenvariante</tooltip>
                                                                 <description/>
                                                         </documentation>
                                                 </annotation>
@@ -118,7 +119,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="intervalAmount" type="int" default="1" nillable="false">
+                                        <element default="1" name="intervalAmount" nillable="false" type="int">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Zeitschritt [h]</label>
@@ -127,7 +128,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="useAWerte" type="boolean" default="false" nillable="false">
+                                        <element default="false" name="useAWerte" nillable="false" type="boolean">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Anfangswerte verwenden</label>
@@ -136,7 +137,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="useAWerteText" type="string" default="Es sind keine Anfangswerte vorhanden." nillable="false">
+                                        <element default="Es sind keine Anfangswerte vorhanden." name="useAWerteText" nillable="false" type="string">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <label>Status der Anfangswerte</label>
