@@ -126,9 +126,9 @@ import org.xml.sax.InputSource;
  */
 public class ZmlFactory
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+  public final static ObjectFactory OF = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -291,6 +291,11 @@ public class ZmlFactory
       throw new SensorException( e );
     }
 
+    return binding2Obs( obs, identifier, context );
+  }
+
+  public static IObservation binding2Obs( final Observation obs, final String identifier, final URL context ) throws SensorException
+  {
     // metadata
     final MetadataList metadata = new MetadataList();
     metadata.put( ObservationConstants.MD_NAME, obs.getName() );
@@ -645,7 +650,7 @@ public class ZmlFactory
     return marshaller;
   }
 
-  private static Unmarshaller getUnmarshaller( ) throws JAXBException
+  public static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
     final Unmarshaller unmarshaller = JC.createUnmarshaller();
 

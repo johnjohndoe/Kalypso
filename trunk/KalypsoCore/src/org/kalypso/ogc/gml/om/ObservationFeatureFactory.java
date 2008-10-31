@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
@@ -52,7 +52,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.KalypsoCoreExtensions;
@@ -124,7 +123,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
   /**
    * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static IObservation<TupleResult> toObservation( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
@@ -134,7 +132,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final String name = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_NAME );
     final String desc = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_DESCRIPTION );
-    final List<MetadataObject> meta = (List<MetadataObject>) f.getProperty( ObservationFeatureFactory.GML_METADATA );
 
     final Object phenProp = f.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
 
@@ -152,7 +149,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final TupleResult tupleResult = ObservationFeatureFactory.buildTupleResult( f );
 
-    final IObservation<TupleResult> observation = new Observation<TupleResult>( name, desc, tupleResult, meta );
+    final IObservation<TupleResult> observation = new Observation<TupleResult>( name, desc, tupleResult );
     observation.setPhenomenon( phenomenon );
 
     return observation;
@@ -201,21 +198,21 @@ public class ObservationFeatureFactory implements IAdapterFactory
         if( "null".equals( token ) ) //$NON-NLS-1$
           value = null;
         else // TODO fabrication method needed!
-        if( handler instanceof XsdBaseTypeHandlerString )
-        {
-          final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-        }
-        else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-        {
-          final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-        }
-        else
-        {
+          if( handler instanceof XsdBaseTypeHandlerString )
+          {
+            final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+          }
+          else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+          {
+            final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+            value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+          }
+          else
+          {
 
-          value = handler.convertToJavaValue( token );
-        }
+            value = handler.convertToJavaValue( token );
+          }
 
         record.setValue( nb, value );
       }
@@ -355,9 +352,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( ObservationFeatureFactory.GML_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( ObservationFeatureFactory.GML_DESCRIPTION ), source.getDescription() ) );
-
-    final List<MetadataObject> mdList = source.getMetadataList();
-    changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( ObservationFeatureFactory.GML_METADATA ), mdList ) );
 
     // TODO: at the moment, only referenced phenomenons are supported
     final IRelationType phenPt = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );

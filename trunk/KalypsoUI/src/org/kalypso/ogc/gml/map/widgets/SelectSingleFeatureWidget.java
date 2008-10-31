@@ -235,9 +235,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     }
     finally
     {
-// // Always reinit, this makes the widget more robust against change of the active theme
-// // Else, we must be a panel listener etc.
-// reinit();
       m_geometryBuilder.reset();
     }
   }

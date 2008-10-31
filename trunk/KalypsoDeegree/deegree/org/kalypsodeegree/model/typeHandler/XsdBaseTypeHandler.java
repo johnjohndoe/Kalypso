@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,16 +45,13 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypso.gmlschema.types.XsdBaseContentHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
- * @author doemming
+ * Base type-handler for simple types.
+ * 
+ * @author Andreas von Dömming
  */
 public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHandler<T>, Comparator<T>
 {
@@ -75,36 +72,12 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
-   *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
+   *      java.net.URL, java.lang.String)
    */
-  public final void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public final void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {
-    final ContentHandler contentHandler = reader.getContentHandler();
-    final LexicalHandler lexicalHandler = (LexicalHandler) reader.getProperty( "http://xml.org/sax/properties/lexical-handler" );
-
-    // TODO: this is NOT the right place to write the element! This should be done in the next higher level, because
-    // it is always the same for every marshalling type handler.
-    final String namespaceURI = propQName.getNamespaceURI();
-    final String localPart = propQName.getLocalPart();
-    final String qNameString = propQName.getPrefix() + ":" + localPart;
-    contentHandler.startElement( namespaceURI, localPart, qNameString, null );
-
-    // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
-    // to look for a specific value. This must of course be decided in a more generel way.
-    // Maybe we register extensions for specific qnames?
-    // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
-    if( propQName.equals( new QName( NS.OM, "result" ) ) )
-      lexicalHandler.startCDATA();
-
-    final String valueAsXMLString = convertToXMLString( (T) value );
-    final char[] cs = valueAsXMLString.toCharArray();
-    contentHandler.characters( cs, 0, cs.length );
-
-    if( propQName.equals( new QName( NS.OM, "result" ) ) )
-      lexicalHandler.endCDATA();
-
-    contentHandler.endElement( namespaceURI, localPart, qNameString );
+    throw new UnsupportedOperationException();
   }
 
   public abstract String convertToXMLString( final T value );
@@ -115,18 +88,9 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
    *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
    */
-  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
+  public void unmarshal( final XMLReader xmlReader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
-    try
-    {
-      final XsdBaseContentHandler contentHandler = new XsdBaseContentHandler( this, marshalResultEater );
-      xmlReader.setContentHandler( contentHandler );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new TypeRegistryException( e );
-    }
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -143,30 +107,34 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     if( objectToClone == null )
-    {
       return null;
-    }
+
     try
-    {// TODO: only do this in the case of the list-handler?
+    {
       if( objectToClone instanceof List )
       {
-        final List list = (List) objectToClone;
-        final List clonedList = new ArrayList( list.size() );
+        final List<T> list = (List<T>) objectToClone;
+        final List<T> clonedList = new ArrayList<T>( list.size() );
         for( final Object listItem : list )
         {
-          final String stringOfCloneItem = convertToXMLString( (T) listItem );
-          clonedList.add( parseType( stringOfCloneItem ) );
+          final T clonedObject = cloneValueObject( (T) listItem );
+          clonedList.add( clonedObject );
         }
         return clonedList;
       }
       // no list
-      final String stringOfClone = convertToXMLString( (T) objectToClone );
-      return parseType( stringOfClone );
+      return cloneValueObject( (T) objectToClone );
     }
-    catch( final ParseException p )
+    catch( final Exception p )
     {
       throw new CloneNotSupportedException( p.getMessage() );
     }
+  }
+
+  private T cloneValueObject( final T objectToClone )
+  {
+    final String xmlString = convertToXMLString( objectToClone );
+    return convertToJavaValue( xmlString );
   }
 
   /**
@@ -174,10 +142,9 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
    */
   public Object parseType( final String xmlString ) throws ParseException
   {
-    if( (xmlString == null) || (xmlString.length() < 1) )
-    {
+    if( xmlString == null || xmlString.isEmpty() )
       return null;
-    }
+
     try
     {
       return convertToJavaValue( xmlString );

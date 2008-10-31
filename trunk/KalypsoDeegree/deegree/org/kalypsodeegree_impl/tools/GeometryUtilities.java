@@ -105,9 +105,11 @@ public class GeometryUtilities
 
   public static final QName QN_DIRECTION_PROPERTY = new QName( NS.GML3, "DirectionPropertyType" );
 
-  public GeometryUtilities( )
+  public static final QName QN_GEOMETRY_PROPERTY = new QName( NS.GML3, "GeometryPropertyType" );
+
+  private GeometryUtilities( )
   {
-    super();
+    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
   }
 
   public static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP ) throws GM_Exception
@@ -579,39 +581,39 @@ public class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-  {
+      {
     return GM_Point.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-  {
+      {
     return GM_MultiPoint.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-  {
+      {
     return GM_MultiCurve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-  {
+      {
     return GM_MultiSurface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-  {
+      {
     return GM_Object.class;
-  }
+      }
 
   public static boolean isGeometry( final Object o )
   {
@@ -675,10 +677,10 @@ public class GeometryUtilities
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
 
-          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-          ) / 2d;
+      ) / 2d;
     }
     return area;
   }
@@ -837,7 +839,7 @@ public class GeometryUtilities
     return nearest;
   }
 
-/**
+  /**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    * 
@@ -849,10 +851,8 @@ public class GeometryUtilities
   {
     Feature nearest = null;
 
-    for( int i = 0; i < modelLists.length; i++ )
+    for( final FeatureList modelList : modelLists )
     {
-      final FeatureList modelList = modelLists[i];
-
       if( modelList == null )
         continue;
 
@@ -1151,11 +1151,11 @@ public class GeometryUtilities
     double minZ = Double.MAX_VALUE;
 
     // find minimum values
-    for( int i = 0; i < ring.length; i++ )
+    for( final GM_Position element : ring )
     {
-      minX = Math.min( minX, ring[i].getX() );
-      minY = Math.min( minY, ring[i].getY() );
-      minZ = Math.min( minZ, ring[i].getZ() );
+      minX = Math.min( minX, element.getX() );
+      minY = Math.min( minY, element.getY() );
+      minZ = Math.min( minZ, element.getZ() );
     }
 
     // if we have no z-value we fake one.

@@ -47,7 +47,6 @@ import java.net.URL;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
-import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
@@ -556,12 +555,9 @@ public class GeoGridUtilities
     rangeSetFile.setMimeType( mimeType );
     rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
-    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-    rangeSet.setFile( rangeSetFile );
-
     coverage.setDescription( "Imported via Kalypso" );
     coverage.setGridDomain( domain );
-    coverage.setRangeSet( rangeSet );
+    coverage.setRangeSet( rangeSetFile );
   }
 
   private static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
