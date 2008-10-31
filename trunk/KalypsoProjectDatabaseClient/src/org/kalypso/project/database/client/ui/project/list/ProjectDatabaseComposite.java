@@ -69,9 +69,8 @@ import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjec
  * 
  * @author Dirk Kuch
  */
-public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener
+public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener, IProjectDatabaseUiLocker
 {
-
   private final FormToolkit m_toolkit;
 
   private Composite m_body = null;
@@ -81,6 +80,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   private final IProjectDatabaseFilter m_filter;
 
   protected UIJob m_updateJob = null;
+
+  private boolean m_updateLock = false;
 
   /**
    * @param parent
@@ -119,6 +120,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   @Override
   public synchronized void update( )
   {
+    if( m_updateLock )
+      return;
+
     if( this.isDisposed() )
       return;
 
@@ -157,18 +161,18 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     {
       if( handler.getRemotePreferences().isOnServer() )
       {
-        return new LocalServerProjectRowBuilder( handler );
+        return new LocalServerProjectRowBuilder( handler, this );
       }
 
-      return new LocalRemoteProjectRowBuilder( handler );
+      return new LocalRemoteProjectRowBuilder( handler, this );
     }
     else if( handler.isLocal() )
     {
-      return new LocalProjectRowBuilder( handler );
+      return new LocalProjectRowBuilder( handler, this );
     }
     else if( handler.isRemote() )
     {
-      return new RemoteProjectRowBuilder( handler );
+      return new RemoteProjectRowBuilder( handler, this );
     }
     else
       throw new IllegalStateException();
@@ -194,6 +198,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private synchronized void updateUI( )
   {
+    if( m_updateLock )
+      return;
+
     if( m_updateJob == null )
     {
       m_updateJob = new UIJob( "" )
@@ -210,6 +217,25 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
       m_updateJob.schedule( 750 );
     }
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUIHandler#acquireUiUpdateLock()
+   */
+  @Override
+  public void acquireUiUpdateLock( )
+  {
+    m_updateLock = true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUIHandler#releaseUiUpdateLock()
+   */
+  @Override
+  public void releaseUiUpdateLock( )
+  {
+    m_updateLock = false;
+    updateUI();
   }
 
 }

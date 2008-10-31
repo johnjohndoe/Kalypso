@@ -82,8 +82,10 @@ public class ProjectDatabaseServerUtils
 
         if( localVersion.intValue() < remoteVersion.intValue() )
           return true;
-        else if( localVersion.intValue() > remoteVersion.intValue() )
-          throw new IllegalStateException( "Should never happen: localVersion.intValue() > remoteVersion.intValue()" );
+        // happens while proejct update action
+// else if( localVersion.intValue() > remoteVersion.intValue() )
+// throw new IllegalStateException( "Should never happen: localVersion.intValue() > remoteVersion.intValue()" );
+
       }
       catch( final CoreException e )
       {

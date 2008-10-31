@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.list.internal;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -48,6 +49,45 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IProjectRowBuilder
 {
+  public static Image IMG_LOCAL_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
+
+  public static Image IMG_LORE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore.gif" ) );
+
+  public static Image IMG_LORE_PROJECT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_disabled.gif" ) );
+
+  public static Image IMG_DELETE_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+
+  public static Image IMG_EXPORT_LOCAL = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+
+  public static Image IMG_IMPORT_REMOTE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) );
+
+  public static Image IMG_IMPORT_REMOTE_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote_disabled.gif" ) );
+
+  public static Image IMG_REMOTE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
+
+  public static Image IMG_REMOTE_PROJECT_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote_locked.gif" ) );
+
+  public static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+
+  public static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
+
+  public static Image IMG_LORE_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_locked.gif" ) );
+
+  public static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
+
+  public static Image IMG_LORE_OTHER_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_other_locked.gif" ) );
+
+  public static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
+
+  public static Image IMG_LORE_COMMIT_AND_UNLOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock.gif" ) );
+
+  public static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) );
+
+  public static Image IMG_LOCAL_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
+
+  public static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) );
+
+  public static Image IMG_LORE_UPDATEABLE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_update.gif" ) );
 
   void render( Composite body, FormToolkit toolkit );
 }
