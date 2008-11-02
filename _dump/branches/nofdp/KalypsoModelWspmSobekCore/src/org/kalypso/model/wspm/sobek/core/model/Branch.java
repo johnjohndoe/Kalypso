@@ -189,7 +189,7 @@ public class Branch implements IBranch
    */
   public GM_Curve getCurve( )
   {
-    return (GM_Curve) m_branch.getDefaultGeometryProperty();
+    return (GM_Curve) m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE );
   }
 
   /**
