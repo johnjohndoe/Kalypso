@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ombr:OmbrometerCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:ombr="org.kalypso.model.rcm.ombrometer" gml:id="root">
- <ombr:hasBeenProcessed>true</ombr:hasBeenProcessed>
+ <ombr:hasBeenProcessed>false</ombr:hasBeenProcessed>
  <ombr:ombrometerMember>
   <ombr:Ombrometer gml:id="Ombrometer-Kamenz_Lückersdorf">
    <gml:description>  0 /  16</gml:description>
