@@ -246,8 +246,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   }
 
   /**
-   * Add a listener in the mapPanel that will be notified in specific changes. <br/> At the moment there is only the
-   * message changed event.
+   * Add a listener in the mapPanel that will be notified in specific changes. <br/>
+   * At the moment there is only the message changed event.
    */
   public void addMapPanelListener( final IMapPanelListener l )
   {
@@ -485,7 +485,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   protected void globalSelectionChanged( )
   {
-    m_painter.invalidate( true );
+    if( m_painter != null )
+      m_painter.invalidate( true );
 
     // TODO: should be fired in the SWT thread, because the global selection listeners
     // need this
@@ -609,7 +610,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
       g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
-      m_painter.paint( g );
+      if( m_painter != null )
+        m_painter.paint( g );
       // TODO: at the moment, we paint the status just on top of the map, if we change this component to SWT, we should
       // show the statusComposite in a title bar, if the status is non-OK (with details button for a stack trace)
       paintStatus( g );
@@ -786,7 +788,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       // Status will immediately set by the call to invalidateMao
     }
 
-
     invalidateMap();
 
     fireMapModelChanged( oldModel, m_model );
@@ -851,7 +852,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     m_shouldPaint = false;
 
-    m_painter.cancel();
+    if( m_painter != null )
+      m_painter.cancel();
   }
 
   public ExtentHistory getExtentHistory( )

@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
@@ -49,7 +47,6 @@ import java.util.Vector;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.Repconf.Repository;
@@ -76,14 +73,11 @@ public class RepositoryConfigUtils
    */
   public static List<RepositoryFactoryConfig> loadConfig( final URL location ) throws RepositoryException
   {
-    InputStream ins = null;
     try
     {
-      ins = new BufferedInputStream( location.openStream() );
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      final Repconf repconf = (Repconf) unmarshaller.unmarshal( ins );
-      ins.close();
+      final Repconf repconf = (Repconf) unmarshaller.unmarshal( location );
 
       final List<Repconf.Repository> list = repconf.getRepository();
 
@@ -100,10 +94,6 @@ public class RepositoryConfigUtils
     catch( final Exception e )
     {
       throw new RepositoryException( "Unable to load repository config from location: " + location, e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( ins );
     }
   }
 }
