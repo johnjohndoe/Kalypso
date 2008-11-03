@@ -119,6 +119,12 @@ public class RestoreSelectionHelper
     final EasyFeatureWrapper[] easyArray = easyFeatures
     .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
+    // TODO: we should do a clean() and than select the new features because:
+    // - we need both, else some models do not refresh, as exactly the same feature get selected
+    // - in this case we can avoid cleaning and restoring (!) the selection before the calculation
+    // IN order to make this work, it must be fixed, that the observation occur twice in the legend of the diagram
+    // (and twice in the tables, if two selection event occur in a short time.
+    
     final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures( m_selectionManager );
     m_selectionManager.changeSelection( selectionToRemove, easyArray );
   }
