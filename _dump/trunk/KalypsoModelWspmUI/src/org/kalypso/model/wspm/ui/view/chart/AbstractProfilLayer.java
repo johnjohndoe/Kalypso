@@ -100,14 +100,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       final String id = getId();
 
-      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", ILineStyle.class );
-      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", IPointStyle.class );
+      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", null );
+      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null );
 
-      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", ILineStyle.class );
-      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", IPointStyle.class );
+      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null );
+      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null );
 
-      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", ILineStyle.class );
-      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", IPointStyle.class );
+      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null );
+      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null );
     }
   }
 
