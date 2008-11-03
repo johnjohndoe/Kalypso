@@ -58,7 +58,7 @@ public class RepositoryItemPropertyTester extends PropertyTester
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
    */
   @Override
-  public boolean test( Object receiver, String property, Object[] args, Object expectedValue )
+  public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     if( !(receiver instanceof IRepositoryItem) )
       return false;
@@ -71,9 +71,9 @@ public class RepositoryItemPropertyTester extends PropertyTester
     return false;
   }
 
-  private boolean testHasWQTable( IRepositoryItem item )
+  private boolean testHasWQTable( final IRepositoryItem item )
   {
-    IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+    final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
     if( obs == null )
       return false;
     
@@ -84,4 +84,6 @@ public class RepositoryItemPropertyTester extends PropertyTester
     return true;
   }
 
+  
+  
 }

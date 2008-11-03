@@ -608,8 +608,7 @@
 				<visibleWhen checkEnabled="false">
 					<with variable="selection">
 						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
-							</instanceof>
+							<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
 						</iterate>
 					</with>
 				</visibleWhen>
@@ -719,7 +718,9 @@
 				<and>
 					<reference definitionId="repositoryItemSelection"/>
 					<with variable="selection">
-				        <test property="org.kalypso.ui.repositoryItemHasWQTable"/>
+						<iterate ifEmpty="false" operator="and">
+				        	<test property="org.kalypso.ui.repositoryItemHasWQTable"/>
+						</iterate>
 					</with>
 				</and>
 			</enabledWhen>
