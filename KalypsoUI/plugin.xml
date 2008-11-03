@@ -390,6 +390,7 @@
 		<key commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+Q" />
 		<key commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+E" />
 		<key commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+F" />
+		<key commandId="org.kalypso.ogc.gml.map.FullExtentCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M" />
 	</extension>
 	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
 		<propertyContributor contributorId="org.kalypso.ui.ContentOutlinePropertyContributor">
