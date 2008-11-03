@@ -114,6 +114,16 @@ public class VFSUtilities
   }
 
   /**
+   * Same as copy(source, destination, true)
+   * 
+   * @see #copy(FileObject, FileObject, boolean)
+   */
+  public static void copy( final FileObject source, final FileObject destination ) throws IOException
+  {
+    copy( source, destination, true );
+  }
+
+  /**
    * This function copies a source to a given destination. If no filename is given in the destination file handle, the
    * filename of the source is used.<br>
    * 
@@ -121,16 +131,28 @@ public class VFSUtilities
    *          The source file.
    * @param destination
    *          The destination file or path.
+   * @param overwrite
+   *          If set, always overwrite existing and newer files
    */
-  public static void copy( final FileObject source, final FileObject destination ) throws IOException
+  public static void copy( final FileObject source, final FileObject destination, final boolean overwrite ) throws IOException
   {
     if( FileType.FOLDER.equals( source.getType() ) )
     {
-      copyDirectoryToDirectory( source, destination );
+      copyDirectoryToDirectory( source, destination, overwrite );
       return;
     }
 
-    copyFileTo( source, destination );
+    copyFileTo( source, destination, overwrite );
+  }
+
+  /**
+   * Same as copyFileTo(source, destination, true)
+   * 
+   * @see #copyFileTo(FileObject, FileObject, boolean)
+   */
+  public static void copyFileTo( FileObject source, FileObject destination ) throws IOException
+  {
+    copyFileTo( source, destination, true );
   }
 
   /**
@@ -144,8 +166,10 @@ public class VFSUtilities
    *          The source file.
    * @param destination
    *          The destination file or path.
+   * @param overwrite
+   *          If set, always overwrite existing and newer files
    */
-  public static void copyFileTo( FileObject source, FileObject destination ) throws IOException
+  public static void copyFileTo( FileObject source, FileObject destination, final boolean overwrite ) throws IOException
   {
     /* Some variables for handling the errors. */
     boolean success = false;
@@ -163,9 +187,12 @@ public class VFSUtilities
         if( FileType.FOLDER.equals( destination.getType() ) )
           destinationFile = destination.resolveFile( source.getName().getBaseName() );
 
-        /* Copy file. */
-        Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
-        FileUtil.copyContent( source, destinationFile );
+        if( overwrite || !destination.exists() )
+        {
+          /* Copy file. */
+          Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
+          FileUtil.copyContent( source, destinationFile );
+        }
 
         /* End copying of this file, because it was a success. */
         success = true;
@@ -211,8 +238,10 @@ public class VFSUtilities
    *          The source directory.
    * @param destination
    *          The destination directory.
+   * @param overwrite
+   *          If set, always overwrite existing and newer files
    */
-  public static void copyDirectoryToDirectory( FileObject source, FileObject destination ) throws IOException
+  public static void copyDirectoryToDirectory( final FileObject source, final FileObject destination, final boolean overwrite ) throws IOException
   {
     if( !FileType.FOLDER.equals( source.getType() ) )
       throw new IllegalArgumentException( "Source must be directory...: " + source.getURL() );
@@ -238,7 +267,7 @@ public class VFSUtilities
         FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
-        copyFileTo( child, destinationFile );
+        copyFileTo( child, destinationFile, overwrite );
       }
       else if( FileType.FOLDER.equals( child.getType() ) )
       {
@@ -247,11 +276,21 @@ public class VFSUtilities
 
         /* Copy ... */
         Debug.println( "Copy directory " + child.getName() + " to " + destinationDir.getName() + " ..." );
-        copyDirectoryToDirectory( child, destinationDir );
+        copyDirectoryToDirectory( child, destinationDir, overwrite );
       }
       else
         Debug.println( "Could not determine the file type ..." );
     }
+  }
+
+  /**
+   * Same as copyDirectoryToDirectory(source, destination, true)
+   * 
+   * @see #copyDirectoryToDirectory(FileObject, FileObject, boolean)
+   */
+  public static void copyDirectoryToDirectory( final FileObject source, final FileObject destination ) throws IOException
+  {
+    copyDirectoryToDirectory( source, destination, false );
   }
 
   /**
