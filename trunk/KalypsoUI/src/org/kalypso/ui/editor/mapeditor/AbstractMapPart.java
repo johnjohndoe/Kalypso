@@ -62,6 +62,7 @@ import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
@@ -598,7 +599,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( adapter == ModellEventProvider.class )
       return new MapPanelModellEventProvider( m_mapPanel );
 
-    if( adapter == Form.class )
+    if( adapter.isAssignableFrom( Control.class ))
       return m_control;
 
     return super.getAdapter( adapter );
