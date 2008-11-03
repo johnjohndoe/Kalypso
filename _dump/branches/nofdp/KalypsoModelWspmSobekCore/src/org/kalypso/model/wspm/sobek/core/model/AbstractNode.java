@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
@@ -58,7 +57,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -215,18 +213,16 @@ public abstract class AbstractNode implements INode
    */
   public boolean relaysOnGeometry( final Geometry geometry ) throws GM_Exception
   {
-    if( geometry instanceof LineString )
-    {
-      final LineString lineString = (LineString) geometry;
-      final GM_Point location = getLocation();
-      final Geometry point = JTSAdapter.export( location );
-
-      if( lineString.intersects( point.buffer( GEOM_BUFFER ) ) )
-        return true;
-
+    if( geometry.isEmpty() )
       return false;
-    }
 
-    throw new NotImplementedException();
+    final GM_Point location = getLocation();
+    final Geometry point = JTSAdapter.export( location );
+
+    if( geometry.intersects( point.buffer( GEOM_BUFFER ) ) )
+      return true;
+
+    return false;
+
   }
 }
