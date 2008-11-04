@@ -2,19 +2,19 @@
 <MappingCollection fid="ID1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://org.kalypso.updateObservationMapping" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://org.kalypso.updateObservationMapping ">
   <mappingMember>
     <MappingObservation fid="EZ_1">
-      <gml:name>Trado 1</gml:name>
+      <gml:name>Trado 3</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.3_SE.02PG...553011.P3_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.3_SE.02PG...553013.P3_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.3_SE.02PG...553011.P4_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.3_SE.02PG...553013.P4_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.3_SE.02PG...9553011.P3_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.3_SE.02PG...9553013.P3_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.3_SE.02PG...9553011.P4_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.3_SE.02PG...9553013.P4_MW"/>
       </out4ObservationLink>
       <local1>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/QV_TRADO.zml"/>

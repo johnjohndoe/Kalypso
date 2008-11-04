@@ -21,13 +21,13 @@
     </observation>
     
     <observation linktype="zml" ns1:href="QV_TRADO.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c7" name="Trado 1 - Wasserstand - Vorhersage [cm]" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c7" name="Trado 3 - Wasserstand - Vorhersage [cm]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="QV_TRADO_unten.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c8" name="Trado 1 - Wasserstand - Vorhersage - Spur unten [cm]" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c8" name="Trado 3 - Wasserstand - Vorhersage - Spur unten [cm]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="QV_TRADO_oben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c9" name="Trado 1 - Wasserstand - Vorhersage - Spur oben [cm]" width="50"/>
+        <column axis="Wasserstand" editable="true" id="c9" name="Trado 3 - Wasserstand - Vorhersage - Spur oben [cm]" width="50"/>
     </observation>
   
     <observation linktype="zml" ns1:href="QV_ZESCHA.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
