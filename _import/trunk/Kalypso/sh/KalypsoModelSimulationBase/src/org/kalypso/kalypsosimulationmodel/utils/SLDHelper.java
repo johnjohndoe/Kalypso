@@ -115,7 +115,9 @@ public class SLDHelper
 
   private static final String LABEL_RULE_NAME = "Labelle";
 
-  private static final double DEFAULT_FILLOPACITY = 0.75;
+  private static final double DEFAULT_VECTOR_FILLOPACITY = 0.75;
+
+  private static final double DEFAULT_RASTER_FILLOPACITY = 0.9;
 
   private static final double DEFAULT_STROKEOPACITY = 1.0;
 
@@ -157,12 +159,12 @@ public class SLDHelper
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
-  public static void exportRasterSymbolyzerSLD( final IFile sldFile, final double minValue, final double maxValue, final int numberOfIntervals, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
+  public static void exportRasterSymbolyzerSLD( final IFile sldFile, final double minValue, final double maxValue, final int numberOfIntervals, final Color lightestColor, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
     final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
     final String myStyleTitle = styleTitle == null ? DEFAULT_STYLE_TITLE : styleTitle;
-    final StyledLayerDescriptor descriptor = createRasterSLD( minValue, maxValue, numberOfIntervals, darkestColor, myStyleName, myStyleTitle, progressMonitor );
+    final StyledLayerDescriptor descriptor = createRasterSLD( minValue, maxValue, numberOfIntervals, lightestColor, darkestColor, myStyleName, myStyleTitle, progressMonitor );
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
@@ -219,27 +221,32 @@ public class SLDHelper
     helper.setFileContents( sldFile, false, false, progressMonitor );
   }
 
-  private static StyledLayerDescriptor createRasterSLD( final double minValue, final double maxValue, final int numberOfIntervals, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
+  /**
+   * if lightestColor is null, than WHITE (0, 0, 0) is used instead
+   */
+  private static StyledLayerDescriptor createRasterSLD( final double minValue, final double maxValue, final int numberOfIntervals, final Color lightestColor, final Color darkestColor, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
   {
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
-    final double step = (maxValue - minValue) / numberOfIntervals;
-    final int r = darkestColor.getRed();
-    final int g = darkestColor.getGreen();
-    final int b = darkestColor.getBlue();
+    final int rd = darkestColor.getRed();
+    final int gd = darkestColor.getGreen();
+    final int bd = darkestColor.getBlue();
+    final int rl = lightestColor == null ? 0 : lightestColor.getRed();
+    final int gl = lightestColor == null ? 0 : lightestColor.getGreen();
+    final int bl = lightestColor == null ? 0 : lightestColor.getBlue();
     for( int i = 0; i <= numberOfIntervals; i++ )
     {
-      // making lighter color (color.brighter() is not so good...)
-      final int rc = (255 - r) * (numberOfIntervals - i) / numberOfIntervals + r;
-      final int gc = (255 - g) * (numberOfIntervals - i) / numberOfIntervals + g;
-      final int bc = (255 - b) * (numberOfIntervals - i) / numberOfIntervals + b;
+      double ratio = (double) i / (double) numberOfIntervals;
+      final double quantity = Math.rint( 1000.0 * (minValue + (maxValue - minValue) * ratio) ) / 1000.0;
 
-      double quantity = step * i;
-      if( quantity <= 0.0 )
-        quantity = 0.1;
-      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( new Color( rc, gc, bc ), DEFAULT_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
-      colorMap.put( new Double( quantity ), colorMapEntry );
+      // making lighter color (color.brighter() is not so good...)
+      final int r = (int) (rd * ratio + rl * (1 - ratio));
+      final int g = (int) (gd * ratio + gl * (1 - ratio));
+      final int b = (int) (bd * ratio + bl * (1 - ratio));
+
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( new Color( r, g, b ), DEFAULT_RASTER_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
+      colorMap.put( quantity, colorMapEntry );
       if( monitor.isCanceled() )
         throw new CoreException( Status.CANCEL_STATUS );
     }
@@ -259,7 +266,7 @@ public class SLDHelper
     final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
 
-    colorMap.put( new Double( -9999.0 ), new ColorMapEntry_Impl( Color.WHITE, DEFAULT_FILLOPACITY, -9999.0, "" ) ); //$NON-NLS-1$
+    colorMap.put( new Double( -9999.0 ), new ColorMapEntry_Impl( Color.WHITE, DEFAULT_RASTER_FILLOPACITY, -9999.0, "" ) ); //$NON-NLS-1$
     for( final Object styledFeatureObject : collection )
     {
       final IColorStyledFeatureWrapper styledFeature;
@@ -277,7 +284,7 @@ public class SLDHelper
       else
         color = new Color( rgb.red, rgb.green, rgb.blue );
       final double quantity = styledFeature.getOrdinalNumber();
-      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
+      final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( color, DEFAULT_RASTER_FILLOPACITY, quantity, "" ); //$NON-NLS-1$
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
 
@@ -327,7 +334,7 @@ public class SLDHelper
       else
         color = new Color( rgb.red, rgb.green, rgb.blue );
       final Stroke stroke = StyleFactory.createStroke( DEFAULT_STROKECOLOR, DEFAULT_STROKEWIDTH, DEFAULT_STROKEOPACITY );
-      final Fill fill = StyleFactory.createFill( color, DEFAULT_FILLOPACITY );
+      final Fill fill = StyleFactory.createFill( color, DEFAULT_VECTOR_FILLOPACITY );
       final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, geomPropertyName );
       final Rule rule = StyleFactory.createRule( newSymbolizer );
       final String ruleName = styledFeature.getName();
