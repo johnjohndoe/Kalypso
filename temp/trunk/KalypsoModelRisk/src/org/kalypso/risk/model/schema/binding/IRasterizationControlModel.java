@@ -12,7 +12,28 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public interface IRasterizationControlModel extends IModel
 {
-  public static final String MODEL_NAME = "RasterizationControlModel.gml"; //$NON-NLS-1$
+  public static enum RISK_CALCULATION_TYPE
+  {
+    VALUE_NOT_SET(""),
+    LANDUSE_RASTERIZATION("LanduseRasterization"),
+    DAMAGE_POTENTIAL_CALCULATION("DamagePotentialCalculation"),
+    RISK_ZONES_CALCULATION("RiskZonesCalculation");
+    private final String m_value;
+
+    private RISK_CALCULATION_TYPE( final String value )
+    {
+      m_value = value;
+    }
+
+    public String value( )
+    {
+      return m_value;
+    }
+  }
+
+  public static final String MODEL_NAME = "RasterizationControlModel"; //$NON-NLS-1$
+
+  public static final String MODEL_FILENAME_GML = "RasterizationControlModel.gml"; //$NON-NLS-1$
 
   public static final double RISKZONE_URBANAREA_LOW = 1.0;
 
@@ -28,6 +49,8 @@ public interface IRasterizationControlModel extends IModel
 
   public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" ); //$NON-NLS-1$
 
+  public static final QName PROPERTY_RISK_CALCULATION_TYPE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskCalculationType" ); //$NON-NLS-1$
+
   public static final QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" ); //$NON-NLS-1$
@@ -37,6 +60,10 @@ public interface IRasterizationControlModel extends IModel
   public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_STATISTIC_OBS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskStatisticResultMember" ); //$NON-NLS-1$
+
+  public void setRiskCalculationType( final RISK_CALCULATION_TYPE riskCalculationType );
+
+  public RISK_CALCULATION_TYPE getRiskCalculationType( );
 
   public List<ILanduseClass> getLanduseClassesList( );
 
@@ -67,7 +94,7 @@ public interface IRasterizationControlModel extends IModel
    * unique)
    * 
    * @param landuseClassName
-   *            The name of landuse class
+   *          The name of landuse class
    * @return The list of landuse classes IDs; if no ID is found, returns empty list
    */
   public List<String> getLanduseClassID( final String landuseClassName );

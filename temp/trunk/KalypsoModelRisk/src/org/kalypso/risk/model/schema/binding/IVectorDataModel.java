@@ -8,6 +8,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 public interface IVectorDataModel extends IModel
 {
+  public static final String MODEL_NAME = "VectorDataModel"; //$NON-NLS-1$
+
   public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "VectorDataModel" ); //$NON-NLS-1$
 
   public QName PROPERTY_LANDUSE_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landusePolygonCollection" ); //$NON-NLS-1$

@@ -70,10 +70,8 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable;
-import org.kalypso.risk.model.operation.RiskCalcSpecificDamageRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable;
-import org.kalypso.risk.model.operation.RiskLanduseRasterizationRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -224,14 +222,14 @@ public class TestRiskModel extends TestCase
     /* RASTER LANDUSE CLASSES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Landnutzungsraster...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IFolder outputFolder = folder;
-    final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, landuseRasterRunnable );
+//    final IFolder outputFolder = folder;
+//    final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
+//    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, landuseRasterRunnable );
 
     /* CREATE SPECIFIC DAMAGE */
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
+//    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+//    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
+//    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
 
     /* CREATE RSIK ZONES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" ); //$NON-NLS-1$ //$NON-NLS-2$

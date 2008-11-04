@@ -8,8 +8,10 @@ import ogc31.www.opengis.net.gml.FileType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -91,6 +93,8 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         coverage.setGridDomain( ascii2Binary.getGridDomain() );
         coverage.setName( binFileName );
         coverage.setDescription( org.kalypso.risk.Messages.getString( "RiskImportWaterdepthRunnable.1" ) + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
+
+        dstRasterIFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
       }
 
       return Status.OK_STATUS;

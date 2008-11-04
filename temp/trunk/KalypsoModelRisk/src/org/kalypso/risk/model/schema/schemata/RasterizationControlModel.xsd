@@ -36,6 +36,7 @@
                 <xs:complexContent>
                         <xs:restriction base="gml:AbstractFeatureCollectionType">
                                 <xs:sequence>
+                                        <xs:element ref="krrcm:riskCalculationType" minOccurs="0" maxOccurs="1"/>
                                         <xs:element ref="krrcm:landuseClassMember" minOccurs="0" maxOccurs="unbounded"/>
                                         <xs:element ref="krrcm:damageFunctionMember" minOccurs="0" maxOccurs="unbounded"/>
                                         <xs:element ref="krrcm:assetValueClassMember" minOccurs="0" maxOccurs="unbounded"/>
@@ -47,6 +48,28 @@
                         </xs:restriction>
                 </xs:complexContent>
         </xs:complexType>
+        <!-- =================================================================
+		riskCalculationType (root property)
+		================================================================== -->
+        <xs:element name="riskCalculationType" type="krrcm:RiskCalculationTypePropertyType">
+                <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                                <xs:label>Risikoberechnungsart</xs:label>
+                                <xs:tooltip>Risikoberechnungsart</xs:tooltip>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="en">
+                                <xs:label>Risk calculation type</xs:label>
+                                <xs:tooltip>Risk calculation type</xs:tooltip>
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+		<xs:simpleType name="RiskCalculationTypePropertyType">
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="LanduseRasterization"></xs:enumeration>
+				<xs:enumeration value="DamagePotentialCalculation"></xs:enumeration>
+				<xs:enumeration value="RiskZonesCalculation"></xs:enumeration>
+			</xs:restriction>
+		</xs:simpleType>
         <!-- =================================================================
 		landuseClassMember (root property)
 		================================================================== -->

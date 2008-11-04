@@ -233,4 +233,12 @@
                      name="Risk Statistics View">
                </view>
             </extension>
+            <extension
+                  point="org.kalypso.simulation.core.simulation">
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.RiskCalcJob"
+                     typeID="KalypsoRisk">
+               </simulation>
+            </extension>
 </plugin>
