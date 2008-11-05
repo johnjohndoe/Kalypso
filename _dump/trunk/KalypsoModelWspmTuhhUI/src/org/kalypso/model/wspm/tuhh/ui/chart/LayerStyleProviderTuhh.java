@@ -40,32 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.HashMap;
-
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
+import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
  */
-public class LayerStyleProviderTuhh implements ILayerStyleProvider
+public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
 {
-  private HashMap<String, IStyle> m_styles = null;
 
-  private void createStyles( )
+  @Override
+  protected void createStyles( )
   {
-    m_styles = new HashMap<String, IStyle>();
+
     // TODO: read styles from *.kod file
     createPointMarkerSytles();
     createCrossSectionSytles();
@@ -84,11 +80,11 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
 
     final ILineStyle lsD = lsT.copy();
     lsD.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-    m_styles.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", lsD );
+    addStyle( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", lsD );
 
     final ILineStyle lsB = lsT.copy();
     lsB.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-    m_styles.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", lsB );
+    addStyle( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", lsB );
   }
 
   private void createWeirSytles( )
@@ -98,7 +94,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
 
     final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class );
     ls.setColor( col );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() );
   }
 
   private void createCrossSectionSytles( )
@@ -119,7 +115,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
 
     final ILineStyle lsU = lsO.copy();
     lsU.setColor( new RGB( 0, 128, 179 ) );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU );
   }
 
   private void createRoughnessSytles( )
@@ -128,24 +124,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     psKS.getStroke().setColor( new RGB( 0, 0, 0 ) );
     psKS.setInlineColor( new RGB( 0, 0, 0 ) );
     psKS.setAlpha( 50 );
-    m_styles.put( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + "_POINT", psKS.copy() );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + "_POINT", psKS.copy() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends IStyle> T getStyleFor( String id, Class<T> defaultStyle )
-  {
-    if( m_styles == null )
-      createStyles();
-    final IStyle style = m_styles.get( id );
-    if( (style != null) )
-      return (T) style;
-    final IStyle newStyle = defaultStyle == null ? null : StyleUtils.getDefaultStyle( defaultStyle );
-    if( newStyle != null )
-      m_styles.put( id, newStyle );
-    return (T) newStyle;
-
-  }
 }

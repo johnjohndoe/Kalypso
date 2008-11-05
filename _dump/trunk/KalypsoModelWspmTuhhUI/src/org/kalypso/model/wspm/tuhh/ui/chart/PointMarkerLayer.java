@@ -64,6 +64,19 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 public class PointMarkerLayer extends AbstractProfilLayer
 {
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    final EditInfo ei = super.getHover( pos );
+    if( ei == null )
+      return null;
+    ei.m_pos.y = pos.y;
+    return ei;
+  }
+
   private final int m_offset;
 
   private final boolean m_close;
@@ -174,14 +187,13 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point) );
-
+    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) );
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyle_hover() );
     hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
 
-    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( point ), newPos );
+    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( point ), dragStartData.m_pos );
 
   }
 

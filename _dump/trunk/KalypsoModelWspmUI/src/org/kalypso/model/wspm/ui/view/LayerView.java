@@ -45,33 +45,19 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
-import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
-import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * @author Gernot Belger
+ * @author kimwerner
  */
-@SuppressWarnings("unchecked")
-public class LayerView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener
+
+public class LayerView extends ViewPart
 
 {
 
@@ -79,58 +65,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
 
   private FormToolkit m_toolkit;
 
-  private final AdapterPartListener m_providerListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
-
-  private IProfilChartViewProvider m_provider;
-
-  private ILayerManager m_layerManager = null;
-
-  private ILayerManagerEventListener m_layerListener = new AbstractLayerManagerEventListener()
-  {
-    @Override
-    public void onActivLayerChanged( IChartLayer layer )
-    {
-      if( layer.isActive() )
-        updatePanel( layer );
-    }
-  };
-
   private IChartLayer m_activeLayer;
-
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
-   */
-  @Override
-  public void init( IViewSite site ) throws PartInitException
-  {
-    super.init( site );
-
-    m_providerListener.init( site.getPage() );
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    unhookProvider();
-
-    m_providerListener.dispose();
-
-    super.dispose();
-  }
-
-  private void unhookProvider( )
-  {
-    if( m_provider != null )
-    {
-
-      m_provider = null;
-    }
-    if( m_layerManager != null )
-      m_layerManager.removeListener( m_layerListener );
-  }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
@@ -156,61 +91,11 @@ public class LayerView extends ViewPart implements IAdapterEater, IProfilChartVi
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     m_form.getForm().getBody().setLayout( bodyLayout );
-    if( m_provider != null )
-      onProfilChartViewChanged( m_provider.getProfilChartView() );
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
-   */
-  public void setAdapter( final IWorkbenchPart part, final Object adapter )
-  {
-    final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
-
-    if( m_provider == provider && provider != null )
-      return;
-
-    unhookProvider();
-
-    m_provider = provider;
-
-    if( m_provider != null )
-    {
-      m_provider.addProfilChartViewProviderListener( this );
-      onProfilChartViewChanged( m_provider.getProfilChartView() );
-    }
 
   }
 
-  final private IChartLayer getActiveLayer( )
+  public final void updatePanel( final IChartLayer activeLayer )
   {
-
-    final IChartLayer[] layers = m_layerManager == null ? new IChartLayer[] {} : m_layerManager.getLayers();
-    for( final IChartLayer layer : layers )
-      if( layer.isActive() )
-      {
-        return layer;
-      }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener#onProfilChartViewChanged(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
-   */
-  public void onProfilChartViewChanged( ProfilChartView newProfilChartView )
-  {
-    final ChartComposite chart = newProfilChartView == null ? null : newProfilChartView.getChart();
-    final IChartModel model = chart == null ? null : chart.getChartModel();
-    m_layerManager = model == null ? null : model.getLayerManager();
-    if( m_layerManager != null )
-      m_layerManager.addListener( m_layerListener );
-
-    updatePanel( getActiveLayer() );
-  }
-
-  final void updatePanel( final IChartLayer activeLayer )
-  {
-
     if( m_activeLayer == activeLayer )
       return;
 

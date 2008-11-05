@@ -16,12 +16,12 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * 
  * @author kimwerner
  */
-public class ClickHandler implements MouseListener, MouseMoveListener
+public class ProfilClickHandler implements MouseListener, MouseMoveListener
 {
   private final ChartComposite m_chart;
   private EditInfo m_clickInfo = null;
 
-  public ClickHandler( final ChartComposite chart )
+  public ProfilClickHandler( final ChartComposite chart )
   {
     m_chart = chart;
 
@@ -73,7 +73,7 @@ public class ClickHandler implements MouseListener, MouseMoveListener
   {
     if( m_chart.getPlot().isEditing() )
     {
-      m_chart.getPlot().getTooltipInfo().m_pos = new Point( e.x, e.y );
+  //    m_chart.getPlot().getTooltipInfo().m_pos = new Point( e.x, e.y );
       m_chart.getPlot().redraw();
     }
     else if( !m_chart.getPlot().isDragging() )
@@ -90,7 +90,7 @@ public class ClickHandler implements MouseListener, MouseMoveListener
           final EditInfo info = layer.getHover( point );
           if( info != null )
           {
-            info.m_pos = point;
+            //info.m_pos = point;
             m_chart.getPlot().setTooltipInfo( info );
             m_chart.getPlot().redraw();
             return;

@@ -52,6 +52,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -64,12 +66,12 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.view.LayerView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
@@ -124,21 +126,32 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Object firstElement = selection.getFirstElement();
-        if( firstElement instanceof IExpandableChartLayer )
+        if( firstElement instanceof IChartLayer )
         {
-          final IChartLayer activeLayer = (IChartLayer) firstElement;
+          ((IChartLayer) firstElement).setActive( true );
           final ProfilChartView pcv = getProfilChartView();
           if( pcv == null )
             return;
           final ILayerManager mngr = pcv.getChart().getChartModel().getLayerManager();
-          for( final IChartLayer layer : mngr.getLayers() )
+
+          final IViewReference ref = getSite().getPage().findViewReference( "org.kalypso.model.wspm.ui.view.LayerView" );
+          final IViewPart view = ref == null ? null : ref.getView( false );
+          if( view != null && view instanceof LayerView )
           {
-            layer.setActive( activeLayer == layer );
+            for( final IChartLayer layer : mngr.getLayers() )
+            {
+              if( layer.isActive() )
+              {
+                ((LayerView) view).updatePanel( layer );
+                break;
+              }
+            }
           }
         }
       }
     } );
 
+    
     final Control control = m_chartlegend.getControl();
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     control.addMouseListener( new MouseAdapter()

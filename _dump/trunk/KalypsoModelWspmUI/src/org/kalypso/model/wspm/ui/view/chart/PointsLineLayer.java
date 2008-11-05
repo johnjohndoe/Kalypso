@@ -210,7 +210,7 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final Point2D point = toNumeric( newPoint );
     return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
-        point.getY(), getTargetComponent().getUnit() } ), newPos );
+        point.getY(), getTargetComponent().getUnit() } ), dragStartData.m_pos );
 
   }
 

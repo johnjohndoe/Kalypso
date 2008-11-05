@@ -66,6 +66,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author gernot
+ * @author kimwerner
  */
 public class GelaendePanel extends AbstractProfilView
 {
@@ -87,7 +88,7 @@ public class GelaendePanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
   {
-    final Composite panel = toolkit.createComposite( parent );// new Composite( parent, SWT.NONE );
+    final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout() );
 
     final Group editgroup = new Group( panel, SWT.NONE );

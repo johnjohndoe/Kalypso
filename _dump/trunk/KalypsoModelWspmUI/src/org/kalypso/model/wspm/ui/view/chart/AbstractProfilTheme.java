@@ -73,6 +73,33 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
 
     /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerContentChanged( IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerVisibilityChanged( IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerMoved( IChartLayer layer )
+    {
+      fireLayerContentChanged();
+    }
+   
+    /**
      * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
@@ -91,9 +118,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
     }
   };
-
-  // private IProfilChartLayer m_hovering = null;
-
   private final String m_id;
 
   private final ILayerManager m_layerManager = new LayerManager();
@@ -115,6 +139,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       }
   }
 
+  protected final void fireLayerContentChanged()
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
@@ -329,7 +357,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public IComponent getTargetComponent( )
   {
     final IProfilChartLayer layer = getActiveLayer();
-    return layer != null ? null : layer.getTargetComponent();
+    return layer == null ? null : layer.getTargetComponent();
 
   }
 

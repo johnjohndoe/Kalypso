@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -63,6 +64,7 @@ public class TubeLayer extends AbstractProfilLayer
   public TubeLayer( final IProfil profil, final ILayerStyleProvider styleProvider )
   {
     super( profil, IWspmConstants.POINT_PROPERTY_HOEHE, styleProvider );
+    getLineStyle().setColor( new RGB (255,255,100) );
 
   }
 

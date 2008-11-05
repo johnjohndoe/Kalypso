@@ -45,6 +45,7 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -124,8 +125,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( dragStartData.m_pos == point )
       executeClick( dragStartData );
     else
+    {
       executeDrop( point, dragStartData );
-
+    }
     return null;
   }
 
@@ -167,7 +169,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public EditInfo drag( Point newPos, EditInfo dragStartData )
   {
     // override this method
-    return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
+    return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
   }
 
   /**
@@ -205,9 +207,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange()
+  public IDataRange<Number> getDomainRange( )
   {
-    if( getCoordinateMapper() == null  )
+    if( getCoordinateMapper() == null )
       return null;
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
@@ -231,8 +233,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       final Rectangle hover = getHoverRect( profilPoints[i] );
       if( hover == null )
         continue;
+
       if( hover.contains( pos ) )
-        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), pos );
+      {
+        final Point target = toScreen( profilPoints[i] );
+        if( target == null )
+          return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), RectangleUtils.getCenterPoint( hover ) );
+        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), target );
+      }
     }
     return null;
   }
@@ -339,9 +347,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange()
+  public IDataRange<Number> getTargetRange( )
   {
-    if(getCoordinateMapper() == null )
+    if( getCoordinateMapper() == null )
       return null;
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );

@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.chart.handler.ClickHandler;
+import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
@@ -258,7 +258,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     ChartUtilities.maximize( m_chart.getChartModel() );
 
-    new ClickHandler( m_chart );
+    new ProfilClickHandler( m_chart );
+    // new EditHandler(m_chart);
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
     m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
