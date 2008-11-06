@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
@@ -60,6 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -119,32 +120,50 @@ public class BankSelectorFunction implements IRectangleMapFunction
 
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
+      GM_Curve line = null;
+
       final Object o = iter.next();
       final Feature feature = FeatureHelper.getFeature( workspace, o );
 
-      final GM_MultiCurve multiline = (GM_MultiCurve) feature.getDefaultGeometryProperty();
-      if( multiline == null )
-      {
-        SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
-        return;
-      }
-      if( multiline.getSize() > 1 )
-      {
-        SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion fehlgeschlagen. Linie nicht zusammenhängend." );
-        return;
-      }
-      final GM_Curve line = multiline.getCurveAt( 0 );
+      final GM_Object geometry = feature.getDefaultGeometryProperty();
 
+      if( geometry instanceof GM_MultiCurve )
+      {
+        final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
+        if( multiline == null )
+        {
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
+          return;
+        }
+        if( multiline.getSize() > 1 )
+        {
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion fehlgeschlagen. Linie nicht zusammenhängend." );
+          return;
+        }
+
+        line = multiline.getCurveAt( 0 );
+      }
+      else if( geometry instanceof GM_Curve )
+      {
+        final GM_Curve curve = (GM_Curve) geometry;
+        if( curve == null )
+        {
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
+          return;
+        }
+        line = curve;
+      }
       try
       {
         final LineString jtsLine = (LineString) JTSAdapter.export( line );
         if( !jtsLine.intersects( rectanglePoly ) )
           iter.remove();
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
       }
+
     }
 
     if( list.size() == 0 )
