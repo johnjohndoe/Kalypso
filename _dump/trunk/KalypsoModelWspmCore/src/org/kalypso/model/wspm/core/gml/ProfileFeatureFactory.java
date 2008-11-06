@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -128,8 +127,8 @@ public class ProfileFeatureFactory implements IWspmConstants
       final List<String> namelist = new ArrayList<String>();
       namelist.add( name );
 
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_NAME ), namelist ) );
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( NamedFeatureHelper.GML_DESCRIPTION ), description ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( Feature.QN_NAME ), namelist ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), description ) );
 
       /* station */
       final double station = profile.getStation();

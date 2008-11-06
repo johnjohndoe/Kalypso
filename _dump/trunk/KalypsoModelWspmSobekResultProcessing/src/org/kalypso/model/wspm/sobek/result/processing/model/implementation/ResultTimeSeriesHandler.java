@@ -23,7 +23,7 @@ public abstract class ResultTimeSeriesHandler extends AbstractFeatureWrapper imp
 {
   private final INode m_node;
 
-  public ResultTimeSeriesHandler( final Feature feature, INode node )
+  public ResultTimeSeriesHandler( final Feature feature, final INode node )
   {
     super( feature );
     m_node = node;
@@ -39,9 +39,10 @@ public abstract class ResultTimeSeriesHandler extends AbstractFeatureWrapper imp
     return (Double) getProperty( QN_MAX_VALUE );
   }
 
+  @Override
   public String getName( )
   {
-    return (String) getProperty( QN_NAME );
+    return (String) getProperty( Feature.QN_NAME );
   }
 
   public String getParameterId( )
@@ -78,7 +79,7 @@ public abstract class ResultTimeSeriesHandler extends AbstractFeatureWrapper imp
     return (Double) getProperty( QN_MIN_VALUE );
   }
 
-  public Double getPositionOnBranch( IBranch branch ) throws GM_Exception, CoreException
+  public Double getPositionOnBranch( final IBranch branch ) throws GM_Exception, CoreException
   {
     final GM_Curve curve = branch.getCurve();
     final GM_Point location = m_node.getLocation();
@@ -86,7 +87,7 @@ public abstract class ResultTimeSeriesHandler extends AbstractFeatureWrapper imp
     final LineString line = (LineString) JTSAdapter.export( curve );
     final Point point = (Point) JTSAdapter.export( location );
 
-    Geometry buffer = line.buffer( 0.1 );
+    final Geometry buffer = line.buffer( 0.1 );
     if( !point.intersects( buffer ) )
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.ResultTimeSeriesHandler_0, m_node.getName(), branch.getName() ) ) );
 

@@ -29,7 +29,7 @@ public class BranchLengthSectionHandler extends AbstractFeatureWrapper implement
   @Override
   public String getName( )
   {
-    return (String) getProperty( QN_NAME );
+    return (String) getProperty( Feature.QN_NAME );
   }
 
   public IObservation<TupleResult> getObservation( ) throws CoreException
