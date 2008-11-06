@@ -1,3 +1,4 @@
+C     Last change:  MD    6 Nov 2008    5:24 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -12,25 +13,40 @@ C     Major rewrite to reverse logic order.
 C     No attemp to compare with last version
 C     Bed numbering changed:
 C     1 = top surface layer, NLAYT = bottom new bed layer
-C_________________________________________________________________________
-      SUBROUTINE SEROSN
+C----------------------------------------------------------------------
+      SUBROUTINE SEROSN(II)
       USE BLK10MOD
       USE BLKSEDMOD
-C.......
+C----------------------------------------------------------------------
 C       THIS SUBROUTINE COMPUTES THE RATE OF SURFACE EROSION AS SERAT(N)
 C   FOR EACH NODE. SURFACE EROSION CAN OCCUR FROM THE BOTTOM LAYER OF
 C   A NEW DEPOSIT WHICH IS FILLED UP OR FROM ANY LAYER OF THE ORIGINAL
 C   BED IF SUCH EXISTS.
-C.......
+C
+C
+!MD:  Erosion in den Layern an der Sohle: als Sohlerosion
+!MD:   --> Ergebnis Erosionsrate SERAT(NN) in [mg/l x m/s]
+C
+C
+!MD:  Neu Kennung des Aufrufs II:
+!MD     II = 1 in der Iterations-Schleife eines Zeitschrittes
+!MD            (Keine Anpassung der Sohle und Layerdicke)
+!MD     II = 2 ausserhalb der Iterations-Schleife eines Zeitschrittes
+!MD             Anpassung der Sohle und Layerdicke
+!MD:  Neu Kennung des Aufrufs II:
+C----------------------------------------------------------------------
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPKAUG05	INCLUDE 'BLKSED.COM'
 C-
-C
 C...LOOP FOR EACH NODE
-C
-C
+
+
+!......................................................
 crrr aug97 new looping
+!MD: Schleife ueber alle Layer NLAYT, in der Wassersaule
+!MD:  Sortierung der Daten "Suspendiertes Material"
+!......................................................
       DO 500 N=1,NPM
        IF(IMID(N,1) .EQ. 0) THEN
          NN = N
@@ -48,27 +64,29 @@ CIPKSEP05
                          
          NL = NLAYT
 crr aug97 new units for temal2
-         TEMAL2 = SERAT(NN)/1000.
+!MD:     TEMAL2 = SERAT(NN)/1000.  :never used!!
 cipk mar00
          serat(n)=0.
          SERAT(NN) = 0.
-
 cipk jun06  test for marshing
          if(wsll(n) .lt. ao(n)) go to 500
 
 cipk mar06         
          seratnewl=0
-         
-         INDC = 0
-         BALM = 0.
+         !MD:  INDC = 0   :never used!!
+         !MD:  BALM = 0.  :never used!!
          DELTREM=DELT
-C
+
+
+!......................................................
 C...CHECK IF BOTTOM LAYER OF NEW, FULL DEPOSIT EXISTS.
-C
+!MD:  Material, aus suspeniertem und abgelagertem Material
+!MD:   im obersten Sus.Layer erodiert
 C   check no other layers exist
+!......................................................
          DO L=1,NLAYT-1
 cipk jan99 change thick from nn to n
-            IF ( THICK(N,L) .GT. 0.0)  GO TO 500
+            IF (THICK(N,L) .GT. 0.0)  GO TO 500
          ENDDO
 
 C  Errode bottom layer of new deposit
@@ -78,31 +96,36 @@ cipk jan99 change thick from nn to n
             IF (BSHEAR(NN) .LT. SS(NLAYT)) GO TO 500
 cipk mar06            
             seratnewl= ERC*(BSHEAR(NN)/SS(NLAYT)-1.)
-            INDC = 1           
+            !MD   INDC = 1  :never used!!
             TMERODE = SERATNEWL*DELT
             DTHK = TMERODE/GAD(NLAYT)
 
 C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED.
-
             BALAN = THICK(N,NLAYT) - DTHK
             IF(BALAN .LE. 0) THEN
-              BEDEL(N) = BEDEL(N) - THICK(N,NLAYT)
               AMASER=THICK(N,NLAYT)*GAD(NLAYT)
               SERATNEWL=AMASER/DELT
               DELTREM=DELT*(1.-THICK(N,NLAYT)/DTHK)
-              THICK(N,NLAYT) = 0.
+              IF(II .EQ. 2) THEN
+                BEDEL(N) = BEDEL(N) - THICK(N,NLAYT)
+                THICK(N,NLAYT) = 0.
+              Endif
             ELSE
-               BEDEL(N) = BEDEL(N) - DTHK
-               THICK(N,NLAYT) = THICK(N,NLAYT) - DTHK
-               GO TO 1
+              IF(II .EQ. 2) THEN
+                BEDEL(N) = BEDEL(N) - DTHK
+                THICK(N,NLAYT) = THICK(N,NLAYT) - DTHK
+              Endif
+              GO TO 1
             ENDIF            
          ENDIF
-C...
+
+
+!......................................................
 C     EROSION OF ORIGINAL BED LAYERS
 C...
-
+!   MD: Gleiche Erosionsberechnungen für das INITIAL BED
+!......................................................
 C   CHECK IF ANY MATERIAL ON BED
-
          IF (NLAYO(N) .EQ. 0)  GO TO 1
          SERATOLD=0.
          SERATOLD1=0.
@@ -123,37 +146,41 @@ c             seratold1 is rate for this layer assuming full erosion
 c  rates for this layer computed  balold positive means all taken so finalize
 C-    ONLY THIS LAYER ERODED
               IF (BALOLD .GT. 0.0) THEN
-                BEDEL(N) = BEDEL(N) - DTHKOLD
-                THICKO(N,L) = THICKO(N,L) - DTHKOLD
-c  new thickness computed add to accumulate more erosion                
+c               new thickness computed add to accumulate more erosion
                 SERATNEWL=SERATOLD+SERATOLD1*DELTREM/DELT+SERATNEWL
-c               newval=mass from full layer+current+new layer                
+c               new value = mass from full layer+current+new layer
+                IF(II .EQ. 2) THEN
+                  BEDEL(N) = BEDEL(N) - DTHKOLD
+                  THICKO(N,L) = THICKO(N,L) - DTHKOLD
+                Endif
                 GO TO 1
               ELSE
-C-    MORE THAN THIS LAYER MAY BE ERODED.
-
-                BEDEL(N) = BEDEL(N) - THICKO(N,L)
+C-            MORE THAN THIS LAYER MAY BE ERODED.
                 AMASER=THICKO(N,L)*GADLN
                 DELTREM=DELTREM*(1.-THICKO(N,L)/DTHKOLD)
-                THICKO(N,L) = 0.0
                 SERATOLD=SERATOLD+AMASER/DELT
+                IF(II .EQ. 2) THEN
+                  BEDEL(N) = BEDEL(N) - THICKO(N,L)
+                  THICKO(N,L) = 0.0
+                Endif
               ENDIF
             ENDIF
 
-   30    CONTINUE            
-         SERATNEWL=SERATNEWL+SERATOLD
-C
-C......
-C......................................................
-C
-    1   CONTINUE
+   30     CONTINUE
+          SERATNEWL=SERATNEWL+SERATOLD
 
-        SERAT(NN) = SERATNEWL*1000.
-        serat(n)=serat(nn)
-       ENDIF
+    1     CONTINUE
+          !MD: Umrechnung [kg/m³ x m/s] * 1000
+          !MD:  --> in [mg/l x m/s]
+          SERAT(NN) = SERATNEWL*1000.
+          serat(n)=serat(nn)
+        ENDIF
   500 CONTINUE
-  
-  
+
+!...................................................
+!MD:   Mittelung der Ergebnisse an den Eckknoten ueber
+!MD:    fuer die Ergebnisse an alle Mittseiten-Knoten
+!......................................................
       DO N=1,NPM
         IF(IMID(N,1) .GT. 0) THEN
           NN = N
@@ -174,7 +201,10 @@ C
 c          WRITE(239,*) N,SERAT(N)
         ENDIF 
       ENDDO
-      
+
+
+
+!......................................................
 CIPK AUG06 LOOK FOR OVERLOADING OF ELEMENTS AND ADD DIFFUSION
 cipkexp      IOVLDN=0
 cipkexp      DO N=1,NPM
@@ -185,7 +215,6 @@ cipkexp          WRITE(*,*) IT,N,PROJCONC
 cipkexp          WRITE(215,*) IT,N,PROJCONC
 cipkexp        ENDIF
 cipkexp      ENDDO
-
 cipk apr00 corect for 3-d using top and bottom element only
       ncn=0
       do n=1,ne
@@ -228,8 +257,8 @@ cipk dec04              if(ndep(n) .gt. 1) k1=nref(nod)+ndep(nod)-1
       enddo 
 
 C      DO N=1,NPM
-      
 C        WRITE(233,'(I5,3G15.5)') N,SERAT(N),THICK(N,1),THICKO(N,1)
 C      ENDDO
+
       RETURN
       END
