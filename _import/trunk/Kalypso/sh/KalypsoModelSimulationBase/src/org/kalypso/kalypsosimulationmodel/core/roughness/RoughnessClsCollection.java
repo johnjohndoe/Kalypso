@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsosimulationmodel.core.roughness;
 
@@ -29,7 +29,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
    * @param featureCol
    * @param fwClass
    */
-  public RoughnessClsCollection( Feature featureCol )
+  public RoughnessClsCollection( final Feature featureCol )
   {
     super( featureCol, IRoughnessCls.class, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
   }
@@ -39,7 +39,7 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
    * @param propQName
    * @throws IllegalArgumentException
    */
-  public RoughnessClsCollection( Feature parentFeature, QName propQName ) throws IllegalArgumentException
+  public RoughnessClsCollection( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
     super( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER, IRoughnessCls.class );
   }
@@ -50,14 +50,14 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
     return NamedFeatureHelper.getName( getFeature() );
   }
 
-  public List<IRoughnessCls> selectRoughnessByName( String nameRegExp )
+  public List<IRoughnessCls> selectRoughnessByName( final String nameRegExp )
   {
-    Pattern p = Pattern.compile( nameRegExp );
-    List<IRoughnessCls> rcList = new ArrayList<IRoughnessCls>( size() );
+    final Pattern p = Pattern.compile( nameRegExp );
+    final List<IRoughnessCls> rcList = new ArrayList<IRoughnessCls>( size() );
     String name;
     Matcher matcher;
 
-    for( IRoughnessCls rc : this )
+    for( final IRoughnessCls rc : this )
     {
       name = rc.getName();
       if( name != null )
@@ -76,8 +76,8 @@ public class RoughnessClsCollection extends FeatureWrapperCollection<IRoughnessC
   public void setName( String name ) throws IllegalArgumentException
   {
     name = Assert.throwIAEOnNullOrEmpty( name );
-    Feature wrappedFeature = getFeature();
-    FeatureHelper.addProperty( wrappedFeature, KalypsoModelRoughnessConsts.GML_PROP_NAME, Arrays.asList( new String[] { name } ) );
+    final Feature wrappedFeature = getFeature();
+    FeatureHelper.addProperty( wrappedFeature, Feature.QN_NAME, Arrays.asList( new String[] { name } ) );
   }
 
   /**

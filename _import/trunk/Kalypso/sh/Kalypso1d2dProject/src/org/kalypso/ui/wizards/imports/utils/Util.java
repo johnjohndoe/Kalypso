@@ -11,7 +11,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -23,9 +22,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class Util
 {
-  public static final List<String> getAllName( Feature feature )
+  public static final List<String> getAllName( final Feature feature )
   {
-    Object obj = feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
+    final Object obj = feature.getProperty( Feature.QN_NAME );
     if( obj instanceof String )
     {
       return Arrays.asList( new String[] { (String) obj } );
@@ -33,7 +32,7 @@ public class Util
     else if( obj instanceof List )
     {
 
-      ArrayList<String> names = new ArrayList<String>( (List<String>) obj );
+      final ArrayList<String> names = new ArrayList<String>( (List<String>) obj );
       return names;
     }
     else
@@ -43,13 +42,13 @@ public class Util
   }
 
   /**
-   * @param feature --
-   *          the feature which workspace of to search for other feature of the same type having the specified uri
+   * @param feature
+   *          -- the feature which workspace of to search for other feature of the same type having the specified uri
    * @param uri
    *          the uri to lookup
    * @return true is in the feature workspace there is a feature of the some type with the given
    */
-  public static final boolean isInFeatureWorkspace( Feature feature, QName propQName, String uri )
+  public static final boolean isInFeatureWorkspace( final Feature feature, final QName propQName, final String uri )
   {
 
     return false;
@@ -62,13 +61,13 @@ public class Util
   {
     try
     {
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
-      SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       return caseDataProvider;
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return null;

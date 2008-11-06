@@ -20,8 +20,8 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * Create a Roughness object wrapping the given feature.
    * 
-   * @param feature -
-   *            the wbr:Roughness feature to wrapped
+   * @param feature
+   *          - the wbr:Roughness feature to wrapped
    * @throw IllegalArgumentException if feature is null or is note a wbr:Roughness feature
    */
   public RoughnessCls( final Feature featureToBind ) throws IllegalArgumentException
@@ -34,11 +34,11 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
    * given parent feaure and linked to it by the property of the type specified by the argument propQName.
    * 
    * @param parentFeature
-   *            the parent feature for the new wbr:Roughness class
+   *          the parent feature for the new wbr:Roughness class
    * @param propQName
-   *            the Q-name of the linking property type
+   *          the Q-name of the linking property type
    * @throws IllegalArgumentException
-   *             if workspace is null or the roughness collection is not part of the workspace
+   *           if workspace is null or the roughness collection is not part of the workspace
    */
   public RoughnessCls( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
@@ -48,7 +48,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getAxAy()
    */
   public double getAxAy( )
@@ -59,7 +58,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getDp()
    */
   public double getDp( )
@@ -70,7 +68,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getEddy()
    */
   public double getEddyXX( )
@@ -99,7 +96,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getKs()
    */
   public double getKs( )
@@ -116,7 +112,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setAxAy(double)
    */
   public void setAxAy( final double axay ) throws IllegalArgumentException
@@ -127,7 +122,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setDp(double)
    */
   public void setDp( final double dp ) throws IllegalArgumentException
@@ -138,7 +132,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setEddy(double)
    */
   public void setEddyXX( final double eddy ) throws IllegalArgumentException
@@ -167,7 +160,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setKs(double)
    */
   public void setKs( final double ks ) throws IllegalArgumentException
@@ -178,7 +170,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setMarsh(double)
    */
   public void setMarsh( final double marsh ) throws IllegalArgumentException
@@ -191,7 +182,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   // one is sure negatives are not allowed
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#validate()
    */
   public RoughnessConfigConsistency validate( )
@@ -201,9 +191,8 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, double, double,
-   *      double, double)
+   * double, double)
    */
   public RoughnessConfigConsistency configure( final String name, final double ks, final double axay, final double dp, final double eddy_xx, final double eddy_yx, final double eddy_xy, final double eddy_yy, final double marsh )
   {
@@ -213,7 +202,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
       return check;
     }
     final Feature feature = getFeature();
-    feature.setProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME, name );
+    feature.setProperty( Feature.QN_NAME, name );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.valueOf( ks ) );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.valueOf( dp ) );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, Double.valueOf( eddy_xx ) );

@@ -2,8 +2,6 @@ package org.kalypso.kalypsosimulationmodel.schema;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
-
 public class KalypsoModelRoughnessConsts
 {
   public static final QName WBR_PROP_URI = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "uri" ); //$NON-NLS-1$
@@ -43,12 +41,9 @@ public class KalypsoModelRoughnessConsts
   public static final QName WBR_F_ROUGHNESS_CLS_COLLECTION = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "RoughnessClsCollection" ); //$NON-NLS-1$
 
   public static final QName WBR_PROP_ROUGHNESS_CLS_MEMBER = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughnessClsMember" ); //$NON-NLS-1$
+
   // colorStyle
 
   public static final QName WBR_PROP_COLOR_STYLE = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" ); //$NON-NLS-1$
 
-  // TODO: mov somewhere else, probably already exists
-  public static final QName GML_PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
-
-  public static final QName GML_PROP_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
 }
