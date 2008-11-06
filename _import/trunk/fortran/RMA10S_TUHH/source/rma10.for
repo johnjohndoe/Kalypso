@@ -1,4 +1,4 @@
-C     Last change:  MD   22 Aug 2008    6:03 pm
+C     Last change:  MD    6 Nov 2008    5:23 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -414,7 +414,7 @@ cipk aug07
         CALL FRONT(1)
       ELSE
         !stop 'option not stable, please use frontal scheme'
-        CALL FRONT_PARDISO(1)
+         CALL FRONT_PARDISO(1)
       ENDIF
       IF(ITIMFL .GT. 0) THEN
         CALL SECOND(ATIM(3))
@@ -1003,32 +1003,17 @@ CIPK JUN03
 C-
 C       TET=TET+DELT/3600.
 
-        IF (LSS .GT. 0) THEN
-          CALL SETVEL
-cipk mar06
-          CALL KINVIS
-ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
-!NiS,Nov06: Seems, that the name of the first shear-Subroutine is not correct. Change SHEAR1 to WSHEAR1
-!          CALL SHEAR1
-          CALL WSHEAR1
-!-
-          CALL WSHEAR2
-c          CALL SHEAR
-CIPK JUN97
-c          CALL WSHEAR1
-ciat mar06 end changes          
-          CALL DEPSN
-          CALL MEROSN
-          CALL SEROSN
-        ENDIF
+!MD: Gesamter LSS>0 Block verschoben: 05.11.2008
+!MD  --> siehe unten im Iteration LOOP!!
 
 C        DO NNN=1,NPM
 C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
 C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
-C-
+
+C----------------------------
 C......ITERATION LOOP
-C-
+C-----------------------------
         !NiS,apr06: starting iteration sequence
         !initialization:
         !NITA = maximum number of iterations of timestep, local copy
@@ -1114,19 +1099,47 @@ cipk aug00 experimental
         IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
 CIPK MAY02 UPDATE SHEARS ETC
-
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .and. ick .eq. 6) THEN
           CALL KINVIS
 c          CALL SHEAR
           WRITE(*,*) 'GOING TO SANDX'
           CALL SANDX
-
-!MDMD: Auskommentieren der Quellen und Senken
-!MDMD   --> Muss wieder rein!!
           CALL BEDXCG
-!MDMD: Auskommentieren der Quellen und Senken
-
         ENDIF
+
+!MD: Gesamter LSS>0 Block in Iterationschleife verschoben: 05.11.2008
+!MD -----------------------------------------------------------------
+        IF (LSS .GT. 0) THEN
+          CALL SETVEL
+          CALL KINVIS
+ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
+!NiS,Nov06: Seems, that name of first shear-Subr is not correct. Change SHEAR1 to WSHEAR1
+!          CALL SHEAR1
+
+!MDMD:  Aufruf nur dann, wenn wirklich Wellen vorhanden!!
+!MD Neu:   Abfrage ueber Kennungen
+          IF (IWVIN == 101 .or. IWVFC==102 .or. IWVFC==104) THEN
+            CALL WSHEAR1
+            CALL WSHEAR2
+          Else
+            !MD: Reaktivierung von SubR SHEAR
+            !MD neu:   Sohlschub-Berechnung mit Kalypso (ks-werten/ Lambda!)
+            IF (IKALYPSOFM /= 0) THEN
+              WRITE(*,*) 'Aufruf KALYP_SHEAR'
+              CALL GET_FFACT
+              CALL KALYP_SHEAR
+            ELSE !MD: Wenn nicht Kalypso, dann KING-Ansatz
+              CALL SHEAR
+            ENDIF
+          END IF
+c         CALL SHEAR
+c         CALL WSHEAR1
+
+          CALL DEPSN
+          CALL MEROSN(1)
+          CALL SEROSN(1)
+        ENDIF
+!MD ---------------------------------------------------------------
 
 CIPK OCT02
   470   CONTINUE
@@ -1168,7 +1181,7 @@ cipk aug07
           CALL FRONT(1)
         ELSE
           !stop 'option not stable, please use frontal scheme'
-          CALL FRONT_PARDISO(1)
+           CALL FRONT_PARDISO(1)
         ENDIF
         IF(ITIMFL .GT. 0) THEN
           CALL SECOND(ATIM(3))
@@ -1293,25 +1306,20 @@ C      END OF ITERATION LOOP
 
         !NiS,apr06,comment: Start next iteration, until maximum number of iterations is reached
         IF (MAXN .LT. NITA) GO TO 465
-
         !NiS,apr06,comment: Writing results after the timestep
   750   CONTINUE
         write(75,*) 'rma10-668 at 750 continue'
 CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
         IF(LSAND .GT. 0) THEN
           write(75,*) 'rma10: going to bedsur'
-
-!MDMD: Auskommentieren der Quellen und Senken
-!MDMD   --> Muss weider rein!
           CALL BEDSUR
-!MDMD: Auskommentieren der Quellen und Senken
-!MDMD   --> Muss weider rein!
-
 
         ELSEIF(LSS .GT. 0) THEN
-C
-C-    IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
-C
+C-      IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
+!MD:    Erneuter Aufruf der Erosionsroutinen mit II = 2
+!MD       zur Berechnung der Sohlanderung infolge ersosion
+          CALL MEROSN(2)
+          CALL SEROSN(2)
           CALL NEWBED(2)
         ENDIF
 
@@ -1323,13 +1331,9 @@ C
           !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
           !MD   BEDLBED wurde mit der aktuelleren Routine BEDSUR ersetzt
           !MD CALL BEDLBED
-          !MD!MD neu
-!MDMD: Auskommentieren der Quellen und Senken
-!MDMD   --> Muss weider rein!
           CALL BEDSUR
-!MDMD: Auskommentieren der Quellen und Senken
-!MDMD   --> Muss weider rein!
         ENDIF
+
 
 !NiS,apr06: calculating the cwr-values for trees.
 !           This option is only activated, if VEGETA is entered in input file at proper place
