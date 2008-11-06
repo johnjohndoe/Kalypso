@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Aug 2008   12:20 pm
+C     Last change:  MD    5 Nov 2008    3:23 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -67,7 +67,7 @@ C
         WRITE(*,*) 'EXPECTED CSS2 DATA - NONE FOUND'
         STOP
 	ENDIF
-      IF (VK .EQ. 0)  VK = 0.4
+      IF (VK .EQ. 0)  VK=0.4
       WRITE (LOUT,6038) VK, RKS,D90
 
 C..................................................................
@@ -120,17 +120,22 @@ crrr aug97
         WRITE(LOUT,6010) (IMTREF(K),K=1,NTYPS)
       ENDIF
       
-      WRITE(LOUT,6001)TAUCDM 
-
+      WRITE(LOUT,6001)TAUCDM
       WRITE(LOUT,6002)
 
+      !MD Gewicht des Sediments pro Fläche WEGTM
       WEGTM =TTLAYM *(GABM -GAWM )*GACM /
      +             (GACM -GAWM )
+      !MD Achtung: Annahme hier, dass GAWM = Suspensionsdichte
+      !MD      gleich der Wasserdichte ist (nicht ganz richtig!)
+
       WRITE(LOUT,6020)NLAYTM ,GAWM ,UNM ,GABM ,TTLAYM 
      +,GACM ,WEGTM ,ERCM 
       CALL GINPT(LIN,ID,DLIN)
       
       WRITE(LOUT,6021)
+
+      !MD: Daten ueber alle Boden-Layer L
       DO L=1,NLAYTM 
 	IF(ID(1:4) .EQ. 'CSS4') THEN
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
@@ -143,8 +148,13 @@ CIPK MAY06   ADD EROSTM
           STOP
 	ENDIF
       ENDDO
-      DO I=1,NLAYTM 
+
+      DO I=1,NLAYTM
+        !MD:  Berechnung der Trocken-Rohdichte [kg/m3]
         GADM(I)=(GBM(I)-GAWM )*GACM /(GACM -GAWM )
+        !MD Achtung: Annahme hier, dass GAWM = Suspensionsdichte
+        !MD      gleich der Wasserdichte ist (nicht ganz richtig!)
+
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
         IF(TLAYM(I) .EQ. 0.) THEN
           TLAYM(I)=WEGTM /GADM(I)
