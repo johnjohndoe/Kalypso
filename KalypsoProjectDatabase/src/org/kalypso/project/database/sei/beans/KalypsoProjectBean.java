@@ -46,8 +46,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -62,6 +62,7 @@ import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
 @Entity
 @Table(name = "PROJECT")
+@IdClass(KalypsoProjectBeanPrimaryKey.class)
 public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
 {
   // TODO FIXME map name and version as primary key!
@@ -69,34 +70,33 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Transient
   KalypsoProjectBean[] m_children;
 
-  @Id
-  @GeneratedValue
-  private Integer m_id;
-
-  @Column(name = "projectName")
+  @Column(name = "project_name")
   private String m_name;
 
-  @Column(name = "projectType")
+  @Column(name = "project_type", updatable = false, nullable = false)
   private String m_projectType;
 
-  @Column(name = "projectVersion")
+  @Id
+  @Column(name = "project_version")
   private Integer m_projectVersion;
 
-  @Column(name = "unixName")
+  @Id
+  @Column(name = "unix_name", updatable = false, nullable = false)
   private String m_unixName;
 
-  @Column(name = "projectDescription")
+  @Column(name = "project_description")
   private String m_description;
 
-  @Column(name = "creationDate")
+  @Column(name = "creation_date", updatable = false, nullable = false)
   private Date m_creationDate;
 
-  @Column(name = "editLockLock")
+  @Column(name = "edit_lock_ticket")
   private String m_editLockTicket;
 
   /**
    * @return previous versions of this bean
    */
+  @Transient
   public KalypsoProjectBean[] getChildren( )
   {
     return m_children;
@@ -163,6 +163,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   /**
    * @return public url (http at the moment) of project data (zipped project)
    */
+  @Transient
   public URL getUrl( ) throws MalformedURLException
   {
     /* destination of incoming file */
@@ -252,9 +253,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
 
       final EqualsBuilder builder = new EqualsBuilder();
       builder.append( getUnixName(), other.getUnixName() );
-      builder.append( getProjectType(), other.getProjectType() );
       builder.append( getProjectVersion(), other.getProjectVersion() );
-      builder.append( getEditLockTicket(), other.getEditLockTicket() );
 
       return builder.isEquals();
     }
@@ -270,9 +269,7 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( getUnixName() );
-    builder.append( getProjectType() );
     builder.append( getProjectVersion() );
-    builder.append( getEditLockTicket() );
 
     return builder.toHashCode();
   }

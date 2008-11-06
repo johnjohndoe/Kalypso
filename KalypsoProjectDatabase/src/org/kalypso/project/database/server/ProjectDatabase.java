@@ -67,6 +67,7 @@ import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
 
 /**
  * @author kuch
@@ -82,6 +83,7 @@ public class ProjectDatabase implements IProjectDatabase
     final AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
 
     configure.addAnnotatedClass( KalypsoProjectBean.class );
+    configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
     FACTORY = configure.buildSessionFactory();
   }
 
