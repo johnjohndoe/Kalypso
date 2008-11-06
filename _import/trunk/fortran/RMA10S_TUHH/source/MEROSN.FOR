@@ -1,3 +1,4 @@
+C     Last change:  MD    6 Nov 2008    5:23 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
@@ -6,19 +7,18 @@ cipk last update apr 7 2000 correct interpolation function for 3-d
 cipk  last update Mar 14 2000 make erosion linear
 CRRR  last update Aug 30 1997  Bed numbering changed:
 C  1 = top surface layer, NLAYT = bottom new bed layer
-C_______________________________________________________________________
-      SUBROUTINE MEROSN
+C----------------------------------------------------------------------
+      SUBROUTINE MEROSN(II)
       USE BLK10MOD
       USE BLKSEDMOD
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
-
 CIPK AUG05	INCLUDE 'BLKSED.COM'
 C-
 C**********************************************************************
 C
-C        THIS SUBROUTINE COMPUTES THE EROSION RATE FOR MASS EROSION
-C     WHICH OCCURS FOR  THE  TOP NLAYT-1 LAYERS OF DEPOSIT.  ALL
+C     THIS SUBROUTINE COMPUTES THE EROSION RATE FOR MASS EROSION
+C     WHICH OCCURS FOR THE TOP NLAYT-1 sus.LAYERS OF DEPOSIT. ALL
 C     COMPUTATIONS ARE MADE ON A NODAL BASIS.
 C         THE EROSION RATE IS RETURNED IN ARRAY EDOT(N).
 C         BEDEL(N) KEEPS TRACK OF THE BED LEVEL
@@ -29,13 +29,22 @@ C         SST(N,J) = LAYER SHEAR STRENGTH
 C         DELT = TIME STEP
 C         VEL(3,N) = WATER DEPTH
 C
+!MD:  Neu Kennung des Aufrufs II:
+!MD     II = 1 in der Iterations-Schleife eines Zeitschrittes
+!MD            (Keine Anpassung der Sohle und Layerdicke)
+!MD     II = 2 ausserhalb der Iterations-Schleife eines Zeitschrittes
+!MD             Anpassung der Sohle und Layerdicke
+!MD:  Neu Kennung des Aufrufs II:
+C
 C********************************************************************
-C
-C
-C.....  LAYERS ARE NUMBERED FROM BOTTOM TO TOP.
-C
-C
-C       CHECK IF TOP LAYER WILL ERODE.
+
+!MD:  --------------------------------------------------------
+!MD:  Erosion in den suspendierten Layern: als Massenerosion
+!MD:   --> Ergebnis Erosionsrate EDOT(NN) in [mg/l x m/s]
+!MD:  --------------------------------------------------------
+
+C    LAYERS ARE NUMBERED FROM BOTTOM TO TOP.
+C    CHECK IF TOP LAYER WILL ERODE.
 C
       DO NN=1,NPM
         N=NN
@@ -54,67 +63,76 @@ cipk mar00
        edot(nn)=0.
 cipk jun06  test for marshing
        if(wsll(n) .lt. ao(n)) go to 100
-       
-       ES=BSHEAR(N)/ALPHA+(1.-1./ALPHA)*ESRO(N)
 
-C
+!MD:  Entfernen einer zeitlichen Wichtung an dieser
+!MD:   Stelle! Konzept durchgängig gleich mit einwirkender
+!MD:   Schub = aktueller Schub!
+!MD
+!MD:  ES=BSHEAR(N)/ALPHA+(1.-1./ALPHA)*ESRO(N)
+!MD
+!MD:  --> "ES" wird durch "BSHEAR(N)" ersetzt!!!
+
+
+! ---------------------------------------------
 C     CHECK IF ANY EROSION WILL OCCUR.
-C
-       IF(ES .GT. SS(1)) THEN
-C
 C     **** TOP LAYER ERODES    ******
-C
+! ---------------------------------------------
+       IF(BSHEAR(N).GT.SS(1)) THEN
 crrr aug97  rearrang to loop through layers
-
-CIPK MAY06 CORRECT TO SETTING OF NL
+CIPK MAY06  CORRECT TO SETTING OF NL
         NL = NLAYTND(NN)
-
         IF (NL .EQ. NLAYT) NL = NLAYT - 1
-crrr aug97 loop through all layers
+crrr aug97  loop through all layers
         DO 20 J=1,NL
         
 CIPK MAY06  TEST FOR ZERO THICKNESS
-         
-          IF(THICK(NN,J) .EQ. 0.) GO TO20
+          IF(THICK(NN,J).EQ.0.) GO TO20
 C
-crrr aug97 test for shear stress level to skip out
-           IF (ES .LT. SS(J)) GO TO 30
+crrr aug97  test for shear stress level to skip out
+           IF (BSHEAR(N).LT.SS(J)) GO TO 30
 CIPK MAY06
            IF(EROSTM(J) .EQ. 0.) THEN
              EDOT(N) = EDOT(N) + THICK(NN,J)*GAD(J)
-cipk mar00
              edot(nn)=edot(n)
-             BEDEL(NN) = BEDEL(NN)-THICK(NN,J)
-             THICK(NN,J)=0.
-C
+             IF(II .EQ. 2) THEN
+               BEDEL(NN) = BEDEL(NN)-THICK(NN,J)
+               THICK(NN,J)=0.
+               SST(NN,J)=0.
+               !MD: ??? wenn, dann SS nicht SST!
+             ENDIF
+
 C   IF IT IS A FULLY CONSOLIDATED BOTTOM LAYER IT WILL UNDERGO SURFACE
 C  EROSION AND IS CONSIDERED IN SUBROUTINE SEROSN,
 C
 c        IF(SST(NN,J) .GT. SS(NLAYT)-0.00001.AND.
 c     .   SST(NN,J) .LT. SS(NLAYT)+0.00001) GO TO 11
 c        IF(SST(NN,J) .GT. ES) GO TO 11
-             SST(NN,J)=0.
+
            ELSE
-             seratnewl= EROSTM(J)*(ES/SS(J)-1.)
-             INDC = 1           
+             seratnewl= EROSTM(J)*(BSHEAR(N)/SS(J)-1.)
+             !MD:  INDC = 1  :never used!!
              TMERODE = SERATNEWL*DELT
              DTHK = TMERODE/GAD(J)
-CIPK MAY06             EDOT(NN)=SERATNEWL*DELT
+CIPK MAY06   EDOT(NN)=SERATNEWL*DELT
 
-C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED.
-
+C-   SEE IF MORE THAN THICKNESS OF LAYER IS ERODED
+!    ---------------------------------------------
              BALAN = THICK(NN,J) - DTHK
              IF(BALAN .LE. 0) THEN
-               BEDEL(NN) = BEDEL(NN) - THICK(NN,J)
                AMASER=THICK(NN,J)*GAD(J)
                SERATNEWL=AMASER/DELT
                DELTREM=DELT*(1.-THICK(NN,J)/DTHK)
-               THICK(NN,J) = 0.
                EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+               IF(II .EQ. 2) THEN
+                 BEDEL(NN) = BEDEL(NN) - THICK(NN,J)
+                 THICK(NN,J) = 0.
+               Endif
              ELSE
-               BEDEL(NN) = BEDEL(NN) - DTHK
-               THICK(NN,J) = THICK(NN,J) - DTHK
                EDOT(NN)=EDOT(NN)+SERATNEWL*DELT
+               IF(II .EQ. 2) THEN
+                 BEDEL(NN) = BEDEL(NN) - DTHK
+                 THICK(NN,J) = THICK(NN,J) - DTHK
+               ENdif
                GO TO 30
              ENDIF            
              
