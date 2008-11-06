@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.maker;
 
@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class FeatureviewHelper implements IFeatureviewFactory
+public class FeatureviewHelper implements IFeatureviewFactory, IFeatureViewSettings
 {
   public static final int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
@@ -77,7 +77,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_showTables;
   }
 
-  public void setShouldAddValidator( boolean shouldAddValidator )
+  public void setShouldAddValidator( final boolean shouldAddValidator )
   {
     m_shouldAddValidator = shouldAddValidator;
   }
@@ -87,7 +87,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_shouldAddValidator;
   }
 
-  public void setShouldShowButton( boolean shouldShowButton )
+  public void setShouldShowButton( final boolean shouldShowButton )
   {
     m_shouldShowButton = shouldShowButton;
   }
@@ -130,7 +130,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
       {
         controlMaker.addControls( controlList, gridLayout, featureType, ftp, feature );
       }
-      catch( AbortCreationException e )
+      catch( final AbortCreationException e )
       {
         // just eat the exception, nothing shall be added for this property
       }

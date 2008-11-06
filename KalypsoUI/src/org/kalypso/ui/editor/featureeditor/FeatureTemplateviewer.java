@@ -59,6 +59,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
@@ -91,7 +92,9 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 {
   private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
-  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+  private final FeatureviewHelper m_featureViewHelper = new FeatureviewHelper();
+
+  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( m_featureViewHelper );
 
   private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
 
@@ -115,7 +118,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       // getLayerTable().setFocusedFeature( feature, ftp );
@@ -172,7 +175,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -293,7 +296,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
     final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
 
-    final String errorMessage = Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4") + m_featurePath; //$NON-NLS-1$
+    final String errorMessage = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
 
     try
     {
@@ -312,7 +315,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       if( m_workspace == null )
       {
         m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5") ); //$NON-NLS-1$
+        m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }
@@ -321,7 +324,19 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       {
         m_featureComposite.addChangeListener( m_changeListener );
         m_featureComposite.setFeature( feature );
-        final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
+
+        /* process rendering properties */
+        final FeatureviewType type = m_fvFactory.get( feature.getFeatureType(), feature );
+        if( type.isToolkit() )
+        {
+          m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
+        }
+
+        int style = SWT.NONE;
+        if( type.isBorder() )
+          style = SWT.BORDER;
+
+        final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         m_featureComposite.setFeature( feature );
         m_featureComposite.updateControl();
@@ -412,7 +427,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
    *         This Option was needed to fix the annoying bug concerning display of FeatureView in Sachsen/Sachsen-Anhalt
    *         Wizards.
    */
-  public boolean hasAdditionalDataObject()
+  public boolean hasAdditionalDataObject( )
   {
     return m_key != null;
   }

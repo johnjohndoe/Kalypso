@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org"
-	targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fv="featureview.template.kalypso.org" xmlns:tv="gistableview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
 	<xs:import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
 
@@ -18,6 +17,7 @@
 				<xs:element name="view" type="fv:FeatureviewType" minOccurs="0" maxOccurs="unbounded"></xs:element>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="optional" />
+
 		</xs:complexType>
 	</xs:element>
 
@@ -62,6 +62,20 @@
 		<xs:attribute name="tooltip" type="xs:string" use="optional" default="" />
 		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true" />
 		<xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
+		<xs:attribute name="toolkit" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>
+					<p>Use form toolkit for rendering the resulting feature view?</p>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="border" type="xs:boolean" use="optional" default="false">
+			<xs:annotation>
+				<xs:documentation>
+					<p>Enclose feature view by a border</p>
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="PropertyControlType">
 		<xs:complexContent>
@@ -79,7 +93,7 @@
 					<xs:element ref="fv:layout" />
 					<xs:element ref="fv:control" minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
-				<xs:attribute name="property" type="xs:QName" use="optional"/>
+				<xs:attribute name="property" type="xs:QName" use="optional" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -131,14 +145,14 @@
 	<xs:element name="geometrylabel" type="fv:GeometryLabelType" substitutionGroup="fv:control" />
 	<xs:complexType name="GeometryLabelType">
 		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType"/>
+			<xs:extension base="fv:PropertyControlType" />
 		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:element name="colorlabel" type="fv:ColorLabelType" substitutionGroup="fv:control" />
 	<xs:complexType name="ColorLabelType">
 		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType"/>
+			<xs:extension base="fv:PropertyControlType" />
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -232,7 +246,7 @@
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
 					<xs:sequence>
-						<xs:element name="text" type="xs:string" minOccurs="0"/>
+						<xs:element name="text" type="xs:string" minOccurs="0" />
 					</xs:sequence>
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>
