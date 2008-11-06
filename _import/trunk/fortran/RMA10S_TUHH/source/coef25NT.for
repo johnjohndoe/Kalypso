@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  MD   22 Aug 2008    5:26 pm
+C     Last change:  MD    6 Nov 2008    5:23 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -159,10 +159,10 @@ CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
         edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5)))/6.+
      +  (edot(NOP(NN,2))+edot(NOP(NN,4))+edot(NOP(NN,6)))/2.
         seratm=-(serat(NOP(NN,1))+serat(NOP(NN,3))+serat(NOP(NN,5)))/6.+
-     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6)))/2.   
+     +  (serat(NOP(NN,2))+serat(NOP(NN,4))+serat(NOP(NN,6)))/2.
         depratm=
      +  -(deprat(NOP(NN,1))+deprat(NOP(NN,3))+deprat(NOP(NN,5)))/6.+
-     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6)))/2.  
+     +  (deprat(NOP(NN,2))+deprat(NOP(NN,4))+deprat(NOP(NN,6)))/2.
         elseif(ncn .eq. 8)then
         edotm=-(edot(NOP(NN,1))+edot(NOP(NN,3))+edot(NOP(NN,5))+
      +            edot(NOP(NN,7)))/12.+ 
@@ -637,12 +637,13 @@ C-
         VDX(M)=VDOT(1,MR)/UDST(MR)
         VDY(M)=VDOT(2,MR)/VDST(MR)
         SDT(M)=VDOT(ICK,MR)/SDST(MR)
-        IF (M.eq.1 .or. M.eq.2) THEN
-         !MD: testoutput into output.out
-         !MD  UDST(MR)=VDST(MR)=SDST(MR)=1.00
-          WRITE (75, *) 'VDOT(6,MR):', VDOT(ICK,MR), 'VEL(6,MR):'
-     + ,VEL(ICK,MR)
-      END IF
+
+!MD    !MD: testoutput into output.out
+!MD        IF (M.eq.1 .or. M.eq.2) THEN
+!MD          WRITE (75, *) 'VDOT(6,MR):', VDOT(ICK,MR), 'VEL(6,MR):'
+!MD       + ,VEL(ICK,MR)
+!MD        END IF
+!MD    !MD: testoutput into output.out
 
         IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
           NBOT=NREF(MR)+NDEP(MR)-1
@@ -790,19 +791,11 @@ CIPK NOV97  275 CONTINUE
 CIPK DEC05
 !nis,sep08: Revert to original implementation;
 !TODO @MD: Is there anything to change?
+!answer MD: Not here!
 !MD   EXTLDEL = FLUX/AREA; Wert kommt aus LOAD
 !--------------------------------------------
-!MD Korrektur!!
-!      DO M=1,NCN
-!        MR=NOP(NN,M)
-        EXTL=EXTL+EXTLDEL(NN) !*XN(M)
-!      ENDDO
-!      EXTL=EXTL+EXTLDEL(NN)
-!
-!MDMD: testtest:
-!MDMD: EXTL=0.0
-!MDMD: testtest:
-!-
+        EXTL=EXTL+EXTLDEL(NN)
+
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
       IF(H+AZER .LT. ABED) THEN
@@ -880,12 +873,22 @@ CIPK SEP05            ALP2=ALP2+(EDOT(MR)+SERAT(MR))*XN(M)
 
 CIPK AUG06 ADD AVERAGE TEST
           IF(IAVEL .EQ. 0) THEN
-            DO M=1,NCNX
-              MC = 2*M - 1
-              MR=NCON(MC)
-              ALP1 = ALP1 + XM(M)*DEPRAT(MR)
-              ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)
+!MD 05.11.2008: Deactivatate because, weighting must be with
+!MD:  XN-Fuctions and at all Nodes!!
+!MD:        DO M=1,NCNX
+!MD:          MC = 2*M - 1
+!MD:          MR=NCON(MC)
+!MD:          ALP1 = ALP1 + XM(M)*DEPRAT(MR)
+!MD:          ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)
+!MD:        END DO
+!MD: End of Deactivatate
+
+            DO M=1,NCN
+              MR=NOP(NN,M)
+              ALP1 = ALP1 + XN(M)*DEPRAT(MR)
+              ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XN(M)
             END DO
+
           ELSE
             alp1=depratm
             alp2=edotm+seratm
@@ -1106,10 +1109,10 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 	difx=ort(nr,14)
       endif
 
-      IF (NN.eq.1 .or. NN.eq.2) THEN
-        !MD: testoutput into output.out
-        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
-      END IF
+!MD: testoutput into output.out
+!MD      IF (NN.eq.1 .or. NN.eq.2) THEN
+!MD        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
+!MD      END IF
 
       peclet=vecq*abs((xl(3)+xl(5)))/2/difx
 !	  
@@ -1364,17 +1367,14 @@ CIPK AUG95    ADD LINE ABOVE FOR RATE TERMS
       ENDIF
 
 !MD!MD Start testout
-      IF (NN.eq.1 ) THEN
-        WRITE (75,*) 'Parameter aus COEF25nt'
-        WRITE (75,*) ' NN, SALT, DSALDX, DSALDY, DSALDT'
-        WRITE (75,*)  NN, SALT, DSALDX, DSALDY, DSALDT
-       ! WRITE (75,*) 'Parameter aus COEF25nt'
-       ! WRITE (75,*) ' SALT, DSALDX, DSALDY, DSALDT, S, R, H,
-       !+SIDFQQ, SIDQ(NN,ICK-3), EXTL, SRCSNK, GRATE, QIN '
-       END IF
-      !WRITE (75,*) SALT, DSALDX, DSALDY, DSALDT, S, R, H,
-      !+  SIDFQQ, SIDQ(NN,ICK-3), EXTL, SRCSNK, GRATE, QIN
-      ! WRITE (75,*)  NN, SALT, DSALDX, DSALDY, DSALDT
+!MD      IF (NN.eq.1 ) THEN
+!MD        WRITE (75,*) 'Parameter aus COEF25nt'
+!MD        WRITE (75,*) ' NN, SALT, DSALDX, DSALDY, DSALDT'
+!MD        WRITE (75,*)  NN, SALT, DSALDX, DSALDY, DSALDT
+!MD       ! WRITE (75,*) 'Parameter aus COEF25nt'
+!MD       ! WRITE (75,*) ' SALT, DSALDX, DSALDY, DSALDT, S, R, H,
+!MD       !+SIDFQQ, SIDQ(NN,ICK-3), EXTL, SRCSNK, GRATE, QIN '
+!MD       END IF
 !MD  Ende testoutput into output.out
 
 !.....................................................
