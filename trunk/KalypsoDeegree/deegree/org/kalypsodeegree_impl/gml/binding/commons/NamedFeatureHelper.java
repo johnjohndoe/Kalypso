@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -51,9 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NamedFeatureHelper
 {
-  public static final QName GML_NAME = new QName( NS.GML3, "name" );
-
-  public static final QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
 
   public static final QName GML_LOCATION = new QName( NS.GML3, "location" );
 
@@ -69,7 +66,7 @@ public class NamedFeatureHelper
   public static String getName( final Feature namedFeature )
   {
     final IFeatureType featureType = namedFeature.getFeatureType();
-    final IPropertyType nameProperty = featureType.getProperty( GML_NAME );
+    final IPropertyType nameProperty = featureType.getProperty( Feature.QN_NAME );
     if( nameProperty == null )
       return null;
 
@@ -93,15 +90,15 @@ public class NamedFeatureHelper
   /** Sets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
   public static void setName( final Feature namedFeature, final String name )
   {
-    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getFeatureType().getProperty( GML_NAME );
+    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getFeatureType().getProperty( Feature.QN_NAME );
     if( vpt.isList() )
     {
       final ArrayList<String> nameList = new ArrayList<String>( 1 );
       nameList.add( name );
-      namedFeature.setProperty( GML_NAME, nameList );
+      namedFeature.setProperty( Feature.QN_NAME, nameList );
     }
     else
-      namedFeature.setProperty( GML_NAME, name );
+      namedFeature.setProperty( Feature.QN_NAME, name );
   }
 
   /**
@@ -110,7 +107,7 @@ public class NamedFeatureHelper
   public static String getDescription( final Feature namedFeature )
   {
     final IFeatureType featureType = namedFeature.getFeatureType();
-    final IPropertyType descProperty = featureType.getProperty( GML_DESCRIPTION );
+    final IPropertyType descProperty = featureType.getProperty( Feature.QN_DESCRIPTION );
     if( descProperty == null )
       return null;
 
@@ -120,7 +117,7 @@ public class NamedFeatureHelper
 
   public static void setDescription( final Feature namedFeature, final String desc )
   {
-    final IPropertyType gmlDescProp = namedFeature.getFeatureType().getProperty( GML_DESCRIPTION );
+    final IPropertyType gmlDescProp = namedFeature.getFeatureType().getProperty( Feature.QN_DESCRIPTION );
     namedFeature.setProperty( gmlDescProp, desc );
   }
 

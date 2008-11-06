@@ -50,6 +50,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface Feature extends KalypsoBaseFeature, Deegree2Feature
 {
+  public static final QName QN_NAME = new QName( NS.GML3, "name" );
+
+  public static final QName QN_DESCRIPTION = new QName( NS.GML3, "description" );
+
   /** QName of gml's gml:_Feature */
   public final static QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" );
 
