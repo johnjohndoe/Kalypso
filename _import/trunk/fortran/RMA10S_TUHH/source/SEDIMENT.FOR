@@ -1,4 +1,4 @@
-C     Last change:  MD    2 Sep 2008    1:46 pm
+C     Last change:  MD   22 Oct 2008   12:30 pm
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -9,7 +9,6 @@ C
       USE BLK10MOD
       USE BLKDRMOD
       USE BLKSANMOD
-
       !MD neu USe BLKSEDMOD
       USE BLKSEDMOD
 C
@@ -37,9 +36,10 @@ CIPK MAR06 MOVED      RHOB=RHOF*CONP*SGSA
       CODT=DELT*(1.-ALPHASN)
 CIPK MAR06 DELETED    COEFF=CDT/(CONP*RHOF*SGSA)
  1030 CONTINUE
-C
+
+C --------------------------------------------------------
 C     CHECK TO SEE IF WE HAVE MULTILAYER PROBLEM
-C
+C --------------------------------------------------------
       IF(NP .GT. NPM) THEN
 C
 C     SETUP SETTLING RATE
@@ -61,9 +61,10 @@ CIPK MAR06
 	  ENDIF
         ENDDO
       ENDIF
-C
+
+C --------------------------------------------------------
 C     NOW PROCESS BOTTOM OR FOR 2DH
-C
+C --------------------------------------------------------
       DO 1130 NN=1,NPM
 	IF(IBNA(NN).GT.0  .and.  WSLL(NN).GT.AO(NN)) THEN
           gpbsav(nn)=gpb(nn,1)   ! Save Geschiebetransport VEL(7,N)
@@ -83,19 +84,21 @@ CIPK MAR06
             COEF=D/CONP
             DO 1120 I=IGS,LGS
               DELSAC=(VEL(6,N)-GPB(N,I))/1000.
+
 c	      DELSAC is concentration difference kg/m3 ve means deposition
+C             --> NOTE. DEPOSITION IS OCCURRING. ------------------------------
+              !MD: Wenn Geschiebe-C gpb() groesser als Schwebstoff-C vel(6)
               IF(DELSAC .GE. 0.) THEN
 C
-C             NOTE. DEPOSITION IS OCCURRING.
-C              IF(VS(N).GT.1E-20)THEN
-C                CST=CLDE*D/VS(N)
-C
+C               IF(VS(N).GT.1E-20)THEN
+C               CST=CLDE*D/VS(N)
                 IF(VSN .GT. 1E-20)THEN
 CIPK JAN03        CST=CLDE*D/VSN
 CDJW APR03        CST=D/VSN
 C		  CST = (0.15*D)/VSN
 CDJW MAY03
-	          CST = (0.25*D)/VSN
+	          !MDMD_test  CST = (0.25*D)/VSN
+                  CST=CLDEND(N)*VEL(3,N)/VSANDND(N)
 CEND DJWAPR03
                 ELSE
                   CST=0.
@@ -103,11 +106,21 @@ CEND DJWAPR03
 Cipk jan03        NOTE.  SOURCE TERM = (GP - CONC)/CST
 CIPK JAN03              IF(CST.LT.DELT) CST=DELT
 CIPK MAR06
-                IF(CST.LT.CLDEND(N)*3600.) CST=CLDEND(N)*3600.
-                ALPHA1(N)=-VEL(3,N)/CST
-                ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
-	        DEP=ALPHA1(N)*VEL(6,N)+ALPHA2(N)
+                !MDMD  CST = IF(CST.LT.CLDEND(N)*3600.) CST=CLDEND(N)*3600.
+                !MDMD  DELT ist schon sekunden!!
 
+                !MDMD_neu  !MDMD_neu
+                IF (CST.LE.0.0) THEN   !MDMD_neu
+                  ALPHA1(N)=0.0
+                  ALPHA2(N)=0.0
+	          DEP=0.0
+                Else                 !Ende MDMD_neu
+                  ALPHA1(N)=-VEL(3,N)/CST
+                  ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
+	          DEP=ALPHA1(N)*VEL(6,N)+ALPHA2(N)
+                END IF
+
+                !MD Vergleiche Geschiebe gpb() mit Schwebstoff vel(6)
 	        if(gpb(n,i) .eq. 0.) then
 	          beta=1.0
 	        else
@@ -120,22 +133,24 @@ CIPK MAR06
 	        endif
 	        EYSRAT=BETA*CAI(N)*VSN
 
-                !MD!MD: Anfang der Testausgabe
-                IF (n==1) then
-                 Write(LOUT,*) 'Ausgabe aus BEDXCG'
-                 write(LOUT,*) '    N,   DEP,            vel(6,n),
-     +      gpb(n),       alpha1(n),
-     +      alpha2(n),     XNU(n),      UST(N),        BSHEAR(N)'
-                Endif
+!MD                !MD!MD: Anfang der Testausgabe
+!MD                IF (n==1) then
+!MD                 Write(LOUT,*) 'Ausgabe aus BEDXCG: DEPO'
+!MD                 write(LOUT,*) '    N,   DEP,            vel(6,n),
+!MD     +      gpb(n),       alpha1(n),
+!MD     +      alpha2(n),     XNU(n),      CST,        BSHEAR(N)'
+!MD                Endif
 
-	        WRITE(LOUT,'(I6,8G15.5)')
-     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),alpha2(n),XNU(n),
-     +            UST(N), BSHEAR(N)
-                !MD!MD: Ende der Testausgabe
+!MD	        WRITE(LOUT,'(I6,8G15.5)')
+!MD     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),alpha2(n),XNU(n),
+!MD     +            CST, BSHEAR(N)
+!MD                !MD!MD: Ende der Testausgabe
+
 
 C
-C        NOTE.  SCOUR IS OCURRING.  CHANGE THE SIGN TO COMPUTE TSACB.
-              ELSE
+C             --> SCOUR IS OCURRING.  CHANGE THE SIGN TO COMPUTE TSACB.
+              !MD: Wenn Geschiebe-C gpb() kleiner als Schwebstoff-C vel(6)
+              ELSE   !MD: Wenn DELSAC < 0    ---------------------------------
 c	 -'ve means erosion
 
 cipk jan98 check for zero velocity
@@ -143,7 +158,7 @@ cipk jan98 check for zero velocity
 	          cst=delt
                 else
 CIPK MAR06              
-                  CST=CLERND(N)*D/AVU
+                  CST=CLERND(N)*VEL(3,N)/AVU
                 endif
 CIPK MAR06             
                 PORSD=SDND(1,N)*CONP/1000.
@@ -156,7 +171,7 @@ c               forced to be not more tham 1
 
                 TSACB=DELSAC*RTO
 c	        TCSACB is predicted change
-                DYBED=-D*TSACB/(RHOB-VEL(6,N)/1000.+TSACB)
+                DYBED=-VEL(3,N)*TSACB/(RHOB-VEL(6,N)/1000.+TSACB)
 c		DYBED is change in bed thickness allowing
 c               suspended material in water column
 
@@ -187,12 +202,25 @@ cipk jan03         IF(CST.LT.DELT) CST=DELT
 cipk jan03     Use CLER as a resuspension time in hours
 cccc              IF(CST .LT. DELT/5.) CST=DELT/5.
 CIPK MAR06
-                CST= CLERND(N)*3600.
+                !MDMD  CST= CLERND(N)*3600.
+                !MDMD  DELT ist schon sekunden!!
                 ALPHA1(N)=-VEL(3,N)/CST
                 ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
 c	        ALPHA1 is rate term
 c               ALPHA1*SED+ALPHA2 is the total source
-C
+
+!MD  MD: Testausgabe - TEST
+!MD                IF (n==1) then
+!MD                   Write(LOUT,*) 'Ausgabe aus BEDXCG: DEPO'
+!MD                   write(LOUT,*) '    N,   DEP,      vel(6,n),
+!MD     +    gpb(n),       alpha1(n),
+!MD     +      alpha2(n),            BSHEAR(N)'
+!MD                Endif
+!MD	        WRITE(LOUT,'(I6,8G15.5)')
+!MD     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),alpha2(n),BSHEAR(N)
+!MD  MD: Testausgabe - TEST
+
+
 C     NOTE.DEPTH OF SEDIMENT LESS THAN REQUIRED TO SATISFY TRANSPORT
 C     CAPACITY.  REDUCE THE TRANSPORT CAPACITY.
               ENDIF
