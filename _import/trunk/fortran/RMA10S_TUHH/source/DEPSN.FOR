@@ -1,3 +1,4 @@
+C     Last change:  MD   22 Oct 2008    6:58 pm
 CIPK LAST UPDATE SEP 05 2006  ADD DEPRATO
 cipk last update JUNE 5 2006  add test marshing
 CIPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
@@ -25,6 +26,8 @@ CIPK SEP06
 C
       DO N=1,NPM
        IF(IMID(N,1) .EQ. 0) THEN
+
+         !MD:  kritische Depo-Schubspannung aus SPROP
          TAUCD=TAUCDND(N)
          I=N
          IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
