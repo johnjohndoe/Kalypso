@@ -1,3 +1,4 @@
+C     Last change:  MD    6 Nov 2008    5:23 pm
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -13,16 +14,16 @@ CRRR  Last update Aug 30 1997  Bed numbering changed:
 C  1 = top surface layer, NLAYT = bottom new bed layer
 CIPK  LAST UPDATE APR 4 1997 
       SUBROUTINE NEWBED(II)
-C-
+
+C----------------------------------------------------------------------
 C       THIS ROUTINE FORMS THE NEW BED THAT IS A RESULT OF DEPOSITION
 C     IN THE LAST TIME INTERVAL
-C-
+C----------------------------------------------------------------------
 C
       USE BLK10MOD
       USE BLKDRMOD
       USE BLKSEDMOD
       USE BLKSANMOD
- 
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLKSED.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
@@ -33,12 +34,10 @@ crrr aug97 add character lines
       CHARACTER*80  FMT
 !NiS,jul06: Consistent data types for passing paramters
       REAL(KIND=8) :: HTP
-!-
 CIPK SEP06
       REAL*8 TVN
 C-
 C-.....ASSIGN PROPER COEFS.....
-C-
       DO 350 NN=1,NPM
         N=NN
         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
@@ -69,29 +68,33 @@ cipk apr99
 CIPK AUG06   SKIP TEST
 CIPK AUG06        if(wsll(nn) .lt. ao(nn)) go to 200
 
-        IF(ESRO(NN) .GT. TAUCD  .AND.  BSHEAR(NN) .GT. TAUCD) GO TO 200
+        IF(ESRO(NN).GT.TAUCD .AND. BSHEAR(NN).GT.TAUCD) GO TO 200
 C-
-
-        TAU=BSHEAR(NN)
-        TAUO=ESRO(NN)
-        CS=VEL(6,N)
-        CSO=VOLD(6,N)
-        VST=VS(N)
-        IF(TAU .GT. TAUCD) TAU=TAUCD
-        IF(TAUO .GT. TAUCD) TAUO=TAUCD
+      !MD: cleaning up things which are never used
+      !MD:   TAU=BSHEAR(NN)
+      !MD:   TAUO=ESRO(NN)
+      !MD:   CS=VEL(6,N)
+      !MD:   CSO=VOLD(6,N)
+      !MD:   VST=VS(N)
+      !MD: cleaning up things which are never used & Unsinn
+      !MD:  IF(TAU .GT. TAUCD) TAU=TAUCD
+      !MD:  IF(TAUO .GT. TAUCD) TAUO=TAUCD
         
 cipk may06 refine computation of added mass
 c        TEMP=((3.*TAUCD-2.*TAUO-TAU)*CSO+
 c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
 c        TEMP1=3.*TAUCD-TAUO-2.*TAU/(3.*TAUCD)
-C
 c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
 c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
 c        TM(NN)=ABS(VST)*DELT*((3.*TAUCD-2.*TAUO-TAU)*CSO+
 c     *         (3.*TAUCD-TAUO-2.*TAU)*CS)/(6.*TAUCD)
-        tmTMP1=deprat(nn)*delt*cs
+
+!MD: Use orginale Parameters
+        TMTMP1=deprat(nn)*DELT*VEL(6,N)
+
 CIPK REVISE TO USE OLD DEPRATO
-        TMTMP2=DEPRATO(NN)*DELT*CSO
+!MD: Use orginale Parameters
+        TMTMP2=DEPRATO(NN)*DELT*VOLD(6,N)
 c        TMTMP2A=TEMP1*ABS(VST)*DELT*CS
 C        write(215,*) nn,temp,vst,delt
 C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
@@ -99,13 +102,14 @@ C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
 cipk may06 end updates       
         TM(NN)=TM(NN)/1000.
         DELBED(NN)=BEDEL(NN)
+
+!MD: TMD=TM vor goto geschoben (statt danach!)
+        TMD(NN)=TM(NN)
         IF(TM(NN).LE.0.)GO TO 350
-C.............................................................
 C    MASS DEPOSITED PER UNIT AREA.
 C..............................................................
-c
-        TMD(NN)=TM(NN)
-C
+
+
 C********************************************************************
 C
 C      FORM NEW BED PROFILE.
@@ -117,10 +121,9 @@ C.......................................................................
 C       NUMBER OF LAYERS ON BOTTOM
 C.......................................................................
 
-C   ..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
+C..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
 c
 cipk apr06        NL=TM(NN)/WEGT
- 
 cipk apr99        if (lt .gt. mlayer+10)  then
 cipk aug05        if (nl .gt. mlayer+10)  then
 cipk apr06        if (nl .gt. mxsedlay+10)  then
@@ -135,42 +138,35 @@ C     *** However if all layers except the bottom are
 C         full add mass directly into bottom layer  ****
 C
          DO 100 L=1,NLAYT-1
-C
 C  Layer not full            
-            IF (THICK(NN,L) .LT. TLAY(L))  THEN
-C
-               ATHICK = TLAY(L) - THICK(NN,L)
-               THICKNW = TM(NN)/GAD(L)
-C
-               IF (ATHICK .GE. THICKNW)  THEN
-                  THICK(NN,L) = THICK(NN,L) + THICKNW
-                  TM(NN) = 0.
-                  GO TO 200
-C
-               ELSE
-                  THICK(NN,L) = TLAY(L)
-                  TM(NN) = TM(NN) - ATHICK*GAD(L)
-C
-               ENDIF
-C
-            ENDIF
+           IF (THICK(NN,L) .LT. TLAY(L))  THEN
+             ATHICK = TLAY(L) - THICK(NN,L)
+             THICKNW = TM(NN)/GAD(L)
+              IF (ATHICK .GE. THICKNW)  THEN
+                THICK(NN,L) = THICK(NN,L) + THICKNW
+                TM(NN) = 0.
+                GO TO 200
+              ELSE
+                THICK(NN,L) = TLAY(L)
+                TM(NN) = TM(NN) - ATHICK*GAD(L)
+              ENDIF
+           ENDIF
   100    CONTINUE
 C
 C  Put All remaining mass in bottom layer 
          THICKNW = TM(NN)/GAD(NLAYT)
          THICK(NN,NLAYT) = THICK(NN,NLAYT) + THICKNW
          TM(NN) = 0.
-C
-C
   200    CONTINUE
-C
 C
          DELBED(NN) = 0.
          DO 220 L=1,NLAYT
             DELBED(NN) = DELBED(NN) + THICK(NN,L)
             SST(NN,L) = SS(L)
+            !MD  SST wird niemals weiter genutzt
+            !MD  alle ero u depo routinen arbeiten mit SSND!
             IF (THICK(NN,L) .GT. 0.0) THEN
-		     NLAY(NN) = L
+              NLAY(NN) = L
             ENDIF
   220    CONTINUE
 
@@ -180,7 +176,6 @@ CIPK JAN05
              DELBED(NN) = DELBED(NN) + THICKO(NN,L)
            ENDDO
          ENDIF
-
 
   350 CONTINUE
 
@@ -209,14 +204,16 @@ C*********************************************************************
         IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
         ESRO(I)=BSHEAR(I)
         ESRO(N)=BSHEAR(N)
-C        CONCO(I)=CONC(I)
+C       CONCO(I)=CONC(I)
   400 CONTINUE
       INEWBED=0
       
       WRITE(LOUT,77)
+
 C*********************************************************************
 C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
 C*********************************************************************
+!MD: Hinweis: II IMMER gleich 2
       IF(II .NE. 1) THEN
 cipk apr97 add option
 CIPK APR06        IF(MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
@@ -224,14 +221,36 @@ C        WRITE(181,80)
         DO 480 I=1,NPM
           N=I
           IF(NDEP(I) .GT. 1) N=NREF(I)+NDEP(I)-1
-cipk feb99          BC=BEDEL(I)-AO(I)
-           BC=BEDEL(I)+AORIG(I)
-crrr aug97 remove scling by depth
-          DMER=EDOT(N)
-          SER=SERAT(N)
-          DR=TMD(I)/DELT
-cipk jan99          EDM=(DMER+SER-DR)*DELT
-          EDM=((DMER+SER)/1000.-DR)*DELT
+cipk feb99  BC=BEDEL(I)-AO(I)
+!MD: cleaning up things which are never used
+      !MD:    BC=BEDEL(I)+AORIG(I)
+crrr aug97    remove scling by depth
+!MD: cleaning up things which are never used
+      !MD:    DMER=EDOT(N)
+      !MD:    SER=SERAT(N)
+      !MD:    DR=TMD(I)/DELT
+cipk jan99    EDM=(DMER+SER-DR)*DELT
+
+!MD:      Used original Parameters
+      !MD:    EDM=((DMER+SER)/1000.-DR)*DELT
+          EDM=((EDOT(N)+SERAT(N))/1000.-(TMD(I)/DELT))*DELT
+
+
+
+!MD: Test ob sohlevultion richtig: !MD: Test ob sohlevultion richtig:
+          IF (N.eq.1) THEN
+            WRITE(75,*) 'CHECK-Bed:        EDM,             DEPINCR,
+     +           DELBED,           BEDELO,       DELBED(EDM)'
+          END IF
+          WRITE(75,*) EDM, DEPINCR(N), DELBED(N), BEDELO(N),
+     + BEDELO(N)-EDM
+          !MD: Test ob sohlevultion richtig:
+          !MD:  DEPINCR(N)= EDM
+          !MD:  DELBED(N) = BEDELO(N)+DEPINCR(N)
+!MD: Test ob sohlevultion richtig: !MD: Test ob sohlevultion richtig:
+
+
+
 cipk jan99 reverse prionting order
 C          WRITE(181,82)I,BSHEAR(I),BC,BEDEL(I),DMER,SER,DR,EDM
   480   CONTINUE
@@ -245,64 +264,65 @@ CIPK APR06 INIIALIZE IPASST
 c update bed elevation for flow calculation
 cipk may06 skip of morphology off
 
-      IF(FACTMORPH .NE. 1.) GO TO  7777 
+      IF(FACTMORPH .NE. 1.) GO TO 7777
       DO M=1,NEM
-
-       IF(IMAT(M) .GT. 0) THEN
-         DO K=1,ncorn(m),2
-	     N=NOP(M,K) 
+        IF(IMAT(M) .GT. 0) THEN
+          DO K=1,ncorn(m),2
+	    N=NOP(M,K)
 cipk jan07	     
-           if(ncorn(m) .eq. 5 .and. k .eq. 3) then
-             n=nop(m,k+1)	     
-           endif
+            if(ncorn(m) .eq. 5 .and. k .eq. 3) then
+              n=nop(m,k+1)
+            endif
 CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
-	     IF(IPASST(N) .EQ. 0) THEN
-	       IPASST(N)=1
-      	     DEP=VEL(3,N)
-	       AO(N)=AO(N)+DEPINCR(N)
-             ADO(N)=ADO(N)+DEPINCR(N)
-             ADB(N)=ADB(N)+DEPINCR(N)
-             ADT(N)=ADT(N)+DEPINCR(N)
-             HEL(N)=WSLL(N)-ADO(N)
-             CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-             VEL(3,N)=HTP
-	       RATIO=vel(3,n)/DEP
-	       VEL(1,N)=VEL(1,N)/RATIO
-	       VEL(2,N)=VEL(2,N)/RATIO
-	       VDOT(1,N)=VDOT(1,N)/RATIO
-	       VDOT(2,N)=VDOT(2,N)/RATIO
+	    IF(IPASST(N) .EQ. 0) THEN
+       	      IPASST(N)=1
+       	      DEP=VEL(3,N)
+       	      AO(N)=AO(N)+DEPINCR(N)
+              ADO(N)=ADO(N)+DEPINCR(N)
+         !MD   ADB(N)=ADB(N)+DEPINCR(N)
+         !MD   ADT(N)=ADT(N)+DEPINCR(N)
+              HEL(N)=WSLL(N)-ADO(N)
+              CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+         !MD   VEL(3,N)=HTP
+       	 !MD   RATIO=vel(3,n)/DEP
+              RATIO = 1.0   !MD: test
+       	      VEL(1,N)=VEL(1,N)/RATIO
+       	      VEL(2,N)=VEL(2,N)/RATIO
+       	      VDOT(1,N)=VDOT(1,N)/RATIO
+       	      VDOT(2,N)=VDOT(2,N)/RATIO
 cipk update suspended sed
-	       VEL(6,N)=VEL(6,N)/RATIO
-	       VDOT(6,N)=VDOT(6,N)/RATIO
+       	      VEL(6,N)=VEL(6,N)/RATIO
+       	      VDOT(6,N)=VDOT(6,N)/RATIO
               BEDEL(N)=DELBED(N)
               BEDELO(N)=BEDEL(N)
               DEPINCR(N)=0.
             ENDIF
-        ENDDO
-	 ENDIF
-	ENDDO
+          ENDDO
+	ENDIF
+      ENDDO
+
+
 cipk may06 separate loops to assure correct updating
       DO M=1,NEM
-
-       IF(IMAT(M) .GT. 0) THEN
+        IF(IMAT(M) .GT. 0) THEN
 cipk jan07
-        ncn=ncorn(m)       
-        nlg=2
-        nhg=ncn
-        ninc=2
-        if(ncn .eq. 5) then
-        nlg=4
-        nhg=2
-        ninc=-2
-        endif
-        DO K=nlg,nhg,ninc
-            N1=NOP(M,K-1)
-	      N=NOP(M,K)
-            IF(K .LT. NCORN(M)) THEN
-	        N2=NOP(M,K+1)
-	      ELSE
-              N2=NOP(M,1)
-	      ENDIF
+          ncn=ncorn(m)
+          nlg=2
+          nhg=ncn
+          ninc=2
+          if(ncn .eq. 5) then
+            nlg=4
+            nhg=2
+            ninc=-2
+          endif
+          DO K=nlg,nhg,ninc
+           N1=NOP(M,K-1)
+	    N=NOP(M,K)
+           IF(K .LT. NCORN(M)) THEN
+	      N2=NOP(M,K+1)
+	    ELSE
+             N2=NOP(M,1)
+	    ENDIF
 cipk jan07
             if(ncn .eq. 5) then
               if(k  .eq. 4) then
@@ -313,33 +333,37 @@ cipk jan07
                 n=nop(k,2)
                 n1=nop(k,1)
                 n2=nop(k,3)
-              endif	 
-            endif     
-CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED 
-	    IF(IPASST(N) .EQ. 0) THEN
-	      IPASST(N)=1
-	      DEP=VEL(3,N)
-	      VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
-	      AO(N)=(AO(N1)+AO(N2))/2.
-	      ADO(N)=(ADO(N1)+ADO(N2))/2.
-	      ADB(N)=(ADB(N1)+ADB(N2))/2.
-	      ADT(N)=(ADT(N1)+ADT(N2))/2.
+              endif
+            endif
+CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
+  	    IF(IPASST(N) .EQ. 0) THEN
+  	      IPASST(N)=1
+  	      DEP=VEL(3,N)
+  	  !MD    VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
+  	      AO(N)=(AO(N1)+AO(N2))/2.
+  	      ADO(N)=(ADO(N1)+ADO(N2))/2.
+  	  !MD    ADB(N)=(ADB(N1)+ADB(N2))/2.
+  	  !MD    ADT(N)=(ADT(N1)+ADT(N2))/2.
               BEDEL(N)=(BEDEL(N1)+BEDEL(N2))/2.
               BEDELO(N)=BEDEL(N)
-	      RATIO=vel(3,n)/DEP
+              RATIO = 1.0    !MD: TEst
+  	  !MD:   RATIO=vel(3,n)/DEP
 	      VEL(1,N)=VEL(1,N)/RATIO
 	      VEL(2,N)=VEL(2,N)/RATIO
 	      VDOT(1,N)=VDOT(1,N)/RATIO
 	      VDOT(2,N)=VDOT(2,N)/RATIO
-cipk may06 update susp sed	      
+cipk may06 update susp sed
 	      VEL(6,N)=VEL(6,N)/RATIO
 	      VDOT(6,N)=VDOT(6,N)/RATIO
 	    ENDIF
           ENDDO
-	 ENDIF
-	ENDDO
- 7777 CONTINUE	
-C
+	ENDIF
+       ENDDO
+
+
+ 7777  CONTINUE
+
+C  ----------------------------------------
 C... PRINT OUT LAYER PROPERTIES.
 C
 cipk apr97 add option
@@ -371,7 +395,6 @@ crrr aug97 revise print format and structure
          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPKSEP05
- 
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
            SS(J)=SSND(N,J)
@@ -387,30 +410,33 @@ C Calculate total dry mass of new bed
          TVN = 0.
          SUMTHICK = 0.
          DO L=1,NLAY(NN)
-            TVN = TVN + THICK(NN,L)*GAD(L)
-            SUMTHICK = SUMTHICK + THICK(NN,L)
+           TVN = TVN + THICK(NN,L)*GAD(L)
+           SUMTHICK = SUMTHICK + THICK(NN,L)
          ENDDO
 cipk jan05
-          IF(NLAYO(NN) .GT. 0) THEN
+         IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
              GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
              TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
-	  ENDIF
+	 ENDIF
 cipk may06 get nodal masses for susp sed and bed 	   
 CIPK AUG06 REVISE MASS COMPUTATION
-	   TMSED(NN)=TVN
-	   TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
-     +   +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
-	   TMSADD(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))*delt/(1000.
-     +   *ALPHA)+TMASSLEFT(NN)
-         TMLF=TMASSLEFT(NN)
-	   TMASSLEFT(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))*delt/1000.
-     +   *(ALPHA-1.)/ALPHA
-	   TMSDEP(NN)=(DEPRAT(NN)*VEL(6,NN))*delt/1000.
+	 TMSED(NN) =TVN
 
-C
+	 TMSSED(NN)=VEL(3,NN)*VEL(6,NN)/1000.
+     +             +(EDOT(nn)+SERAT(nn))*delt/1000.*(ALPHA-1.)/ALPHA
+
+	 TMSADD(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
+     +             *delt/(1000.*ALPHA)+TMASSLEFT(NN)
+         !MD:  TMLF =TMASSLEFT(NN)    :never used
+
+	 TMASSLEFT(NN)=(EDOT(nn)+SERAT(nn)-DEPRAT(NN)*VEL(6,NN))
+     +                *delt/1000.*(ALPHA-1.)/ALPHA
+
+	 TMSDEP(NN) =(DEPRAT(NN)*VEL(6,NN))*delt/1000.
+
 C Print layer info
 cipk jan99 fix reference to N when it should be NN
 cipk jan99         IF (NLAY(N) .GT. 0 .OR. NLAYO(N) .GT. 0) THEN
@@ -518,6 +544,9 @@ c     +           (AREA(N)/2.)
       IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
 
 CIPK SEP06 ADD TO OUTPUT DATA
+      WRITE(LOUT,'(A)')
+     & 'TMSED         TMSSED(0)           TMSED+TMSSED       TMSADD
+     +               TMD                 TMSDEP'
       WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0),TMSADD(0)
      +  ,TMD(0),TMSDEP(0)
    76 continue      
@@ -526,7 +555,7 @@ CIPK SEP06 ADD TO OUTPUT DATA
      +  ,TMSADD(0),TMD(0),TMSDEP(0)
 
       endif
- 9999 FORMAT(F10.3,1PE20.10,1PE20.10,1P4E20.10) 
+ 9999 FORMAT(1P2E20.10,1PE20.10,1P4E20.10)
       
 
 C
@@ -564,16 +593,16 @@ crrr aug97 end changes to output
    80 FORMAT(1X,'NODE',5X,'BED SHEAR',5X,'BOT.ELEV',5X,'BED CHANGE',4X
      1,'MASS ER. RATE',3X,'SURF. ER. ',3X,'DEP. RATE',4X,'ER/DEP MASS')
    82 FORMAT(I5,1P7E14.3)
-   83 FORMAT(1H1,///' BED LAYER PROPERTIES....'//)
-   84 FORMAT(5X,'NODE',3X,'LAYER',4X,'THICKNESS',7X,'SHEAR ST.')
+!MD:   83 FORMAT(1H1,///' BED LAYER PROPERTIES....'//)
+!MD:   84 FORMAT(5X,'NODE',3X,'LAYER',4X,'THICKNESS',7X,'SHEAR ST.')
 crrr aug97   85 FORMAT(/1X,I7,25X,' OLD DEPOSIT')
-   85 FORMAT(/1X, 25X,' OLD DEPOSIT')
+!MD:   85 FORMAT(/1X, 25X,' OLD DEPOSIT')
 crrr aug97   86 FORMAT(13X,I4,1P3E15.3)
-   86 FORMAT(13X,I4,1P2E15.3)
+!MD:   86 FORMAT(13X,I4,1P2E15.3)
 crrr aug97   87 FORMAT(1X,I7,25X,' NEW DEPOSIT')
-   87 FORMAT(1X, 25X,' NEW DEPOSIT')
-   88 FORMAT(5X,2I5,1P2E15.3)
-   89 FORMAT(10X,I5,1P2E15.3)
+!MD:   87 FORMAT(1X, 25X,' NEW DEPOSIT')
+!MD:   88 FORMAT(5X,2I5,1P2E15.3)
+!MD:   89 FORMAT(10X,I5,1P2E15.3)
       RETURN
       END
 
