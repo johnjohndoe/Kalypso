@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Aug 2008    4:42 pm
+C     Last change:  MD    3 Nov 2008    1:23 pm
 cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
@@ -21,6 +21,8 @@ CIPK AUG05      INCLUDE 'BLKSAND.COM'
         IF(IMAT(N) .GT. 0) THEN
           NCN=NCORN(N)
           DO K=1,NCN
+            !MD: Fuer alle Mittseitenknoten (lokal)
+            !MD: Teilen der Knotenummer / 2 --> kein Rest
             IF(MOD(K,2) .EQ. 0) THEN
               IMID(NOP(N,K),1)=NOP(N,K-1)
               IF(K .EQ. NCN) THEN
@@ -28,6 +30,11 @@ CIPK AUG05      INCLUDE 'BLKSAND.COM'
               ELSE
                 IMID(NOP(N,K),2)=NOP(N,K+1)
               ENDIF
+              !MD: Bsp. fuer Mittseiten-Kn 2:
+              !MD:    IMID(2,1) = 1  =Eck-Knoten 1
+              !MD:    IMID(2,2) = 3  =Eck-Knoten 2
+
+            !MD: Fuer alle Eckknoten: IMID(2,1) = 0
             ELSE
               IMID(NOP(N,K),1)=0
             ENDIF
@@ -51,6 +58,7 @@ cipk aug05 update to allow redefinition of bed
 
       DO N=1,NPM
         TM(N)=0.
+        !MD: TM = Total Mass [kg/m²] ueber alle Layer
       ENDDO
 cipk apr06   make a first call to get sed initial conditions
 
