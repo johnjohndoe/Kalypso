@@ -1,3 +1,4 @@
+C     Last change:  MD    6 Nov 2008    5:23 pm
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -11,10 +12,11 @@ CRRR  Last update Aug 30 1997  Bed numbering changed:
 C  1 = top surface layer, NLAYT = bottom new bed layer
 CIPK  LAST UPDATE APR 4 1997 
       SUBROUTINE FORMBED(II)
-C-
+
+C----------------------------------------------------------------------
 C       THIS ROUTINE FORMS THE NEW BED THAT IS A RESULT OF DEPOSITION
 C     IN THE LAST TIME INTERVAL
-C-
+C----------------------------------------------------------------------
 C
       USE BLK10MOD
       USE BLKDRMOD
@@ -68,15 +70,14 @@ crrr add test for II = 1
         IF(IABS(NB) .GT. 0 .AND.  INEWBED .EQ. 0) GO TO 221
 cipk feb95        IF(TM(NN).LE.0.)GO TO 350
 C.......................................................................
-C       NUMBER OF LAYERS ON BOTTOM
+C       NUMBER OF suspended LAYERS ON BOTTOM
 C.......................................................................
-          BEDEL(NN)=AO(NN)
-          NLAY(NN)=1
+        BEDEL(NN)=AO(NN)
+        NLAY(NN)=1
 
 C   ..   CALCULATE THE NUMBER OF LAYERS THAT CAN BE FORMED BY THIS MASS
 c
 cipk apr06        NL=TM(NN)/WEGT
- 
 cipk apr06        if (nl .gt. mxsedlay+10)  then
 cipk apr06           write(*,*) '  lt > mlayer ', lt, nn,tm(nn)
 cipk apr06           stop 
@@ -88,77 +89,74 @@ C  Add the mass of top layer to mass to be deposited.
 C     *** However if all layers except the bottom are
 C         full add mass directly into bottom layer  ****
 C
-         DO L=1,NLAYT-1
-C
+        DO L=1,NLAYT-1
+!MD:    For all suspended Layer, without the last one
 C  Layer not full            
-            IF (THICK(NN,L) .LT. TLAY(L))  THEN
-C
-               ATHICK = TLAY(L) - THICK(NN,L)
-               THICKNW = TM(NN)/GAD(L)
-C
-               IF (ATHICK .GE. THICKNW)  THEN
-                  THICK(NN,L) = THICK(NN,L) + THICKNW
-                  TM(NN) = 0.
-                  GO TO 200
-C
-               ELSE
-                  THICK(NN,L) = TLAY(L)
-                  TM(NN) = TM(NN) - ATHICK*GAD(L)
-C
-               ENDIF
-C
+          IF (THICK(NN,L) .LT. TLAY(L))  THEN
+            ATHICK = TLAY(L) - THICK(NN,L)
+            THICKNW = TM(NN)/GAD(L)
+            IF (ATHICK .GE. THICKNW)  THEN
+              THICK(NN,L) = THICK(NN,L) + THICKNW
+              TM(NN) = 0.
+              GO TO 200
+            ELSE
+              THICK(NN,L) = TLAY(L)
+              TM(NN) = TM(NN) - ATHICK*GAD(L)
             ENDIF
-         ENDDO
+          ENDIF
+        ENDDO
 C
-C  Put All remaining mass in bottom layer 
-         THICKNW = TM(NN)/GAD(NLAYT)
-         THICK(NN,NLAYT) = THICK(NN,NLAYT) + THICKNW
-         TM(NN) = 0.
-CC
-  200    CONTINUE
+C  Put All remaining total mass TM in bottom layer
+        THICKNW = TM(NN)/GAD(NLAYT)
+        THICK(NN,NLAYT) = THICK(NN,NLAYT) + THICKNW
+        TM(NN) = 0.
+  200   CONTINUE
 C
 C
-         BEDORIG(NN) = 0.
-         DO 220 L=1,NLAYT
-            BEDORIG(NN) = BEDORIG(NN) + THICK(NN,L)
-            SST(NN,L) = SS(L)
-            IF (THICK(NN,L) .GT. 0.0) THEN
-		     NLAY(NN) = L
-            ENDIF
-  220    CONTINUE
+        !MD: BEDORIG Sohldicke in [m] ohne GOK!!
+        BEDORIG(NN) = 0.
+        DO 220 L=1,NLAYT
+          BEDORIG(NN) = BEDORIG(NN) + THICK(NN,L)
+          SST(NN,L) = SS(L)
+          IF (THICK(NN,L) .GT. 0.0) THEN
+            NLAY(NN) = L
+          ENDIF
+  220   CONTINUE
 
 CIPK JAN05
-         IF(NLAYO(NN) .GT. 0) THEN
-           DO L=1,NLAYO(NN)
-             BEDORIG(NN) = BEDORIG(NN) + THICKO(NN,L)
-           ENDDO
-         ENDIF
+        IF(NLAYO(NN) .GT. 0) THEN
+          DO L=1,NLAYO(NN)
+            BEDORIG(NN) = BEDORIG(NN) + THICKO(NN,L)
+          ENDDO
+        ENDIF
          
 C     AORIG is the solid bed level
-         GO TO 350
+        GO TO 350
 C
-C       ENTER HERE FOR RESTART CASE
-C
+C       ENTER HERE ONLY FOR RESTART CASE
+!------------------------------------------
   221   LT = NLAY(NN)
         TH2=0.
         bedel(nn)=aorig(nn)
-        DO  I=1,LT
+        DO I=1,LT
           TH2 = TH2 + THICK(NN,I)
         ENDDO
         DELTHK = TH2-TH1
+        !MD: DELTHK = SUMME(THICK)
         BEDEL(NN) = BEDEL(NN) + TH2
-
+        !MD: BEDEL Sohllage in [mNN] mit GOK!!
 CIPK JAN05
-         IF(NLAYO(NN) .GT. 0) THEN
-           DO L=1,NLAYO(NN)
-             BEDEL(NN) = BEDEL(NN) + THICKO(NN,L)
-           ENDDO
-         ENDIF
+        IF(NLAYO(NN) .GT. 0) THEN
+          DO L=1,NLAYO(NN)
+            BEDEL(NN) = BEDEL(NN) + THICKO(NN,L)
+          ENDDO
+        ENDIF
 
   350 CONTINUE
 
-C   BEDEL IS NOW LEVEL OF BED
 
+C   BEDEL IS NOW LEVEL OF BED
+! ---------------------------------------
       DO N=1,NPM
         IF(IMID(N,1) .GT. 0) THEN
           NN = N
@@ -189,11 +187,9 @@ CIPK MAR06
       ENDDO
 
 
-
-c        BEDEL is the total thickness of mud (OUT OF DATE)
-
+c     BEDEL is the total thickness of mud (OUT OF DATE)
 C********************************************************************
-C    SET OLD CONCENTRATIONS AND SHEARS TO NEW VALUES.
+C    SET old Elevations and SHEARS-Stress TO NEW VALUES.
 C*********************************************************************
       DO 400 N=1,NPM
 CIPK JAN05
@@ -203,31 +199,32 @@ c	    BEDORIG(N)=BEDEL(N)
 c	  ENDIF
         IF(INEWBED .EQ. 0) THEN
           AORIG(N)=AORIG(N)-BEDORIG(N)
-         
-C       AORIG is the solid bed level
+C         AORIG is the solid bed level
           bedel(n)=bedel(n)-bedorig(n)        
           DEPINCR(N)=BEDEL(N)-aorig(n)-BEDORIG(N)
-
-C       DEPINCR IS INCREASE IN BED THICKNESS FROM INPUT VALUE
+C         DEPINCR IS INCREASE IN BED THICKNESS FROM INPUT VALUE
 
         ELSE
           DEPINCR(N)=0.
           AORIG(N)=AORIG(N)-BEDORIG(N)
-         
-C     AORIG is the solid bed level
+C         AORIG is the solid bed level
+
+          !MDMD: UNSINN - Pruefen
           DELBED(N)=-DEPINCR(N)
+          !MD: UNSINN Betthöhe = -0.0 ???
         
         ENDIF
         I=N
         IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
         ESRO(I)=BSHEAR(I)
         ESRO(N)=BSHEAR(N)
-C        CONCO(I)=CONC(I)
+C       CONCO(I)=CONC(I)
         BEDELO(N)=BEDEL(N)-AORIG(N)
         BEDEL(N)=BEDELO(N)
   400 CONTINUE
       
       WRITE(LOUT,77)
+
 C*********************************************************************
 C     PRINT THE BED SHEAR ,ER/DEP RATES AND ELEVATIONS.
 C*********************************************************************
@@ -238,14 +235,21 @@ C        WRITE(181,80)
         DO 480 I=1,NPM
           N=I
           IF(NDEP(I) .GT. 1) N=NREF(I)+NDEP(I)-1
-cipk feb99          BC=BEDEL(I)-AO(I)
-           BC=BEDEL(I)+AORIG(I)
+
+cipk feb99  BC=BEDEL(I)-AO(I)
+!MD: cleaning up things which are never used
+      !MD:    BC=BEDEL(I)+AORIG(I)
 crrr aug97 remove scling by depth
-          DMER=EDOT(N)
-          SER=SERAT(N)
-          DR=TMD(I)/DELT
-cipk jan99          EDM=(DMER+SER-DR)*DELT
-          EDM=((DMER+SER)/1000.-DR)*DELT
+!MD: cleaning up things which are never used
+      !MD:    DMER=EDOT(N)
+      !MD:    SER=SERAT(N)
+      !MD:    DR=TMD(I)/DELT
+cipk jan99    EDM=(DMER+SER-DR)*DELT
+
+!MD:      Used original Parameters
+      !MD:    EDM=((DMER+SER)/1000.-DR)*DELT
+          EDM=((EDOT(N)+SERAT(N))/1000.-(TMD(I)/DELT))*DELT
+
 cipk jan99 reverse prionting order
 C          WRITE(181,82)I,BSHEAR(I),BC,BEDEL(I),DMER,SER,DR,EDM
   480   CONTINUE
@@ -273,7 +277,7 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
               ADT(N)=ADT(N)+DEPINCR(N)
               HEL(N)=WSLL(N)-ADO(N)
               CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-              VEL(3,N)=HTP
+              VEL(3,N)=HTP   !MD HTP=HSIG
 	      RATIO=vel(3,n)/DEP
 	      VEL(1,N)=VEL(1,N)/RATIO
 	      VEL(2,N)=VEL(2,N)/RATIO
@@ -313,23 +317,29 @@ C
 C... PRINT OUT LAYER PROPERTIES.
 C
 cipk apr97 add option
-      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) RETURN
-
+      !MD: Abfrage zur Ausgabe:
+      !MD: Geaendert, da anschließend noch Berechnungen!!
+      !MD:   IF (MOD(IT,NPRTF).NE.0  .AND. TET.NE.0.) RETURN
+      IF (MOD(IT,NPRTF).NE.0  .AND. TET.NE.0.) THEN
 crrr aug97 revise print format and structure
-      WRITE(LINE256,'(A)')
-     & '  Node  Bed Shear  Bed-elev  Sed Dep   Sed Dep   New Layer Thick
-     +ness (mm)'
-      IDX = MAX(65,45+NLAYT*10) + 1
-      IF (IDX .GT. 144) IDX = 144
-      IF (NLAYO(1) .GT. 0) THEN
-         WRITE(LINE256(IDX:IDX+26),'(A)') 'Old Layer Thickness (mm)'
-      ENDIF
-      WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
+        WRITE(LINE256,'(A)')
+     &  '  Node  Bed Shear  Bed-elev  Sed Dep  Sed Dep  New Layer Thick
+     +  ness (mm)'
+        IDX = MAX(65,45+NLAYT*10) + 1
+        IF (IDX .GT. 144) IDX = 144
+        IF (NLAYO(1) .GT. 0) THEN
+          WRITE(LINE256(IDX:IDX+26),'(A)') 'Old Layer Thickness (mm)'
+        ENDIF
+        WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
 
-      WRITE(LINE256,'(A,12I10)')
+        WRITE(LINE256,'(A,12I10)')
      & '          (N/m2)    (m)       (Kg/m2)   (mm) ',
      &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
-      WRITE(LOUT,'(A)') LINE256
+        WRITE(LOUT,'(A)') LINE256
+
+      ENDIF
+      !MD: Geaendert mit Ausgabe
+
 
       INT = (NP+5)/6
       MLAYRS = MIN(NLAYT,5)
@@ -338,7 +348,6 @@ crrr aug97 revise print format and structure
          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPKSEP05
- 
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
            SS(J)=SSND(N,J)
@@ -421,16 +430,17 @@ crrr aug97 end changes to output
    77 FORMAT(////11X,40HBED SHEARS AND BED PROFILE .............//)
    80 FORMAT(1X,'NODE',5X,'BED SHEAR',5X,'BOT.ELEV',5X,'BED CHANGE',4X
      1,'MASS ER. RATE',3X,'SURF. ER. ',3X,'DEP. RATE',4X,'ER/DEP MASS')
-   82 FORMAT(I5,1P7E14.3)
-   83 FORMAT(1H1,///' BED LAYER PROPERTIES....'//)
-   84 FORMAT(5X,'NODE',3X,'LAYER',4X,'THICKNESS',7X,'SHEAR ST.')
+
+!MD:   82 FORMAT(I5,1P7E14.3)
+!MD:   83 FORMAT(1H1,///' BED LAYER PROPERTIES....'//)
+!MD:   84 FORMAT(5X,'NODE',3X,'LAYER',4X,'THICKNESS',7X,'SHEAR ST.')
 crrr aug97   85 FORMAT(/1X,I7,25X,' OLD DEPOSIT')
-   85 FORMAT(/1X, 25X,' OLD DEPOSIT')
+!MD:   85 FORMAT(/1X, 25X,' OLD DEPOSIT')
 crrr aug97   86 FORMAT(13X,I4,1P3E15.3)
-   86 FORMAT(13X,I4,1P2E15.3)
+!MD:   86 FORMAT(13X,I4,1P2E15.3)
 crrr aug97   87 FORMAT(1X,I7,25X,' NEW DEPOSIT')
-   87 FORMAT(1X, 25X,' NEW DEPOSIT')
-   88 FORMAT(5X,2I5,1P2E15.3)
-   89 FORMAT(10X,I5,1P2E15.3)
+!MD:   87 FORMAT(1X, 25X,' NEW DEPOSIT')
+!MD:   88 FORMAT(5X,2I5,1P2E15.3)
+!MD:   89 FORMAT(10X,I5,1P2E15.3)
       RETURN
       END
