@@ -9,7 +9,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.Messages;
@@ -27,13 +26,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Thomas Jung
- * 
  */
 public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgress
 {
   private final static int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
-
-  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
@@ -86,7 +82,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       RiskLanduseHelper.handleDBImport( m_externalProjectName, m_controlModel, m_scenarioFolder );
 
       /* create new landuse classes */
-      RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
+      RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, Feature.QN_NAME, PROP_DATA_MEMBER, PROP_VALUE );
 
       /* if there is no damage functions defined, define the default one */
       if( m_controlModel.getDamageFunctionsList().size() == 0 )

@@ -61,11 +61,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -105,8 +103,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   private static final int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
 
-  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
-
   private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" ); //$NON-NLS-1$
 
   private static final QName PROP_DAMAGE_FUNCTION_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "damageFunctionsCollection" ); //$NON-NLS-1$
@@ -135,7 +131,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   }
 
   @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
@@ -149,7 +145,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       m_predefinedDamageFunctionsCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
       m_predefinedAssetValueClassesCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -166,13 +162,13 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     final List<String> assetValueClassesList = new ArrayList<String>();
     for( final Feature feature : m_predefinedDamageFunctionsCollection )
     {
-      final List<String> names = (List<String>) feature.getProperty( PROP_NAME );
+      final List<String> names = (List<String>) feature.getProperty( Feature.QN_NAME );
       if( names != null && names.size() > 0 && names.get( 0 ) != null )
         damageFunctionNamesList.add( names.get( 0 ) );
     }
     for( final Feature feature : m_predefinedAssetValueClassesCollection )
     {
-      final List<String> names = (List<String>) feature.getProperty( PROP_NAME );
+      final List<String> names = (List<String>) feature.getProperty( Feature.QN_NAME );
       if( names != null && names.size() > 0 && names.get( 0 ) != null )
         assetValueClassesList.add( names.get( 0 ) );
     }
@@ -300,7 +296,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, landuseClassesList, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
