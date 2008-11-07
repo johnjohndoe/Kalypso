@@ -45,8 +45,10 @@ import java.util.EventListener;
 /**
  * @author Dirk Kuch
  */
-public interface IRemoteWorkspaceListener extends EventListener
+public interface IRemoteProjectsListener extends EventListener
 {
   // TODO parameter. What changed?
   public void remoteWorkspaceChanged( );
+
+  public void remoteConnectionChanged( boolean connectionState );
 }

@@ -24,12 +24,14 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteWorkspaceModel
 {
-  // 300000 = 5 min
-  private static final int JOB_DELAY = 30000;
+  // 300 000 = 5 min
+  private static final int JOB_DELAY = 60000;
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected Set<IRemoteWorkspaceListener> m_listener = new LinkedHashSet<IRemoteWorkspaceListener>();
+  protected boolean m_connectionState = false;
+
+  protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
 
   protected final WorkspaceJob UPDATE_JOB;
 
@@ -46,6 +48,11 @@ public class RemoteWorkspaceModel
         {
           final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
+          if( m_connectionState == false )
+          {
+            m_connectionState = true;
+            fireConnectionStatusChanged();
+          }
 
           if( remote.length != m_beans.length )
           {
@@ -71,6 +78,12 @@ public class RemoteWorkspaceModel
         }
         catch( final WebServiceException e )
         {
+          if( m_connectionState == true )
+          {
+            m_connectionState = false;
+            fireConnectionStatusChanged();
+          }
+
           if( m_beans.length != 0 )
           {
             m_beans = new KalypsoProjectBean[] {};
@@ -96,14 +109,23 @@ public class RemoteWorkspaceModel
         UPDATE_JOB.schedule( JOB_DELAY );
       }
     } );
+
     UPDATE_JOB.schedule( JOB_DELAY );
   }
 
   protected void fireWorkspaceChanged( )
   {
-    for( final IRemoteWorkspaceListener listener : m_listener )
+    for( final IRemoteProjectsListener listener : m_listener )
     {
       listener.remoteWorkspaceChanged();
+    }
+  }
+
+  protected void fireConnectionStatusChanged( )
+  {
+    for( final IRemoteProjectsListener listener : m_listener )
+    {
+      listener.remoteConnectionChanged( m_connectionState );
     }
   }
 
@@ -128,12 +150,12 @@ public class RemoteWorkspaceModel
     return m_beans;
   }
 
-  public void addListener( final IRemoteWorkspaceListener listener )
+  public void addListener( final IRemoteProjectsListener listener )
   {
     m_listener.add( listener );
   }
 
-  public void removeListener( final IRemoteWorkspaceListener listener )
+  public void removeListener( final IRemoteProjectsListener listener )
   {
     m_listener.remove( listener );
   }
@@ -147,5 +169,10 @@ public class RemoteWorkspaceModel
   public void setDirty( )
   {
     UPDATE_JOB.schedule();
+  }
+
+  public boolean isRemoteWorkspaceConnected( )
+  {
+    return m_connectionState;
   }
 }

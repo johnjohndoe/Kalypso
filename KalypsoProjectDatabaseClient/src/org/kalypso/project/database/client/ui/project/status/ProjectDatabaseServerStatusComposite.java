@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.status;
 
-import javax.xml.ws.WebServiceException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -57,20 +53,17 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.sei.IProjectDatabase;
-import org.kalypso.util.swt.StatusDialog;
+import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 
 /**
  * Composite which displays the current project model database server state
  * 
  * @author Dirk Kuch
  */
-public class ProjectDatabaseServerStatusComposite extends Composite
+public class ProjectDatabaseServerStatusComposite extends Composite implements IRemoteProjectsListener
 {
-  private static final int SCHEDULE_TIME = 1000;
-
   private final Image IMG_SERVER_OK = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_okay.gif" ) );
 
   private final Image IMG_SERVER_ERROR = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_error.gif" ) );
@@ -84,38 +77,13 @@ public class ProjectDatabaseServerStatusComposite extends Composite
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
 
-    update();
+    final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    model.addRemoteListener( this );
 
-    final UIJob job = new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        update();
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.addJobChangeListener( new JobChangeAdapter()
-    {
-      /**
-       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-       */
-      @Override
-      public void done( final IJobChangeEvent event )
-      {
-        job.schedule( SCHEDULE_TIME );
-      }
-    } );
-
-    job.schedule( SCHEDULE_TIME );
+    update( model.isRemoteWorkspaceConnected() );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Control#update()
-   */
-  @Override
-  public void update( )
+  protected void update( final boolean connected )
   {
     if( this.isDisposed() )
       return;
@@ -130,11 +98,8 @@ public class ProjectDatabaseServerStatusComposite extends Composite
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    try
+    if( connected )
     {
-      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      service.ping();
-
       final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
       img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       img.setText( "Server Status: online" );
@@ -142,7 +107,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite
       img.setEnabled( false );
       img.setUnderlined( false );
     }
-    catch( final WebServiceException e )
+    else
     {
       final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
       img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -159,8 +124,10 @@ public class ProjectDatabaseServerStatusComposite extends Composite
         @Override
         public void linkActivated( final HyperlinkEvent e1 )
         {
-          final StatusDialog dialog = new StatusDialog( img.getShell(), StatusUtilities.statusFromThrowable( e ), "Modelldatendienst Fehler" );
-          dialog.open();
+          // TODO getstate
+// final StatusDialog dialog = new StatusDialog( img.getShell(), StatusUtilities.statusFromThrowable( e ),
+          // "Modelldatendienst Fehler" );
+// dialog.open();
         }
       } );
 
@@ -168,6 +135,32 @@ public class ProjectDatabaseServerStatusComposite extends Composite
 
     m_toolkit.adapt( this );
     this.layout();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged(boolean)
+   */
+  @Override
+  public void remoteConnectionChanged( final boolean connectionState )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        update( connectionState );
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteWorkspaceChanged()
+   */
+  @Override
+  public void remoteWorkspaceChanged( )
+  {
+    // nothing to do
   }
 
 }
