@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jan 2008    4:53 pm
+!     Last change:  MD    7 Nov 2008   11:59 am
 !--------------------------------------------------------------------------
 ! This code, globale_funktionen.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -117,7 +117,28 @@ end if
 
 IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
 
-   ! Laminare Strömung
+   !MD:CHECK !MD:CHECK !MD:CHECK
+   IF (ks_local .le. 0.0 ) then
+     write (*,8000)
+     write (UNIT_OUT_LOG,8000)
+     8000 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: ks-Wert <= 0.0 vorhanden.')
+     Stop
+   ElseIF (rhy .le. 0.0 ) then
+     write (*,8001)
+     write (UNIT_OUT_LOG,8001)
+     8001 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: rhy <= 0.0 vorhanden --> WSP negativ??.')
+     Stop
+   ElseIF (f .le. 0.0 ) then
+     write (*,8002)
+     write (UNIT_OUT_LOG,8002)
+     8002 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: formbeiwert <= 0.0 vorhanden.')
+     Stop
+   ENDIF
+   !MD:CHECK !MD:CHECK !MD:CHECK
+
 
    ! Startwert Lambda
    lambda_CW = ( - 2.03 * log10 (ks_local / (14.84 * rhy * f) ) ) ** 2.0
@@ -143,6 +164,42 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
    	i = i + 1
 	lalt = lambda_CW
 
+        !MD:CHECK !MD:CHECK !MD:CHECK
+
+         IF (ks_local .le. 0.0 ) then
+           write (*,8006)
+           write (UNIT_OUT_LOG,8006)
+           8006 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                         & 1X, 'URSACHE: ks-Wert <= 0.0 vorhanden.')
+           Stop
+         ElseIF (rhy .le. 0.0 ) then
+           write (*,8007)
+           write (UNIT_OUT_LOG,8007)
+           8007 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                         & 1X, 'URSACHE: rhy <= 0.0 vorhanden --> WSP negativ??.')
+           Stop
+         ElseIF (f .le. 0.0) then
+           write (*,8008)
+           write (UNIT_OUT_LOG,8008)
+           8008 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                         & 1X, 'URSACHE: formbeiwert <= 0.0 vorhanden.')
+           Stop
+         ElseIF (lalt .le. 0.0) then
+           write (*,8009)
+           write (UNIT_OUT_LOG,8009)
+           8009 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                         & 1X, 'URSACHE: lalt <= 0.0 vorhanden.')
+           Stop
+         ElseIF (Re .le. 0.0) then
+           write (*,8010)
+           write (UNIT_OUT_LOG,8010)
+           8010 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                         & 1X, 'URSACHE: Re <= 0.0 vorhanden.')
+           Stop
+         ENDIF
+         !MD:CHECK !MD:CHECK !MD:CHECK
+
+
    	! formular by COLEBROOK/WHITE
    	lambda_CW = ( - 2.03 * log10 (2.51 / (f * Re * SQRT(lalt) ) + ks_local / (14.84 * rhy * f) ) ) ** 2.0
 
@@ -157,6 +214,27 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
 ELSE
   
   ! Turbulente Strömung
+
+  !MD:CHECK !MD:CHECK !MD:CHECK
+   IF (ks_local .le. 0.0 ) then
+     write (*,8003)
+     write (UNIT_OUT_LOG,8003)
+     8003 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: ks-Wert <= 0.0 vorhanden.')
+     Stop
+   ElseIF (rhy .le. 0.0 ) then
+     write (*,8004)
+     write (UNIT_OUT_LOG,8004)
+     8004 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: rhy <= 0.0 vorhanden --> WSP negativ??.')
+     Stop
+   ElseIF (f .le. 0.0 ) then
+     write (*,8005)
+     write (UNIT_OUT_LOG,8005)
+     8005 format (1X, 'Achtung: Keine Berechnung von LAMBDA moeglich!', /, &
+                   & 1X, 'URSACHE: formbeiwert <= 0.0 vorhanden.')
+     Stop
+   ENDIF
 
   ! formular by COLEBROOK/WHITE
   lambda_CW = ( - 2.03 * log10 (ks_local / (14.84 * rhy * f) ) ) ** 2.0
