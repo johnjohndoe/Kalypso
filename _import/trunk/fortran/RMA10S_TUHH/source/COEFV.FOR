@@ -71,11 +71,11 @@ C-
 C-....CHANGE VERT DIFF IF STRATIFIED.....
 C-
 cipk jan99
-C  Use dfct from previous result file
-      IF (NIPT .GT. 0)  THEN
-         DFACT = DFCT(NN)
-         GOTO 65
-      ENDIF
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to obsolete unit nipt
+!nipt is obsolete
+!-
 
       DFACT=1.
       IF( NDF.LT.4 ) GO TO 65

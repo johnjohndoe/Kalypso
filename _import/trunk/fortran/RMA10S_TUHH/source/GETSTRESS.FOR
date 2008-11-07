@@ -23,9 +23,10 @@ C     +STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
  5000     FORMAT(8X,I8,3I8,3F8.5)
           ENDDO
           CLOSE(INWGT)
-        ELSEIF(INBNWGT .NE. 0) THEN
-          READ(INBNWGT) HEADWT
-          READ(INBNWGT)((NODWT(M,J),J=1,3),(WAT(M,J),J=1,3),M=1,NP)
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove reading from obsolete binary file inbnwgt
+!inbnwgt is obsolete
+!-
         ELSEIF(ICORDIN .EQ. 0) THEN
           RETURN
         ENDIF
@@ -52,26 +53,10 @@ cipk sep04
           ELSE
             MBND=1
           ENDIF
-        ELSEIF(INBNSTR .GT. 0) THEN
-          READ(INBNSTR) HEDR
-	    READ(HEDR(101:105),'(I5)') MBND
-          IF(MBND .EQ. 0) THEN
-            READ(INBNSTR,ERR=155,END=155) IDYY,TTTV,NV,IYDD
-     +            ,(K,(STR2(K,J),J=1,6),L=1,NV)
-            GO TO 160     
- 155        CONTINUE
-cipk sep04
-            CLOSE(75)
-            OPEN(75,FILE='ERROR.OUT')
-            write(75,*) 'ERROR IN SURFACE STRESS DATA'
-            STOP 'ERROR IN SURFACE STRESS DATA'
-  160       CONTINUE
-            if(idebug .eq. 1) then
-             DO K=1,NV
-             WRITE(234,'(I8,6F15.3)')K,XUSR(K),YUSR(K),(STR2(K,J),J=3,6)
-             ENDDO
-            endif
-          ENDIF
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove reading from obsolete binary file inbnstr
+!inbnstr is obsolete
+!-
         ELSEIF(ICORDIN .EQ. 0) THEN
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
@@ -88,18 +73,11 @@ C
 C      SURFACE STRESS DATA READ
 C
 
-          IF(INSTR .GT. 0) THEN
-            READ(INSTR,5001,ERR=165) IDYY,TTT,NV,IYDD
- 5001       FORMAT(8X,I8,F8.0,I8,I8)
-            READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
+          READ(INSTR,5001,ERR=165) IDYY,TTT,NV,IYDD
+ 5001     FORMAT(8X,I8,F8.0,I8,I8)
+          READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
      +      ((K,STR2(K,J),J=1,6),L=1,NV)
-            GO TO 166
-          ELSE
-cipk aug05            READ(INBNSTR,ERR=165) TTT,NV,IYDD,
-            READ(INBNSTR,ERR=165) IDYY,TTT,NV,IYDD,
-     +      (K,(STR2(K,J),J=1,6),L=1,NV)
-            GO TO 166
-            ENDIF
+          GO TO 166
   165     CONTINUE
 cipk sep04
           CLOSE(75)
@@ -195,16 +173,13 @@ C
 C      SURFACE STRESS DATA  read
 C
 
-          IF(INSTR .GT. 0) THEN
-            READ(INSTR,5001,ERR=286,END=285) IDYY,TTTV,NV,IYDD
-              READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
+          READ(INSTR,5001,ERR=286,END=285) IDYY,TTTV,NV,IYDD
+          READ(INSTR,'(8X,I8,2F16.0,4F8.0)')
      +      (K,(STR2(K,J),J=1,6),L=1,NV)
-            ELSE
-cipk aug05              READ(INBNSTR,ERR=286,END=285) TTTV,NV,IYDD
-              READ(INBNSTR,ERR=286,END=285) IDYY,TTTV,NV,IYDD
-     +            ,(K,(STR2(K,J),J=1,6),L=1,NV)
-
-          ENDIF
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove reading from obsolete binary file inbnstr
+!inbnstr is obsolete
+!-
           NVK=NV
           TTTV=TTTV+(IDYY-1)*24.
             TTT=TTTV

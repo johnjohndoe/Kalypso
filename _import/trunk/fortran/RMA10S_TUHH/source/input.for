@@ -48,6 +48,22 @@ CIPK  LAST UPDATE OCT 1 1996
 cipk  last updated Apr 24 1996
 CIPK  LAST UPDATED SEP 19 1995
       SUBROUTINE INPUT(IBIN)
+      
+      !calls
+      !-----
+      !ginpt
+      !ErrorMessageAndStop
+      !getgeo
+      !initsed
+      !check
+      !insand
+      !sprop
+      !getbc
+      !anglen
+      !getcon
+      !threed
+      
+      
       USE BLK10MOD
       USE BLK11MOD
       USE BLKDRMOD
@@ -124,7 +140,8 @@ CIPK APR96 ADD DEFINITIONS
       idye=0
       hrend=0
       nscrin=18
-!      open(nscrin,status='scratch',form='formatted')
+      open (nscrin, file = 'scratch.fil', 
+     +      status = 'REPLACE', form='formatted')
 CIPK APR96 END ADDITIONS
       LE=MAXE
       LP=MAXP
@@ -280,10 +297,22 @@ cipk mar03 add diffusion switch ( default of  0 uses old formulations
       
       WRITE(LOUT,6010) NDP,GRAV,IZB,IPASS1,IPASS2,IPASS3,IZERS,IDIFSW
      +  ,INOTR
-      WRITE(LOUT,6011) NB,NLL,IFILE,NOPT,IFIT,IFOT
+      !REMOVE FOR RMA·Kalypso
+      !nll is obsolete
+      !nopt is obsolete
+      !ifot is obsolete
+      !ifit is obsolete
+      !WRITE(LOUT,6011) NB,NLL, IFILE,NOPT,IFIT,IFOT
+      WRITE(LOUT,6011) NB, IFILE
+      
 C
       IF( IFILE .GT. 0 ) REWIND IFILE
-      IF( NOPT .GT. 0 ) REWIND NOPT
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove editing obsolete unit nopt
+!nopt is obsolete
+!-
+
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
@@ -458,11 +487,12 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
 CIPK AUG07  ADD ICPU
-      ICPU=0
+      ICPU = 0
+      itefreq = 0
       IF(ID(1:2) .EQ. 'C6') THEN
 cipk mar06 allow for output file rewind      
 CIPK AUG07  ADD ICPU
-        READ(DLIN,'(4I8)') IOUTFREQ,IOUTRST,IOUTRWD,ICPU
+        READ(DLIN,'(5I8)') IOUTFREQ,IOUTRST,IOUTRWD,ICPU, itefreq
         call ginpt(lin,id,dlin)
 	    WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD,ICPU
         IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
@@ -1018,7 +1048,7 @@ C-
       end do
       !-
 
-      IF (IFILE == 60 .AND. IGEO == 2) THEN
+      IF (IFILE == 60) THEN
         IF (id == 'SCL') THEN
           READ(DLIN,*) NCL
           kmax = NCL
@@ -1507,8 +1537,11 @@ cipk jan99 set directions
 C
 C...... Set up IBN for three dimensional element generation
 C-
-
-      IF(IFIT .GT. 0) GO TO 99
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove obsolete unit ifit
+!ifit is obsolete
+!      IF(IFIT .GT. 0) GO TO 99
+!-
       DO 86 I=1,NP
    86 IBN(I)=0
       DO 90 J=1,NE
@@ -1644,7 +1677,11 @@ C-
 C-
 C......FORM THREE DIMENSIONAL ELEMENTS FROM INPUT
 C-
-      CALL THREED
+      CALL THREED!nis,comment
+!In dependency of the switch NT, two general jobs are possible for file.subroutine
+!NT = 1: First call (called from RMA10.program); the general files are read and opened
+!NT = 2: Second call (called from input.subroutine); output file LOUT is opened
+
    99 CONTINUE
 
 CIPK AUG00 SAVE GENERATED ORDER
@@ -1786,25 +1823,12 @@ CIPK SEP04  ENSURE VALUES AT ALL NODES
 
 
 c-
-c
-C......SAVE 3D GEOMETRY
-C
-CIPK NOV97 CHANGE NES TO NEM
-CIPK JUL02 ADD HEADER
-      IF(IFOT .GT. 0) THEN
-        HEADER(1:8)='RMA103DG'
-        WRITE(HEADER(41:60),'(2I10)') NP,NE
-        HEADER(101:172)=TITLE   
-        WRITE(IFOT) HEADER
-        WRITE(IFOT) NP,NE,NPM,NEM,((CORD(J,K),SPEC(J,K),K=1,3),ALFA(J),
-     2NFIX(J),NFIX1(J),AO(J),NSURF(J),J=1,NP),(NDEP(J),NREF(J),J=1,NPM),
-     3               ((NOP(J,K),K=1,20),NCORN(J),IMAT(J),NETYP(J),TH(J),
-     4               NFIXH(J),J=1,NE),(WIDTH(J),J=1,NP)
-        HEADER(1:8)='RMA10   '
-	ENDIF
-cip  feb98     3               ((NOP(J,K),K=1,20),NCORN(J),IMAT(J),IMAT(J),TH(J),
-cipk feb98     4               NFIXH(J),J=1,NE),(WIDTH(J),J=1,NP)
-CIPK DEC02
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to obsolete unit ifot
+!ifot is obsolete
+!-
+
+
 C     HEADER  =   1000 character header with the label RMA103DG in loc 1-8
 
 C	NP		=	I4	Number of nodes
@@ -2453,6 +2477,7 @@ cipk feb97 new subroutine to process input files
       CHARACTER ID*8,DLIN*72
 cipk jan03  ADD AN EXTRA 8 CHARACTERS
       CHARACTER*8 DLINEXTRA
+      integer (kind = 4) :: iin
       COMMON /DLINF/ DLINEXTRA
   100 CONTINUE
 CIPK JAN03

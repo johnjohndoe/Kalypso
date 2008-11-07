@@ -1,4 +1,4 @@
-C     Last change:  MD    6 Nov 2008    5:23 pm
+C     Last change:  MD   22 Aug 2008    6:03 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -27,14 +27,6 @@ CIPK  NEW ROUTINE jULY 9 2001
       USE PARAKalyps
 !-
 
-cipk aug05      INCLUDE 'BLK10.COM'
-CIPK AUG05      INCLUDE 'BLKDR.COM'
-CIPK AUG05      INCLUDE 'BLK4.COM'
-CIPK AUG05      INCLUDE 'BLK11.COM'
-CIPK AUG05      INCLUDE 'BLKSAND.COM'
-CIPK AUG05      INCLUDE 'BLKSED.COM'
-      ALLOCATABLE VSING(:,:)
-cipk mar95 add a column      COMMON /SINPRE/ VSING(6,MNP)
 
 cipk aug98 add character statement
       CHARACTER*48 FRST
@@ -83,7 +75,6 @@ cipk aug98 add character statement
       temp_maxnn = 0.
 !-
       CALL SECOND(TA)
-      ALLOCATE (VSING(8,MAXP))
 C-
 c  the following variable turns:
 c   0 - original RMA-10
@@ -151,112 +142,21 @@ CIPK JUN05  Input time series data
       !EFa jun07, output for autoconverge
 !      if (beiauto /= 0.) call autoconverge (-1.0)
 
-      !nis,Apr08: Write File header outputs in external subroutine
-      !call FileHeaders ()
-CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
-      IF(IRMAFM .GT. 0) THEN
-        WRITE(HEADER(41:60),'(2I10)') NP,NE
-        HEADER(101:172)=TITLE   
-        WRITE(IRMAFM) HEADER
-      ENDIF
 
-CIPK JUN02 ADD BED DATA OUTFILE HEADER
-      IF(IBEDOT .GT. 0) THEN
-        HEADER(1:5)='RMA11'
-        WRITE(HEADER(41:60),'(2I10)') NP,NE
-        HEADER(101:172)=TITLE   
-        WRITE(IBEDOT) HEADER
-      ENDIF
-
-CIPK JAN03 ADD WAVE DATA OUTFILE HEADER
-      IF(IWAVOT .GT. 0) THEN
-        HEADER(1:5)='RMA11'
-        WRITE(HEADER(41:60),'(2I10)') NP,NE
-        HEADER(101:172)=TITLE   
-        WRITE(IWAVOT) HEADER
-      ENDIF
-
-CIPK JUN02    ADD OUTPUT OF HEADER FOR SMS FORMAT
-      
-      IF(ISMSFM .GT. 0) THEN
-
-        IREC(1) = 435
-        MFLG = 120
-        WRITE (ISMSFM) MFLG, IREC(1), NP, NEM
-      ENDIF
-CIPK AUG02
-      IF(ISMSFM1 .GT. 0) THEN
-        IREC(1) = 431     
-        MFLG = 140
-        WRITE (ISMSFM1) MFLG, IREC(1), NP, NEM
-      ENDIF
-
-CIPK JAN03
-      IF(ISMSFM2 .GT. 0) THEN
-        IREC(1) = 435     
-        MFLG = 120
-        WRITE (ISMSFM2) MFLG, IREC(1), NP, NEM
-      ENDIF
-
-      IF(ISMSFM .GT. 0  .OR.  ISMSFM1 .GT. 0  .OR.  ISMSFM2 .GT. 0) THEN
-        IWRT1 = 1200
-        DO I=11,1200
-          IPACKB(I)='    '
-        ENDDO
-          IPACKB(1)='RMA '
-        IPACKB(2)='IMPL'
-        IPACKB(3)='EMEN'
-        IPACKB(4)='TATI'
-        IPACKB(5)='ON O'
-        IPACKB(6)='F SM'
-        IPACKB(7)='S OU'
-        IPACKB(8)='TPUT'
-        IPACKB(9)=' FOR'
-        IPACKB(10)='MAT '
-
-        IF(ISMSFM .GT. 0) THEN
-          WRITE (ISMSFM) IWRT1, (IPACKB(I),I= 1,IWRT1)
-        ENDIF
-        IF(ISMSFM1 .GT. 0) THEN
-          WRITE (ISMSFM1) IWRT1, (IPACKB(I),I= 1,IWRT1)
-        ENDIF
-CIPK JAN03
-        IF(ISMSFM2 .GT. 0) THEN
-          WRITE (ISMSFM2) IWRT1, (IPACKB(I),I= 1,IWRT1)
-        ENDIF
-        IWRT2 = 40
-        IWRT3 = 40
-        IF(ISMSFM .GT. 0) THEN
-          WRITE (ISMSFM) IWRT2, IWRT3,
-     *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-        ENDIF
-        IF(ISMSFM1 .GT. 0) THEN
-          WRITE (ISMSFM1) IWRT2, IWRT3,
-     *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-        ENDIF
-CIPK JAN03
-        IF(ISMSFM2 .GT. 0) THEN
-          WRITE (ISMSFM2) IWRT2, IWRT3,
-     *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-        ENDIF
-        DO I=1,77
-          IPACKT(I)='    '
-          IF(I .LT. 73) THEN
-            IPACKT(I)(1:1)=TITLE(I:I)
-          ENDIF
-        ENDDO
-        IWRT4 = 77
-        IF(ISMSFM .GT. 0) THEN
-          WRITE (ISMSFM) IWRT4, (IPACKT(I),I= 1,IWRT4)
-        ENDIF
-        IF(ISMSFM1 .GT. 0) THEN
-          WRITE (ISMSFM1) IWRT4, (IPACKT(I),I= 1,IWRT4)
-        ENDIF
-CIPK JAN03
-        IF(ISMSFM2 .GT. 0) THEN
-          WRITE (ISMSFM2) IWRT4, (IPACKT(I),I= 1,IWRT4)
-        ENDIF
-      ENDIF
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to unit irmafm
+!irmafm is obsolete
+!nis,nov08: Remove writing to unit ibedot
+!ibedot is obsolete
+!nis,nov08: Remove writing to unit ismsfm
+!ismsfm is obsolete
+!nis,nov08: Remove writing to unit ismsfm1
+!ismsfm1 is obsolete
+!nis,nov08: Remove writing to unit ismsfm2
+!ismsfm2 is obsolete
+!nis,nov08: Remove writing to unit iwavot
+!iwavot is obsolete
+!-
 
 
 CIPK JUN03 SETUP STRESS WEIGHTING 
@@ -414,7 +314,7 @@ cipk aug07
         CALL FRONT(1)
       ELSE
         !stop 'option not stable, please use frontal scheme'
-         CALL FRONT_PARDISO(1)
+        CALL FRONT_PARDISO(1)
       ENDIF
       IF(ITIMFL .GT. 0) THEN
         CALL SECOND(ATIM(3))
@@ -488,21 +388,14 @@ CIPK DEC00
 CIPK DEC00      ENDIF
 CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
       TETT=(DAYOFY-1)*24.+TET
-      IF(NLL .GT. 0) THEN
-        REWIND NLL
-C      WRITE(NLL) TET,NP,NDFF,((VEL(K,J),VDOT(K,J),K=1,NDF),VVEL(J),J=1
-CIPK MAY96 ADD YEAR TO FILE
-        WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +            ,VVEL(J),J=1,NP)
-     +     ,(hel(j),hdet(j),j=1,np)
-     +     ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-CIPK SEP02 ADD WRITE STATEMENT FOR ICE THICKNESS ON RESTART FILE
-        IF(ICESW .GT. 0) THEN
-          WRITE(NLL) (ICETHK(J),J=1,NPM)
-        ENDIF
-CIPK SEP02 ADD RESTART DATA FOR BED
-cipk aug98 add line above for consistent restart
-      ENDIF
+
+
+!REMOVE FOR RMA·Kalypso
+!nis,nov08: Remove writing to restart output file with unit NLL
+!NLL is obsolete
+!-
+
+
 CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
       IF(NCONV .EQ. 2) GO TO 350
   300 CONTINUE
@@ -572,16 +465,12 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       if(niti .eq. 0) go to 400
-C-
-C......STORE AS A SINGLE PRECISION ARRAY
-C-
-      DO 320 J=1,NP
-        DO 310 K=1,NDF
-          VSING(K,J)=VEL(K,J)
-  310   CONTINUE
-cipk mar95 add a line to save dhdt
-        VSING(7,J)=VDOT(3,J)
-  320 CONTINUE
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: remove vsing-array for output
+!vsing is obsolete
+!-
+
 
 !        !EFa jun07, autoconverge
 !        if (beiauto.ne.0.) then
@@ -602,13 +491,12 @@ cipk mar95 add a line to save dhdt
 
 !-
 !NiS,may06,comment: Writing output files in different formats
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to unit irmafm
+!irmafm is obsolete
 !-
-CIPK MAR00
-      !NiS,apr06,comment: Writing RMA-outputfile after steady state converged solution
-      IF(IRMAFM .GT. 0) THEN
-        WRITE(IRMAFM) TETT,NP,NDG,NE,IYRR,((VSING(K,J),K=1,NDF),VVEL(J)
-     1  ,WSLL(J),J=1,NP),(DFCT(J),J=1,NE),(VSING(7,J),J=1,NP)
-      ENDIF
+
 
 !NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE STEADY STATE SOLUTION
       IF (IKALYPSOFM /= 0) THEN
@@ -627,37 +515,15 @@ CIPK MAR00
       END IF
 !-
 CIPK AUG02
-      !NiS,apr06,comment: Writing SMS-outputfile after steady state converged solution
-      IF(ISMSFM .GT. 0) THEN
-        DO JJ=1,NEM
-          IMATL(JJ)=IMAT(JJ)
-        ENDDO
-        WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
-     *                         (NDRY(K), K = 1, NPM), 
-     *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
-     *                         (WSLL(K), K = 1, NPM)
-      ENDIF
 
-      IF(ISMSFM1 .GT. 0) THEN
-        DO JJ=1,NEM
-          IMATL(JJ)=IMAT(JJ)
-        ENDDO
-        NQAL=3
-        WRITE (ISMSFM1) TETT, NQAL,NPM,
-     +   ((VSING(J,K),K=1,NPM),J=4,6),
-     *   NEM,  (IMATL(JJ), JJ = 1, NEM)
-      ENDIF
-
-
-      !NiS,apr06,comment: writing control output file after steady state converged solution
-      IF(NOPT .GT. 0) THEN
-CIPK MAY96 ADD YEAR TO FILE
-C       WRITE(NOPT) TET,NP,NDG,NE,((VSING(K,J),K=1,NDF),VVEL(J)
-        WRITE(NOPT) TETT,NP,NDG,NE,IYRR,((VSING(K,J),K=1,NDF),VVEL(J)
-     1  ,J=1,NP),(DFCT(J),J=1,NE),(VSING(7,J),J=1,NP)
-      ENDIF
-CIPK MAR95 ADD DHDT TO WRITE     1  ,J=1,NP),(DFCT(J),J=1,NE)
-CIPK DEC97 MOVE SKIP TO DYNAMIC SOLUTION
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to obsolete unit nopt
+!nopt is obsolete
+!nis,nov08: Remove writing to obsolete unit ismsfm
+!ismsfm is obsolete
+!nis,nov08: Remove writing to obsolete unit ismsfm1
+!ismsfm1 is obsolete
+!-
 
 !NiS,apr06,comment: End option, if just steady state is desired
 
@@ -723,8 +589,7 @@ C-
 !-
 !NiS,may06: calculation is only started with Kalypso-2D-geometry file, if the cycle iaccyc is reached; the user gives iaccyc in control file
 !           as timestep to start from
-        LaterTimestep: IF (IFILE == 60 .and.
-     +                     IGEO == 2 .and. n < iaccyc) THEN
+        LaterTimestep: IF (IFILE == 60 .and. n < iaccyc) THEN
           !NiS,may06: This part of the if-clause is for simulating the update of the boundary conditions. The purpose is to read through
           !           time step date lines, that are not interesting, when starting from a later time step than the first. After reading through
           !           that data, the next time step can be read, as long as firstly the wanted starting cycle exceeds the current cycle number.
@@ -804,52 +669,15 @@ CIPK MAY02
         else
           altm=0.
         endif
-C
-C.....   If NIPT not equal to zero read velocities,depth from file
-C
-        IF(NIPT .GT. 0) THEN
-          WRITE(*,*) 'GETTING VELS'
-          DO 455 J=1,NP
-            !write(75,*) 'RMA10_835: NDF=',NDF
-            DO 452 K=1,NDF
-              VOLD(K,J)=VEL(K,J)
-              V2OL(K,J)=VDOTO(K,J)
-              VDOTO(K,J)=VDOT(K,J)
-  452       CONTINUE
-cipk mar98 add logic to preserve HEL to VEL relationship
-            VTM=VEL(3,J)
-            CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
-            HOL(J)=HEL(J)
-            HDOT(J)=HDET(J)    
-  455     CONTINUE
-CIPK MAY96 ADD IYYN TO LIST
-          READ(NIPT) TETA,NPA,NDG,NTE,IYYN,((VSING(K,J),K=1,3)
-     +   ,DUM,DUM1,DUM2,
-     +    VVEL(J),J=1,NPA),(DFCT(J),J=1,NTE),(DUM,J=1,NP)
-C-
-C......STORE AS A DOUBLE PRECISION ARRAY
-C-
-          DO  J=1,NP
-            DO  K=1,3
-              VEL(K,J)=VSING(K,J)
-            ENDDO
-CIPK NOV97  457   CONTINUE
-            !NiS,jul06: The usage of single and double precision waterdepth for calling of amf is used in the code. For
-            !consistency, the single precision waterdepth is replaced with double precision.
-            !CALL AMF(HEL(J),VSING(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
-            CALL AMF(HEL(J),VEL(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
-            !-
-            WSLL(J) = HEL(J) + ADO(J)
-          ENDDO  
-CIPK NOV97  458 CONTINUE
 
-          WRITE(*,*) 'RESTART with SANDX'
-          CALL SANDX
-          WRITE(*,*) 'BACK FROM SANDX'
-          NDL=4
-        ELSE
-          NDL=1
-        ENDIF
+
+      !REMOVE FOR RMA·KALYPSO
+      !nis,nov08: Remove reading from file unit nipt
+      !nipt is obsolete
+      !-
+      NDL=1
+
+
         IF (ITEQV(MAXN) .NE. 5  .AND.  IOPTZD .GT. 0
      +    .AND. IOPTZD .LT. 3 ) CALL MELLII
 
@@ -1181,7 +1009,7 @@ cipk aug07
           CALL FRONT(1)
         ELSE
           !stop 'option not stable, please use frontal scheme'
-           CALL FRONT_PARDISO(1)
+          CALL FRONT_PARDISO(1)
         ENDIF
         IF(ITIMFL .GT. 0) THEN
           CALL SECOND(ATIM(3))
@@ -1338,7 +1166,7 @@ C-      IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
 !NiS,apr06: calculating the cwr-values for trees.
 !           This option is only activated, if VEGETA is entered in input file at proper place
         temp_maxn = maxn
-        maxn=0.
+        maxn=0
         IF (IVEGETATION /= 0) THEN
           CALL get_element_cwr
         END IF
@@ -1352,42 +1180,11 @@ C-
 CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
         TETT=(DAYOFY-1)*24.+TET
         WRITE(75,*) 'TET,DAYOFY',TET,TETT,DAYOFY
-        IF(NLL .EQ. 0) GO TO 600
-        REWIND NLL
-C      WRITE(NLL) TET,NP,NDFF,((VEL(K,J),VDOT(K,J),K=1,NDF),VVEL(J),J=1
-CIPK MAY96 ADD YEAR TO FILE
 
-        IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
-          WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NP)
-     +     ,(hel(j),hdet(j),j=1,np)
-
-        ELSEIF(LSAND .GT. 0) THEN
-          WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NP)
-     +     ,(hel(j),hdet(j),j=1,np)
-     +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-        ELSE
-          WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-     +           ,VVEL(J),J=1,NP)
-     +     ,(hel(j),hdet(j),j=1,np)
-     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NP)
-     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
-     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NP)
-
-C          WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
-C     +           ,VVEL(J),J=1,NP)
-C     +     ,(hel(j),hdet(j),j=1,np)
-C     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,NLAY(I)),I=1,NP)
-C     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
-C     &     ,SMVAL(I,J),J=1,NLAYO(I)),I=1,NP)
-        ENDIF	    
-        IF(ICESW .GT. 0) THEN
-          WRITE(NLL) (ICETHK(J) ,J=1,NPM)
-        ENDIF
-CIPK SEP02 ADD RESTART DATA FOR BED
-cipk aug98 add line above for consistent restart
-  600   CONTINUE
+!REMOVE FOR RMA·Kalypso
+!nis,nov08: Remove writing to restart output file with unit NLL
+!NLL is obsolete
+!-
 
 !        !EFa jun07, autoconverge
 !        if (beiauto.ne.0.) then
@@ -1405,35 +1202,40 @@ C-
 
 !NiS,apr06: Adding KALYPS-2D results file as option
 CIPK MAR00
-        IF((NOPT .GT. 0  .OR.  IRMAFM .GT. 0 .OR. IBEDOT .GT. 0
-     + .OR. IWAVOT .GT. 0 .OR. ISMSFM2 .GT. 0
-!     + .or. ISMSFM .gt. 0 .or. ismsfm1 .gt. 0)  .AND. N .GE. IRSAV) THEN
-     + .or. ISMSFM .gt. 0 .or. ismsfm1 .gt. 0)  .AND. N .GE. IRSAV
-     + .or. IKALYPSOFM > 0) THEN
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to unit irmafm
+!irmafm is obsolete
+!nis,nov08: Remove writing to obsolete unit nopt
+!nopt is obsolete
+!nis,nov08: Remove writing to obsolete unit ibedot
+!ibedot is obsolete
+!nis,nov08: Remove writing to obsolete unit ismsfm
+!ismsfm is obsolete
+!nis,nov08: Remove writing to obsolete unit ismsfm1
+!ismsfm1 is obsolete
+!nis,nov08: Remove writing to obsolete unit ismsfm2
+!ismsfm2 is obsolete
+!nis,nov08: Remove writing to obsolete unit iwavot
+!iwavot is obsolete
+!-
+        IF(IKALYPSOFM > 0) THEN
 !-
 
 Cipk mar03 add option that allows output at a set frequency
 
           IF(MOD(N,IOUTFREQ) .EQ. 0) THEN
-C-
-C......STORE AS A SINGLE PRECISION ARRAY
-C-
-            DO 770 J=1,NP
-            ! write(75,*) 'RMA10_1426: NDF=',NDF
-              DO 760 K=1,NDF
-                VSING(K,J)=VEL(K,J)
-  760         CONTINUE
-cipk mar95 add a line to save dhdt
-CIPK NOV02 This is now water column potential and bed elevation
- 
-              VSING(7,J)=VEL(7,J)
-              VSING(8,J)=AO(J)
-  770       CONTINUE
-CIPK MAR00
-            IF(IRMAFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
-         WRITE(IRMAFM) TETT,NP,NDF,NE,IYRR,((VSING(K,J),K=1,NDF),VVEL(J)
-     1    ,WSLL(J),J=1,NP),(DFCT(J),J=1,NE),(VSING(7,J),J=1,NP)
-            ENDIF
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: remove vsing-array for output
+!vsing is obsolete
+!-
+
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to unit irmafm
+!irmafm is obsolete
+!-
+
 C       Output RMA results file contains
  
 c       1   time in hours (Julian)
@@ -1474,110 +1276,17 @@ c      14   VSING subscript(7)  water column potential by node
             END IF
 !-
 CIPK AUG02
-            IF(ISMSFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
-              DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
-            WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
-     *                     (NDRY(K), K = 1, NPM),
-     *                     NEM,  (IMATL(JJ), JJ = 1, NEM),
-     *                     (WSLL(K), K = 1, NPM)
-            ENDIF
 
-            IF(ISMSFM1 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
-              DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
-
-CIPK DEC02 REVISE TO ADD BED ELEVATION AS 7TH COMPONENT
-cipk aug05 correct to get BSHEAR OUTPUT
-!            NQAL=7
-            NQAL=9 ! djw 16/08/04 To enable addition of wave force x & wave force y
-            NQAL=11 ! djw 16/08/04 To enable addition of bed form height and roughness
-            !
-            !  Initiates Bed form info if necessary ! djw 2/11/04
-            !
-            WBM = .FALSE.
-            IF (WBM) THEN
-!NiS,Nov06: Mixing logical type with arithmetic is not possible in Lahey
-!	        IF (wbm_Initiated.EQ..FALSE.) THEN
-               IF (.not.wbm_Initiated) THEN
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to unit ismsfm
+!ismsfm is obsolete
+!nis,nov08: Remove writing to unit ismsfm1
+!ismsfm1 is obsolete
+!nis,nov08: Remove writing to unit ismsfm2
+!ismsfm2 is obsolete
+!nis,nov08: Remove writing to unit nopt
+!nopt is obsolete
 !-
-                CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
-     +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
-               END IF
-            END IF
-            IF (WBM) THEN
-              WRITE (ISMSFM1) TETT, NQAL,NPM,       
-     +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
-     +         (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
-!
-!  DJW 16/08/04 writing wave force x and y coordinates to file : Constituents 8 and 9.
-!
-     +         (STRESS(J,1),J=1,NPM),(STRESS(J,2),J=1,NPM),
-     +         (wbm_MANNTRANSOLD(J),J=1,NPM),
-     +         (wbm_BedHeight(J), J=1,NPM),
-!
-!  DJW 16/08/04  end djw 16/08/04
-!
-     *                    NEM,  (IMATL(JJ), JJ = 1, NEM) 
-            ELSE
-              NQAL = 9
-              WRITE (ISMSFM1) TETT, NQAL,NPM,
-     +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
-     +          (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
-!
-!  DJW 16/08/04 writing wave force x and y coordinates to file : Constituents 8 and 9.
-!
-     +          (STRESS(J,1),J=1,NPM),(STRESS(J,2),J=1,NPM),
-!
-!  DJW 16/08/04  end djw 16/08/04
-!
-     +          NEM,  (IMATL(JJ), JJ = 1, NEM) 
-            END IF
-          ENDIF
-c     1   TETT                Time in hours (Julian)
-c     2   NQAL                Number of constituents = 7
-c     3   NP                  Number of nodes
-c     4   VSING subscript(4)  salinity by node   		CONST 1
-c     5   VSING subscript(5)  temperature by node		CONST 2
-c     6   VSING subscript(6)  water column concentration by nodeCONST 3
-c     7   VSING subscript(7)  water column potential by node	CONST 4
-c     8   VSING subscript(8)  Bed elevation by node		CONST 5
-c     9   DELBED              Bed change by node		CONST 6
-c    10   BSHEAR              Shear stress by node		CONST 7
-            IF(ISMSFM2 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
-              DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
-              TETT=(DAYOFY-1)*24.+TET
-              IF(LSAND .GT. 0) THEN
-                WRITE (ISMSFM2) TETT, NPM 
-     +         ,(WAVEHT(J)*COS(WAVEDR(J))
-     +         ,WAVEHT(J)*SIN(WAVEDR(J))
-     +         , TRRAT(J),J=1,NPM)
-     +         ,(NDRY(K),K=1,NPM)
-     +         , NEM,  (IMATL(JJ), JJ = 1, NEM) 
-     +         ,(WSLL(J),J=1,NPM)
-              ELSEIF(LSS .GT. 0) THEN
-                WRITE (ISMSFM2) TETT, NPM 
-     +     ,    (SWH(J)*COS(WVDR(J))
-     +     ,     SWH(J)*SIN(WVDR(J))
-     +         , AWL(J),J=1,NPM)
-     +         ,(NDRY(K),K=1,NPM)
-     +         , NEM,  (IMATL(JJ), JJ = 1, NEM) 
-     +         ,(WSLL(J),J=1,NPM)
-              ENDIF
-            ENDIF
-C
-CIPK MAY96 ADD YEAR TO FILE
-C       WRITE(NOPT) TET,NP,NDG,NE,((VSING(K,J),K=1,NDF),VVEL(J)
-CIPK AUG02 TEST FRO SAVE FREQUENCY
-            IF(NOPT .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
-          WRITE(NOPT) TETT,NP,NDF,NE,IYRR,((VSING(K,J),K=1,NDF),VVEL(J)
-     1    ,J=1,NP),(DFCT(J),J=1,NE),(VSING(7,J),J=1,NP)
-            ENDIF
-CIPK MAR95 ADD DHDT TO WRITE     1  ,J=1,NP),(DFCT(J),J=1,NE)
 
 C     Output results file contains
 
@@ -1595,67 +1304,14 @@ c    10   VSING subscript(6)  sus-sed by node
 c    11   VVEL                w-vel by node
 c    12   DFCT                stratification multiplier by element
 c    13   VSING subscript(7)  water column potential by node
-            IF(IBEDOT .GT. 0) THEN
-              NQL=10
-cipk aug05 correct to get BSHEAR OUTPUT
-CIPK MAR06 CORRECT TO GET SAND OUTPUT
-              if(LSS .GT. 0) THEN
-                WRITE(IBEDOT) TETT,NQL,NP,IYRR
-     +           ,((VSING(K,J),J=1,NP),K=1,2),(VVEL(J),J=1,NP)
-     +           ,(VSING(3,J),J=1,NP),(WSLL(J),J=1,NP)
-     1           ,((VSING(K,J),J=1,NP),K=6,8),
-     +           (BEDEL(J)-BEDORIG(J),J=1,NP),(BSHEAR(J),J=1,NP)
-                IF(IDEBUG .EQ. 3) THEN
-                  do j=1,np
-                    write(236,8888)j,BEDEL(J),BEDORIG(J),DELBED(J)
-     +              ,(BEDEL(J)-BEDORIG(J)),ao(j),aorig(j),bshear(j)
- 8888               format(i8,2f15.5,2e15.5,2f15.5,e15.5)
-                  enddo
-                ENDIF
-              ELSE
-                WRITE(IBEDOT) TETT,NQL,NP,IYRR
-     +          ,((VSING(K,J),J=1,NP),K=1,2),(VVEL(J),J=1,NP)
-     +          ,(VSING(3,J),J=1,NP),(WSLL(J),J=1,NP)
-     1          ,((VSING(K,J),J=1,NP),K=6,8),
-     +          (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NP)
-                IF(IDEBUG .EQ. 3) THEN
-                  do j=1,np
-                    write(236,8888)j,
-     +              DELBED(J),ao(j),aorig(j)            
-                  enddo
-                ENDIF
-              ENDIF
-            ENDIF
 
-            IF(IWAVOT .GT. 0) THEN
-              IF(LSAND .GT. 0) THEN
-                NQL=6
-                WRITE(IWAVOT) TETT,NQL,NP,IYRR
-     +     ,    (WAVEHT(J)*COS(WAVEDR(J)),J=1,NP)
-     +     ,    (WAVEHT(J)*SIN(WAVEDR(J)),J=1,NP),(VVEL(J),J=1,NP)
-     +     ,    (VSING(3,J),J=1,NP),(WSLL(J),J=1,NP),(TRRAT(J),J=1,NP)
-              ELSEIF(LSS .GT. 0) THEN
-cipk sep06 allow for new params
-                NQL=11
-                WRITE(IWAVOT) TETT,NQL,NP,IYRR
-     +     ,    (SWH(J)*COS(WVDR(J)),J=1,NP)
-     +     ,    (SWH(J)*SIN(WVDR(J)),J=1,NP),(VVEL(J),J=1,NP)
-     +     ,    (VSING(3,J),J=1,NP),(WSLL(J),J=1,NP)
-     +     ,    (SPWP(J),J=1,NP),(AWL(J),J=1,NP),(SWH(J),J=1,NP)
-     +     ,    (serat(J),J=1,NP),(DEPRAT(J),J=1,NP),(edot(j),j=1,np)
-cipk sep06 add line above     
-C     +     ,    (edot(j)*delt/vel(3,j),j=1,np)
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to obsolete unit ibedot
+!ibedot is obsolete
+!nis,nov08: Remove writing to obsolete unit iwavot
+!iwavot is obsolete
+!-
 
-C     SPWP(N)    Spectral peak wave period (hours)
-
-C     AWL(N)     Average wave length (m)
-
-C     SWH(N)     Significant wave height (m)
-
-C     WVDR(N)    Wave direction measure counter clockwise from the x -axis.
-
-              ENDIF
-            ENDIF
 
 C     Output bed results file contains
 
@@ -1682,7 +1338,7 @@ C  Save restart file every IOURST timesteps
 CIPK SEP04
 !              WRITE(INUM,'(I4.4)') N
               WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
-              FRST=FNAM(1:LNNAM) // 'RST'//INUM//'.RST'
+              FRST=trim(fnam) // 'RST'//INUM//'.RST'
               OPEN(131,FILE=FRST,FORM='UNFORMATTED',STATUS='UNKNOWN')
               IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
                 WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)

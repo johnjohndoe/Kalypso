@@ -24,6 +24,8 @@ REAL (KIND = 8) :: calcPolynomial, calcPolynomial1stDerivative
 REAL (KIND = 8) :: Q1t
 INTEGER :: PolyPos(1:2), findpolynom
 INTEGER :: NodA, NodB
+
+integer (kind = 4) :: n1
 !nis,feb08
 REAL (KIND = 8) :: DX, DY, CosinusAlpha
 
@@ -41,9 +43,6 @@ NCN=NCORN(NN)
 
 !parameters for polynomial approach
 if (width(nop(nn,1)) == 0.0) then
-  !init Q(h), it is not necessary at all
-  qh (nop (nn, 1)) = 0.0
-  qh (nop (nn, 3)) = 0.0
 
   !Polnyomial positions
   PolyPos(1) = findPolynom (PolyRangeA (nop (nn, 1), :), vel (3, nop(nn, 1)), PolySplitsA (nop (nn, 1)), cord (nop (nn,1), 1), cord (nop (nn,1), 2), nop (nn, 1))

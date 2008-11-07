@@ -108,9 +108,7 @@ endif
 lambda = lambdasand + lambdawald + lambdabedform
 
 !nis, prohibit mathematical lambda values
-if (lambda > 1000.0) then
-  lambda = min (1000.0, lambda)
-endif
+if (lambda > 0.0) lambda = min (1000.0, lambda)
 
 END SUBROUTINE darcy
 
@@ -200,6 +198,9 @@ iteration_lambda: do
 
   IF (lambda .eq. 0.0) lambda = 0.0001
   lambda = 1.0 / lambda
+  !nis,oct08: Restrict lambda to be maximum 1000.0
+  if (lambda > 0.0) lambda = min (lambda, 1000.0)
+  !-
 
 end do iteration_lambda
 
@@ -237,8 +238,8 @@ implicit none
 ! Calling variables
 !NiS,jul06: Consistent variable types!
 !REAL, INTENT(IN) 	:: h, a, dp, cwr
-REAL (kind = 8), INTENT(IN) 	 :: a, dp
-REAL, INTENT(IN) 	            :: cwr
+REAL (kind = 8), INTENT(IN) 	:: a, dp
+REAL (kind = 8), INTENT(IN) 	            :: cwr
 REAL(KIND=8), INTENT(IN)      :: h
 !-
 REAL (kind = 8), INTENT(OUT) 	:: lambda
@@ -265,6 +266,9 @@ else
   lambda = ( (4.0 * h * dur) / (ax * ay) ) * cwr
                                                                         
 end if
+
+!nis,oct08: Restrict lambdaWald less than 1000.0
+if (lambda > 0.0) lambda = min (lambda, 1000.0)
 
 1000 format (1X, 'Diameter of trees is larger than the distance'/ &
 	   & 1X, 'between trees:'/ &

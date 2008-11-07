@@ -8,10 +8,22 @@ CIPK  LAST UPDATED AUGUST 30 1995
 c
 c     BLK11
 c
+      !unit definitions
+      integer (kind = 4) :: IIQ, IOMET
+      
+      !execution parameters; perhaps initialised in the file opening process
+      integer (kind = 4) :: MMET
+      !meaning of the parameters
+      !MMET (switch 0 or 1) - 0 means meteorology file but don't read from it or 
+      !                         no meteorology file is present
+      !                     - 1 means meteorology file is present and read from it!
+
+
       REAL LAT,LONG,SOLHR,TOFDAY,TRLCD,CHI,ELEVAT,STANM,STIME,EXTINC,
      +DAYLEN,VPAIR,EQTEMP,XKRAT,EXTING
-      INTEGER DAYOFY,IIQ,NPM11,IJULD,METRIC,MMET,IOMET,IMGEOM,METEQ,
+      INTEGER DAYOFY,NPM11,IJULD,METRIC,IMGEOM,METEQ,
      +IHTMET,IWNDMET
+     
 
       REAL ort
 

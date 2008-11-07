@@ -3,10 +3,10 @@ subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
 
-INTEGER, INTENT(IN)          :: ErrorID, ObjectID
-INTEGER                      :: istat
-REAL (KIND = 8), INTENT (IN) :: coorx, coory
-INTEGER                      :: ErrorUnit
+integer (kind = 4), intent(in) :: ErrorID, ObjectID
+integer                        :: istat
+real (kind = 8), intent (in)   :: coorx, coory
+integer                        :: errorunit
 
 !This subroutine generates an Error function and writes it to the ERROR.OUT file. Afterwards it stops the program.
 !This is good for bringing together all the Errors in a list.
@@ -54,6 +54,23 @@ elseif (ErrorID == 1008) then
 elseif (ErrorID == 1009) then
   WRITE (ErrorUnit, 1009)
   WRITE (        *, 1009)
+  
+elseif (ErrorID == 1010) then
+  WRITE (ErrorUnit, 1010)
+  WRITE (        *, 1010)
+elseif (ErrorID == 1011) then
+  WRITE (ErrorUnit, 1011)
+  WRITE (        *, 1011)
+elseif (ErrorID == 1012) then
+  WRITE (ErrorUnit, 1012)
+  WRITE (        *, 1012)
+elseif (ErrorID == 1013) then
+  WRITE (ErrorUnit, 1013)
+  WRITE (        *, 1013)
+elseif (ErrorID == 1014) then
+  WRITE (ErrorUnit, 1014)
+  WRITE (        *, 1014)
+
 
 elseif (ErrorID == 1101) then
   WRITE (ErrorUnit, 1101) ObjectID
@@ -132,6 +149,18 @@ elseif (ErrorID == 1207) then
 elseif (ErrorID == 1208) then
   WRITE (ErrorUnit, 1208) ObjectID
   WRITE (        *, 1208) ObjectID
+
+elseif (ErrorID == 1209) then
+  WRITE (ErrorUnit, 1209) ObjectID
+  WRITE (        *, 1209) ObjectID
+
+elseif (ErrorID == 1210) then
+  WRITE (ErrorUnit, 1210)
+  WRITE (        *, 1210)
+
+elseif (ErrorID == 1211) then
+  WRITE (ErrorUnit, 1211) ObjectID
+  WRITE (        *, 1211) ObjectID
 
 elseif (ErrorID == 1301) then
   WRITE (ErrorUnit, 1301) ObjectID
@@ -242,6 +271,17 @@ end if
             & 1x, 'maximum number is 90')
  1009 format (1x, 'ERROR - too many possible iterations for unsteady steps defined. '/ &
             & 1x, 'maximum number is 90')
+ !file
+ 1010 format (1x, ' ERROR - additional input data line -CONTROL- is missing. '/ &
+            & 1x, ' EXECUTION TERMINATED!')
+ 1011 format (1x, ' ERROR - additional input data line -CONTROL- could not be evaluated. '/ &
+            & 1x, ' Please check the control file! - EXECUTION TERMINATED!')
+ 1012 format (1x, " ERROR - Can't open control file! - EXECUTION TERMINATED!")
+ 1013 format (1x, ' ERROR - Execution terminated after errors opening file(s) - EXECUTION TERMINATED!')
+ 1014 format (1x, ' ERROR - NO OUTPUT FILE DEFINED! - EXECUTION TERMINATED!')
+
+
+
 
 !1100  Errors with nodes
 !****
@@ -294,6 +334,14 @@ end if
             & 1x, 'control structure data', / 'Execution terminated')
  1208 format (1x, 'ERROR - ', i5, ' is not a valid control structure type number', / &
             & 1x, 'execution terminated!' )
+ !getgeo
+ 1209 format (1x, 'ERROR - Roughness data of element ', I5, ' are not valid. Check', / &
+            & 1x, 'element! - EXECUTION TERMINATED!')
+ 1210 format (1x, 'ERROR - Weir data definition in control file not correct.', / &
+            & 1x, 'EXECUTION TERMINATED!')
+ 1211 format (1x, 'ERROR - Transition line ', i5, ' has insufficient number of nodes (<= 1). '/ &
+            & 1x, 'Change the definition of that line! - EXECUTION TERMINATED!' )
+ 
 
 
 !1300  Errors with arcs
@@ -371,6 +419,6 @@ end if
 
 CLOSE (75)
 !stop program
-STOP
+STOP 'EXECUTION OF RMA-Kalypso TERMINATED'
 
 end subroutine

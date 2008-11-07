@@ -208,7 +208,7 @@ CIPK APR06
 
       ALLOCATE   (IWFLOW(MAXP),WFLOW(MAXP),WHGT(MAXP),WLEN(MAXP)
      +             ,wflolw(MAXP),TRANSEL(MAXP),ISUBM(MAXP),ISUBMEL(MAXE)
-     +             ,NFCTP(MAXE),REWEIR(MAXE,2))
+     +             ,NFCTP(MAXE))
 
       ALLOCATE   (STRESS(MAXP,2),SPWP(MAXP),AWL(MAXP),SWH(MAXP)
      +                ,WVDR(MAXP),STR1(MAXP,6),STR2(MAXP,6)
@@ -849,14 +849,9 @@ CIPK MAR01
       !flow kilometer of node
       ALLOCATE (kmx(1:maxp))
 
-      !time dependent values
-      ALLOCATE (hht(1:maxp), vvt(1:maxp))
-      ALLOCATE (dhht(1:maxp), dvvt(1:maxp))
-
       !cross sectional area
       ALLOCATE (ah(1:maxp))
       ALLOCATE (dahdh(1:maxp))
-      ALLOCATE (qh(1:maxp))
 
 
       DO i = 1, MaxP
@@ -895,15 +890,9 @@ CIPK MAR01
         qgef(i)       = 0.0
         !intersecting water depth for flow coefficient (e.g. Boussinesq)
         hbordv(i)     = 0.0
-        !time dependent variables
-        hht(i)        = 0.0
-        vvt(i)        = 0.0
-        dhht(i)       = 0.0
-        dvvt(i)       = 0.0
         !cross sectional areas, derivative of areas and discharge
         ah(i)         = 0.0
         dahdh(i)      = 0.0
-        qh(i)         = 0.0
       ENDDO
 
       !nis,jun07: Proforma initialization

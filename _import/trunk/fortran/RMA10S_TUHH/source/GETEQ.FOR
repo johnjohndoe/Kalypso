@@ -10,6 +10,7 @@ cipk  last update jan 9 1996
       SUBROUTINE GETEQ(N,QF,QQAL,IYRR,DAYNOW,TIME,TETH,NESU,LN)
       USE BLK11MOD
       USE PARAMMOD
+      use blk_ifu
       SAVE
 cipk jan96 add common
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -18,7 +19,7 @@ cipk nov97 note danger, do not add BLK10.COM
 
 !NiS,jul06: Add IWINDIN for correct memory interpretation
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
 !-
 
 CIPK DEC97  MOVE TO PARAM.COM      PARAMETER (NELDS=20,NDPTS=200)

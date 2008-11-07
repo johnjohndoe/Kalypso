@@ -305,7 +305,7 @@ CIPK OCT01
           do i = 1, lmt(j)
             iostaterror = 0
             !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
-            if (nb.ne.0 .and. igeo.eq.2) then
+            if (nb.ne.0) then
               REWIND(nb)
               reading: do
                 !WRITE(*,*) lineID

@@ -19,6 +19,7 @@ CIPK  LAST UPDATED AUGUST 28 1995
       USE Para1DPoly
       !EFa jun07, modul necessary for autoconverge
       USE parakalyps
+      use blk_ifu
       SAVE
 C-
 C...... Input special boundary conditions
@@ -28,7 +29,7 @@ CIPK DEC97      PARAMETER (NQBS=20)
 CIPKJAN94 V4.5 END CHANGE
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
       DIMENSION QQAL(3)
 CIPKFEB94 V4.5
 CIPK DEC97 CHANGE TO PERMIT PARAMETER DEFINITION

@@ -81,7 +81,12 @@ C     Determine number of points read
   320 CONTINUE
 
 C     Triangulate locations
-      CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+      !REMOVE FOR RMA·KALYPSO
+      !nis,nov08: Remove writing to obsolete unit imeshout
+      !imeshout is obsolete
+      !CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+      CALL DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT) 
+      !-
 
 C     Interpolate to get weighting factors
 
@@ -124,14 +129,18 @@ C     Save weigthing factors
      +   M,(NODWT(M,J),J=1,3),(WAT(M,J),J=1,3)
           ENDDO
       ENDIF
-      IF(IOBNWGT .GT. 0) THEN
-        WRITE(IOBNWGT) HEADER
-        WRITE(IOBNWGT) ((NODWT(M,J),J=1,3),(WAT(M,J),J=1,3),M=1,NP)
-      ENDIF
+      !REMOVE FOR RMA·KALYPSO
+      !nis,nov08: Remove writing to obsolete unit iobnwgt
+      !iobnwgt is obsolete
       RETURN
       END
 
-      SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+      !REMOVE FOR RMA·KALYPSO
+      !nis,nov08: Remove writing to obsolete unit imeshout
+      !imeshout is obsolete
+      !SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT,IMESHOUT) 
+      SUBROUTINE DELN2(XUSR,YUSR,NOPEL,NELTS,NVERT) 
+      !-
 
       USE BLKCDMOD
 
@@ -239,36 +248,11 @@ c     Get rid of elements from super point
                                                                         
       CALL RIDPOINT(XCEN,YCEN,RADS,NVERT,NOPEL,NELTS) 
 c 
-      IF(IMESHOUT .GT. 0) THEN 
-        WRITE(IMESHOUT,*) '    TITLE'
-        N1=1
-          N0=0
-          N2=2
-          ZER=0.
-          TEN=10.
-          EIGHT=8.
-        WRITE(IMESHOUT,'(15I5,2F10.0,I10)') 
-     +  N0,N1,N1,N1,N1,N1,N0,N0,N0,N0,N1,N0,N0,N1,N0,ZER,ZER,N2
+!REMOVE FOR RMA·KALYPSO
+!nis,nov08: Remove writing to obsolete unit imeshout
+!imeshout is obsolete
+!-
 
-        WRITE(IMESHOUT,'(8F10.0)') TEN,EIGHT,ZER,ZER,ZER,ZER,ZER,ZER
-
-        DO J=1,NELTS 
-          IF(NOPEL(1,J) .GT. 0) THEN 
-            WRITE(IMESHOUT,'(2i5,2i10,19x,''1'')') J,(NOPEL(K,J),K=1,3) 
-          ENDIF 
-        END DO 
-          NININ=9999
-        WRITE(IMESHOUT,'(I5)') NININ 
-        DO J=1,NVERT-3
-            WRITE(IMESHOUT,'(I10,2F20.5)') J,XUSR(J),YUSR(J)
-          ENDDO
-          WRITE(IMESHOUT,'(I10)') NININ
-          WRITE(IMESHOUT,'(I5)') NININ
-          WRITE(IMESHOUT,*) '   0                    NENTRY'
-        WRITE(IMESHOUT,*) '   0                    NCLM'
-          ENDDATA='ENDDATA'
-        WRITE(IMESHOUT,'(A7)') ENDDATA
-      ENDIF
       RETURN 
       END SUBROUTINE 
 

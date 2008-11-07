@@ -36,6 +36,12 @@ C
 C      QUADRALATERAL                            TRIANGLE
 C
 C
+      !input parameters
+      !----------------
+      integer (kind = 4), intent (in) :: ncn
+      
+      !local parameters
+      !----------------
       REAL*8 XN2,DNX,DNY
       REAL*8 ETAGPT,PSIGPT,ETAGPR,PSIGPR,ETGPTH,PSGPTH,ETGPRH,PSGPRH
      +      ,ETGPRL,PSGPRL

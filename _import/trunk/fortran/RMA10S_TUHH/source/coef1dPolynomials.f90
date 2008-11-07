@@ -131,7 +131,8 @@ REAL (KIND = 8) :: deltax, deltvx, deltay, deltvy, deltaalpha
 REAL (KIND = 8) :: sidft
 
 !local resulting velocities
-REAL (KIND = 8) :: vel_res(3)
+REAL (KIND = 8) :: vel_res(1:3)
+real (kind = 8) :: dvel_res_dt (1:3)
 
 INTEGER :: PolyTest
 
@@ -151,6 +152,11 @@ COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 !initializing
 PP(1) = 1
 PP(2) = 1
+
+do i = 1, 3
+  vel_res (i) = 0.0d0
+  dvel_res_dt (i) = 0.0d0
+enddo
 
 rho = 1000.0
 sbot          = 0.0
@@ -363,8 +369,9 @@ DO k = 1, ncn
   XL (K) =  DX * CXX + DY * SAA
   YL (K) = -DX * SAA + DY * CXX
 
-  !Calculate the mean velocity at node k (local number)
+  !Calculate the main velocity at node k (local number)
   vel_res (k) = vel (1, n) * COS (alfa (n)) + vel (2, n) * SIN (alfa (n))
+  if (icyc > 0) dvel_res_dt (k) = vdot (1, n) * COS (alfa (n)) + vdot (2, n) * SIN (alfa (n))
 
   !updating length, if kilometres are given
   if (kmx(n1) /= -1.0 .and. kmx(n3) /= -1.0) then
@@ -457,15 +464,6 @@ if (ntx == 1) then
 
     !Check for critical/ subcritical discharge
     if (vel_res(j) / sqrt (grav * h) .gt. 1) WRITE (*,*) 'Supercritical flow at node ', n
-
-    !unsteady case
-    if (icyc .gt. 0) then
-      !time derivatives of the water depth
-      dhht (n) = vdot (3, n)
-      !time derivatives of the velocity
-      dvvt (n) = vdot (1, n) * COS (alfa (n)) + vdot (2, n) * SIN (alfa (n))
-    end if
-
 
     dahdh(n) = 0.0D0
 
@@ -569,7 +567,7 @@ Gaussloop: DO I = 1, NGP
   !dh/dx at GP
   dhhintdx(i) = h1     * dmx(1)     + h3     * dmx(2)
   !dh/dt at GP
-  dhintdt(i)  = xm(1)  * dhht(n1)    + xm(2)  * dhht(n3)
+  dhintdt (i) = xm(1) * vdot (3, n1) + xm (2) * vdot (3, n3)
 
   do j = 1, 3
     !v at GP
@@ -577,7 +575,7 @@ Gaussloop: DO I = 1, NGP
     !dv/dx at GP
     dvintdx(i)  = dvintdx(i)  + dnx(j) * vel_res(j) * qfact(j)
     !dv/dt at GP
-    dvintdt(i)  = dvintdt(i)  + xn(j)  * dvvt(nop(nn,j)) * qfact(j)
+    dvintdt(i)  = dvintdt(i)  + xn(j)  * dvel_res_dt(j) * qfact(j)
   end do
 
   do k = 1, 2
@@ -1661,9 +1659,6 @@ RETURN
 !nis,nov07: This code should be for calling the control structure subroutine, but it can never reach this place, because imat can only be 89 in this
 !           subroutine
 IF(IMAT(NN) .GT. 903) THEN
-  !init Q(h)
-  qh(n1) = 0.0
-  qh(n3) = 0.0
 
   !Find position in polynom range definitions
   PP(1) = FindPolynom (PolyrangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord (N1, 1), cord (N1, 2), N1)

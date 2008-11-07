@@ -1,10 +1,19 @@
       MODULE BLKDRMOD
+      
+      
+      !element definition data for drying/wetting purposes
+      !---------------------------------------------------
+      integer (kind = 4), allocatable, dimension (:) :: imato
+      !meaning of the variables
+      !------------------------
+      !imato      old material type of an element from the last time step
+      
 C-
       REAL  DSET,DSETD,SADEL,SADX
 
       INTEGER IDSWT,ISAD
       ALLOCATABLE    NDRY(:),NDRYO(:),IPT(:),DREC(:),
-     +               IMATO(:),LISTEL(:)
+     +               LISTEL(:)
      +               ,ADB(:),ADT(:),ADO(:),AKP(:)
      +               ,DAME(:),AME(:),ACOR(:),ADOKP(:),AOKP(:)
 CIPK NOV97 LINE ABOVE ADDED

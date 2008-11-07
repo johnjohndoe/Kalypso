@@ -62,7 +62,7 @@ IMPLICIT NONE
 !*************************************************************************************************
 real(8), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   !Nodal Roughnesses
 real(8), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           !Elemental Roughnesses
-integer, INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
+integer (kind = 4), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
 integer, INTENT(IN)                ::  NE                 !Number of Elements
 integer, INTENT(IN)                ::  TSNO               !Time Step Number
 integer, INTENT(IN)                ::  ITNNO              !Iteration Number

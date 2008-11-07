@@ -44,7 +44,7 @@ cipk apr96 define save parameter
 cipk apr96 keep track of data for end of time step
       if(iyend+idye+hrend .eq. 0) then
         isvs=1
-        !rewind nscrin
+        rewind nscrin
       elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
         if(abs(tet-hrend) .lt. 0.001) then
           isvs=1
@@ -100,7 +100,7 @@ cipk mar98 remove iwind
         write(lout,6156) delt,iyend,idye,hrend
       endif
       if(isvs .eq. 1) then
-!        rewind nscrin
+        rewind nscrin
         write(nscrin,7000) id,dlin
       endif
 cc      TTT=TET+DELT

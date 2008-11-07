@@ -4,12 +4,14 @@ cipk  last update Apr 28 1996
 C     Last change:  IPK  17 Jan 96   10:29 pm
 cipk  last update Jan 17 1996
       subroutine GTIDE(TTIDE,IYRR,DAYOFY,TIME,TDTIM,QQAL)
+      
+      use blk_ifu
       SAVE
 cipk APR96 add common
 
 !NiS,jul06: Add IWINDIN for correct memory interpretation
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,IWINDIN
 !-
 
 C

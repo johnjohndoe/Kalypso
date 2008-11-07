@@ -8,6 +8,7 @@ cipk  last update April 26 1996  many changes
       SUBROUTINE GETH(LNO,N,HF,HF2,IYRR,DAYNOW,TIME,TETH,QQAL)
       USE PARAMMOD
       USE BLK11MOD
+      use blk_ifu
       SAVE
 CIPK AUG05      INCLUDE 'PARAM.COM'
 cipk nov97  do not include BLK10.COM
@@ -15,7 +16,7 @@ cipk dec97 move to param.com      PARAMETER (NCHBS=10,NCHOBS=200)
 
 !NiS,jul06: Add IWINDIN for correct memory interpretation
 !      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY
-      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
+!      COMMON /IFU/ IQEUNIT,IHUNIT,IQUNIT,KEY,INWINDIN
 !-
 
 CIPK AUG05      INCLUDE 'BLK11.COM'

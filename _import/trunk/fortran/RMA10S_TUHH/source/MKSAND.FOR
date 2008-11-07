@@ -1,4 +1,3 @@
-C     Last change:  MD    5 Nov 2008    5:39 pm
       SUBROUTINE MKSAND(T,D,VSET,SRCSNK,GRATE,NETT)
       USE BLKSANMOD
       USE BLK11MOD
@@ -13,7 +12,7 @@ C-
      +           1,2,0,0,4,3,0,3,0,0,
      +           4,4,4,4/
 
-      INTEGER :: NETT
+      INTEGER (kind = 4) :: NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
       REAL*8 T
@@ -74,7 +73,7 @@ CIPK AUG05	INCLUDE 'BLKSAND.COM'
      +           1,2,0,0,4,3,0,3,0,0,
      +           4,4,4,4/
 
-      INTEGER*2 NETT
+      INTEGER (kind = 4) ::  NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
       REAL*8 T

@@ -212,7 +212,7 @@ Version 1.0.2 (laufende Änderungen)
 28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
 -----------------------------------------------------------------------------------------------------
 
-Version 1.1.0 (laufende Änderungen)
+Ziel-Version 1.1.0 (laufende Änderungen)
 -----------------------------------
 
 001.) update automake.fig file; makefile for IntelCompiler doesn't exist yet.
@@ -403,9 +403,9 @@ Version 1.1.0 (laufende Änderungen)
       cbh   
       cbh   --- Nico Schrage 27.08.2008 (1.0.3 bf4)
       cbh: cite branch history
-      --------------------------------------------------------------------
-      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK
-      --------------------------------------------------------------------
+      ---------------------------------------------------------------------------------------------
+      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK (Revisions 5269 to 5469)
+      ---------------------------------------------------------------------------------------------
 037.) Change compilation settings for Lahey to have default integer type (kind = 8) (affects: automake.fig)
 038.) Make MKL operatable:
       - define irwept as short integer (affects: blk10.for)
@@ -433,7 +433,47 @@ Version 1.1.0 (laufende Änderungen)
       (No real changes!) >> SubR CSTRC2D                                              
 --- Monika Donner, 02.09.2008
 
-049.) Correction in BEDXCG Depositionrat and Erosionsrat are here multiplied
+048.) To read different data from EFE lines an iostat error question must be integrated in the read statement. Besides dlinextra is not read there anymore. The same applies to EFA. (Affects: ELFLOWS.FOR)
+049.) If MKL is used it produces at every reordering step a new memory allocatio without deleting the old one. Furthermore the ierror variable was from wrong type. This changed and
+      pardiso is called a third time, for cleaning up the memory to run it with a new equation system.
+      
+--- Nico Schrage, 05.09.2008 (1.1.0alpha3)
+
+050.) Delete output to unit 198 in front_mkl3.for
+
+--- Nico Schrage, 09.09.2008 (1.1.0alpha3)
+
+051.) Allocatable beahaviour of array for linear matrix storage for pardiso solver. Besides: Use the same variables for memory allocation either for Front-
+      solver or pardiso-Solver.
+052.) Introduce QCFF line for discharges with more than 8 and up to 16 digits.
+
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+053.) Do not scale improvements after iteration with the effective porosity (affected routine: update.sub)
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+
+--- Nico Schrage, 22.09.2008 (1.1.0alpha6)
+
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+054.) Put TODO to the line of 053.), because this seems to be very sensitive and has to be reworked carefully
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+055.) Catch division by zero in REWET, when dealing with HLOS
+056.) Do not allow mathematical lambda-values (i.e. values greater than 1000 are reduced to this)
+057.) nscrin is a scratch file and not really necessary, so delete it. Has still to be finished
+058.) Revert to old implementation regarding ext... in coef25nt
+059.) Catch exception, in RDKALYPSO, if middle coordinate shall be calculated for a none active element (imat == 0)
+
+--- Nico Schrage, 29.09.2008 (1.1.0alpha6)
+
+060.) kmx of node 0 was used, for what reason ever?! It caused big problems and was therefore removed; allocation of kmx now
+      only takes place for 1:maxp (affects initl.sub)
+
+--- Nico Schrage, 30.09.2008 (1.1.0alpha6)
+
+061.) Delete editing of tet in heatex.sub. Firstly, it should not be changed anywhere and secondly, it was not used correctly, because tet describes the overall time in hours, not daily simulation time in hours.
+
+--- Nico Schrage, 29.10.2008 (1.1.0alpha6_build20081029)
+
+062.) Correction in BEDXCG Depositionrat and Erosionsrat are here multiplied
       with delta Time (DELT) in order to get the bedevolution. Here a Faktor
       of 3600 multiplied. This factos is now deleted, because DELT is alrealdy
       in seconds. 
@@ -441,23 +481,23 @@ Version 1.1.0 (laufende Änderungen)
       for sand-bed!. They are used in 1/Faktor, so normally factors over 100
       and >1000 should be used.  
       >> SubR BEDXCG (in Sediment!)
-050.) Correction in FORMBED: Return option behind printing layer properties
+063.) Correction in FORMBED: Return option behind printing layer properties
       is deleted in order to allow all calculations in the last block of SubR
       Double defined variables are deleted and original variables are used 
       (For example: DMER, SER, DR, ...)
       >> SubR FORMBED
-051.) Correction in MKSSED: Adjust the Routine based on structure of MKSAND.
+064.) Correction in MKSSED: Adjust the Routine based on structure of MKSAND.
       And replace the wrong variable GRW=0. by SET=0.
       >> SubR MKSSED  
-052.) Correction in COEF25NT: Depositionrat and Erosionsrat for cohesive
+065.) Correction in COEF25NT: Depositionrat and Erosionsrat for cohesive
       sediment must be multiplied with quadratic W-Functions (XN(M)!!). 
       >> SubR COEF25NT
-053.) Corrections and reactivation off SHEAR: Avoid a Shear-stress > 0, if water
+066.) Corrections and reactivation off SHEAR: Avoid a Shear-stress > 0, if water
       level is below the river bed. 
       Double defined variables are deleted and original variables are used 
       (For example: UN, U, V, ...)
       >> SubR SHEAR 
-054.) Corrections in RMA10s: The whole "cohesive sediment or LSS"-BLOCK was in a wrong
+067.) Corrections in RMA10s: The whole "cohesive sediment or LSS"-BLOCK was in a wrong
       position outside the iteration loop (:-//). Now this "LSS"-BLOCK is located inside
       the loop therefore the Routines SEROSN and MEROSN were also adjusted.
       Additional the "Shear"-option is added. If there are waves, the Shear stress for 
@@ -467,15 +507,50 @@ Version 1.1.0 (laufende Änderungen)
       Outside the iteration loop Routines SEROSN and MEROSN are called again, in order to
       determine the Change of bed in/at Suspended and Bed Layers.
       >> SubR RMA10s
-055.) Corrections in SEROSN and MEROSN: Due to the movement of the "LSS"-BLOCK in RMA10s the Routines 
+068.) Corrections in SEROSN and MEROSN: Due to the movement of the "LSS"-BLOCK in RMA10s the Routines 
       SEROSN and MEROSN were also adjusted. And an Interger II is used in order to check, if
       the SubRs are called form inside or outside the iteration loop of RMA10s
       Outside the iteration loop Routines SEROSN and MEROSN are called with II = 2, in order to
       determine the Change of bed in/at Suspended and Bed Layers.
       >> SubR SEROSN and MEROSN 
-056.) Corrections in NEWBED: Updated bed without an ratio-factor for the next time step, because 
+069.) Corrections in NEWBED: Updated bed without an ratio-factor for the next time step, because 
       of instabilities in the solutions fpr cohesive sediment.
       >> SubR NEWBED
-057.) new Subr KALYP_SHEAR for Bottom Shear stress      
+070.) new Subr KALYP_SHEAR for Bottom Shear stress      
                                  
 --- Monika Donner, 06.11.2008
+
+
+bugfixes and small changes
+--------------------------
+071.) Moved reading of frequency for writing out iterations to the control file line C6. ('itefreq') (affects file.sub; input.sub)
+072.) Deactivate option to define continuity lines in geometry *.2d-file; they can be only defined in the control file (affects rdkalyps.sub)
+073.) derivative of velocity over time was not considered at the midside nodes in 1D polynomial approach (affects coef1dpoly.sub)
+074.) replace imat(n)>0 durch imat(n)/=0 in getgeo.sub. Dry elements that are active for the calculation wouldn't be considered otherwise.
+075.) small if-control change to increase robustness for writing out convergence feedback to the console in update.sub
+076.) Increase the border to store relative changes for small models in update.sub
+077.) Replacing common blocks IFU and swanf by module definitions.
+
+refactoring for the purpose of generating freeware RMA·KALYPSO
+--------------------------------------------------------------
+A lot of changes were made to some subroutines starting with the program unit and the reading subroutines. Following goals were followed:
+ - Change program file rma10mnms.for by RMAKalypso.f90 and change initial console output.
+ - update to higher Fortran standard (currently *.f90-files)
+ - introduce only-specifier for the usage of modules, to make clear which variables are really used from it
+ - introduce implicit none to all subroutines to get rid of implicitly defined variables
+ - document all used variables within a subroutine
+ - sort the variables (globals and locals) against a certain sense to combine them in a second step to derived data types and get rid of global variables
+ - document code parts to build logical pieces. Goal is to become able to split up the code into smaller subroutines/functions and later on to generate libraries
+078.) start to update several block modules by sorting them and updating the codes standard. The appearance of certain variables in the order of refactoring the rest
+      of the code determines the variables that are already processed yet in the block modules.
+079.) Remove several input file possibilities in order to only provide ASCII-files, that are used in at IWB. At the same time lots of output code in rma10.sub became
+      obsolete. Besides the input formats rm1, bin and sms-compliants became obsolete, too. Subroutines and the calling points were deleted.
+080.) Commenting out all obvious code that is connected to the application of 3D in order to make it not operative.
+
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+------------------------------------------------
+RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
+------------------------------------------------
+***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
+
+--- Nico Schrage, 07.11.2008 (RMAKalypso 1.1.0alpha7)

@@ -10,7 +10,7 @@ implicit none
 INTEGER :: FindPolynom
 !input
 !*****
-INTEGER, INTENT (IN) :: entries, node
+INTEGER (kind = 4), INTENT (IN) :: entries, node
 REAL (KIND = 8), INTENT (IN) :: rangearray(1:*)
 REAL (KIND = 8), INTENT (IN) :: depth
 real (kind = 8), intent (in) :: xcord, ycord

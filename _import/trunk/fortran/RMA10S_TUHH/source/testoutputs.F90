@@ -147,10 +147,6 @@ subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_
            &  dahdh1, dahdh3, d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, dareaintdh, d2areaintdh, daintdx, d2aintdx, &
            &  d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schint, sfint, dsfintdh1, vflowint, dvintdx)
 
-!subroutine ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
-!                       &  ah(n1), ah(n3), sfnod, sfwicht, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
-!                       &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
-!                       &  sfint, sdfintdh1, vflowint, dvintdx)  implicit none
 
   INTEGER, INTENT (IN) :: nop1, nop3, nn
   REAL (KIND = 8), INTENT (IN) :: sbot, xl (3), area
@@ -221,7 +217,8 @@ implicit none
 !ncn    : number of corner nodes
 !maxp   : maximum node ID-number in the mesh
 !maxe   : maximum element ID-number in the mesh
-INTEGER         :: nbc (1:maxp, 1:6), nop (1: maxe, 1: 8)
+INTEGER         :: nbc (1:maxp, 1:6)
+integer (kind = 4) :: nop (1: maxe, 1: 8)
 INTEGER         :: nn, ncn, maxp, maxe
 REAL (KIND = 8) :: f (80), estifm (80, 80)
 

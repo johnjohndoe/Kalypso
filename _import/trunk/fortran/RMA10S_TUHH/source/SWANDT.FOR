@@ -4,7 +4,8 @@
       USE BLKSSTMOD
       USE BLKSANMOD
 
-      INCLUDE 'SWANF.COM'
+      use BLKSWANF
+      !INCLUDE 'SWANF.COM'
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05	INCLUDE 'BLKSST.COM'
@@ -17,20 +18,23 @@ CIPK AUG05	INCLUDE 'BLKSAND.COM'
 
       DATA ITIME/0/
 
-c      WRITE(143,*) 'ENTERING SWANDT',ISWANR
-      IF(ISWANR .LT. 1) RETURN
+      !skip execution of following code, if there is no SWAN control file 
+      IF(unitSwan == 0) RETURN
 
 C     routine to execute swan and get the forces
 
+      !itime shows, that it's called the first time (itime == 0) or a further time (itime == 1)
       IF(ITIME .EQ. 0) THEN
 
 C     First time open the SWAN defaults file
 
         ITIME=1
-        OPEN(106,FILE=SWANFL,STATUS='OLD',FORM='FORMATTED')
+
+        !unit 106 is the swan control file; the opening of the file was moved to file.sub
+        !OPEN(106,FILE=SWANFL,STATUS='OLD',FORM='FORMATTED')
 
         DO N=1,100
-          CALL GINPT(106,IDSW,DLINSW)
+          CALL GINPT(unitSwan,IDSW,DLINSW)
           IF(IDSW(1:6) .EQ. 'WORDIR') THEN
 	      SWANDIR=DLINSW
           ELSEIF(IDSW(1:6) .EQ. 'SWANEX') THEN
@@ -40,9 +44,9 @@ C     First time open the SWAN defaults file
           ENDIF
         ENDDO 
   200   CONTINUE
-        REWIND 106
+        REWIND unitSwan
         DO N=1,100
-          CALL GINPT(106,IDSW,DLINSW)
+          CALL GINPT(unitSwan,IDSW,DLINSW)
 	    IF(IDSW(1:6) .EQ. 'EDTFL1') THEN
 	      SWANFL1=TRIM(SWANDIR)//TRIM(DLINSW)
           ELSEIF(IDSW(1:6) .EQ. 'EDTFL2') THEN
@@ -72,7 +76,7 @@ C DJW 10/06/04 End of Changes
 	      GO TO 210
           ENDIF
         ENDDO 
-  210   CLOSE(106)
+  210   CLOSE(unitSwan)
   	  				
         OPEN(106,FILE=SWANFL1,STATUS='OLD',FORM='FORMATTED')
 

@@ -4,8 +4,6 @@
      +             ,wflolw(:),TRANSEL(:),ISUBM(:),ISUBMEL(:)
      +             ,NFCTP(:)
 
-CLF NOV06 weir info for renumbering
-      INTEGER, ALLOCATABLE :: REWEIR(:,:)
 
 
 C      COMMON /SUBMRG/
