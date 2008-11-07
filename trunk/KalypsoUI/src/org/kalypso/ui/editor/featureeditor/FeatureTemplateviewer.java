@@ -326,6 +326,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         m_featureComposite.setFeature( feature );
 
         /* process rendering properties */
+
         final FeatureviewType type = m_fvFactory.get( feature.getFeatureType(), feature );
         if( type.isToolkit() )
         {
