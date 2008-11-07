@@ -68,7 +68,7 @@ var sub_folder
 !insertmacro MUI_PAGE_WELCOME
 
 # !insertmacro MUI_PAGE_LICENSE license.txt
-!insertmacro MUI_PAGE_LICENSE install_data/license/LGPL.txt
+!insertmacro MUI_PAGE_LICENSE install_data/license/license.txt
 
 !DEFINE MUI_PAGE_CUSTOMFUNCTION_PRE pre_DirPage
 !DEFINE MUI_PAGE_CUSTOMFUNCTION_LEAVE leave_DirPage
