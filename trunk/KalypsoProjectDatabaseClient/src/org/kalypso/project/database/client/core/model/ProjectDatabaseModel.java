@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.client.core.model.local.ILocalProject;
@@ -197,16 +198,16 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_remote.setDirty();
   }
 
-  public boolean isRemoteWorkspaceConnected( )
+  public IStatus getRemoteConnectionState( )
   {
-    return m_remote.isRemoteWorkspaceConnected();
+    return m_remote.getRemoteConnectionState();
   }
 
   /**
    * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged()
    */
   @Override
-  public void remoteConnectionChanged( final boolean connectionState )
+  public void remoteConnectionChanged( final IStatus connectionState )
   {
     buildProjectList();
 

@@ -42,6 +42,8 @@ package org.kalypso.project.database.client.core.model.remote;
 
 import java.util.EventListener;
 
+import org.eclipse.core.runtime.IStatus;
+
 /**
  * @author Dirk Kuch
  */
@@ -50,5 +52,5 @@ public interface IRemoteProjectsListener extends EventListener
   // TODO parameter. What changed?
   public void remoteWorkspaceChanged( );
 
-  public void remoteConnectionChanged( boolean connectionState );
+  public void remoteConnectionChanged( IStatus connectionState );
 }

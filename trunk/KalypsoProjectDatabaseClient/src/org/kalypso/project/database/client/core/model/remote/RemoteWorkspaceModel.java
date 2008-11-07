@@ -29,7 +29,7 @@ public class RemoteWorkspaceModel
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected boolean m_connectionState = false;
+  protected IStatus m_connectionState = null;
 
   protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
 
@@ -48,9 +48,9 @@ public class RemoteWorkspaceModel
         {
           final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
-          if( m_connectionState == false )
+          if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
           {
-            m_connectionState = true;
+            m_connectionState = StatusUtilities.createOkStatus( "Verbindung OK" );
             fireConnectionStatusChanged();
           }
 
@@ -78,9 +78,9 @@ public class RemoteWorkspaceModel
         }
         catch( final WebServiceException e )
         {
-          if( m_connectionState == true )
+          if( m_connectionState == null || m_connectionState.getSeverity() == IStatus.OK )
           {
-            m_connectionState = false;
+            m_connectionState = StatusUtilities.statusFromThrowable( e );
             fireConnectionStatusChanged();
           }
 
@@ -171,7 +171,7 @@ public class RemoteWorkspaceModel
     UPDATE_JOB.schedule();
   }
 
-  public boolean isRemoteWorkspaceConnected( )
+  public IStatus getRemoteConnectionState( )
   {
     return m_connectionState;
   }
