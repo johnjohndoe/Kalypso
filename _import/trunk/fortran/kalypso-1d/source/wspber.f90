@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jul 2008   12:30 pm
+!     Last change:  MD    7 Nov 2008   11:27 am
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -796,7 +796,10 @@ Hauptschleife: DO i = 1, maxger
 
   IF (BERECHNUNGSMODUS == 'WATERLEVEL' .and. nq.gt.1) then
 
+
     IF (nprof.gt.1) then
+
+      117 continue
 
       dif1 = qstat (izz) - stat (nprof - 1)
       dif2 = qstat (izz) - stat (nprof)
@@ -804,29 +807,57 @@ Hauptschleife: DO i = 1, maxger
       IF (dif1.gt.0. .and. dif2.le.0.) then
 
         WRITE (UNIT_OUT_TAB, 13) stat (nprof), qwert (izz)
-
-        nz = nz + 2  ! Anzahl der Zeilen auf Seite in Dateo mit Tabellenausgabe (UNIT_OUT_TAB)
-
+        nz = nz + 2  ! Anzahl der Zeilen mit Tabellenausgabe (UNIT_OUT_TAB)
         write (UNIT_OUT_LOG, 13) stat (nprof), qwert (izz)
         13 FORMAT (/,5x,'Durchflussaenderung bei Station km ',f7.3, &
                 & ' :  Q = ',f7.2,' m**3/s')
 
         q = qwert (izz)
-
         IF (izz.ne.merg) izz = izz + 1
 
-      ENDIF
+      !MD NEU:  Wenn mehrere Abfluss zwischen zwei Profilen
+      ElseIF (dif1.le.0. .and. dif2.le.0.) then
+
+        !MD: Sonderfall Bruecke im UW
+        IF (out_PROF((nprof-2),nr_q)%chr_kenn .eq.'b') THEN
+          dif1 = qstat (izz) - stat (nprof - 2)
+          dif2 = qstat (izz) - stat (nprof)
+          IF (dif1.gt.0. .and. dif2.le.0.) then
+
+            write (UNIT_OUT_LOG, 113) stat (nprof-2)
+            113 FORMAT (/,5x,'Achtung: Durchflussaenderung innerhalb der Bruecke an Station km ',f7.3)
+            write (UNIT_OUT_LOG, 213) stat (nprof), qwert (izz)
+            213 FORMAT (/,5x,' --> Durchflussaenderung bei Station km ',f7.3, &
+                  & ' :  Q = ',f7.2,' m**3/s')
+
+            q = qwert (izz)
+            IF (izz.ne.merg) izz = izz + 1
+
+          END IF
+
+        !MD: Andere Sonderfalle ...
+        Else
+          write (UNIT_OUT_LOG, 313) stat (nprof), qwert (izz)
+          313 FORMAT (/,5x,'Durchflussaenderung bereits ueberholt an Station km ',f7.3, &
+                & ' :  Q = ',f7.2,' m**3/s')
+          izz = izz + 1
+          GOTO 117
+
+        ENDIF
+      Endif
+
+
 
     ELSE
 
-      !**          nprof=1:
+      !**  nprof=1:
       17 continue
 
       IF (izz.le. (nq - 1) ) then
         dif1 = qstat (izz) - stat (nprof)
         dif2 = qstat (izz + 1) - stat (nprof)
 
-        IF (dif1.le.0..and.dif2.gt.0.) then
+        IF (dif1.le.0. .and. dif2.gt.0.) then
           WRITE (UNIT_OUT_TAB, 14) stat (nprof), qwert (izz)
 
 
