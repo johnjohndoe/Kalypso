@@ -145,6 +145,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   private boolean m_disposed = false;
 
+  private Featuretemplate m_template;
+
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight, final int marginWidth )
   {
     m_commandtarget = commandtarget;
@@ -183,6 +185,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
   public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
+    m_template = template;
+
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
       m_fvFactory.addView( featureviewType );
@@ -326,16 +330,18 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         m_featureComposite.setFeature( feature );
 
         /* process rendering properties */
-
-        final FeatureviewType type = m_fvFactory.get( feature.getFeatureType(), feature );
-        if( type.isToolkit() )
-        {
-          m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
-        }
-
         int style = SWT.NONE;
-        if( type.isBorder() )
-          style = SWT.BORDER;
+
+        if( m_template != null )
+        {
+          if( m_template.isToolkit() )
+          {
+            m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
+          }
+
+          if( m_template.isBorder() )
+            style = SWT.BORDER;
+        }
 
         final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );

@@ -17,7 +17,20 @@
 				<xs:element name="view" type="fv:FeatureviewType" minOccurs="0" maxOccurs="unbounded"></xs:element>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="optional" />
-
+			<xs:attribute name="toolkit" type="xs:boolean" use="optional" default="false">
+				<xs:annotation>
+					<xs:documentation>
+						<p>Use form toolkit for rendering the resulting feature view?</p>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="border" type="xs:boolean" use="optional" default="false">
+				<xs:annotation>
+					<xs:documentation>
+						<p>Enclose feature view by a border</p>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 
@@ -62,20 +75,6 @@
 		<xs:attribute name="tooltip" type="xs:string" use="optional" default="" />
 		<xs:attribute name="visible" type="xs:boolean" use="optional" default="true" />
 		<xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
-		<xs:attribute name="toolkit" type="xs:boolean" use="optional" default="false">
-			<xs:annotation>
-				<xs:documentation>
-					<p>Use form toolkit for rendering the resulting feature view?</p>
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="border" type="xs:boolean" use="optional" default="false">
-			<xs:annotation>
-				<xs:documentation>
-					<p>Enclose feature view by a border</p>
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="PropertyControlType">
 		<xs:complexContent>
