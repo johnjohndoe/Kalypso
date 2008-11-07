@@ -52,14 +52,14 @@ import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListe
 import org.kalypso.project.database.client.core.model.local.ILocalProject;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.core.model.remote.IRemoteWorkspaceListener;
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorkspaceListener, IRemoteWorkspaceListener
+public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorkspaceListener, IRemoteProjectsListener
 {
   private LocalWorkspaceModel m_local;
 
@@ -168,6 +168,11 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_listener.add( listener );
   }
 
+  public void addRemoteListener( final IRemoteProjectsListener listener )
+  {
+    m_remote.addListener( listener );
+  }
+
   public void removeListener( final IProjectDatabaseListener listener )
   {
     m_listener.remove( listener );
@@ -190,5 +195,24 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public void setRemoteProjectsDirty( )
   {
     m_remote.setDirty();
+  }
+
+  public boolean isRemoteWorkspaceConnected( )
+  {
+    return m_remote.isRemoteWorkspaceConnected();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged()
+   */
+  @Override
+  public void remoteConnectionChanged( final boolean connectionState )
+  {
+    buildProjectList();
+
+    for( final IProjectDatabaseListener listener : m_listener )
+    {
+      listener.projectModelChanged();
+    }
   }
 }
