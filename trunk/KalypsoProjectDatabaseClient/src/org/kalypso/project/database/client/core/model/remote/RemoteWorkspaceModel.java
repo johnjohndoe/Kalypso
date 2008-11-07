@@ -110,7 +110,7 @@ public class RemoteWorkspaceModel
       }
     } );
 
-    UPDATE_JOB.schedule( JOB_DELAY );
+    UPDATE_JOB.schedule();
   }
 
   protected void fireWorkspaceChanged( )
