@@ -56,6 +56,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.util.swt.StatusDialog;
 
 /**
  * Composite which displays the current project model database server state
@@ -80,10 +81,10 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     model.addRemoteListener( this );
 
-    update( model.isRemoteWorkspaceConnected() );
+    update( model.getRemoteConnectionState() );
   }
 
-  protected void update( final boolean connected )
+  protected void update( final IStatus connectionState )
   {
     if( this.isDisposed() )
       return;
@@ -98,24 +99,26 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    if( connected )
+    final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
+    img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    img.setUnderlined( false );
+
+    if( connectionState != null && connectionState.getSeverity() == IStatus.OK )
     {
-      final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
-      img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       img.setText( "Server Status: online" );
       img.setImage( IMG_SERVER_OK );
-      img.setEnabled( false );
-      img.setUnderlined( false );
+
     }
     else
     {
-      final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
-      img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
       img.setText( "Server Status: offline" );
       img.setImage( IMG_SERVER_ERROR );
 
-      img.setUnderlined( false );
+    }
 
+    if( connectionState != null )
+    {
       img.addHyperlinkListener( new HyperlinkAdapter()
       {
         /**
@@ -124,13 +127,10 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
         @Override
         public void linkActivated( final HyperlinkEvent e1 )
         {
-          // TODO getstate
-// final StatusDialog dialog = new StatusDialog( img.getShell(), StatusUtilities.statusFromThrowable( e ),
-          // "Modelldatendienst Fehler" );
-// dialog.open();
+          final StatusDialog dialog = new StatusDialog( img.getShell(), connectionState, "Verbindungsstatus" );
+          dialog.open();
         }
       } );
-
     }
 
     m_toolkit.adapt( this );
@@ -141,7 +141,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
    * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged(boolean)
    */
   @Override
-  public void remoteConnectionChanged( final boolean connectionState )
+  public void remoteConnectionChanged( final IStatus connectionState )
   {
     new UIJob( "" )
     {
