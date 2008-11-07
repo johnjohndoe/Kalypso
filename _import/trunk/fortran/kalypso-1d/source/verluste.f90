@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jul 2008    1:12 pm
+!     Last change:  MD    4 Nov 2008    4:50 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -309,7 +309,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !write (UNIT_OUT_LOG,1000)
     !1000 format(1X, 'In VERLUSTE. Vor eb2ks')
     !write (UNIT_OUT_LOG,1002) iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot
-    
+
     CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, Q_Abfrage)
 
     !write (UNIT_OUT_LOG,1001)
