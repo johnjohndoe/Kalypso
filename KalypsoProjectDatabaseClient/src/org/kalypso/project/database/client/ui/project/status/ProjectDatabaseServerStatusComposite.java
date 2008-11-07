@@ -160,7 +160,6 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
   @Override
   public void remoteWorkspaceChanged( )
   {
-    // nothing to do
   }
 
 }
