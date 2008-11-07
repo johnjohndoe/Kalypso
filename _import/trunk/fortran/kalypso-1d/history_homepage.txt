@@ -663,7 +663,33 @@ Kalypso 2.1.4.0      23. Juli 2008
       "Wehrüberfall & Druckabfluss" vorlag, sonst nicht!!
 
 							                Monika Donner, 23.07.2008 
+  
+   Hinweis:
+   -----------
+   Der Rechenkern kann KEINE negativen Wasserspiegellage verarbeiten. Dies betrifft auch die Zwischen-
+   iterationen zur Berechnung der Wasserspiegellagen.
+   Ausweg: Ein Anheben des gesamten Gewässers um +dz!
+							                Monika Donner, 04.11.2008
 
 
+
+Kalypso 2.1.4.1      07. November 2008
+-------------------------------------    
+1) BUGFIX fuer Abfluss-Änderungen entlang eines Gewässers speziell im Oberwasser einer Brücke 
+   (Wasserspiegellagen-Berechnung)
+
+   Die Abfrage ob ein neuer Abfluss-Wert an einer Station vorhanden ist, findet an jedem neu
+   berechneten Profil (n, w, b, t, k, usw.) statt. Innerhalb einer Brückenbereich mit Impulsbilanz 
+   zwischen OW und UW kann keine Abflussänderung angesetzt werden.
+   Wurde ein Abflusswert genau zwischen dem Profil der Brücke b und dem interpolierten Profil im Oberwasser
+   der Brücke (also Station(b)+0,006 km) definiert, so konnte bislang der Abflusswert mit seiner Abfluss-Station
+   kein Referenzprofil mehr finden, da die Berechnung schon über das Abfluss-Profil hinausgelaufen ist.
+   Nun wird eine Warnung ausgegeben und geprüft ob das zweit-zurückliegende Profil (nprof-2) eine Brücke war
+   Die Abflussänderung wird dann im Oberwasser der Brücke angesetzt.
+
+   Anmerkung: Abflussänderungen innerhalb von und an Bauwerken sind vom Anwender immer kritisch
+              zu überdenken!
+
+									Monika Donner, 07.11.2008
 
  
