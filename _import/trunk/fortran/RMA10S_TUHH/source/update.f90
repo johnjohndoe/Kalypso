@@ -266,7 +266,7 @@ UpdateDOFs: DO KK = 1, NDFM
       !for the depth degree of freedom (K = 3), this can't be easily done, because marsh algorithm has to be considered
       if (k /= 3) then
         !nis,aug08: Store relative changes
-        if (abs(vel (k, j)) > 5.0*10.0e-4 .or. vel (k, j) == 0.0) then
+        if (abs(vel (k, j)) > 5.0*10.0e-6 .or. vel (k, j) == 0.0) then
           !this happens at reacitvated nodes
           if (vel (k, j) == 0.0) then
             EPercMax (k) = 5.0
@@ -504,7 +504,7 @@ WriteDOFOutputs: DO J = 1, 7
     endif
   ENDIF   
 
-  IF (nmx (j) == 0) THEN
+  IF (nmx (j) == 0 .or. nRel (j) == 0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
   ELSEIF (kmx (nmx (j)) /= 0.0) THEN
     WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
