@@ -325,6 +325,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
                   final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( getHandler() );
 
                   final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+                  if( shell == null )
+                    return;
+
                   if( !shell.isDisposed() )
                     ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
                 }

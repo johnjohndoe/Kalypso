@@ -25,7 +25,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 public class RemoteWorkspaceModel
 {
   // 300 000 = 5 min
-  private static final int JOB_DELAY = 60000;
+  private static final int JOB_DELAY = 5000;
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 

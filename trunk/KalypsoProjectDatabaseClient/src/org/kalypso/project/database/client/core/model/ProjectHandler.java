@@ -1,9 +1,12 @@
 package org.kalypso.project.database.client.core.model;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.local.ILocalProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
@@ -57,10 +60,23 @@ public class ProjectHandler implements Comparable<ProjectHandler>
 
   public String getName( )
   {
-    if( isLocal() )
-      return getProject().getName(); // TODO this is the unixName!
-    else
+    if( isRemote() )
       return m_bean.getName();
+    else
+    {
+      try
+      {
+        final IProjectDescription description = getProject().getDescription();
+
+        return description.getName();
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+        return getProject().getName();
+      }
+    }
   }
 
   public String getUnixName( )

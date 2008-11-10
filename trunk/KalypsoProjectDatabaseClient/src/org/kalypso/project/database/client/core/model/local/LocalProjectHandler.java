@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.local;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -74,8 +77,17 @@ public class LocalProjectHandler implements ILocalProject, IPreferenceChangeList
     if( m_preferences == null )
     {
       final IProjectNature nature = m_project.getNature( RemoteProjectNature.NATURE_ID );
-      final RemoteProjectNature myNature = (RemoteProjectNature) nature;
+      if( nature == null )
+      {
+        final IProjectDescription description = m_project.getDescription();
+        final String[] natureIds = description.getNatureIds();
+        ArrayUtils.add( natureIds, RemoteProjectNature.NATURE_ID );
 
+        description.setNatureIds( natureIds );
+        m_project.setDescription( description, new NullProgressMonitor() );
+      }
+
+      final RemoteProjectNature myNature = (RemoteProjectNature) nature;
       m_preferences = myNature.getRemotePreferences( m_project, this );
 
     }
