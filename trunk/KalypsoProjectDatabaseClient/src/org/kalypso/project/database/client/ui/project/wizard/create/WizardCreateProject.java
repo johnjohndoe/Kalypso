@@ -49,7 +49,6 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.afgui.wizards.NewProjectWizard;
@@ -119,8 +118,7 @@ public class WizardCreateProject extends NewProjectWizard
         description.setNatureIds( myNatures.toArray( new String[] {} ) );
         description.setComment( newProject.getName() );
 
-        newProject.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
-
+        newProject.setDescription( description, monitor );
         monitor.done();
       }
     };
