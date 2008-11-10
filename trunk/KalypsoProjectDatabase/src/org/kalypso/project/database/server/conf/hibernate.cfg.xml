@@ -7,7 +7,7 @@
 	<session-factory>
 
 		<!-- local connection properties -->
-		<property name="hibernate.connection.url">jdbc:hsqldb:file:c:\sdk\work\db\projects</property>
+		<property name="hibernate.connection.url">jdbc:hsqldb:file:c:\temp\planerclient\db</property>
 		<property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
 		<property name="hibernate.connection.pool_size">1</property>
 		<property name="hibernate.connection.autocommit">true</property>

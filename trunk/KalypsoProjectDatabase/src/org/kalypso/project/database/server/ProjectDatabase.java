@@ -153,13 +153,13 @@ public class ProjectDatabase implements IProjectDatabase
 
       // TODO check needed? - order by clauses
       Arrays.sort( values, new Comparator<KalypsoProjectBean>()
-      {
+          {
         @Override
         public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
         {
           return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
         }
-      } );
+          } );
 
       head.setChildren( values );
       projectBeans.add( head );
@@ -241,7 +241,7 @@ public class ProjectDatabase implements IProjectDatabase
     }
     catch( final Exception e )
     {
-      throw new IOException( e.getMessage() );
+      throw new IOException( e.getMessage(), e );
     }
   }
 
