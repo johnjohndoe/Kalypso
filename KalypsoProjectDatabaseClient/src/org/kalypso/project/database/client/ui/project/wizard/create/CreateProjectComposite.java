@@ -167,6 +167,8 @@ public class CreateProjectComposite extends Composite
 
         final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), m_natures );
         wizard.init( PlatformUI.getWorkbench(), null );
+        wizard.setActivateScenarioOnPerformFinish( false );
+
         final WizardDialog2 dialog = new WizardDialog2( null, wizard );
         dialog.setRememberSize( true );
 

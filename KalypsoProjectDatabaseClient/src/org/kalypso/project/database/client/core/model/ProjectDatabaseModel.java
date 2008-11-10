@@ -47,7 +47,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.client.core.model.local.ILocalProject;
@@ -55,6 +58,7 @@ import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListe
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -124,7 +128,38 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       projects.put( project.getProject().getName(), handler );
     }
 
+    /* clean up */
     final Collection<ProjectHandler> collection = projects.values();
+    for( final ProjectHandler handler : collection )
+    {
+
+      // TODO FIXME this should never happen!
+      try
+      {
+        if( handler.isLocal() )
+        {
+          /* reset false remote preferences */
+          final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
+
+          if( preferences.isOnServer() && !handler.isRemote() )
+          {
+            preferences.setIsOnServer( false );
+          }
+
+          if( !preferences.isOnServer() && handler.isRemote() )
+          {
+            preferences.setIsOnServer( true );
+          }
+
+        }
+      }
+      catch( final CoreException e )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+
+    }
+
     m_projects.addAll( collection );
   }
 

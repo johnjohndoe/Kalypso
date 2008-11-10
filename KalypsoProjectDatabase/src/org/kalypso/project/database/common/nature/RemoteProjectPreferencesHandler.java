@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.nature;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.KalypsoProjectDatabase;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Remote project settings of {@link org.eclipse.core.resources.IProjectNature} -> {@link RemoteProjectNature}
@@ -60,7 +61,7 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 
   private static final String REMOTE_PROJECT_TYPE = "project.remote.type";
 
-  private final IEclipsePreferences m_node;
+  protected final IEclipsePreferences m_node;
 
   public RemoteProjectPreferencesHandler( final IEclipsePreferences node )
   {
@@ -129,14 +130,22 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 
   private void flush( )
   {
-    try
+    new WorkspaceJob( "" )
     {
-      m_node.flush();
-    }
-    catch( final BackingStoreException e )
-    {
-      KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+      @Override
+      public IStatus runInWorkspace( final IProgressMonitor monitor )
+      {
+        try
+        {
+          m_node.flush();
+        }
+        catch( final Exception e )
+        {
+        }
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   /**

@@ -47,6 +47,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
@@ -70,6 +71,7 @@ public class RemoteProjectHelper
   {
     final WizardCreateProject wizard = new WizardCreateProject( templates, new String[] {} );
     wizard.init( PlatformUI.getWorkbench(), null );
+    wizard.setActivateScenarioOnPerformFinish( false );
 
     final WizardDialog2 dialog = new WizardDialog2( null, wizard );
     dialog.setRememberSize( true );
@@ -107,26 +109,28 @@ public class RemoteProjectHelper
     } );
 
     dialog.open();
-
-    try
+    if( Window.OK == dialog.getReturnCode() )
     {
-      final IProject project = wizard.getNewProject();
-      final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
-      if( nature instanceof RemoteProjectNature )
+      try
       {
-        // bad hack
-        final KalypsoProjectBean bean = mapping.get( wizard.getSelectedTemplate() );
+        final IProject project = wizard.getNewProject();
 
-        final RemoteProjectNature remote = (RemoteProjectNature) nature;
-        final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
-        preferences.setVersion( bean.getProjectVersion() );
-        preferences.setIsOnServer( Boolean.TRUE );
+        final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
+        if( nature instanceof RemoteProjectNature )
+        {
+          // bad hack
+          final KalypsoProjectBean bean = mapping.get( wizard.getSelectedTemplate() );
+
+          final RemoteProjectNature remote = (RemoteProjectNature) nature;
+          final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+          preferences.setVersion( bean.getProjectVersion() );
+          preferences.setIsOnServer( Boolean.TRUE );
+        }
+      }
+      catch( final CoreException e1 )
+      {
+        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
       }
     }
-    catch( final CoreException e1 )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-    }
-
   }
 }
