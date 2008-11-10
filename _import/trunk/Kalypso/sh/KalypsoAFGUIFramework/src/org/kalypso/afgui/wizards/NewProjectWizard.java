@@ -89,6 +89,8 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
   private final ProjectTemplatePage m_templateProjectPage;
 
+  protected boolean m_activateScenario = true;
+
   /**
    * @param categoryId
    *          If non-<code>null</code>, only project templates with this categoryId are shown.
@@ -104,6 +106,11 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
   {
     m_templateProjectPage = page;
     addPage( m_templateProjectPage );
+  }
+
+  public void setActivateScenarioOnPerformFinish( final boolean activate )
+  {
+    m_activateScenario = activate;
   }
 
   /**
@@ -241,7 +248,9 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
 
           final Scenario caze = nature.getCaseManager().getCases().get( 0 );
 
-          KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+          if( m_activateScenario )
+            KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+
           project.refreshLocal( IResource.DEPTH_ZERO, monitor );
           description.setName( newName );
           project.move( description, false, monitor );
