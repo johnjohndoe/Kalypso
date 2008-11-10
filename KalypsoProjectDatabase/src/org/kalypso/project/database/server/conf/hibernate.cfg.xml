@@ -5,7 +5,6 @@
 
 <hibernate-configuration>
 	<session-factory>
-
 		<!-- local connection properties -->
 		<property name="hibernate.connection.url">jdbc:hsqldb:file:c:\temp\planerclient\db</property>
 		<property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
