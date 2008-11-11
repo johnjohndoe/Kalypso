@@ -99,7 +99,14 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<!-- Pegelabfluss (Messung) ; auch der Vorhersagezeitraum wird angelegt -->
+
+		<!-- Pegelabfluss (leere zeitreihen für Hilfspegel; ohne Warn-Meldung beim Zeitreihen-Abholen -> keine Description) -->
+		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_durchfluss_leer.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+
+		<!-- Pegelabfluss (Messung); auch der Vorhersagezeitraum wird angelegt -->
 		<kalypso.copyObservation description="Abruf Pegelabfluss mit Vorhersage" gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_durchfluss_mit_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
 			<metadata name="Szenario" value="${scenarioId}"/>
