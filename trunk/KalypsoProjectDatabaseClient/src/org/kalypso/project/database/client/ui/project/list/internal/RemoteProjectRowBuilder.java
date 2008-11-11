@@ -56,9 +56,12 @@ import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLoc
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
-  public RemoteProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker )
+  private final boolean m_isExpert;
+
+  public RemoteProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
     super( handler, locker );
+    m_isExpert = isExpert;
   }
 
   /**
@@ -92,7 +95,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
     lnk.setText( getHandler().getName() );
 
     /* info */
-    getInfoLink( body, toolkit );
+    getInfoLink( body, toolkit, m_isExpert );
 
     /* import */
     getImportLink( body, toolkit );

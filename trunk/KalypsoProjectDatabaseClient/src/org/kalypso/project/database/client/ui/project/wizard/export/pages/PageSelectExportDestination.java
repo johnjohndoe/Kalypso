@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.java.io.FileUtilities;
 
 /**
  * @author Dirk Kuch
@@ -74,6 +76,7 @@ public class PageSelectExportDestination extends WizardPage
   private IPath browse( )
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.SAVE );
+    dialog.setFileName( m_sFile );
 
     final String[][] filters = getFilters();
     dialog.setFilterExtensions( filters[0] );
@@ -135,7 +138,13 @@ public class PageSelectExportDestination extends WizardPage
       }
     } );
 
-    checkPage();
+    /* propose export target */
+    final String javaTmpDir = FrameworkProperties.getProperty( FileUtilities.JAVA_IO_TMPDIR );
+    final String target = String.format( "%sexport.zip", javaTmpDir );
+    m_sFile = target;
+    text.setText( target );
+
+    setPageComplete( false );
   }
 
   private String[][] getFilters( )

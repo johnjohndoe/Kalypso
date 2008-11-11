@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,10 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.wizard.info.pages;
+package org.kalypso.project.database.client.ui.project.wizard.info;
 
 import java.net.MalformedURLException;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -49,13 +51,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
@@ -63,38 +66,56 @@ import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public class PageRemoteProjektInfo extends WizardPage
+public class RemoteInfoDialog extends TitleAreaDialog
 {
   private final KalypsoProjectBean[] m_beans;
 
   private final KalypsoProjectBean m_bean;
 
-  public PageRemoteProjektInfo( final KalypsoProjectBean bean )
+  private final boolean m_isExpert;
+
+  public RemoteInfoDialog( final KalypsoProjectBean bean, final Shell parentShell, final boolean isExpert )
   {
-    super( "KalypsoProjectBean" ); //$NON-NLS-1$
+    super( parentShell );
     m_bean = bean;
+    m_isExpert = isExpert;
 
-    setTitle( "Projektinformationen" );
-    setDescription( "Wählen Sie eine Version aus der Auswahlbox, um nähere Information zu dieser zu erfahren." );
-
+    setBlockOnOpen( true );
     m_beans = KalypsoProjectBeanHelper.getSortedBeans( bean );
   }
 
   /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( final Composite parent )
+  @Override
+  protected Control createContents( final Composite parent )
   {
-    setPageComplete( false );
+    final Control contents = super.createContents( parent );
 
-    final Composite container = new Composite( parent, SWT.NULL );
-    container.setLayout( new GridLayout() );
-    setControl( container );
+    setTitle( "Projektinformationen" );
+    setMessage( null );
+
+    return contents;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createDialogArea( final Composite parent )
+  {
+    final Composite composite = (Composite) super.createDialogArea( parent );
+    composite.setLayout( new GridLayout() );
+    final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
+    data.heightHint = 300;
+    data.widthHint = 100;
+
+    composite.setLayoutData( data );
 
     /* select version */
-    final Group groupVersions = new Group( container, SWT.NULL );
+    final Group groupVersions = new Group( composite, SWT.NULL );
     groupVersions.setLayout( new GridLayout() );
     groupVersions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     groupVersions.setText( String.format( "Version des Projektes: %s", m_bean.getName() ) );
@@ -123,7 +144,7 @@ public class PageRemoteProjektInfo extends WizardPage
 
     viewerVersions.setInput( m_beans );
 
-    final Group groupDetails = new Group( container, SWT.NULL );
+    final Group groupDetails = new Group( composite, SWT.NULL );
     groupDetails.setLayout( new GridLayout( 2, false ) );
     groupDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     groupDetails.setText( "Details" );
@@ -148,23 +169,52 @@ public class PageRemoteProjektInfo extends WizardPage
     final Text version = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
     version.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    /* type */
-    new Label( groupDetails, SWT.NULL ).setText( "Projekttyp:" );
+    if( m_isExpert )
+    {
+      /* type */
+      new Label( groupDetails, SWT.NULL ).setText( "Projekttyp:" );
 
-    final Text type = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
-    type.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      final Text type = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
+      type.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    /* unix name */
-    new Label( groupDetails, SWT.NULL ).setText( "Unix Name:" );
+      /* unix name */
+      new Label( groupDetails, SWT.NULL ).setText( "Unix Name:" );
 
-    final Text unix = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
-    unix.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      final Text unix = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
+      unix.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    /* server url */
-    new Label( groupDetails, SWT.NULL ).setText( "Url:" );
+      /* server url */
+      new Label( groupDetails, SWT.NULL ).setText( "Url:" );
 
-    final Text url = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
-    url.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      final Text url = new Text( groupDetails, SWT.BORDER | SWT.READ_ONLY );
+      url.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+      viewerVersions.addSelectionChangedListener( new ISelectionChangedListener()
+      {
+        @Override
+        public void selectionChanged( final SelectionChangedEvent event )
+        {
+          final IStructuredSelection selection = (IStructuredSelection) viewerVersions.getSelection();
+          final Object element = selection.getFirstElement();
+
+          if( element instanceof KalypsoProjectBean )
+          {
+            try
+            {
+              final KalypsoProjectBean project = (KalypsoProjectBean) element;
+
+              type.setText( project.getProjectType() );
+              unix.setText( project.getUnixName() );
+              url.setText( project.getUrl().toExternalForm() );
+            }
+            catch( final MalformedURLException e )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+            }
+          }
+        }
+      } );
+    }
 
     /* change listener */
     viewerVersions.addSelectionChangedListener( new ISelectionChangedListener()
@@ -177,26 +227,26 @@ public class PageRemoteProjektInfo extends WizardPage
 
         if( element instanceof KalypsoProjectBean )
         {
-          try
-          {
-            final KalypsoProjectBean project = (KalypsoProjectBean) element;
+          final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-            name.setText( project.getName() );
-            description.setText( project.getDescription() );
-            version.setText( String.format( "Version %d erstellt am  %tc", project.getProjectVersion(), project.getCreationDate() ) );
-            type.setText( project.getProjectType() );
-            unix.setText( project.getUnixName() );
-            url.setText( project.getUrl().toExternalForm() );
-          }
-          catch( final MalformedURLException e )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
+          name.setText( project.getName() );
+          description.setText( project.getDescription() );
+          version.setText( String.format( "Version %d erstellt am  %tc", project.getProjectVersion(), project.getCreationDate() ) );
         }
-
       }
     } );
 
     viewerVersions.setSelection( new StructuredSelection( m_bean ) );
+
+    return composite;
+  }
+
+  @Override
+  protected void createButtonsForButtonBar( final Composite parent )
+  {
+    // create OK and Cancel buttons by default
+    createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
+// createButton(parent, IDialogConstants.CANCEL_ID,
+// IDialogConstants.CANCEL_LABEL, false);
   }
 }

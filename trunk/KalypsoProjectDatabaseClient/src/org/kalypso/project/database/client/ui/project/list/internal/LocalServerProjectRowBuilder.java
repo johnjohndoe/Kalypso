@@ -67,9 +67,12 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
 
-  public LocalServerProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker )
+  private final boolean m_isExpert;
+
+  public LocalServerProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
     super( handler, locker );
+    m_isExpert = isExpert;
   }
 
   /**
@@ -120,7 +123,7 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
       } );
 
       // info
-      getInfoLink( body, toolkit );
+      getInfoLink( body, toolkit, m_isExpert );
 
       // lock project
       createLockHyperlink( body, toolkit );

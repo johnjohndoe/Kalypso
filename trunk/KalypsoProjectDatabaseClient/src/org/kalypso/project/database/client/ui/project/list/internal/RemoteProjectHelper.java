@@ -48,8 +48,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
@@ -57,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
@@ -90,20 +89,7 @@ public class RemoteProjectHelper
         else if( page instanceof WizardNewProjectCreationPage )
         {
           final WizardNewProjectCreationPage myPage = (WizardNewProjectCreationPage) page;
-          final Composite myParent = (Composite) myPage.getControl();
-          final Control[] children = myParent.getChildren();
-
-          /* project name */
-          final Composite subChildOne = (Composite) children[0];
-          final Control[] subChildrenOne = subChildOne.getChildren();
-          subChildrenOne[1].setEnabled( false );
-
-          /* working sets */
-          final Composite subChildTwo = (Composite) children[2];
-          final Control[] subChildrenTwo = subChildTwo.getChildren();
-          final Composite subSubChildTwo = (Composite) subChildrenTwo[0];
-          final Control[] subSubChildrenTwo = subSubChildTwo.getChildren();
-          subSubChildrenTwo[0].setEnabled( false );
+          DisableCreateProjectWizardPageElements.disableElementsForProjectDownload( myPage );
         }
       }
     } );

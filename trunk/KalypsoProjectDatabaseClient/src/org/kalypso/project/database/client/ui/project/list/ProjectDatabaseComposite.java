@@ -83,6 +83,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private boolean m_updateLock = false;
 
+  private final boolean m_isExpert;
+
   /**
    * @param parent
    *          composite
@@ -90,12 +92,15 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    *          handle project with these project nature ids TODO perhaps delegate.getProjects()
    * @param remoteProjectTypes
    *          handle remote projects with these type ids //TODO filter
+   * @param isExpert
+   *          show expert debug informations?
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter )
+  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final boolean isExpert )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
     m_filter = filter;
+    m_isExpert = isExpert;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     m_model.addListener( this );
@@ -142,7 +147,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
       try
       {
-        final IProjectRowBuilder builder = getBuilder( project );
+        final IProjectRowBuilder builder = getBuilder( project, m_isExpert );
         builder.render( m_body, m_toolkit );
       }
       catch( final CoreException e )
@@ -155,13 +160,13 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     this.layout();
   }
 
-  private IProjectRowBuilder getBuilder( final ProjectHandler handler ) throws CoreException
+  private IProjectRowBuilder getBuilder( final ProjectHandler handler, final boolean isExpert ) throws CoreException
   {
     if( handler.isLocalRemoteProject() )
     {
       if( handler.getRemotePreferences().isOnServer() )
       {
-        return new LocalServerProjectRowBuilder( handler, this );
+        return new LocalServerProjectRowBuilder( handler, this, isExpert );
       }
 
       return new LocalRemoteProjectRowBuilder( handler, this );
@@ -172,7 +177,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     }
     else if( handler.isRemote() )
     {
-      return new RemoteProjectRowBuilder( handler, this );
+      return new RemoteProjectRowBuilder( handler, this, isExpert );
     }
     else
       throw new IllegalStateException();
