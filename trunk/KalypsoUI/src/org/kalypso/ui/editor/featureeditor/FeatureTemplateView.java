@@ -139,6 +139,12 @@ public class FeatureTemplateView extends ViewPart
   {
     m_templateviewer.setTemplate( template, context, featurePath, href, linkType );
 
+    final String title = template.getViewtitle();
+    if( title.length() > 0 )
+    {
+      setPartName( title );
+    }
+
     final String partName = template.getName();
 
     if( partName != null )

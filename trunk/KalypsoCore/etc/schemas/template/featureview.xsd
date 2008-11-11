@@ -24,10 +24,17 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
-			<xs:attribute name="border" type="xs:boolean" use="optional" default="false">
+			<xs:attribute name="swtflags" type="xs:string" use="optional" default="">
 				<xs:annotation>
 					<xs:documentation>
 						<p>Enclose feature view by a border</p>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="viewtitle" type="xs:string" use="optional" default="">
+				<xs:annotation>
+					<xs:documentation>
+						<p>Custom Title of Feature View</p>
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
