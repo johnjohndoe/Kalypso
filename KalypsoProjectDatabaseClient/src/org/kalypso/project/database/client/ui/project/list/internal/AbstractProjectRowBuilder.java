@@ -72,7 +72,7 @@ import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
-import org.kalypso.project.database.client.ui.project.wizard.info.WizardInfoRemoteProject;
+import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -114,7 +114,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
     return m_locker;
   }
 
-  protected void getInfoLink( final Composite body, final FormToolkit toolkit )
+  protected void getInfoLink( final Composite body, final FormToolkit toolkit, final boolean isExpert )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", getHandler().getName() ) );
@@ -135,9 +135,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
           {
             getLocker().acquireUiUpdateLock();
 
-            final WizardInfoRemoteProject wizard = new WizardInfoRemoteProject( getHandler().getBean() );
-
-            final WizardDialog dialog = new WizardDialog( null, wizard );
+            final RemoteInfoDialog dialog = new RemoteInfoDialog( getHandler().getBean(), lnkInfo.getShell(), isExpert );
             dialog.open();
           }
           finally

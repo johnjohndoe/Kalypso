@@ -54,6 +54,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -174,6 +175,7 @@ public class CreateProjectComposite extends Composite
 
         dialog.addPageChangedListener( new IPageChangedListener()
         {
+          private boolean resetProjectName = true;
 
           public void pageChanged( final PageChangedEvent event )
           {
@@ -182,6 +184,16 @@ public class CreateProjectComposite extends Composite
             {
               final IUpdateable update = (IUpdateable) page;
               update.update();
+            }
+            else if( page instanceof WizardNewProjectCreationPage )
+            {
+              if( resetProjectName )
+              {
+                final WizardNewProjectCreationPage myPage = (WizardNewProjectCreationPage) page;
+                DisableCreateProjectWizardPageElements.disableElementsForProjectCreation( myPage );
+
+                resetProjectName = false;
+              }
             }
           }
         } );

@@ -104,6 +104,7 @@ public class WizardCreateProject extends NewProjectWizard
         KalypsoGisPlugin.getDefault();
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
+        description.setName( description.getComment() );
 
         final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), m_natures );
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
@@ -114,9 +115,7 @@ public class WizardCreateProject extends NewProjectWizard
         {
           myNatures.add( nature );
         }
-
         description.setNatureIds( myNatures.toArray( new String[] {} ) );
-        description.setComment( newProject.getName() );
 
         newProject.setDescription( description, monitor );
         monitor.done();
