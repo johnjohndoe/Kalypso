@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.featureeditor;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -339,8 +340,23 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
             m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
           }
 
-          if( m_template.isBorder() )
-            style = SWT.BORDER;
+          // FIXME ask gernot for an existing helper which can interpret swt-flags
+          final String swtflag = m_template.getSwtflags();
+          final String[] flags = swtflag.split( " | " );
+          for( final String flag : flags )
+          {
+            if( flag.length() < 1 )
+              continue;
+
+            final String f = flag.trim();
+            if( "SWT.BORDER".equals( f ) )
+            {
+              style = style | SWT.BORDER;
+            }
+            else
+              throw new NotImplementedException();
+          }
+
         }
 
         final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );

@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class FeatureviewHelper implements IFeatureviewFactory, IFeatureViewSettings
+public class FeatureviewHelper implements IFeatureviewFactory
 {
   public static final int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
