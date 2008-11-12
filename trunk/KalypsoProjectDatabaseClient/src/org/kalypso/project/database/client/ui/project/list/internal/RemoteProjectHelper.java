@@ -53,6 +53,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
@@ -62,13 +63,21 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class RemoteProjectHelper
 {
   public static void importRemoteProject( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
-    final WizardCreateProject wizard = new WizardCreateProject( templates, new String[] {} );
+    final WizardCreateProject wizard;
+    if( templates.length == 1 )
+    {
+      final ProjectTemplatePage page = new ProjectTemplatePage( new ProjectTemplate[] { templates[0] } );
+      wizard = new WizardCreateProject( page, new String[] {} );
+    }
+    else
+      wizard = new WizardCreateProject( templates, new String[] {} );
+
     wizard.init( PlatformUI.getWorkbench(), null );
     wizard.setActivateScenarioOnPerformFinish( false );
 
