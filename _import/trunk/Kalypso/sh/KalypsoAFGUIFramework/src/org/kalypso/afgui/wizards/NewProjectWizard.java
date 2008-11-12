@@ -102,10 +102,11 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
       addPage( m_templateProjectPage );
   }
 
-  public NewProjectWizard( final ProjectTemplatePage page )
+  public NewProjectWizard( final ProjectTemplatePage page, final boolean showTemplates )
   {
     m_templateProjectPage = page;
-    addPage( m_templateProjectPage );
+    if( showTemplates )
+      addPage( m_templateProjectPage );
   }
 
   public void setActivateScenarioOnPerformFinish( final boolean activate )
