@@ -41,9 +41,7 @@
 package org.kalypso.project.database.client.ui.project.list.internal;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -69,7 +67,6 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
-import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
@@ -431,21 +428,13 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
             getLocker().acquireUiUpdateLock();
 
             /* sort beans */
-            final KalypsoProjectBean[] beans = KalypsoProjectBeanHelper.getSortedBeans( getHandler().getBean() );
-            final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
+            final KalypsoProjectBean bean = getHandler().getBean();
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
 
-            // bad hack - to determine which project was newly created
             final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+            mapping.put( template, bean );
 
-            for( final KalypsoProjectBean b : beans )
-            {
-              final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", b.getName(), b.getProjectVersion() ), b.getUnixName(), b.getDescription(), null, b.getUrl() );
-              mapping.put( template, b );
-
-              templates.add( template );
-            }
-
-            RemoteProjectHelper.importRemoteProject( templates.toArray( new ProjectTemplate[] {} ), mapping );
+            RemoteProjectHelper.importRemoteProject( new ProjectTemplate[] { template }, mapping );
           }
           catch( final MalformedURLException e1 )
           {
