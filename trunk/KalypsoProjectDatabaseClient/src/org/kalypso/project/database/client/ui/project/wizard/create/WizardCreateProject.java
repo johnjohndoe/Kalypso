@@ -65,7 +65,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class WizardCreateProject extends NewProjectWizard
 {
-
   final protected String[] m_natures;
 
   /**

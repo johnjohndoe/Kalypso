@@ -93,6 +93,9 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Column(name = "edit_lock_ticket")
   private String m_editLockTicket;
 
+  @Column(name = "project_changes")
+  private String m_changes;
+
   /**
    * @return previous versions of this bean
    */
@@ -299,5 +302,15 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public void setCreationDate( final Date creationDate )
   {
     m_creationDate = creationDate;
+  }
+
+  public void setChanges( final String changes )
+  {
+    m_changes = changes;
+  }
+
+  public String getChanges( )
+  {
+    return m_changes;
   }
 }

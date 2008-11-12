@@ -94,7 +94,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Projektinformationen" );
+    setTitle( "Projekthistorie" );
     setMessage( null );
 
     return contents;
@@ -216,6 +216,16 @@ public class RemoteInfoDialog extends TitleAreaDialog
       } );
     }
 
+    final Group groupChanges = new Group( composite, SWT.NULL );
+    groupChanges.setLayout( new GridLayout() );
+    groupChanges.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    groupChanges.setText( String.format( "Änderungen" ) );
+
+    final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
+    changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    if( m_bean.getChanges() != null )
+      changes.setText( m_bean.getChanges() );
+
     /* change listener */
     viewerVersions.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -232,6 +242,11 @@ public class RemoteInfoDialog extends TitleAreaDialog
           name.setText( project.getName() );
           description.setText( project.getDescription() );
           version.setText( String.format( "Version %d erstellt am  %tc", project.getProjectVersion(), project.getCreationDate() ) );
+
+          if( project.getChanges() != null )
+          {
+            changes.setText( m_bean.getChanges() );
+          }
         }
       }
     } );
