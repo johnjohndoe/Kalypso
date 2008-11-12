@@ -79,8 +79,8 @@ public class ProjectDatabase implements IProjectDatabase
 
   public ProjectDatabase( )
   {
-    final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
-    final AnnotationConfiguration configure = new AnnotationConfiguration().configure( url );
+// final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
+    final AnnotationConfiguration configure = new AnnotationConfiguration().configure();
 
     configure.addAnnotatedClass( KalypsoProjectBean.class );
     configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
@@ -153,13 +153,13 @@ public class ProjectDatabase implements IProjectDatabase
 
       // TODO check needed? - order by clauses
       Arrays.sort( values, new Comparator<KalypsoProjectBean>()
-          {
+      {
         @Override
         public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
         {
           return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
         }
-          } );
+      } );
 
       head.setChildren( values );
       projectBeans.add( head );
