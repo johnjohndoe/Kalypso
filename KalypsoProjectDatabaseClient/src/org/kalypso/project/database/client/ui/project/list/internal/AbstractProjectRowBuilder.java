@@ -63,6 +63,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDataBaseController;
@@ -71,6 +72,7 @@ import org.kalypso.project.database.client.core.project.workspace.DeleteLocalPro
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -117,7 +119,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected void getInfoLink( final Composite body, final FormToolkit toolkit, final boolean isExpert )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setToolTipText( String.format( "Projektinformationen: %s", getHandler().getName() ) );
+    lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", getHandler().getName() ) );
 
     if( getHandler().isRemote() && ProjectDatabaseServerUtils.isServerOnline() )
     {
@@ -252,12 +254,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
               final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
               /* commit */
-              final IStatus commitStatus = ProjectDataBaseController.updateProject( getHandler() );
-              if( !shell.isDisposed() )
-                ErrorDialog.openError( shell, "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
-
-              if( !commitStatus.isOK() )
-                return;
+              final WizardCommitProject wizard = new WizardCommitProject( getHandler() );
+              final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+              dialog.open();
 
               /* release */
               final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( getHandler() );
