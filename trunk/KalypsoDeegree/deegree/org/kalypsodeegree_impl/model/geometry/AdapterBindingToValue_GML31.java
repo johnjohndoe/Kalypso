@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -82,7 +82,7 @@ import org.w3c.dom.Node;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
- * 
+ *
  * @author doemming
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
@@ -229,21 +229,21 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     final JAXBElement< ? extends AbstractRingType> ring = ringType.getRing();
     final AbstractRingType abstractLinearRing = ring.getValue();
-    final GM_Position[] exteriorRing = createGM_PositionFrom( abstractLinearRing );
+    final GM_Position[] exteriorRing = createGM_Positions( abstractLinearRing );
     final List<JAXBElement<AbstractRingPropertyType>> interior = type.getInterior();
     final Iterator<JAXBElement<AbstractRingPropertyType>> iterator = interior.iterator();
     final List<GM_Position[]> interiorList = new ArrayList<GM_Position[]>();
     while( iterator.hasNext() )
     {
       final AbstractRingPropertyType abstractRingPropertyType = iterator.next().getValue();
-      final GM_Position[] positions = createGM_PositionFrom( abstractRingPropertyType.getRing().getValue() );
+      final GM_Position[] positions = createGM_Positions( abstractRingPropertyType.getRing().getValue() );
       interiorList.add( positions );
     }
     final GM_Position[][] interiorRings = interiorList.toArray( new GM_Position[interiorList.size()][] );
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
   }
 
-  private GM_Position[] createGM_PositionFrom( final AbstractRingType abstractRingType )
+  private GM_Position[] createGM_Positions( final AbstractRingType abstractRingType )
   {
     if( abstractRingType instanceof LinearRingType )
     {
@@ -251,19 +251,35 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final CoordinatesType coordinates = linearRingType.getCoordinates();
       if( coordinates != null )
         return createGM_Positions( coordinates );
-      else
-        throw new UnsupportedOperationException();
+
+      final List<JAXBElement< ? >> posList = linearRingType.getPosOrPointPropertyOrPointRep();
+      if( posList != null )
+        return createGM_Positions( posList );
+
+      throw new UnsupportedOperationException( "LinearRing has neither coordinates nor points" );
     }
-    else
-      throw new UnsupportedOperationException();
+
+    throw new UnsupportedOperationException();
   }
 
   private GM_Curve createGM_LineString( final LineStringType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
-    final CoordinatesType coordinates = type.getCoordinates();
-    final GM_Position[] positions = createGM_Positions( coordinates );
+    final GM_Position[] positions = create_GM_Positions( type );
     return GeometryFactory.createGM_Curve( positions, co );
+  }
+
+  private GM_Position[] create_GM_Positions( final LineStringType lineString )
+  {
+    final CoordinatesType coordinates = lineString.getCoordinates();
+    if( coordinates != null )
+      return createGM_Positions( coordinates );
+
+    final List<JAXBElement< ? >> posList = lineString.getPosOrPointPropertyOrPointRep();
+    if( posList != null )
+      return createGM_Positions( posList );
+
+    throw new UnsupportedOperationException( "LineString has neither coordinates nor points" );
   }
 
   private GM_Point createGM_Point( final PointType type, final String cs )
@@ -276,9 +292,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       return GeometryFactory.createGM_Point( position, co );
     }
 
-    final GM_Position position;
-
     final DirectPositionType pos = type.getPos();
+
+    final GM_Position position;
     if( pos != null )
       position = createGM_Position( pos );
     else
@@ -316,14 +332,32 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_Position( crds );
   }
 
+
+  private GM_Position[] createGM_Positions( final List<JAXBElement< ? >> posList )
+  {
+    final List<GM_Position> result = new ArrayList<GM_Position>();
+    for( final JAXBElement< ? > element : posList )
+    {
+      final GM_Position pos = createGM_PositionForPosOrPointPropertyOrPointRep( element.getValue() );
+      result.add( pos );
+    }
+    return result.toArray( new GM_Position[result.size()] );
+  }
+
+  private GM_Position createGM_PositionForPosOrPointPropertyOrPointRep( final Object pointOrPos )
+  {
+    if( pointOrPos instanceof DirectPositionType )
+      return createGM_Position( (DirectPositionType) pointOrPos );
+
+    throw new UnsupportedOperationException( "Not supported: " + pointOrPos );
+  }
+
   private GM_Position[] createGM_Positions( final CoordinatesType coordinates )
   {
     final String coordinateSepearator = coordinates.getCs();
     final String tuppleSeparator = coordinates.getTs();
     final String decimal = coordinates.getDecimal();
     final String value = coordinates.getValue();
-    if( !".".equals( decimal ) )
-      throw new UnsupportedOperationException(); // TODO
     final List<GM_Position> result = new ArrayList<GM_Position>();
     final StringTokenizer tuppleTokenizer = new StringTokenizer( value, tuppleSeparator, false );
     while( tuppleTokenizer.hasMoreTokens() )
@@ -335,7 +369,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       while( coordinatesTokenizer.hasMoreTokens() )
       {
         final String coordinate = coordinatesTokenizer.nextToken();
-        pos[i] = Double.parseDouble( coordinate );
+        pos[i] = Double.parseDouble( coordinate.replace( decimal, "." ) );
         i++;
       }
       result.add( GeometryFactory.createGM_Position( pos ) );
