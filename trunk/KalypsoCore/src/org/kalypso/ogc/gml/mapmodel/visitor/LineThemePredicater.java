@@ -54,12 +54,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class LineThemePredicater implements IKalypsoThemePredicate
 {
-  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING_PROPERTY };
+  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING, GeometryUtilities.QN_LINE_STRING };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public boolean decide( IKalypsoTheme theme )
+  public boolean decide( final IKalypsoTheme theme )
   {
     if( theme instanceof IKalypsoFeatureTheme )
     {

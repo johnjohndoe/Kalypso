@@ -140,15 +140,15 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     final QName valueQName = vpt.getValueQName();
     final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
-    if( GeometryUtilities.QN_POLYGON_PROPERTY.equals( valueQName ))
+    if( GeometryUtilities.QN_POLYGON.equals( valueQName ) )
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );
-    else if(GeometryUtilities.QN_MULTI_POLYGON_PROPERTY.equals( valueQName ))
+    else if( GeometryUtilities.QN_MULTI_POLYGON.equals( valueQName ) )
       m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
-    else if( GeometryUtilities.QN_LINE_STRING_PROPERTY.equals( valueQName ) )
+    else if( GeometryUtilities.QN_LINE_STRING.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs );
-    else if(GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY.equals( valueQName ))
+    else if( GeometryUtilities.QN_MULTI_LINE_STRING.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs ); //TODO
-    else if( GeometryUtilities.QN_POINT_PROPERTY.equals( valueQName ) )
+    else if( GeometryUtilities.QN_POINT.equals( valueQName ) )
       m_builder = new PointGeometryBuilder( targetCrs );
     else
     {

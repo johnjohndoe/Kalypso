@@ -36,7 +36,7 @@ public class WriteShapeTest extends TestCase
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ); //$NON-NLS-1$
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
-    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT_PROPERTY );
+    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -67,7 +67,7 @@ public class WriteShapeTest extends TestCase
 
     final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR );
 
-    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null ); //$NON-NLS-1$
+    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
 
     System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
   }

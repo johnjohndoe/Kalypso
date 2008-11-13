@@ -164,7 +164,7 @@
             function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
             isList="false"
             qname="{virtual}rasterGridDomainBoundary"
-            value="{http://www.opengis.net/gml}PolygonPropertyType">
+            value="{http://www.opengis.net/gml}Polygon">
       </virtualProperty>
    </extension>
    <extension
