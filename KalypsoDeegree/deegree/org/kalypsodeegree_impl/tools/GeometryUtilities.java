@@ -73,64 +73,30 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
  */
 public class GeometryUtilities
 {
-  public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
+  // TODO: move these properties to a general GML-constants interface
+  public static final QName QN_GEOMETRY = new QName( NS.GML3, "_Geometry" );
 
-  public static final QName QN_POLYGON_PROPERTY = new QName( NS.GML3, "PolygonPropertyType" );
+  public static final QName QN_SURFACE = new QName( NS.GML3, "_Surface" );
+
+  public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
 
   public static final QName QN_POINT = new QName( NS.GML3, "Point" );
 
-  public static final QName QN_POINT_PROPERTY = new QName( NS.GML3, "PointPropertyType" );
-
   public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
-
-  public static final QName QN_LINE_STRING_PROPERTY = new QName( NS.GML3, "LineStringPropertyType" );
 
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
 
-  public static final QName QN_MULTI_POINT_PROPERTY = new QName( NS.GML3, "MultiPointPropertyType" );
-
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
-
-  public static final QName QN_MULTI_LINE_STRING_PROPERTY = new QName( NS.GML3, "MultiLineStringPropertyType" );
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
-  public static final QName QN_MULTI_POLYGON_PROPERTY = new QName( NS.GML3, "MultiPolygonPropertyType" );
-
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
 
-  public static final QName QN_LOCATION_PROPERTY = new QName( NS.GML3, "LocationPropertyType" );
-
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
-
-  public static final QName QN_DIRECTION_PROPERTY = new QName( NS.GML3, "DirectionPropertyType" );
-
-  public static final QName QN_GEOMETRY_PROPERTY = new QName( NS.GML3, "GeometryPropertyType" );
 
   private GeometryUtilities( )
   {
     throw new UnsupportedOperationException( "Do not instantiate this helper class" );
-  }
-
-  public static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP ) throws GM_Exception
-  {
-    final GM_Position[] pos = new GM_Position[] { srcP.getPosition(), targetP.getPosition() };
-    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
-  }
-
-  public static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
-  {
-    final double dx = targetP.getX() - srcP.getX();
-    final double dy = targetP.getY() - srcP.getY();
-
-    final GM_Position p1 = srcP.getPosition();
-    final GM_Position p4 = targetP.getPosition();
-    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
-    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
-    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
-
-    final GM_Position[] pos = new GM_Position[] { p1, p2, p3, p4, p5, p2 };
-    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
   /**
@@ -207,7 +173,7 @@ public class GeometryUtilities
 
   /**
    * guess point that is on the surface
-   * 
+   *
    * @param surface
    *          surface that should contain the result point
    * @param pointGuess
@@ -405,7 +371,6 @@ public class GeometryUtilities
   {
     // remember to use the same classes as used by the marshalling type handlers !!
     return ftp.getValueClass().equals( getPointClass() );
-
   }
 
   /**
@@ -561,59 +526,43 @@ public class GeometryUtilities
     if( !(pt instanceof IValuePropertyType) )
       return false;
     final IValuePropertyType gpt = (IValuePropertyType) pt;
-    if( isPointGeometry( gpt ) )
-      return true;
-    if( isMultiPointGeometry( gpt ) )
-      return true;
-    if( isLineStringGeometry( gpt ) )
-      return true;
-    if( isMultiLineStringGeometry( gpt ) )
-      return true;
-    if( isPolygonGeometry( gpt ) )
-      return true;
-    if( isMultiPolygonGeometry( gpt ) )
-      return true;
-    if( isAnyMultiGeometry( gpt ) )
-      return true;
-    // if( isEnvelopeGeometry( ftp ) )
-    // return true;
-    return false;
+    return gpt.isGeometry();
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-      {
+  {
     return GM_Point.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-      {
+  {
     return GM_MultiPoint.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-      {
+  {
     return GM_Curve.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-      {
+  {
     return GM_MultiCurve.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-      {
+  {
     return GM_Surface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-      {
+  {
     return GM_MultiSurface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-      {
+  {
     return GM_Object.class;
-      }
+  }
 
   public static boolean isGeometry( final Object o )
   {
@@ -638,7 +587,7 @@ public class GeometryUtilities
   /**
    * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
    * polygon is wrapped to a multi polygon.
-   * 
+   *
    * @param geomToCheck
    *          geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
@@ -677,17 +626,17 @@ public class GeometryUtilities
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
 
-      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-      ) / 2d;
+          ) / 2d;
     }
     return area;
   }
 
   /**
    * Finds the first geometry property of the given feature type.
-   * 
+   *
    * @param aPreferedGeometryClass
    *          If non null, the first property of this type is returned.
    */
@@ -726,7 +675,7 @@ public class GeometryUtilities
 
   /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
-   * 
+   *
    * @param newLine
    *          the input linestring
    * @param value
@@ -747,7 +696,7 @@ public class GeometryUtilities
 
   /**
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
-   * 
+   *
    * @param curve
    *          input curve to be simplified
    * @param epsThinning
@@ -806,7 +755,7 @@ public class GeometryUtilities
   /**
    * Same as {@link #findNearestFeature(GM_Point, double, FeatureList, QName)}, but only regards features of certain
    * qnames.
-   * 
+   *
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
@@ -839,10 +788,10 @@ public class GeometryUtilities
     return nearest;
   }
 
-  /**
+/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
-   * 
+   *
    * @param allowedQNames
    *            Only features that substitute one of these qnames are considered.
    */
@@ -884,7 +833,7 @@ public class GeometryUtilities
 
   /**
    * Calculates the direction (in degrees) from one position to another.
-   * 
+   *
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
@@ -901,7 +850,7 @@ public class GeometryUtilities
    * <p>
    * Orientation is anti.clockwise (i.e. positive).
    * </p>
-   * 
+   *
    * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
    */
   public static double directionFromVector( final double vx, final double vy )
@@ -940,7 +889,7 @@ public class GeometryUtilities
 
   /**
    * checks, if a position lies inside or outside of an polygon defined by a position array
-   * 
+   *
    * @param pos
    *          position array of the polygon object
    * @param position
@@ -1070,7 +1019,7 @@ public class GeometryUtilities
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
    * inverse order.<br>
    * <strong>The last point is missing, so they are not all positions for a closed polygon.</strong>
-   * 
+   *
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1094,7 +1043,7 @@ public class GeometryUtilities
 
   /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
-   * 
+   *
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1114,7 +1063,7 @@ public class GeometryUtilities
 
   /**
    * Orientates a ring counter clock wise.
-   * 
+   *
    * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
    */
   public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
@@ -1139,7 +1088,7 @@ public class GeometryUtilities
    * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
    * <b>It uses floats, so there can occur rounding problems!</b><br>
    * To avoid this, we substract all values with its minimum value. And add it later.
-   * 
+   *
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
   public static GM_Position[][] triangulateRing( final GM_Position[] ring )
