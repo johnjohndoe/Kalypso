@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,6 +37,8 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -89,13 +91,21 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Factory class for the different kinds of <tt>DisplayElement</tt>s.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
 public class DisplayElementFactory
 {
+  private static final GM_Object[] EMPTY_GEOMS = new GM_Object[0];
+
+  private static final GM_Point[] EMPTY_POINTS = new GM_Point[0];
+
+  private static final GM_Curve[] EMPTY_CURVES = new GM_Curve[0];
+
+  private static final GM_Surface< ? >[] EMPTY_SURFACES = new GM_Surface[0];
+
   /**
    * returns the display elements associated to a feature
    */
@@ -183,86 +193,27 @@ public class DisplayElementFactory
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or raster and <tt>Symbolizer</tt>.
    * <p>
-   * 
+   *
    * @param o
-   *            contains the geometry or raster information (Feature or raster)
+   *          contains the geometry or raster information (Feature or raster)
    * @param symbolizer
-   *            contains the drawing (style) information and selects the geometry property of the <tt>Feature</tt> to
-   *            be drawn
+   *          contains the drawing (style) information and selects the geometry property of the <tt>Feature</tt> to be
+   *          drawn
    * @throws IncompatibleGeometryTypeException
-   *             if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
+   *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
   public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer ) throws IncompatibleGeometryTypeException, FilterEvaluationException
   {
     // determine the geometry property to be used
-    GM_Object geoProperty = null;
-    final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
-
-    if( geometry != null )
-    {
-      final PropertyName propertyName = geometry.getPropertyName();
-      final Object value = propertyName.evaluate( feature );
-      if( value == null )
-        return null;
-      else if( value instanceof GM_Object )
-        geoProperty = (GM_Object) value;
-      else
-      {
-        final String msg = String.format( "PropertyName '%s' does not evaluate to a geometry: %s", propertyName, value );
-        throw new IncompatibleGeometryTypeException( msg );
-      }
-    }
-    else
-    {
-      geoProperty = feature.getDefaultGeometryProperty();
-    }
+    final Object geoObject = findGeometryObject( feature, symbolizer );
 
     // if the geometry property is null, do not build a DisplayElement
-    if( geoProperty == null )
-    {
-      if( symbolizer instanceof RasterSymbolizer )
-      {
-        // these two symbs do allow empty geometry...
-      }
-      else
+    // Only for RasterSymbolizer a null geoObject is allowed, as it only depends on the feature
+    if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) )
         return null;
-    }
 
-    DisplayElement displayElement = null;
-    if( symbolizer instanceof PointSymbolizer )
-    {
-      displayElement = buildPointDisplayElement( feature, geoProperty, (PointSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof LineSymbolizer )
-    {
-      displayElement = buildLineStringDisplayElement( feature, geoProperty, (LineSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof PolygonSymbolizer )
-    {
-      displayElement = buildPolygonDisplayElement( feature, geoProperty, (PolygonSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof TextSymbolizer )
-    {
-      displayElement = buildLabelDisplayElement( feature, geoProperty, (TextSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof RasterSymbolizer )
-    {
-      displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof SurfacePolygonSymbolizer )
-    {
-      displayElement = buildSurfacePolygonDisplayElement( feature, geoProperty, (SurfacePolygonSymbolizer) symbolizer );
-    }
-    else if( symbolizer instanceof SurfaceLineSymbolizer )
-    {
-      displayElement = buildSurfaceLineDisplayElement( feature, geoProperty, (SurfaceLineSymbolizer) symbolizer );
-    }
-    else
-    {
-      System.out.println( "symbolizer...?: " + symbolizer );
-    }
-
+    final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject );
     if( displayElement == null )
       return null;
 
@@ -280,12 +231,62 @@ public class DisplayElementFactory
     return displayElement;
   }
 
-  public static DisplayElement buildSurfaceLineDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfaceLineSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  /**
+   * Internally build the display element, without decoration and other stuff.
+   */
+  private static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject ) throws IncompatibleGeometryTypeException
   {
-    final LineColorMap colorMap = symbolizer.getColorMap();
+    if( symbolizer instanceof PointSymbolizer )
+      return buildPointDisplayElement( feature, geoObject, (PointSymbolizer) symbolizer );
 
+    if( symbolizer instanceof LineSymbolizer )
+      return buildLineStringDisplayElement( feature, geoObject, (LineSymbolizer) symbolizer );
+
+    if( symbolizer instanceof PolygonSymbolizer )
+      return buildPolygonDisplayElement( feature, geoObject, (PolygonSymbolizer) symbolizer );
+
+    if( symbolizer instanceof TextSymbolizer )
+      return buildLabelDisplayElement( feature, geoObject, (TextSymbolizer) symbolizer );
+
+    if( symbolizer instanceof RasterSymbolizer )
+      return buildRasterDisplayElement( feature, geoObject, (RasterSymbolizer) symbolizer );
+
+    if( symbolizer instanceof SurfacePolygonSymbolizer )
+      return buildSurfacePolygonDisplayElement( feature, geoObject, (SurfacePolygonSymbolizer) symbolizer );
+
+    if( symbolizer instanceof SurfaceLineSymbolizer )
+      return buildSurfaceLineDisplayElement( feature, geoObject, (SurfaceLineSymbolizer) symbolizer );
+
+    System.out.println( "symbolizer...?: " + symbolizer );
+    return null;
+  }
+
+  /**
+   * Finds the geometry object for the given symbolizer and feature.
+   *
+   * @return Either a {@link GM_Object} or a {@link List} of {@link GM_Object}'s.
+   */
+  private static Object findGeometryObject( final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException, IncompatibleGeometryTypeException
+  {
+    final Geometry geometry = symbolizer == null ? null : symbolizer.getGeometry();
+    if( geometry == null )
+      return feature.getDefaultGeometryProperty();
+
+    final PropertyName propertyName = geometry.getPropertyName();
+    final Object value = propertyName.evaluate( feature );
+    if( value == null || value instanceof GM_Object || value instanceof List )
+      return value;
+
+    final String msg = String.format( "PropertyName '%s' does not evaluate to a geometry: %s", propertyName, value );
+    throw new IncompatibleGeometryTypeException( msg );
+  }
+
+  public static DisplayElement buildSurfaceLineDisplayElement( final Feature feature, final Object geoProperty, final SurfaceLineSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  {
     if( !(geoProperty instanceof GM_TriangulatedSurface) )
       throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+
+    final LineColorMap colorMap = symbolizer.getColorMap();
     final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
 
     final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
@@ -300,14 +301,13 @@ public class DisplayElementFactory
     return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
-  public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
-    final PolygonColorMap colorMap = symbolizer.getColorMap();
-
     if( !(geoProperty instanceof GM_TriangulatedSurface) )
       throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
-    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
 
+    final PolygonColorMap colorMap = symbolizer.getColorMap();
+    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
     final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
     {
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
@@ -323,11 +323,11 @@ public class DisplayElementFactory
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or Raster and a default <tt>Symbolizer</tt>.
    * <p>
-   * 
+   *
    * @param o
-   *            contains the geometry or raster information (Feature or raster)
+   *          contains the geometry or raster information (Feature or raster)
    * @throws IncompatibleGeometryTypeException
-   *             if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
+   *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
   public static DisplayElement buildDisplayElement( final Object o ) throws IncompatibleGeometryTypeException
@@ -374,42 +374,69 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>PointDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
-   *            associated <tt>Feature<tt>
-   * @param geom geometry information
-   * @param sym style information
+   *          associated <tt>Feature<tt>
+   * @param geom
+   *          geometry object or list of geometries
+   * @param sym
+   *          style information
    * @return constructed <tt>PointDisplayElement</tt>
    */
-  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final GM_Object geom, final PointSymbolizer sym )
+  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final Object geomOrList, final PointSymbolizer sym )
   {
-    if( geom == null )
-      return null;
-
-    final GM_Point[] points = (GM_Point[]) geom.getAdapter( GM_Point[].class );
-
+    final GM_Point[] points = findPoints( geomOrList, EMPTY_POINTS );
     if( points == null )
       return null;
-
     return new PointDisplayElement_Impl( feature, points, sym );
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T[] findPoints( final Object geomOrList, final T[] typedList )
+  {
+    if( geomOrList == null )
+      return null;
+
+    if( geomOrList instanceof GM_Object )
+      return (T[]) ((GM_Object) geomOrList).getAdapter( typedList.getClass() );
+
+    if( geomOrList instanceof List )
+      return findGeometries( (List< ? >) geomOrList, typedList );
+
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> T[] findGeometries( final List< ? > geomList, final T[] typedList )
+  {
+    final List<T> result = new ArrayList<T>();
+    for( final Object geom : geomList )
+    {
+      if( geom instanceof GM_Object )
+      {
+        final T[] geometries = (T[]) ((GM_Object) geom).getAdapter( typedList.getClass() );
+        result.addAll( Arrays.asList( geometries ) );
+      }
+    }
+
+    return result.toArray( typedList );
   }
 
   /**
    * Creates a <tt>LineStringDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
-   *            associated <tt>Feature<tt>
-   * @param geom geometry information
-   * @param sym style information
+   *          associated <tt>Feature<tt>
+   * @param geom
+   *          geometry information
+   * @param sym
+   *          style information
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym )
+  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final Object geomOrList, final LineSymbolizer sym )
   {
-    if( geom == null )
-      return null;
-
-    final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+    final GM_Curve[] curves = findPoints( geomOrList, EMPTY_CURVES );
     if( curves == null )
       return null;
     return new LineStringDisplayElement_Impl( feature, curves, sym );
@@ -418,62 +445,64 @@ public class DisplayElementFactory
   /**
    * Creates a <tt>PolygonDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
-   *            associated <tt>Feature<tt>
-   * @param gmObject geometry information
-   * @param sym style information
+   *          associated <tt>Feature<tt>
+   * @param gmObject
+   *          geometry information
+   * @param sym
+   *          style information
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object geom, final PolygonSymbolizer sym )
+  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final Object geomOrList, final PolygonSymbolizer sym )
   {
-    if( geom == null )
-      return null;
-
-    final GM_Surface< ? >[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
+    final GM_Surface< ? >[] surfaces = findPoints( geomOrList, EMPTY_SURFACES );
     if( surfaces == null )
       return null;
-
     return new PolygonDisplayElement_Impl( feature, surfaces, sym );
   }
 
   /**
    * Creates a <tt>LabelDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
-   *            <tt>Feature</tt> to be used (necessary for evaluation of the label expression)
+   *          <tt>Feature</tt> to be used (necessary for evaluation of the label expression)
    * @param gmObject
-   *            geometry information
+   *          geometry information
    * @param sym
-   *            style information
+   *          style information
    * @throws IncompatibleGeometryTypeException
-   *             if the geometry property is not a <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or
-   *             <tt>GM_MultiSurface</tt>
+   *           if the geometry property is not a <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final GM_Object gmObject, final TextSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym )
   {
-    if( gmObject instanceof GM_Point || gmObject instanceof GM_Surface || gmObject instanceof GM_MultiSurface || gmObject instanceof GM_Curve || gmObject instanceof GM_MultiCurve )
-      return new LabelDisplayElement_Impl( feature, new GM_Object[] { gmObject }, sym );
+    final GM_Object[] objects = findPoints( geomOrList, EMPTY_SURFACES );
+    if( objects == null )
+      return null;
 
-    throw new IncompatibleGeometryTypeException( "Tried to create a LabelDisplayElement from a geometry with " + "an incompatible / unsupported type: '" + gmObject.getClass().getName() + "'!" );
+    return new LabelDisplayElement_Impl( feature, objects, sym );
   }
 
   /**
    * Creates a <tt>RasterDisplayElement</tt> from the submitted image. The submitted <tt>GM_Envelope</tt> holds the
    * bounding box of the imgae/raster data.
-   * 
+   *
    * @param feature
-   *            grid coverage as feature
+   *          grid coverage as feature
    * @param sym
-   *            raster symbolizer
+   *          raster symbolizer
    * @return RasterDisplayElement
    */
-  public static RasterDisplayElement buildRasterDisplayElement( final Feature feature, final RasterSymbolizer sym )
+  public static RasterDisplayElement buildRasterDisplayElement( final Feature feature, final Object geomOrList, final RasterSymbolizer sym )
   {
-    // TODO: instead of giving a null geometry, retrieve a raster class from the feature and give it to the raste
-    // display element.
-    return new RasterDisplayElement_Impl( feature, null, sym );
+    // REMARK: not really necessary at the moment, as the raster symbolizer does nothing with its geometries
+    // maybe it would be better to always reference the gridDomain property and give it to the symbolizer?
+    final GM_Object[] objects = findPoints( geomOrList, EMPTY_GEOMS );
+    if( objects == null )
+      return null;
+
+    return new RasterDisplayElement_Impl( feature, objects, sym );
   }
 }
