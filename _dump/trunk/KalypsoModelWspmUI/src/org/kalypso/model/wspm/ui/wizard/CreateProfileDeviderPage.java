@@ -113,8 +113,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
         if( pt instanceof IValuePropertyType )
         {
           final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          return valueQName.equals( GeometryUtilities.QN_LINE_STRING_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_POLYGON_PROPERTY )
-              || valueQName.equals( GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_MULTI_POLYGON_PROPERTY );
+          return valueQName.equals( GeometryUtilities.QN_LINE_STRING ) || valueQName.equals( GeometryUtilities.QN_POLYGON ) || valueQName.equals( GeometryUtilities.QN_MULTI_LINE_STRING )
+              || valueQName.equals( GeometryUtilities.QN_MULTI_POLYGON );
         }
         return false;
       }
@@ -220,7 +220,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
 
     final String[] markerTypes = provider.getPointProperties();
-    IComponent[] markerComponents = new IComponent[markerTypes.length];
+    final IComponent[] markerComponents = new IComponent[markerTypes.length];
     for( int i = 0; i < markerTypes.length; i++ )
       markerComponents[i] = provider.getPointProperty( markerTypes[i] );
 
@@ -241,7 +241,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     if( dialogSettings != null )
     {
       final String typeName = dialogSettings.get( SETTINGS_DEVIDER );
-      for( IComponent component : markerComponents )
+      for( final IComponent component : markerComponents )
       {
         if( component.getId().equals( typeName ) )
           deviderSelection = new StructuredSelection( component );

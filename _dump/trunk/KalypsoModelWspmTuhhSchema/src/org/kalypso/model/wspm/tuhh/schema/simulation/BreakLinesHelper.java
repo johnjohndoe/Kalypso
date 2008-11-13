@@ -193,7 +193,7 @@ public class BreakLinesHelper implements IWspmConstants
       }
       else
       {
-        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING_PROPERTY );
+        final IMarshallingTypeHandler lineStringTypeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( GeometryUtilities.QN_LINE_STRING );
         final Object cloneObject = lineStringTypeHandler.cloneObject( curve, gmlVersion );
         return (GM_Curve) cloneObject;
       }
