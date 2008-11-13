@@ -85,7 +85,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
- * 
+ *
  * @author Belger
  */
 public class GmlLoader extends AbstractLoader
@@ -201,7 +201,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
       setStatus( StatusUtilities.statusFromThrowable( e ) );
-      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + e.toString(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
