@@ -459,7 +459,7 @@ public class DBaseFile
   {
     switch( m_defaultFileShapeType )
     {
-      // remeber: the geometry classes must be the same
+      // remember: the geometry classes must be the same
       // as the one used by the marshalling type handlers
       case ShapeConst.SHAPE_TYPE_POINT:
         return GeometryUtilities.getPointClass();

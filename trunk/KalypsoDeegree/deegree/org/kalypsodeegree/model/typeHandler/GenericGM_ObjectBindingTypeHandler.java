@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -54,10 +54,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * a generic typehandler for GM_Object geometries based on a bindingtypehandler<br>
+ * a generic type-handler for GM_Object geometries based on a binding-type-handler<br>
  * is wraps binding geometries to GM_Object geometries
- * 
- * @author doemming
+ *
+ * @author Andreas von Dömming
  */
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
@@ -106,7 +106,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
         }
         catch( final Exception e )
         {
-          throw new SAXParseException( e.getLocalizedMessage(), null, e );
+          throw new SAXParseException( e.toString(), null, e );
         }
       }
     };
