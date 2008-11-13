@@ -53,9 +53,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This function property creates 'arrows' from links beetween features.
@@ -108,7 +109,7 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
       final GM_Object[] destGeo = visitor.getGeometryDestinations();
       final List<GM_Curve> curves = new ArrayList<GM_Curve>();
       for( final GM_Object element : destGeo )
-        curves.add( GeometryUtilities.createArrowLineString( srcGeo.getCentroid(), element.getCentroid(), 0.8, 0.01 ) );
+        curves.add( createArrowLineString( srcGeo.getCentroid(), element.getCentroid(), 0.8, 0.01 ) );
       return GeometryFactory.createGM_MultiCurve( curves.toArray( new GM_Curve[curves.size()] ) );
     }
     catch( final GM_Exception e )
@@ -116,6 +117,21 @@ public class FeatureAssociationFunctionProperty extends FeaturePropertyFunction
       e.printStackTrace();
       return null;
     }
+  }
+
+  private static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
+  {
+    final double dx = targetP.getX() - srcP.getX();
+    final double dy = targetP.getY() - srcP.getY();
+
+    final GM_Position p1 = srcP.getPosition();
+    final GM_Position p4 = targetP.getPosition();
+    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
+    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
+    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
+
+    final GM_Position[] pos = new GM_Position[] { p1, p2, p3, p4, p5, p2 };
+    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
   /**
