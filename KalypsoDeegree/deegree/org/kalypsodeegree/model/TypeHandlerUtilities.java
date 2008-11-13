@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -247,16 +247,35 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // Geometries
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POLYGON_PROPERTY, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    // TODO: why QName QN_MULTI_POLYGON in next line?
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_GEOMETRY_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_GEOMETRY, GeometryUtilities.QN_GEOMETRY, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_SURFACE, GeometryUtilities.QN_SURFACE, GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POLYGON, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_POLYGON_PROPERTY, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class,
+    // true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+// // TODO: why QName QN_MULTI_POLYGON in next line?
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_GEOMETRY_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+    // GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
+// registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
 
     // Coverages
 // registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType"

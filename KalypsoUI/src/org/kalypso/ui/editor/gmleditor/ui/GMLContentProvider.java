@@ -68,7 +68,7 @@ public class GMLContentProvider implements ITreeContentProvider
 {
   private final ModellEventListener m_workspaceListener = new ModellEventListener()
   {
-    public void onModellChange( ModellEvent modellEvent )
+    public void onModellChange( final ModellEvent modellEvent )
     {
       handleModelChanged( modellEvent );
     }
@@ -106,7 +106,7 @@ public class GMLContentProvider implements ITreeContentProvider
   /**
    * Full construcotr.<br>
    * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
-   * 
+   *
    * @param handleModelEvents
    *            Only for backwards compability. Should always be set to <code>true</code>.
    */
@@ -118,7 +118,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Gets the children and updates the parent-hash.
-   * 
+   *
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren( final Object parentElement )
@@ -169,6 +169,7 @@ public class GMLContentProvider implements ITreeContentProvider
     final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
     for( final IPropertyType property : properties )
+    {
       if( property instanceof IRelationType )
       {
         final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property );
@@ -183,6 +184,7 @@ public class GMLContentProvider implements ITreeContentProvider
         if( value != null )
           result.add( value );
       }
+    }
   }
 
   private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
