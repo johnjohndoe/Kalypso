@@ -59,7 +59,7 @@ public class MetaDocSerializer
 
   private static final QName QNAME_PROP_SCENARIO = new QName( UrlCatalogPSI.NS_METADOC, "scenarioId" );
 
-  private static final QName QNAME_PROP_REGION = new QName( UrlCatalogPSI.NS_METADOC, TAG_REGION );
+  public static final QName QNAME_PROP_REGION = new QName( UrlCatalogPSI.NS_METADOC, TAG_REGION );
 
   public static final QName QNAME_PROP_CALCCASE = new QName( UrlCatalogPSI.NS_METADOC, "calcCaseName" );
 
@@ -123,9 +123,9 @@ public class MetaDocSerializer
     writer.write( "</" + TAG_FOLDERDATA + ">" );
   }
 
-  private static String formatDate( XMLGregorianCalendar cal )
+  private static String formatDate( final XMLGregorianCalendar cal )
   {
-    Date date = DateUtilities.toDate( cal );
+    final Date date = DateUtilities.toDate( cal );
     if( date == null )
       return "";
 
