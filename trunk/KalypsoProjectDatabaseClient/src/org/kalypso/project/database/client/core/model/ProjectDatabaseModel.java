@@ -50,14 +50,16 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
-import org.kalypso.project.database.client.core.model.local.ILocalProject;
-import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
+import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
+import org.kalypso.project.database.common.model.IProjectDatabaseModel;
+import org.kalypso.project.database.common.model.ProjectHandler;
+import org.kalypso.project.database.common.model.local.ILocalProject;
+import org.kalypso.project.database.common.model.local.ILocalWorkspaceListener;
+import org.kalypso.project.database.common.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -136,7 +138,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       // TODO FIXME this should never happen!
       try
       {
-        if( handler.isLocal() )
+        if( handler.isLocal() && handler.isLocalRemoteProject() )
         {
           /* reset false remote preferences */
           final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
@@ -155,7 +157,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       }
       catch( final CoreException e )
       {
-        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
 
     }

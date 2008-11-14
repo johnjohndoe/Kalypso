@@ -55,7 +55,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.common.model.remote.IRemoteProjectsListener;
 import org.kalypso.util.swt.StatusDialog;
 
 /**
@@ -65,9 +65,11 @@ import org.kalypso.util.swt.StatusDialog;
  */
 public class ProjectDatabaseServerStatusComposite extends Composite implements IRemoteProjectsListener
 {
-  private final Image IMG_SERVER_OK = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_okay.gif" ) );
+  private static final Image IMG_SERVER_WAITING = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_refresh.gif" ) );
 
-  private final Image IMG_SERVER_ERROR = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_error.gif" ) );
+  private static final Image IMG_SERVER_OK = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_okay.gif" ) );
+
+  private static final Image IMG_SERVER_ERROR = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_error.gif" ) );
 
   private final FormToolkit m_toolkit;
 
@@ -80,6 +82,10 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
 
     final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     model.addRemoteListener( this );
+
+    final GridLayout layout = new GridLayout();
+    layout.verticalSpacing = layout.marginWidth = 0;
+    this.setLayout( layout );
 
     update( model.getRemoteConnectionState() );
   }
@@ -99,7 +105,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT );
+    final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT | SWT.BEGINNING );
     img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     img.setUnderlined( false );
 
@@ -109,12 +115,15 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
       img.setImage( IMG_SERVER_OK );
 
     }
+    else if( connectionState.getSeverity() == IStatus.WARNING )
+    {
+      img.setText( "Server Status: aktualisiere" );
+      img.setImage( IMG_SERVER_WAITING );
+    }
     else
     {
-
       img.setText( "Server Status: offline" );
       img.setImage( IMG_SERVER_ERROR );
-
     }
 
     if( connectionState != null )

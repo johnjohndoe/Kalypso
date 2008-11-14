@@ -38,18 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model.local;
+package org.kalypso.project.database.common.interfaces;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import java.util.EventListener;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject
+public interface IProjectDatabaseListener extends EventListener
 {
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
-
-  public IProject getProject( );
+  public void projectModelChanged( );
 }

@@ -1,7 +1,10 @@
 package org.kalypso.model.product;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.model.product.utils.ConfigPropertyUtilities;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -10,9 +13,11 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelProductPlugin extends AbstractUIPlugin
 {
   public static final String ALWAYS_SHOW_INTRO_ON_START = "alwaysShowIntroOnStart";
-  
+
   // The shared instance.
   private static KalypsoModelProductPlugin plugin;
+
+  private FormToolkit m_formToolkit;
 
   /**
    * The constructor.
@@ -29,6 +34,29 @@ public class KalypsoModelProductPlugin extends AbstractUIPlugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+  }
+
+  /**
+   * This function returns the form toolkit for the Planer-Client.
+   * 
+   * @return The form toolkit.
+   */
+  public FormToolkit getToolkit( )
+  {
+    if( m_formToolkit == null )
+      m_formToolkit = new FormToolkit( PlatformUI.getWorkbench().getDisplay() );
+
+    return m_formToolkit;
+  }
+
+  /**
+   * This function returns the form toolkit for the Planer-Client.
+   * 
+   * @return The form toolkit.
+   */
+  public static FormToolkit getFormToolkit( )
+  {
+    return getDefault().getToolkit();
   }
 
   /**
@@ -60,4 +88,15 @@ public class KalypsoModelProductPlugin extends AbstractUIPlugin
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.product", path );
   }
+
+  /**
+   * This function returns true, if the logged on user has expert privileges.
+   * 
+   * @return True, if the user is an expert.
+   */
+  public boolean isExpert( )
+  {
+    return ConfigPropertyUtilities.isExpert();
+  }
+
 }

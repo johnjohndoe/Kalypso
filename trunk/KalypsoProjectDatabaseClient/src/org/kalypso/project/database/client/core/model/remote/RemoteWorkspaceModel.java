@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.common.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -29,7 +30,7 @@ public class RemoteWorkspaceModel
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected IStatus m_connectionState = null;
+  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( "aktualisiere" );
 
   protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
 
@@ -47,6 +48,9 @@ public class RemoteWorkspaceModel
         try
         {
           final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+          if( service == null )
+            return Status.CANCEL_STATUS;
+
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
           if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
           {
@@ -134,8 +138,14 @@ public class RemoteWorkspaceModel
     try
     {
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-      m_beans = service.getAllProjectHeads();
-
+      if( service == null )
+      {
+        m_beans = new KalypsoProjectBean[] {};
+      }
+      else
+      {
+        m_beans = service.getAllProjectHeads();
+      }
     }
     catch( final WebServiceException e )
     {

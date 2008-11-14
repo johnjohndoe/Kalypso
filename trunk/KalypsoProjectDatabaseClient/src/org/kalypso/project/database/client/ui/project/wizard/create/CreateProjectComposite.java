@@ -50,8 +50,10 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
@@ -59,14 +61,15 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
+import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -78,7 +81,9 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class CreateProjectComposite extends Composite
 {
-  private static Image IMG_CREATE = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/create.gif" ) );
+  public static Image IMG_ADD_PROJECT = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/add_project.gif" ) );
+
+  public static Image IMG_EXTRACT_DEMO = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/extract_demo.gif" ) );
 
   private final FormToolkit m_toolkit;
 
@@ -88,6 +93,12 @@ public class CreateProjectComposite extends Composite
 
   protected final String m_remoteCommitType;
 
+  final String m_categoryId;
+
+  private final String m_label;
+
+  private final Image m_img;
+
   /**
    * @param remote
    *          project templates (project type ids) hosted by the project model data service
@@ -96,13 +107,20 @@ public class CreateProjectComposite extends Composite
    * @param remoteCommitType
    *          as which {@link KalypsoProjectBean}.m_projectType will a newly created project committed
    */
-  public CreateProjectComposite( final Composite parent, final FormToolkit toolkit, final String[] remote, final String[] natures, final String remoteCommitType )
+  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final String categoryId, final String[] remote, final String[] natures, final String remoteCommitType, final Image img )
   {
     super( parent, SWT.NULL );
+    m_label = label;
     m_toolkit = toolkit;
+    m_categoryId = categoryId;
     m_remote = remote;
     m_natures = natures;
     m_remoteCommitType = remoteCommitType;
+    m_img = img;
+
+    final GridLayout layout = new GridLayout();
+    layout.verticalSpacing = layout.marginWidth = 0;
+    this.setLayout( layout );
 
     update();
   }
@@ -117,8 +135,8 @@ public class CreateProjectComposite extends Composite
       return;
 
     final ImageHyperlink lnkCreateProject = m_toolkit.createImageHyperlink( this, SWT.NULL );
-    lnkCreateProject.setImage( IMG_CREATE );
-    lnkCreateProject.setText( "Neues Projekt erzeugen" );
+    lnkCreateProject.setImage( m_img );
+    lnkCreateProject.setText( m_label );
 
     lnkCreateProject.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -128,7 +146,6 @@ public class CreateProjectComposite extends Composite
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-
         final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
 
         final ProjectHandler[] projects = model.getProjects( new IProjectDatabaseFilter()
@@ -166,6 +183,15 @@ public class CreateProjectComposite extends Composite
           }
         }
 
+        if( m_categoryId != null )
+        {
+          final ProjectTemplate[] localTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( m_categoryId );
+          for( final ProjectTemplate template : localTemplates )
+          {
+            templates.add( template );
+          }
+        }
+
         final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), m_natures );
         wizard.init( PlatformUI.getWorkbench(), null );
         wizard.setActivateScenarioOnPerformFinish( false );
@@ -199,23 +225,26 @@ public class CreateProjectComposite extends Composite
         } );
 
         dialog.open();
-
-        try
+        if( dialog.getReturnCode() == Window.OK )
         {
-          final IProject project = wizard.getNewProject();
-          final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
-          if( nature instanceof RemoteProjectNature )
+          try
           {
-            final RemoteProjectNature remote = (RemoteProjectNature) nature;
-            final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
-            preferences.setVersion( -1 );
-            preferences.setIsOnServer( Boolean.FALSE );
-            preferences.setProjectType( m_remoteCommitType );
+
+            final IProject project = wizard.getNewProject();
+            final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
+            if( nature instanceof RemoteProjectNature )
+            {
+              final RemoteProjectNature remote = (RemoteProjectNature) nature;
+              final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
+              preferences.setVersion( -1 );
+              preferences.setIsOnServer( Boolean.FALSE );
+              preferences.setProjectType( m_remoteCommitType );
+            }
           }
-        }
-        catch( final CoreException e1 )
-        {
-          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          catch( final CoreException e1 )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          }
         }
 
       }

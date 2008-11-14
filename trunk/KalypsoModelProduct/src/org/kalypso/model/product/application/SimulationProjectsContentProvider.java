@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.application;
+package org.kalypso.model.product.application;
 
 import java.io.PrintWriter;
 

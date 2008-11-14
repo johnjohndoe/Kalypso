@@ -1,6 +1,5 @@
 package org.kalypso.project.database.client;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -31,19 +30,17 @@ public class KalypsoProjectDatabaseClient extends Plugin
         final String namespaceURI = "http://server.database.project.kalypso.org/";
         final String serviceImplName = ProjectDatabase.class.getSimpleName();
 
-        // final String wsdlLocationProperty = System.getProperty(
-        // "kalypso.hwv.observation.service.client.wsdl.location" );
-        // TODO: get from outside
         final String wsdlLocationProperty = System.getProperty( IProjectDataBaseClientConstant.SERVER_WSDL_LOCATION );
         final URL wsdlLocation = new URL( wsdlLocationProperty );
         final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" );
-        final Service service = Service.create( wsdlLocation, serviceName );
 
+        final Service service = Service.create( wsdlLocation, serviceName );
         m_service = service.getPort( new QName( namespaceURI, serviceImplName + "Port" ), IProjectDatabase.class );
+
       }
-      catch( final MalformedURLException e )
+      catch( final Throwable e )
       {
-        e.printStackTrace();
+        // TODO trace option
       }
     }
 

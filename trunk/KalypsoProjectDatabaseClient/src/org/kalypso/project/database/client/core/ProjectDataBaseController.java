@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model;
+package org.kalypso.project.database.client.core;
 
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,10 +46,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker;
 import org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.project.lock.release.ReleaseProjectLockWorker;
+import org.kalypso.project.database.common.model.ProjectHandler;
 
 /**
  * @author Dirk Kuch
