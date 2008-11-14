@@ -4,17 +4,17 @@ Bundle-Name: KalypsoProjectDatabaseClient Plug-in
 Bundle-SymbolicName: org.kalypso.project.database.client
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.project.database.client.KalypsoProjectDatabaseClient
-Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.forms,
- org.kalypso.contribs.eclipseplatform;bundle-version="1.0.0",
+Require-Bundle: org.kalypso.project.database;bundle-version="1.0.0";visibility:=reexport,
+ org.eclipse.ui;bundle-version="3.4.1",
+ org.eclipse.ui.forms;bundle-version="3.3.101",
+ org.eclipse.core.resources;bundle-version="3.4.1",
+ org.eclipse.core.runtime;bundle-version="3.4.0",
+ org.kalypso.contribs.eclipsercp;bundle-version="1.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
- org.eclipse.core.resources,
- org.kalypso.ui;bundle-version="1.0.0",
- org.kalypso.project.database;bundle-version="1.0.0"
+ org.kalypso.ui;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
- org.kalypso.project.database.client.core.interfaces,
  org.kalypso.project.database.client.core.model,
  org.kalypso.project.database.client.ui.project.list,
  org.kalypso.project.database.client.ui.project.status,

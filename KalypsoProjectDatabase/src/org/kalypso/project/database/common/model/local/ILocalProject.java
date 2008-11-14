@@ -38,12 +38,18 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model;
+package org.kalypso.project.database.common.model.local;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public interface IProjectDatabaseModel
+public interface ILocalProject
 {
+  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
 
+  public IProject getProject( );
 }

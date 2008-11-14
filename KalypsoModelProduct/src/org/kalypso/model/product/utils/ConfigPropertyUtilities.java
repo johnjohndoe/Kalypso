@@ -38,20 +38,47 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.interfaces;
+package org.kalypso.model.product.utils;
 
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
 /**
- * Model Database Filter
+ * Utility class, which helps retrieving system/platform properties.
  * 
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-public interface IProjectDatabaseFilter
+@SuppressWarnings("restriction")
+public class ConfigPropertyUtilities
 {
-  /**
-   * add this element?
-   */
-  boolean select( ProjectHandler handler );
 
+  /**
+   * The property for the rights of the user.
+   */
+  public static final String PROPERTY_EXPERT = "org.kalypso.model.product.expert";
+
+  /**
+   * The default value of the property for the rights of the user.
+   */
+  public static final String PROPERTY_DEFAULT_EXPERT = "false";
+
+  private ConfigPropertyUtilities( )
+  {
+  }
+
+  /**
+   * This function returns true, if the user should have expert privileges.
+   * 
+   * @return True, if the user should be an expert.
+   */
+  public static boolean isExpert( )
+  {
+    /* Get the property. */
+    final String expert = FrameworkProperties.getProperty( PROPERTY_EXPERT, PROPERTY_DEFAULT_EXPERT );
+
+    /* If it is not set or set to false, the user has no expert rights. */
+    if( expert == null || expert.equalsIgnoreCase( "false" ) )
+      return false;
+
+    return true;
+  }
 }

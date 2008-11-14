@@ -54,15 +54,15 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.core.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalRemoteProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.LocalServerProjectRowBuilder;
 import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjectRowBuilder;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
+import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
+import org.kalypso.project.database.common.model.ProjectHandler;
 
 /**
  * Composite for rendering and handling remote and local projects

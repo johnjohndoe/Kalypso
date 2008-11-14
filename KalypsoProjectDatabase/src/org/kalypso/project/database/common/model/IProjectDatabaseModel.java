@@ -38,14 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.interfaces;
-
-import java.util.EventListener;
+package org.kalypso.project.database.common.model;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IProjectDatabaseListener extends EventListener
+public interface IProjectDatabaseModel
 {
-  public void projectModelChanged( );
+
 }

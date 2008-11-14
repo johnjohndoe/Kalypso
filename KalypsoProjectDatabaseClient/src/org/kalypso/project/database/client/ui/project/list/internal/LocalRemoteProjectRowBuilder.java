@@ -51,8 +51,8 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.common.model.ProjectHandler;
 
 /**
  * UI builder for projects, which can be committed ( nature

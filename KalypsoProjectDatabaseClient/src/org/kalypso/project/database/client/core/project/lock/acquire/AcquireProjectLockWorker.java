@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
