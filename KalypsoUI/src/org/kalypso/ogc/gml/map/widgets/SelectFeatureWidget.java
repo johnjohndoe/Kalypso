@@ -44,6 +44,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -51,6 +53,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -86,7 +89,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * ADD (on via pressed 'SHIFT' key):<br>
  * the new selection is added to the current selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
  * If pressed selection is done by using INTERSECT-method.
- * 
+ *
  * @author Thomas Jung
  */
 public class SelectFeatureWidget extends AbstractWidget
@@ -334,21 +337,21 @@ public class SelectFeatureWidget extends AbstractWidget
         m_addMode = true;
         break;
 
-        // "STRG": Toggle mode
+      // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-        // "ALT": switch between intersect / contains mode
+      // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-        // "SPACE": switch between polygon / rect mode
+      // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder( mapPanel );
         break;
-        // "ESC": deselection
+      // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_selectionTypeDelegate.reset();
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -455,7 +458,7 @@ public class SelectFeatureWidget extends AbstractWidget
 
       final QName geomQName = findGeomQName( featureList, m_geomQName );
 
-      final List<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQName, m_intersectMode );
+      final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQName, m_intersectMode );
       if( selectedSubList != null )
         selectedFeatures.addAll( selectedSubList );
     }
@@ -516,35 +519,39 @@ public class SelectFeatureWidget extends AbstractWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  @SuppressWarnings("unchecked")
-  private List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
+  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
   {
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final Collection<Feature> selectedFeatures = new HashSet<Feature>();
 
+    // why the check here?
     if( selectGeometry instanceof GM_Surface )
     {
-      final GM_Surface surface = (GM_Surface) selectGeometry;
-
-      final GM_Envelope envelope = surface.getEnvelope();
+      final GM_Envelope envelope = selectGeometry.getEnvelope();
       final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-      final List result = featureList.query( envelope, null );
+      final List< ? > result = featureList.query( envelope, null );
 
       for( final Object object : result )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );
+        final IFeatureType featureType = feature.getFeatureType();
 
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), qnamesToSelect ) )
+        if( GMLSchemaUtilities.substitutes( featureType, qnamesToSelect ) )
         {
-          final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
+          final IPropertyType pt = featureType.getProperty( geomQName );
+          final Object property = feature.getProperty( pt );
 
-          if( geom != null && intersectMode == true )
+          if( pt.isList() )
           {
-            if( surface.intersects( geom ) )
-              selectedFeatures.add( feature );
+            final List<?> list = (List< ? >) property;
+            for( final Object elmt : list )
+            {
+              if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
+                selectedFeatures.add( feature );
+            }
           }
           else
           {
-            if( surface.contains( geom ) )
+            if( intersects( selectGeometry, (GM_Object) property, intersectMode ) )
               selectedFeatures.add( feature );
           }
         }
@@ -552,6 +559,17 @@ public class SelectFeatureWidget extends AbstractWidget
     }
 
     return selectedFeatures;
+  }
+
+  private boolean intersects( final GM_Object selectGeom, final GM_Object geom, final boolean intersectMode )
+  {
+    if( geom == null )
+      return false;
+
+    if( intersectMode == true )
+      return selectGeom.intersects( geom );
+
+    return selectGeom.contains( geom );
   }
 
   /**
