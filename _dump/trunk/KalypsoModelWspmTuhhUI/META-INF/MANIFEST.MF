@@ -8,6 +8,7 @@ Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.chart,
+ org.kalypso.model.wspm.tuhh.ui.extension,
  org.kalypso.model.wspm.tuhh.ui.resolutions,
  org.kalypso.model.wspm.tuhh.ui.rules
 Require-Bundle: org.kalypso.model.wspm.core,
@@ -18,5 +19,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.schema,
  de.openali.odysseus.chart.ui,
  org.kalypso.simulation.core,
- de.openali.odysseus.chart.ext.base
+ de.openali.odysseus.chart.ext.base,
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
+ org.kalypso.project.database;bundle-version="1.0.0"
 Eclipse-LazyStart: true

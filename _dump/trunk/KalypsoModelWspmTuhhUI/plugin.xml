@@ -191,12 +191,6 @@
       </perspectiveExtension>
    </extension>
    <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.kalypso.model.product.configId"
-            content="content/ext.xml"/>
-   </extension>
-   <extension
          point="org.kalypso.model.wspm.core.profileFeatureProvider">
       <profileFeatureProvider
             class="org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentProfileFeatureProvider"
@@ -259,5 +253,11 @@
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
                name="Marker löschen">
          </reparator>
+      </extension>
+      <extension
+            point="org.kalypso.ModelSimulationBase.kalypsoModule">
+         <module
+               module="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
+         </module>
       </extension>
 </plugin>
