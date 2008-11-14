@@ -11,8 +11,10 @@ Require-Bundle:
  org.kalypso.ui.addlayer,
  de.renew.workflow.model,
  de.renew.workflow.connector,
- org.kalypso.model.wspm.schema;bundle-version="0.0.1";visibility:=reexport
-Export-Package: org.kalypso.kalypsosimulationmodel.core,
+ org.kalypso.model.wspm.schema;bundle-version="0.0.1";visibility:=reexport,
+ org.kalypso.project.database;bundle-version="1.0.0"
+Export-Package: org.kalypso.kalypsosimulationmodel,
+ org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.discr,
  org.kalypso.kalypsosimulationmodel.core.flowrel,
  org.kalypso.kalypsosimulationmodel.core.flowresistance,
@@ -20,8 +22,10 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.core.resultmeta,
  org.kalypso.kalypsosimulationmodel.core.roughness,
  org.kalypso.kalypsosimulationmodel.core.terrainmodel,
+ org.kalypso.kalypsosimulationmodel.extension,
  org.kalypso.kalypsosimulationmodel.schema,
  org.kalypso.kalypsosimulationmodel.utils,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 
 Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Activator: org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase

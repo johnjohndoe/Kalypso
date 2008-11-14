@@ -276,12 +276,6 @@
 	</extension>
 
    <extension
-           point="org.eclipse.ui.intro.configExtension">
-        <configExtension
-              configId="org.kalypso.model.product.configId"
-              content="content/ext.xml"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewer
             viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
@@ -417,5 +411,11 @@
             label="Leere Vorlage"
             projectName=" ">
       </project>
+   </extension>
+   <extension
+         point="org.kalypso.ModelSimulationBase.kalypsoModule">
+      <module
+            module="org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule">
+      </module>
    </extension>
 </plugin>

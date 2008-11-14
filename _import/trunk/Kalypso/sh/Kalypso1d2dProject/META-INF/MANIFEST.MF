@@ -20,10 +20,11 @@ Require-Bundle: org.junit4,
  de.renew.workflow.connector,
  org.kalypso.model.wspm.ui,
  org.kalypso.model1d2d,
-  org.kalypso.simulation.core,
+ org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
  de.openali.odysseus.chart.factory,
- de.openali.odysseus.chart.ui
+ de.openali.odysseus.chart.ui,
+ org.kalypso.project.database;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.ui.wizards.imports,
  org.kalypso.ui.wizards.imports.baseMap,

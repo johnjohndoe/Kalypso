@@ -2,12 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.kalypso.model.product.configId"
-            content="content/ext.xml"/>
-   </extension>
-   <extension
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
             class="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
@@ -375,5 +369,11 @@
             label="Leere Vorlage"
             projectName="">
       </project>
+   </extension>
+   <extension
+         point="org.kalypso.ModelSimulationBase.kalypsoModule">
+      <module
+            module="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
+      </module>
    </extension>
 </plugin>
