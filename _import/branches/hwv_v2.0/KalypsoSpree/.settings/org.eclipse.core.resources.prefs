@@ -1,4 +1,4 @@
-#Thu Sep 18 21:13:09 WAT 2008
+#Tue Nov 11 10:28:06 CET 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/\#ToDo.txt=UTF-8
 encoding//.model/observationConf/OmbrometerMapping.gml=UTF-8
@@ -74,6 +74,12 @@ encoding//.prognose/Spielwiese/.calculation=UTF-8
 encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
 encoding//.prognose/Stand\ WAVOS\ FK/.calculation=UTF-8
 encoding//.prognose/Stand_SchwarzeElster_11_2006/.calculation=UTF-8
+encoding//.prognose/Stand_SchwarzeElster_11_2006/Zeitreihen/W_BAUTZWB.zml=UTF-8
+encoding//.prognose/Stand_SchwarzeElster_11_2006/Zeitreihen/W_BOXBRG.zml=UTF-8
+encoding//.prognose/Stand_SchwarzeElster_11_2006/calcCase.gml=UTF-8
+encoding//.prognose/TestGebietsniederschlag/.calculation=UTF-8
+encoding//.prognose/TestGebietsniederschlag/ombrometer.gml=UTF-8
+encoding//.prognose/TestGebietsniederschlag/rainfallCatchment.gml=UTF-8
 encoding//.prognose/TestGnm/.calculation=UTF-8
 encoding//.prognose/TestGnm/calcCase.gml=UTF-8
 encoding//.prognose/TestGnm/ombrometer.gml=UTF-8
