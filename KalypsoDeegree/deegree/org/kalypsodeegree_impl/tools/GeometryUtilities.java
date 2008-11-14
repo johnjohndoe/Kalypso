@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -61,6 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -763,19 +765,23 @@ public class GeometryUtilities
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName, final QName[] allowedQNames )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+    final List< ? > foundElements = modelList.query( reqEnvelope, null );
 
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    for( final Feature feature : foundElements )
+    final Feature parentFeature = modelList.getParentFeature();
+    final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
+    for( final Object object : foundElements )
     {
+      final Feature feature = FeatureHelper.getFeature( workspace, object );
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
-        final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
+        final Object property = feature.getProperty( geoQName );
 
-        if( geom != null )
+        if( property instanceof GM_Object )
         {
+          final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
           final double curDist = point.distance( geom );
           if( min > curDist && curDist <= grabDistance )
           {
