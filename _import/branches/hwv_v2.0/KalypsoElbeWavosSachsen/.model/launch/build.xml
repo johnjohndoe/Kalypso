@@ -148,11 +148,11 @@
 
     		<!-- Ablage W, ohne Rundung (Filter für W und Q gleich?) -->
     			<property name="filterCommitPrognoseW"
-    					value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    					value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;  /&gt;&lt;/filter&gt;" />
     			
     		<!-- Ablage Q, ohne Rundung -->
     		<property name="filterCommitPrognoseQ"
-    				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;  /&gt;&lt;/filter&gt;" />
 
     	
     	<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
