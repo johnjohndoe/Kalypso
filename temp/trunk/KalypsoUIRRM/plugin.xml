@@ -28,12 +28,6 @@
             name="RRM-Style-Catalog"/>
    </extension>
    <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.kalypso.model.product.configId"
-            content="content/ext.xml"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
@@ -44,5 +38,11 @@
             id="org.kalypso.ui.rrm.wizards.NewProjectImportAsciiWizard"
             name="NA-Model Projekt aus Ascii File Projekt"
             project="true"/>
+   </extension>
+   <extension
+         point="org.kalypso.ModelSimulationBase.kalypsoModule">
+      <module
+            module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
+      </module>
    </extension>
 </plugin>
