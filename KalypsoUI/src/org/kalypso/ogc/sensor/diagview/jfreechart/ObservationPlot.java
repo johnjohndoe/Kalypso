@@ -88,7 +88,6 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -174,7 +173,7 @@ public class ObservationPlot extends XYPlot
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
 
-    setNoDataMessage( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1") ); //$NON-NLS-1$
+    setNoDataMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
 
     setTimezone( view.getTimezone() );
   }
@@ -200,40 +199,39 @@ public class ObservationPlot extends XYPlot
     try
     {
       final String dataType = diagAxis.getDataType();
-      final TimeZone timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+      final TimeZone timezone = m_timezone;
 
       if( "date".equals( dataType ) )
       {
         // HACK: instantiation is not possible via factroy, as the search for the constructor is buggy there...
         vAxis = new DateAxis( diagAxis.toFullString(), timezone );
-        final DateAxis da = (DateAxis)vAxis;
+        final DateAxis da = (DateAxis) vAxis;
 
-        //      REMARK: the next line is necessary, as the constructor with timezone does
+        // REMARK: the next line is necessary, as the constructor with timezone does
         // not initalize the timeline (freechart bug!)
         da.setTimeline( new DefaultTimeline() );
         // Create standard source with correct timezone
         final TickUnitSource source = createStandardDateTickUnits( timezone );
         da.setStandardTickUnits( source );
-        //        da.setDateFormatOverride( TimeserieUtils.getDateFormat() );
       }
       else
-        vAxis = (ValueAxis)OF.getObjectInstance( dataType, ValueAxis.class, new Object[]
-        { diagAxis.toFullString() } );
+        vAxis = (ValueAxis) OF.getObjectInstance( dataType, ValueAxis.class, new Object[] { diagAxis.toFullString() } );
 
       // HACK: damit immer zu mindest [0,1] als range gesetzt wird
       // z.Zt. nur für Niederschlag.
       if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis == null ? null : axis.getType() ) )
       {
-        final NumberAxis na = (NumberAxis)vAxis;
+        final NumberAxis na = (NumberAxis) vAxis;
         na.setAutoRangeMinimumSize( 1 );
 
         if( na instanceof NumberAxis2 )
         {
-          final NumberAxis2 na2 = (NumberAxis2)na;
+          final NumberAxis2 na2 = (NumberAxis2) na;
           na2.setMin( new Double( 0 ) );
           na2.setMax( new Double( 1 ) );
         }
-      }    }
+      }
+    }
     catch( final FactoryException e )
     {
       throw new SensorException( e );
@@ -390,7 +388,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2") + curve + Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2" ) + curve + Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
@@ -482,7 +480,7 @@ public class ObservationPlot extends XYPlot
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.4"), e ); //$NON-NLS-1$
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.4" ), e ); //$NON-NLS-1$
             }
           }
         }
@@ -679,7 +677,7 @@ public class ObservationPlot extends XYPlot
         final double yy = axis.valueToJava2D( vac.alarm.value, dataArea, RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea.getMaxX(), yy );
         // always set stroke, else we got the stroke from the last drawn line
-        g2.setStroke( AlarmLevelPlotElement.STROKE_ALARM ); 
+        g2.setStroke( AlarmLevelPlotElement.STROKE_ALARM );
         g2.setPaint( vac.alarm.color );
         g2.draw( line );
 
@@ -713,7 +711,7 @@ public class ObservationPlot extends XYPlot
 
     if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
       return new XYBarRenderer();
-    
+
     return new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
   }
 
@@ -747,31 +745,30 @@ public class ObservationPlot extends XYPlot
   /**
    * Special tick units for kalypso
    */
-  public static TickUnitSource createStandardDateTickUnits( TimeZone zone )
+  public static TickUnitSource createStandardDateTickUnits( final TimeZone zone )
   {
-
     if( zone == null )
     {
       throw new IllegalArgumentException( "Null 'zone' argument." );
     }
-    TickUnits units = new TickUnits();
+    final TickUnits units = new TickUnits();
 
     // date formatters
-    //      DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
-    //      DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
-    //      DateFormat f3 = new SimpleDateFormat("HH:mm");
-    //      DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
-    //      DateFormat f5 = new SimpleDateFormat("d-MMM");
-    //      DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
-    //      DateFormat f7 = new SimpleDateFormat("yyyy");
+    // DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
+    // DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
+    // DateFormat f3 = new SimpleDateFormat("HH:mm");
+    // DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
+    // DateFormat f5 = new SimpleDateFormat("d-MMM");
+    // DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
+    // DateFormat f7 = new SimpleDateFormat("yyyy");
 
-    DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
-    DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
-    DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
-    DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
-    DateFormat f5 = new SimpleDateFormat( "dd.MM" );
-    DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
-    DateFormat f7 = new SimpleDateFormat( "yyyy" );
+    final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
+    final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
+    final DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
+    final DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
+    final DateFormat f5 = new SimpleDateFormat( "dd.MM" );
+    final DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
+    final DateFormat f7 = new SimpleDateFormat( "yyyy" );
 
     f1.setTimeZone( zone );
     f2.setTimeZone( zone );
@@ -864,15 +861,15 @@ public class ObservationPlot extends XYPlot
 
     public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
-      this.alarm = al;
-      this.label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-      this.axis = diagAxis;
-      //      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
+      alarm = al;
+      label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      axis = diagAxis;
+      // this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
       annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
       annotation.setAngle( Math.toRadians( 340 ) );
       annotation.setArrowLength( 10.0 );
       annotation.setLabelOffset( 30 );
-      //      annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
+      // annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
       annotation.setArrowPaint( al.color );
       annotation.setPaint( al.color );
     }
@@ -880,7 +877,7 @@ public class ObservationPlot extends XYPlot
     @Override
     public String toString( )
     {
-      return getClass().getName() + ": " + this.label + " " + this.alarm + " " + this.axis.getLabel(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return getClass().getName() + ": " + label + " " + alarm + " " + axis.getLabel(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
@@ -906,9 +903,15 @@ public class ObservationPlot extends XYPlot
     if( axis instanceof DateAxis )
     {
       final DateAxis da = (DateAxis) axis;
-      final DateFormat df = da.getDateFormatOverride() != null ? da.getDateFormatOverride() : DateFormat.getDateTimeInstance();
-      df.setTimeZone( m_timezone );
-      da.setDateFormatOverride( df );
+      final DateFormat df = da.getDateFormatOverride() == null ? null : da.getDateFormatOverride();
+      if( df != null )
+      {
+        df.setTimeZone( m_timezone );
+        da.setDateFormatOverride( df );
+      }
+      
+      final TickUnitSource source = createStandardDateTickUnits( m_timezone );
+      da.setStandardTickUnits( source );
     }
   }
 }
