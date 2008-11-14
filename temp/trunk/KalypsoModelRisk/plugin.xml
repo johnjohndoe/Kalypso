@@ -18,13 +18,6 @@
       </requires-nature>
    </extension>
    <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.kalypso.model.product.configId"
-            content="content/ext.xml">
-      </configExtension>
-   </extension>
-   <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
             definition="etc/workflow.xml"
@@ -240,5 +233,11 @@
                      simulationClass="org.kalypso.risk.model.simulation.RiskCalcJob"
                      typeID="KalypsoRisk">
                </simulation>
+            </extension>
+            <extension
+                  point="org.kalypso.ModelSimulationBase.kalypsoModule">
+               <module
+                     module="org.kalypso.risk.extension.KalypsoRiskModule">
+               </module>
             </extension>
 </plugin>
