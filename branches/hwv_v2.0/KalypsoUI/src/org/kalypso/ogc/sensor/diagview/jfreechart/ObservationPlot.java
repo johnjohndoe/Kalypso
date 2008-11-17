@@ -103,6 +103,7 @@ import org.kalypso.ogc.sensor.diagview.DiagViewCurve.AlarmLevel;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * A plot for IObservation.
@@ -163,19 +164,19 @@ public class ObservationPlot extends XYPlot
     // standard renderer
     setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
 
+    final TimeZone viewzone = view.getTimezone();
+    final TimeZone timezone = viewzone == null ? KalypsoGisPlugin.getDefault().getDisplayTimeZone() : viewzone;
+    setTimezone( timezone );
+
     final DiagramAxis[] diagAxes = view.getDiagramAxes();
     for( final DiagramAxis diagAxis : diagAxes )
-    {
       addDiagramAxis( diagAxis, null );
-    }
 
     final ObsViewItem[] curves = view.getItems();
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
 
     setNoDataMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
-
-    setTimezone( view.getTimezone() );
   }
 
   public void dispose( )
@@ -909,7 +910,7 @@ public class ObservationPlot extends XYPlot
         df.setTimeZone( m_timezone );
         da.setDateFormatOverride( df );
       }
-      
+
       final TickUnitSource source = createStandardDateTickUnits( m_timezone );
       da.setStandardTickUnits( source );
     }
