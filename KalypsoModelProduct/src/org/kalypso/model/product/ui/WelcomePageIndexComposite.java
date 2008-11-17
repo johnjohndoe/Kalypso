@@ -95,21 +95,6 @@ public class WelcomePageIndexComposite extends Composite
     headerIconData.heightHint = headerIconData.minimumHeight = 110;
     headerIcon.setLayoutData( headerIconData );
 
-    headerIcon.addText( "Module", MyFonts.WELCOME_PAGE_HEADING, MyColors.COLOR_WELCOME_PAGE_HEADING, new IHyperCanvasSizeHandler()
-    {
-      @Override
-      public int getX( )
-      {
-        return 5;
-      }
-
-      @Override
-      public int getY( )
-      {
-        return 80 / 2;
-      }
-    } );
-
     /* main canvas */
     final HyperCanvas mainCanvas = new HyperCanvas( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -129,7 +114,7 @@ public class WelcomePageIndexComposite extends Composite
           final Point canvasSize = mainCanvas.getSize();
 
           // fixed start position
-          final int x = canvasSize.x / 2 - canvasSize.x / 4;
+          final int x = canvasSize.x / 2 - canvasSize.x / 8;
           return x;
         }
 

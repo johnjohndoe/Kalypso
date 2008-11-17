@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.create;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
@@ -61,18 +56,13 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
-import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Composite for calling the new project wizard
@@ -87,35 +77,22 @@ public class CreateProjectComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  protected final String[] m_remote;
-
-  protected final String[] m_natures;
-
-  protected final String m_remoteCommitType;
-
-  final String m_categoryId;
-
   private final String m_label;
 
   private final Image m_img;
 
-  /**
-   * @param remote
-   *          project templates (project type ids) hosted by the project model data service
-   * @param natures
-   *          natures which will be added to the new create project
-   * @param remoteCommitType
-   *          as which {@link KalypsoProjectBean}.m_projectType will a newly created project committed
-   */
-  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final String categoryId, final String[] remote, final String[] natures, final String remoteCommitType, final Image img )
+  protected final INewProjectWizard m_wizard;
+
+  protected final String m_remoteCommitType;
+
+  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final INewProjectWizard wizard, final String commitType, final Image img )
   {
     super( parent, SWT.NULL );
+
     m_label = label;
     m_toolkit = toolkit;
-    m_categoryId = categoryId;
-    m_remote = remote;
-    m_natures = natures;
-    m_remoteCommitType = remoteCommitType;
+    m_wizard = wizard;
+    m_remoteCommitType = commitType;
     m_img = img;
 
     final GridLayout layout = new GridLayout();
@@ -146,57 +123,10 @@ public class CreateProjectComposite extends Composite
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+        m_wizard.init( PlatformUI.getWorkbench(), null );
+        m_wizard.setActivateScenarioOnPerformFinish( false );
 
-        final ProjectHandler[] projects = model.getProjects( new IProjectDatabaseFilter()
-        {
-          @Override
-          public boolean select( final ProjectHandler handler )
-          {
-            if( !handler.isRemote() )
-              return false;
-
-            final KalypsoProjectBean bean = handler.getBean();
-            final String type = bean.getProjectType();
-
-            return ArrayUtils.contains( m_remote, type );
-          }
-        } );
-
-        final List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
-
-        for( final ProjectHandler handler : projects )
-        {
-          if( handler.isRemote() )
-          {
-            try
-            {
-              final KalypsoProjectBean bean = handler.getBean();
-              final ProjectTemplate template = new ProjectTemplate( bean.getName(), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
-
-              templates.add( template );
-            }
-            catch( final MalformedURLException e1 )
-            {
-              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-            }
-          }
-        }
-
-        if( m_categoryId != null )
-        {
-          final ProjectTemplate[] localTemplates = EclipsePlatformContributionsExtensions.getProjectTemplates( m_categoryId );
-          for( final ProjectTemplate template : localTemplates )
-          {
-            templates.add( template );
-          }
-        }
-
-        final WizardCreateProject wizard = new WizardCreateProject( templates.toArray( new ProjectTemplate[] {} ), m_natures );
-        wizard.init( PlatformUI.getWorkbench(), null );
-        wizard.setActivateScenarioOnPerformFinish( false );
-
-        final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), m_wizard );
         dialog.setRememberSize( true );
 
         dialog.addPageChangedListener( new IPageChangedListener()
@@ -211,7 +141,7 @@ public class CreateProjectComposite extends Composite
               final IUpdateable update = (IUpdateable) page;
               update.update();
             }
-            else if( page instanceof WizardNewProjectCreationPage )
+            else if( m_wizard instanceof WizardCreateProject && page instanceof WizardNewProjectCreationPage )
             {
               if( resetProjectName )
               {
@@ -229,8 +159,7 @@ public class CreateProjectComposite extends Composite
         {
           try
           {
-
-            final IProject project = wizard.getNewProject();
+            final IProject project = m_wizard.getNewProject();
             final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
             if( nature instanceof RemoteProjectNature )
             {

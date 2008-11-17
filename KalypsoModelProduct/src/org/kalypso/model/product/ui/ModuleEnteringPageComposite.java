@@ -56,11 +56,11 @@ import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModulePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.ILocalProjectTemplateDescription;
-import org.kalypso.kalypsosimulationmodel.extension.IRemoteProjectTemplateDescription;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
+import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.list.ProjectDatabaseComposite;
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 import org.kalypso.project.database.client.ui.project.wizard.create.CreateProjectComposite;
@@ -162,7 +162,6 @@ public class ModuleEnteringPageComposite extends Composite
 
   private void renderListOfProjects( final Composite body, final FormToolkit toolkit )
   {
-
     // list of projects
     final ScrolledSection sectionProjects = new ScrolledSection( body, toolkit, ExpandableComposite.TITLE_BAR, true );
     final Composite bodyProjects = sectionProjects.setup( "Projekte:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -177,18 +176,23 @@ public class ModuleEnteringPageComposite extends Composite
     projects.setLayout( new GridLayout() );
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
-    final IRemoteProjectTemplateDescription remote = m_enteringPage.getRemoteProjectTemplateDescription();
-    final ILocalProjectTemplateDescription local = m_enteringPage.getLocalProjectTemplateDescription();
+    final String remoteCommitType = m_enteringPage.getRemoteCommitType();
+    final INewProjectWizard wizardProject = m_enteringPage.getProjectWizard();
+    final INewProjectWizard wizardDemoProject = m_enteringPage.getDemoProjectWizard();
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, local.getCategoryId(), remote.getRemoteTemlateIds(), remote.getNaturesToBeAdded(), remote.getCommitType(), CreateProjectComposite.IMG_ADD_PROJECT );
+    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, wizardProject, remoteCommitType, CreateProjectComposite.IMG_ADD_PROJECT );
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
-    final IRemoteProjectTemplateDescription remoteDemo = m_enteringPage.getRemoteDemoTemplateDescription();
+    if( wizardDemoProject != null )
+    {
+      final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, wizardDemoProject, remoteCommitType, CreateProjectComposite.IMG_EXTRACT_DEMO );
+      demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    }
 
-    final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, local.getDemoCategoryId(), remoteDemo.getRemoteTemlateIds(), remoteDemo.getNaturesToBeAdded(), remoteDemo.getCommitType(), CreateProjectComposite.IMG_EXTRACT_DEMO );
-    demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-    final ProjectDatabaseServerStatusComposite status = new ProjectDatabaseServerStatusComposite( bodyProjects, toolkit );
-    status.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    if( ProjectDatabaseServerUtils.handleRemoteProject() )
+    {
+      final ProjectDatabaseServerStatusComposite status = new ProjectDatabaseServerStatusComposite( bodyProjects, toolkit );
+      status.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    }
   }
 }

@@ -42,6 +42,7 @@ package org.kalypso.project.database.client.core.utils;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -66,6 +67,17 @@ public class ProjectDatabaseServerUtils
     {
       return false;
     }
+  }
+
+  public static boolean handleRemoteProject( )
+  {
+    final String property = System.getProperty( IProjectDataBaseClientConstant.HANDLE_REMOTE_PROJECTS );
+    if( property != null && Boolean.valueOf( property ) == true )
+    {
+      return true;
+    }
+
+    return false;
   }
 
   public static boolean isUpdateAvailable( final ProjectHandler handler )
