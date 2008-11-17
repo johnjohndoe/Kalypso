@@ -11,11 +11,13 @@ Require-Bundle: org.kalypso.project.database;bundle-version="1.0.0";visibility:=
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.kalypso.contribs.eclipsercp;bundle-version="1.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
- org.kalypso.ui;bundle-version="1.0.0"
+ org.kalypso.ui;bundle-version="1.0.0",
+ org.kalypso.ModelSimulationBase;bundle-version="0.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core.model,
+ org.kalypso.project.database.client.core.utils,
  org.kalypso.project.database.client.ui.project.list,
  org.kalypso.project.database.client.ui.project.status,
  org.kalypso.project.database.client.ui.project.wizard.create

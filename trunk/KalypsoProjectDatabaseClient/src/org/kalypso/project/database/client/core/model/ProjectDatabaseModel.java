@@ -53,6 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.KalypsoProjectDatabase;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
+import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.common.model.IProjectDatabaseModel;
@@ -70,7 +71,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 {
   private LocalWorkspaceModel m_local;
 
-  private RemoteWorkspaceModel m_remote;
+  private RemoteWorkspaceModel m_remote = null;
 
   private Set<ProjectHandler> m_projects = null;
 
@@ -91,14 +92,20 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_local = new LocalWorkspaceModel();
     m_local.addListener( this );
 
-    m_remote = new RemoteWorkspaceModel();
-    m_remote.addListener( this );
+    if( ProjectDatabaseServerUtils.handleRemoteProject() )
+    {
+      m_remote = new RemoteWorkspaceModel();
+      m_remote.addListener( this );
+    }
+
   }
 
   public void dispose( )
   {
     m_local.dispose();
-    m_remote.dispose();
+
+    if( m_remote != null )
+      m_remote.dispose();
   }
 
   private void buildProjectList( )
@@ -108,13 +115,17 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     final Map<String, ProjectHandler> projects = new HashMap<String, ProjectHandler>();
 
     final ILocalProject[] local = m_local.getProjects();
-    final KalypsoProjectBean[] remote = m_remote.getBeans();
 
-    for( final KalypsoProjectBean bean : remote )
+    if( m_remote != null )
     {
-      final ProjectHandler handler = new ProjectHandler();
-      handler.setBean( bean );
-      projects.put( bean.getUnixName(), handler );
+      final KalypsoProjectBean[] remote = m_remote.getBeans();
+
+      for( final KalypsoProjectBean bean : remote )
+      {
+        final ProjectHandler handler = new ProjectHandler();
+        handler.setBean( bean );
+        projects.put( bean.getUnixName(), handler );
+      }
     }
 
     for( final ILocalProject project : local )
@@ -208,7 +219,8 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   public void addRemoteListener( final IRemoteProjectsListener listener )
   {
-    m_remote.addListener( listener );
+    if( m_remote != null )
+      m_remote.addListener( listener );
   }
 
   public void removeListener( final IProjectDatabaseListener listener )
@@ -232,12 +244,16 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   public void setRemoteProjectsDirty( )
   {
-    m_remote.setDirty();
+    if( m_remote != null )
+      m_remote.setDirty();
   }
 
   public IStatus getRemoteConnectionState( )
   {
-    return m_remote.getRemoteConnectionState();
+    if( m_remote != null )
+      return m_remote.getRemoteConnectionState();
+
+    return StatusUtilities.createWarningStatus( "Laufzeiteinstellung verhindert Behandlung von Remote-Projekten" );
   }
 
   /**

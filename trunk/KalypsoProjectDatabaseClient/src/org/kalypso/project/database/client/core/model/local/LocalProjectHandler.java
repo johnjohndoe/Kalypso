@@ -53,7 +53,7 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class LocalProjectHandler implements ILocalProject, IPreferenceChangeListener
 {

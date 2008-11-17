@@ -7,4 +7,6 @@ public interface IProjectDataBaseClientConstant
   public static String CLIENT_WRITEABLE_PATH = "org.kalypso.project.database.client.writeable.path";
 
   public static String SERVER_WSDL_LOCATION = "org.kalypso.project.database.server.wsdl";
+
+  public static String HANDLE_REMOTE_PROJECTS = "org.kalypso.project.database.server.handle.remote";
 }
