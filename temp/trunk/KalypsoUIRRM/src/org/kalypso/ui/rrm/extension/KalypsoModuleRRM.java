@@ -14,10 +14,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.ILocalProjectTemplateDescription;
-import org.kalypso.kalypsosimulationmodel.extension.IRemoteProjectTemplateDescription;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.model.ProjectHandler;
+import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 public class KalypsoModuleRRM implements IKalypsoModule
 {
@@ -94,8 +94,6 @@ public class KalypsoModuleRRM implements IKalypsoModule
             {
               final IPath stateLocation = KalypsoUIRRMPlugin.getDefault().getStateLocation();
               final File targetDir = new File( stateLocation.toFile(), "infoPage" );
-              // final boolean mkdir = dir.mkdir();
-
               ZipUtilities.unzip( zipStream, targetDir );
 
               INFO_PAGE_EXTRACTED = true;
@@ -120,72 +118,21 @@ public class KalypsoModuleRRM implements IKalypsoModule
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteProjectTemplateDescription( )
+      public INewProjectWizard getDemoProjectWizard( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsRrmModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return null;
       }
 
       @Override
-      public ILocalProjectTemplateDescription getLocalProjectTemplateDescription( )
+      public INewProjectWizard getProjectWizard( )
       {
-        return new ILocalProjectTemplateDescription()
-        {
-          @Override
-          public String getCategoryId( )
-          {
-            return null;
-          }
-
-          @Override
-          public String getDemoCategoryId( )
-          {
-            return null;
-          }
-        };
+        return new NewNAAsciiProjectWizard();
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteDemoTemplateDescription( )
+      public String getRemoteCommitType( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsRrmModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return "KalypsRrmModel";
       }
     };
   }
