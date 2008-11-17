@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
@@ -77,7 +78,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
  * 
  * @author Gernot Belger
  */
-public class NewProjectWizard extends BasicNewProjectResourceWizard
+public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
 {
   private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
   {

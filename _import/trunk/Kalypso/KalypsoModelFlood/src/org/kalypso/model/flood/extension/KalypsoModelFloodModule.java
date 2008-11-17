@@ -13,9 +13,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.ILocalProjectTemplateDescription;
-import org.kalypso.kalypsosimulationmodel.extension.IRemoteProjectTemplateDescription;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
+import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
+import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.model.ProjectHandler;
 
@@ -37,7 +38,6 @@ public class KalypsoModelFloodModule implements IKalypsoModule
   {
     return new IKalypsoModuleWelcomePageHandler()
     {
-
       @Override
       public Image getIcon( )
       {
@@ -133,7 +133,6 @@ public class KalypsoModelFloodModule implements IKalypsoModule
           {
             KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
           }
-
         }
 
         final IPath stateLocation = KalypsoModelFloodPlugin.getDefault().getStateLocation();
@@ -144,72 +143,21 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteProjectTemplateDescription( )
+      public INewProjectWizard getDemoProjectWizard( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoFloodModelType";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return new NewDemoProjectWizard();
       }
 
       @Override
-      public ILocalProjectTemplateDescription getLocalProjectTemplateDescription( )
+      public INewProjectWizard getProjectWizard( )
       {
-        return new ILocalProjectTemplateDescription()
-        {
-          @Override
-          public String getCategoryId( )
-          {
-            return "org.kalypso.model.flood.projectTemplate";
-          }
-
-          @Override
-          public String getDemoCategoryId( )
-          {
-            return "org.kalypso.model.flood.demoProject";
-          }
-        };
+        return new NewProjectWizard();
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteDemoTemplateDescription( )
+      public String getRemoteCommitType( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoFloodModelType";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return "KalypsoFloodModelType";
       }
     };
   }

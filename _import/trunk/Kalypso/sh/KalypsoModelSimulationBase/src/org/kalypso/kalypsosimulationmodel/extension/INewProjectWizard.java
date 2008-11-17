@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.extension;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.ui.IWorkbench;
+
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProjectTemplateDescription
+public interface INewProjectWizard extends IWizard
 {
-  String getCategoryId( );
+  public void init( IWorkbench workbench, IStructuredSelection currentSelection );
 
-  String getDemoCategoryId( );
+  public void setActivateScenarioOnPerformFinish( boolean b );
+
+  public IProject getNewProject( );
 }

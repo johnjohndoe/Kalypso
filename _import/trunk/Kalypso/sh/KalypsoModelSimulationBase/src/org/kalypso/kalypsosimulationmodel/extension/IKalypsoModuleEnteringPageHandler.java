@@ -67,10 +67,9 @@ public interface IKalypsoModuleEnteringPageHandler
    */
   IProjectDatabaseFilter getDatabaseFilter( );
 
-  IRemoteProjectTemplateDescription getRemoteProjectTemplateDescription( );
+  INewProjectWizard getProjectWizard( );
 
-  ILocalProjectTemplateDescription getLocalProjectTemplateDescription( );
+  INewProjectWizard getDemoProjectWizard( );
 
-  IRemoteProjectTemplateDescription getRemoteDemoTemplateDescription( );
-
+  String getRemoteCommitType( );
 }
