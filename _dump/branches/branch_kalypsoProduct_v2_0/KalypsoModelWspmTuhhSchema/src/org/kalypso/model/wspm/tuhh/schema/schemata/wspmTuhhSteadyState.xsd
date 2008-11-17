@@ -1078,6 +1078,16 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
+								<enumeration value="_2_1_2_0">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[2.1.2.0 (07.05.2008)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[2.1.2.0 (2008/05/07)]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
 								<enumeration value="_2_1_1_0">
 									<annotation>
 										<documentation xml:lang="de">
