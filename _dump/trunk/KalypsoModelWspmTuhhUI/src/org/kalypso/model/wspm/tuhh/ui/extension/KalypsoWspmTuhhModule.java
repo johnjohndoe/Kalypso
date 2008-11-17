@@ -14,9 +14,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.ILocalProjectTemplateDescription;
-import org.kalypso.kalypsosimulationmodel.extension.IRemoteProjectTemplateDescription;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
+import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.model.ProjectHandler;
 
@@ -130,73 +131,23 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteProjectTemplateDescription( )
+      public INewProjectWizard getDemoProjectWizard( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoWspmModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return new DemoProjectWizard();
       }
 
       @Override
-      public ILocalProjectTemplateDescription getLocalProjectTemplateDescription( )
+      public INewProjectWizard getProjectWizard( )
       {
-        return new ILocalProjectTemplateDescription()
-        {
-          @Override
-          public String getCategoryId( )
-          {
-            return "org.kalypso.model.wspm.tuhh.projectTemplate";
-          }
-
-          @Override
-          public String getDemoCategoryId( )
-          {
-            return "org.kalypso.model.wspm.tuhh.demoProjects";
-          }
-        };
+        return new NewProjectWizard();
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteDemoTemplateDescription( )
+      public String getRemoteCommitType( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoWspmModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return "KalypsoWspmModel";
       }
+
     };
   }
 }

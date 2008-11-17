@@ -75,6 +75,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 
@@ -85,7 +86,7 @@ import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
  * 
  * @author Gernot Belger
  */
-public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension
+public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension, INewProjectWizard
 {
   private final class DoFinishOperation extends WorkspaceModifyOperation
   {
@@ -122,6 +123,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   };
 
   private final ProjectTemplatePage m_demoProjectPage;
+
+  private IProject m_project;
 
   public NewProjectWizard( )
   {
@@ -207,20 +210,20 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   @Override
   public boolean performFinish( )
   {
-    final IProject project = m_createProjectPage.getProjectHandle();
+    m_project = m_createProjectPage.getProjectHandle();
 
-    final DoFinishOperation op = new DoFinishOperation( project );
+    final DoFinishOperation op = new DoFinishOperation( m_project );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( status.matches( IStatus.ERROR ) )
     {
       ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
-      deleteProject( project );
+      deleteProject( m_project );
     }
     else if( status.matches( IStatus.CANCEL ) )
     {
-      deleteProject( project );
+      deleteProject( m_project );
     }
     else
     {
@@ -228,9 +231,9 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
         ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
 
       BasicNewProjectResourceWizard.updatePerspective( m_config );
-      BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
+      BasicNewResourceWizard.selectAndReveal( m_project, m_workbench.getActiveWorkbenchWindow() );
 
-      final IFile fileToOpen = project.getFile( "WSPM.gmv" );
+      final IFile fileToOpen = m_project.getFile( "WSPM.gmv" );
       openTreeView( fileToOpen );
       return true;
     }
@@ -314,6 +317,24 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
     final URL zipLocation = demoProject.getData();
     ZipUtilities.unzip( zipLocation, project, new SubProgressMonitor( monitor, 1 ) );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard#getNewProject()
+   */
+  @Override
+  public IProject getNewProject( )
+  {
+    return m_project;
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard#setActivateScenarioOnPerformFinish(boolean)
+   */
+  @Override
+  public void setActivateScenarioOnPerformFinish( final boolean b )
+  {
+// nothing to do
   }
 
 }
