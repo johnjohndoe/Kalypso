@@ -13,11 +13,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.ILocalProjectTemplateDescription;
-import org.kalypso.kalypsosimulationmodel.extension.IRemoteProjectTemplateDescription;
+import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypso.risk.project.KalypsoRiskProjectWizard;
 
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
@@ -144,74 +144,21 @@ public class KalypsoRiskModule implements IKalypsoModule
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteProjectTemplateDescription( )
+      public INewProjectWizard getDemoProjectWizard( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoRiskModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-        };
+        return null;
       }
 
       @Override
-      public ILocalProjectTemplateDescription getLocalProjectTemplateDescription( )
+      public INewProjectWizard getProjectWizard( )
       {
-        return new ILocalProjectTemplateDescription()
-        {
-          @Override
-          public String getCategoryId( )
-          {
-            return "org.kalypso.risk.projectTemplate";
-          }
-
-          @Override
-          public String getDemoCategoryId( )
-          {
-            return null;
-          }
-        };
+        return new KalypsoRiskProjectWizard();
       }
 
       @Override
-      public IRemoteProjectTemplateDescription getRemoteDemoTemplateDescription( )
+      public String getRemoteCommitType( )
       {
-        return new IRemoteProjectTemplateDescription()
-        {
-
-          @Override
-          public String getCommitType( )
-          {
-            return "KalypsoRiskModel";
-          }
-
-          @Override
-          public String[] getNaturesToBeAdded( )
-          {
-            return new String[] {};
-          }
-
-          @Override
-          public String[] getRemoteTemlateIds( )
-          {
-            return new String[] {};
-          }
-
-        };
+        return "KalypsoRiskModel";
       }
     };
   }
