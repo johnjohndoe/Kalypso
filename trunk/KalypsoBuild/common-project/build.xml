@@ -61,7 +61,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	</target>
 
 	<target name="deploy" depends="prepare">
-		<echo message="Erzeuge Jar Files ..." />
+		<echo message="Erzeuge Jar Files from ${project.bin} ..." />
 		<jar destfile="${project.deploy}/${project-name}.jar">
 			<fileset dir="${project.bin}" includes="**/*" />
 		</jar>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="KalypsoProjectDatabase-Services" default="build-all" basedir=".">
+<project name="KalypsoObservationService" default="build-all" basedir=".">
 	<property file="service.properties" />
 
 	<property file="service-build.properties" />

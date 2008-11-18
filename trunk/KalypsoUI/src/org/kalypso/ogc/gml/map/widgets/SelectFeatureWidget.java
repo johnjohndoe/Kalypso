@@ -514,7 +514,14 @@ public class SelectFeatureWidget extends AbstractWidget
     }
 
     if( !add && !toggle )
-      selectionManager.clear();
+    {
+      // REMARK: instead of invoking
+      // selectionManager.clear();
+      // We add all features to the remove-list; else we get two selection-change events here
+      final EasyFeatureWrapper[] allFeatures = selectionManager.getAllFeatures();
+      for( final EasyFeatureWrapper feature : allFeatures )
+        toRemove.add( feature.getFeature() );
+    }
 
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }

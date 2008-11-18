@@ -504,7 +504,6 @@ public class ObservationServiceDelegate implements IObservationService
       final IRepository rep = (IRepository) element;
 
       final IRepositoryItem item = rep.findItem( id );
-
       if( item != null )
         return item;
     }

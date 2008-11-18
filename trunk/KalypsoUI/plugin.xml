@@ -390,6 +390,7 @@
 		<key commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+Q" />
 		<key commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+E" />
 		<key commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+F" />
+		<key commandId="org.kalypso.ogc.gml.map.FullExtentCommand" contextId="org.kalypso.ogc.gml.map.context" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="M1+M" />
 	</extension>
 	<extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
 		<propertyContributor contributorId="org.kalypso.ui.ContentOutlinePropertyContributor">
@@ -549,6 +550,7 @@
 			<command commandId="org.kalypso.ui.command.repositoryConfigure"></command>
 			<command commandId="org.kalypso.ui.command.repositoryReload"></command>
 			<command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
+			<command commandId="org.kalypso.ui.command.repositoryDumpExtended"></command>
 			<separator name="manageTree" visible="true">
 			</separator>
 			<command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
@@ -570,6 +572,7 @@
 			<command commandId="org.kalypso.ui.command.repositoryConfigure"></command>
 			<command commandId="org.kalypso.ui.command.repositoryReload"></command>
 			<command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
+			<command commandId="org.kalypso.ui.command.repositoryDumpExtended"></command>
 			<separator name="manageTree" visible="true">
 			</separator>
 			<command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
@@ -606,8 +609,7 @@
 				<visibleWhen checkEnabled="false">
 					<with variable="selection">
 						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme">
-							</instanceof>
+							<instanceof value="org.kalypso.ogc.gml.IKalypsoTheme"/>
 						</iterate>
 					</with>
 				</visibleWhen>
@@ -638,26 +640,17 @@
 		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" icon="icons/map/prevFeature.gif" />
 	</extension>
 	<extension id="org.kalypso.ui.repositoryContainerCommands" name="Repository Container Commands" point="org.eclipse.ui.commands">
-		<category id="org.kalypo.ui.commandCategory.repositoryContainer" name="%category.name.6">
-		</category>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler" description="%command.description.13" id="org.kalypso.ui.command.repositoryAdd" name="%command.name.17">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.14" id="org.kalypso.ui.command.repositoryRemove" name="%command.name.18">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.15" id="org.kalypso.ui.command.repositoryConfigure" name="%command.name.19">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.16" id="org.kalypso.ui.command.repositoryReload" name="%command.name.20">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.17" id="org.kalypso.ui.command.repositoryDumpStructure" name="%command.name.21">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.CollapseAllHandler" description="%command.description.18" id="org.kalypso.ui.command.repositoryCollapseAll" name="%command.name.22">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.19" id="org.kalypso.ui.command.repositoryExportAsFile" name="%command.name.23">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.20" id="org.kalypso.ui.command.repositoryCopyLink" name="%command.name.24">
-		</command>
-		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.21" id="org.kalypso.ui.command.repositoryShowWQ" name="%command.name.25">
-		</command>
+		<category id="org.kalypo.ui.commandCategory.repositoryContainer" name="%category.name.6"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler" description="%command.description.13" id="org.kalypso.ui.command.repositoryAdd" name="%command.name.17"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.14" id="org.kalypso.ui.command.repositoryRemove" name="%command.name.18"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.15" id="org.kalypso.ui.command.repositoryConfigure" name="%command.name.19"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.16" id="org.kalypso.ui.command.repositoryReload" name="%command.name.20"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.17" id="org.kalypso.ui.command.repositoryDumpStructure" name="%command.name.21"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%org.kalypso.ui.command.repositoryDumpExtended.description" id="org.kalypso.ui.command.repositoryDumpExtended" name="%org.kalypso.ui.command.repositoryDumpExtended.name"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" defaultHandler="org.kalypso.ogc.sensor.view.actions.CollapseAllHandler" description="%command.description.18" id="org.kalypso.ui.command.repositoryCollapseAll" name="%command.name.22"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.19" id="org.kalypso.ui.command.repositoryExportAsFile" name="%command.name.23"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.20" id="org.kalypso.ui.command.repositoryCopyLink" name="%command.name.24"/>
+		<command categoryId="org.kalypo.ui.commandCategory.repositoryContainer" description="%command.description.21" id="org.kalypso.ui.command.repositoryShowWQ" name="%command.name.25"/>
 	</extension>
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ui.command.repositoryAdd" icon="icons/repository/repository_add.gif">
@@ -668,8 +661,8 @@
 		</image>
 		<image commandId="org.kalypso.ui.command.repositoryReload" icon="icons/util/update.gif">
 		</image>
-		<image commandId="org.kalypso.ui.command.repositoryDumpStructure" icon="icons/repository/repository_rep.gif">
-		</image>
+		<image commandId="org.kalypso.ui.command.repositoryDumpStructure" icon="icons/repository/repository_rep.gif"/>
+		<image commandId="org.kalypso.ui.command.repositoryDumpExtended" icon="icons/repository/repository_rep.gif"/>
 		<image commandId="org.kalypso.ui.command.repositoryCollapseAll" icon="icons/util/tree_collapse_all.gif">
 		</image>
 		<image commandId="org.kalypso.ui.command.repositoryExportAsFile" icon="icons/repository/zml_download.gif">
@@ -698,6 +691,11 @@
 				</reference>
 			</enabledWhen>
 		</handler>
+		<handler class="org.kalypso.ogc.sensor.view.actions.DumpExtendedHandler" commandId="org.kalypso.ui.command.repositoryDumpExtended">
+			<enabledWhen>
+				<reference definitionId="repositorySelection"/>
+			</enabledWhen>
+		</handler>
 		<handler class="org.kalypso.ogc.sensor.view.actions.ExportAsFileHandler" commandId="org.kalypso.ui.command.repositoryExportAsFile">
 			<enabledWhen>
 				<reference definitionId="repositoryItemSelection">
@@ -718,8 +716,14 @@
 		</handler>
 		<handler class="org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler" commandId="org.kalypso.ui.command.repositoryShowWQ">
 			<enabledWhen>
-				<reference definitionId="repositoryItemSelection">
-				</reference>
+				<and>
+					<reference definitionId="repositoryItemSelection"/>
+					<with variable="selection">
+						<iterate ifEmpty="false" operator="and">
+				        	<test property="org.kalypso.ui.repositoryItemHasWQTable"/>
+						</iterate>
+					</with>
+				</and>
 			</enabledWhen>
 		</handler>
 	</extension>
@@ -1231,6 +1235,7 @@
 	</extension>
 	<extension point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui" properties="activeThemeNotNull,activeThemeQName,activeThemeHasExtent,activeThemeIsFeatureTheme" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 	</extension>
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">

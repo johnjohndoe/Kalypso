@@ -119,8 +119,7 @@ public class RestoreSelectionHelper
     final EasyFeatureWrapper[] easyArray = easyFeatures
     .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
-    final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures( m_selectionManager );
-    m_selectionManager.changeSelection( selectionToRemove, easyArray );
+    m_selectionManager.setSelection( easyArray );
   }
 
   private void saveSelection( final CommandableWorkspace workspace )
@@ -131,9 +130,6 @@ public class RestoreSelectionHelper
     // this avoids concurrency problems if the same features are selected within another theme
     if( features.length != 0 )
     {
-      // deselect old selection
-      m_selectionManager.changeSelection( features, new EasyFeatureWrapper[0] );
-
       m_oldSelectionState = new String[features.length];
       for( int i = 0; i < features.length; i++ )
       {

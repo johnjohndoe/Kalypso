@@ -46,11 +46,15 @@ import java.net.URL;
 import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
@@ -72,7 +76,7 @@ public class ZmlLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String source, URL context, IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
     try
     {
@@ -105,8 +109,10 @@ public class ZmlLoader extends AbstractLoader
    *      java.lang.Object)
    */
   @Override
-  public void save( final String source, URL context, IProgressMonitor monitor, Object data ) throws LoaderException
+  public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
+    IMarker lockMarker = null;
+
     try
     {
       if( data == null )
@@ -119,6 +125,9 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.2") + url ); //$NON-NLS-1$
 
+      // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation
+      lockMarker = file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
+      
       final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
 
       // set contents of ZML-file
@@ -135,12 +144,25 @@ public class ZmlLoader extends AbstractLoader
       };
       helper.setFileContents( file, false, true, new NullProgressMonitor() );
     }
-    catch( Throwable e ) // generic exception caught for simplicity
+    catch( final Throwable e ) // generic exception caught for simplicity
     {
       throw new LoaderException( e );
     }
     finally
     {
+      /* delete all markers on the corresponding resource */
+      if( lockMarker != null )
+      {
+        try
+        {
+          lockMarker.delete();
+        }
+        catch( final CoreException e )
+        {
+          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
+        }
+      }
+      
       monitor.done();
     }
   }
