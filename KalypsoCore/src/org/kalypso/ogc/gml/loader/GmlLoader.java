@@ -247,7 +247,6 @@ public class GmlLoader extends AbstractLoader
   @Override
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    IFile file = null;
     IMarker lockMarker = null;
     try
     {
@@ -256,8 +255,7 @@ public class GmlLoader extends AbstractLoader
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
       // ists im Workspace?
-      file = ResourceUtilities.findFileFromURL( gmlURL );
-
+      final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
       {
         // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation

@@ -43,13 +43,13 @@ package org.kalypso.ui.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
 
 /**
  * The perspective for the Kalypso Modeler.
  * 
  * @author schlienger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
   public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
@@ -57,6 +57,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
    */
+  @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {
     // Editors are placed for free.
@@ -67,27 +68,28 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
         "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
 
     setContentsOfShowViewMenu( layout );
 
-    // next lines are defined in a different plugin, this causes errors in a deploy without riskmodelmodule!
-    // use extensionpoint for this
-    // layout.addActionSet( "org.kalypso.actionSet.model" );
-    // layout.addActionSet( "KalypsoFloodRiskAnalysis.Start" );
+    // a bit dirty, but this perspective should be minimalistic
+    if( layout instanceof PageLayout )
+      ((PageLayout) layout).getActionSets().clear();
+    
+    layout.addActionSet( "org.kalypso.simulation.ui.actionSet" );
 
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.folder" );//$NON-NLS-1$
     layout.addNewWizardShortcut( "org.eclipse.ui.wizards.new.file" );//$NON-NLS-1$
   }
 
   /**
-   * Sets the intial contents of the "Show View" menu
+   * Sets the initial contents of the "Show View" menu
    * 
    * @param layout
    */
-  protected void setContentsOfShowViewMenu( IPageLayout layout )
+  protected void setContentsOfShowViewMenu( final IPageLayout layout )
   {
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );

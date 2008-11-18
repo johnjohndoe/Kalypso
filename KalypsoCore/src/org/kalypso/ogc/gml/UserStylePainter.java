@@ -132,16 +132,15 @@ public class UserStylePainter
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( features.size() );
 
-    final Filter filter = rule.getFilter();
     for( final Object o : features )
     {
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( workspace, scale, selected, rule, filter, o, qname, childProgress, delegate );
+      paintFeature( workspace, scale, selected, rule, o, qname, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
 
-  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.2"), 100 ); //$NON-NLS-1$
 
@@ -152,6 +151,7 @@ public class UserStylePainter
     try
     {
       /* Only paint really visible features */
+      final Filter filter = rule.getFilter();
       if( filterFeature( feature, selected, filter ) )
       {
         /* Only paint features which applies to the given qname */
