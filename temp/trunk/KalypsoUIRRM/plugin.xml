@@ -40,8 +40,8 @@
             project="true"/>
    </extension>
    <extension
-         point="org.kalypso.ModelSimulationBase.kalypsoModule">
-      <module
+         point="org.kalypso.afgui.kalypsoModule">
+    <module
             module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
       </module>
    </extension>

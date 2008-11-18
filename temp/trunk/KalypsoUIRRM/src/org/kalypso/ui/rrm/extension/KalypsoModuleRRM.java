@@ -9,14 +9,14 @@ import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 public class KalypsoModuleRRM implements IKalypsoModule
@@ -43,13 +43,13 @@ public class KalypsoModuleRRM implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "Kalypso Hydrology";
+        return "KalypsoHydrology";
       }
 
       @Override
       public String getTooltip( )
       {
-        return "Kalypso Hydrology öffnen";
+        return "KalypsoHydrology öffnen";
       }
     };
   }
@@ -68,7 +68,7 @@ public class KalypsoModuleRRM implements IKalypsoModule
         return new IProjectDatabaseFilter()
         {
           @Override
-          public boolean select( final ProjectHandler handler )
+          public boolean select( final IProjectHandler handler )
           {
             return false;
           }
@@ -78,7 +78,7 @@ public class KalypsoModuleRRM implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "Kalypso Hydrology";
+        return "KalypsoHydrology";
       }
 
       @Override
