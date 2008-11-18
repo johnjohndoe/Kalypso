@@ -173,6 +173,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.gml.ui"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.kalypso1d2d.pjt"/>
+      <plugin id="org.kalypso.lib.hsqldb"/>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.flood"/>
       <plugin id="org.kalypso.model.product"/>
@@ -185,6 +186,8 @@ de_DE</programArgs>
       <plugin id="org.kalypso.model.wspm.ui"/>
       <plugin id="org.kalypso.model1d2d"/>
       <plugin id="org.kalypso.optimize"/>
+      <plugin id="org.kalypso.project.database"/>
+      <plugin id="org.kalypso.project.database.client"/>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.risk"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
