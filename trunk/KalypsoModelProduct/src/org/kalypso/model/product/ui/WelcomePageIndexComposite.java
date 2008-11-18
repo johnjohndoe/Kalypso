@@ -48,13 +48,13 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
+import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
 import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
 import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
-import org.kalypso.kalypsosimulationmodel.KalypsoModelSimulationBase;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModulePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 
@@ -99,7 +99,7 @@ public class WelcomePageIndexComposite extends Composite
     final HyperCanvas mainCanvas = new HyperCanvas( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final IKalypsoModule[] extensions = KalypsoModelSimulationBase.getKalypsoModules();
+    final IKalypsoModule[] extensions = KalypsoAFGUIFrameworkPlugin.getKalypsoModules();
     for( final IKalypsoModule module : extensions )
     {
       final IKalypsoModuleWelcomePageHandler handler = module.getWelcomePageHandler();

@@ -38,19 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.model.remote;
+package org.kalypso.project.database.client.core.model.local;
 
 import java.util.EventListener;
-
-import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRemoteProjectsListener extends EventListener
+public interface ILocalWorkspaceListener extends EventListener
 {
-  // TODO parameter. What changed?
-  public void remoteWorkspaceChanged( );
-
-  public void remoteConnectionChanged( IStatus connectionState );
+  public void localWorkspaceChanged( );
 }

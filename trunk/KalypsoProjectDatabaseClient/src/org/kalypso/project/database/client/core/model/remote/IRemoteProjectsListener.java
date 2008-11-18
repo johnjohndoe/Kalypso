@@ -38,20 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces;
+package org.kalypso.project.database.client.core.model.remote;
 
-import org.kalypso.project.database.common.model.ProjectHandler;
+import java.util.EventListener;
+
+import org.eclipse.core.runtime.IStatus;
 
 /**
- * Model Database Filter
- * 
  * @author Dirk Kuch
  */
-public interface IProjectDatabaseFilter
+public interface IRemoteProjectsListener extends EventListener
 {
-  /**
-   * add this element?
-   */
-  boolean select( ProjectHandler handler );
+  // TODO parameter. What changed?
+  public void remoteWorkspaceChanged( );
 
+  public void remoteConnectionChanged( IStatus connectionState );
 }

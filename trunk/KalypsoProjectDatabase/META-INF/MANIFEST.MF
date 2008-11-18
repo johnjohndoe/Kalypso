@@ -15,9 +15,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.project.database,
  org.kalypso.project.database.common.interfaces,
- org.kalypso.project.database.common.model,
- org.kalypso.project.database.common.model.local,
- org.kalypso.project.database.common.model.remote,
  org.kalypso.project.database.common.nature,
  org.kalypso.project.database.common.utils,
  org.kalypso.project.database.sei,

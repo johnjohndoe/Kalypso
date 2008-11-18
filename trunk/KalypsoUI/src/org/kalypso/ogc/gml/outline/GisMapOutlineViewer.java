@@ -109,7 +109,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
     // Change rendering to bold-font (or what else?); put flag into user preferences?
     // get type of rendering from map-file (and also flag?)
     // TODO: if committed to true, please set to false
-    final boolean showActive = false;
+    final boolean showActive = true;
 
     m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
     setMapModel( mapModel );

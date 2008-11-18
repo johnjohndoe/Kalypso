@@ -10,8 +10,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.project.database.common.model.local.ILocalProject;
-import org.kalypso.project.database.common.model.local.ILocalWorkspaceListener;
 
 /**
  * @author Dirk Kuch

@@ -1,18 +1,19 @@
-package org.kalypso.project.database.common.model;
+package org.kalypso.project.database.client.core.model;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.KalypsoProjectDatabase;
-import org.kalypso.project.database.common.model.local.ILocalProject;
+import org.kalypso.project.database.client.core.model.local.ILocalProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
-public class ProjectHandler implements Comparable<ProjectHandler>
+public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandler
 {
   private KalypsoProjectBean m_bean = null;
 
