@@ -55,7 +55,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.common.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.util.swt.StatusDialog;
 
 /**

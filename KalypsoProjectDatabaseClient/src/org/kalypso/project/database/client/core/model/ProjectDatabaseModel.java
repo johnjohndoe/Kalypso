@@ -49,18 +49,16 @@ import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.KalypsoProjectDatabase;
+import org.kalypso.project.database.client.core.model.local.ILocalProject;
+import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
-import org.kalypso.project.database.common.model.IProjectDatabaseModel;
-import org.kalypso.project.database.common.model.ProjectHandler;
-import org.kalypso.project.database.common.model.local.ILocalProject;
-import org.kalypso.project.database.common.model.local.ILocalWorkspaceListener;
-import org.kalypso.project.database.common.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 

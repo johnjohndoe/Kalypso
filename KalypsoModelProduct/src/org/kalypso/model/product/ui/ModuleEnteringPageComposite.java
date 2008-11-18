@@ -51,12 +51,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
+import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
 import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModulePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
@@ -64,7 +65,6 @@ import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils
 import org.kalypso.project.database.client.ui.project.list.ProjectDatabaseComposite;
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 import org.kalypso.project.database.client.ui.project.wizard.create.CreateProjectComposite;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 
 /**
  * @author Dirk Kuch

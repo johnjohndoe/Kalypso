@@ -47,8 +47,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations;
-import org.kalypso.project.database.common.model.ProjectHandler;
 
 /**
  * @author Dirk Kuch

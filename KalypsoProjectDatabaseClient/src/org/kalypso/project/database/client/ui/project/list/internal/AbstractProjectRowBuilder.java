@@ -65,13 +65,13 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
+import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
-import org.kalypso.project.database.common.model.ProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
