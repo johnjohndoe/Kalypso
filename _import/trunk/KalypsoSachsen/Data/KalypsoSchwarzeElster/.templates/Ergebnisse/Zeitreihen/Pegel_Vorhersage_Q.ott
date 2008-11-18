@@ -21,13 +21,13 @@
     </observation>
     
     <observation linktype="zml" ns1:href="QV_TRADO.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c7" name="Trado 1 - Abfluss - Vorhersage [m³/s]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c7" name="Trado 3 - Abfluss - Vorhersage [m³/s]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="QV_TRADO_unten.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c8" name="Trado 1 - Abfluss - Vorhersage - Spur unten [m³/s]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c8" name="Trado 3 - Abfluss - Vorhersage - Spur unten [m³/s]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="QV_TRADO_oben.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Abfluss" editable="true" id="c9" name="Trado 1 - Abfluss - Vorhersage - Spur oben [m³/s]" width="50"/>
+        <column axis="Abfluss" editable="true" id="c9" name="Trado 3 - Abfluss - Vorhersage - Spur oben [m³/s]" width="50"/>
     </observation>
   
     <observation linktype="zml" ns1:href="QV_ZESCHA.zml" xmlns:ns1="http://www.w3.org/1999/xlink">

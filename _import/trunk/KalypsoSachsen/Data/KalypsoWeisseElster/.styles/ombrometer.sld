@@ -3,41 +3,14 @@
 	<NamedLayer>
 		<Name>deegree style definition</Name>
 		<UserStyle>
-			<Name>Ombrometer</Name>
-			<Title>Ombrometer</Title>
+			<Name>Ombrometer_Label</Name>
+			<Title>Text</Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
-				<Name>Ombrometer</Name>
+				<Name>Ombrometer_Label</Name>
 				<Rule>
 					<Name>default</Name>
 					<Title>default</Title>
-					<Abstract>default</Abstract>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
-					<PointSymbolizer>
-						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
-						</Geometry>
-						<Graphic>
-							<Mark>
-								<WellKnownName>circle</WellKnownName>
-								<Fill>
-									<CssParameter name="fill-opacity">1.0</CssParameter>
-									<CssParameter name="fill">#ffff00</CssParameter>
-								</Fill>
-								<Stroke>
-									<CssParameter name="stroke">#000000</CssParameter>
-									<CssParameter name="stroke-width">1.0</CssParameter>
-									<CssParameter name="stroke-linejoin">round</CssParameter>
-									<CssParameter name="stroke-opacity">1.0</CssParameter>
-									<CssParameter name="stroke-linecap">square</CssParameter>
-								</Stroke>
-							</Mark>
-							<Opacity>1.0</Opacity>
-							<Size>10.0</Size>
-							<Rotation>0.0</Rotation>
-						</Graphic>
-					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -79,6 +52,41 @@
 							</Stroke>
 						</Halo>
 					</TextSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		<UserStyle>
+			<Name>Ombrometer_Points</Name>
+			<Title>Lage</Title>
+			<FeatureTypeStyle>
+				<Name>Ombrometer_Points</Name>
+				<Rule>
+					<Name>Ort</Name>
+					<Title>default</Title>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>circle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill-opacity">1.0</CssParameter>
+									<CssParameter name="fill">#ffff00</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#000000</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+									<CssParameter name="stroke-linejoin">round</CssParameter>
+									<CssParameter name="stroke-opacity">1.0</CssParameter>
+									<CssParameter name="stroke-linecap">square</CssParameter>
+								</Stroke>
+							</Mark>
+							<Opacity>1.0</Opacity>
+							<Size>10.0</Size>
+							<Rotation>0.0</Rotation>
+						</Graphic>
+					</PointSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>

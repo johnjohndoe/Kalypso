@@ -49,6 +49,10 @@ public class PSICompactCommiter extends DocumentServiceSimulation
 
     final String preferredValidFilename = FileUtilities.validateName( calcCaseName + "_" + preferredFilename, "_" );
     final String goodDocFilePath = filenameCleaner( preferredValidFilename );
+    
+    final String region = (String) metadataFeature.getProperty( MetaDocSerializer.QNAME_PROP_REGION );
+    metadataFeature.setProperty( MetaDocSerializer.QNAME_PROP_REGION, region + "_" + goodDocFilePath );
+    
 
     final File docFile = new File( tmpdir, goodDocFilePath );
     final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );

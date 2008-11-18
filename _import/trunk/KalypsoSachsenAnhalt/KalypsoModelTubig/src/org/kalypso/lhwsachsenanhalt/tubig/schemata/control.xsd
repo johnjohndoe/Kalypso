@@ -222,7 +222,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Beschreibung</label>
-								<tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
+								<tooltip>Kurzbeschreibung dieser Rechenvariante</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
@@ -231,7 +231,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Kommentar</label>
-								<tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
+								<tooltip>Langbeschreibung dieser Rechenvariante</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
@@ -240,7 +240,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Erstellungszeitpunkt (GMT)</label>
-								<tooltip>Zeitpunkt der Erstellung des Rechenfalls (GMT Greenwich Mean Time)</tooltip>
+								<tooltip>Zeitpunkt der Erstellung der Rechenvariante (GMT Greenwich Mean Time)</tooltip>
 								<description/>
 							</documentation>
 						</annotation>

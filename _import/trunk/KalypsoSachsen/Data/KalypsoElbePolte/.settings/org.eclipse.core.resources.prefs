@@ -1,4 +1,4 @@
-#Mon Sep 15 20:48:58 WAT 2008
+#Mon Nov 10 17:53:45 CET 2008
 eclipse.preferences.version=1
 encoding//..BCE_intern/steuerParam_Import/modell.gml=UTF-8
 encoding//..BCE_intern/steuerParam_Import/sicher/modell.gml=UTF-8
@@ -67,6 +67,9 @@ encoding//.prognose/Spielwiese/Ergebnisse/Zeitreihen/Pegel/Wittenberg.zml=UTF-8
 encoding//.prognose/Spielwiese/Zeitreihen/Pegel/Riesa.zml=UTF-8
 encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
 encoding//.prognose/Stand_WAVOS_FK/.calculation=UTF-8
+encoding//.prognose/Stand_WAVOS_FK/Log-Dateien/elbePolte.log=UTF-8
+encoding//.prognose/Stand_WAVOS_FK/Zeitreihen/Pegel/Dresden.zml=UTF-8
+encoding//.prognose/Stand_WAVOS_FK/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2007-10-04_16h11/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2007-10-04_16h11/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2007-10-04_17h57/.calculation=UTF-8

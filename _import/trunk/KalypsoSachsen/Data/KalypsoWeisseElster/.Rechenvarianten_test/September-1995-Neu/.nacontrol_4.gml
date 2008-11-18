@@ -1,54 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<NAModellControl fid="ID000000" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.namodell.control project:/.model/schema/nacontrol.xsd">
-  <description>Beschreibung</description>
-  <name>Strassberg</name>
-  <tmp>true</tmp>
-  <pre>true</pre>
-  <sch>false</sch>
-  <bof>true</bof>
-  <bsp>false</bsp>
-  <gws>false</gws>
-  <qgs>true</qgs>
-  <qgg>false</qgg>
-  <qna>false</qna>
-  <qif>false</qif>
-  <qvs>false</qvs>
-  <qbs>false</qbs>
-  <qt1>false</qt1>
-  <qtg>false</qtg>
-  <qgw>false</qgw>
-  <vet>false</vet>
-  <hyd>false</hyd>
-  <bil>false</bil>
-  <nmq>false</nmq>
-  <spi>false</spi>
-  <sup/>
-  <automaticCallibration>false</automaticCallibration>
-  <Catchments><![CDATA[//:Catchment[@fid="Catchment6000" or @fid="Catchment1403" or @fid="Catchment1404" or @fid="Catchment1401" or @fid="Catchment1402"]]]></Catchments>
-  <CatchmentsBianf>1.1767595650130143</CatchmentsBianf>
-  <CatchmentsFaktorRetobTetint>1.8722071096654855</CatchmentsFaktorRetobTetint>
-  <CatchmentsFaktn>1.8975478794537892</CatchmentsFaktn>
-  <CatchmentsFaktorAigw>0.5548446627778941</CatchmentsFaktorAigw>
-  <KMChannels><![CDATA[//:KMChannel[@fid="KMChannel1404" or @fid="KMChannel1403" or @fid="KMChannel6000" or @fid="KMChannel1500" or @fid="KMChannel6100" or @fid="KMChannel1401" or @fid="KMChannel1402"]]]></KMChannels>
-  <KMChannelsFaktorRkf>0.8684702531705318</KMChannelsFaktorRkf>
-  <KMChannelsFaktorRnf>0.7495182046219402</KMChannelsFaktorRnf>
-  <rootNode>Node1401</rootNode>
-  <pegelZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Pegel/Pegel_Strassberg.zml" ns1:type="simple" linktype="zml" timeaxis="Datum" valueaxis="Q"/>
-  </pegelZR>
-  <qberechnetZR>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Berechnet/Pegel_Strassberg.zml" ns1:type="simple" linktype="zml" timeaxis="Datum" valueaxis="Abfluss"/>
-  </qberechnetZR>
-  <accuracyPrediction>30.0</accuracyPrediction>
-  <useOffsetStartPrediction>false</useOffsetStartPrediction>
-  <useOffsetEndPrediction>false</useOffsetEndPrediction>
-  <qAblageSpurMittlerer>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Berechnet/Ablage/SpurM_Pegel_Strassberg.zml" ns1:type="simple" linktype="zml" timeaxis="Datum" valueaxis="Abfluss"/>
-  </qAblageSpurMittlerer>
-  <qAblageSpurOberer>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Berechnet/Ablage/SpurO_Pegel_Strassberg.zml" ns1:type="simple" linktype="zml" timeaxis="Datum" valueaxis="Abfluss"/>
-  </qAblageSpurOberer>
-  <qAblageSpurUnterer>
-    <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Berechnet/Ablage/SpurU_Pegel_Strassberg.zml" ns1:type="simple" linktype="zml" timeaxis="Datum" valueaxis="Abfluss"/>
-  </qAblageSpurUnterer>
-</NAModellControl>
+<rrmControl:NAModellControl xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:rrmControl="org.kalypso.namodell.control" xs:schemaLocation="org.kalypso.namodell.control project:/.model/schema/nacontrol.xsd" gml:fid="ID000000">
+ <rrmControl:name>Strassberg</rrmControl:name>
+ <rrmControl:description>Beschreibung</rrmControl:description>
+ <rrmControl:editor/>
+ <rrmControl:comment/>
+ <rrmControl:calctime/>
+ <rrmControl:startsimulation/>
+ <rrmControl:startforecast/>
+ <rrmControl:endsimulation/>
+ <rrmControl:timeStep/>
+ <rrmControl:tmp>true</rrmControl:tmp>
+ <rrmControl:pre>true</rrmControl:pre>
+ <rrmControl:sch>false</rrmControl:sch>
+ <rrmControl:bof>true</rrmControl:bof>
+ <rrmControl:bsp>false</rrmControl:bsp>
+ <rrmControl:gws>false</rrmControl:gws>
+ <rrmControl:qgs>true</rrmControl:qgs>
+ <rrmControl:qgg>false</rrmControl:qgg>
+ <rrmControl:qna>false</rrmControl:qna>
+ <rrmControl:qif>false</rrmControl:qif>
+ <rrmControl:qvs>false</rrmControl:qvs>
+ <rrmControl:qbs>false</rrmControl:qbs>
+ <rrmControl:qt1>false</rrmControl:qt1>
+ <rrmControl:qtg>false</rrmControl:qtg>
+ <rrmControl:qgw>false</rrmControl:qgw>
+ <rrmControl:kap/>
+ <rrmControl:vet>false</rrmControl:vet>
+ <rrmControl:hyd>false</rrmControl:hyd>
+ <rrmControl:bil>false</rrmControl:bil>
+ <rrmControl:nmq>false</rrmControl:nmq>
+ <rrmControl:spi>false</rrmControl:spi>
+ <rrmControl:sub/>
+ <rrmControl:sph/>
+ <rrmControl:spv/>
+ <rrmControl:spn/>
+ <rrmControl:vep/>
+ <rrmControl:sup/>
+ <rrmControl:automaticCallibration>false</rrmControl:automaticCallibration>
+ <rrmControl:Catchments>//rrm:Catchment[@gml:fid="Catchment6000" or @gml:fid="Catchment1403" or @gml:fid="Catchment1404" or @gml:fid="Catchment1401" or @gml:fid="Catchment1402"]</rrmControl:Catchments>
+ <rrmControl:CatchmentsBianf>1.1767595650130143</rrmControl:CatchmentsBianf>
+ <rrmControl:CatchmentsFaktorRetobTetint>1.8722071096654855</rrmControl:CatchmentsFaktorRetobTetint>
+ <rrmControl:CatchmentsFaktn>1.8975478794537892</rrmControl:CatchmentsFaktn>
+ <rrmControl:CatchmentsFaktorAigw>0.5548446627778941</rrmControl:CatchmentsFaktorAigw>
+ <rrmControl:KMChannels>//rrm:KMChannel[@gml:fid="KMChannel1404" or @gml:fid="KMChannel1403" or @gml:fid="KMChannel6000" or @gml:fid="KMChannel1500" or @gml:fid="KMChannel6100" or @gml:fid="KMChannel1401" or @gml:fid="KMChannel1402"]</rrmControl:KMChannels>
+ <rrmControl:KMChannelsFaktorRkf>0.8684702531705318</rrmControl:KMChannelsFaktorRkf>
+ <rrmControl:KMChannelsFaktorRnf>0.7495182046219402</rrmControl:KMChannelsFaktorRnf>
+ <rrmControl:rootNode>Node1401</rrmControl:rootNode>
+ <rrmControl:resultForRootNodeOnly/>
+ <pegelZR xmlns="org.kalypso.namodell.control">
+  <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Q" xlink:href="Pegel/Pegel_Strassberg.zml" xlink:type="simple"/>
+ </pegelZR>
+
+ <qberechnetZR xmlns="org.kalypso.namodell.control">
+  <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" xlink:href="Ergebnisse/Berechnet/Pegel_Strassberg.zml" xlink:type="simple"/>
+ </qberechnetZR>
+
+ <rrmControl:accuracyPrediction>30.0</rrmControl:accuracyPrediction>
+ <rrmControl:useOffsetStartPrediction>false</rrmControl:useOffsetStartPrediction>
+ <rrmControl:useOffsetEndPrediction>false</rrmControl:useOffsetEndPrediction>
+ <qAblageSpurMittlerer xmlns="org.kalypso.namodell.control">
+  <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" xlink:href="Ergebnisse/Berechnet/Ablage/SpurM_Pegel_Strassberg.zml" xlink:type="simple"/>
+ </qAblageSpurMittlerer>
+
+ <qAblageSpurOberer xmlns="org.kalypso.namodell.control">
+  <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" xlink:href="Ergebnisse/Berechnet/Ablage/SpurO_Pegel_Strassberg.zml" xlink:type="simple"/>
+ </qAblageSpurOberer>
+
+ <qAblageSpurUnterer xmlns="org.kalypso.namodell.control">
+  <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" timeaxis="Datum" valueaxis="Abfluss" xlink:href="Ergebnisse/Berechnet/Ablage/SpurU_Pegel_Strassberg.zml" xlink:type="simple"/>
+ </qAblageSpurUnterer>
+
+</rrmControl:NAModellControl>

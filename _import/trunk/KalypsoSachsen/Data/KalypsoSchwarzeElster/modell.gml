@@ -4,7 +4,7 @@
   <ns3:PegelCollection gml:fid="EZC_1">
    <ns3:PegelMember>
     <ns3:Einzugsgebiet gml:fid="EZ_1">
-     <ns3:Name>Trado 1</ns3:Name>
+     <ns3:Name>Trado 3</ns3:Name>
      <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3862249.962377299 5703155.191672433 NaN</gml:coordinates>

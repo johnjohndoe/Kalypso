@@ -61,7 +61,7 @@ public class PSICompactUtilitites
     throw new IllegalStateException( "Helper class, do not instantiate." );
   }
 
-  public static int arcTypeToCalendarField( int arcType ) throws SensorException
+  public static int arcTypeToCalendarField( final int arcType ) throws SensorException
   {
     switch( arcType )
     {
@@ -85,7 +85,7 @@ public class PSICompactUtilitites
     }
   }
 
-  public static int arcTypeToCalendarAmount( int arcType ) throws SensorException
+  public static int arcTypeToCalendarAmount( final int arcType ) throws SensorException
   {
     switch( arcType )
     {
@@ -119,9 +119,8 @@ public class PSICompactUtilitites
     try
     {
       final Field[] fields = PSICompact.class.getFields();
-      for( int i = 0; i < fields.length; i++ )
+      for( final Field field : fields )
       {
-        final Field field = fields[i];
         final String fieldName = field.getName();
         if( fieldName.startsWith( "ARC_" ) )
         {
@@ -131,7 +130,7 @@ public class PSICompactUtilitites
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new ECommException( "Failed retrieving archive type: " + arcType + " (" + e.toString() + ")" );
     }
@@ -188,7 +187,7 @@ public class PSICompactUtilitites
       return "Kubikmeter (m³)";
 
     case PSICompact.SI_CUBIC_METER_PER_SECOND:
-      return "Kubikmeter pro Sekunde (m³/s";
+      return "Kubikmeter pro Sekunde (m³/s)";
 
     case PSICompact.SI_KELVIN:
       return "Kelvin (K)";
@@ -201,7 +200,7 @@ public class PSICompactUtilitites
   /**
    * Converts string of form 'MIN15' to {@link PSICompact#ARC_MIN15}constants.
    */
-  public static int archiveTypeFromString( String archiveTypeStr )
+  public static int archiveTypeFromString( final String archiveTypeStr )
   {
     try
     {
@@ -209,19 +208,19 @@ public class PSICompactUtilitites
       final Field field = PSICompact.class.getDeclaredField( "ARC_" + archiveTypeStr );
       return field.getInt( null );
     }
-    catch( SecurityException e )
+    catch( final SecurityException e )
     {
       e.printStackTrace();
     }
-    catch( NoSuchFieldException e )
+    catch( final NoSuchFieldException e )
     {
       e.printStackTrace();
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
     }
-    catch( IllegalAccessException e )
+    catch( final IllegalAccessException e )
     {
       e.printStackTrace();
     }

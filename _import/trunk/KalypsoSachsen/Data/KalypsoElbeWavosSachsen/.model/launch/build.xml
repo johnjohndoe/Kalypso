@@ -148,11 +148,11 @@
 
     		<!-- Ablage W, ohne Rundung (Filter für W und Q gleich?) -->
     			<property name="filterCommitPrognoseW"
-    					value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    					value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;  /&gt;&lt;/filter&gt;" />
     			
     		<!-- Ablage Q, ohne Rundung -->
     		<property name="filterCommitPrognoseQ"
-    				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;  /&gt;&lt;/filter&gt;" />
 
     	
     	<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
@@ -319,27 +319,35 @@
    		<echo message="Szenario-ID der Rechenvariante ist: ${scenarioId}" />
    		<echo message="" />
 
-       	<!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
+
+            <!-- Einmal normal und je einmal für die untere und die obere Umhüllende -->
+            <!-- Pro Pegel werden 6 Prognosespuren definiert:
+                    - 3 Spuren für den Wasserstand                           
+                    .P1_MW untere Umhüllende      W                    
+                    .P2_MW obere Umhüllende       W                          
+                    .P3_MW berechnete Prognose    W    
+                    
+                    - 3 Spuren für den Durchfluss                   
+                    .P4_MW untere Umhüllende      Q                 
+                    .P5_MW obere Umhüllende       Q             
+                    .P6_MW berechnete Prognose    Q-->
+            
+            
        	
-       	<!-- Die normale Umhüllende soll nicht mehr abgelegt werden
-       	<echo message="Ablage der Rechenergebnisse"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-       	-->
-    	
-    	<echo message="Ablage der Prognose für Usti Q"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQUsti.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-
-    	<echo message="Ablage der Prognose für Usti W"/>
-    	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingWUsti.gml" sourcefilter="${filterCommitPrognoseW}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-
-       	<echo message="Ablage der oberen Umhüllenden Q"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-       	<echo message="Ablage der unteren Umhüllenden Q"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-
-       	<echo message="Ablage der oberen Umhüllenden W"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseWUp}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-       	<echo message="Ablage der unteren Umhüllenden W"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseWDown}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false" IgnoreIllegalFeaturePath="true"/>
-</target>
+            <echo message="Ablage der unteren Umhüllenden W"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseWDown}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+            <echo message="Ablage der oberen Umhüllenden W"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseWUp}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+            <echo message="Ablage der Prognoseergebnisse W"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseW}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+            
+            <echo message="Ablage der unteren Umhüllenden Q"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+            <echo message="Ablage der oberen Umhüllenden Q"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+            <echo message="Ablage der Prognoseergebnisse Q"/>
+            <kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingQ.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+    
+    
+    </target>
 </project>

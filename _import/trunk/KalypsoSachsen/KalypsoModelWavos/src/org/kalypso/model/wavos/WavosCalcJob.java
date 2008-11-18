@@ -41,13 +41,13 @@
 package org.kalypso.model.wavos;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +71,6 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
- * 
  * @author thuel2
  */
 public class WavosCalcJob implements ISimulation
@@ -83,8 +82,7 @@ public class WavosCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
-      throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File loggerFile = new File( tmpdir, WavosConst.LOG_FILE );
     resultEater.addResult( "LOG", loggerFile );
@@ -120,14 +118,13 @@ public class WavosCalcJob implements ISimulation
 
       resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
       resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
-      //      final File outputResultDir = new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME );
-      //      resultEater.addResult( "ERGEBNISSE", outputResultDir );
+      // final File outputResultDir = new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME );
+      // resultEater.addResult( "ERGEBNISSE", outputResultDir );
       resultEater.addResult( "ERGEBNISSE", outputDir );
 
       // Eingabedateien erzeugen
       final Properties props = new Properties();
-      final File exeDir = WavosInputWorker.createNativeInput( tmpdir, inputProvider, props, nativeInDir,
-          WavosConst.FLUSS, metaMap );
+      final File exeDir = WavosInputWorker.createNativeInput( tmpdir, inputProvider, props, nativeInDir, WavosConst.FLUSS, metaMap );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
@@ -190,8 +187,7 @@ public class WavosCalcJob implements ISimulation
 
   }
 
-  private void writeResultsToFolder( final File nativeOutDir, final File outputDir, final Properties props,
-      final Map metaMap ) throws Exception
+  private void writeResultsToFolder( final File nativeOutDir, final File outputDir, final Properties props, final Map metaMap ) throws Exception
   {
     final File nativeOutWavosDir = new File( nativeOutDir, WavosConst.DIR_WAVOS );
     final File nativeOutWavosFlussDir = new File( nativeOutWavosDir, WavosConst.FLUSS );
@@ -208,8 +204,7 @@ public class WavosCalcJob implements ISimulation
     outputTSDir.mkdirs();
     final File outputZmlDir = new File( outputTSDir, "Pegel" );
     outputZmlDir.mkdirs();
-    final File nativeOutVorherDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ),
-        WavosConst.FLUSS ), WavosConst.DIR_VORHER );
+    final File nativeOutVorherDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ), WavosConst.FLUSS ), WavosConst.DIR_VORHER );
     WavosConverter.convertVorher2Zml( nativeOutVorherDir, outputZmlDir, props, metaMap, true );
 
     // --- ohne Anbiegung (Ergebnis wird vor shiftvor zwischengespeichert)
@@ -218,34 +213,34 @@ public class WavosCalcJob implements ISimulation
     final File outputZmlOhneShiftvorDir = new File( outputTSOhneShiftvorDir, "Pegel" );
     outputZmlOhneShiftvorDir.mkdirs();
 
-        final File nativeOutVorherSaveDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ),
-            WavosConst.FLUSS ), WavosConst.DIR_VORHER_SAVE );
-        WavosConverter.convertVorher2Zml( nativeOutVorherSaveDir, outputZmlOhneShiftvorDir, props, metaMap, false );
+    final File nativeOutVorherSaveDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ), WavosConst.FLUSS ), WavosConst.DIR_VORHER_SAVE );
+    WavosConverter.convertVorher2Zml( nativeOutVorherSaveDir, outputZmlOhneShiftvorDir, props, metaMap, false );
   }
 
-  private void startCalculation( final File exeDir, final ISimulationMonitor monitor, final File nativeOutDir )
-      throws IOException, SimulationException
+  private void startCalculation( final File exeDir, final ISimulationMonitor monitor, final File nativeOutDir ) throws SimulationException
   {
-
     final String commandString = exeDir + File.separator + WavosConst.FILE_START_BAT;
     m_logger.info( "\t" + commandString );
 
-    final StringWriter logStream = new StringWriter();
-    final StringWriter errStream = new StringWriter();
     try
     {
+      final ByteArrayOutputStream logStream = new ByteArrayOutputStream();
+      final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
       // timeout after 5 min
-      ProcessHelper.startProcess( commandString, null, exeDir, monitor, 1000 * 60 * 5, logStream, errStream );
-
+      ProcessHelper.startProcess( commandString, null, exeDir, monitor, 1000 * 60 * 5, logStream, errStream, null );
+      logStream.close();
+      errStream.close();
+      final String logString = logStream.toString();
+      final String errString = errStream.toString();
+      
       m_logger.info( "Ausgaben des Rechenkerns" );
       m_logger.info( "========================" );
       m_logger.info( "= Standard-Ausgabe (Konsole) =" );
       m_logger.info( "========================" );
-      m_logger.info( logStream.toString() );
+      m_logger.info( logString );
       m_logger.info( "========================" );
       m_logger.info( "" );
 
-      final String errString = errStream.toString();
       if( errString.length() > 0 )
       {
         m_logger.info( "========================" );
@@ -256,7 +251,6 @@ public class WavosCalcJob implements ISimulation
         m_logger.info( "" );
       }
     }
-
     catch( final IOException e )
     {
       e.printStackTrace();
@@ -269,9 +263,6 @@ public class WavosCalcJob implements ISimulation
     }
     finally
     {
-      logStream.close();
-      errStream.close();
-
       // LOG-Dateien (output.log, shiftvor.log) lesen und analysieren
       final File fleWavosLog = new File( exeDir, WavosConst.FILE_WAVOS_LOG );
       final File fleShiftvorLog = new File( exeDir, WavosConst.FILE_SHIFTVOR_LOG );
@@ -312,7 +303,8 @@ public class WavosCalcJob implements ISimulation
         }
         else if( processOut3.startsWith( "Ende: call_rodasp: -4" ) )
         {
-          // für Fehler -4 spezielle Fehlermedlung von Frau Rademacher (BfG) bekommen
+          // für Fehler -4 spezielle Fehlermedlung von Frau Rademacher
+          // (BfG) bekommen
           m_logger.info( WavosConst.ERROR_MINUS_4 );
           throw new Exception( processOut3 + ": " + WavosConst.ERROR_MINUS_4, new Exception() );
         }
@@ -353,19 +345,19 @@ public class WavosCalcJob implements ISimulation
         m_logger.info( "" );
 
         // TODO return value von shiftvor noch wirklich analysieren
-        //        if( processOut2.startsWith( "" ) )
-        //        {
+        // if( processOut2.startsWith( "" ) )
+        // {
         m_logger.info( "Shiftvor erfolgreich beendet." );
         shiftvorSuccess = true;
-        //        }
-        //        else
-        //        {
-        //          m_logger.info( WavosConst.ERROR_SHIFTVOR );
-        //          throw new Exception( processOut2 + ": " + WavosConst.ERROR_SHIFTVOR, new Exception() );
-        //        }
+        // }
+        // else
+        // {
+        // m_logger.info( WavosConst.ERROR_SHIFTVOR );
+        // throw new Exception( processOut2 + ": " + WavosConst.ERROR_SHIFTVOR, new Exception() );
+        // }
         if( wavosSuccess && shiftvorSuccess && nativeOutDir.exists() )
         {
-          //  Daten zurückholen ins .native/out
+          // Daten zurückholen ins .native/out
 
           // vorher
           final File flussExeDir = new File( exeDir, WavosConst.FLUSS );
@@ -379,7 +371,7 @@ public class WavosCalcJob implements ISimulation
             final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeVorherDir, nativeOutVorherDir, true );
             FileUtilities.accept( exeVorherDir, copyVisitor, true );
           }
-          
+
           // vorher_save
           final File nativeOutVorherSaveDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_VORHER_SAVE );
           nativeOutVorherSaveDir.mkdirs();
@@ -414,7 +406,7 @@ public class WavosCalcJob implements ISimulation
         }
 
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         throw new SimulationException( e.getLocalizedMessage(), e );
       }
@@ -431,7 +423,7 @@ public class WavosCalcJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( WavosConst.CALCJOB_SPEC );
   }

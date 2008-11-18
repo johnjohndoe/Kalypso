@@ -18,7 +18,7 @@
 			</imageobject>
 		</inlinemediaobject>
 		
-		&bookinfo.subtitle;
+		<para>&bookinfo.subtitle;</para>
 	</subtitle>
 	
 	<authorgroup>
@@ -35,9 +35,9 @@
 		</author>
 	</authorgroup>
 	
-	<pubdate>Version 1.0.0, Oktober 2005</pubdate>
+	<pubdate>Version 2.0.0, September 2008</pubdate>
 	
-	<!-- Bei den beidne folgenden Tags funktioniert das Profiling nicht
+	<!-- Bei den beiden folgenden Tags funktioniert das Profiling nicht
 	deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.
 	-->
 	<!--copyright>

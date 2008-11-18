@@ -9,12 +9,10 @@
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Teilgebiete</Name>
+				<!-- Remark: we need two rules, else the labels will not always be drawn (the next feature covers parts of the label) -->
 				<Rule>
-					<Name>default</Name>
-					<Title>default</Title>
-					<Abstract>default</Abstract>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+					<Name>ruleArea</Name>
+					<Title>Flächen</Title>
 					<PolygonSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -26,16 +24,12 @@
 						<Stroke>
 							<CssParameter name="stroke">#000000</CssParameter>
 							<CssParameter name="stroke-width">1.0</CssParameter>
-							<CssParameter name="stroke-linejoin">mitre</CssParameter>
-							<CssParameter name="stroke-opacity">1.0</CssParameter>
-							<CssParameter name="stroke-linecap">butt</CssParameter>
 						</Stroke>
 					</PolygonSymbolizer>
 				</Rule>
 				<Rule>
-					<Title>Rule 1</Title>
-					<MinScaleDenominator>0.0</MinScaleDenominator>
-					<MaxScaleDenominator>302376.6744536605</MaxScaleDenominator>
+					<Name>ruleLabels</Name>
+					<Title>Label</Title>
 					<TextSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
@@ -58,12 +52,36 @@
 							<Stroke>
 								<CssParameter name="stroke">#000000</CssParameter>
 								<CssParameter name="stroke-width">1.0</CssParameter>
-								<CssParameter name="stroke-linejoin">round</CssParameter>
-								<CssParameter name="stroke-opacity">1.0</CssParameter>
-								<CssParameter name="stroke-linecap">square</CssParameter>
 							</Stroke>
 						</Halo>
-					</TextSymbolizer>
+					</TextSymbolizer>					
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		<UserStyle>
+			<Name>Teilgebiete_ohneLabel</Name>
+			<Title>Teilgebiete</Title>
+			<FeatureTypeStyle>
+				<Name>Teilgebiete</Name>
+				<Rule>
+					<Name>default</Name>
+					<Title>default</Title>
+					<Abstract>default</Abstract>
+					<MinScaleDenominator>0.0</MinScaleDenominator>
+					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+					<PolygonSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>Ort</ogc:PropertyName>
+						</Geometry>
+						<Fill>
+							<CssParameter name="fill-opacity">1.0</CssParameter>
+							<CssParameter name="fill">#808080</CssParameter>
+						</Fill>
+						<Stroke>
+							<CssParameter name="stroke">#000000</CssParameter>
+							<CssParameter name="stroke-width">1.0</CssParameter>
+						</Stroke>
+					</PolygonSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
