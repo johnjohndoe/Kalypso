@@ -11,8 +11,7 @@ Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.gml.ui,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core;bundle-version="1.0.0",
- org.kalypso.simulation.ui;bundle-version="0.0.1",
- org.kalypso.project.database;bundle-version="1.0.0"
+ org.kalypso.simulation.ui;bundle-version="0.0.1"
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.risk.model.actions.dataImport.waterdepth,
  org.kalypso.risk.model.operation,

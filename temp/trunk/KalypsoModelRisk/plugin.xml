@@ -235,7 +235,7 @@
                </simulation>
             </extension>
             <extension
-                  point="org.kalypso.ModelSimulationBase.kalypsoModule">
+                  point="org.kalypso.afgui.kalypsoModule">
                <module
                      module="org.kalypso.risk.extension.KalypsoRiskModule">
                </module>
