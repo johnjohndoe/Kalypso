@@ -175,7 +175,6 @@ public class CreateProjectComposite extends Composite
             KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
           }
         }
-
       }
     } );
 
