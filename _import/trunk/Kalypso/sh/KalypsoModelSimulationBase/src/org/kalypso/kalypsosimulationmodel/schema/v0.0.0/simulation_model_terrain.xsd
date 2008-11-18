@@ -160,7 +160,7 @@
 				kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
 				kapp:property="simBase:geometry"
 				kapp:isVirtual="true"
-				kapp:valueType="gml:LineStringPropertyType"/>
+				kapp:valueType="gml:LineString"/>
 				</xs:appinfo-->
 		</xs:annotation>
 		<xs:complexContent>
@@ -198,7 +198,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
 					kapp:property="simBase:geometry" kapp:isVirtual="true"
-					kapp:valueType="gml:LineStringPropertyType" />
+					kapp:valueType="gml:LineString" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>

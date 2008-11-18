@@ -213,7 +213,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
 					kapp:property="wb1d2d:geometry"
-					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
+					kapp:valueType="gml:Polygon" kapp:isVirtual="true" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -282,7 +282,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
 					kapp:property="wb1d2d:geometry"
-					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
+					kapp:valueType="gml:Polygon" kapp:isVirtual="true" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -370,7 +370,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
 					kapp:property="wb1d2d:geometry"
-					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
+					kapp:valueType="gml:Polygon" kapp:isVirtual="true" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -409,7 +409,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
 					kapp:property="wb1d2d:geometry"
-					kapp:valueType="gml:LineStringPropertyType" kapp:isVirtual="true" />
+					kapp:valueType="gml:LineString" kapp:isVirtual="true" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -466,7 +466,7 @@
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2DEdgeTypeGeometry"
 					kapp:property="wb1d2d:geometry" kapp:isVirtual="true"
-					kapp:valueType="gml:LineStringPropertyType" />
+					kapp:valueType="gml:LineString" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>

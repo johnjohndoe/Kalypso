@@ -260,7 +260,7 @@
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.connectCentersByLine" kapp:property="flood:connectorLine" kapp:isVirtual="true"
-					kapp:valueType="gml:LineStringPropertyType">
+					kapp:valueType="gml:LineString">
 					<kapp:parameter>
 						<kapp:name>geometry1Property</kapp:name>
 						<kapp:value>{org.kalypso.model.flood}referencePoint</kapp:value>
