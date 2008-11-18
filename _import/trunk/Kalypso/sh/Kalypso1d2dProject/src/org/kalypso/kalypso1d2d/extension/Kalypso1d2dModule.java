@@ -9,18 +9,18 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.common.model.ProjectHandler;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
@@ -47,13 +47,13 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "Kalypso 1D/2D";
+        return "Kalypso1D2D";
       }
 
       @Override
       public String getTooltip( )
       {
-        return "Kalypso 1D/2D öffnen";
+        return "Kalypso1D2D öffnen";
       }
     };
   }
@@ -72,7 +72,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
         return new IProjectDatabaseFilter()
         {
           @Override
-          public boolean select( final ProjectHandler handler )
+          public boolean select( final IProjectHandler handler )
           {
             if( handler.isLocal() )
             {
@@ -96,7 +96,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "Kalypso 1D/2D";
+        return "Kalypso1D2D";
       }
 
       @Override

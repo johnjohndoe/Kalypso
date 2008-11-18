@@ -19,6 +19,7 @@ Eclipse-LazyStart: true
 Export-Package: de.renew.workflow.cases,
  org.kalypso.afgui,
  org.kalypso.afgui.application,
+ org.kalypso.afgui.extension,
  org.kalypso.afgui.handlers,
  org.kalypso.afgui.i18n,
  org.kalypso.afgui.perspective,

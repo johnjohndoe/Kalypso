@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="scenarioData" name="Scenario data" schema="schema/scenarioData.exsd"/>   	
-   
+   <extension-point id="kalypsoModule" name="kalypsoModule" schema="schema/kalypsoModule.exsd"/>
    <extension
          id="org.kalypso.afgui.ScenarioHandlingProjectNature"
          name="ScenarioHandlingProjectNature"

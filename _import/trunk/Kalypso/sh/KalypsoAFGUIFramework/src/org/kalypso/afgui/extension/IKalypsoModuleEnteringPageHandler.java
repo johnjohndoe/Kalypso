@@ -38,12 +38,10 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.extension;
+package org.kalypso.afgui.extension;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
 
 /**
  * Entering page of a Kalypso Module. Page contains list of projects and a description about the module.

@@ -38,21 +38,29 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.extension;
+package org.kalypso.afgui.extension;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.swt.graphics.Image;
 
 /**
+ * interface for rendering the welcome page content of a kalypso module
+ * 
  * @author Dirk Kuch
  */
-public interface INewProjectWizard extends IWizard
+public interface IKalypsoModuleWelcomePageHandler
 {
-  public void init( IWorkbench workbench, IStructuredSelection currentSelection );
+  /**
+   * @return icon of module
+   */
+  Image getIcon( );
 
-  public void setActivateScenarioOnPerformFinish( boolean b );
+  /**
+   * @return label of model icon (placed at the right side of the icon)
+   */
+  String getLabel( );
 
-  public IProject getNewProject( );
+  /**
+   * @return module icon tooltip
+   */
+  String getTooltip( );
 }

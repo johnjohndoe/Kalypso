@@ -38,17 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.extension;
+package org.kalypso.afgui.extension;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.ui.IWorkbench;
 
 /**
- * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
- * welcome page
- * 
  * @author Dirk Kuch
  */
-public interface IKalypsoModule
+public interface INewProjectWizard extends IWizard
 {
-  public IKalypsoModuleWelcomePageHandler getWelcomePageHandler( );
+  public void init( IWorkbench workbench, IStructuredSelection currentSelection );
 
-  public IKalypsoModuleEnteringPageHandler getModuleEnteringPage( );
+  public void setActivateScenarioOnPerformFinish( boolean b );
+
+  public IProject getNewProject( );
 }

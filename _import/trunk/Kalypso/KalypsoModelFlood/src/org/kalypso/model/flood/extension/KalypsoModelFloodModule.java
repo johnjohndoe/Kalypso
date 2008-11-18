@@ -8,17 +8,17 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.common.model.ProjectHandler;
 
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
@@ -47,13 +47,13 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "Kalypso Flood";
+        return "KalypsoFlood";
       }
 
       @Override
       public String getTooltip( )
       {
-        return "Kalypso Flood öffnen";
+        return "KalypsoFlood öffnen";
       }
     };
   }
@@ -73,7 +73,7 @@ public class KalypsoModelFloodModule implements IKalypsoModule
         return new IProjectDatabaseFilter()
         {
           @Override
-          public boolean select( final ProjectHandler handler )
+          public boolean select( final IProjectHandler handler )
           {
             if( handler.isLocal() )
             {
@@ -102,7 +102,7 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "Kalypso Flood";
+        return "KalypsoFlood";
       }
 
       @Override

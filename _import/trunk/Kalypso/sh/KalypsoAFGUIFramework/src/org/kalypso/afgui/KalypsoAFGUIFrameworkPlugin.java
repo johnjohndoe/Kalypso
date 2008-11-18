@@ -1,11 +1,18 @@
 package org.kalypso.afgui;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -15,6 +22,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
+import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -23,6 +31,7 @@ import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.Task;
@@ -40,6 +49,10 @@ import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
+  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.afgui.kalypsoModule";
+
+  private static List<IKalypsoModule> KALYPSO_MODULES = null;
+
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.afgui"; //$NON-NLS-1$
 
@@ -218,7 +231,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    * Returns an image descriptor for the image file at the given plug-in relative path
    * 
    * @param path
-   *            the path
+   *          the path
    * @return the image descriptor
    */
   public static ImageDescriptor getImageDescriptor( final String path )
@@ -266,5 +279,52 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       job.setUser( true );
       job.schedule();
     }
+  }
+
+  /**
+   * @return list of feature binding handlers, handling a special featureType qname
+   */
+  public synchronized static IKalypsoModule[] getKalypsoModules( )
+  {
+    // fill binding map
+    if( KALYPSO_MODULES == null )
+    {
+
+      KALYPSO_MODULES = new ArrayList<IKalypsoModule>();
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( KALYPSO_MODULES_EXTENSION_POINT );
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? extends IKalypsoModule> featureClass = bundle.loadClass( element.getAttribute( "module" ) );
+          final Constructor< ? extends IKalypsoModule> constructor = featureClass.getConstructor();
+
+          final IKalypsoModule instance = constructor.newInstance();
+          KALYPSO_MODULES.add( instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+
+      final Comparator<IKalypsoModule> comparator = new Comparator<IKalypsoModule>()
+      {
+        @Override
+        public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
+        {
+          return o1.getModuleEnteringPage().getHeader().compareTo( o2.getModuleEnteringPage().getHeader() );
+        }
+      };
+
+      Collections.sort( KALYPSO_MODULES, comparator );
+    }
+
+    return KALYPSO_MODULES.toArray( new IKalypsoModule[] {} );
   }
 }

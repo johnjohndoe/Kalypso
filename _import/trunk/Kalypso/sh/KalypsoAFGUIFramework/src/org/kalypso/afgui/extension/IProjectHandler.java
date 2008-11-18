@@ -38,15 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.extension;
+package org.kalypso.afgui.extension;
+
+import org.eclipse.core.resources.IProject;
 
 /**
  * @author Dirk Kuch
  */
-public interface IKalypsoModulePageHandler
+public interface IProjectHandler
 {
-  void setPage( IKalypsoModuleEnteringPageHandler page );
+  IProject getProject( );
 
-  void update( );
+  boolean isLocal( );
 
+  boolean isRemote( );
+
+  Object getBean( );
 }

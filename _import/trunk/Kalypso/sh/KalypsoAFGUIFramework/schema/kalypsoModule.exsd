@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.ModelSimulationBase" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.kalypso.afgui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.kalypso.ModelSimulationBase" id="kalypsoModule" name="kalypsoModule"/>
+         <meta.schema plugin="org.kalypso.afgui" id="kalypsoModule" name="kalypsoModule"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.afgui.extension.IKalypsoModule"/>
                </appinfo>
             </annotation>
          </attribute>

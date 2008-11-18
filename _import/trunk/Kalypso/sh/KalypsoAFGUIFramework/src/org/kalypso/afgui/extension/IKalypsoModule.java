@@ -38,29 +38,17 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.extension;
-
-import org.eclipse.swt.graphics.Image;
+package org.kalypso.afgui.extension;
 
 /**
- * interface for rendering the welcome page content of a kalypso module
+ * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
+ * welcome page
  * 
  * @author Dirk Kuch
  */
-public interface IKalypsoModuleWelcomePageHandler
+public interface IKalypsoModule
 {
-  /**
-   * @return icon of module
-   */
-  Image getIcon( );
+  public IKalypsoModuleWelcomePageHandler getWelcomePageHandler( );
 
-  /**
-   * @return label of model icon (placed at the right side of the icon)
-   */
-  String getLabel( );
-
-  /**
-   * @return module icon tooltip
-   */
-  String getTooltip( );
+  public IKalypsoModuleEnteringPageHandler getModuleEnteringPage( );
 }

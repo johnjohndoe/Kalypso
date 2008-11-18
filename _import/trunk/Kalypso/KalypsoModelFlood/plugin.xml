@@ -370,8 +370,8 @@
             projectName="">
       </project>
    </extension>
-   <extension
-         point="org.kalypso.ModelSimulationBase.kalypsoModule">
+     <extension
+         point="org.kalypso.afgui.kalypsoModule">
       <module
             module="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
       </module>

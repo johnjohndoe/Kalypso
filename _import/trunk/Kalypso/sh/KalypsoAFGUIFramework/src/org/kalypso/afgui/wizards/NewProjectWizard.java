@@ -64,13 +64,13 @@ import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
