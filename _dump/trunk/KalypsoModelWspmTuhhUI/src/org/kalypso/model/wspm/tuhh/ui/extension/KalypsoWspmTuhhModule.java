@@ -9,17 +9,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.kalypsosimulationmodel.extension.INewProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
-import org.kalypso.project.database.common.interfaces.IProjectDatabaseFilter;
-import org.kalypso.project.database.common.model.ProjectHandler;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
@@ -45,13 +45,13 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "Kalypso WSPM";
+        return "KalypsoWSPM";
       }
 
       @Override
       public String getTooltip( )
       {
-        return "Kalypso WSPM öffnen";
+        return "KalypsoWSPM öffnen";
       }
     };
   }
@@ -67,7 +67,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "Kalypso WSPM";
+        return "KalypsoWSPM";
       }
 
       @Override
@@ -76,7 +76,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
         return new IProjectDatabaseFilter()
         {
           @Override
-          public boolean select( final ProjectHandler handler )
+          public boolean select( final IProjectHandler handler )
           {
             if( handler.isLocal() )
             {

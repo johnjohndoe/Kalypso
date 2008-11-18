@@ -254,8 +254,8 @@
                name="Marker löschen">
          </reparator>
       </extension>
-      <extension
-            point="org.kalypso.ModelSimulationBase.kalypsoModule">
+       <extension
+         point="org.kalypso.afgui.kalypsoModule">
          <module
                module="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
          </module>
