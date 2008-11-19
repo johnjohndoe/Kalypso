@@ -85,10 +85,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
+   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
@@ -110,10 +110,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
-   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
+   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs )
   {
@@ -266,5 +266,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     m_result = null;
     if( m_extender != null )
       m_extender.setCursor( CROSSHAIR_CURSOR );
+  }
+
+  public int size( )
+  {
+    return m_points.size();
   }
 }
