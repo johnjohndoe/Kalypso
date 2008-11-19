@@ -68,12 +68,10 @@ public class ScenarioDataExtension
 
   private static ExtensionTracker extensionTracker;
 
-  public static String getScenarioDataPath( final String id, final String classKey )
-  {
-    final Map<String, IScenarioDatum> map = getScenarioDataMap( id );
-    return map.get( classKey ).getModelPath();
-  }
-
+  /**
+   * Returns all registered data for a given id. @return Mapping data-id (id of the data-descriptor, not the given id)
+   * to data-descriptor.
+   */
   public static Map<String, IScenarioDatum> getScenarioDataMap( final String id )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -103,9 +101,9 @@ public class ScenarioDataExtension
           final IConfigurationElement[] elements = dataSet.getChildren();
           for( final IConfigurationElement element : elements )
           {
-            final String classKey = element.getAttribute( ScenarioDatumProxy.ATTRIBUTE_CLASS_KEY );
             final ScenarioDatumProxy scenarioDatum = new ScenarioDatumProxy( element );
-            scenarioDataMap.put( classKey, scenarioDatum );
+            final String datumID = scenarioDatum.getID();
+            scenarioDataMap.put( datumID, scenarioDatum );
           }
         }
       }
