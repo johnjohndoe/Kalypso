@@ -54,8 +54,10 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -205,7 +207,14 @@ public final class GmlSerializer
       // ist garantiert Mist rauskommt
       // der XML Mechanismus decodiert so schon richtig, zumindest, wenn das
       // richtige enconding im xml-header steht.
-      stream = new BufferedInputStream( gmlURL.openStream() );
+      final URLConnection openConnection = gmlURL.openConnection();
+      // hack: disable caching of jars
+      if( openConnection instanceof JarURLConnection )
+      {
+        final JarURLConnection jarConnection = (JarURLConnection) openConnection;
+        jarConnection.setUseCaches( false );
+      }
+      stream = new BufferedInputStream( openConnection.getInputStream() );
 
       return createGMLWorkspace( new InputSource( stream ), gmlURL, factory );
     }
