@@ -121,17 +121,17 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<!-- TODO: Fehlermeldung ?? -->
-		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
-			<source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
-			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation>
-		
-		<!-- TODO: Fehlermeldung ?? -->
-		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsschnee.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
-			<source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
-			<metadata name="Szenario" value="${scenarioId}"/>
-		</kalypso.copyObservation>
+                                	        <!-- keine Description + DefaultStatus = 0 => keine Fehlermeldung -->
+                                	        <kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsniederschlag.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+                                	                <source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;0&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
+                                	                <metadata name="Szenario" value="${scenarioId}"/>
+                                	        </kalypso.copyObservation>
+                                	        
+                                	        <!-- keine Description + DefaultStatus = 0 => keine Fehlermeldung -->
+                                	        <kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_gebietsschnee.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
+                                	                <source property="${gebietsniederschlagLink}" from="${startsim}" to="${stopsim}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;0&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;" />
+                                	                <metadata name="Szenario" value="${scenarioId}"/>
+                                	        </kalypso.copyObservation>
 		
 <!--		1. Schneeversuch
 		<kalypso.copyObservation gml="modell.gml" featurePath="PegelCollectionAssociation/PegelMember[Gebiet]" context="${calc.url}" targetObservation="Schnee" forecastFrom="${startforecast}" forecastTo="${stopsim}" tokens="featureName-name">
