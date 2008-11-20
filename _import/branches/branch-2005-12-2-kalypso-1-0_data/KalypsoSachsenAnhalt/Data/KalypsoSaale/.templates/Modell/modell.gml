@@ -9224,8 +9224,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4423629.0,5734516.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5216488.833129135,5741919.7331032455</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
@@ -20353,7 +20353,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44499">
-          <ombrometer:Name>Beneckenstein</ombrometer:Name>
+          <ombrometer:Name>Benneckenstein</ombrometer:Name>
           <ombrometer:NR>44499</ombrometer:NR>
           <ombrometer:NR-Ersatz>81309</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20477,8 +20477,8 @@
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4416067.0,5741910.0</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5209230.801563027,5749625.895121467</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
