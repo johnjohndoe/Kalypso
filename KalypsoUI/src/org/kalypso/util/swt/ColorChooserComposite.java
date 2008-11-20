@@ -134,4 +134,9 @@ public class ColorChooserComposite extends Composite
     super.update();
   }
 
+  public RGB getColor( )
+  {
+    return m_color;
+  }
+
 }
