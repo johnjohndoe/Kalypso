@@ -1788,7 +1788,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final GM_Curve nodeCurve1d = NodeResultHelper.getProfileCurveFor1dNode( teschkeRelation.getProfile() );
 
       // TODO: this cannot work: we need the IdProvider for the lines in order to find the right line by its number
-      // TODO: better: change rma10s in order to write boundary-line definition into the .2d file
+      // TODO: better: change RMA·Kalypso in order to write boundary-line definition into the .2d file
       // final List<IFELine> continuityLine2Ds = m_controlModel.getCalculationUnit().getContinuityLines();
       // IContinuityLine2D selectedBoundaryLine = null;
       // for( final IFELine continuityLine2D : continuityLine2Ds )

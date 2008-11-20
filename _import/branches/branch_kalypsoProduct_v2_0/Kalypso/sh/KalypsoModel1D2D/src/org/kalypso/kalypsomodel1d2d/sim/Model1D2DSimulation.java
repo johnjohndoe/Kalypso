@@ -123,7 +123,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
     try
     {
-      tmpDir = SimulationUtilitites.createSimulationTmpDir( "rma10s" + m_calculationUnit );
+      tmpDir = SimulationUtilitites.createSimulationTmpDir( "rmakalypso" + m_calculationUnit );
       outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit );
 
       FileUtils.forceMkdir( outputDir );
@@ -177,7 +177,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
   /**
    * third level of calculation:
    * <ul>
-   * <li>run rma10s in wizard</li>
+   * <li>run RMA·Kalypso in wizard</li>
    * </ul>
    */
   public void process2( final File tmpDir, final File outputDir, final IGeoLog geoLog ) throws CoreException

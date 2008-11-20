@@ -5,15 +5,15 @@
 	<gml:name />
 	<om:time />
 	<om:procedure>
-		<om:ObservationProcedure gml:id="proc_rma10s_simulation">
-			<gml:description>RMA10s Simulation</gml:description>
-			<gml:name>RMA10s Simulation</gml:name>
+		<om:ObservationProcedure gml:id="proc_rmakalypso_simulation">
+			<gml:description>RMA·Kalypso Simulation</gml:description>
+			<gml:name>RMAKalypso Simulation</gml:name>
 			<om:method />
 		</om:ObservationProcedure>
 	</om:procedure>
 	<om:observedProperty>
-		<swe:Phenomenon gml:id="phen_iteration_rma10s">
-			<gml:name>RMA10s Iteration</gml:name>
+		<swe:Phenomenon gml:id="phen_iteration_rmakalypso">
+			<gml:name>RMAKalypso Iteration</gml:name>
 		</swe:Phenomenon>
 	</om:observedProperty>
 	<om:featureOfInterest />

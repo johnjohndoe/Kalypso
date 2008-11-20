@@ -97,7 +97,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
- * Converts discretisation model to RMA10s model
+ * Converts discretisation model to RMA·Kalypso model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */

@@ -94,10 +94,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
  */
 public class Control1D2DConverter
 {
-  /** Directory name for rma10s result files (Output...) files */
+  /** Directory name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_DIR_NAME = "result";
 
-  /** Base filename name for rma10s result files (Output...) files */
+  /** Base filename name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output";
 
   private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
@@ -169,7 +169,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * Writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * Writes the Control Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10ControlDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -258,7 +258,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * writes the Properties Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Properties Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10PropertiesDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -310,7 +310,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Continuity Lines Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
 
   @SuppressWarnings("unchecked")
@@ -358,7 +358,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Timestep Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10TimeStepDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -682,7 +682,7 @@ public class Control1D2DConverter
    * @return If unsteady calculation is selected, returns date/time of the first timestep from the control model.
    *         <p>
    *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this
-   *         value is not considered by RMA10s)
+   *         value is not considered by RMA·Kalypso)
    */
   private Date getFirstTimeStep( ) throws CoreException
   {

@@ -55,7 +55,7 @@ public interface ISimulation1D2DConstants
 
   public static final String RESOURCEBASE = "resource/";
 
-  public static final String RMA10S_BASE = RESOURCEBASE + "rma10s/";
+//  public static final String RMA10S_BASE = RESOURCEBASE + "rma10s/";
 
   public static final String R10_File = "control.R10";
 
@@ -63,7 +63,7 @@ public interface ISimulation1D2DConstants
 
   public static final String BC_WQ_File = "wqusw.txt";
 
-  public static final String SIM_EXE_FILE_PREFIX = "rma10sk_";
+  public static final String SIM_EXE_FILE_PREFIX = "rma-kalypso_";
 
   /** The date representing the steady calculation step */
   public static final Date STEADY_DATE = new Date( 0 );
@@ -106,8 +106,8 @@ public interface ISimulation1D2DConstants
   /** General status from pre-processing the calculation */
   public static final int CODE_PRE = 1000;
 
-  // RMA10s codes
-  /** Any message from the rma10s */
+  // RMAKalypso codes
+  /** Any message from the RMAKalypso */
   public static final int CODE_RMA10S = 2000;
 
   // Result Post-processing

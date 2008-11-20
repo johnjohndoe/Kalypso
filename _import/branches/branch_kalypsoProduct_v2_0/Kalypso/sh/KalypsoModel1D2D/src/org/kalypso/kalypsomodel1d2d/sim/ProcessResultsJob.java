@@ -190,7 +190,7 @@ public class ProcessResultsJob extends Job
       final File[] files = new File[] { m_inputFile };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
-      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA·Kalypso Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
 
       ProgressUtilities.worked( monitor, 1 );
 

@@ -124,7 +124,7 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Version</xs:label>
-								<xs:tooltip>Version des Rechenkerns RMA 10S</xs:tooltip>
+								<xs:tooltip>Version des Rechenkerns RMA·Kalypso</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
@@ -171,7 +171,7 @@
 								</xs:label>
 								<xs:tooltip>
 									Anzahl der Prozessoren; Wert 0: Front-Algorithmus; Wert > 0 Verwendung der MKL
-									(für Wert > 0 ist rma10sk-Version 1.1.x und höher erforderlich)
+									(für Wert > 0 ist RMA·Kalypso-Version 1.1.0 und höher erforderlich)
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>

@@ -303,7 +303,7 @@ public class IterationInfo
       if( ISimulation1D2DConstants.STEADY_DATE.equals( stepDate ) )
       {
         obsName = "Stationärer Schritt";
-        obsDesc = "RMA10s-Iterationsverlauf für stationären Schritt";
+        obsDesc = "RMAKalypso-Iterationsverlauf für stationären Schritt";
         fileName = "Iteration_steady.gml";
       }
       else
@@ -312,7 +312,7 @@ public class IterationInfo
         final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
         calendar.setTime( stepDate );
         obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar );
-        obsDesc = String.format( "RMA10s-Iterationsverlauf für Zeitschritt %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar );
+        obsDesc = String.format( "RMAKalypso-Iterationsverlauf für Zeitschritt %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar );
         fileName = String.format( "Iteration_%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", calendar );
       }
 

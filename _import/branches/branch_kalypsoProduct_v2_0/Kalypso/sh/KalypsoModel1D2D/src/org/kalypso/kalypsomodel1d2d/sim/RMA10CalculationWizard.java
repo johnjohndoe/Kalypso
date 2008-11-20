@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- * A wizard showing the progress of a rma10s calculation.
+ * A wizard showing the progress of a RMA·Kalypso calculation.
  * 
  * @author Gernot Belger
  */
