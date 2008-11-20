@@ -53,7 +53,6 @@ import org.kalypso.contribs.java.io.FileVisitor;
  * <p>
  * Zips all visited files into an archive.
  * </p>
- * 
  * <p>
  * Die Namen der Zip entries (=Pfade im ZIP) können durch ein Pattern-Replace aus den Dateinamen erzeugt werden
  * </p>
@@ -78,7 +77,7 @@ public class ZipFileVisitor implements FileVisitor
     m_zos = zos;
   }
 
-  public void close() throws IOException
+  public void close( ) throws IOException
   {
     m_zos.close();
   }
@@ -99,7 +98,6 @@ public class ZipFileVisitor implements FileVisitor
 
   /**
    * @throws IOException
-   * 
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
   public boolean visit( final File file ) throws IOException
@@ -109,8 +107,10 @@ public class ZipFileVisitor implements FileVisitor
       final String absolutePath = file.getAbsolutePath();
 
       final String relPath = absolutePath.replaceFirst( m_basePattern, m_baseReplace );
-
-      ZipUtilities.writeZipEntry( m_zos, file, relPath );
+      String unixStylePath = relPath.replace( '\\', '/' );
+      if( unixStylePath.charAt( 0 ) == '/' )
+        unixStylePath = unixStylePath.substring( 1 );
+      ZipUtilities.writeZipEntry( m_zos, file, unixStylePath );
     }
 
     return true;
