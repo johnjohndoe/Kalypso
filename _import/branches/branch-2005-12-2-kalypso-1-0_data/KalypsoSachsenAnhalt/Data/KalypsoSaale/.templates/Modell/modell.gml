@@ -353,7 +353,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="Pegel-570000">
           <pegel:PNR>570000</pegel:PNR>
-          <pegel:Name>Saale-TS-Zulauf</pegel:Name>
+          <pegel:Name>TS Saale, Zulauf</pegel:Name>
           <pegel:Gewaesser>Saale</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>10</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1403,7 +1403,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="Pegel-574210">
           <pegel:PNR>574210</pegel:PNR>
-          <pegel:Name>Erfurt - Möbisburg</pegel:Name>
+          <pegel:Name>Erfurt-Möbisburg</pegel:Name>
           <pegel:Gewaesser>Gera</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -1751,7 +1751,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="Pegel-573090">
           <pegel:PNR>573090</pegel:PNR>
-          <pegel:Name>Straußfurt Zulauf</pegel:Name>
+          <pegel:Name>TS Straußfurt, Zulauf</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -5903,7 +5903,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="Pegel-579011">
           <pegel:PNR>579011</pegel:PNR>
-          <pegel:Name>Rappbode-TS-Zulauf</pegel:Name>
+          <pegel:Name>TS Rappbode, Zulauf</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -7962,7 +7962,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-573100">
           <pegel:PNR>573100</pegel:PNR>
-          <pegel:Name>Straußfurt Abgabe</pegel:Name>
+          <pegel:Name>TS Straußfurt, Abgabe</pegel:Name>
           <pegel:Gewaesser>Unstrut</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>20</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8175,7 +8175,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-575402">
           <pegel:PNR>575402</pegel:PNR>
-          <pegel:Name>Kelbra Zulauf</pegel:Name>
+          <pegel:Name>TS Kelbra, Zulauf</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8246,7 +8246,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-575406">
           <pegel:PNR>575406</pegel:PNR>
-          <pegel:Name>Kelbra-Abgabe</pegel:Name>
+          <pegel:Name>TS Kelbra, Abgabe</pegel:Name>
           <pegel:Gewaesser>Helme</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>30</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8672,7 +8672,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579306">
           <pegel:PNR>579306</pegel:PNR>
-          <pegel:Name>HWR Kalte Bode -Zulauf</pegel:Name>
+          <pegel:Name>HWR Kalte Bode, Zulauf</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8743,7 +8743,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579330">
           <pegel:PNR>579330</pegel:PNR>
-          <pegel:Name>Königsh./HWR - Abgabe</pegel:Name>
+          <pegel:Name>HWR Kalte Bode, Abgabe</pegel:Name>
           <pegel:Gewaesser>Kalte Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8814,7 +8814,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579000">
           <pegel:PNR>579000</pegel:PNR>
-          <pegel:Name>Ül-Sperre, Zulauf</pegel:Name>
+          <pegel:Name>Überleitungssperre, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>55</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8956,7 +8956,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579012">
           <pegel:PNR>579012</pegel:PNR>
-          <pegel:Name>Rappbode-TS-Abgabe</pegel:Name>
+          <pegel:Name>TS Rappbode, Abgabe</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -9027,7 +9027,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579013">
           <pegel:PNR>579013</pegel:PNR>
-          <pegel:Name>Rappbode-TS, TWA</pegel:Name>
+          <pegel:Name>TS Rappbode, TWA</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -19541,13 +19541,13 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-579330">
           <speicher:PNR>579330</speicher:PNR>
-          <speicher:Name>RHB Kalte Bode</speicher:Name>
+          <speicher:Name>HWR Kalte Bode</speicher:Name>
           <speicher:Gewaesser>Kalte Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>4.47</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579306</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579000</speicher:PNR_ST>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>HWS Kalte Bode</speicher:TS_NAME>
+          <speicher:TS_NAME>HWR Kalte Bode</speicher:TS_NAME>
           <speicher:STEUNAME>Überleitungssperre, Zulauf</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
@@ -20143,7 +20143,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43760">
-          <ombrometer:Name>Luis.-Ohra</ombrometer:Name>
+          <ombrometer:Name>Luisenthal</ombrometer:Name>
           <ombrometer:NR>43760</ombrometer:NR>
           <ombrometer:NR-Ersatz>110814</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20188,7 +20188,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43811">
-          <ombrometer:Name>Straussfurt</ombrometer:Name>
+          <ombrometer:Name>Straußfurt</ombrometer:Name>
           <ombrometer:NR>43811</ombrometer:NR>
           <ombrometer:NR-Ersatz>93200</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20203,7 +20203,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43935">
-          <ombrometer:Name>Sondershsn.</ombrometer:Name>
+          <ombrometer:Name>Sondershausen</ombrometer:Name>
           <ombrometer:NR>43935</ombrometer:NR>
           <ombrometer:NR-Ersatz>80101</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20293,7 +20293,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44299">
-          <ombrometer:Name>Weissenfels</ombrometer:Name>
+          <ombrometer:Name>Weißenfels</ombrometer:Name>
           <ombrometer:NR>44299</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20308,7 +20308,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43530">
-          <ombrometer:Name>Halle-Kroellwitz</ombrometer:Name>
+          <ombrometer:Name>Halle-Kröllwitz</ombrometer:Name>
           <ombrometer:NR>43530</ombrometer:NR>
           <ombrometer:NR-Ersatz>130849</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20323,7 +20323,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44188">
-          <ombrometer:Name>Kelbra</ombrometer:Name>
+          <ombrometer:Name>TS Kelbra</ombrometer:Name>
           <ombrometer:NR>44188</ombrometer:NR>
           <ombrometer:NR-Ersatz>43935</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20413,7 +20413,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44403">
-          <ombrometer:Name>Elend RHB k. Bode</ombrometer:Name>
+          <ombrometer:Name>Elend (HWR Kalte Bode)</ombrometer:Name>
           <ombrometer:NR>44403</ombrometer:NR>
           <ombrometer:NR-Ersatz>72023</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20428,7 +20428,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44404">
-          <ombrometer:Name>Ueberleitgsp.</ombrometer:Name>
+          <ombrometer:Name>Überleitungssperre</ombrometer:Name>
           <ombrometer:NR>44404</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20443,12 +20443,12 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44407">
-          <ombrometer:Name>Rappbode TS</ombrometer:Name>
+          <ombrometer:Name>TS Rappbode</ombrometer:Name>
           <ombrometer:NR>44407</ombrometer:NR>
           <ombrometer:NR-Ersatz>44499</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4423629,5734516</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5216488.833129135,5741919.7331032455</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20462,8 +20462,8 @@
           <ombrometer:NR>44406</ombrometer:NR>
           <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31468">
-              <gml:coordinates cs="," decimal="." ts=" ">4425400,5734830</gml:coordinates>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5218272.874608937,5742160.828668987</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
@@ -20473,7 +20473,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44430">
-          <ombrometer:Name>Zilierbach TS</ombrometer:Name>
+          <ombrometer:Name>TS Zillierbach</ombrometer:Name>
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20488,7 +20488,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44498">
-          <ombrometer:Name>Blankenbg. Harz</ombrometer:Name>
+          <ombrometer:Name>Blankenburg</ombrometer:Name>
           <ombrometer:NR>44498</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20533,7 +20533,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43478">
-          <ombrometer:Name>Roetha</ombrometer:Name>
+          <ombrometer:Name>Rötha</ombrometer:Name>
           <ombrometer:NR>43478</ombrometer:NR>
           <ombrometer:NR-Ersatz>43451</ombrometer:NR-Ersatz>
           <gml:location>
@@ -20548,7 +20548,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43451">
-          <ombrometer:Name>Schoembach</ombrometer:Name>
+          <ombrometer:Name>Schömbach</ombrometer:Name>
           <ombrometer:NR>43451</ombrometer:NR>
           <ombrometer:NR-Ersatz>143102</ombrometer:NR-Ersatz>
           <gml:location>
