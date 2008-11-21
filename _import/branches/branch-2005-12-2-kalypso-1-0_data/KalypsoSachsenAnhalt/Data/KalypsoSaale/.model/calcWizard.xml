@@ -472,7 +472,7 @@
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 50 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWR Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_50"/>
@@ -500,7 +500,7 @@
 		<arg name="zmlTableShow" value="all"/>
 	</page>
 	<!-- TS-Steuerungs-Gruppe 55 -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Abflüsse /  Wasserstände - HWR Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Q_TS_Gruppe_55"/>
@@ -527,7 +527,7 @@
         Tabelle -->
 		<arg name="zmlTableShow" value="all"/>
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung der HWS Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Steuerung - HWR Kalte Bode" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Steu_TS_Gruppe_55"/>
@@ -876,7 +876,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWR Kalte Bode (1)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg50"/>
@@ -904,7 +904,7 @@
 		<!-- 
         Tabelle -->
 	</page>
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWS Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Ergebnisse - HWR Kalte Bode (2)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
         HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berechnung_Erg55"/>
