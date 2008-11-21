@@ -2,72 +2,76 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wfs;
 
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.naming.OperationNotSupportedException;
+import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.CoreException;
+import org.apache.commons.lang.ObjectUtils;
+import org.deegree.datatypes.QualifiedName;
+import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -84,16 +88,15 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.wfs.IWFSLayer;
-import org.kalypso.ogc.wfs.WFService;
+import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.filterencoding.Filter;
 
 /**
@@ -101,11 +104,7 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public class ImportWfsWizardPage extends WizardPage
 {
-  private Combo m_url = null;
-
-  Text m_pass = null;
-
-  Text m_user = null;
+  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, "Lade Capabilities...", null );
 
   protected Button getDefault;
 
@@ -129,90 +128,20 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Group m_layerGroup;
 
-  Label m_labelUser;
-
-  Label m_labelPass;
-
-  Button m_authentification;
-
   private Label m_labelUrl;
 
-  private WFService m_wfsService = null;
+  private WFSClient m_wfsClient = null;
 
   private Button m_addFilterButton;
 
-  private HashMap<IWFSLayer, Filter> m_filter = new HashMap<IWFSLayer, Filter>();
+  private final HashMap<WFSFeatureType, Filter> m_filter = new HashMap<WFSFeatureType, Filter>();
 
-  private final SelectionListener m_urlSelectionListener = new SelectionListener()
-  {
-    public void widgetSelected( final SelectionEvent e )
-    {
-      reloadServer();
-    }
-
-    public void widgetDefaultSelected( SelectionEvent e )
-    {
-      reloadServer();
-    }
-  };
-
-  private final SelectionListener m_authSelectionListener = new SelectionAdapter()
-  {
-    @Override
-    public void widgetSelected( SelectionEvent e )
-    {
-      if( m_authentification.getSelection() )
-      {
-        m_labelUser.setVisible( true );
-        m_labelPass.setVisible( true );
-        m_pass.setVisible( true );
-        m_user.setVisible( true );
-      }
-      else
-      {
-        m_labelUser.setVisible( false );
-        m_labelPass.setVisible( false );
-        m_pass.setVisible( false );
-        m_user.setVisible( false );
-      }
-      reloadServer();
-    }
-  };
-
-  private final SelectionListener m_userSelectionListener = new SelectionAdapter()
-  {
-    @Override
-    public void widgetSelected( SelectionEvent e )
-    {
-      reloadServer();
-    }
-
-    @Override
-    public void widgetDefaultSelected( SelectionEvent e )
-    {
-      reloadServer();
-    }
-  };
-
-  private final SelectionListener m_passSelectionListener = new SelectionAdapter()
-  {
-    @Override
-    public void widgetSelected( SelectionEvent e )
-    {
-      reloadServer();
-    }
-
-    @Override
-    public void widgetDefaultSelected( SelectionEvent e )
-    {
-      reloadServer();
-    }
-  };
+  private String m_uri = null;
 
   private final ISelectionChangedListener m_leftSelectionListener = new ISelectionChangedListener()
   {
 
-    public void selectionChanged( SelectionChangedEvent event )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
       updateButtons();
     }
@@ -221,7 +150,7 @@ public class ImportWfsWizardPage extends WizardPage
   private final SelectionListener m_addButtonSelectionListener = new SelectionAdapter()
   {
     @Override
-    public void widgetSelected( SelectionEvent e )
+    public void widgetSelected( final SelectionEvent e )
     {
       addButtonPressed();
     }
@@ -230,7 +159,7 @@ public class ImportWfsWizardPage extends WizardPage
   private final SelectionListener m_removeButtonSelectionListener = new SelectionAdapter()
   {
     @Override
-    public void widgetSelected( SelectionEvent e )
+    public void widgetSelected( final SelectionEvent e )
     {
       removeButtonPressed();
     }
@@ -239,7 +168,7 @@ public class ImportWfsWizardPage extends WizardPage
   private final SelectionListener m_filterButtonSelectionListener = new SelectionAdapter()
   {
     @Override
-    public void widgetSelected( SelectionEvent e )
+    public void widgetSelected( final SelectionEvent e )
     {
       filterPressed();
     }
@@ -247,85 +176,54 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final ISelectionChangedListener m_rightSelectionListener = new ISelectionChangedListener()
   {
-    public void selectionChanged( SelectionChangedEvent event )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
       updateButtons();
 
     }
   };
 
-  private final ModifyListener m_urlModifyListener = new ModifyListener()
-  {
-    public void modifyText( final ModifyEvent e )
-    {
-      revalidatePage();
-    }
-  };
-
-  final static ILabelProvider labelProvider = new LabelProvider()
+  final static ILabelProvider FEATURE_TYPE_LABEL_PROVIDER = new LabelProvider()
   {
     @Override
-    public String getText( Object element )
+    public String getText( final Object element )
     {
-      if( element instanceof IWFSLayer )
+      if( element instanceof WFSFeatureType )
       {
-        String title = ((IWFSLayer) element).getTitle();
-        if( title == null )
-          return ((IWFSLayer) element).getQName().getLocalPart();
+        final WFSFeatureType featureType = (WFSFeatureType) element;
+        final String title = featureType.getTitle();
+        if( title == null || title.isEmpty() )
+          return featureType.getName().getLocalName();
+
         return title;
       }
-      return "...";
-    }
-  };
 
-  final static IStructuredContentProvider contentProvider = new IStructuredContentProvider()
-  {
-
-    public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
-    {
-      // TODO Auto-generated method stub
-    }
-
-    public void dispose( )
-    {
-      // TODO Auto-generated method stub
-    }
-
-    public Object[] getElements( Object input )
-    {
-      if( input instanceof List )
-        return ((List< ? >) input).toArray();
-      return null;
+      throw new IllegalArgumentException();
     }
   };
 
   private Composite m_leftsideButtonC;
 
-  protected HashMap<URL, WFService> m_capabilites = new HashMap<URL, WFService>();
+  private final Map<URL, WFSClient> m_capabilites = new HashMap<URL, WFSClient>();
 
   final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
-
-    public void doubleClick( DoubleClickEvent event )
+    public void doubleClick( final DoubleClickEvent event )
     {
       addButtonPressed();
     }
   };
 
-  // private Label m_authLabel;
+  private StatusComposite m_statusComposite;
 
   public ImportWfsWizardPage( final String pageName )
   {
-    super( pageName );
-    setTitle( "Web Feature Service einbinden" );
-    setMessage( "Web Feature Service Daten einbinden." );
-    setPageComplete( false );
+    this( pageName, null, null );
   }
 
   public ImportWfsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setPageComplete( false );
   }
 
   /**
@@ -333,127 +231,102 @@ public class ImportWfsWizardPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-    final Composite top = new Composite( parent, SWT.NULL );
-    top.setLayout( new GridLayout() );
-    top.setLayoutData( new GridData() );
-    final Group composite = new Group( top, SWT.NULL );
+    final Group composite = new Group( parent, SWT.NULL );
     composite.setLayout( new GridLayout( 1, false ) );
-    composite.setLayoutData( new GridData() );
+
+    m_statusComposite = new StatusComposite( composite, StatusComposite.DETAILS );
+    m_statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
 
     createSourceFields( composite );
-
     createLayerSelectionControl( composite );
 
-    setControl( top );
+    setControl( composite );
+
+    setMessage( "Auf dieser Seite können Sie die Basisadresse (URL) des WebFeatureService eingeben und die anzuzeigenden Themen auswählen." );
     setPageComplete( false );
+    setStatus( null );
   }
 
   private void createSourceFields( final Composite parent )
   {
     final Group fieldGroup = new Group( parent, SWT.NULL );
     fieldGroup.setLayout( new GridLayout( 2, false ) );
-    fieldGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    fieldGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fieldGroup.setText( "Verbindungsdaten" );
 
     // add url
     m_labelUrl = new Label( fieldGroup, SWT.NONE );
     m_labelUrl.setText( "URL:" );
     m_labelUrl.setToolTipText( "URL des Web Feature Servers (WFS)" );
-    m_labelUrl.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
+    m_labelUrl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     // initialize availabel Servers
     ArrayList<String> catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
     if( catalog == null )
       catalog = new ArrayList<String>();
-    m_url = new Combo( fieldGroup, SWT.BORDER );
-    m_url.setItems( catalog.toArray( new String[catalog.size()] ) );
-    m_url.setVisibleItemCount( 15 );
 
-    final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+    final ComboViewer comboViewer = new ComboViewer( fieldGroup, SWT.BORDER );
+    comboViewer.setContentProvider( new ArrayContentProvider() );
+    comboViewer.setLabelProvider( new LabelProvider() );
+    comboViewer.setInput( catalog );
+
+    final Combo combo = comboViewer.getCombo();
+
+    combo.setVisibleItemCount( 15 );
+
+    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     gridData.widthHint = 400;
-    m_url.setLayoutData( gridData );
-    m_url.addSelectionListener( m_urlSelectionListener );
-    m_url.addModifyListener( m_urlModifyListener );
-// m_url.addFocusListener( new FocusAdapter()
-// {
-//
-// /**
-// * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-// */
-// @Override
-// public void focusLost( FocusEvent e )
-// {
-// reloadServer();
-// }
-//
-// } );
+    combo.setLayoutData( gridData );
+    combo.addSelectionListener( new SelectionListener()
+    {
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleUrlComboChanged( combo.getText() );
+      }
 
-    // add spacer
-    final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
-    label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 3 ) );
+      public void widgetDefaultSelected( final SelectionEvent e )
+      {
+        handleUrlComboChanged( combo.getText() );
+      }
+    } );
 
-    // dummy to keep the layoutaut
-    // new Label( fieldGroup, SWT.NONE ).setLayoutData( new GridData() );
-    m_authentification = new Button( fieldGroup, SWT.CHECK | SWT.LEFT );
-    GridData gridDataAuth = new GridData( GridData.FILL_HORIZONTAL );
-    gridDataAuth.horizontalSpan = 2;
-    m_authentification.setLayoutData( gridDataAuth );
-    m_authentification.setText( "Authentifizierung" );
-    m_authentification.setToolTipText( "Einblenden der Eingabefelder für Benutzername und Passwort für den Zugriff auf geschützte Services" );
-    m_authentification.setSelection( false );
-    m_authentification.addSelectionListener( m_authSelectionListener );
+    combo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        revalidatePage();
+      }
+    } );
 
-    // usr
-    m_labelUser = new Label( fieldGroup, SWT.NONE );
-    m_labelUser.setText( "Benutzername:" );
-    m_labelUser.setToolTipText( "Benutzername für den gewählten Server" );
-    m_labelUser.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
-    m_labelUser.setVisible( false );
-
-    m_user = new Text( fieldGroup, SWT.BORDER );
-    m_user.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_user.addSelectionListener( m_userSelectionListener );
-    m_user.setVisible( false );
-
-    // pass
-    m_labelPass = new Label( fieldGroup, SWT.NONE );
-    m_labelPass.setText( "Passwort:" );
-    m_labelPass.setToolTipText( "Passwort für den gewählten Server" );
-    m_labelPass.setLayoutData( new GridData( SWT.END, SWT.DEFAULT, false, false ) );
-    m_labelPass.setVisible( false );
-
-    m_pass = new Text( fieldGroup, SWT.BORDER | SWT.PASSWORD );
-    m_pass.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    m_pass.addSelectionListener( m_passSelectionListener );
-    m_pass.setVisible( false );
-
-    /*
-     * add advanced stuff advancedTag = new Button( composite, SWT.CHECK ); advancedTag.setLayoutData( new GridData(
-     * SWT.LEFT, SWT.DEFAULT, false, false ) ); advancedTag.setSelection( false ); advancedTag.addSelectionListener(
-     * this ); advancedTag.setText( "Erweitert" ); advancedTag.setToolTipText( "Erweiterte Einstellungen" ); label = new
-     * Label( composite, SWT.NONE ); label.setLayoutData( new GridData( SWT.DEFAULT, SWT.DEFAULT, false, false ) );
-     * advanced = createAdvancedControl( composite ); advanced.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT,
-     * true, true, 2, 1 ) );
-     */
-    fieldGroup.pack();
+    combo.addFocusListener( new FocusAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+       */
+      @Override
+      public void focusLost( final FocusEvent e )
+      {
+        handleUrlComboChanged( combo.getText() );
+      }
+    } );
   }
 
-  private void createLayerSelectionControl( Composite composite )
+  private void createLayerSelectionControl( final Composite composite )
   {
     m_layerGroup = new Group( composite, SWT.CENTER );
     m_layerGroup.setText( "Verfügbare Themen des Web Feature Servers" );
-    GridLayout gridLayout = new GridLayout( 4, false );
+    final GridLayout gridLayout = new GridLayout( 4, false );
     gridLayout.marginHeight = 10;
     gridLayout.horizontalSpacing = 10;
     gridLayout.verticalSpacing = 10;
     m_layerGroup.setLayout( gridLayout );
-    m_layerGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_layerGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_listLeftSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
 
     m_listLeftSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_listLeftSide.setLabelProvider( labelProvider );
-    m_listLeftSide.setContentProvider( contentProvider );
+    m_listLeftSide.setLabelProvider( FEATURE_TYPE_LABEL_PROVIDER );
+    m_listLeftSide.setContentProvider( new ArrayContentProvider() );
 
     m_listLeftSide.addSelectionChangedListener( m_leftSelectionListener );
     m_listLeftSide.addDoubleClickListener( m_doubleClickListener );
@@ -465,8 +338,8 @@ public class ImportWfsWizardPage extends WizardPage
     m_addLayer.setEnabled( false );
     m_listRightSide = new ListViewer( m_layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL );
     m_listRightSide.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    m_listRightSide.setLabelProvider( labelProvider );
-    m_listRightSide.setContentProvider( contentProvider );
+    m_listRightSide.setLabelProvider( FEATURE_TYPE_LABEL_PROVIDER );
+    m_listRightSide.setContentProvider( new ArrayContentProvider() );
 
     m_listRightSide.addSelectionChangedListener( m_rightSelectionListener );
     m_leftsideButtonC = new Composite( m_layerGroup, SWT.NULL );
@@ -487,203 +360,68 @@ public class ImportWfsWizardPage extends WizardPage
     m_layerGroup.pack();
   }
 
-  // private Composite createAdvancedControl( Composite arg0 )
-  // {
-  // advanced = new Group( arg0, SWT.BORDER );
-  // advanced.setLayout( new GridLayout( 2, false ) );
-  //
-  // // get
-  // Label label = new Label( advanced, SWT.NONE );
-  // label.setText( "Get" );
-  // label.setToolTipText( "Http Get Protocol" );
-  // label.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false, false )
-  // );
-  //
-  // getDefault = new Button( advanced, SWT.CHECK );
-  // getDefault.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false,
-  // false ) );
-  // getDefault.setSelection( false );
-  // getDefault.addSelectionListener( this );
-  //
-  // // post
-  // label = new Label( advanced, SWT.NONE );
-  // label.setText( "Post" );
-  // label.setToolTipText( "Http Post Protocol" );
-  // label.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false, false )
-  // );
-  //
-  // postDefault = new Button( advanced, SWT.CHECK );
-  // postDefault.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false,
-  // false ) );
-  // postDefault.setSelection( false );
-  // postDefault.addSelectionListener( this );
-  //
-  // // add spacer
-  // label = new Label( advanced, SWT.SEPARATOR | SWT.HORIZONTAL );
-  // label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 3
-  // ) );
-  //
-  // // buffer
-  // label = new Label( advanced, SWT.NONE );
-  // label.setText( "Buffer Groesse (Features)" );
-  // label
-  // .setToolTipText( "Groessere buffer sizes benötigen mehr Speicher, es erhöht
-  // aber die Geschwindigkeit. Die buffer-size wird in Anzahl Features
-  // gemessen." );
-  // label.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false, false )
-  // );
-  //
-  // bufferText = new Text( advanced, SWT.BORDER | SWT.RIGHT );
-  // bufferText.setLayoutData( new GridData( GridData.FILL, SWT.DEFAULT, true,
-  // false, 1, 1 ) );
-  // bufferText.setText( bufferDefault );
-  // bufferText.setTextLimit( 5 );
-  // bufferText.addModifyListener( this );
-  //
-  // // timeout
-  // label = new Label( advanced, SWT.NONE );
-  // label.setText( "Timeout (Sekunden)" );
-  // label
-  // .setToolTipText( "Längeres timeouts unterstützt unzuverlässigere
-  // Netzwerkverbindungen, führt unter umständen aber auch zu längeren render
-  // Zeiten. Die timeout-size wird in Sekunden gemessen." );
-  // label.setLayoutData( new GridData( SWT.CENTER, SWT.DEFAULT, false, false )
-  // );
-  //
-  // timeoutText = new Text( advanced, SWT.BORDER | SWT.RIGHT );
-  // timeoutText.setLayoutData( new GridData( GridData.FILL, SWT.DEFAULT, true,
-  // false, 1, 1 ) );
-  // timeoutText.setText( timeoutDefault );
-  // timeoutText.setTextLimit( 5 );
-  // timeoutText.addModifyListener( this );
-  //
-  // advanced.setVisible( false );
-  //
-  // return advanced;
-  // }
-
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   * @param e
-   */
-  public void widgetSelected( SelectionEvent e )
-  {
-    // Button b;
-    if( e.widget instanceof Button )
-    {
-      // b = (Button) e.widget;
-      // if( b.equals( getDefault ) )
-      // {
-      // // allow get was clicked
-      // if( getDefault.getSelection() && postDefault.getSelection() )
-      // {
-      // postDefault.setSelection( false );
-      // }
-      // }
-      // else
-      // {
-      // if( b.equals( postDefault ) )
-      // {
-      // if( postDefault.getSelection() && getDefault.getSelection() )
-      // {
-      // getDefault.setSelection( false );
-      // }
-      // }
-      // else
-      // {
-      // if( b.equals( advancedTag ) )
-      // {
-      // advanced.setVisible( advancedTag.getSelection() );
-      // }
-      // }
-
-    }
-    getContainer().updateButtons();
-  }
-
-  private URL getSchemaURL( String layer ) throws MalformedURLException
-  {
-    return new URL( getUrl() + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
-  }
-
-  public URL getUrl( ) throws MalformedURLException
-  {
-    return new URL( m_url.getText().trim() );
-  }
-
-  /**
-   * @throws Exception,
-   *             OperationNotSupportedException
-   * @throws MalformedURLException
-   */
-  public String guessFeaturePath( String layer ) throws MalformedURLException, Exception, OperationNotSupportedException
-  {
-    // FIXME this method is not working properly, it has to be adjusted
-    // when the Schema parser is adjusted!!!!!!
-    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( null, getSchemaURL( layer ) );
-    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    if( featureTypes.length == 1 )
-      return featureTypes[0].getQName().getLocalPart();
-    for( int i = 0; i < featureTypes.length; i++ )
-    {
-      IFeatureType ft = featureTypes[i];
-      IPropertyType[] properties = ft.getProperties();
-      for( int j = 0; j < properties.length; j++ )
-      {
-        IPropertyType property = properties[j];
-        if( property instanceof IRelationType )
-        {
-          return property.getQName().getLocalPart();
-        }
-
-      }
-    }
-    throw new OperationNotSupportedException( "Guess of feature path failed!" );
-  }
-
-  public void removeListeners( )
-  {
-    m_addLayer.removeSelectionListener( m_addButtonSelectionListener );
-    m_removeLayer.removeSelectionListener( m_removeButtonSelectionListener );
-    m_listLeftSide.removeSelectionChangedListener( m_leftSelectionListener );
-    m_listRightSide.removeSelectionChangedListener( m_rightSelectionListener );
-  }
-
-  public Filter getFilter( IWFSLayer wfsLayer )
+  public Filter getFilter( final WFSFeatureType wfsLayer )
   {
     return m_filter.get( wfsLayer );
   }
 
   protected void reloadServer( )
   {
+    setErrorMessage( null );
+    setPageComplete( false );
+    m_wfsClient = null;
+    m_listLeftSide.setInput( new Object[0] );
+    m_listRightSide.setInput( new ArrayList<IWFSLayer>() );
+    setStatus( LOADING_STATUS );
+
+    if( m_uri == null || m_uri.trim().isEmpty() )
+    {
+      setStatus( null );
+      return;
+    }
+
     try
     {
-      m_wfsService = getCapabilites();
+      final URL service = new URL( m_uri.trim() );
+      if( m_capabilites.containsKey( service ) )
+      {
+        m_wfsClient = m_capabilites.get( service );
+        return;
+      }
+
+      final CapabilitiesGetter runnable = new CapabilitiesGetter( service );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+      setStatus( status );
+      if( !status.isOK() )
+        setErrorMessage( status.getMessage() );
+
+      final WFSClient capabilities = runnable.getCapabilities();
+      m_capabilites.put( service, capabilities );
+      m_wfsClient = capabilities;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      setErrorMessage( "Ungültige URL" );
-      setPageComplete( false );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Ungültige URL: " + m_uri, e );
+      setErrorMessage( status.getMessage() );
+      setStatus( status );
     }
-    catch( IOException e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Die Verbindung zum WFS-Dienst konnte nicht hergestellt werden:\n" + e.getMessage() );
-      setPageComplete( false );
-    }
-    catch( Throwable e )
-    {
-      e.printStackTrace();
-      setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes:\n" + e.getMessage() );
-      setPageComplete( false );
-    }
-    final IWFSLayer[] featureTypes = m_wfsService.getLayer();
-    final List<IWFSLayer> list = Arrays.asList( featureTypes );
-    m_listLeftSide.setInput( list );
-    m_listRightSide.setInput( new ArrayList<IWFSLayer>() );
+
+    if( m_wfsClient != null )
+      m_listLeftSide.setInput( m_wfsClient.getFeatureTypes() );
+
     updateButtons();
+  }
+
+  private void setStatus( final IStatus status )
+  {
+    m_statusComposite.setStatus( status );
+
+    final boolean visible = status != null && !status.isOK();
+
+    ((GridData) m_statusComposite.getLayoutData()).exclude = !visible;
+    m_statusComposite.setVisible( visible );
+    m_statusComposite.getParent().layout();
   }
 
   protected void addButtonPressed( )
@@ -692,40 +430,41 @@ public class ImportWfsWizardPage extends WizardPage
     if( selection != null )
     {
       final Object[] original = selection.toArray();
-      for( int i = 0; i < original.length; i++ )
+      for( final Object element : original )
       {
-        IWFSLayer wfsFT = (IWFSLayer) original[i];
-        final List<IWFSLayer> input = getLayerList();
+        final WFSFeatureType wfsFT = (WFSFeatureType) element;
+        final List<WFSFeatureType> input = getLayerList();
         if( !input.contains( wfsFT ) )
         {
           input.add( wfsFT );
           m_listRightSide.add( wfsFT );
         }
       }
+
+      m_listRightSide.setSelection( new StructuredSelection( original ) );
+
       updateButtons();
     }
   }
 
   /** Just for casting the list and suppress the warning */
   @SuppressWarnings("unchecked")
-  List<IWFSLayer> getLayerList( )
+  List<WFSFeatureType> getLayerList( )
   {
-    return (List<IWFSLayer>) m_listRightSide.getInput();
+    return (List<WFSFeatureType>) m_listRightSide.getInput();
   }
 
   protected void removeButtonPressed( )
   {
-    IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
     if( selection != null )
     {
-      Object[] list = selection.toArray();
-      for( int i = 0; i < list.length; i++ )
+      final Object[] list = selection.toArray();
+      for( final Object element : list )
       {
-        final IWFSLayer wfsFT = (IWFSLayer) list[i];
-        final List<IWFSLayer> input = getLayerList();
-        input.remove( wfsFT );
-        m_listRightSide.remove( wfsFT );
-        // if( ArrayUtils.contains( list, wfsFT ) )
+        final List<WFSFeatureType> input = getLayerList();
+        input.remove( element );
+        m_listRightSide.remove( element );
       }
       updateButtons();
     }
@@ -733,105 +472,90 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void filterPressed( )
   {
-    // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
-    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
-    final IWFSLayer wfsFT = (IWFSLayer) selection.getFirstElement();
-    final Filter oldFilter = m_filter.get( wfsFT );
-    final IFeatureType ft = wfsFT.getFeatureType();
-    final String[] supportedOperations = m_wfsService.getAllFilterCapabilitesOperations();
-    // final String[] supportedOperations = WFSUtilities.getAllFilterCapabilitesOperations( m_wfsCapabilites );
-    final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, supportedOperations, false );
-    int open = dialog.open();
-    if( open == Window.OK )
-      m_filter.put( wfsFT, dialog.getFilter() );
-    revalidatePage();
+    try
+    {
+      // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
+      final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+      final WFSFeatureType wfsFT = (WFSFeatureType) selection.getFirstElement();
+      final Filter oldFilter = m_filter.get( wfsFT );
+
+      final QualifiedName name = wfsFT.getName();
+      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final String namespace = name.getNamespace().toString();
+      final IGMLSchema schema = catalog.getSchema( namespace, "3.1.1" );
+      final IFeatureType ft = schema.getFeatureType( new QName( namespace, name.getLocalName() ) );
+
+      final String[] supportedOperations = m_wfsClient.getAllFilterCapabilitesOperations();
+      final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, supportedOperations, false );
+      final int open = dialog.open();
+      if( open == Window.OK )
+        m_filter.put( wfsFT, dialog.getFilter() );
+      revalidatePage();
+    }
+    catch( final InvocationTargetException e )
+    {
+      e.getTargetException().printStackTrace();
+      setErrorMessage( e.getTargetException().toString() );
+    }
   }
 
   protected void revalidatePage( )
   {
-    final List<IWFSLayer> input = getLayerList();
+    final List<WFSFeatureType> input = getLayerList();
     setPageComplete( input != null && !input.isEmpty() );
   }
 
   void updateButtons( )
   {
     final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
-    final Object firstElement = selection.getFirstElement();
-    IFeatureType selectedFT = null;
-    if( firstElement instanceof IWFSLayer )
-    {
-      final IWFSLayer wfsLayer = (IWFSLayer) firstElement;
-      selectedFT = wfsLayer.getFeatureType();
-    }
-    m_addFilterButton.setEnabled( (selection).size() == 1 && selectedFT != null );
-    m_removeLayer.setEnabled( (selection).size() > 0 );
+    m_addFilterButton.setEnabled( selection.size() == 1 );
+    m_removeLayer.setEnabled( selection.size() > 0 );
     m_addLayer.setEnabled( ((IStructuredSelection) m_listLeftSide.getSelection()).size() > 0 );
     revalidatePage();
   }
 
-  public IWFSLayer[] getChoosenFeatureLayer( )
+  public WFSFeatureType[] getChoosenFeatureLayer( )
   {
-    final List<IWFSLayer> input = getLayerList();
+    final List<WFSFeatureType> input = getLayerList();
     if( input == null )
-      return new IWFSLayer[0];
-    return input.toArray( new IWFSLayer[input.size()] );
-
+      return new WFSFeatureType[0];
+    return input.toArray( new WFSFeatureType[input.size()] );
   }
 
   private final class CapabilitiesGetter implements ICoreRunnableWithProgress
   {
     private final URL m_service;
 
-    private WFService m_wfs = null;
+    private WFSClient m_wfs = null;
 
-    protected CapabilitiesGetter( URL service )
+    protected CapabilitiesGetter( final URL service )
     {
-      super();
       m_service = service;
     }
 
-    public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+    public IStatus execute( final IProgressMonitor monitor )
     {
-      // final WFService capabilities;
-      try
-      {
-        WFService wfs = new WFService( m_service.toExternalForm() );
-
-        // capabilities = WFSUtilities.getCapabilites( m_service );
-        m_capabilites.put( m_service, wfs );
-        m_wfs = wfs;
-      }
-      catch( CoreException e )
-      {
-        throw e;
-      }
-      catch( Exception e )
-      {
-        return StatusUtilities.statusFromThrowable( e.getCause() );
-      }
-
-      // store url and capabilites in a map so it is only loaded once
-
-      return Status.OK_STATUS;
+      m_wfs = new WFSClient( m_service );
+      return m_wfs.load();
     }
 
-    public WFService getCapabilities( )
+    public WFSClient getCapabilities( )
     {
       return m_wfs;
     }
   }
 
-  private synchronized WFService getCapabilites( ) throws Throwable
+  protected void handleUrlComboChanged( final String text )
   {
-    final URL service = new URL( getUrl().toString().trim() );
-    if( m_capabilites.containsKey( service ) )
-      return m_capabilites.get( service );
+    if( ObjectUtils.equals( m_uri, text ) )
+      return;
 
-    final CapabilitiesGetter runnable = new CapabilitiesGetter( service );
+    m_uri = text;
+    reloadServer();
+  }
 
-    IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
-    if( status.getSeverity() == IStatus.ERROR )
-      throw status.getException();
-    return runnable.getCapabilities();
+  public String getUri( )
+  {
+    return m_uri;
   }
 }
