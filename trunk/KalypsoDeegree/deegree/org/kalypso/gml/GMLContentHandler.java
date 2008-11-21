@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -49,7 +52,9 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
-import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -74,14 +79,15 @@ import org.xml.sax.XMLReader;
  * hierarchy from it.<br>
  * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
  * property-values to their corresponding {@link IMarshallingTypeHandler}s.
- * 
+ *
  * @author Andreas von Doemming
  */
 public class GMLContentHandler extends DelegateContentHandler implements UnmarshallResultEater
 {
-  private final URL m_context;
+  /* Additional schema locations parsed from the 'schemaLocation' attribute of the root element */
+  private final Map<String, URL> m_schemaLocations = new HashMap<String, URL>();
 
-  private final IGMLSchema m_schema;
+  private final URL m_context;
 
   private final XMLReader m_xmlReader;
 
@@ -97,11 +103,20 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
   private final ContentHandler m_parentHandler;
 
-  public GMLContentHandler( final XMLReader xmlReader, final URL context, final IGMLSchema schema )
+  private String m_version;
+
+  /**
+   * @param schemaLocations
+   *          If non-<code>null</code>, these locations will be used to load the corresponding schmema's (i.e. given to
+   *          the catalog). If the schema is already cached or a location is registered, the location will probably
+   *          ignored.
+   */
+  public GMLContentHandler( final XMLReader xmlReader, final URL context, final Map<String, URL> schemaLocations )
   {
     m_xmlReader = xmlReader;
     m_context = context;
-    m_schema = schema;
+    if( schemaLocations != null )
+      m_schemaLocations.putAll( schemaLocations );
 
     m_parentHandler = m_xmlReader.getContentHandler();
   }
@@ -129,8 +144,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       return;
     }
 
-    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
-    final QName qname = new QName( localUri, localName );
+    final QName qname = new QName( uri, localName );
 
     if( (m_scopeFeature == null && m_scopeProperty == null) || (m_scopeFeature != null && m_scopeProperty instanceof IRelationType) )
       startFeature( atts, qname );
@@ -195,18 +209,39 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       try
       {
-        final String gmlVersion = m_schema.getGMLVersion();
+        final GMLSchema schema = findSchema( uri );
+        final String gmlVersion = schema.getGMLVersion();
 
         // TODO: we SHOULD provide here the full information to the handler: qname, att, ...
         typeHandler.unmarshal( m_xmlReader, m_context, this, gmlVersion );
       }
       catch( final TypeRegistryException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
 
         m_xmlReader.getErrorHandler().warning( new SAXParseException( "Failed to unmarshall property value: " + vpt, getLocator(), e ) );
       }
+    }
+  }
+
+  private GMLSchema findSchema( final String namespace ) throws SAXParseException
+  {
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final URL locationHint = m_schemaLocations.get( namespace );
+      final GMLSchema schema = schemaCatalog.getSchema( namespace, m_version, locationHint );
+
+      if( m_version == null )
+        m_version = schema.getGMLVersion();
+
+      return schema;
+    }
+    catch( final InvocationTargetException e )
+    {
+      final Exception targetException = (Exception) e.getTargetException();
+      targetException.printStackTrace();
+      throw new SAXParseException( "Unknown schema for namespace: " + namespace, getLocator(), targetException );
     }
   }
 
@@ -249,7 +284,8 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   private void startFeature( final Attributes atts, final QName qname ) throws SAXException
   {
     /* Root feature or new sub-feature. */
-    final IFeatureType featureType = m_schema.getFeatureType( qname );
+    final GMLSchema schema = findSchema( qname.getNamespaceURI() );
+    final IFeatureType featureType = schema.getFeatureType( qname );
     if( featureType == null )
       throw new SAXException( "No feature type found for: " + qname );
 
@@ -271,8 +307,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
     /* First check, if a current scope is closing */
-
-    final String localUri = uri == null || uri.isEmpty() ? m_schema.getTargetNamespace() : uri;
+    final String localUri = uri == null || uri.isEmpty() ? null /* schema.getTargetNamespace() */: uri;
 
     if( m_simpleContent != null )
     {
