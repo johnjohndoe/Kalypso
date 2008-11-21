@@ -38,45 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.ui.view.legend;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.IProfilView;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author kimwerner
  */
-public class ProfilTheme extends AbstractProfilTheme
-
+public class ProfilChartTreeLabelProvider extends ChartTreeLabelProvider
 {
-
-  
-
-  public ProfilTheme(final IProfil profil, final String name, final ICoordinateMapper cm )
-  {
-    super(profil, IWspmConstants.NS_WSPM, name, null, cm );
-
-  }
+  final ProfilChartView m_profilChartView;
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#createLayerPanel()
+   * @see org.kalypso.chart.ui.editor.ChartTreeLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public IProfilView createLayerPanel( )
+  public String getText( Object element )
   {
-    for (final IChartLayer layer : getLayerManager().getLayers())
+    if( element instanceof ILayerManager )
     {
-      if (layer.isActive()&&layer instanceof IProfilChartLayer)
-        return ((IProfilChartLayer)layer).createLayerPanel();
+      if( m_profilChartView == null )
+        return "Profil";
+      return m_profilChartView.getProfil().getName();
     }
-    return null;
+    return super.getText( element );
   }
 
-  
+  public ProfilChartTreeLabelProvider( IChartPart editor )
+  {
+    super( editor );
+    if( editor instanceof ProfilChartView )
+      m_profilChartView = (ProfilChartView) editor;
+    else
+      m_profilChartView = null;
+
+  }
+
 }

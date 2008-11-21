@@ -40,31 +40,43 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
 
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
- * @author Gernot Belger
+ * @author kimwerner
  */
-public class ChartView extends AbstractProfilViewPart2 implements IChartPart
+public class ChartView extends AbstractProfilViewPart2 implements IChartPart, IProfilListener
 {
+
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
-  private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
+  private ProfilChartView m_chart = null;
 
-  private ChartEditorTreeOutlinePage m_outlinePage;
+  private FormToolkit m_toolkit = null;
+
+  private Form m_form = null;
+  
+  
 
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
@@ -72,20 +84,69 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
   @Override
   protected Control createContent( final Composite parent )
   {
-    final Control control = m_profilPart.createPartControl( parent );
+    if( m_toolkit == null )
+    {
+      m_toolkit = new FormToolkit( parent.getDisplay() );
+    }
+    if( m_form == null )
+    {
+      m_form = m_toolkit.createForm( parent );
+      m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      final GridLayout gridLayout = new GridLayout();
+      gridLayout.marginWidth = 0;
+      gridLayout.marginHeight = 0;
+      m_form.setLayout( gridLayout );
+      m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      m_form.getBody().setLayout( new GridLayout() );
+      m_toolkit.decorateFormHeading( m_form );
+    }
+    if( m_chart == null )
+    {
+      m_chart = new ProfilChartView();
+      m_chart.createControl( m_form.getBody() );
+    }
+    if( getProfil() == null )
+    {
+      m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      m_chart.setProfil( null );
+    }
+    else
+    {
+      m_form.setMessage( null );
+      m_chart.setProfil( getProfil() );
+      ChartUtilities.maximize( m_chart.getChart().getChartModel() );
+      m_form.getBody().layout();
+    }
+    m_form.getBody().setFocus();
+    return getChartComposite();
 
-    m_profilPart.setProfil( getProfil() );
-
-    return control;
   }
 
   /**
-   * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#saveState()
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2#dispose()
    */
   @Override
-  protected void saveState( )
+  public void dispose( )
   {
-    // TODO Auto-generated method stub
+    if( m_form != null && !m_form.isDisposed() )
+    {
+      m_form.dispose();
+      m_form = null;
+    }
+    if( m_toolkit != null )
+    {
+      m_toolkit.dispose();
+      m_toolkit = null;
+    }
+
+    if( m_chart != null )
+    {
+      ChartHandlerUtilities.updateElements( m_chart );
+      m_chart.dispose();
+      m_chart = null;
+    }
+
+    super.dispose();
   }
 
   /**
@@ -94,7 +155,19 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    // do nothing the ProfilChartView is itself a listener on the profile
+    if( hint.isPointPropertiesChanged() )
+      m_chart.updateLayer();
+  }
+
+  public ChartComposite getChart( )
+  {
+    return m_chart.getChartComposite();
+  }
+
+  @Override
+  protected void saveState( )
+  {
+    //m_chart.saveState( getProfilViewData().getChartMemento() );
   }
 
   /**
@@ -102,7 +175,7 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public void onProblemMarkerChanged( final IProfil source )
   {
-    // do nothing the ProfilChartView is itself a listener on the profile
+    //
   }
 
   /**
@@ -112,50 +185,13 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
   @Override
   public Object getAdapter( final Class adapter )
   {
-    final Object adapted = m_profilPart.getAdapter( adapter );
-    if( adapted != null )
-      return adapted;
-
-    if( ChartComposite.class.equals( adapter ) )
-    {
-      ChartComposite chart = getChartComposite();
-      if( chart != null && !chart.isDisposed() )
-        return chart;
-      else
-        return null;
-    }
 
     if( IChartPart.class.equals( adapter ) )
     {
-      return this;
-    }
-
-    if( IContentOutlinePage.class.equals( adapter ) )
-    {
-      if( m_outlinePage == null )
-      {
-        m_outlinePage = new ChartEditorTreeOutlinePage( this );
-      }
-      return m_outlinePage;
+      return m_chart;
     }
 
     return super.getAdapter( adapter );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.IProfilViewDataListener#onProfilViewDataChanged()
-   */
-  public void onProfilViewDataChanged( )
-  {
-    // probably nothing to do
-//    if( (m_profilPart.getViewData() != null) && (m_profilPart.getProfil() != null) )
-//    {
-//      final IComponent[] markerTypes = m_profilPart.getProfil().getPointMarkerTypes();
-//      for( final IComponent markerTyp : markerTypes )
-//      {
-//        m_profilPart.getViewData().setMarkerVisibility( markerTyp.getId(), true );
-//      }
-//    }
   }
 
   /**
@@ -163,8 +199,9 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
-    return m_profilPart.getProfilChartView().getAxisDragHandler();
-    // return null;
+    if( m_chart == null )
+      return null;
+    return m_chart.getAxisDragHandler();
   }
 
   /**
@@ -172,7 +209,9 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public ChartComposite getChartComposite( )
   {
-    return m_profilPart.getProfilChartView().getChart();
+    if( m_chart == null )
+      return null;
+    return m_chart.getChartComposite();
   }
 
   /**
@@ -180,6 +219,9 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
-    return m_profilPart.getProfilChartView().getPlotDragHandler();
+    if( m_chart == null )
+      return null;
+    return m_chart.getPlotDragHandler();
   }
+
 }

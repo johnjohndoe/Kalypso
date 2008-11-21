@@ -41,8 +41,10 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel;
@@ -52,8 +54,6 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -62,9 +62,21 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class BuildingBridgeTheme extends AbstractProfilTheme
 
 {
-  public BuildingBridgeTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", chartLayers, cm );
+    if(hint.isPointsChanged()||hint.isPointValuesChanged())
+    {
+       fireLayerContentChanged();
+    }
+  }
+
+  public BuildingBridgeTheme(final IProfil profil,final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  {
+    super(profil, IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", chartLayers, cm );
   }
 
   /**

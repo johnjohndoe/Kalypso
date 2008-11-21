@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -58,7 +57,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -66,11 +64,11 @@ import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilViewPart2, IProfilViewDataListener, IProfilListener, IProfilProviderListener, IAdapterEater
+public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilProviderListener, IAdapterEater<IProfilProvider2>
 {
-  //private ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
+  // private ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
 
-  private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( IProfilProvider2.class, this, new EditorFirstAdapterFinder(), new EditorFirstAdapterFinder() );
+  private final AdapterPartListener<IProfilProvider2> m_adapterPartListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, new EditorFirstAdapterFinder<IProfilProvider2>(), new EditorFirstAdapterFinder<IProfilProvider2>() );
 
   private IProfil m_profile = null;
 
@@ -91,9 +89,9 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
       handleProfilChanged();
       return Status.OK_STATUS;
     }
+
   };
 
- 
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -102,7 +100,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     final IWorkbenchPage page = site.getPage();
 
     m_adapterPartListener.init( page );
-   
+
   }
 
   public IProfil getProfil( )
@@ -110,15 +108,13 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     return m_profile;
   }
 
-  public void setAdapter( final IWorkbenchPart part, final Object adapter )
+  public void setAdapter( final IWorkbenchPart part, final IProfilProvider2 adapter )
   {
-    final IProfilProvider2 provider = (IProfilProvider2) adapter;
-    if( provider == m_provider )
+    if( adapter == m_provider )
     {
       // for first initialization, provider empty profile
-      if( provider == null )
+      if( adapter == null )
         onProfilProviderChanged( null, null, null, null, null );
-
       return;
     }
 
@@ -131,7 +127,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     final IProfil oldProfile = m_profile;
     final ProfilViewData oldViewData = getProfilViewData();
 
-    m_provider = provider;
+    m_provider = adapter;
     m_profilProviderPart = part;
 
     if( m_provider != null )
@@ -150,7 +146,9 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   public void dispose( )
   {
     m_adapterPartListener.dispose();
- 
+
+    m_control.dispose();
+
     m_profilProviderPart = null;
 
     unhookProvider();
@@ -180,18 +178,12 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
    */
   public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
-    unhookProvider();
 
     setPartNames( Messages.AbstractProfilViewPart2_0, Messages.AbstractProfilViewPart2_1 );
 
+          
     m_profile = newProfile;
     m_viewData = newViewData;
-
-    if( m_profile != null )
-      m_profile.addProfilListener( this );
-
-    if( m_viewData != null )
-      m_viewData.addProfilViewDataListener( this );
 
     onProfilChanged();
   }
@@ -229,17 +221,6 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     saveState();
 
-    if( m_profile != null )
-    {
-      m_profile.removeProfilListener( this );
-      m_profile = null;
-    }
-
-    if( m_viewData != null )
-    {
-      m_viewData.removeProfilViewDataListener( this );
-      m_viewData = null;
-    }
   }
 
   @Override
@@ -282,12 +263,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     if( parent == null || parent.isDisposed() )
       return;
 
-    for( final Control c : parent.getChildren() )
-      c.dispose();
-
-    final Control control = createContent( parent );
-    if( control != null )
-      control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    createContent( parent );
     parent.layout();
   }
 

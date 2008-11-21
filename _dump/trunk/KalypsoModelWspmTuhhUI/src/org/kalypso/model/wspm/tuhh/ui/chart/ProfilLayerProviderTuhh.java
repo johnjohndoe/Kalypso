@@ -268,6 +268,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
+    
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
 
@@ -290,45 +291,45 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
-      return new VegetationTheme( new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ),
+      return new VegetationTheme(profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ),
           new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
     {
-      return new GeoCoordinateTheme( new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ),
+      return new GeoCoordinateTheme(profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ),
           new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) }, null );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
-      return new CrossSectionTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
+      return new CrossSectionTheme(profil, new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
           new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {
 
-      return new DeviderTheme( new IProfilChartLayer[] { new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true ),
+      return new DeviderTheme(profil, new IProfilChartLayer[] { new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true ),
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false ), new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_lsp, 15, false ) }, cmLeft );
     }
 
     else if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
-      return new RoughnessTheme( new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ),
+      return new RoughnessTheme(profil, new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ),
           new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) }, cmRight );
     }
 
     else if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
-      return new BuildingBridgeTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
+      return new BuildingBridgeTheme(profil, new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
           new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
-      return new BuildingWeirTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ),
+      return new BuildingWeirTheme(profil,new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ),
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) }, cmLeft );
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
-      return new BuildingTubesTheme( new IProfilChartLayer[] { new TubeLayer( profil, m_lsp ) }, cmLeft );
+      return new BuildingTubesTheme(profil, new IProfilChartLayer[] { new TubeLayer( profil, m_lsp ) }, cmLeft );
 
 // if( layerId.equals( IWspmTuhhConstants.LAYER_WASSERSPIEGEL ) )
 // {

@@ -41,6 +41,9 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -56,10 +59,9 @@ public class CrossSectionTheme extends AbstractProfilTheme
 
 {
 
-  public CrossSectionTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public CrossSectionTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", chartLayers, cm );
-
+    super(profil, IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", chartLayers, cm );
   }
 
   /**
@@ -68,8 +70,17 @@ public class CrossSectionTheme extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-
     return new GelaendePanel( getProfil(), getLayerManager().getLayerById( IWspmConstants.POINT_PROPERTY_HOEHE ) );
   }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    if(hint.isActivePointChanged()||hint.isPointValuesChanged()||hint.isPointsChanged())
+    {
+      fireLayerContentChanged();
+    }
+  }
 }

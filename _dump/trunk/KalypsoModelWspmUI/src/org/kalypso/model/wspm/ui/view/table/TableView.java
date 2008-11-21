@@ -251,7 +251,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     final GridData outlineData = new GridData( SWT.FILL, SWT.FILL, true, false );
     outlineData.exclude = true;
     m_outlineContainer.setLayoutData( outlineData );
-    m_problemView = new ProfileProblemView(m_toolkit,m_outlineContainer,MAX_OUTLINE_HEIGHT);
+    m_problemView = new ProfileProblemView( m_toolkit, m_outlineContainer, MAX_OUTLINE_HEIGHT );
 
     m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
@@ -262,9 +262,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_cursor.setVisible( true );
     m_cursor.setEnabled( true );
-    
-    
-    
+
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
     m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -309,9 +307,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( (m_form == null) || m_form.isDisposed() )
       return;
 
-    final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
-
-    if( (m_profile == null) || (pvd == null) )
+    if( (m_profile == null) )
     {
       m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
 
@@ -416,9 +412,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected final void updateProblemView( )
   {
-    if( m_problemView == null|| m_outlineContainer==null||m_outlineContainer.isDisposed() )
+    if( m_problemView == null || m_outlineContainer == null || m_outlineContainer.isDisposed() )
       return;
-    final int height = m_problemView.updateSections( m_profile);
+    final int height = m_problemView.updateSections( m_profile );
     if( height < 0 )
     {
       ((GridData) (m_outlineContainer.getLayoutData())).exclude = true;
@@ -430,10 +426,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       m_outlineContainer.setVisible( true );
       ((GridData) (m_outlineContainer.getLayoutData())).heightHint = Math.min( height, MAX_OUTLINE_HEIGHT );
     }
-    
+
     m_view.getControl().getParent().layout();
 
- 
   }
 
   /**

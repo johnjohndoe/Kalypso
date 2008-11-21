@@ -47,6 +47,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IRecord;
 
@@ -63,6 +65,16 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class PointsLineLayer extends AbstractProfilLayer
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    if(hint.isPointsChanged()||hint.isPointValuesChanged())
+      getEventHandler().fireLayerContentChanged( this );
+  }
 
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {

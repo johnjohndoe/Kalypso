@@ -132,10 +132,10 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "", "%.03f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "##,###", "%.03f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "##,####", "%.03f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     if( ComponentUiHandlerFactory.Q_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

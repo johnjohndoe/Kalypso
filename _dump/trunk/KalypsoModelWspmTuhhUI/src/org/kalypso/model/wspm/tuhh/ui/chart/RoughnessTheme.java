@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -47,7 +50,6 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -67,12 +69,22 @@ public class RoughnessTheme extends AbstractProfilTheme
     return super.getTargetRange( );
   }
 
-  public RoughnessTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public RoughnessTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_RAUHEIT, "Rauheiten", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_RAUHEIT, "Rauheiten", chartLayers, cm );
 
   }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    if(hint.isMarkerMoved()||hint.isPointPropertiesChanged()||hint.isPointValuesChanged()||hint.isPointsChanged())
+    {
+      fireLayerContentChanged();
+    }
+  }
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
    */

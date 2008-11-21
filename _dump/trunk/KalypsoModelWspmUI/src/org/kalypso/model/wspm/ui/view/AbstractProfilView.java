@@ -43,23 +43,18 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
-
 /**
  * @author belger
  * @author kimwerner
  */
 
-public abstract class AbstractProfilView implements IProfilListener, IProfilView, IChartPart
+public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
 {
 
@@ -113,47 +108,12 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   }
 
   protected abstract Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style );
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
-  public ChartComposite getChartComposite( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
-   */
-  public Object getAdapter( Class< ? > clazz )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+  
   public final Control getControl( )
   {
     return m_control;
   }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-  public PlotDragHandlerDelegate getPlotDragHandler( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+ 
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()

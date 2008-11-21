@@ -62,7 +62,6 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
@@ -168,9 +167,9 @@ public class VegetationTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  public VegetationTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
+  public VegetationTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) );
   }
 

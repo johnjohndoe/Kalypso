@@ -49,8 +49,6 @@ import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -60,9 +58,9 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
 
 {
 
-  public GeoCoordinateTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public GeoCoordinateTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_GEOKOORDINATEN, "Geokoordinaten", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_GEOKOORDINATEN, "Geokoordinaten", chartLayers, cm );
 
   }
 

@@ -46,8 +46,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
@@ -67,9 +65,9 @@ public class DeviderTheme extends AbstractProfilTheme
 
 {
 
-  public DeviderTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public DeviderTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_DEVIDER, "Flieﬂzonen", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_DEVIDER, "Flieﬂzonen", chartLayers, cm );
 
   }
 
@@ -81,8 +79,6 @@ public class DeviderTheme extends AbstractProfilTheme
   {
     return new TrennerPanel( getProfil() );
   }
-
-  
 
   @Override
   public ILegendEntry[] createLegendEntries( )
@@ -113,20 +109,9 @@ public class DeviderTheme extends AbstractProfilTheme
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    final IProfil profil = getProfil();
-    if( profil == null )
-      return;
-    if( hint.isPointPropertiesChanged() )
+     if( hint.isPointPropertiesChanged() || hint.isMarkerMoved() )
     {
-
-      for( final IProfilChange change : changes )
-        if( change instanceof PointPropertyAdd || change instanceof PointPropertyRemove )
-        {
-          getEventHandler().fireLayerContentChanged( this );
-        }
-
+      getEventHandler().fireLayerContentChanged( this );
     }
-    else
-      super.onProfilChanged( hint, changes );
   }
 }

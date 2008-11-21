@@ -60,15 +60,18 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.LayerView;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
+import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -82,41 +85,29 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * </p>
  * 
  * @author Gernot Belger
+ * @author kimwerner
  */
+
 @SuppressWarnings("unchecked")
-public class LegendView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener
+public class LegendView extends ViewPart implements IAdapterEater, IProfilProviderListener
 {
 
-  private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IChartPart.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   private Form m_composite;
 
   private FormToolkit m_toolkit;
 
-  private IProfilChartViewProvider m_provider;
+  private ProfilChartView m_chart;
 
   private ChartEditorTreeOutlinePage m_chartlegend;
-
-  private void createContent( )
-  {
-    if( m_composite == null || m_composite.isDisposed() )
-      return;
-    final ProfilChartView chartView = getProfilChartView();
-    if( chartView == null )
-    {
-      m_composite.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
-    }
-    else
-    {
-      createChartLegend( m_composite.getBody(), chartView );
-      m_composite.layout();
-    }
-  }
 
   private final void createChartLegend( final Composite parent, final ProfilChartView chartView )
   {
     m_chartlegend = new ChartEditorTreeOutlinePage( chartView );
     m_chartlegend.createControl( parent );
+
+    m_chartlegend.getTreeViewer().setContentProvider( new ProfilChartEditorTreeContentProvider( chartView.getChart().getChartModel() ) );
     m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
@@ -129,6 +120,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
         if( firstElement instanceof IChartLayer )
         {
           ((IChartLayer) firstElement).setActive( true );
+
           final ProfilChartView pcv = getProfilChartView();
           if( pcv == null )
             return;
@@ -151,7 +143,6 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
       }
     } );
 
-    
     final Control control = m_chartlegend.getControl();
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     control.addMouseListener( new MouseAdapter()
@@ -162,16 +153,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
         showLayerProperties();
       }
     } );
-    final ILayerManager mngr = chartView.getChart().getChartModel().getLayerManager();
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      if( layer.isActive() )
-      {
-        m_chartlegend.setSelection( new StructuredSelection( layer ) );
-        m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
-        break;
-      }
-    }
+
   }
 
   /**
@@ -190,6 +172,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     m_composite.getBody().setLayout( bodyLayout );
 
     updateChartLegend();
+
   }
 
   /**
@@ -199,9 +182,10 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   public void dispose( )
   {
     m_chartProviderListener.dispose();
-    unhookProvider();
+    m_chart.removeProfilProviderListener( this );
     getSite().setSelectionProvider( null );
-
+    m_chartlegend.dispose();
+    m_chartlegend = null;
     super.dispose();
   }
 
@@ -224,8 +208,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   public ProfilChartView getProfilChartView( )
   {
-    final ProfilChartView chartView = (m_provider == null ? null : m_provider.getProfilChartView());
-    return chartView;
+    return m_chart;
   }
 
   @Override
@@ -238,28 +221,16 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener#ProfilChartViewChanged(org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView)
-   */
-  public void onProfilChartViewChanged( final ProfilChartView newProfilChartView )
-  {
-    updateChartLegend();
-  }
-
-  /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
   public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
-    final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
-    if( m_provider == provider )
+    if( m_chart == adapter )
       return;
+    m_chart = adapter instanceof ProfilChartView ? (ProfilChartView) adapter : null;
 
-    unhookProvider();
-
-    if( provider == null )
-      return;
-    m_provider = provider;
-    m_provider.addProfilChartViewProviderListener( this );
+    if( m_chart != null )
+      m_chart.addProfilProviderListener( this );
 
     updateChartLegend();
   }
@@ -292,27 +263,52 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     }
   }
 
-  private void unhookProvider( )
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.IProfilProvider2,
+   *      org.kalypso.model.wspm.core.profil.IProfil, org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.model.wspm.ui.view.ProfilViewData, org.kalypso.model.wspm.ui.view.ProfilViewData)
+   */
+  @Override
+  public void onProfilProviderChanged( IProfilProvider2 provider, IProfil oldProfile, IProfil newProfile, ProfilViewData oldViewData, ProfilViewData newViewData )
   {
-    if( m_provider != null )
-    {
-      m_provider.removeProfilChartViewProviderListener( this );
-      m_provider = null;
-    }
+    updateChartLegend();
+
   }
 
   private void updateChartLegend( )
   {
-    if( m_composite != null && !m_composite.isDisposed() )
+    if( m_composite == null || m_composite.isDisposed() )
+      return;
+
+    final ProfilChartView chartView = getProfilChartView();
+    if( chartView == null )
     {
-      m_composite.setMessage( null );
-      for( final Control control : m_composite.getBody().getChildren() )
+      m_composite.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      if( m_chartlegend != null )
       {
-        if( !control.isDisposed() )
-          control.dispose();
+        m_chartlegend.dispose();
+        m_chartlegend = null;
       }
     }
-    createContent();
+    else
+    {
+      m_composite.setMessage( null );
+      if( m_chartlegend == null )
+        createChartLegend( m_composite.getBody(), chartView );
+      final ILayerManager mngr = chartView.getChart().getChartModel().getLayerManager();
+      for( final IChartLayer layer : mngr.getLayers() )
+      {
+        if( layer.isActive() )
+        {
+          m_chartlegend.getTreeViewer().setExpandedElements( new Object[] { layer } );
+          m_chartlegend.getTreeViewer().expandToLevel( 2 );
+          m_chartlegend.setSelection( new StructuredSelection( layer ) );
+          break;
+        }
+      }
+      m_chartlegend.getTreeViewer().refresh();
+      m_composite.layout();
+    }
 
   }
 
