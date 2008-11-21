@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * format is used that has inherent coloring, the coloring is discarded and only the opacity channel (or equivalent) is
  * used. A Halo, Fill, and/or Stroke is applied as appropriate for the shape's source format.
  * <p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -69,7 +69,7 @@ public class Mark_Impl implements Mark, Marshallable
 {
   private Fill m_fill = null;
 
-  private String m_wellKnownName = "square";
+  private String m_wellKnownName = null;
 
   private Stroke m_stroke = null;
 
@@ -80,7 +80,7 @@ public class Mark_Impl implements Mark, Marshallable
    */
   Mark_Impl( )
   {
-    //
+    this( "square", new Stroke_Impl(), null );
   }
 
   /**
@@ -98,7 +98,7 @@ public class Mark_Impl implements Mark, Marshallable
    * "star", "cross", and "x", though map servers may draw a different symbol instead if they don't have a shape for all
    * of these. Renderings of these marks may be made solid or hollow depending on Fill and Stroke parameters. The
    * default value is "square".
-   * 
+   *
    * @return the WK-Name of the mark
    */
   public String getWellKnownName( )
@@ -111,7 +111,7 @@ public class Mark_Impl implements Mark, Marshallable
    * "cross", and "x", though map servers may draw a different symbol instead if they don't have a shape for all of
    * these. Renderings of these marks may be made solid or hollow depending on Fill and Stroke parameters. The default
    * value is "square".
-   * 
+   *
    * @param wellKnownName
    *            the WK-Name of the mark
    */
@@ -124,7 +124,7 @@ public class Mark_Impl implements Mark, Marshallable
    * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
    * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
    * 50%-gray (color "#808080") opaque fill.
-   * 
+   *
    * @return the fill of the mark
    */
   public Fill getFill( )
@@ -134,7 +134,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * sets the <Fill>
-   * 
+   *
    * @param fill
    *            the fill of the mark
    */
@@ -148,7 +148,7 @@ public class Mark_Impl implements Mark, Marshallable
    * strokes: solid Color, GraphicFill (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly and
    * has its graphic symbol bended around the curves of the line string. The default is a solid black line (Color
    * "#000000").
-   * 
+   *
    * @return the stroke of the mark
    */
   public Stroke getStroke( )
@@ -158,7 +158,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * sets <Stroke>
-   * 
+   *
    * @param stroke
    *            the stroke of the mark
    */
@@ -269,7 +269,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a triangle mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    * @param fillColor
@@ -304,7 +304,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a triangle mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -327,7 +327,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a circle mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    * @param fillColor
@@ -353,7 +353,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a circle mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -365,7 +365,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a square mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    * @param fillColor
@@ -390,7 +390,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a square mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -402,7 +402,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a cross mark (a "+") according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and width
    * @param strokeColor
@@ -421,7 +421,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a cross mark (a "+") according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -433,7 +433,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a cross mark (an "X") according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    * @param strokeColor
@@ -452,7 +452,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a cross mark (an "X") according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -466,7 +466,7 @@ public class Mark_Impl implements Mark, Marshallable
    * Draws a scaled instance of a triangle mark according to the given parameters.
    * <p>
    * The arrow start at the middle of the rectangle and points right, the arrow-tip touching the border.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    * @param fillColor
@@ -510,7 +510,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * Draws a scaled instance of a triangle mark according to the given parameters.
-   * 
+   *
    * @param size
    *            resulting image's height and widthh
    */
@@ -543,7 +543,7 @@ public class Mark_Impl implements Mark, Marshallable
 
   /**
    * exports the content of the Mark as XML formated String
-   * 
+   *
    * @return xml representation of the Mark
    */
   public String exportAsXML( )
