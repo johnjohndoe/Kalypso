@@ -930,7 +930,7 @@ public class CreateMainChannelComposite extends Composite
         // here repaint!!
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
-      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0]);
+      final ProfilChartView profilChartView = new ProfilChartView();
       profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
@@ -941,7 +941,7 @@ public class CreateMainChannelComposite extends Composite
       label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11" ) + profil.getStation() ); //$NON-NLS-1$
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
-      final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
+      final Control profilControl = profilChartView.createControl( sectionClient);
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
