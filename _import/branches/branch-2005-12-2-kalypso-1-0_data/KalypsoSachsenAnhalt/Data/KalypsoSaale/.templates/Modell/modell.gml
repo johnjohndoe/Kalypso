@@ -6080,7 +6080,7 @@
       <pegel:PegelMember>
         <pegel:Gebiet fid="Pegel-579015">
           <pegel:PNR>579015</pegel:PNR>
-          <pegel:Name>TS-Wendefurth-Zulauf</pegel:Name>
+          <pegel:Name>TS Wendefurth, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -8885,7 +8885,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579999">
           <pegel:PNR>579999</pegel:PNR>
-          <pegel:Name>ÜL zur Rappbode</pegel:Name>
+          <pegel:Name>Überleitung zur Rappbode</pegel:Name>
           <pegel:Gewaesser>Rappbode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -19401,7 +19401,7 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-573100">
           <speicher:PNR>573100</speicher:PNR>
-          <speicher:Name>TS Straußfurt</speicher:Name>
+          <speicher:Name>TS Straußfurt, Abgabe</speicher:Name>
           <speicher:Gewaesser>Unstrut</speicher:Gewaesser>
           <speicher:MaxInhalt>18.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>573090</speicher:PNR-Zufluss>
@@ -19471,7 +19471,7 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-575406">
           <speicher:PNR>575406</speicher:PNR>
-          <speicher:Name>TS Kelbra</speicher:Name>
+          <speicher:Name>TS Kelbra, Abgabe</speicher:Name>
           <speicher:Gewaesser>Helme</speicher:Gewaesser>
           <speicher:MaxInhalt>35.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>575402</speicher:PNR-Zufluss>
@@ -19541,7 +19541,7 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-579330">
           <speicher:PNR>579330</speicher:PNR>
-          <speicher:Name>HWR Kalte Bode</speicher:Name>
+          <speicher:Name>HWR Kalte Bode, Abgabe</speicher:Name>
           <speicher:Gewaesser>Kalte Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>4.47</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579306</speicher:PNR-Zufluss>
@@ -19611,15 +19611,15 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-579001">
           <speicher:PNR>579001</speicher:PNR>
-          <speicher:Name>Überleitungssperre</speicher:Name>
+          <speicher:Name>Überleitungssperre, Abgabe</speicher:Name>
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>1.2</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579000</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579014</speicher:PNR_ST>
           <speicher:PNR_NA>579999</speicher:PNR_NA>
-          <speicher:TS_NAME>Überleitungssperre Königshütte</speicher:TS_NAME>
-          <speicher:STEUNAME>TS-Wendefurth, Bode-Anteil</speicher:STEUNAME>
-          <speicher:UELNAME>Überleitung Rappbode</speicher:UELNAME>
+          <speicher:TS_NAME>Überleitungssperre</speicher:TS_NAME>
+          <speicher:STEUNAME>TS Wendefurth, Bode-Anteil</speicher:STEUNAME>
+          <speicher:UELNAME>Überleitung zur Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>25</speicher:QG1>
@@ -19683,15 +19683,15 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-579012">
           <speicher:PNR>579012</speicher:PNR>
-          <speicher:Name>TS Rappbode</speicher:Name>
+          <speicher:Name>TS Rappbode, Abgabe</speicher:Name>
           <speicher:Gewaesser>Rappbode</speicher:Gewaesser>
           <speicher:MaxInhalt>109.08</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579011</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579015</speicher:PNR_ST>
           <speicher:PNR_NA>579013</speicher:PNR_NA>
           <speicher:TS_NAME>TS Rappbode</speicher:TS_NAME>
-          <speicher:STEUNAME>Zulauf TS Wendefuth</speicher:STEUNAME>
-          <speicher:UELNAME>TWA</speicher:UELNAME>
+          <speicher:STEUNAME>TS Wendefurth, Zulauf</speicher:STEUNAME>
+          <speicher:UELNAME>TS Rappbode, TWA</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
           <speicher:QG1>100</speicher:QG1>
@@ -19755,7 +19755,7 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-579006">
           <speicher:PNR>579006</speicher:PNR>
-          <speicher:Name>TS Wendefurth</speicher:Name>
+          <speicher:Name>TS Wendefurth, Abgabe</speicher:Name>
           <speicher:Gewaesser>Bode</speicher:Gewaesser>
           <speicher:MaxInhalt>9.22</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579015</speicher:PNR-Zufluss>

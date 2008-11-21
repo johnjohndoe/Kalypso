@@ -22,8 +22,7 @@
 	        <text editable="false" property="Gewaesser" style="SWT.NONE" tooltip="Gewässer">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
-	        
-	        <label text="Abgabepegel" style="SWT.NONE" tooltip="Name" visible="true">
+	         <label text="Abgabepegel" style="SWT.NONE" tooltip="Name des Abgabepegels" visible="true">
 	        </label>
 	        <text editable="false" property="Name" style="SWT.NONE" tooltip="Name">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
