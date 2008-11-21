@@ -53,10 +53,13 @@ import org.xml.sax.SAXException;
  * Ugo Taddei<br>
  * Changes:<br>
  * Holger Albert
- * 
+ *
  * @author <a href="mailto:taddei@lat-lon.de">Ugo Taddei</a>
+ * @deprecated Do not use anymore, use {@link WFSClient} instead. Used only by Gazetteer stuff; remove when gazetter is
+ *             refaktored.
  * @author Holger Albert
  */
+@Deprecated
 public class WFService
 {
   public static String WFS_PREFIX = "wfs"; //$NON-NLS-1$
@@ -149,7 +152,7 @@ public class WFService
 
   /**
    * Gets a document containing a valid description feature type (schema; XSD). Code adapted from deegree viewer
-   * 
+   *
    * @param featureType
    *            the feature type whose description should be returned
    * @return an XSD containing the type description
@@ -236,7 +239,7 @@ public class WFService
 
   /**
    * Creates an String[] containing the attributes of a given feature type
-   * 
+   *
    * @param featureTypeName
    *            the name of the feature type
    * @throws Exception
@@ -256,7 +259,7 @@ public class WFService
 
   /**
    * guess which property might be "the" geometry property
-   * 
+   *
    * @param propNames
    * @return
    */
@@ -396,7 +399,7 @@ public class WFService
 
   /**
    * This function returns the capabilities of the service.
-   * 
+   *
    * @return The wfs capabilities.
    */
   public WFSCapabilities getCapabilities( )
@@ -406,7 +409,7 @@ public class WFService
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   * 
+   *
    * @raturn All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
@@ -434,7 +437,7 @@ public class WFService
 
   /**
    * This function creates a gml workspace from a get feature request.
-   * 
+   *
    * @param featureTypeToLoad
    * @param targetCRS
    * @param filter
@@ -482,7 +485,7 @@ public class WFService
 
   /**
    * This function builds a GetFeature request XML.
-   * 
+   *
    * @param wfsCaps
    * @param ftQName
    * @param filter
@@ -571,7 +574,7 @@ public class WFService
 
   /**
    * This function returns the layer of the wfs.
-   * 
+   *
    * @return The layer of the wfs.
    */
   public IWFSLayer[] getLayer( )

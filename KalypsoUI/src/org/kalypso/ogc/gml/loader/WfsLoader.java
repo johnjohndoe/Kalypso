@@ -16,21 +16,24 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.java.util.PropertiesHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.wfs.WFService;
+import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * @author Kuepferle, v.Doemming
@@ -53,7 +56,7 @@ public class WfsLoader extends AbstractLoader
 
   /**
    * Loads a WFS DataSource from the given URL
-   * 
+   *
    * @param source
    *            the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
    *            feature to be loaded
@@ -61,10 +64,10 @@ public class WfsLoader extends AbstractLoader
    *            the URL form the map context (here the path to the associated gmt file)
    */
   @Override
-  protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
+  protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
-    BufferedInputStream inputStream = null;
-    PrintStream ps = null;
+    final BufferedInputStream inputStream = null;
+    final PrintStream ps = null;
     try
     {
       monitor.beginTask( "WFS laden", 1000 ); //$NON-NLS-1$
@@ -75,17 +78,22 @@ public class WfsLoader extends AbstractLoader
       final String filter = sourceProps.getProperty( KEY_FILTER );
       final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final QName qNameFT;
       if( featureTypeNS != null && featureTypeNS.length() > 0 )
         qNameFT = new QName( featureTypeNS, featureType );
       else
         qNameFT = new QName( featureType );
 
-      WFService wfs = new WFService( baseURLAsString );
-      GMLWorkspace workspace = wfs.createGMLWorkspaceFromGetFeature( qNameFT, targetCRS, filter, maxFeature );
-      // final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ),
-      // qNameFT, targetCRS, filter, maxFeature );
+      final WFSClient wfs = new WFSClient( new URL( baseURLAsString ) );
+      final IStatus status = wfs.load();
+      if( !status.isOK() )
+        throw new LoaderException( status.getMessage(), status.getException() );
+
+      final Integer maxFeatures = maxFeature == null || maxFeature.isEmpty() ? null : new Integer( maxFeature );
+      final GMLWorkspace workspace = wfs.operationGetFeature( qNameFT, filter, maxFeatures );
+
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       return new CommandableWorkspace( workspace );
     }
@@ -117,20 +125,20 @@ public class WfsLoader extends AbstractLoader
     // TODO implementation of a transactional WFS
     if( data instanceof CommandableWorkspace )
     {
-      Display display = new Display();
-      MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.8"), (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.9"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+      final Display display = new Display();
+      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.8"), (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.9"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
           Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.10"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.11") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
-      int result = md.open();
+      final int result = md.open();
       try
       {
         if( result == 0 )
         {
-          IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-          SaveAsDialog dialog = new SaveAsDialog( new Shell( display ) );
+          final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+          final SaveAsDialog dialog = new SaveAsDialog( new Shell( display ) );
           dialog.open();
-          IPath targetPath = root.getLocation().append( dialog.getResult() );
+          final IPath targetPath = root.getLocation().append( dialog.getResult() );
           // IFile file = root.getFile( targetPath );
-          FileWriter fw = new FileWriter( targetPath.toFile().toString() );
+          final FileWriter fw = new FileWriter( targetPath.toFile().toString() );
           GmlSerializer.serializeWorkspace( fw, (GMLWorkspace) data );
           ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, monitor );
         }
@@ -141,15 +149,15 @@ public class WfsLoader extends AbstractLoader
         }
 
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
-      catch( GmlSerializeException e )
+      catch( final GmlSerializeException e )
       {
         e.printStackTrace();
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
       }

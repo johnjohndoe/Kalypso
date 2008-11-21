@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * This user style painter paints a list of features according to one (sld) user style.
- * 
+ *
  * @author Gernot Belger
  */
 public class UserStylePainter
@@ -174,10 +174,12 @@ public class UserStylePainter
     }
     catch( final CoreException e )
     {
+      e.printStackTrace();
       throw e;
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
@@ -185,7 +187,7 @@ public class UserStylePainter
   /**
    * Determines if a feature should be drawn or not.<br>
    * Checks for the sld:filter and current selection.
-   * 
+   *
    * @param selected
    *          Whether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
    */

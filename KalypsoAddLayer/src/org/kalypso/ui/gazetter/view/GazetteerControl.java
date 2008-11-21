@@ -71,7 +71,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class GazetteerControl implements ISelectionChangedListener, IStructuredContentProvider
 {
-
   private final GazetterLocationType m_gazetteerLocation;
 
   private final GazetterView m_view;
@@ -82,14 +81,14 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
 
   Control m_button;
 
-  public GazetteerControl( GazetterLocationType gazetteerLocation, URL baseURL, GazetterView view )
+  public GazetteerControl( final GazetterLocationType gazetteerLocation, final URL baseURL, final GazetterView view )
   {
     m_gazetteerLocation = gazetteerLocation;
     m_baseURL = baseURL;
     m_view = view;
   }
 
-  public void init( GazetterLocationType parent, Feature selectedFeature, String query )
+  public void init( final GazetterLocationType parent, final Feature selectedFeature, final String query )
   {
     initChilds();
     if( parent != null && selectedFeature == null )
@@ -132,7 +131,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       if( value == null )
         return;
       // TODO better use binding
-      String valueAsString = value.toString();
+      final String valueAsString = value.toString();
       final StringBuffer buffer = new StringBuffer();
       buffer.append( "<ogc:Filter>\n" );
       // buffer.append( "<ogc:PropertyIsEqualTo wildCard=\"*\" singleChar=\"#\" escape=\"!\">\n" );
@@ -148,16 +147,16 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     final Job job = new Job( "Gazetter: load" + featureTypeToLoad.getLocalPart() )
     {
       @Override
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( final IProgressMonitor monitor )
       {
         try
         {
-          WFService service = new WFService( m_baseURL.toExternalForm() );
-          GMLWorkspace workspace = service.createGMLWorkspaceFromGetFeature( featureTypeToLoad, targetCRS, filter, maxFeatureAsString );
+          final WFService service = new WFService( m_baseURL.toExternalForm() );
+          final GMLWorkspace workspace = service.createGMLWorkspaceFromGetFeature( featureTypeToLoad, targetCRS, filter, maxFeatureAsString );
           setContent( workspace );
           setEnable( true );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
           setContent( null );
@@ -210,7 +209,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       {
         control.init( m_gazetteerLocation, null, null );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -237,13 +236,13 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     // combo invoked
     // let childs update
     final Feature selectedFeature;
-    IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    Object firstElement = selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof Feature )
       selectedFeature = (Feature) firstElement;
     else
@@ -261,12 +260,12 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof GMLWorkspace )
     {
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
-      QName featureType = m_gazetteerLocation.getFeatureType();
+      final QName featureType = m_gazetteerLocation.getFeatureType();
       final IFeatureType ft = workspace.getGMLSchema().getFeatureType( featureType );
       final Feature[] features = workspace.getFeatures( ft );
       final Object result[] = new Object[features.length + 1];
@@ -291,12 +290,12 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     // TODO Auto-generated method stub
   }
 
-  public void setViewer( ComboViewer comboViewer, Button control )
+  public void setViewer( final ComboViewer comboViewer, final Button control )
   {
     m_comboViewer = comboViewer;
     m_button = control;
