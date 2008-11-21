@@ -11,30 +11,36 @@
 			<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true" horizontalSpan="2"/>
 			<gridLayout numColumns="2" horizontalSpacing="0" marginHeight="0"/>
 	  
-	        <label text="Name" style="SWT.NONE" tooltip="Name der Talsperre" visible="true">
-	        </label>
+
 	        <text editable="false" property="TS_NAME" style="SWT.NONE" tooltip="Name der Talsperre">
-	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+	                <!--  horizontalAlignment="16777216" bedeutet: SWT.CENTER -->
+	            <gridData horizontalAlignment="16777216" horizontalSpan="2" grabExcessHorizontalSpace="true"/>
 	        </text>
-	        
-	        <label text="Gewässer" style="SWT.NONE" tooltip="Gewässer" visible="true">
+ 		       
+ 		        <label style="SWT.NONE" visible="false">
+ 		                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+ 		        </label>
+ 		        <label style="SWT.NONE" visible="false">
+ 		                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+ 		        </label>
+	        <label text="Gewässer:" style="SWT.NONE" tooltip="Gewässer" visible="true">
 	        </label>
 	        <text editable="false" property="Gewaesser" style="SWT.NONE" tooltip="Gewässer">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
-	         <label text="Abgabepegel" style="SWT.NONE" tooltip="Name des Abgabepegels" visible="true">
+	         <label text="Abgabepegel:   " style="SWT.NONE" tooltip="Name des Abgabepegels" visible="true">
 	        </label>
 	        <text editable="false" property="Name" style="SWT.NONE" tooltip="Name">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
 	        
-	        <label text="Steuerpegel" style="SWT.NONE" tooltip="Name des Steuerpegels" visible="true">
+	        <label text="Steuerpegel:" style="SWT.NONE" tooltip="Name des Steuerpegels" visible="true">
 	        </label>
 	        <text editable="false" property="STEUNAME" style="SWT.NONE" tooltip="Name des Steuerpegels">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
 	
-	        <label text="Überleitung" style="SWT.NONE" tooltip="Bezeichnung Überleitung" visible="true">
+	        <label text="Überleitung:" style="SWT.NONE" tooltip="Bezeichnung Überleitung" visible="true">
 	        </label>
 	        <text editable="false" property="UELNAME" style="SWT.NONE" tooltip="Bezeichnung Überleitung">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
@@ -81,14 +87,12 @@
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </label>
 	        </group>
-	         <label style="SWT.NONE" visible="false">
-	            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-	        </label>
+ 		        <label style="SWT.NONE" visible="false">
+ 		                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+ 		        </label>
         </group>
 
-        <label style="SWT.NONE" visible="false">
-            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-        </label>
+      
     </view>
 </featuretemplate>
 
