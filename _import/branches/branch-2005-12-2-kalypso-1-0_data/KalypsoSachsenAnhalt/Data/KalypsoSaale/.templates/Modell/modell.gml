@@ -19331,7 +19331,7 @@
       <speicher:SpeicherMember>
         <speicher:Speicher fid="Speicher-570250">
           <speicher:PNR>570250</speicher:PNR>
-          <speicher:Name>Saale-TS</speicher:Name>
+          <speicher:Name>Kaulsdorf</speicher:Name>
           <speicher:Gewaesser>Saale</speicher:Gewaesser>
           <speicher:MaxInhalt>411.4</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>570000</speicher:PNR-Zufluss>
