@@ -10,7 +10,7 @@
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
-        <mapv:layer visible="true" name="Gewässerstrang - stationär (TU-HH) - Demo Strang" id="ID_2" featurePath="#fid#ReachWspmTuhhSteadyState1211993884481105/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" linktype="gml" xlink:type="simple" xlink:href="platform:/resource//WSPMDemo/modell.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="Gewässerstrang - stationär (TU-HH) - Demo Strang" id="ID_2" featurePath="#fid#ReachWspmTuhhSteadyState1211993884481105/reachSegmentMember[ProfileReachSegmentWspmTuhhSteadyState]" linktype="gml" xlink:type="simple" xlink:href="WSPMDemo/modell.gml" xlink:actuate="onRequest">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
