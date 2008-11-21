@@ -35,7 +35,10 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/commons/commons-fileupload-1.1.jar,
  lib/commons/commons-httpclient-2.0.2-deegreeversion.jar,
  lib/commons/commons-lang-2.1.jar,
- lib/commons/commons-logging.jar
+ lib/commons/commons-logging.jar,
+ lib/batik/batik-awt-util.jar,
+ lib/batik/batik-svggen.jar,
+ lib/batik/batik-util.jar
 Export-Package: com.vividsolutions.jts;version="1.8.0",
  com.vividsolutions.jts.algorithm;version="1.8.0",
  com.vividsolutions.jts.geom;version="1.8.0",
