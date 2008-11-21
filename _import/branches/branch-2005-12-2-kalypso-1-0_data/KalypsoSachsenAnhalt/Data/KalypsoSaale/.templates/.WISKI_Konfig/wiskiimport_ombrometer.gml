@@ -590,7 +590,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44406">
-      <name>Wendefurt</name>
+      <name>Wendefurth</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44406.zml"/>
       </lokal>

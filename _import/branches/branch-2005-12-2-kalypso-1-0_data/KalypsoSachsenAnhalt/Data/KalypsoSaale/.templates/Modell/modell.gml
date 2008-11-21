@@ -20458,7 +20458,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-44406">
-          <ombrometer:Name>Wendefurt</ombrometer:Name>
+          <ombrometer:Name>Wendefurth</ombrometer:Name>
           <ombrometer:NR>44406</ombrometer:NR>
           <ombrometer:NR-Ersatz>44407</ombrometer:NR-Ersatz>
           <gml:location>
