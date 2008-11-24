@@ -81,7 +81,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   private static final String IMAGE_NO_ERROR = "profilLabelProvider.img.no_error"; //$NON-NLS-1$
 
-  private final ImageRegistry m_imgRegistry = new ImageRegistry();
+  private final static ImageRegistry m_imgRegistry = new ImageRegistry();
 
   private final IProfil m_profile;
 
@@ -89,13 +89,17 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   {
     m_profile = profile;
 
-    m_imgRegistry.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
+    if( m_imgRegistry.get( IMAGE_ERROR ) == null )
+      m_imgRegistry.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
 
-    m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+    if( m_imgRegistry.get( IMAGE_WARNING ) == null )
+      m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
 
-    m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+    if( m_imgRegistry.get( IMAGE_INFO ) == null )
+      m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
 
-    m_imgRegistry.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
+    if( m_imgRegistry.get( IMAGE_NO_ERROR ) == null )
+      m_imgRegistry.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
 
   }
 
@@ -190,7 +194,10 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       return backgroundImage;
 
     buffer.append( severity );
-    buffer.append( deviderTypes );
+    for( String string : deviderTypes )
+    {
+      buffer.append( string );
+    }
     final String key = buffer.toString();
 
     final IProfilPointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
@@ -213,6 +220,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
         gc.dispose();
       }
     }
+
     return m_imgRegistry.get( key );
 
   }
