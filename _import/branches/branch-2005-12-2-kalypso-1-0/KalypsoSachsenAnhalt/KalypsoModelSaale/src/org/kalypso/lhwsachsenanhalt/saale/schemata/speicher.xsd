@@ -38,9 +38,13 @@
 	<complexType name="SpeicherType">
 		<complexContent>
 			<extension base="common:EmptyFeatureBaseType">
+			                                <!-- der Vollständigkeit halber wäre noch die PNR des Seepegels interessant -->
+			                                <!-- und bei größeren Modellumbauten könnte auf die einzelnen Pegel-Typen auch nen Link/Verweis gesetzt werden -->
 				<sequence>
-					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer</label><tooltip>Messstellennummer des Abgabepegels</tooltip><description>Messstellennummer des Abgabepegels</description></documentation></annotation></element>
-					<element name="Name"  type="string"> <annotation><documentation xml:lang="de"><label>Name</label><tooltip>Name</tooltip><description>Name</description></documentation></annotation></element>
+				                                <!-- ACHTUNG: dies ist die Pegelnummer des Abgabepegels!!! -->
+					<element name="PNR"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer</label><tooltip>Messstellennummer  </tooltip><description>Messstellennummer des Abgabepegels</description></documentation></annotation></element>
+				                              <!-- ACHTUNG: dies ist der Name des Abgabepegels!!! -->
+				                              <element name="Name"  type="string"> <annotation><documentation xml:lang="de"><label>Name</label><tooltip>Name des Abgabepegels</tooltip><description>Name des Abgabepegels</description></documentation></annotation></element>
 					<element name="Gewaesser"  type="string"> <annotation><documentation xml:lang="de"><label>Gewässer</label><tooltip>Gewässer</tooltip><description>Gewässer</description></documentation></annotation></element>
 					<element name="MaxInhalt"  type="double"> <annotation><documentation xml:lang="de"><label>MaxInhalt</label><tooltip>MaxInhalt</tooltip><description>MaxInhalt zur Berechnung des aktuellen Hochwasserschutzraumes</description></documentation></annotation></element>
 					<element name="PNR-Zufluss"  type="string"> <annotation><documentation xml:lang="de"><label>Messstellennummer Zufluss</label><tooltip>Messstellennummer des Zuflusspegels</tooltip><description>Messstellennummer des Zuflusspegels</description></documentation></annotation></element>

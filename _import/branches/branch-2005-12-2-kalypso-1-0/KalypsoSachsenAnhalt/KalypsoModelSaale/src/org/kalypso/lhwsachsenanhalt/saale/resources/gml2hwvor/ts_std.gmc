@@ -2,7 +2,7 @@
 ./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<csvtarget linktype="gml" xlink:href="ts.std" featurePath="SpeicherCollectionAssociation/SpeicherMember" delemiter="&#9;" writeHeader="true" >
 		<column>PNR</column>
-		<column>Name</column>
+		<column>TS_NAME</column>
 		<column>Gewaesser</column>
 		<column>MaxInhalt</column>
 		<column>PNR-Zufluss</column>
