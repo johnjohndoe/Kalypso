@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5618018.932642491" left="5198999.019134934" right="5438282.890305198" srs="EPSG:31469" top="5869313.191168792"/>
+    <extent bottom="5625698.422404705" left="5213937.800518876" right="5436947.553994412" srs="EPSG:31469" top="5850168.938457591"/>
     <layers active="ID_1">
         <layer name="Talsperren Gruppe 80" visible="true" featurePath="PegelCollectionAssociation/PegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
             <ns2:style linktype="sld" style="Eingabepegel" ns1:actuate="onRequest" ns1:href="project:/.styles/talsperren_gruppe_80.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

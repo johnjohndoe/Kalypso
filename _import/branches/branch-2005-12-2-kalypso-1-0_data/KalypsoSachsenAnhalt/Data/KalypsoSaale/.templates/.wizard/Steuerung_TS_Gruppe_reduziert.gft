@@ -35,13 +35,15 @@
 	        <text editable="false" property="Name" style="SWT.NONE" tooltip="Name">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
-	        
+	        <!-- Steuerpegel aus Anzeige entfernt, da GFT nur für Überleitungssperre verwendet wird 
+	                und der für die Überleitungssperre eingetragene Pegel ein Pegel ist, dessen Werte nicht editiert werden können= Verwirrungsgefahr
+	                
 	        <label text="Steuerpegel:" style="SWT.NONE" tooltip="Name des Steuerpegels" visible="true">
 	        </label>
 	        <text editable="false" property="STEUNAME" style="SWT.NONE" tooltip="Name des Steuerpegels">
 	            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
 	        </text>
-	
+	-->
 	        <label text="Überleitung:" style="SWT.NONE" tooltip="Bezeichnung Überleitung" visible="true">
 	        </label>
 	        <text editable="false" property="UELNAME" style="SWT.NONE" tooltip="Bezeichnung Überleitung">

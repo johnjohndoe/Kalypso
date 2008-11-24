@@ -6082,7 +6082,7 @@
           <pegel:PNR>579015</pegel:PNR>
           <pegel:Name>TS Wendefurth, Zulauf</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
-          <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
+          <pegel:TS_Steuerung_Gruppe>65</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
           <pegel:Land>SA</pegel:Land>
           <pegel:WN1>AS1</pegel:WN1>
