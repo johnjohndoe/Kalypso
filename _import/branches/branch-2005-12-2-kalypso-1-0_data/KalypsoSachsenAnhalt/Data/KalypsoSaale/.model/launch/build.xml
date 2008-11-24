@@ -76,6 +76,22 @@
 				<include name="**/*.odt" />
 			</fileset>
 		</copy>
+		
+	   	<copy file="${project.dir}/.model/.calculation.template" tofile="${calc.dir}/.calculation"/>
+
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
+			<property featurepath="ScenarioAssociation" featureProperty="scenarioId" value="${kalypso.currentScenarioId}"/>
+			<property featurepath="ScenarioAssociation" featureProperty="scenarioName" value="${kalypso.currentScenarioName}"/>
+			<property featurepath="ScenarioAssociation" featureProperty="scenarioDescription" value="${kalypso.currentScenarioDescription}"/>
+
+			<property featurepath="ControlAssociation" featureProperty="startforecast" value="${kalypso.startforecast}"/>
+			
+			<property featurepath="MetadataAssociation" featureProperty="editor" value="${kalypso.currentUser}"/>
+			<property featurepath="MetadataAssociation" featureProperty="description" value="- bitte ausfüllen -"/>
+			<property featurepath="MetadataAssociation" featureProperty="comment" value="- bitte ausfüllen -"/>
+			<property featurepath="MetadataAssociation" featureProperty="calctime" value="${kalypso.currentTime}"/>
+		</kalypso.changeGml>
+		
 	</target>
 
 	<target name="update" depends="calculationProperties" description="Aktualisiert eine Rechenvariante">

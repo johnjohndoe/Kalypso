@@ -3,15 +3,15 @@
 project:/.model/schema/control.xsd">
 	<ScenarioAssociation>
 		<Scenario>
-			<scenarioId>:scenarioId:</scenarioId>
-			<scenarioName>:scenarioName:</scenarioName>
-			<scenarioDescription>:scenarioDescription:</scenarioDescription>
+			<scenarioId></scenarioId>
+			<scenarioName></scenarioName>
+			<scenarioDescription></scenarioDescription>
 		</Scenario>
 	</ScenarioAssociation>
 	<ControlAssociation>
 		<Control fid="IlseControl">
-			<startsimulation>:startsim:</startsimulation>
-			<startforecast>:startforecast:</startforecast>
+			<startsimulation></startsimulation>
+			<startforecast></startforecast>
 			<BatchIDCollectionAssociation>
 				<BatchIDCollection fid="batches">
 					<BatchIDAssociation>
@@ -25,10 +25,10 @@ project:/.model/schema/control.xsd">
 	</ControlAssociation>
 	<MetadataAssociation>
 		<Metadata fid="IlseMetaData">
-			<editor>:user:</editor>
-			<description>- bitte ausfüllen -</description>
-			<comment>- bitte ausfüllen -</comment>
-			<calctime>:time:</calctime>
+			<editor></editor>
+			<description></description>
+			<comment></comment>
+			<calctime></calctime>
 		</Metadata>
 	</MetadataAssociation>
 </TubigControl>
