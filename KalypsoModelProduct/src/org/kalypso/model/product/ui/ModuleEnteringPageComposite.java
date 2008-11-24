@@ -62,9 +62,10 @@ import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.ui.project.list.ProjectDatabaseComposite;
+import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseComposite;
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 import org.kalypso.project.database.client.ui.project.wizard.create.CreateProjectComposite;
+import org.kalypso.project.database.client.ui.project.wizard.imp.ImportProjectComposite;
 
 /**
  * @author Dirk Kuch
@@ -165,7 +166,7 @@ public class ModuleEnteringPageComposite extends Composite
     // list of projects
     final ScrolledSection sectionProjects = new ScrolledSection( body, toolkit, ExpandableComposite.TITLE_BAR, true );
     final Composite bodyProjects = sectionProjects.setup( "Projekte:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    final GridLayout layout = new GridLayout( 2, false );
+    final GridLayout layout = new GridLayout( 2, true );
     layout.verticalSpacing = layout.marginWidth = 0;
     bodyProjects.setLayout( layout );
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -181,7 +182,10 @@ public class ModuleEnteringPageComposite extends Composite
     final INewProjectWizard wizardDemoProject = m_enteringPage.getDemoProjectWizard();
 
     final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, wizardProject, remoteCommitType, CreateProjectComposite.IMG_ADD_PROJECT );
-    projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
+    projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, toolkit );
+    projectImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     if( wizardDemoProject != null )
     {

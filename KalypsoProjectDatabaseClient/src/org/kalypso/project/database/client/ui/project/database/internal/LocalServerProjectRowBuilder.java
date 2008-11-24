@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.ui.project.database.internal;
 
 import java.util.Properties;
 
@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**

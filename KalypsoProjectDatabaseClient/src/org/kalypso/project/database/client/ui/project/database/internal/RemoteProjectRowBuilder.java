@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.ui.project.database.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseUiLocker;
 
 /**
  * Projects hosted at the project database model server

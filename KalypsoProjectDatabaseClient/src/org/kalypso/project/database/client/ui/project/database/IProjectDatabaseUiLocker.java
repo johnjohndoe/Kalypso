@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list;
+package org.kalypso.project.database.client.ui.project.database;
 
 /**
  * Some model operations need a bunch of time. Is the UI update during this operations, the UI can display wrong states
