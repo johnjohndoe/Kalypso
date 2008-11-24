@@ -8,6 +8,7 @@ import java.net.URL;
 import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
@@ -133,6 +134,18 @@ public class KalypsoModuleRRM implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsRrmModel";
+      }
+
+      @Override
+      public IWizard getImportWizard( )
+      {
+        return null;
+      }
+
+      @Override
+      public String getImportWizardLabel( )
+      {
+        return null;
       }
     };
   }
