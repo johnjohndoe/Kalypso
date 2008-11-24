@@ -71,6 +71,7 @@ import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils
 import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
+import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -113,7 +114,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
     return m_locker;
   }
 
-  protected void getInfoLink( final Composite body, final FormToolkit toolkit, final boolean isExpert )
+  protected void getRemoteInfoLink( final Composite body, final FormToolkit toolkit, final boolean isExpert )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", getHandler().getName() ) );
@@ -134,7 +135,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
           {
             getLocker().acquireUiUpdateLock();
 
-            final RemoteInfoDialog dialog = new RemoteInfoDialog( getHandler().getBean(), lnkInfo.getShell(), isExpert );
+            final RemoteInfoDialog dialog = new RemoteInfoDialog( getHandler(), lnkInfo.getShell(), isExpert );
             dialog.open();
           }
           finally
@@ -150,6 +151,37 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
       lnkInfo.setImage( IMG_REMOTE_INFO_DISABLED );
       lnkInfo.setEnabled( false );
     }
+  }
+
+  protected void getLocalInfoLink( final Composite body, final FormToolkit toolkit )
+  {
+    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", getHandler().getName() ) );
+
+    lnkInfo.setImage( IMG_REMOTE_INFO );
+
+    lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        try
+        {
+          getLocker().acquireUiUpdateLock();
+
+          final LocalInfoDialog dialog = new LocalInfoDialog( getHandler(), lnkInfo.getShell() );
+          dialog.open();
+        }
+        finally
+        {
+          getLocker().releaseUiUpdateLock();
+        }
+
+      }
+    } );
   }
 
   protected void getDeleteLink( final Composite body, final FormToolkit toolkit )
