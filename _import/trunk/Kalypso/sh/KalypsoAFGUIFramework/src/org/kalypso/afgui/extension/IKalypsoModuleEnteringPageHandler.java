@@ -43,6 +43,8 @@ package org.kalypso.afgui.extension;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.wizard.IWizard;
+
 /**
  * Entering page of a Kalypso Module. Page contains list of projects and a description about the module.
  * 
@@ -65,9 +67,25 @@ public interface IKalypsoModuleEnteringPageHandler
    */
   IProjectDatabaseFilter getDatabaseFilter( );
 
+  /**
+   * @return special new project wizard of plugin
+   */
   INewProjectWizard getProjectWizard( );
 
+  /**
+   * @return special new demo project wizard of plugin
+   */
   INewProjectWizard getDemoProjectWizard( );
 
+  /**
+   * @return project data base commit type
+   */
   String getRemoteCommitType( );
+
+  /**
+   * @return special plugin import wizard
+   */
+  IWizard getImportWizard( );
+
+  String getImportWizardLabel( );
 }

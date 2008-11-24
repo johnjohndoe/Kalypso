@@ -7,6 +7,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
@@ -158,6 +159,18 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsoFloodModelType";
+      }
+
+      @Override
+      public IWizard getImportWizard( )
+      {
+        return null;
+      }
+
+      @Override
+      public String getImportWizardLabel( )
+      {
+        return null;
       }
     };
   }

@@ -8,6 +8,7 @@ import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
@@ -21,6 +22,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.wizards.import1d2d.Import2dWizard;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
@@ -151,6 +153,18 @@ public class Kalypso1d2dModule implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "Kalypso1d2dModel";
+      }
+
+      @Override
+      public IWizard getImportWizard( )
+      {
+        return new Import2dWizard();
+      }
+
+      @Override
+      public String getImportWizardLabel( )
+      {
+        return "Importiere BCE2D Projekt";
       }
     };
   }
