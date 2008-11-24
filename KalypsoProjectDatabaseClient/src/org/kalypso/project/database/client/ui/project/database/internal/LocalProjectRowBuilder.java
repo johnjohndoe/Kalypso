@@ -76,7 +76,7 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
   public void render( final Composite parent, final FormToolkit toolkit )
   {
     final Composite body = toolkit.createComposite( parent );
-    body.setLayout( new GridLayout( 4, false ) );
+    body.setLayout( new GridLayout( 5, false ) );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
@@ -100,6 +100,9 @@ public class LocalProjectRowBuilder extends AbstractProjectRowBuilder implements
         action.run( null, properties );
       }
     } );
+
+    /* info */
+    getLocalInfoLink( body, toolkit );
 
     /* export */
     getExportLink( body, toolkit );

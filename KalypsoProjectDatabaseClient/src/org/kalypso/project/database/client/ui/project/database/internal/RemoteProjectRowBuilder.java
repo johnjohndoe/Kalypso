@@ -95,7 +95,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder implement
     lnk.setText( getHandler().getName() );
 
     /* info */
-    getInfoLink( body, toolkit, m_isExpert );
+    getRemoteInfoLink( body, toolkit, m_isExpert );
 
     /* import */
     getImportLink( body, toolkit );

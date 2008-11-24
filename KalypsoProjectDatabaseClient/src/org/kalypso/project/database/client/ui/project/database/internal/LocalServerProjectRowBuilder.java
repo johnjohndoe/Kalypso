@@ -123,7 +123,7 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
       } );
 
       // info
-      getInfoLink( body, toolkit, m_isExpert );
+      getRemoteInfoLink( body, toolkit, m_isExpert );
 
       // lock project
       createLockHyperlink( body, toolkit );
