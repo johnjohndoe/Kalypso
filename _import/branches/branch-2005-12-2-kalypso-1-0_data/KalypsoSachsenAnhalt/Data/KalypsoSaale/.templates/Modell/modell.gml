@@ -9098,7 +9098,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579001">
           <pegel:PNR>579001</pegel:PNR>
-          <pegel:Name>Hirtenstieg/ÜL-Abgabe</pegel:Name>
+          <pegel:Name>Überleitungssperre, Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>

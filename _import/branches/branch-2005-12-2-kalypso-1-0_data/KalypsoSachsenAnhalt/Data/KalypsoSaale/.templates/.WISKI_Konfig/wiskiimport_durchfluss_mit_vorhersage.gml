@@ -72,7 +72,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-573100">
-      <name>Straußfurt Abgabe</name>
+      <name>TS Straußfurt, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/573100.zml"/>
       </lokal>
@@ -100,7 +100,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579330">
-      <name>Königsh./HWR - Abgabe</name>
+      <name>HWR Kalte Bode, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579330.zml"/>
       </lokal>
@@ -114,7 +114,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579001">
-      <name>Hirtenstieg/ÜL-Abgabe</name>
+      <name>Überleitungssperre, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579001.zml"/>
       </lokal>
@@ -128,7 +128,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579006">
-      <name>TS-Wendefurth-Abgabe</name>
+      <name>TS Wendefurth, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579006.zml"/>
       </lokal>
@@ -142,7 +142,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579012">
-      <name>Rappbode-TS-Abgabe</name>
+      <name>TS Rappbode, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579012.zml"/>
       </lokal>
@@ -156,7 +156,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579013">
-      <name>Rappbode-TS, TWA</name>
+      <name>TS Rappbode, TWA</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579013.zml"/>
       </lokal>
@@ -170,7 +170,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-575406">
-      <name>Kelbra-Abgabe</name>
+      <name>TS Kelbra, Abgabe</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/575406.zml"/>
       </lokal>
@@ -184,7 +184,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579999">
-      <name>ÜL zur Rappbode</name>
+      <name>Überleitung zur Rappbode</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579999.zml"/>
       </lokal>
@@ -198,7 +198,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579011">
-      <name>Rappbode-TS-Zulauf</name>
+      <name>TS Rappbode, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579011.zml"/>
       </lokal>
@@ -212,7 +212,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579000">
-      <name>Ül-Sperre, Zulauf</name>
+      <name>Überleitungssperre, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579000.zml"/>
       </lokal>
@@ -226,7 +226,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Pegel-579015">
-      <name>TS-Wendefurth-Zulauf</name>
+      <name>TS Wendefurth, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579015.zml"/>
       </lokal>
