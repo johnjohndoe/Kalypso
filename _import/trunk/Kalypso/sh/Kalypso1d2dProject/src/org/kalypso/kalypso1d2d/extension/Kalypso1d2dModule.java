@@ -22,7 +22,6 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.wizards.import1d2d.Import2dWizard;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
@@ -158,13 +157,13 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public IWizard getImportWizard( )
       {
-        return new Import2dWizard();
+        return null;
       }
 
       @Override
       public String getImportWizardLabel( )
       {
-        return "Importiere BCE2D Projekt";
+        return null;
       }
     };
   }
