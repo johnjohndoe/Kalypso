@@ -30,7 +30,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Gebiet-570000">
-      <name>Saale-TS-Zulauf</name>
+            <name>TS Saale, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570000.zml"/>
       </lokal>
@@ -114,7 +114,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Gebiet-574210">
-      <name>Erfurt - Möbisburg</name>
+      <name>Erfurt-Möbisburg</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/574210.zml"/>
       </lokal>
@@ -142,7 +142,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Gebiet-573090">
-      <name>Straußfurt Zulauf</name>
+            <name>TS Straußfurt, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573090.zml"/>
       </lokal>
@@ -478,7 +478,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Gebiet-579011">
-      <name>Rappbode-TS-Zulauf</name>
+            <name>TS Rappbode, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579011.zml"/>
       </lokal>
@@ -492,7 +492,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Gebiet-579015">
-      <name>TS-Wendefurth-Zulauf</name>
+            <name>TS Wendefurth, Zulauf</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579015.zml"/>
       </lokal>
