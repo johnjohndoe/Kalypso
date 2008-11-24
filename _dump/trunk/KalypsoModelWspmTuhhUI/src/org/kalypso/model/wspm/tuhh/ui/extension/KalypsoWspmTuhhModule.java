@@ -8,6 +8,7 @@ import java.net.URL;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
@@ -19,6 +20,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
+import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
@@ -146,6 +148,18 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsoWspmModel";
+      }
+
+      @Override
+      public IWizard getImportWizard( )
+      {
+        return new NewProjectImportWspwinWizard();
+      }
+
+      @Override
+      public String getImportWizardLabel( )
+      {
+        return "Importiere WspWin Projekt";
       }
 
     };
