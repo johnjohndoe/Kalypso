@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.swt;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -51,6 +54,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Dirk Kuch
@@ -61,6 +65,8 @@ public class ColorChooserComposite extends Composite
 
   private final String m_label;
 
+  ColorRegistry m_colorRegister = new ColorRegistry();
+
   private Composite m_body = null;
 
   public ColorChooserComposite( final Composite parent, final String label, final RGB color )
@@ -68,6 +74,8 @@ public class ColorChooserComposite extends Composite
     super( parent, SWT.NULL );
     m_label = label;
     m_color = color;
+
+    m_colorRegister.put( color.toString(), color );
 
     this.setLayout( new GridLayout() );
 
@@ -98,15 +106,38 @@ public class ColorChooserComposite extends Composite
     /* color */
     final Label lColor = new Label( m_body, SWT.BORDER );
     final GridData gridData = new GridData( GridData.FILL, GridData.FILL, false, false );
-    gridData.widthHint = gridData.heightHint = 20;
+    gridData.widthHint = gridData.heightHint = 16;
     lColor.setLayoutData( gridData );
-    // TODO color regestry
-    lColor.setBackground( new Color( lColor.getDisplay(), m_color ) );
+
+    Color color = m_colorRegister.get( m_color.toString() );
+    if( color == null )
+    {
+      color = new Color( null, m_color );
+      m_colorRegister.put( m_color.toString(), m_color );
+    }
+
+    lColor.setBackground( color );
+
+    lColor.addMouseListener( new MouseAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
+       */
+      @Override
+      public void mouseUp( final MouseEvent e )
+      {
+        if( e.button == 1 )// left button
+        {
+          changeColor( lColor.getShell(), lColor );
+        }
+
+      }
+    } );
 
     /* label */
     final Label label = new Label( m_body, SWT.NULL );
     label.setText( m_label );
-    label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    label.setLayoutData( new GridData( GridData.FILL, GridData.CENTER, true, false ) );
 
     /* color chooser */
     final Button bColor = new Button( m_body, SWT.NONE );
@@ -117,17 +148,7 @@ public class ColorChooserComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final ColorDialog colorDialog = new ColorDialog( bColor.getShell() );
-        colorDialog.setRGB( m_color );
-
-        final RGB rgb = colorDialog.open();
-        if( rgb != null )
-        {
-          m_color = rgb;
-
-          // TODO color regestry
-          lColor.setBackground( new Color( null, m_color ) );
-        }
+        changeColor( bColor.getShell(), lColor );
       }
     } );
 
@@ -137,6 +158,27 @@ public class ColorChooserComposite extends Composite
   public RGB getColor( )
   {
     return m_color;
+  }
+
+  protected void changeColor( final Shell shell, final Label colorLabel )
+  {
+    final ColorDialog colorDialog = new ColorDialog( shell );
+    colorDialog.setRGB( m_color );
+
+    final RGB rgb = colorDialog.open();
+    if( rgb != null )
+    {
+      m_color = rgb;
+
+      Color color = m_colorRegister.get( m_color.toString() );
+      if( color == null )
+      {
+        color = new Color( null, m_color );
+        m_colorRegister.put( m_color.toString(), m_color );
+      }
+
+      colorLabel.setBackground( color );
+    }
   }
 
 }
