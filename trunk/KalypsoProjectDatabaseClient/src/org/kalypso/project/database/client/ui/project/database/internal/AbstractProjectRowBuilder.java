@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list.internal;
+package org.kalypso.project.database.client.ui.project.database.internal;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.ui.project.list.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;

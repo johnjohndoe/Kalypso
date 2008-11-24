@@ -17,7 +17,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core.model,
  org.kalypso.project.database.client.core.utils,
- org.kalypso.project.database.client.ui.project.list,
+ org.kalypso.project.database.client.ui.project.database,
  org.kalypso.project.database.client.ui.project.status,
- org.kalypso.project.database.client.ui.project.wizard.create
+ org.kalypso.project.database.client.ui.project.wizard.create,
+ org.kalypso.project.database.client.ui.project.wizard.imp
 Import-Package: org.junit

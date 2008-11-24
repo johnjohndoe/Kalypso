@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.list;
+package org.kalypso.project.database.client.ui.project.database;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -57,11 +57,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.ui.project.list.internal.IProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.list.internal.LocalProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.list.internal.LocalRemoteProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.list.internal.LocalServerProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.list.internal.RemoteProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.LocalRemoteProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.LocalServerProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
