@@ -43,6 +43,7 @@ package org.kalypso.model.product.ui;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Color;
@@ -66,6 +67,7 @@ import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseCo
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 import org.kalypso.project.database.client.ui.project.wizard.create.CreateProjectComposite;
 import org.kalypso.project.database.client.ui.project.wizard.imp.ImportProjectComposite;
+import org.kalypso.project.database.client.ui.project.wizard.imp.SpecialImportProjectComposite;
 
 /**
  * @author Dirk Kuch
@@ -180,6 +182,7 @@ public class ModuleEnteringPageComposite extends Composite
     final String remoteCommitType = m_enteringPage.getRemoteCommitType();
     final INewProjectWizard wizardProject = m_enteringPage.getProjectWizard();
     final INewProjectWizard wizardDemoProject = m_enteringPage.getDemoProjectWizard();
+    final IWizard importWizard = m_enteringPage.getImportWizard();
 
     final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, wizardProject, remoteCommitType, CreateProjectComposite.IMG_ADD_PROJECT );
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -192,9 +195,20 @@ public class ModuleEnteringPageComposite extends Composite
       final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, wizardDemoProject, remoteCommitType, CreateProjectComposite.IMG_EXTRACT_DEMO );
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
+    else
+      toolkit.createLabel( bodyProjects, "" ); // spacer
+
+    if( importWizard != null )
+    {
+      final String label = m_enteringPage.getImportWizardLabel();
+
+      final SpecialImportProjectComposite specialImport = new SpecialImportProjectComposite( bodyProjects, toolkit, importWizard, label );
+      specialImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    }
 
     if( ProjectDatabaseServerUtils.handleRemoteProject() )
     {
+
       final ProjectDatabaseServerStatusComposite status = new ProjectDatabaseServerStatusComposite( bodyProjects, toolkit );
       status.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     }

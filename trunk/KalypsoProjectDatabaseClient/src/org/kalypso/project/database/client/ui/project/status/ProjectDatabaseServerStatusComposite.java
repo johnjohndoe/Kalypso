@@ -105,7 +105,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
-    final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT | SWT.BEGINNING );
+    final ImageHyperlink img = m_toolkit.createImageHyperlink( m_body, SWT.RIGHT | SWT.END );
     img.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     img.setUnderlined( false );
 
