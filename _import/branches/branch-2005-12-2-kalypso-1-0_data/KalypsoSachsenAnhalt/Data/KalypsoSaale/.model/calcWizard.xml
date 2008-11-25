@@ -3405,13 +3405,13 @@
 		<!-- 
         Exporte  -->
 		<!-- Name of the feature-property, used for display/selection purposes -->
-		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="pegelNameProperty" value="TS_NAME"/>
 		<arg name="resultProperty" value="Inhalt_gerechnet"/>
 		<!-- für alle Speicher V-Diag,  D-V / W / Z / A / Steu / Überl-Tabelle-->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>
 			<arg name="name" value="Speicher"/>
-			<arg name="nameproperty" value="Name"/>
+			<arg name="nameproperty" value="TS_NAME"/>
 			<arg name="width" value="800"/>
 			<arg name="height" value="600"/>
 			<arg name="imageFormat" value="png"/>
