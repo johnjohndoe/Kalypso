@@ -2,7 +2,7 @@
 <WiskiCollection fid="root" xmlns="org.kalypso.wiski" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.wiski org.kalypso.bode.wiski project:/.model/schema/bodemodell.xsd">
   <WiskiMember>
     <Wiski fid="Speicher-570250">
-      <name>Saale-TS</name>
+      <name>TS Saale</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/570250.zml"/>
       </lokal>
@@ -44,7 +44,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Speicher-579330">
-      <name>RHB Kalte Bode</name>
+      <name>HWR Kalte Bode</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Speicherinhalt/579330.zml"/>
       </lokal>
