@@ -583,4 +583,16 @@ public class TimeserieUtils
 
     throw new WQException( "Kann die Alarmstufe nicht nach " + axisType + " konvertieren." );
   }
+
+  /**
+   * Returns the class name for the given axis-type. The class must inherit from
+   * <code>org.jfree.chart.axis.ValueAxis</code>.
+   * 
+   * @return The class name for the given axis-type. The class must inherit from
+   *         <code>org.jfree.chart.axis.ValueAxis</code>.
+   */
+  public static String getAxisClassFor( final String type )
+  {
+    return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null );
+  }
 }
