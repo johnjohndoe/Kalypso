@@ -57,11 +57,6 @@ import org.jfree.data.Range;
  */
 public class PolderControlAxis extends NumberAxis
 {
-  public PolderControlAxis()
-  {
-    this( null );
-  }
-
   public PolderControlAxis( final String label )
   {
     super( label );
