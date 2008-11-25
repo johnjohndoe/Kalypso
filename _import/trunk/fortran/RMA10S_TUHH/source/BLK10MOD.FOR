@@ -11,38 +11,41 @@
 
       !i/o file and unit definitions (up to date); for description look into file.sub
       !------------------------------------------------------------------------------
-      integer (kind = 4) :: ICFL
-      integer (kind = 4) :: LIN, LOUT, LITR, IMESOUT
-      integer (kind = 4) :: IKALYPSOFM, IFILE, NB, ibup
-      integer (kind = 4) :: INCSTR, insfl
-      integer (kind = 4) :: IWVFC, INSTR, IOWGT, ICORDIN, IOCON, IWVIN
-      integer (kind = 4) :: INTIMS, INWGT, IMASSOUT, ITIMFL
+      integer (kind = 4) :: icfl
+      integer (kind = 4) :: lin, lout, litr, imesout
+      integer (kind = 4) :: ikalypsofm, ifile, nb, ibup
+      integer (kind = 4) :: incstr, insfl
+      integer (kind = 4) :: iwvfc, instr, iowgt, icordin, iocon, iwvin
+      integer (kind = 4) :: intims, inwgt, imassout, itimfl
+      integer (kind = 4) :: nscr, nd1
       !meaning of the variables
       !------------------------
-      
-      !            TODO: examine, how ICFL works
-      !icfl:       unit number definition of the console
-      !LIN         unit of control file (control.r10)
-      !LOUT        after 1st call of file.sub unit of output file (.ech)
-      !            after 2nd call of file.sub LOUT becomes the general output unit (.out-file)
-      !LITR        unit of iteration file (.itr)
-      !IMESOUT     unit of Message file (MESS.ech)
-      !IKALYPSOFM  unit number of the results ouput files
-      !IFILE       model geometry (in *.2d-format)
-      !NB          restart input file (binary or ASCII)
-      !ibup        external boundary condition file
-      !INCSTR      control structure data
-      !insfl       input control stage flow relationship file
-      !IWVFC       input surface stress data file
-      !INSTR       surface traction from external grid
-      !IOWGT       Mesh weighting output
-      !ICORDIN     external grid data
-      !IOCON       continuity line hydrograph file
-      !IWVIN       input wave data file
-      !INTIMS      on/off controlling of constrol structure time series
-      !INWGT       external inpolation weighting data file
-      !IMASSOUT    ???
-      !ITIMFL      processing time data
+      !           TODO: examine, how ICFL works
+      !icfl:      unit number definition of the console
+      !LIN        unit of control file (control.r10)
+      !LOUT       after 1st call of file.sub unit of output file (.ech)
+      !           after 2nd call of file.sub LOUT becomes the general output unit (.out-file)
+      !LITR       unit of iteration file (.itr)
+      !IMESOUT    unit of Message file (MESS.ech)
+      !IKALYPSOFM unit number of the results ouput files
+      !IFILE      model geometry (in *.2d-format)
+      !NB         restart input file (binary or ASCII)
+      !ibup       external boundary condition file
+      !INCSTR     control structure data
+      !insfl      input control stage flow relationship file
+      !IWVFC      input surface stress data file
+      !INSTR      surface traction from external grid
+      !IOWGT      Mesh weighting output
+      !ICORDIN    external grid data
+      !IOCON      continuity line hydrograph file
+      !IWVIN      input wave data file
+      !INTIMS     on/off controlling of constrol structure time series
+      !INWGT      external inpolation weighting data file
+      !IMASSOUT   ???
+      !ITIMFL     processing time data
+      !           TODO: Make one unit number from nscr and nd1
+      !nscr       scratch file unit for solver purposes
+      !nd1        copy of scratch file unit nscr
       !other units
       !-----------
       !unit definitions in other blocks
@@ -56,10 +59,45 @@
       !integer (kind = 4) :: NAINPT, IRMAFM, JBEDOT, ISMSFM, ISMSFM1
       !integer (kind = 4) :: ISMSGN, ISMSFM2, IMESHOUT, IWAVOT, IBEDOT, INBNWGT
       !integer (kind = 4) :: INBNSTR, IOBNWGT
+
+      !primary execution control parameters
+      !------------------------------------
+      integer (kind = 4) :: icpu
+      integer (kind = 4) :: ioptzd
+      integer (kind = 4) :: idrpt
+      integer (kind = 4) :: idnopt
+      integer (kind = 4) :: iproj
+      integer (kind = 4), allocatable, dimension (:,:) :: IESPC
+      !Meaning of the variables
+      !------------------------
+      !icpu       switch for controlling of equation solver
+      !           0  - use frontal solution scheme
+      !           1+ - use pardiso solver from the MKL; icpu gives the number of cores/threads to be utilized
+      !ioptzd     switch for turbulence closure method
+      !           0 - original RMA-10
+      !           1 - quadratic functions
+      !           2 - linear functions
+      !idrpt      switch for equation dropout
+      !           0 - not operative
+      !           TODO: Find out exactly what equation dropout does
+      !           1 - dropout equations but bring all of them back, if active set of constituents changes
+      !           TODO: Find out exactly what advanced equation dropout does
+      !           2 - dropout advanced method; 
+      !idnopt     switch for Marsh algorithm
+      !           0 - use simple element drop out
+      !          -1 - use default Marsh parameters (
+      !          -2 - use user defined Marsh parameters
+      !iproj      switch for time projection method
+      !           0 - project in time based on time derivative of variable (time derivative is not changed!)
+      !           1 - do not project in time
+      !           2 - project based on current and previous value (purpose? faster convergence?)
+      !iespc      ????      
+      !
+      !
       
-      !execution parameters; initialised in the file opening process
-      !--------------------
-      integer (kind = 4) :: iutub, KRESTF
+      !secondary execution control parameters; initialised in the file opening process
+      !--------------------------------------
+      integer (kind = 4) :: iutub, krestf
       !Meaning of the variables
       !------------------------
       !iutub : switch (0 or 1) - 0 means that certain turbulence options can not be executed.
@@ -67,6 +105,7 @@
       !TODO: Meaning of krestf
       !krestf: switch (0 or 1) - 0 means not restarted and ???
       !                          1 means restarted or ???; the value is edited in the rma10.sub, too. The meaning is not clear. It is used in surcof.
+
       !model name i/o parameters
       !-------------------------
       character (len = 96) :: fnam
@@ -84,18 +123,13 @@
       !modellaus   suffix (string) of the results file in *.2d format
       !id          character variable into which the first 8 digits of any input line from a file are read
       !dlin        character variable into which the last 72 digits of any input line from a file are read
-      !outwriting frequency and starting point parametrs
-      !-------------------------------------------------
-      INTEGER          :: iaccyc
-      !meaning of the variables
-      !------------------------
-      !iaccyc: time step to start the calculation from; counting through the list of time steps to reach the iaccyc-th step
 
-      
       !model dimension parameters
       !--------------------------
       integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, ncl
       integer (kind = 4) :: np, ne, lp, le
+      integer (kind = 4) :: npm, nem
+      integer (kind = 4) :: nmat
       integer (kind = 4) :: maxPolyA, maxPolyQ, maxPolyB
       !meaning of the variables
       !-----------------------------
@@ -111,9 +145,13 @@
       !le         minimum element number
       !np         maximum node number
       !lp         minimum node number
+      !npm        maximum node number; copy for 3D purposes
+      !nem        maximum element number; copy for 3D purposes
+      !nmat       number of material types
       !maxPolyA:  maximum number of polynomials to describe A(h) at any node
       !maxPolyQ:  maximum number of polynomials to describe Q(h) at any node
       !maxPolyB:  maximum number of polynomials to describe alpha(h)/ beta(h) at any node
+
       !element definition data
       !-----------------------
       integer (kind = 4)                               :: ncn
@@ -140,28 +178,32 @@
       !zmann   (optional) Manning's n coefficient of an elements
       !nfixh      reordering number; position at which element will be solved
       
-      
       !general node geometry definition data
       !-------------------------------------
       real (kind = 8), allocatable, dimension (:,:)  :: cord
       real (kind = 8), allocatable, dimension (:)    :: ao, aorig
-      integer (kind = 4), allocatable, dimension (:) :: ndep
       !general node calculation value data definition
       !----------------------------------------------
-      real (kind = 8), allocatable, dimension (:,:)  :: vel, vdot
-      real (kind = 8), allocatable, dimension (:,:)  :: vold, vdoto
-      real (kind = 8), allocatable, dimension (:)    :: alfak
-      real (kind = 8), allocatable, dimension (:)    :: den
+      real (kind = 8), allocatable, dimension (:,:) :: vel, vdot
+      real (kind = 8), allocatable, dimension (:,:) :: vold, vdoto
+      real (kind = 8), allocatable, dimension (:,:) :: v2ol
+      real (kind = 8), allocatable, dimension (:)   :: vvel
+      real (kind = 8), allocatable, dimension (:)   :: alfak
+      real (kind = 8), allocatable, dimension (:)   :: den
+      real (kind = 8), allocatable, dimension (:)   :: hel, hol
+      real (kind = 8), allocatable, dimension (:)   :: hdet, hdot
+      real (kind = 8), allocatable, dimension (:)   :: h2ol
+      real (kind = 8), allocatable, dimension (:)   :: wsll
       !meaning of the variables
       !------------------------
       !cord       x-, y- and ?-coordinates of a node
       !ao         bed elevation of a node
       !aorig      original value of the bed elevation of a node; necessary for bed evolution calculations
-      !ndep       number of layers per nodes; that means depending nodes on original 2D-node
       !vel        The degree of freedom field; it's the key array
       !vdot       derivative of the degrees of freedom
       !vold       The degree of freedom field from the last time step; i.e. storage of old results
       !vdoto      derivative of the degrees of freedom from the last time step; i.e. storage of old results
+      !v2ol       The degree of freedom field from the penultimate time step; i.e. storage of old results
       !for all counts:
       !           1 - x-velocity
       !           2 - y-velocity
@@ -171,9 +213,17 @@
       !           6 - suspended sediment
                   !TODO: what is vel(7,x)
       !           7 - ??? perhaps water column potential by element
+      !vvel       vertical velocity; for 3D applications
       !alfak      Fixed flow direction angle at a certain node; Value 0.0 zero means, that flow direction not restricted
                   !TODO: What actually is the 3rd coordinate? Is it the same as ao
       !den        density at each node
+      !hel        real depth; important for Marsh-nodes
+      !hol        real depth of last time step; important for Marsh-nodes
+      !hdet       derivative of real depth over time; important for Marsh-nodes
+      !hdot       derivative of real depth over time in last time step; important for Marsh-nodes
+      !h2ol       real depth of penultimate time step; important for Marsh-nodes
+      !wsll       water surface elevation of node
+
       
       !1D-node definition data (geometry approach)
       !-------------------------------------------
@@ -189,7 +239,6 @@
       !widbs      lowest point of off-channel storage
       !wss        side slope of the off-channel storage
       
-
       !continuity line definition data
       !-------------------------------
       integer (kind = 4) :: line (50, 350)
@@ -207,6 +256,7 @@
       !------------------------
       !translines   data of transition lines; transitioning line, 1D-element, and node
       !jpoint       determines connections of nodes in 1D/2D and 2D/3D-vertical elements
+
       !input control parameters - elevations
       !-------------------------------------
       real (kind = 8) :: elev, hmin, hmnn
@@ -218,6 +268,7 @@
       !        zero value     - no minimum water depth applied at the beginning; if elev is less than ao at a certain node, the node becomes dry at startup
       !        negative value - all water depth values ar overwritten with the absolute of the negative hmin
       !hmnn:   Actually a working copy of hmin for internal purposes to identify the method, that should be applied for hmin
+
       !input control parameters - scaling
       !----------------------------------
       real (kind = 8) :: xscale, yscale, zscale
@@ -226,7 +277,8 @@
       !xscale: scaling of all coordinates in x-direction by this factor
       !yscale: scaling of all coordinates in y-direction by this factor
       !zscale: scaling of all bed-coordinates in z-direction by this factor
-      !global constituents
+
+      !global constituents (constants)
       !-------------------
       real (kind = 8) :: roavg, tempi, grav
       !meaning of the variables
@@ -234,6 +286,7 @@
       !roavg:  average density of the fluid
       !tempi:  input temperature (from input file; is used here to determine the average density)
       !grav:   gravitational constant
+
       !general execution control
       !-------------------------
       integer (kind = 4) :: igf
@@ -250,39 +303,154 @@
       !        2 - definition at corner nodes (line LD3)
       !       -N - number of layers to be applied is N
       
-      !time parameter
-      !--------------
+      !simulation time parameter
+      !-------------------------
       integer (kind = 4) :: iyrr
-      real (kind = 8)    :: tett
+      real (kind = 8)    :: tett, tet
       !meaning of the variables
       !------------------------
       !iyrr       year
       !tett       date in hours
+      !tet        hours of the current day
+      
+      !real time parameters
+      !--------------------
+      real (kind = 8), dimension (10) :: ATIM
+      !meaning of the variables
+      !------------------------
+      !atim       array to store processing times for 1D, 2D and so on; it is used for the time-output file
+
+      
+      !iteration and time step control
+      !-------------------------------
+      integer (kind = 4) :: niti, nitn, nita
+      integer (kind = 4) :: maxn
+      integer (kind = 4) :: itpas
+      integer (kind = 4) :: iaccyc
+      integer (kind = 4) :: icyc, ncyc
+      integer (kind = 4) :: it
+!meaning of the variables
+!------------------------
+!niti                   number of steady state iterations
+!nitn                   number of unsteady iterations read for each time step
+!nita                   local copy of current maximum number of iterations in steady or unsteady run
+!maxn                   current iteration cycle
+!itpas                  ???
+!iaccyc: time step to start the calculation from; counting through the list of time steps to reach the iaccyc-th step
+!                       TODO: delete everything, connected to ioutrst
+!icyc                   counter for really processed time steps
+!ncyc                   maximum number of time steps
+!it                     actual 'ID' of the time step
+
+
+      !file handling and outwriting frequencies
+      !----------------------------------------
+      integer (kind = 4) :: ioutrst, ioutfreq, ioutrwd
+      integer (kind = 4) :: nprti, nprtf
+!meaning of the variables
+!------------------------
+!ioutrst                frequency to write out restart results (obsolete?)
+!                       TODO: Examine what is the difference between those two lines
+!ioutfreq               frequency to write out results
+!                       TODO: Why do this; remove it
+!ioutrwd                frequency to rewind output file LOUT
+!nprtf                  frequency of time steps to write out full results
+!nprti                  frequency of iterations within nprtf to write out full results
+
+      !controlling of active degrees of freedom
+      !----------------------------------------
+      integer (kind = 4), allocatable, dimension (:) :: iteqs, iteqv
+      integer (kind = 4)                             :: ick
+      integer (kind = 4)                             :: ndf
+      !meaning of the variables
+      !------------------------
+      !iteqs      active constituents in the iteration
+      !iteqv      active equations in the iteration
+      !           TODO: Examine meaning of ick
+      !ick        ??? is connected to iteqs
+      !ndf        active number of degrees of freedom
+ 
+      !convergence and equation dropout
+      !--------------------------------
+      integer (kind = 4)                               :: nconv
+      integer (kind = 4), allocatable, dimension (:,:) :: iactv
+      !meaning of the variables
+      !------------------------
+      !nconv            switch, that says, whehther model is converged in the time step
+      !                 0 - model is not converged
+      !                 1 - model is converged up to the variables, that had to be calculated to the iteration maxn; there might be another iteration, that
+      !                       has to be done later in the time step, where another variable is active and is not converged
+      !                 2 - all variables of the time step are fully converged
+      !                 TODO: Examine the usage of iactv
+      !iactv            stores for each node and each degree of freedom a switch for being active
+      !                 0 - ???
+      !                 1 - ???
+      !                10 - ???
+      
+      !time derivative purposes
+      !------------------------
+      real (kind = 8) :: delt
+      real (kind = 8) :: alpha
+      real (kind = 8) :: ALTM
+      real (kind = 8) :: alphasn
+      !meaning of the variables
+      !------------------------
+      !delt       time step length [hours]
+      !alpha      factor for time derivative of variables; centering (default 1.8) for hydrodynamic values
+      !altm       = alpha/ delt
+      !alphasn    factor for time centering for constituents (default 2.0)
+      
+      !boundary conditions and inflow values
+      !-------------------------------------
+      real (kind = 8), allocatable, dimension (:) :: SIDFF
+      !meaning of the variables
+      !------------------------
+      !sidff      side inflow to an element
+      
+      
+      !morpho purposes
+      !---------------
+      integer (kind = 4) :: mxsedlay
+      !meaning of the variables
+      !------------------------
+      !mxsedlay         ??? - morpho purposes
+      
+      !3D purposes
+      !-----------
+      integer (kind = 4), allocatable, dimension (:) :: nref
+      integer (kind = 4), allocatable, dimension (:) :: ndep
+      integer (kind = 4)                             :: itransit
+      real (kind = 8), allocatable, dimension (:)    :: dfct
+      !meaning of the variables
+      !------------------------
+      !nref       reference node, that is the top/bottom (?) node of a node column
+      !ndep       number of layers per nodes; that means depending nodes on original 2D-node
+      !itransit   ??? - 3D purposes
+      !dfct       ??? - 3D purposes
+      
+ 
+      
       
 
 C-
-      INTEGER NDF,NMAT,NSZF,IWIND,MAXN,
-     1        NITI,NITN,NCBC,ND1,MXSEDLAY
-     2         ,IT,ICYC,NLP,NEM,NPM,NS
-     3          ,IVS,NPRTF,IR1MAX,NPRTI
-     4          ,ICK,NSCR,NCYC 
-     5          ,NPSAV,NESAV,ISALBC,ISTRT,NCONV,NITA,IZB,IRSAV
-     6          ,IPASS1,IPASS2,IPASS3,IOPTZD
+      INTEGER NSZF
+     1        ,NCBC
+     2         ,NLP,NS
+     3          ,IVS,IR1MAX
+     5          ,NPSAV,NESAV,ISALBC,ISTRT,IZB
+                !TODO: IRSAV can be deleted; it's not used anymore
+     +          ,IRSAV
+     6          ,IPASS1,IPASS2,IPASS3
      7          ,ibinrst,iyend,idye,nscrin,ISVS,NMETF
-     9          ,idrpt,nrbd,iedsw,istch
-     +          ,ioptim,IDNOPT,IHGNN,IZERS,ITRANSIT
-     +          ,IPROJ,NODETR
-     +          ,ITPAS,IOUTFREQ,IOUTRST
+     9          ,nrbd,iedsw,istch
+     +          ,ioptim,IHGNN,IZERS
+     +          ,NODETR
      +          ,NBSFRQ,IDIFSW
 !removed: lnnam
 !     +          ,IOV,IYKK,IDTM,TTEM,LNNAM,INOTR
      +          ,IOV,IYKK,IDTM,TTEM,INOTR
-     +          ,INEWBED,IDEBUG,IOUTRWD
-     +          ,ICNSV,IAVEL,ICPU,IREALLCT,MR1
-     +          ,ISOLCT
-CIPK AUG07  ADD ICPU to ISOLCT
-cipk aug06  add input options    
-
+     +          ,INEWBED,IDEBUG
+     +          ,ICNSV,IAVEL,IREALLCT,MR1
 !EFa, mar07     add MFWW for gloabl use (used in numbopt)
      +          ,MFWW
 
@@ -291,9 +459,6 @@ cipk aug06  add input options
 
 !nis,sep06: Adding switch for chosing approach of boundary condition transformation
       INTEGER          :: BSWIT
-      INTEGER          :: npr !steady state counter for iterations
-!-
-
 !NiS,apr:       former variables of the common.cfg-file in the KALYPSO-2D version move to this module because they
 !               are used here, if those informations about material and so on are used:
       INTEGER           :: irk
@@ -301,34 +466,33 @@ cipk aug06  add input options
 !-
 
 CIPK MAY06 ASS IMASSOUT     
-CIPK MAR06 ADD IOUTRWD     
       REAL    
      1           OMEGA
-     2          ,DELT,TMAX,ALTM,FACT,TET
+     2          ,TMAX,FACT
      3          ,POWER,PWERIN,UMIN,VMIN
      6          ,UINP,VINP,TSTART
      7          ,UNOM,SALI,SEDI
      8          ,hrend,teth
-     9          ,alpha,alphasn,drfact,prcnt,dmix
+     9          ,drfact,prcnt,dmix
      +          ,tbfact,tbmin,TRANSIT
      +          ,ELEV1,TRELEV,TRFACT
-     +          ,ZSTDEP,ATIM(10)
+     +          ,ZSTDEP
 !EFa may07, dispersion-coefficient for turbulence modell
      +          ,p_bottom
 
 
       REAL      CINT(100),CPOW(100),AJ(100),BJ(100),CJ(100)
      +         ,GAMJ(100),QD(100),DJ(100)
-      INTEGER   JLIN(50), !ITLVL(90),ITEQV(90)
-!     +         ,ITEQS(90),IURVL(90),NCNV(7)
+      INTEGER   JLIN(50), !ITLVL(90)
+!     +         ,IURVL(90),NCNV(7)
      +          NCNV(7)
 !Nis,sep06: adding lineimat(50,350) for storage of material of line segments
      +         ,lineimat(50,350), lineelement (50, 350)
 
 !-
       !EFa jun07, changed dimension for autoconverge
-      !+         ,ITEQS(65),IURVL(65),ITLVL(65),ITEQV(65)
-      INTEGER,ALLOCATABLE :: ITEQS(:),IURVL(:),ITLVL(:),ITEQV(:)
+      !+         ,IURVL(65),ITLVL(65)
+      INTEGER,ALLOCATABLE :: IURVL(:),ITLVL(:)
       !-
       REAL      STQ(50),STQA(50),STQE(50),STQC(50),STQT(50),ALN(50)
      +         ,CONV(7)
@@ -355,8 +519,8 @@ CIPK MAR06 ADD IOUTRWD
      1              ALFA(:),
      3              NFIX(:),NLOC(:)
      4             ,NSURF(:),NBTN(:),IBN(:),NFIX1(:)
-     5             ,FCTV(:),FCTS(:),NREF(:),NTHREE(:)
-     6             ,VVEL(:),FC(:,:)
+     5             ,FCTV(:),FCTS(:),NTHREE(:)
+     6             ,FC(:,:)
      7             ,XSLP(:),YSLP(:),NFIXK(:)
      8             ,NFIXP(:),ADIF(:)
      +             ,VOUTN(:)
@@ -365,15 +529,9 @@ CIPK MAR06 ADD IOUTRWD
      +           ,NDROP(:,:),ICPON(:),NSPL(:)
      +           ,DROXIN(:),DRODXN(:),DROYIN(:),DRODYN(:)
      +           ,irbd(:),nfixsav(:)
-     +           ,IESPC(:,:)
-!NiS,jul06: For consistent data types declaration below
-!     +           ,iactv(:,:),HEL(:),HOL(:),HDET(:)
-     +           ,iactv(:,:),HOL(:),HDET(:)
-!-
-     +           ,HDOT(:)
      +           ,SIDN(:),XTLN(:)
-     +           ,ICOLLAP(:),WSLL(:)
-     +           ,V2OL(:,:),H2OL(:),NBCKP(:,:),NFIXSV1(:)
+     +           ,ICOLLAP(:)
+     +           ,NBCKP(:,:),NFIXSV1(:)
      +           ,WAT(:,:),NODWT(:,:)
      +           ,GAN(:),GAN0(:)
      +           ,DGN(:),IBNA(:),XNU(:),XNMANN(:),ISTLIN(:)
@@ -389,20 +547,16 @@ cipk sep06 add IOVLDN
 cipk apr06 add IPASST
 C-
 
-!NiS,jul06: Variable HEL has to be real,kind=8 because of calling problems for amf
-      REAL(KIND=8), ALLOCATABLE :: HEL(:)
-!-
 
       REAL MANMIN,MANMAX,MANTAB
 
       ALLOCATABLE  AREA(:),IMATL(:)
      7             ,LNO(:),SIDF(:),SIDQ(:,:)
-     +             ,DFCT(:)
      +             ,EDD1(:),EDD2(:),EDD3(:),nelord(:)
      +             ,DROXINS(:,:),DROYINS(:,:)
      +             ,ELAREA(:),neref(:),nedep(:),TVOLC(:)
      +             ,TVOL(:),ICOLLAPE(:),NRELSF(:)
-     +      ,SIDFF(:),NOPSS(:,:),NFIXHS(:),EINX(:),EINY(:)
+     +             ,NOPSS(:,:),NFIXHS(:),EINX(:),EINY(:)
      +             ,IEDSW1(:),TBFACT1(:),TBMIN1(:)
      +             ,INOFLOW(:)
      +             ,NCTREF(:),NTMREF(:),NREORD(:),EEXXYY(:,:)

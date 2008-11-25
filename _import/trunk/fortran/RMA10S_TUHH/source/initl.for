@@ -699,12 +699,6 @@ cipk jan02
 
       ENDDO
 
-      !nis,jul08: Since Version 8.0, what is the meaning
-      isolct = 0
-      !-
-
-
-
       !nis,jan08: nctref is for the material types, especially for the weir structures
       !nis,jan08: ort-variable is according to the material types
       do j = 1, 1000
@@ -763,6 +757,7 @@ CIPK MAR01
         CNIKU(j)     = 0.0
         DURCHBAUM(j) = 0.0
         ABST(j)      = 0.0
+        c_wr(j)      = 1.0
       ENDDO
 !-
 !NiS,apr06: allocating arrays for neighbourhood relations
@@ -910,7 +905,6 @@ CIPK MAR01
       end do
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0
-      npr = 0
       !-
       !nis,jul07: following values are causing problems somewhere, therefore initialize them
       TETH = 0.0

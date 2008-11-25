@@ -13,26 +13,29 @@ integer (kind = 4) :: maxIntPolElts, NodesToIntPol, statElSz, statNoSz
 !statnosz         node number to start counting the interpolated node ID numbers at; actually it's maxp+1
 
 
-!resistance parameters (lambdas)
-!-------------------------------
+
+!Darcy-Weisbach element parameters and values
+!--------------------------------------------
+real (kind = 8), allocatable, dimension (:) :: cniku
+real (kind = 8), allocatable, dimension (:) :: abst, durchbaum, c_wr
 real (kind = 8), allocatable, dimension (:) :: lambdatot
 real (kind = 8), allocatable, dimension (:) :: lambdaks, lambdap
 real (kind = 8), allocatable, dimension (:) :: lambdadunes
+real (kind = 8), allocatable, dimension (:) :: correctionks, correctionaxay, correctiondp
 !meaning of the variables
 !------------------------
+!cniku            Nikuradses kS-value per element
+!abst             average distance between wood elements for each discretisation element
+!durchbaum        average diameter of wood elements for each discretisation element
+!c_wr             cWR value for each discretisation element
 !lambdatot        total calculated lambda value of an element
 !lambdaks         lambda due to bed roughness (ks)
 !lambdap          lambda due to vegetation resistance (ax, ay, dp)
 !lambdadunes      lambda due to dunes resistance (not operative yet)
-
-!resistance correction parameters for calibration purposes
-!---------------------------------------------------------
-real (kind = 8), allocatable, dimension (:) :: correctionks, correctionaxay, correctiondp
-!meaning of the variables
-!------------------------
 !correctionks     correction scaling factor for the ks value of an element; default must be 1.0d0
 !correctionaxay   correction scaling factor for the ax and ay values of an element; default must be 1.0d0
 !correctiondp     correction scaling factor for the dp values of an element; default must be 1.0d0
+
 
 !node informations
 !-----------------
@@ -78,6 +81,17 @@ character (len = 96) :: name_cwr
 !name_cwr         name string of the cwr-data input file, if restarting
                   !TODO: Probably not needed this way any longer
 
+!average element values
+!----------------------
+real (kind = 8), allocatable, dimension (:) :: mvx, mvy, mvxvy
+real (kind = 8), allocatable, dimension (:) :: mh
+!meaning of the variables
+!------------------------
+!mvx        average x-velocity in an element
+!mvy        average y-velocity in an element
+!mvxy       average absolute velocity in an element
+!mh         average water depth in an element
+
 !results copies (for writing out purposes)
 !--------------
 real(kind=8), allocatable, dimension (:,:) :: rausv
@@ -89,8 +103,22 @@ real(kind=8), allocatable, dimension (:,:) :: rausv
 !                 3 - water depth
 !                 4 - water surface elevation
 
-!vegetation usage switch
-INTEGER   :: IVEGETATION
+!primary execution control parameters
+!------------------------------------
+integer (kind = 4) :: ivegetation
+!meaning of the variables
+!------------------------
+!ivegetation      calculate resistance with Darcy approach according to big vegetation elements
+
+!output control parameters
+!-------------------------
+integer (kind = 4) :: itefreq
+!meaning of the variables
+!------------------------
+!itefreq          frequency to write out results between iterations
+
+
+
 !using energy level for cstrc
 INTEGER   :: UseEnergyCSTRC
 
@@ -102,22 +130,11 @@ INTEGER   :: UseEnergyCSTRC
 INTEGER 		  :: iauslp, iausnpm
 REAL(KIND=8), allocatable :: zeigma(:)
 REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
-!-
+
+
 
 !-
 
-!NiS,apr06:     The following variables are necessary for the implementation of the Darcy-Weisbach (DW) flow equation. Within the subroutines the
-!               flow-resistance 'lambda' is calculated as well as the resistance coefficient c_wr. The necessary arrays are declared at this point.
-!               They will be allocated and initialized in the subroutine 'initl'. The arrays are compatible with the arrays ZMANN and CHEZ out of
-!               the Blk10mod.for module. They could also be declared there. In the first step all variables necessary for the implementation of
-!               the DW-roughness method are put together to see possible errors directly:
-REAL, ALLOCATABLE :: abst(:), c_wr(:), durchbaum(:), mvx(:), mvy(:), mvxvy(:)
-ALLOCATABLE cniku (:)
-REAL(KIND=8), ALLOCATABLE, DIMENSION (:) :: mh
-
-!filename for saving cwr-file
-!frequency pointer for output after itertion
-INTEGER            :: itefreq
 
 !NiS,jul06: At the moment as a dummy argument, the bedform-array in a global version. It is passed to the subroutine
 !           formrauheit in the file roughness.f90

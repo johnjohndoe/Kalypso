@@ -34,7 +34,7 @@ SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, Po
 !                                             Nov 1995 Wyrwa
 !-----------------------------------------------------------------------
 
-USE BLK10MOD , only: &
+use blk10mod , only: &
 &   maxe, maxa, maxp, maxt, maxlt, ncl, &
 &   width, ss1, ss2, wids, widbs, wss, &
 &   ifile, nb, lout, id, &
@@ -90,13 +90,13 @@ USE BLK10MOD , only: &
             !TODO: what is vel(7,x)
 !           7 - ??? perhaps water column potential by element
 
-USE BLKDRMOD, only: imato
+use blkdrmod, only: imato
 !meaning of the variables
 !------------------------
 !imato      old material type of an element from the last time step
 
 
-USE ParaKalyps , only: &
+use parakalyps , only: &
 &   correctionks, correctionaxay, correctiondp, &
 &   lambdatot, lambdaks, lambdap, lambdadunes, &
 &   intpolprof, ispolynomnode, transitionelement, &
@@ -141,7 +141,7 @@ USE ParaKalyps , only: &
 !rausv            is the water surface elevation at startup
 !
 
-USE Para1DPoly, only: &
+use para1dpoly, only: &
 &   kmx, hhmin, hhmax, hbordv, &
 &   polysplitsa, polyrangea, apoly, &
 &   polysplitsq, polyrangeq, qpoly, qgef, &
@@ -192,24 +192,44 @@ integer (kind = 4), intent (out) :: polysplitcounta, polysplitcountq, polysplitc
 
 !local variables
 !----------------
-integer (kind = 4)                  :: unit_nr
-integer (kind = 4)                  :: istat
-character (len = 2)                 :: id_local
-character (len = 512)               :: linie
-integer                             :: weircnt
-integer (kind = 4), allocatable     :: reweir (:, :)
-real (kind = 8), dimension (1:2)    :: vekkant, vekpu1
-real (kind = 8)                     :: kreuz
-integer (kind = 4)                  :: i, j, k, l
-real (kind = 8)                     :: x, y, z
-real (kind = 8)                     :: a, b, c
-real (kind = 8)                     :: hhmin_loc
-integer (kind = 4)                  :: elzaehl, mittzaehl
+integer (kind = 4)                              :: unit_nr
+integer (kind = 4)                              :: istat
+integer (kind = 4)                              :: linestat
+character (len = 2)                             :: id_local
+character (len = 512)                           :: linie
+integer                                         :: weircnt
+integer (kind = 4), allocatable, dimension (:,:):: reweir (:, :)
+real (kind = 8), dimension (1:2)                :: vekkant, vekpu1
+real (kind = 8)                                 :: kreuz
+integer (kind = 4)                              :: i, j, k, l
+real (kind = 8)                                 :: x, y, z
+real (kind = 8)                                 :: a, b, c
+real (kind = 8)                                 :: hhmin_loc
+integer (kind = 4)                              :: elzaehl, mittzaehl
+integer (kind = 4)                              :: arcs_without_midside, midsidenode_max
+integer (kind = 4), allocatable, dimension (:,:):: arc
+integer (kind = 4), dimension (5)               :: temparc
+integer (kind = 4)                              :: ibot, itop
+integer (kind = 4)                              :: ilft, irgt
+integer (kind = 4)                              :: jnum
+integer (kind = 4), dimension (5)               :: elkno
+integer (kind = 4), dimension (4)               :: mikno
+integer (kind = 4), allocatable, dimension (:)  :: nop_temp
+integer (kind = 4)                              :: ncorn_temp
+integer (kind = 4)                              :: node1, node2, nd
+integer (kind = 4)                              :: connline
+integer (kind = 4)                              :: connnumber
+integer (kind = 4), allocatable, dimension (:,:):: elem
+real (kind = 8)                                 :: sumx, sumy
+logical                                         :: ReorderingNotDone
+integer (kind = 4), dimension (2, 160)          :: qlist
+integer (kind = 4), allocatable, dimension (:)  :: elfix
 !meaning of the variables
 !------------------------
                         !TODO: geometry and restart file become one
 !unit_nr                unit number to read from; it can be either the geometry or the restart file
 !istat                  i/o status specifier
+!linestat               i/o status specifier
 !id_local               first digits of any read line to examine what sort of line type is present
 !linie                  rest of any read line starting from id_local, to evaluate the data written in the line
 !weircnt                counts all control structure occurances locally
@@ -223,83 +243,79 @@ integer (kind = 4)                  :: elzaehl, mittzaehl
 !hhmin_loc              read out variable for the minimum water depth of the valid range of a polynomial
 !elzaehl                element counter that checks for the really used element numbers. During element set up it's just incrementally increased, if an element really has data
 !mittzaehl              counter of midside nodes that are generated during mesh set up
+!arcs_without_midside   counter for midside nodes without arcs
+!midsidenode_max        counter for midside nodes
+!arc                    !shows definition parts of an arc; local storage for creating mesh geometry
+!                       1 - first  (bottom) node
+!                       2 - second (top) node
+!                       3 - left element
+!                       4 - right element
+!                       5 - midside node
+!temparc                !shows definition parts of an arc during read procedure
+!                       0 - not used
+!                       1 - first  (bottom) node
+!                       2 - second (top) node
+!                       3 - left element
+!                       4 - right element
+!                       5 - midside node
+!ibot                   First(bottom) definition node of an arc
+!itop                   Last(top) definition node of an arc
+!ilft                   left positioned element of an arc
+!irgt                   right positioned element of an arc
+!jnum                   shows the number of nodes assigned to an element; shows implicitly shape of element
+!elkno                  stores all three or four corner nodes of an element; last entry (4th or 5th in 2D-geometry must fit to the 1st again to build a ring)
+!mikno                  stores all three or four midside nodes of an element
+!nop_temp               temporary node storage for only for 1D/2D line-2-element transitions (includes 1D nodes as well as line's nodes)
+!ncorn_temp             temporary node number storage that are connected to a 1D/2D line-2-element transition
+!node1                  used as local storage of reference node, when creating neighbourhood relations
+!node2                  used as local storage of neighbouring node, when creating neighbourhood relations
+!nd                     used as local storage of a node
+!connline               local storage of a continuity line's ID when running through the 1D/2D line-2-element transitions
+!connnumber             ID number of a 1D/2D line-2-element transition
+!elem                   arc definitions of the elements
+!                       0 - not used
+!                       1 - number of arcs + 1
+!                       2 - 1st arc ID
+!                       3 - 2nd arc ID
+!                       4 - 3rd arc ID
+!                       5 - 4th arc ID
+!                       6 - not used
+!sumx                   auxiliary sum for calculating an element's center x-coordinate
+!sumy                   auxiliary sum for calculating an element's center y-coordinate
+!ReorderingNotDone      switch to start reordering
+!                       .t. - reodering has to be done
+!                       .f. - reordering has not to be done
+!                       TODO: array is bad conditioned, because 2nd subscript is never used and size doesn't fit a continuity line
+!qlist                  list of nodes to start reordering from; comes from startnode.sub; is bad conditioned
+!                       1 - list that will be applied
+!                       2 - not used
+!elfix                  shows, whether an element has a reodering number or not; examines, whether reordering has to be done
 
-
-
-integer (kind = 4) :: nd, connline
-
-
-INTEGER,ALLOCATABLE    :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
-!!nis,dec06: for neighbourhood relations at line couplings
-INTEGER, ALLOCATABLE   :: nop_temp (:)
-INTEGER                :: ncorn_temp
-
-
-INTEGER, allocatable :: elem (:, :)                    !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
-!                                              	       !on the type and shape of element; the first entry can also show 1D-ELEMENT with negative value
-INTEGER              :: elkno(5), mikno(4)           !local array for loop, that generates midsides for elements where no midside is assigned
-INTEGER, allocatable :: elfix (:)                      !for reordering subroutine of RMA1, not used in RMA10S
-
-!nis,aug08: Reordering sequence renewing
-logical :: ReorderingNotDone
-
-!
-!!NiS,mar06: the following variables were already used in the KALYPSO-2D version, but were never declared. Now they are.
-INTEGER                :: iakt         	               !temp: stands for an active element (number) in a calculation run
-INTEGER                :: ibot,itop                    !temp: first(BOTtom) and last(TOP) definition nodes of an arc
-INTEGER                :: ilft,irgt                    !temp: left and right positioned element of an arc
-INTEGER                :: jnum                         !temp: shows the number of nodes assigned to an element; shows implicitly shape of element
-
-!Other old variables
-INTEGER                :: qlist (2, 160)               !list for reordering sequence
-REAL                   :: sumx, sumy = 0.0             !temporary summation of coordinates of elements points, to find center of element by average
-INTEGER                :: node1, node2                 !temporary node spaces for neighbourhood relation calculation
-
-!NiS,mar06 NEW DECLARATIONS:
-integer (kind = 4) :: temparc(5)                   !reading an arc at the option of KSWIT=1, when the ARC-array is not yet assigned
-INTEGER                :: arcs_without_midside         !counting the number of arcs that have no explicitly defined midside to increase the number of
-!                                		       !MAXP at the end of the dimensioning run for array allocation in initl.subroutine
-INTEGER                :: midsidenode_max              !comparison variable for the highest necessary node number, so it can be tested, whether
-!                                      		       !the node list is complete
-!
-INTEGER                :: linestat
-!
-!!nis,jan07: temporary variables for connection handling
-INTEGER                :: ConnNumber
-!-
-!NiS,mar06: the following common block has been replaced by global module called ParaKalyps
-
-
-!tm Thomas Maurer, 15.05,1998
-!tm linie von *80 auf *120 verlaengert                                  
-!tm Anpassung an "verlaengerten" *.2D file, d.h.                        
-!tm VA-Zeile hat noch eine neue Position auf von Spalte 86 bis 96 bekomm
-!tm VA         1           0.9858658           0.0481516           2.217
 
 
 ! INITIALISIERUNGSBLOCK -----------------------------------------------------------------------
 
+!TODO: Initializations are not good, because zero subscripts are not used and size of elem doesn't fit
 allocate (elem (MaxE, 6), elfix (MaxE))
 
+sumx = 0.0d0
+sumy = 0.0d0
   
 
-IF (KSWIT==1) THEN        !In the first case the value MAXA has to be found, the allocation of
-  MAXA = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
-  MAXE = 0                  !EFa Nov06
-  ALLOCATE (arc (MAXA, 5))   !just pro forma, it is deallocated at the end of this run.
-ELSE                      !In the second run, the value of MAXA is known and the arc-array is
-  ALLOCATE (arc (MAXA, 5))   !allocated again; it is deallocated at the end of the run.
-ENDIF                     !NiS,mar06
+if (kswit == 1) then        !in the first case the value maxa has to be found, the allocation of
+  maxa = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
+  maxe = 0                  !efa nov06
+endif                     !nis,mar06
+allocate (arc (maxa, 5))   !just pro forma, it is deallocated at the end of this run.
+
 arcs_without_midside = 0
 midsidenode_max = 0
 
-!nis,jun07: Initializing the qlist array
+!TODO: 
 do i = 1, 160
-  qlist(1, i) = 0
-  qlist(2, i) = 0
+  qlist (1, i) = 0
+  qlist (2, i) = 0
 end do
-!-
-
 
 !initialisations of locals for i/o purposes
 !------------------------------------------
@@ -327,7 +343,7 @@ enddo
 
 !LF nov06: initialize the number of weir elements
 
-!NiS,mar06: temparc is an array for reading arc informations in the dimensioning run (KSWIT==1)
+!temparc is an array for reading arc informations in the dimensioning run (KSWIT==1)
 DO i=1,5
   temparc (i) = 0
 ENDDO
@@ -752,73 +768,63 @@ ENDIF
 
 
 !     TRANSLATION TO KALYPSO-2D FORMAT -----------------------------------------------------
-!     UMSETZUNG AUF KALYPSO-2D FORMAT ------------------------------------------------------
 
-!     Die Datenstruktur, die die Verknuepfung der Knoten mit den
-!     Elementen ueber die Kanten bewerkstelligt, wird nun in die
-!     im Berechnungsmodul verwendete Struktur der direkten
-!     Zuordnung der Knotennummern zu den Elementen umgesetzt.
-!     Dabei wird auf Datenkonsistenz und Netzfehler geprueft.
-!
-!     Baue das Feld ELEM(j,i) auf (Kantennummern am Element):
-!     - ELEM(j,1) Kantenanzahl; this is not correct!!! it is as follows because
-!     of direct access to the array elements 2...5
-!     NiS,mar06
-!     - ELEM(j,1) Kantenanzahl + 1
-!     - ELEM(j,2-4/5) Kantennummern
-!     mit j=Elementnummer
+
 !NiS,may06: every arc's element(s) will be saved in the elem-array, which shows after Loop-Execution the grouping of nodes belonging to an element.
 !           The stored values are: On the first place the number of nodes associated with the element and on the 2nd to 5th place the nodes (unsorted)
 !
 !           Changed the if-clauses in the way that, 1D, 1D-2D-transitions and 2D-elements can be recognized
 DO i = 1, arccnt
-  !1D-ELEMENT, 1D-2D-TRANSITION-ELEMENT or DEAD ARC
-  IF (arc(i,3) == arc(i,4)) THEN
-    !SKIP DEAD ARCS WITH NO ELEMENT NUMBERS ASSIGNED
-    IF (arc(i,3) == 0) THEN
-      WRITE (Lout,9003) i
-      WRITE (*   ,9003) i
 
-    !1D (TRANSITION ELEMENTS AND NORMAL ELEMENTS)
-    ELSE
-      !TODO: These checks are not 100 percent consistent
-      j = arc(i,3)
-      !Error, if the potential 1D-NODE is used, which means (elem(j,1)/=0)
-      IF (elem(j,1) /= 0) THEN
-        !ERROR - 1D-element is used twice which is not possible
-        call ErrorMessageAndStop (1302, j, 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
+  !DEAD ARCS
+  if (arc (i, 3) == 0 .and. arc (i, 4) == 0) then
+    write (lout, 9003) i
+    write (*   , 9003) i
+    
+  !1D-ELEMENT or 1D-2D-TRANSITION-ELEMENT
+  elseif ((arc (i, 3) == arc (i, 4)) .and. arc (i, 3) /= 0) then
+    !TODO: these checks are not 100 percent consistent
+    j = arc (i, 3)
+    
+    !ERROR, if 1D-node is already in use
+    if (elem (j, 1) /= 0) then
+      call errormessageandstop (1302, j, 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                                 &          0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
-      !assign identification for 1D-NODES (elem(j,1)==-1) for normal 1D-ELEMENTS and (elem(j,1)==-2) for 1D-2D-transition elements; remember
-      !the ARC, that defines the 1D-ELEMENT for later NODE extraction
-      ELSE
-        !No 4th NODE at normal 1D-ELEMENTS
-        IF (nop(j,4)==0) THEN
-          elem(j,1) = -1
-        !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
-        ELSE
-          elem(j,1) = -2
-        ENDIF
-        !Remember the ARC of the 1D-ELEMENT
-        elem(j,2) = i
-      ENDIF
-    ENDIF
 
-  !2D-ELEMENT(S)
-  ELSE !implicitly arc(i,3) /= arc(i,4), which means one can be zero.
-    !linkes Element k = 3; rechtes Element k = 4
+    !assign identification for 1D-nodes
+    !  elem (j, 1) == -1) - normal 1D-elements
+    !  elem (j, 1) == -2) - 1D/2D transition elements
+    !remember the arc, that defines the 1D-element for later node extraction
+    else
+      !no 4th node at normal 1d-elements
+      if (nop (j, 4) == 0) then
+        elem (j, 1) = -1
+      !4th node at 1d-2d-transition elements; nodes for 1d-2d-transition elements were already assigned in the reading section
+      else
+        elem (j, 1) = -2
+      endif
+      !remember the arc of the 1d-element
+      elem (j, 2) = i
+    endif
+
+  !2D-ELEMENTS
+  else
+    !left element k = 3
+    !right element k = 4
     DO k = 3, 4
+      !get element number
       j = arc (i, k)
-      !Testing, whether placeholder has element informations
-      IF (j>0) then
-        !ERROR - element is used twice which is not possible
+      !Testing for the existance of the element
+      IF (j > 0) then
+        !ERROR - element is used twice
         IF (elem (j, 1) == -1) call ErrorMessageAndStop (1302, j,                  &
                              & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                              & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
         !Testing, whether it is the first defining arc
-        IF (elem (j, 1) ==0) elem (j, 1) = 1
+        IF (elem (j, 1) == 0) elem (j, 1) = 1
         !Increase number of assigned ARCS to ELEMENT by increment =1
         elem (j, 1) = elem (j, 1) + 1
-        !ERROR - Element is defined with more than 4 arcs
+        !ERROR - Element is defined with more than 4 arcs (only 3 or 4 is possible)
         IF (elem (j, 1) > 5) call ErrorMessageAndStop (1202, j,                      &
                                & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                                & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
@@ -855,21 +861,21 @@ all_elem: DO i = 1, maxe
   END DO kno
   elkno (5) = 0
 
-  ! leere Elementnummern uebergehen:
-  IF (elem (i, 1) == 0) CYCLE all_elem                          !if the element with the actual number i is 0 then cycle and try the next
+  !cycle empty elements
+  IF (elem (i, 1) == 0) CYCLE all_elem
 
   !count the number of NOT-empty entries of elcnt
   elzaehl = elzaehl + 1
 
   !normal 1D-elements --------------------
-  dimensionif: IF (elem(i,1) == -1) THEN
+  dimensionif: IF (elem (i, 1) == -1) THEN
     !for normal 1D-elements, the number of nodes is 3 and the number of corner nodes is 2
     jnum = 2
     ncorn(i) = 3
 
     !Passing corner nodes to node array
-    nop(i,1) = arc(elem(i,2),1)
-    nop(i,3) = arc(elem(i,2),2)
+    nop (i, 1) = arc (elem (i, 2), 1)
+    nop (i, 3) = arc (elem (i, 2), 2)
 
     !giving over midsidenode, if present, to temporary node array
     IF (arc(elem(i,2),5) > 0) THEN
@@ -924,10 +930,9 @@ all_elem: DO i = 1, maxe
 
       GOTO 2444
     END IF
-    iakt = elkno (l)                                        	    !this is not necessary becaus elkno(l) can be used in the following if-construct
     elem_arc: DO j = 2, jnum                                        !For every left arc with exception of the first, dealt with above, it is checked,
       ! Element links der Kante .und. unten-Knoten knuepft an?      !whether it is the one that is connected to the last node of the last arc.
-      left: IF ((arc (elem (i,j+1),3) == i) .AND. (arc (elem (i,j+1),1) == iakt)) then
+      left: IF ((arc (elem (i,j+1),3) == i) .AND. (arc (elem (i,j+1),1) == elkno(l))) then
         elkno (l + 1) = arc (elem (i, j + 1), 2)                    !In dependency of the side the actual element is positioned in relation
         IF (arc (elem (i, j + 1), 5) >0) then                    !to the arc j, the node that could be connected with the last one of the last
           mikno (l) = arc (elem (i, j + 1), 5)                      !arc is checked, whether it is connected. If so the procedure jumps to the
@@ -935,7 +940,7 @@ all_elem: DO i = 1, maxe
         GOTO 2222
       END IF left
       ! Element rechts der Kante .und. oben-Knoten knuepft an?
-      right: IF ((arc (elem (i,j+1),4) == i) .AND. (arc (elem (i,j+1),2) == iakt)) then
+      right: IF ((arc (elem (i,j+1),4) == i) .AND. (arc (elem (i,j+1),2) == elkno(l))) then
         elkno (l + 1) = arc (elem (i, j + 1), 1)
         IF (arc (elem (i, j + 1), 5) >0) then
           mikno (l) = arc (elem (i, j + 1), 5)
@@ -1198,6 +1203,7 @@ DO i = 1, elcnt
   elfix (i) = 0
 END do
 
+!examine, whether reordering has to be done
 ReorderingNotDone = .true.
 DO i = 1, elcnt
   IF (nfixh (i) <= 0 .or. nfixh (i) > MaxE) then

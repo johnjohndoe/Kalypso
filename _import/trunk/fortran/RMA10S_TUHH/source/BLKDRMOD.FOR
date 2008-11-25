@@ -1,6 +1,5 @@
       MODULE BLKDRMOD
       
-      
       !element definition data for drying/wetting purposes
       !---------------------------------------------------
       integer (kind = 4), allocatable, dimension (:) :: imato
@@ -8,20 +7,33 @@
       !------------------------
       !imato      old material type of an element from the last time step
       
-C-
+
+      !primary execution control parameters
+      !------------------------------------
+      integer (kind = 4) :: idswt
+!meaning of the variables
+!-----------------------
+!           TODO: How does the dry node modification testing really work?
+!idswt      frequency of testing for dry node modification
+!           0 - eliminate testing
+!          1+ - frequency
+
+      !nodal Marsh parameters
+      !----------------------
+      real (kind = 8), allocatable, dimension (:) :: adb, adt, ado, akp
+!adb        bottom elevation of the transition range in operative Marsh algorithm
+!adt        top elevation of the transition range in operative Marsh algorithm
+!ado        slot bed elevation in operative Marsh algorithm
+!akp        porosity for Marsh algorithm
+
+      
+
       REAL  DSET,DSETD,SADEL,SADX
 
-      INTEGER IDSWT,ISAD
+      INTEGER ISAD
       ALLOCATABLE    NDRY(:),NDRYO(:),IPT(:),DREC(:),
      +               LISTEL(:)
-     +               ,ADB(:),ADT(:),ADO(:),AKP(:)
      +               ,DAME(:),AME(:),ACOR(:),ADOKP(:),AOKP(:)
-CIPK NOV97 LINE ABOVE ADDED
 
-C      COMMON /BLKDR/ NDRY(MNP),NDRYO(MNP),IPT(MNP),DREC(MNP),
-C     +               IMATO(MEL),LISTEL(MEL),DSET,DSETD,IDSWT
-C     +               ,ADB(MNP),ADT(MNP),ADO(MNP),AKP(MNP)
-C     +               ,DAME(MNP),AME(MNP),ACOR(MNP),ADOKP(MNP),AOKP(MNP)
-C     +               ,SADEL,SADX,ISAD
 
       ENDMODULE

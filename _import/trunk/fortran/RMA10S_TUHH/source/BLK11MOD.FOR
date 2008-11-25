@@ -1,13 +1,43 @@
-C     Last change:  K    25 Jan 2007    6:30 pm
       MODULE BLK11MOD
+      
+      
+      !parameter for time purposes
+      !---------------------------
+      integer (kind = 4) :: dayofy
+      !meaning of the variables
+      !-----------------------
+      !dayofy     day of the year
 
-CIPK LAST UPDATE JAN 06 2003
-CIPK  LAST UPDATE SEP 27 2002
-CIPK  LAST UPDATE APRIL 26 1996
-CIPK  LAST UPDATED AUGUST 30 1995
-c
-c     BLK11
-c
+      !primary execution control parameters
+      !------------------------------------
+      integer (kind = 4) :: icesw
+      !meaning of the variables
+      !-----------------------
+      !icesw      ice usage switch
+      !           0 - no usage of ice cover
+      !           1 - use Ashton formulation of temperature slope calculation
+      !           2 - use RMA10 formulation of temperature slope calculation
+      
+      !global meterology data
+      !----------------------
+      real (kind = 8) :: TMED
+      !meaning of the variables
+      !-----------------------
+      !tmed       medium temperature to examine status of freezing/melting
+
+      
+      !general node calculation value data definition
+      !----------------------------------------------
+      real (kind = 8), allocatable, dimension (:) :: icethk, icethkol
+      !meaning of the variables
+      !-----------------------
+      !icethk     ice thickness from current time step
+      !icethkol   ice thickness from previous time step
+
+
+
+
+
       !unit definitions
       integer (kind = 4) :: IIQ, IOMET
       
@@ -21,7 +51,7 @@ c
 
       REAL LAT,LONG,SOLHR,TOFDAY,TRLCD,CHI,ELEVAT,STANM,STIME,EXTINC,
      +DAYLEN,VPAIR,EQTEMP,XKRAT,EXTING
-      INTEGER DAYOFY,NPM11,IJULD,METRIC,IMGEOM,METEQ,
+      INTEGER NPM11,IJULD,METRIC,IMGEOM,METEQ,
      +IHTMET,IWNDMET
      
 
@@ -35,20 +65,13 @@ c
                  
 
 cipk SEP02
-      REAL ICETHK,ICETHKOL,CAL1,CAL2,CAL3,CAL4,ROW,CHEAT,TMED,HTR,XLAT
+      REAL CAL1,CAL2,CAL3,CAL4,ROW,CHEAT,HTR,XLAT
      +,ROSN,ROIC,TICE,VTR
-      INTEGER ICESW
       
-      ALLOCATABLE ICETHK(:),QICE(:),WNDSP(:),WNDDR(:)
-     +,SNOWD(:),AIRTMP(:),ICETHKOL(:),SIGMA(:,:)
+      ALLOCATABLE QICE(:),WNDSP(:),WNDDR(:)
+     +,SNOWD(:),AIRTMP(:),SIGMA(:,:)
 
 
 
-C      ALLOCATABLE       TSOLHR(MMAT1),HA(MMAT1),DRYBLB(MMAT1),WETBLB(MMAT1),
-C     +             CLOUD(MMAT1),WIND(MMAT1),AE(MMAT1),BE(MMAT1),SNOWMT(MMAT1)
-C     +   ,WDIRT(MMAT1),DAT(MMAT1),ATMPR(MMAT1)
-      
-C      ALLOCATABLE ICETHK(MAXP),QICE(MAXP),WNDSP(MAXP),WNDDR(MAXP)
-C     +,SNOWD(MAXP),AIRTMP(MAXP),ICETHKOL(MAXP),SIGMA(MAXP,2)
 
       END MODULE
