@@ -47,7 +47,7 @@
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </label>
 		
-		        <radiobutton text="Durchfluss ist vorgegeben" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="0">
+		        <radiobutton text="Durchfluss ist vorgegeben" style="SWT.NONE" tooltip="" property="Steuerung" valueToSet="1">
 		            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
 		        </radiobutton>
 		        <label style="SWT.NONE" visible="false">
