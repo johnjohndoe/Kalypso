@@ -1207,18 +1207,7 @@
 					<!-- <arg name="label" value="Kaulsdorf-Eichicht"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs3">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Saale-TS-Zulauf"/> -->
-<!--					<arg name="href" value="./Ergebnisse/Durchfluss/570000.zml"/>
-				</arg>
--->
-				<arg name="obs4">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kaulsdorf"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
+
 				</arg>
 				<arg name="obs5">
 					<arg name="label" value="%obsname%"/>
@@ -1260,20 +1249,7 @@
 					<!-- <arg name="label" value="Nägelstedt"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs13">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Straußfurt Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573090.zml"/>
-				</arg>
--->
-				<arg name="obs14">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
-				</arg>
+
 				<arg name="obs15">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Wasserthaleben"/> -->
@@ -1284,29 +1260,13 @@
 					<!-- <arg name="label" value="Hachelbich"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Hilfspegel
-				<arg name="obs17">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Wippermündung"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/575245.zml"/>
-				</arg>
--->
+
 				<arg name="obs18">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Oldisleben"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Hilfspegel
-				<arg name="obs19">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="oh. Bretleben"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
-				</arg>
--->
+
 				<arg name="obs20">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Ilfeld"/> -->
@@ -1322,16 +1282,7 @@
 					<!-- <arg name="label" value="Sundhausen"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
 				</arg>
-				<arg name="obs23">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra Zulauf"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
-				</arg>
-				<arg name="obs24">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra-Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
-				</arg>
+
 				<arg name="obs25">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Stolberg"/> -->
@@ -1377,11 +1328,15 @@
 					<!-- <arg name="label" value="Böhlen"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
 				</arg>
+		       
 				<arg name="obs36">
 					<arg name="label" value="%obsname%"/>
+					
 					<!-- <arg name="label" value="Oberthau"/> -->
+		
 					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
+				
 				<arg name="obs38">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Halle-Trotha"/> -->
@@ -1432,70 +1387,13 @@
 					<!-- <arg name="label" value="Trautenstein"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/579405.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs49">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="HWR Kalte Bode -Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579306.zml"/>
-				</arg>
--->
+
 				<arg name="obs50">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Königsh./HWR - Abgabe"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/579330.zml"/>
 				</arg>
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs51">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Ül-Spere, Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579000.zml"/>
-				</arg>
--->
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs52">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="ÜL zur Rappbode"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579999.zml"/>
-				</arg>
--->
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs53">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579011.zml"/>
-				</arg>
--->
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs54">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Rappbode-TS-Abgabe"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579012.zml"/>
-				</arg>
--->
-				<arg name="obs56">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Hirtenstieg/ÜL-Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579001.zml"/>
-				</arg>
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs58">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="TS-Wendefurth-Zulauf"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/579015.zml"/>
-				</arg>
--->
+
 				<arg name="obs59">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
@@ -1695,21 +1593,14 @@
 					<!-- <arg name="label" value="Hachelbich"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575240.zml"/>
 				</arg>
-				<arg name="obs17">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Wippermündung"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575245.zml"/>
+
 				</arg>
 				<arg name="obs18">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Oldisleben"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
 				</arg>
-				<arg name="obs19">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="oh. Bretleben"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
-				</arg>
+
 				<arg name="obs20">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Ilfeld"/> -->
@@ -2059,11 +1950,15 @@
 					<!-- <arg name="label" value="Zeitz"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/576610.zml"/>
 				</arg>
+			      
 				<arg name="obs14">
 					<arg name="label" value="%obsname%"/>
+					
 					<!-- <arg name="label" value="Oberthau"/> -->
+			     
 					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
+				
 				<arg name="obs15">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Halle-Trotha"/> -->
@@ -2137,11 +2032,7 @@
 				<arg name="axisType" value="W"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-				<arg name="obs1">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
-				</arg>
+
 				<arg name="obs2">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="HACHELBICH"/> -->
@@ -2157,29 +2048,7 @@
 					<!-- <arg name="label" value="OLDISLEBEN"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs5">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben, gesamt"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573122.zml"/>
-				</arg>
-				<arg name="obs6">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben Abgabe"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573126.zml"/>
-				</arg>
-				<arg name="obs7">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben UMFLUT"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573127.zml"/>
-				</arg>
--->
+
 				<arg name="obs8">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Nordhausen"/> -->
@@ -2190,16 +2059,7 @@
 					<!-- <arg name="label" value="Sundhausen"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
 				</arg>
-				<arg name="obs10">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra-Zufluss"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
-				</arg>
-				<arg name="obs11">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra-Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
-				</arg>
+
 				<arg name="obs12">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Stolberg"/> -->
@@ -2210,33 +2070,7 @@
 					<!-- <arg name="label" value="BENNUNGEN"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs14">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Nikolausrieth"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/575560.zml"/>
-				</arg>
--->
-<!-- entfernt, da kein W/Q, Zeitreihe aus Template
-				<arg name="obs15">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Schoenewerda,"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
-				</arg>
--->
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs16">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Gehofen"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573150.zml"/>
-				</arg>
--->
+
 				<arg name="obs17">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Laucha"/> -->
@@ -2275,11 +2109,7 @@
 					<!-- <arg name="label" value="Kaulsdorf-Eichicht"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/572010.zml"/>
 				</arg>
-				<arg name="obs3">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kaulsdorf"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/570250.zml"/>
-				</arg>
+
 				<arg name="obs4">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Schwarzburg"/> -->
@@ -2338,11 +2168,7 @@
 					<!-- <arg name="label" value="Nägelstedt"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573010.zml"/>
 				</arg>
-				<arg name="obs5">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Straußfurt Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/573100.zml"/>
-				</arg>
+
 				<arg name="obs6">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Hachelbich"/> -->
@@ -2421,11 +2247,15 @@
 					<!-- <arg name="label" value="Böhlen"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/577570.zml"/>
 				</arg>
+			
 				<arg name="obs5">
 					<arg name="label" value="%obsname%"/>
+					
 					<!-- <arg name="label" value="Oberthau"/> -->
+		
 					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
+				
 			</arg>
 			<arg name="exporter10">
 				<arg name="id" value="sumUpTableExporter"/>
@@ -2474,11 +2304,15 @@
 					<!-- <arg name="label" value="Naumburg"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/570500.zml"/>
 				</arg>
+			
 				<arg name="obs6">
 					<arg name="label" value="%obsname%"/>
+				
 					<!-- <arg name="label" value="Oberthau"/> -->
+			        
 					<arg name="href" value="./Ergebnisse/Durchfluss/576900.zml"/>
 				</arg>
+				
 				<arg name="obs7">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Halle-Trotha"/> -->
@@ -2849,29 +2683,7 @@
 					<!-- <arg name="label" value="OLDISLEBEN"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/573110.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs5">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben, gesamt"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573122.zml"/>
-				</arg>
-				<arg name="obs6">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben Abgabe"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573126.zml"/>
-				</arg>
-				<arg name="obs7">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Bretleben UMFLUT"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573127.zml"/>
-				</arg>
--->
+
 				<arg name="obs8">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Nordhausen"/> -->
@@ -2882,16 +2694,7 @@
 					<!-- <arg name="label" value="Sundhausen"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575400.zml"/>
 				</arg>
-				<arg name="obs10">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra-Zufluss"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575402.zml"/>
-				</arg>
-				<arg name="obs11">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Kelbra-Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/575406.zml"/>
-				</arg>
+
 				<arg name="obs12">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Stolberg"/> -->
@@ -2902,29 +2705,7 @@
 					<!-- <arg name="label" value="BENNUNGEN"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/575410.zml"/>
 				</arg>
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs14">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Nikolausrieth"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/575560.zml"/>
-				</arg>
--->
-				<arg name="obs15">
-					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Schoenewerda,"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/573200.zml"/>
-				</arg>
-<!-- enfernt, da nicht Teil des Modells
-				<arg name="obs16">
-					<arg name="label" value="%obsname%"/>
--->
-					<!-- <arg name="label" value="Gehofen"/> -->
-<!--
-					<arg name="href" value="./Ergebnisse/Durchfluss/573150.zml"/>
-				</arg>
--->
+
 				<arg name="obs17">
 					<arg name="label" value="%obsname%"/>
 					<!-- <arg name="label" value="Laucha"/> -->
