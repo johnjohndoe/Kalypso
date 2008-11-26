@@ -53,7 +53,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -98,17 +97,15 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
 
   private FormToolkit m_toolkit;
 
-  private ProfilChartView m_chart;
+  protected ProfilChartView m_chart;
 
-  private ChartEditorTreeOutlinePage m_chartlegend;
+  protected ChartEditorTreeOutlinePage m_chartlegend;
 
   private final void createChartLegend( final Composite parent, final ProfilChartView chartView )
   {
     m_chartlegend = new ChartEditorTreeOutlinePage( chartView );
-    m_chartlegend.createControl( parent );
-
-    m_chartlegend.getTreeViewer().setContentProvider( new ProfilChartEditorTreeContentProvider( chartView.getChart().getChartModel() ) );
-    m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
+    m_chartlegend.setContentProvider( new ProfilChartEditorTreeContentProvider( chartView.getChart().getChartModel() ) );
+    m_chartlegend.setSelectionChangeListener( new ISelectionChangedListener()
     {
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -120,28 +117,13 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
         if( firstElement instanceof IChartLayer )
         {
           ((IChartLayer) firstElement).setActive( true );
-
-          final ProfilChartView pcv = getProfilChartView();
-          if( pcv == null )
-            return;
-          final ILayerManager mngr = pcv.getChart().getChartModel().getLayerManager();
-
-          final IViewReference ref = getSite().getPage().findViewReference( "org.kalypso.model.wspm.ui.view.LayerView" );
-          final IViewPart view = ref == null ? null : ref.getView( false );
-          if( view != null && view instanceof LayerView )
-          {
-            for( final IChartLayer layer : mngr.getLayers() )
-            {
-              if( layer.isActive() )
-              {
-                ((LayerView) view).updatePanel( layer );
-                break;
-              }
-            }
-          }
         }
+        fireSelectionChanged();
+
       }
     } );
+
+    m_chartlegend.createControl( parent );
 
     final Control control = m_chartlegend.getControl();
     control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -154,6 +136,13 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
       }
     } );
 
+  }
+
+  protected final void fireSelectionChanged( )
+  {
+    final IViewPart vp = getSite().getPage().findView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
+    if( vp != null && vp instanceof LayerView )
+      ((LayerView) vp).updatePanel( m_chart.getChart() );
   }
 
   /**
@@ -181,11 +170,13 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
   @Override
   public void dispose( )
   {
-    m_chartProviderListener.dispose();
     m_chart.removeProfilProviderListener( this );
+    m_chartProviderListener.dispose();
     getSite().setSelectionProvider( null );
     m_chartlegend.dispose();
-    m_chartlegend = null;
+    m_toolkit.dispose();
+    m_composite.dispose();
+
     super.dispose();
   }
 
@@ -306,7 +297,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
           break;
         }
       }
-      m_chartlegend.getTreeViewer().refresh();
+      // m_chartlegend.getTreeViewer().refresh();
       m_composite.layout();
     }
 

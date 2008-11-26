@@ -41,12 +41,10 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;

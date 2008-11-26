@@ -239,9 +239,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   {
     final ArrayList<String> layerToAdd = new ArrayList<String>();
     final IProfil profile = view.getProfil();
-    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
-      layerToAdd.add( IWspmTuhhConstants.LAYER_GELAENDE );
-
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
+      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT );
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) != null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_BEWUCHS );
 
@@ -272,8 +271,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
 
-    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null || profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
-      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+   
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
+      layerToAdd.add( IWspmTuhhConstants.LAYER_GELAENDE );
 
     return layerToAdd.toArray( new String[0] );
   }
@@ -301,8 +301,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
-      return new CrossSectionTheme(profil, new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp ),
-          new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) }, cmLeft );
+      return new CrossSectionTheme(profil, new IProfilChartLayer[] {new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ), new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp )
+           }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
     {

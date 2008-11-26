@@ -82,9 +82,7 @@ public final class PointPropertyAdd implements IProfilChange
     m_profil = profil;
     m_property = property;
     m_cloneFrom = null;
-    m_values = new Object[profil.getPoints().length];
-    for( int i = 0; i < m_values.length; i++ )
-      m_values[i] = defaultValue;
+    m_values =  new Object[]{defaultValue};
   }
 
   public IProfilChange doChange( final ProfilChangeHint hint )
@@ -93,6 +91,10 @@ public final class PointPropertyAdd implements IProfilChange
       hint.setPointPropertiesChanged();
     if( m_cloneFrom != null )
       m_profil.getResult().addComponent( m_property,m_cloneFrom );
+    else if (m_values==null)
+      m_profil.addPointProperty( m_property );
+    else if (m_values.length==1)
+      m_profil.addPointProperty( m_property ,m_values[0]);
     else
     {
        m_profil.addPointProperty( m_property );

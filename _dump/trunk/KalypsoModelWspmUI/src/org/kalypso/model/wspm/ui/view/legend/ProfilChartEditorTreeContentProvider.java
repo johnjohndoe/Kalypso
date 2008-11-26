@@ -53,12 +53,14 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContentProvider
 {
 
-  private IExpandableChartLayer m_modelLayer;
+  private final IExpandableChartLayer m_modelLayer;
+
+  protected final IChartModel m_model;
 
   public ProfilChartEditorTreeContentProvider( IChartModel model )
   {
     super( model );
-    final IChartModel m_model = model;
+    m_model = model;
     m_modelLayer = new AbstractExpandableLayer()
     {
 
@@ -82,6 +84,18 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
     };
     m_modelLayer.setVisible( true );
 
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getParent(java.lang.Object)
+   */
+  @Override
+  public Object getParent( Object element )
+  {
+    final Object parent = super.getParent( element );
+    if( parent == m_model )
+      return m_modelLayer;
+    return parent;
   }
 
   /**

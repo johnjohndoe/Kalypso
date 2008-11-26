@@ -52,6 +52,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -74,9 +75,10 @@ public class AddLayerHandler extends AbstractHandler
 
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" );
-    final ProfilChartView chartView = view == null ? null : (ProfilChartView) view.getAdapter( ProfilChartView.class );
-    final IProfil profil = chartView.getProfil();
-    if( chartView == null || profil == null )
+    final Object chartPart = view == null ? null : view.getAdapter( IChartPart.class );
+    final ProfilChartView chartView = (chartPart != null && chartPart instanceof ProfilChartView) ? (ProfilChartView) chartPart : null;
+    final IProfil profil = chartView == null ? null : chartView.getProfil();
+    if( profil == null )
     {
       return null;
     }
