@@ -282,4 +282,9 @@ public class GftTreeViewer
     }.schedule();
 
   }
+
+  public boolean isDisposed( )
+  {
+    return m_treeViewer.isDisposed();
+  }
 }
