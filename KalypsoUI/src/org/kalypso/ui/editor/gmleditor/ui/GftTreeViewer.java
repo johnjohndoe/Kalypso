@@ -275,6 +275,9 @@ public class GftTreeViewer
       @Override
       public IStatus runInUIThread( final IProgressMonitor arg0 )
       {
+        if( m_treeViewer.isDisposed() )
+          return org.eclipse.core.runtime.Status.OK_STATUS;
+
         m_treeViewer.getTreeViewer().refresh();
 
         return org.eclipse.core.runtime.Status.OK_STATUS;
