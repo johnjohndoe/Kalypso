@@ -121,7 +121,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   public void dispose( )
   {
-    m_provider.removeSelectionChangedListener( this );
+    if( m_provider != null )
+      m_provider.removeSelectionChangedListener( this );
 
     unhookListeners();
   }
