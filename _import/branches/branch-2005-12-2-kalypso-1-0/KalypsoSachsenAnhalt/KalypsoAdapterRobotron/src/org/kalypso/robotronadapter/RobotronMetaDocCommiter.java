@@ -42,6 +42,8 @@
 package org.kalypso.robotronadapter;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,11 +54,13 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.rpc.ParameterMode;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.Constants;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.io.FileUtils;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 
@@ -93,11 +97,17 @@ import org.kalypso.metadoc.impl.MetaDocException;
  */
 public class RobotronMetaDocCommiter implements IMetaDocCommiter
 {
+  /*
+   * If this system property is set to an absolute file path; every committed document (and xml metadata) are
+   * additionally copied into this directory.
+   */
+  private static final String SYSPROP_DEBUG_DIR = "org.kalypso.robotronadapter.debugdir";
+
   private final static String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
   private final static String LT = "<";
   private final static String CLT = "</";
   private final static String GT = ">";
-//  private final static String CGT = "/>";
+  //  private final static String CGT = "/>";
 
   private static final String TAG_META = "meta";
 
@@ -123,6 +133,21 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
   private final static Logger LOG = Logger.getLogger( RobotronMetaDocCommiter.class.getName() );
+
+  /** @see #SYSPROP_DEBUG_DIR */
+  private final File m_debugDir;
+
+  public RobotronMetaDocCommiter()
+  {
+    String debugDirProp = System.getProperty( SYSPROP_DEBUG_DIR, null );
+    if( debugDirProp != null )
+    {
+      m_debugDir = new File( debugDirProp );
+      m_debugDir.mkdirs();
+    }
+    else
+      m_debugDir = null;
+  }
 
   /**
    * @see org.kalypso.metadoc.IMetaDocCommiter#prepareMetainf(java.util.Properties, java.util.Map)
@@ -154,6 +179,17 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
     try
     {
+      /* Create metadata XML */
+      final Properties mdProps = new Properties();
+      mdProps.putAll( metadata );
+      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, category,
+          metadataExtensions );
+
+      /* If configured; write doc+xml into separate directory */
+      if( m_debugDir != null )
+        writeDebug( doc, metadataXml );
+
+      /* Try to invoce Robotron service */
       final Service service = new Service();
       final Call call = (Call)service.createCall();
       call.setTargetEndpointAddress( new java.net.URL( endpoint ) );
@@ -162,14 +198,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       call.addParameter( "metadoc", Constants.XSD_STRING, ParameterMode.IN );
       call.setReturnType( Constants.XSD_STRING );
 
-      final Properties mdProps = new Properties();
-      mdProps.putAll( metadata );
-
       final DataHandler[] docs = new DataHandler[]
       { new DataHandler( new FileDataSource( doc ) ) };
-
-      final String metadataXml = buildXML( serviceProps, mdProps, doc.getName(), identifier, category,
-          metadataExtensions );
 
       LOG.info( "Metadata:\n" + metadataXml );
 
@@ -190,11 +220,36 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     {
       throw e;
     }
-    catch( final Exception e ) // generic for simplicity
+    catch( RemoteException re )
+    {
+      throw new MetaDocException( "Fehler beim Zugriff auf Robotron-IMS (" + endpoint + ")", re );
+    }
+    catch( MalformedURLException e )
+    {
+      throw new MetaDocException( "Adresse des Robotron Endpoint ungültig: " + endpoint, e );
+    }
+    catch( ServiceException e )
+    {
+      throw new MetaDocException( "Apache Axis Service konnte nicht instantiiert werden", e );
+    }
+  }
+
+  /**
+   * Copies the commit data into a separate directory
+   * 
+   * @see #SYSPROP_DEBUG_DIR
+   */
+  private void writeDebug( File doc, String metadataXml )
+  {
+    try
+    {
+      FileUtils.copyFileToDirectory( doc, m_debugDir );
+      final File xmlFile = new File( doc.getParentFile(), doc.getName() + ".xml" );
+      FileUtils.writeStringToFile( xmlFile, metadataXml, "UTF-8" );
+    }
+    catch( Exception e )
     {
       e.printStackTrace();
-
-      throw new MetaDocException( e );
     }
   }
 
