@@ -138,12 +138,12 @@ public class ObservationPlot extends XYPlot
     // standard renderer
     setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
 
-    final DiagramAxis[] diagAxes = view.getDiagramAxes();
-    for( int i = 0; i < diagAxes.length; i++ )
-    {
-      final DiagramAxis diagAxis = diagAxes[i];
-      addDiagramAxis( diagAxis, null );
-    }
+//    final DiagramAxis[] diagAxes = view.getDiagramAxes();
+//    for( int i = 0; i < diagAxes.length; i++ )
+//    {
+//      final DiagramAxis diagAxis = diagAxes[i];
+//      addDiagramAxis( diagAxis, null );
+//    }
 
     final ObsViewItem[] curves = view.getItems();
     for( int i = 0; i < curves.length; i++ )
