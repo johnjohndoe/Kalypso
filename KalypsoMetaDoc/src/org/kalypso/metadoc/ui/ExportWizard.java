@@ -183,6 +183,6 @@ public final class ExportWizard extends Wizard
       exception.printStackTrace();
     ErrorDialog.openError( m_shell, m_target.getName(), "Export-Probleme", status );
 
-    return !status.matches( IStatus.ERROR );
+    return true;
   }
 }
