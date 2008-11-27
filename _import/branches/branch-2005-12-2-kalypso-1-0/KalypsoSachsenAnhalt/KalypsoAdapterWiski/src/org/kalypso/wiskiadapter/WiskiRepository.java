@@ -3,6 +3,7 @@ package org.kalypso.wiskiadapter;
 import java.io.File;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ClassUtils;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -46,6 +48,8 @@ public class WiskiRepository extends AbstractRepository
 
   private Map m_children = null;
 
+  private Collection m_forbiddenCalls;
+
   /**
    * @param conf
    *          the configuration should be build the followin way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
@@ -66,6 +70,7 @@ public class WiskiRepository extends AbstractRepository
     m_debugMode = validator.isDebugMode();
     m_debugDir = validator.getDebugDir();
     m_simulate = validator.isSimulateMode();
+    m_forbiddenCalls = validator.getForbiddenCalls();
 
     try
     {
@@ -286,6 +291,14 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
+      /* If this wiski-call is explicitely forbidden, just ignore it */
+      final String callName = ClassUtils.getShortClassName( call.getClass() );
+      if( m_forbiddenCalls.contains( callName ) )
+      {
+        System.out.println(  "Ignoring forbidden wiski-call: " + callName );
+        return;
+      }
+
       if( m_wiski == null )
       {
         // If wiski not initialized, do it now
