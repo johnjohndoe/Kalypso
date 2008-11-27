@@ -153,7 +153,7 @@ public class KalypsoMetaDocService implements IMetaDocService
     {
       m_logger.throwing( "KalypsoMetaDocService", "commitNewDocument", e );
 
-      throw new RemoteException( "commitNewDocument", e );
+      throw new RemoteException( "Dokument konnte nicht abgelegt werden", e );
     }
   }
 
