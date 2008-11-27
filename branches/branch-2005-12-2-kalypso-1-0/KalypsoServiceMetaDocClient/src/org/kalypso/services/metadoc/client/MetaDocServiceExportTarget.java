@@ -159,7 +159,11 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       // Unpack true exception from remote exception
       // TODO: maybe further unpacking is necessary?
-      throw new InvocationTargetException( re.getCause() );
+      Throwable cause = re.getCause();
+      if( cause != null )
+        throw new InvocationTargetException( re.getCause() );
+
+      throw new InvocationTargetException( re );
     }
     catch( final Throwable e )
     {
