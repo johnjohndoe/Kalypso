@@ -49,26 +49,30 @@ import javax.swing.table.TableModel;
  */
 public class WQTableModel extends AbstractTableModel implements TableModel
 {
-  private final static String[] COLUMN_NAMES =
-  {
-      "W",
-      "Q0",
-      "Q1",
-      "Q2",
-      "Q3",
-      "Q4",
-      "Q5",
-      "Q6",
-      "Q7",
-      "Q8",
-      "Q9" };
+//  private final static String[] COLUMN_NAMES =
+//  {
+//      "W",
+//      "Q0",
+//      "Q1",
+//      "Q2",
+//      "Q3",
+//      "Q4",
+//      "Q5",
+//      "Q6",
+//      "Q7",
+//      "Q8",
+//      "Q9" };
 
   private final Double m_startW;
   private final Double[] m_Q;
   private final int m_indexOffset;
+  private final String m_fromType;
+  private final String m_toType;
 
-  public WQTableModel( final Double startW, final Double[] Q )
+  public WQTableModel( final String fromType, final String toType, final Double startW, final Double[] Q )
   {
+    m_fromType = fromType;
+    m_toType = toType;
     m_startW = startW;
     m_Q = Q;
 
@@ -86,7 +90,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
    */
   public int getColumnCount()
   {
-    return COLUMN_NAMES.length;
+    return 11;
   }
 
   /**
@@ -105,7 +109,10 @@ public class WQTableModel extends AbstractTableModel implements TableModel
    */
   public String getColumnName( int columnIndex )
   {
-    return COLUMN_NAMES[columnIndex];
+    if( columnIndex == 0 )
+      return m_fromType;
+    
+    return m_toType + columnIndex;
   }
 
   /**

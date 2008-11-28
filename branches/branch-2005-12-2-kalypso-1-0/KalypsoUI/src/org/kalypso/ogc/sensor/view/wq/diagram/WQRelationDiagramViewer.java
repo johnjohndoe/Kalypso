@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
 import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 
@@ -71,21 +72,11 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
   private ObservationChart m_chart;
 
   private final DiagView m_diagView = new DiagView( true );
-  private final DiagramAxis m_diagramAxisW;
-  private final DiagramAxis m_diagramAxisQ;
 
   private Composite m_control = null;
 
   public WQRelationDiagramViewer( final Composite parent )
   {
-    m_diagramAxisW = new DiagramAxis( "w", "double", "W", "cm", DiagramAxis.DIRECTION_VERTICAL,
-        DiagramAxis.POSITION_LEFT, false );
-    m_diagramAxisQ = new DiagramAxis( "q", "double", "Q", "m³/s", DiagramAxis.DIRECTION_HORIZONTAL,
-        DiagramAxis.POSITION_BOTTOM, false );
-
-    m_diagView.addAxis( m_diagramAxisW );
-    m_diagView.addAxis( m_diagramAxisQ );
-
     createControl( parent );
   }
 
@@ -115,16 +106,27 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
     final Frame vFrame = SWT_AWT.new_Frame( m_control );
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );
     vFrame.setVisible( true );
-    
+
     m_control.addDisposeListener( this );
   }
 
   public void setInput( final WQTableSet wqs ) throws SensorException
   {
     m_chart.clearChart();
-    
+
     if( wqs == null )
       return;
+
+    final String fromType = wqs.getFromType();
+    final String toType = wqs.getToType();
+
+    final String fromUnit = TimeserieUtils.getUnit( fromType );
+    final String toUnit = TimeserieUtils.getUnit( toType );
+
+    final DiagramAxis diagramAxisFrom = new DiagramAxis( "from", "double", fromType, fromUnit, DiagramAxis.DIRECTION_VERTICAL, DiagramAxis.POSITION_LEFT, false );
+    final DiagramAxis diagramAxisTo = new DiagramAxis( "to", "double", toType, toUnit, DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false );
+    m_diagView.addAxis( diagramAxisFrom );
+    m_diagView.addAxis( diagramAxisTo );
 
     final WQTable[] tables = wqs.getTables();
     for( int i = 0; i < tables.length; i++ )
@@ -132,11 +134,10 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
       final IObservation obs = WQCurveFactory.createObservation( tables[i] );
 
       final AxisMapping[] axmaps = new AxisMapping[2];
-      axmaps[0] = new AxisMapping( obs.getAxisList()[0], m_diagramAxisW );
-      axmaps[1] = new AxisMapping( obs.getAxisList()[1], m_diagramAxisQ );
+      axmaps[0] = new AxisMapping( obs.getAxisList()[0], diagramAxisFrom );
+      axmaps[1] = new AxisMapping( obs.getAxisList()[1], diagramAxisTo );
 
-      final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(),
-          ColorUtilities.random(), null, axmaps );
+      final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(), ColorUtilities.random(), null, axmaps );
 
       m_chart.getObservationPlot().addCurve( curve );
     }
