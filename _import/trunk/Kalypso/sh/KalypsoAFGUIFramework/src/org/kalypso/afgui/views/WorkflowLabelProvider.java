@@ -10,13 +10,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
-import de.renew.workflow.base.Task;
-import de.renew.workflow.base.TaskGroup;
-import de.renew.workflow.base.Task.Help;
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.ITaskGroup;
+import de.renew.workflow.base.ITaskHelp;
 
 /**
  * @author Stefan Kurzbach
- * 
+ *
  */
 public class WorkflowLabelProvider extends ColumnLabelProvider
 {
@@ -60,7 +60,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof Task )
+    if( element instanceof ITask )
     {
       // TODO: get image from task
       return IMAGE_TASK;
@@ -77,12 +77,10 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof Task )
-    {
-      return ((Task) element).getName();
-    }
-    else
-      return null;
+    if( element instanceof ITask )
+      return ((ITask) element).getName();
+
+    return null;
   }
 
   /**
@@ -105,7 +103,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   @Override
   public Font getFont( final Object element )
   {
-    if( element instanceof TaskGroup )
+    if( element instanceof ITaskGroup )
     {
       if( m_workflowControl.getTaskExecutor().getActiveTask() == element )
         return FONT_ACTIVE_TASKGROUP;
@@ -127,18 +125,16 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   @Override
   public String getToolTipText( final Object element )
   {
-    if( element instanceof Task )
+    if( element instanceof ITask )
     {
-      final Task task = (Task) element;
-      final Help help = task.getHelp();
+      final ITask task = (ITask) element;
+      final ITaskHelp help = task.getHelp();
       if( help == null )
         return null;
 
       return help.getValue();
     }
-    else
-    {
-      return null;
-    }
+
+    return null;
   }
 }

@@ -63,7 +63,6 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class EditorContextHandler extends AbstractHandler implements IHandler
 {
-
   private final String m_editorId;
 
   private final String m_input;

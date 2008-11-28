@@ -34,8 +34,8 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.base.Task;
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -219,7 +219,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -229,7 +229,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   * 
+   *
    * @param path
    *          the path
    * @return the image descriptor
@@ -264,8 +264,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_szenarioSourceProvider.resetCase();
 
     // Then execute default task
-    final Workflow workflow = ScenarioHelper.findWorkflow( caze, nature );
-    final Task defaultTask = workflow == null ? null : workflow.getDefaultTask();
+    final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
+    final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {
       final UIJob job = new UIJob( "Öffne Szenario: " + nature.getProject().getName() + " - " + caze.getName() )

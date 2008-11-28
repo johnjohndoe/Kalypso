@@ -43,6 +43,7 @@ package de.renew.workflow.contexts;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -55,9 +56,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.osgi.framework.Bundle;
 
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.impl.Workflow_Impl;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
@@ -66,29 +70,29 @@ import de.renew.workflow.base.Workflow;
  */
 public class WorkflowSystemExtension
 {
-  private static Map<String, Workflow> THE_WORKFLOW_MAP = null;
+  private static Map<String, IWorkflow> THE_WORKFLOW_MAP = null;
 
   private final static String WORKFLOW_SYSTEM_EXTENSION_POINT = "de.renew.workflow.model.workflowSystem";
 
   private final static JAXBContext JC = createJAXBContext();
 
-  public static Workflow getWorkflow( final String id )
+  public static IWorkflow getWorkflow( final String id )
   {
-    final Map<String, Workflow> map = getWorkflowMap();
+    final Map<String, IWorkflow> map = getWorkflowMap();
     if( map == null )
       return null;
 
     return map.get( id );
   }
 
-  private static Map<String, Workflow> getWorkflowMap( )
+  private static Map<String, IWorkflow> getWorkflowMap( )
   {
     if( THE_WORKFLOW_MAP == null )
     {
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( WORKFLOW_SYSTEM_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_WORKFLOW_MAP = new HashMap<String, Workflow>( configurationElements.length );
+      THE_WORKFLOW_MAP = new HashMap<String, IWorkflow>( configurationElements.length );
 
       for( final IConfigurationElement element : configurationElements )
       {
@@ -98,10 +102,10 @@ public class WorkflowSystemExtension
           final String filePath = element.getAttribute( "definition" );
           final IContributor contributor = element.getContributor();
           final Bundle bundle = Platform.getBundle( contributor.getName() );
-          final URL entry = bundle.getEntry( filePath );
-          if( entry != null )
+          final URL location = bundle.getEntry( filePath );
+          if( location != null )
           {
-            final Workflow workflow = loadModel( entry );
+            final IWorkflow workflow = loadModel( location );
             THE_WORKFLOW_MAP.put( id, workflow );
           }
           else
@@ -135,11 +139,16 @@ public class WorkflowSystemExtension
     }
   }
 
-  private static Workflow loadModel( final URL entry ) throws CoreException
+  private static IWorkflow loadModel( final URL location ) throws CoreException
   {
     try
     {
-      return (Workflow) JC.createUnmarshaller().unmarshal( entry );
+      final Workflow workflow = (Workflow) JC.createUnmarshaller().unmarshal( location );
+
+      final Properties i10nProperties = new Properties();
+      PropertiesUtilities.loadI18nProperties( i10nProperties, location );
+
+      return new Workflow_Impl( workflow, i10nProperties );
     }
     catch( final Throwable e )
     {

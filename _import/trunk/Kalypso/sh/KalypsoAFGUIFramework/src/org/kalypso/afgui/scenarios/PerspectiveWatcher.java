@@ -15,7 +15,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.views.WorkflowView;
 
-import de.renew.workflow.base.Task;
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.PerspectiveContextType;
 
@@ -28,7 +28,7 @@ public class PerspectiveWatcher
 
   /**
    * This function cleans up the perspective.
-   * 
+   *
    * @param workbench
    *            The workbench.
    * @param partsToKeep
@@ -38,15 +38,14 @@ public class PerspectiveWatcher
   {
     final UIJob job = new UIJob( Messages.getString( "PerspectiveWatcher.0" ) ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
         if( activeWorkbenchWindow == null )
           return Status.CANCEL_STATUS;
 
-        IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
+        final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
         if( workbenchPage == null )
           return Status.CANCEL_STATUS;
 
@@ -95,13 +94,13 @@ public class PerspectiveWatcher
   /**
    * This function checks each tasks parent, until a perspective context is found. Than the id of the perspecive
    * configured there will be returned.
-   * 
+   *
    * @param context
    *            The context, to start the search with.
-   * 
+   *
    * @return The perspective id.
    */
-  public static String getPerspectiveID( final Task task )
+  public static String getPerspectiveID( final ITask task )
   {
     if( task == null )
       return Perspective.ID;

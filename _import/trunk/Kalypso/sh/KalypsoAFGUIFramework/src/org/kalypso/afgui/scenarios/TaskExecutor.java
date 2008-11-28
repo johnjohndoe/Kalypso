@@ -60,8 +60,8 @@ import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.EActivityType;
-import de.renew.workflow.base.Task;
-import de.renew.workflow.base.TaskGroup;
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.ITaskGroup;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutionListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -76,7 +76,7 @@ import de.renew.workflow.contexts.WorkbenchSiteContext;
  */
 public class TaskExecutor implements ITaskExecutor
 {
-  private Task m_activeTask;
+  private ITask m_activeTask;
 
   private final ITaskExecutionAuthority m_authority;
 
@@ -97,7 +97,7 @@ public class TaskExecutor implements ITaskExecutor
     m_taskChangeListeners = new ArrayList<ITaskExecutionListener>();
   }
 
-  public Task getActiveTask( )
+  public ITask getActiveTask( )
   {
     return m_activeTask;
   }
@@ -121,7 +121,7 @@ public class TaskExecutor implements ITaskExecutor
   /**
    * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)
    */
-  public IStatus execute( final Task task )
+  public IStatus execute( final ITask task )
   {
     if( m_activeTask != null )
     {
@@ -138,7 +138,7 @@ public class TaskExecutor implements ITaskExecutor
     }
 
     final String name = task.getURI();
-    final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
+    final Command command = getCommand( m_commandService, name, task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
 
     final ContextType context = task.getContext();
     final IStatus contextStatus = context == null ? Status.OK_STATUS : activateContext( context );
@@ -211,7 +211,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function activates the context, which is given and all its parents.
-   * 
+   *
    * @param context
    *            The context.
    * @return A status object indicating the success of the function.
@@ -237,7 +237,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function activates the context, which is given.
-   * 
+   *
    * @param context
    *            The context, which should be activated.
    * @return A status object indicating the success of the function.
@@ -305,13 +305,13 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function notifies all registered listeners.
-   * 
+   *
    * @param results
    *            The results of the task, which was activated, as well of all of its associated tasks.
    * @param task
    *            The final task, that was activated.
    */
-  private void fireTaskExecuted( final IStatus result, final Task task )
+  private void fireTaskExecuted( final IStatus result, final ITask task )
   {
     for( int i = 0; i < m_taskChangeListeners.size(); i++ )
     {
@@ -322,11 +322,11 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function notifies all registered listeners.
-   * 
+   *
    * @param task
    *            The final task, that was activated.
    */
-  private void fireTaskStopped( final Task task )
+  private void fireTaskStopped( final ITask task )
   {
     for( int i = 0; i < m_taskChangeListeners.size(); i++ )
     {

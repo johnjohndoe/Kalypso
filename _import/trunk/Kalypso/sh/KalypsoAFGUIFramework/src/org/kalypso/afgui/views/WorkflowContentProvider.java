@@ -1,12 +1,12 @@
 /**
- * 
+ *
  */
 package org.kalypso.afgui.views;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import de.renew.workflow.base.TaskGroup;
+import de.renew.workflow.base.ITaskGroup;
 
 /**
  * @author Stefan Kurzbach
@@ -18,11 +18,11 @@ public class WorkflowContentProvider implements ITreeContentProvider
    */
   public Object[] getChildren( final Object element )
   {
-    if( element instanceof TaskGroup )
+    if( element instanceof ITaskGroup )
     {
-      final TaskGroup taskGroup = ((TaskGroup) element);
+      final ITaskGroup taskGroup = ((ITaskGroup) element);
       return taskGroup.getTasks().toArray();
-    }    
+    }
     else
     {
       return new Object[] {};
@@ -42,9 +42,9 @@ public class WorkflowContentProvider implements ITreeContentProvider
    */
   public boolean hasChildren( final Object element )
   {
-    if( element instanceof TaskGroup )
+    if( element instanceof ITaskGroup )
     {
-      final TaskGroup taskGroup = ((TaskGroup) element);
+      final ITaskGroup taskGroup = ((ITaskGroup) element);
       return !taskGroup.getTasks().isEmpty();
     }
     else

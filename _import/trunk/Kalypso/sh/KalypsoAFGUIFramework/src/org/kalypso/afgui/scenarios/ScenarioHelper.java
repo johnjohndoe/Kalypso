@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -143,7 +143,7 @@ public class ScenarioHelper
     return null;
   }
 
-  public static Workflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
+  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
   {
     try
     {

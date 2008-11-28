@@ -21,7 +21,7 @@ import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
 
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 
 public class KalypsoModelFloodModule implements IKalypsoModule
@@ -84,7 +84,7 @@ public class KalypsoModelFloodModule implements IKalypsoModule
                 if( nature == null )
                   return false;
 
-                final Workflow workflow = nature.getCurrentWorklist();
+                final IWorkflow workflow = nature.getCurrentWorklist();
                 final String uri = workflow.getURI();
 
                 return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" );

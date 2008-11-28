@@ -26,7 +26,7 @@ import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
-import de.renew.workflow.base.Task;
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -177,7 +177,7 @@ public class NewSimulationModelControlBuilder
     return errorMessage;
   }
 
-  public void setUpdateListerner( @SuppressWarnings("hiding")//$NON-NLS-1 final $
+  public void setUpdateListerner( @SuppressWarnings("hiding")
   final IUpdateListener updateListener )
   {
     this.updateListener = updateListener;
@@ -223,7 +223,7 @@ public class NewSimulationModelControlBuilder
         final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
         final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
         final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
-        final Task activeTask = plugin.getTaskExecutor().getActiveTask();
+        final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
         if( taskExecutionAuthority.canStopTask( activeTask ) )
         {
           if( scenario != null )

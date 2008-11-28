@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.renew.workflow.base;
 
 import java.util.logging.Logger;
@@ -20,7 +17,7 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
- * 
+ *
  * @author Patrice Congo, Stefan Kurzbach
  */
 public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListener
@@ -39,13 +36,13 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
       logger.setUseParentHandlers( false );
   }
 
-  private Workflow m_currentWorkflow;
+  private IWorkflow m_currentWorkflow;
 
   private final IProject m_project;
 
   /**
    * Loads a workflow instance for the project
-   * 
+   *
    * @exception CoreException
    *                if this method fails. Reasons include:
    *                <ul>
@@ -64,7 +61,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
 
   private void handleWorkflowIdChanged( final String workflowId ) throws CoreException
   {
-    final Workflow workflow = WorkflowSystemExtension.getWorkflow( workflowId );
+    final IWorkflow workflow = WorkflowSystemExtension.getWorkflow( workflowId );
     if( workflow != null )
     {
       m_currentWorkflow = workflow;
@@ -82,7 +79,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
   /**
    * @see org.kalypso.afgui.model.IWorkflowSystem#getCurrentWorkFlow()
    */
-  public Workflow getCurrentWorkflow( )
+  public IWorkflow getCurrentWorkflow( )
   {
     return m_currentWorkflow;
   }

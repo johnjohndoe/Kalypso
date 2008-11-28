@@ -44,8 +44,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.IWorkflowSystem;
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.WorkflowSystem;
 
 /**
@@ -93,7 +93,7 @@ public class WorkflowProjectNature implements IProjectNature
    * Returns the current workflow description <br>
    * TODO: method name still correct? Better: getWorkflow ?
    */
-  public Workflow getCurrentWorklist( ) throws CoreException
+  public IWorkflow getCurrentWorklist( ) throws CoreException
   {
     if( m_workflow == null )
       m_workflow = new WorkflowSystem( m_project );

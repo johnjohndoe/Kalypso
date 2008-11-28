@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
-import de.renew.workflow.base.Task;
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.IWorklistChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutionListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -97,9 +97,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
         final Object first = selection.getFirstElement();
         if( first != null )
         {
-          if( first instanceof Task )
+          if( first instanceof ITask )
           {
-            final Task task = (Task) first;
+            final ITask task = (ITask) first;
             doTask( task );
           }
         }
@@ -121,7 +121,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     return m_topControl;
   }
 
-  final void doTask( final Task task )
+  final void doTask( final ITask task )
   {
     final IStatus result = m_taskExecutor.execute( task );
     // TODO: error handling should be done by the task executor!; why isn't there a job?
@@ -133,13 +133,13 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     ErrorDialog.openError( shell, title, message + task.getName(), result, IStatus.WARNING | IStatus.ERROR );
   }
 
-  public void setWorkflow( final Workflow workflow )
+  public void setWorkflow( final IWorkflow workflow )
   {
     if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed() )
     {
       m_treeViewer.setInput( workflow );
       m_treeViewer.collapseAll();
-      final Task activeTask = m_taskExecutor.getActiveTask();
+      final ITask activeTask = m_taskExecutor.getActiveTask();
       if( workflow != null && activeTask != null )
         setCurrentTask( workflow, activeTask );
     }
@@ -161,9 +161,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
 
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskExecuted(org.eclipse.core.runtime.IStatus,
-   *      de.renew.workflow.base.Task)
+   *      de.renew.workflow.base.ITask)
    */
-  public void handleTaskExecuted( final IStatus result, final Task task )
+  public void handleTaskExecuted( final IStatus result, final ITask task )
   {
     final TreeViewer treeViewer = m_treeViewer;
     if( treeViewer == null || treeViewer.getControl() == null || treeViewer.getControl().isDisposed() )
@@ -176,7 +176,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
       {
         if( !treeViewer.getControl().isDisposed() )
         {
-          final Workflow workflow = (Workflow) treeViewer.getInput();
+          final IWorkflow workflow = (IWorkflow) treeViewer.getInput();
           if( workflow != null && task != null )
             setCurrentTask( workflow, task );
 
@@ -188,9 +188,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   }
 
   /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskStopped(de.renew.workflow.base.Task)
+   * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskStopped(de.renew.workflow.base.ITask)
    */
-  public void handleTaskStopped( final Task task )
+  public void handleTaskStopped( final ITask task )
   {
 
   }
@@ -232,7 +232,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     }
   }
 
-  protected void setCurrentTask( final Workflow workflow, final Task task )
+  protected void setCurrentTask( final IWorkflow workflow, final ITask task )
   {
     final TreePath findPart = TaskHelper.findPart( task.getURI(), workflow );
     if( findPart != null )

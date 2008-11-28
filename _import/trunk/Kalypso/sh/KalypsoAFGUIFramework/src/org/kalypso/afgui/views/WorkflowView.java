@@ -16,7 +16,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
@@ -80,7 +80,7 @@ public class WorkflowView extends ViewPart
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         setContentDescription( contentDescription );
-        final Workflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
+        final IWorkflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
         m_workflowControl.setWorkflow( workflow );
         return Status.OK_STATUS;
       }

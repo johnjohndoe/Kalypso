@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- Replaced 'http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#' by 'http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__' in order to have valid ID's  -->
 <Workflow
 	URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__WF_Kalypso1D2D"
 	xmlns="http://www.renew.de/workflow/base"
@@ -11,15 +10,13 @@
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing"
 		context="BaseMap">
-		<Help><![CDATA[Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
-Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden.
-Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.]]></Help>
-		<Name>Preprocessing: Modellaufbau</Name>
+		<Help>%Preprocessing_Modellaufbau_help</Help>
+		<Name>%Preprocessing_Modellaufbau</Name>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataLoad"
 			context="BaseMap">
-			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
-			<Name>Daten laden</Name>
+			<Help>%Preprocessing_Daten_laden_help</Help>
+			<Name>%Preprocessing_Daten_laden</Name>
 			<Task context="ImportBaseMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
 				<Help>Einladen von Hintergrunddaten (Bilddateien, shape-Dateien, MapServer)</Help>
