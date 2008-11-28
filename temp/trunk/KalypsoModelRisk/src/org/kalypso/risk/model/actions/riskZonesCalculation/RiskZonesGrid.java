@@ -198,7 +198,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       {
         if( polygon.contains( position ) )
         {
-          final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+          final Integer landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
 
           /* set statistic for landuse class */
           fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
@@ -222,7 +222,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
   }
 
-  private void fillStatistics( final double averageAnnualDamageValue, final int landuseClassOrdinalNumber )
+  private void fillStatistics( final double averageAnnualDamageValue, final Integer landuseClassOrdinalNumber )
   {
     /* add the current average annual damage value to all landuse polygons that covers the current raster cell */
     // polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );

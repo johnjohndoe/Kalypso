@@ -52,14 +52,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.grid.AbstractDelegatingGeoGrid;
-import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.observation.IObservation;
@@ -77,7 +74,6 @@ import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
-import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
@@ -90,38 +86,18 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.transformation.CachedTransformationFactory;
-import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public class RiskCalcJob implements ISimulation
+public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
-  private static final String MODELSPEC_INPUT_ControlModel = "ControlModel";
-
-  private static final String MODELSPEC_INPUT_RasterDataModel = "RasterDataModel";
-
-  private static final String MODELSPEC_INPUT_VectorDataModel = "VectorDataModel";
-
-  private static final String MODELSPEC_OUTPUT_RasterDataModel = "RasterDataModel";
-
-  private static final String MODELSPEC_OUTPUT_RasterFolder = "OutputRasterFolder";
-
-  // sadly, modelspec does not support constants
-  private static final String COVERAGE_FILE_RELATIVE_PATH_PREFIX = "raster/output/";
-
   private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
@@ -132,7 +108,7 @@ public class RiskCalcJob implements ISimulation
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "RiskCalcJobSpecification.xml" );
+    return getClass().getResource( "Specification_RiskZonesCalculation.xml" );
   }
 
   /**
@@ -144,284 +120,27 @@ public class RiskCalcJob implements ISimulation
   {
     try
     {
-      final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_INPUT_ControlModel ), null );
+      final GMLWorkspace controlModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.CONTROL_MODEL.name() ), null );
       final IRasterizationControlModel controlModel = (IRasterizationControlModel) controlModelWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
-      final GMLWorkspace rasterModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_INPUT_RasterDataModel ), null );
+      final GMLWorkspace rasterModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.RASTER_MODEL.name() ), null );
       final IRasterDataModel rasterModel = (IRasterDataModel) rasterModelWorkspace.getRootFeature().getAdapter( IRasterDataModel.class );
 
-      final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_INPUT_VectorDataModel ), null );
+      final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name() ), null );
       final IVectorDataModel vectorModel = (IVectorDataModel) vectorModelWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
 
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" );
       outputRasterTmpDir.mkdir();
-      switch( controlModel.getRiskCalculationType() )
-      {
-        case LANDUSE_RASTERIZATION:
-          doLanduseRasterization( outputRasterTmpDir, rasterModel, vectorModel, monitor, 1.0 );
-          break;
-        case DAMAGE_POTENTIAL_CALCULATION:
-          doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 1.0 );
-          break;
-        case RISK_ZONES_CALCULATION:
-//          doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 0.5 );
-          doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 1.0 );
-          break;
-        case VALUE_NOT_SET:
-        default:
-          // TODO set default action
-          break;
-      }
+      // doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 0.5 );
+      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 1.0 );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir );
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" );
-      resultEater.addResult( MODELSPEC_OUTPUT_RasterDataModel, tmpRasterModel );
-      resultEater.addResult( MODELSPEC_OUTPUT_RasterFolder, outputRasterTmpDir );
+      resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
+      resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
     }
     catch( final Exception e )
     {
       throw new SimulationException( e.getLocalizedMessage() );
-    }
-  }
-
-  /**
-   * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   * 
-   */
-  private void doLanduseRasterization( final File tmpdir, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
-  {
-    monitor.setMessage( Messages.getString( "RiskLanduseRasterizationRunnable.0" ) );
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = rasterModel.getWaterlevelCoverageCollection();
-    if( waterDepthCoverageCollection.size() == 0 )
-      throw new SimulationException( "Keine Fliesstiefen Rasterdaten vorhanden. Bitte importieren Sie zuerst die Fliesstiefen." ); //$NON-NLS-1$
-    final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( waterDepthCoverageCollection );
-    final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
-    if( maxReturnPeriod == Integer.MIN_VALUE )
-      throw new SimulationException( Messages.getString( "RiskLanduseRasterizationRunnable.1" ) ); //$NON-NLS-1$
-
-    final ICoverageCollection inputCoverages = maxCoveragesCollection;
-    final ICoverageCollection outputCoverages = rasterModel.getLanduseCoverage();
-
-    // remove existing (invalid) coverage entries from the model
-    outputCoverages.clear();
-
-    // TODO: delete old landuse coverage files!
-    // hmm... how to initiate that with WPS?
-
-    final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
-
-    final double monitorIncrement = (100.0 - monitor.getProgress()) * chainProcessWeight / inputCoverages.size();
-    final int monitorInitial = monitor.getProgress();
-    try
-    {
-      for( int i = 0; i < inputCoverages.size(); i++ )
-      {
-        final ICoverage inputCoverage = inputCoverages.get( i );
-        monitor.setMessage( Messages.getString( "RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]..." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
-        final int sizeY = inputGrid.getSizeY();
-
-        /* This grid should have the cs of the input grid. */
-        final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
-        {
-          /**
-           * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int) gets the ordinal number of the landuse
-           *      class
-           */
-          @Override
-          public double getValue( int x, int y ) throws GeoGridException
-          {
-            if( y % 20 == 0 )
-              monitor.setProgress( monitorInitial + ((int) (monitorIncrement * y / sizeY)) );
-            try
-            {
-              final Double value = super.getValue( x, y );
-              if( value.equals( Double.NaN ) )
-                return Double.NaN;
-              else
-              {
-                /* This coordinate has the cs of the input grid! */
-                final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-
-                if( polygonCollection.size() == 0 )
-                  return Double.NaN;
-
-                final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-                final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
-                final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-
-                /* Transform query position into the cs of the polygons. */
-                final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
-                final GM_Position position = TransformUtilities.transform( positionAt, transformation );
-
-                /* This list has some unknown cs. */
-                final List<ILandusePolygon> list = polygonCollection.query( position );
-                if( list == null || list.size() == 0 )
-                  return Double.NaN;
-                else
-                  for( final ILandusePolygon polygon : list )
-                  {
-                    if( polygon.contains( position ) )
-                    {
-                      final Integer ordinalNumber = polygon.getLanduseClassOrdinalNumber();
-                      return ordinalNumber != null ? ordinalNumber : Double.NaN;
-                    }
-                  }
-                return Double.NaN;
-              }
-            }
-            catch( Exception ex )
-            {
-              throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.10" ), ex ); //$NON-NLS-1$
-            }
-          }
-        };
-        final String outputCoverageFileName = inputCoverage.getGmlID() + "_" + i + ".bin"; //$NON-NLS-1$
-        final String outputCoverageFileRelativePath = COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
-        final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-        GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-        inputGrid.dispose();
-      }
-    }
-    catch( final Exception e )
-    {
-      throw new SimulationException( e.getLocalizedMessage() );
-    }
-  }
-
-  /**
-   * Creates the specific damage coverage collection. <br>
-   * The damage value for each grid cell is taken from the underlying polygon.
-   */
-  private void doDamagePotentialCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
-  {
-    final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterModel.getSpecificDamageCoverageCollection();
-    final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorModel.getLandusePolygonCollection();
-    final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
-
-    if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-      throw new SimulationException( Messages.getString( org.kalypso.risk.Messages.getString( "RiskCalcSpecificDamageRunnable.0" ) ) ); //$NON-NLS-1$
-
-    for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() )
-    {
-      final Integer returnPeriod = collection.getReturnPeriod();
-      if( returnPeriod == null || returnPeriod <= 0 )
-        throw new SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$
-    }
-
-    monitor.setMessage( Messages.getString( "DamagePotentialCalculationHandler.9" ) ); //$NON-NLS-1$
-    try
-    {
-      /* clear existing data */
-      specificDamageCoverageCollection.clear();
-      for( ILanduseClass landuseClass : landuseClassesList )
-        landuseClass.clearStatisticEntries();
-
-      /* loop over all waterdepths */
-      for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
-      {
-        monitor.setMessage( Messages.getString( "DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
-
-        /* create annual damage coverage collection */
-        final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-
-        final int returnPeriod = srcAnnualCoverages.getReturnPeriod();
-
-        for( int i = 0; i < srcAnnualCoverages.size(); i++ )
-        {
-          final ICoverage inputCoverage = srcAnnualCoverages.get( i );
-
-          final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
-          final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
-
-          final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
-          {
-            /**
-             * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int) gets the damage value for each grid
-             *      cell from the underlying polygon.
-             */
-            @Override
-            public double getValue( int x, int y ) throws GeoGridException
-            {
-              try
-              {
-                final Double value = super.getValue( x, y );
-                if( value.equals( Double.NaN ) )
-                  return Double.NaN;
-                else
-                {
-
-                  /* This coordinate has the cs of the input grid! */
-                  final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-
-                  if( polygonCollection.size() == 0 )
-                    return Double.NaN;
-
-                  final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-                  final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
-                  final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-
-                  /* Transform query position into the cs of the polygons. */
-                  final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
-                  final GM_Position position = TransformUtilities.transform( positionAt, transformation );
-
-                  /* This list has some unknown cs. */
-
-                  final List<ILandusePolygon> list = polygonCollection.query( position );
-                  if( list == null || list.size() == 0 )
-                    return Double.NaN;
-                  else
-                  {
-                    for( final ILandusePolygon polygon : list )
-                    {
-                      if( polygon.contains( position ) )
-                      {
-                        final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-                        final double damageValue = polygon.getDamageValue( value );
-
-                        if( Double.isNaN( damageValue ) )
-                          return Double.NaN;
-
-                        if( damageValue < 0.0 )
-                          return Double.NaN;
-
-                        /* set statistic for landuse class */
-                        RiskModelHelper.fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
-                        return damageValue;
-                      }
-                    }
-                  }
-                  return Double.NaN;
-                }
-              }
-              catch( Exception ex )
-              {
-                throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.0" ), ex ); //$NON-NLS-1$
-              }
-            }
-          };
-
-          /* add the new coverage to the collection */
-          final String outputCoverageFileName = "specificDamage_HQ" + srcAnnualCoverages.getReturnPeriod() + "_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          final String outputCoverageFileRelativePath = COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
-          final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
-          final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-
-          for( final ILanduseClass landuseClass : landuseClassesList )
-          {
-            landuseClass.updateStatistic( returnPeriod );
-          }
-          newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.6" ) ) + srcAnnualCoverages.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.9" ) ) + new Date().toString() ); //$NON-NLS-1$
-          inputGrid.dispose();
-        }
-        /* set the return period of the specific damage grid */
-        destCoverageCollection.setReturnPeriod( srcAnnualCoverages.getReturnPeriod() );
-      }
-    }
-    catch( final Exception e )
-    {
-      throw new SimulationException( Messages.getString( "RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 
@@ -452,7 +171,7 @@ public class RiskCalcJob implements ISimulation
 
         // TODO: change name: better: use input name
         final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        final String outputCoverageFileRelativePath = COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
+        final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 

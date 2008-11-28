@@ -36,7 +36,7 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public void setLanduseClass( final Feature landuseClassFeature );
 
-  public int getLanduseClassOrdinalNumber( );
+  public Integer getLanduseClassOrdinalNumber( );
 
   /**
    * calculates the damage value:<br>

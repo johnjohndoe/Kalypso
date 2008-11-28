@@ -189,28 +189,4 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   {
     return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
   }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getRiskCalculationType()
-   */
-  @Override
-  public RISK_CALCULATION_TYPE getRiskCalculationType( )
-  {
-    final Object value = getFeature().getProperty( IRasterizationControlModel.PROPERTY_RISK_CALCULATION_TYPE );
-    if( value == null )
-      return RISK_CALCULATION_TYPE.VALUE_NOT_SET;
-    for( final RISK_CALCULATION_TYPE type : RISK_CALCULATION_TYPE.values() )
-      if( type.value().equals( value ) )
-        return type;
-    return RISK_CALCULATION_TYPE.VALUE_NOT_SET;
-  }
-
-  /**
-   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#setRiskCalculationType(org.kalypso.risk.model.schema.binding.IRasterizationControlModel.RISK_CALCULATION_TYPE)
-   */
-  @Override
-  public void setRiskCalculationType( RISK_CALCULATION_TYPE riskCalculationType )
-  {
-    getFeature().setProperty( IRasterizationControlModel.PROPERTY_RISK_CALCULATION_TYPE, riskCalculationType.value() );
-  }
 }

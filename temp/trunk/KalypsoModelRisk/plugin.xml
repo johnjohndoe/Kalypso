@@ -230,8 +230,24 @@
                   point="org.kalypso.simulation.core.simulation">
                <simulation
                      catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
-                     simulationClass="org.kalypso.risk.model.simulation.RiskCalcJob"
-                     typeID="KalypsoRisk">
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization"
+                     typeID="KalypsoRisk_LanduseRasterization">
+               </simulation>
+            </extension>
+            <extension
+                  point="org.kalypso.simulation.core.simulation">
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation"
+                     typeID="KalypsoRisk_SpecificDamageCalculation">
+               </simulation>
+            </extension>
+            <extension
+                  point="org.kalypso.simulation.core.simulation">
+               <simulation
+                     catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
+                     simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation"
+                     typeID="KalypsoRisk_RiskZonesCalculation">
                </simulation>
             </extension>
             <extension

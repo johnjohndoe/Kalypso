@@ -77,7 +77,7 @@ public class RiskModelHelper
     sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
 
-  public static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
+  public static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final Integer landuseClassOrdinalNumber, final double cellSize )
   {
     /* add the current damage value to all landuse polygons that covers the current raster cell */
     polygon.updateStatistics( damageValue, returnPeriod );

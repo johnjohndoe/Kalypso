@@ -4,20 +4,23 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.Messages;
-import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
-import org.kalypso.risk.model.schema.binding.IRasterizationControlModel.RISK_CALCULATION_TYPE;
-import org.kalypso.simulation.ui.calccase.CalcCaseJob;
+import org.kalypso.risk.model.simulation.SimulationKalypsoRiskModelspecHelper;
+import org.kalypso.risk.model.simulation.ISimulationSpecKalypsoRisk.SIMULATION_KALYPSORISK_TYPEID;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -43,16 +46,28 @@ public class RiskZonesCalculationHandler extends AbstractHandler
     {
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext context = handlerService.getCurrentState();
-      final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-      final IRasterizationControlModel controlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
 
-      // set calculation type flag
-      controlModel.setRiskCalculationType( RISK_CALCULATION_TYPE.RISK_ZONES_CALCULATION );
-      scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Just to make it dirty.", false ) ); //$NON-NLS-1$
-      scenarioDataProvider.saveModel( IRasterizationControlModel.class, new NullProgressMonitor() );
-
-      new CalcCaseJob( scenarioFolder ).schedule();
+      final Job job = new Job( "Berechne..." )
+      {
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          final IStatus status;
+          try
+          {
+            status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
+          }
+          catch( final CoreException e )
+          {
+            ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
+            return Status.CANCEL_STATUS;
+          }
+          return status;
+        }
+      };
+      job.setUser( true );
+      job.schedule( 100 );
     }
     catch( final Exception e )
     {

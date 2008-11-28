@@ -12,25 +12,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public interface IRasterizationControlModel extends IModel
 {
-  public static enum RISK_CALCULATION_TYPE
-  {
-    VALUE_NOT_SET(""),
-    LANDUSE_RASTERIZATION("LanduseRasterization"),
-    DAMAGE_POTENTIAL_CALCULATION("DamagePotentialCalculation"),
-    RISK_ZONES_CALCULATION("RiskZonesCalculation");
-    private final String m_value;
-
-    private RISK_CALCULATION_TYPE( final String value )
-    {
-      m_value = value;
-    }
-
-    public String value( )
-    {
-      return m_value;
-    }
-  }
-
   public static final String MODEL_NAME = "RasterizationControlModel"; //$NON-NLS-1$
 
   public static final String MODEL_FILENAME_GML = "RasterizationControlModel.gml"; //$NON-NLS-1$
@@ -60,10 +41,6 @@ public interface IRasterizationControlModel extends IModel
   public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" ); //$NON-NLS-1$
 
   public static final QName PROPERTY_STATISTIC_OBS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskStatisticResultMember" ); //$NON-NLS-1$
-
-  public void setRiskCalculationType( final RISK_CALCULATION_TYPE riskCalculationType );
-
-  public RISK_CALCULATION_TYPE getRiskCalculationType( );
 
   public List<ILanduseClass> getLanduseClassesList( );
 

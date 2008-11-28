@@ -71,7 +71,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     getFeature().setProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS, landuseClassFeature );
   }
 
-  public int getLanduseClassOrdinalNumber( )
+  public Integer getLanduseClassOrdinalNumber( )
   {
     return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }

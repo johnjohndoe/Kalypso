@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * Project Nature for 1d 2d simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
+ * Project Nature for risk simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
