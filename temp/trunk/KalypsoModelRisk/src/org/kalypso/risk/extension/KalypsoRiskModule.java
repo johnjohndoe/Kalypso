@@ -20,7 +20,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.project.KalypsoRiskProjectWizard;
 
-import de.renew.workflow.base.Workflow;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 
 public class KalypsoRiskModule implements IKalypsoModule
@@ -82,7 +82,7 @@ public class KalypsoRiskModule implements IKalypsoModule
                 if( nature == null )
                   return false;
 
-                final Workflow workflow = nature.getCurrentWorklist();
+                final IWorkflow workflow = nature.getCurrentWorklist();
                 final String uri = workflow.getURI();
 
                 return uri.contains( "http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk" ); //$NON-NLS-1$
