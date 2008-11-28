@@ -12,7 +12,6 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.ITaskGroup;
-import de.renew.workflow.base.ITaskHelp;
 
 /**
  * @author Stefan Kurzbach
@@ -128,11 +127,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     if( element instanceof ITask )
     {
       final ITask task = (ITask) element;
-      final ITaskHelp help = task.getHelp();
-      if( help == null )
-        return null;
-
-      return help.getValue();
+      return task.getTooltip();
     }
 
     return null;

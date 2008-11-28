@@ -45,7 +45,5 @@ package de.renew.workflow.base;
  */
 public interface ITaskHelp
 {
-
   String getValue( );
-
 }

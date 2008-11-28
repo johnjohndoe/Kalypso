@@ -57,6 +57,9 @@ public interface ITask
 
   String getName( );
 
-  ITaskHelp getHelp( );
-
+  /**
+   * Returns the string value of the task's help element.<br>
+   * Return <code>null</code> rather than the empty string, else we get ugly empty tooltips.
+   */
+  String getTooltip( );
 }

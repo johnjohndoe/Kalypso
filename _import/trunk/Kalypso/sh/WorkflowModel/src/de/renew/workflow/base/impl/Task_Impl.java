@@ -66,7 +66,7 @@ public class Task_Impl implements ITask
     m_i10nproperties = i10nproperties;
 
     final Help help = m_task.getHelp();
-    m_help = new TaskHelp_Impl( help, i10nproperties );
+    m_help = help == null ? null : new TaskHelp_Impl( help, i10nproperties );
   }
 
   protected Task getTask( )
@@ -112,12 +112,20 @@ public class Task_Impl implements ITask
   }
 
   /**
-   * @see de.renew.workflow.base.ITask#getHelp()
+   * @see de.renew.workflow.base.ITask#getTooltip()
    */
   @Override
-  public ITaskHelp getHelp( )
+  public String getTooltip( )
   {
-    return m_help;
+    if( m_help == null )
+      return null;
+
+    final String value = m_help.getValue();
+    if( value == null || value.trim().isEmpty() )
+      return null;
+
+    return value;
   }
+
 
 }
