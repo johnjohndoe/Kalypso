@@ -71,6 +71,8 @@ public class WQRelationTableViewer extends AbstractViewer
   private Combo m_combo;
   private WQTable[] m_tables;
   private JTable m_table;
+  private String m_fromType;
+  private String m_toType;
 
   public WQRelationTableViewer( final Composite parent )
   {
@@ -79,8 +81,11 @@ public class WQRelationTableViewer extends AbstractViewer
 
   private final void createControl( final Composite parent )
   {
-    m_composite = new Composite( parent, SWT.FILL );
-    m_composite.setLayout( new GridLayout() );
+    m_composite = new Composite( parent, SWT.NONE );
+    GridLayout layout = new GridLayout();
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    m_composite.setLayout( layout );
     m_composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Combo combo = new Combo( m_composite, SWT.DROP_DOWN | SWT.READ_ONLY );
@@ -102,13 +107,14 @@ public class WQRelationTableViewer extends AbstractViewer
 
     // SWT-AWT Brücke für die Darstellung von JTable
     final Composite embCmp = new Composite( m_composite, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
-    embCmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    final GridData embCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    embCmp.setLayoutData( embCompData );
     final Frame vFrame = SWT_AWT.new_Frame( embCmp );
 
     m_table = new JTable();
     vFrame.setVisible( true );
     m_table.setVisible( true );
-    m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+    m_table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
     m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( 3 ) );
     m_table.getTableHeader().setReorderingAllowed( false );
 
@@ -120,7 +126,7 @@ public class WQRelationTableViewer extends AbstractViewer
   protected void comboSelected( final Combo combo )
   {
     final WQTable table = m_tables[combo.getSelectionIndex()];
-    m_table.setModel( WQRelationFactory.createTableModel( table ) );
+    m_table.setModel( WQRelationFactory.createTableModel( m_fromType, m_toType, table ) );
   }
 
   public Control getControl()
@@ -135,6 +141,9 @@ public class WQRelationTableViewer extends AbstractViewer
     if( wqs == null )
       return;
 
+    m_fromType = wqs.getFromType();
+    m_toType = wqs.getToType();
+    
     m_tables = wqs.getTables();
     for( int i = 0; i < m_tables.length; i++ )
       m_combo.add( m_tables[i].toString() );
@@ -143,7 +152,7 @@ public class WQRelationTableViewer extends AbstractViewer
     {
       m_combo.select( 0 );
 
-      m_table.setModel( WQRelationFactory.createTableModel( m_tables[0] ) );
+      m_table.setModel( WQRelationFactory.createTableModel( m_fromType, m_toType, m_tables[0] ) );
     }
   }
 }

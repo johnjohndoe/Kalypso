@@ -76,14 +76,14 @@ public class ViewWQRelationAction extends AbstractObservationChooserAction
     final String propTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
     if( propTable == null )
       return;
-    
+
     final StringReader reader = new StringReader( propTable );
     try
     {
       final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
       reader.close();
-      
-      final WQRelationDialog dlg = new WQRelationDialog( getShell(), "WQ-Beziehung für " + obs.getName(), set );
+
+      final WQRelationDialog dlg = new WQRelationDialog( getShell(), obs.getName(), set );
       dlg.open();
     }
     catch( final WQException e )
