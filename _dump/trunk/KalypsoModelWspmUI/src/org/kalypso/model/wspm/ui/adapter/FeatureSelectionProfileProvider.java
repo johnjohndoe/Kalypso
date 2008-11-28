@@ -63,10 +63,9 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider2;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -81,17 +80,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * @author Gernot Belger
  */
-public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 implements IProfilProvider2, ISelectionChangedListener, IProfilListener, ModellEventListener
+public class FeatureSelectionProfileProvider extends AbstractProfilProvider implements IProfilProvider, ISelectionChangedListener, IProfilListener, ModellEventListener
 {
   /**
-   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getProfil()
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getProfil()
    */
   public IProfil getProfil( )
   {
     return m_profile;
   }
-
-  private final ProfilViewData m_viewData = new ProfilViewData();
 
   private final ISelectionProvider m_provider;
 
@@ -155,7 +152,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider2#getEventManager()
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getEventManager()
    */
   public IProfil getProfile( )
   {
@@ -173,14 +170,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   public ISelectionProvider getSelectionProvider( )
   {
     return m_provider;
-  }
-
-  /**
-   * @see com.bce.profil.ui.view.IProfilProvider2#getViewData()
-   */
-  public ProfilViewData getViewData( )
-  {
-    return m_viewData;
   }
 
   /**
@@ -345,7 +334,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     if( m_feature != null )
       m_feature.getWorkspace().addModellListener( this );
 
-    fireOnProfilProviderChanged( this, oldProfile, m_profile, m_viewData, m_viewData );
+    fireOnProfilProviderChanged( this, oldProfile, m_profile);
   }
 
   private void unhookListeners( )

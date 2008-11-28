@@ -49,7 +49,7 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 
 /**
  * @author Gernot Belger
@@ -89,7 +89,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
-    if( adapterType == IProfilProvider2.class )
+    if( adapterType == IProfilProvider.class )
       if( adaptableObject instanceof IWorkbenchPart )
       {
         final IWorkbenchPart part = (IWorkbenchPart) adaptableObject;
@@ -132,6 +132,6 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Class[] getAdapterList( )
   {
-    return new Class[] { IProfilProvider2.class };
+    return new Class[] { IProfilProvider.class };
   }
 }
