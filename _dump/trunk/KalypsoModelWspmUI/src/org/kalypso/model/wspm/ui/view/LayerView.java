@@ -51,7 +51,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.IChartView;
 
 /**
  * @author kimwerner
@@ -64,18 +67,6 @@ public class LayerView extends ViewPart
   private ScrolledForm m_form = null;
 
   private FormToolkit m_toolkit;
-
-  private IChartLayer m_activeLayer;
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
-  @Override
-  public void setFocus( )
-  {
-    if( m_form != null && m_form.getBody() != null )
-      m_form.getBody().setFocus();
-  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -91,14 +82,49 @@ public class LayerView extends ViewPart
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     m_form.getForm().getBody().setLayout( bodyLayout );
-
+    m_form.getForm().setText( "" );
+    m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
   }
 
-  public final void updatePanel( final IChartLayer activeLayer )
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+   */
+  @Override
+  public void dispose( )
   {
-    if( m_activeLayer == activeLayer )
-      return;
+    if( m_form != null )
+      m_form.dispose();
+    super.dispose();
+  }
 
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+   */
+  @Override
+  public void setFocus( )
+  {
+    if( m_form != null && m_form.getBody() != null )
+      m_form.getBody().setFocus();
+  }
+
+  private final IChartLayer getActiveLayer( final IChartView chart )
+  {
+    final IChartModel model = chart == null ? null : chart.getChartModel();
+    final ILayerManager mngr = model == null ? null : model.getLayerManager();
+    if( mngr != null )
+    {
+      for( final IChartLayer layer : mngr.getLayers() )
+      {
+        if( layer.isActive() )
+          return layer;
+      }
+    }
+    return null;
+  }
+
+  public final void updatePanel( final IChartView chart )
+  {
+    final IChartLayer activeLayer = getActiveLayer( chart );
     if( m_form == null || m_form.isDisposed() || m_form.getBody() == null )
       return;
     for( final Control ctrl : m_form.getBody().getChildren() )
@@ -115,19 +141,15 @@ public class LayerView extends ViewPart
       if( panel != null )
       {
         final Control control = panel.createControl( m_form.getForm().getBody(), m_toolkit );
-
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
       }
-
-      m_activeLayer = activeLayer;
     }
     else
     {
       m_form.getForm().setText( "" );
       m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
     }
-
     m_form.getForm().layout();
-
   }
+
 }
