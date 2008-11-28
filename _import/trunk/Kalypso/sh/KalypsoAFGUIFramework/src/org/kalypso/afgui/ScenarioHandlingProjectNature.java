@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui;
 
@@ -50,12 +50,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
-import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.ICase;
 
 /**
  * @author Stefan Kurzbach
@@ -87,7 +87,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    * Constructs a path for the scenario relative to the project location.
    */
   @Override
-  public IPath getRelativeProjectPath( final Case caze )
+  public IPath getRelativeProjectPath( final ICase caze )
   {
     return getProjectRelativePath( caze );
   }
@@ -95,9 +95,9 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   /**
    * Static version of {@link #getRelativeProjectPath(Case)}.
    */
-  public static IPath getProjectRelativePath( final Case caze )
+  public static IPath getProjectRelativePath( final ICase caze )
   {
-    final Scenario scenario = (Scenario) caze;
+    final IScenario scenario = (IScenario) caze;
     if( scenario.getParentScenario() != null )
       return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );
     else
@@ -108,14 +108,14 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#scenarioAdded(de.renew.workflow.cases.Case)
    */
   @Override
-  public void caseAdded( final Case caze )
+  public void caseAdded( final ICase caze )
   {
     super.caseAdded( caze );
     final IPath projectPath = getRelativeProjectPath( caze );
     final IFolder newFolder = getProject().getFolder( projectPath );
 
-    final Scenario scenario = (Scenario) caze;
-    final Scenario parentScenario = scenario.getParentScenario();
+    final IScenario scenario = (IScenario) caze;
+    final IScenario parentScenario = scenario.getParentScenario();
     // if( parentScenario == null )
     // {
     // // this is a new scenario at base level, so use empty project zip

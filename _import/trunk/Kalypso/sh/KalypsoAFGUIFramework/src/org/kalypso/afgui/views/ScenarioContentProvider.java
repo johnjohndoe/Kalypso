@@ -7,13 +7,14 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.IScenarioList;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
@@ -28,7 +29,7 @@ import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>, IActiveScenarioChangeListener<Scenario>
+public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<IScenario>, IActiveScenarioChangeListener<IScenario>
 {
   private Viewer m_viewer;
 
@@ -43,7 +44,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     m_showResources = showResources;
 
-    final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.addActiveContextChangeListener( this );
   }
 
@@ -75,7 +76,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
             // is of correct nature
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
-            final ICaseManager<Scenario> caseManager = nature.getCaseManager();
+            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
               caseManager.addCaseManagerListener( this );
@@ -129,10 +130,10 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
           if( nature != null )
           {
-            final ICaseManager<Scenario> caseManager = nature.getCaseManager();
+            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
-              final List<Scenario> rootScenarios = caseManager.getCases();
+              final List<IScenario> rootScenarios = caseManager.getCases();
               return rootScenarios != null && !rootScenarios.isEmpty();
             }
           }
@@ -168,7 +169,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
    */
-  public void caseAdded( final Scenario caze )
+  public void caseAdded( final IScenario caze )
   {
     refreshViewer( caze );
   }
@@ -176,7 +177,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseRemoved(de.renew.workflow.cases.Case)
    */
-  public void caseRemoved( final Scenario caze )
+  public void caseRemoved( final IScenario caze )
   {
     refreshViewer( caze );
   }
@@ -185,12 +186,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
    * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
    *      de.renew.workflow.cases.Case)
    */
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
   {
     refreshViewer( null );
   }
 
-  private void refreshViewer( final Scenario caze )
+  private void refreshViewer( final IScenario caze )
   {
     if( m_viewer instanceof StructuredViewer )
     {
@@ -200,10 +201,9 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       }
       else
       {
-        final String projectName = ScenarioHelper.getProjectName( caze );
-        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+        final IProject project = caze.getProject();
         final StructuredViewer viewer = (StructuredViewer) m_viewer;
-        final Scenario parentScenario = caze.getParentScenario();
+        final IScenario parentScenario = caze.getParentScenario();
         if( parentScenario != null )
         {
           ViewerUtilities.refresh( viewer, parentScenario, true );
@@ -227,7 +227,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public void dispose( )
   {
-    final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.removeActiveContextChangeListener( this );
     super.dispose();
   }
@@ -236,20 +236,20 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
    * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object element )
+  public Object[] getElements( final Object element )
   {
     if( element instanceof IResource )
       return super.getElements( element );
 
-    if( !(element instanceof Scenario) )
+    if( !(element instanceof IScenario) )
       return new Object[0];
 
-    Scenario scenario = (Scenario) element;
-    ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    final IScenario scenario = (IScenario) element;
+    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
     if( derivedScenarios == null )
       return new Object[0];
 
-    List<Scenario> scenarios = derivedScenarios.getScenarios();
+    final List<IScenario> scenarios = derivedScenarios.getScenarios();
     if( scenarios == null || scenarios.size() == 0 )
       return new Object[0];
 

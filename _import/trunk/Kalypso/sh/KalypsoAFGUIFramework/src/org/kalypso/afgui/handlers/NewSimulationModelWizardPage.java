@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package org.kalypso.afgui.handlers;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 
 /**
  * @author Stefan Kurzbach
@@ -20,7 +20,7 @@ public class NewSimulationModelWizardPage extends WizardPage
   {
     public void update( )
     {
-      boolean status = c.isValid();
+      final boolean status = c.isValid();
       if( status )
       {
         NewSimulationModelWizardPage.this.setErrorMessage( null );
@@ -33,9 +33,9 @@ public class NewSimulationModelWizardPage extends WizardPage
     }
   };
 
-  private final Scenario m_scenario;
+  private final IScenario m_scenario;
 
-  public NewSimulationModelWizardPage( final String pageName, final Scenario workflowData )
+  public NewSimulationModelWizardPage( final String pageName, final IScenario workflowData )
   {
     super( pageName );
     m_scenario = workflowData;

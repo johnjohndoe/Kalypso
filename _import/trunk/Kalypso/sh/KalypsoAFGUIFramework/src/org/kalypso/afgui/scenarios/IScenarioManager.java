@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.afgui.scenarios;
 
@@ -14,23 +14,23 @@ import de.renew.workflow.connector.cases.ICaseManager;
  * 
  * @author Stefan Kurzbach
  */
-public interface IScenarioManager extends ICaseManager<Scenario>
+public interface IScenarioManager extends ICaseManager<IScenario>
 {
 
   /**
-   * Creates a new scenario with the given name. It is derived from <code>parentScenario</code>. The scenario
-   * metadata file and the database will be updated to reflect the change. The name must be unique within the context of
+   * Creates a new scenario with the given name. It is derived from <code>parentScenario</code>. The scenario metadata
+   * file and the database will be updated to reflect the change. The name must be unique within the context of
    * parentScenario. A notification will be sent to registered listeners that the scenarios have changed. If
    * <code>parentScenario</code> is <code>null</code>, a new root scenario is created.
    * 
    * @exception CoreException
    *              if this method fails. Reasons include:
    *              <ul>
-   *              <li> A scenario with the given name already exists.</li>
-   *              <li> The name of this scenario is not valid (according to <code>IWorkspace.validateName</code>).</li>
-   *              <li> There is a problem persisting the database. See {@link #persist()} for details.</li>
+   *              <li>A scenario with the given name already exists.</li>
+   *              <li>The name of this scenario is not valid (according to <code>IWorkspace.validateName</code>).</li>
+   *              <li>There is a problem persisting the database. See {@link #persist()} for details.</li>
    */
-  public Scenario deriveScenario( final String name, final Scenario parentScenario ) throws CoreException;
+  public IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException;
 
   /**
    * Saves the changes in the scenario structure to the database.
@@ -40,8 +40,8 @@ public interface IScenarioManager extends ICaseManager<Scenario>
    * @exception CoreException
    *              if this method fails. Reasons include:
    *              <ul>
-   *              <li> The database is not accessible or writable.</li>
-   *              <li> An error specific to the kind of database has occured. It will be included in the cause of the
+   *              <li>The database is not accessible or writable.</li>
+   *              <li>An error specific to the kind of database has occured. It will be included in the cause of the
    *              exception.</li>
    */
   public void persist( final IProgressMonitor monitor ) throws CoreException;

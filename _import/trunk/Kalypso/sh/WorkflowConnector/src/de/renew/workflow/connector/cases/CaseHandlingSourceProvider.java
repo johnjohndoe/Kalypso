@@ -9,11 +9,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-public class CaseHandlingSourceProvider<T extends Case, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
+public class CaseHandlingSourceProvider<T extends ICase, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
 {
   private static final Logger LOGGER = Logger.getLogger( CaseHandlingSourceProvider.class.getName() );
 

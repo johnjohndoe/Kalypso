@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -35,13 +35,13 @@ import de.renew.workflow.connector.context.ActiveWorkContext;
 public class NewSimulationModelControlBuilder
 {
 
-  final static String NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString("NewSimulationModelControlBuilder.0");   //$NON-NLS-1$
+  final static String NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString( "NewSimulationModelControlBuilder.0" ); //$NON-NLS-1$
 
-  final static String ALLREADY_EXISTS = Messages.getString("NewSimulationModelControlBuilder.1");   //$NON-NLS-1$
+  final static String ALLREADY_EXISTS = Messages.getString( "NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
 
   final static Logger logger = Logger.getLogger( NewSimulationModelControlBuilder.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );    //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
 
   static
   {
@@ -63,15 +63,15 @@ public class NewSimulationModelControlBuilder
 
   private String newName;
 
-  private KeyListener keyListener = new KeyListener()
+  private final KeyListener keyListener = new KeyListener()
   {
 
-    public void keyPressed( KeyEvent e )
+    public void keyPressed( final KeyEvent e )
     {
       // Empty
     }
 
-    public void keyReleased( KeyEvent e )
+    public void keyReleased( final KeyEvent e )
     {
       cacheNewName();
       if( updateListener != null )
@@ -82,40 +82,40 @@ public class NewSimulationModelControlBuilder
 
   };
 
-  private final Scenario m_scenario;
+  private final IScenario m_scenario;
 
-  public NewSimulationModelControlBuilder( final Scenario scenario, final Composite parentComposite )
+  public NewSimulationModelControlBuilder( final IScenario scenario, final Composite parentComposite )
   {
     m_scenario = scenario;
     createControl( parentComposite );
     cacheNewName();
   }
 
-  private void createControl( Composite parent )
+  private void createControl( final Composite parent )
   {
     panel = new Composite( parent, SWT.FILL );
-    GridLayout gl = new GridLayout();
+    final GridLayout gl = new GridLayout();
     gl.numColumns = 2;
     panel.setLayout( gl );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    Label newModelNameLabel = new Label( panel, SWT.NONE );
-    newModelNameLabel.setText( Messages.getString("NewSimulationModelControlBuilder.3") );   //$NON-NLS-1$
+    final Label newModelNameLabel = new Label( panel, SWT.NONE );
+    newModelNameLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.3" ) ); //$NON-NLS-1$
     newModelTFE = new Text( panel, SWT.BORDER );
     newModelTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     newModelTFE.addKeyListener( keyListener );
 
-    Label parentLabel = new Label( panel, SWT.NONE );
-    parentLabel.setText( Messages.getString("NewSimulationModelControlBuilder.4") );   //$NON-NLS-1$
+    final Label parentLabel = new Label( panel, SWT.NONE );
+    parentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
     parentTFE = new Text( panel, SWT.BORDER );
     parentTFE.setEditable( false );
     parentTFE.setText( getParentDataName() );
     parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    Label commentLabel = new Label( panel, SWT.NONE );
-    commentLabel.setText( Messages.getString("NewSimulationModelControlBuilder.5") );   //$NON-NLS-1$
+    final Label commentLabel = new Label( panel, SWT.NONE );
+    commentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.5" ) ); //$NON-NLS-1$
     commentText = new Text( panel, SWT.BORDER | SWT.WRAP | SWT.MULTI );
-    GridData gd = new GridData( GridData.FILL_BOTH );
+    final GridData gd = new GridData( GridData.FILL_BOTH );
     gd.verticalSpan = 10;
     commentText.setLayoutData( gd );
 
@@ -127,7 +127,7 @@ public class NewSimulationModelControlBuilder
   {
     if( m_scenario == null )
     {
-      return Messages.getString("NewSimulationModelControlBuilder.6");   //$NON-NLS-1$
+      return Messages.getString( "NewSimulationModelControlBuilder.6" ); //$NON-NLS-1$
     }
     return m_scenario.getName();
   }
@@ -136,7 +136,7 @@ public class NewSimulationModelControlBuilder
   {
     newName = newModelTFE.getText();
 
-    newName = (newName == null) ? "" : newName.trim();    //$NON-NLS-1$
+    newName = (newName == null) ? "" : newName.trim(); //$NON-NLS-1$
     return newName;
   }
 
@@ -149,15 +149,15 @@ public class NewSimulationModelControlBuilder
   {
     // FormLayout fl=null;
 
-    String comment = commentText.getText();
+    final String comment = commentText.getText();
     return comment;
   }
 
   public boolean isValid( )
   {
     Boolean answer = true;
-    StringBuffer errors = new StringBuffer( 128 );
-    if( newName.equals( "" ) )    //$NON-NLS-1$
+    final StringBuffer errors = new StringBuffer( 128 );
+    if( newName.equals( "" ) ) //$NON-NLS-1$
     {
       answer = answer && false;
       errors.append( NEW_NAME_MUST_NOT_BE_EMPTY );
@@ -177,28 +177,28 @@ public class NewSimulationModelControlBuilder
     return errorMessage;
   }
 
-  public void setUpdateListerner( @SuppressWarnings("hiding")   //$NON-NLS-1$
-  IUpdateListener updateListener )
+  public void setUpdateListerner( @SuppressWarnings("hiding")//$NON-NLS-1 final $
+  final IUpdateListener updateListener )
   {
     this.updateListener = updateListener;
   }
 
-  public static void startWizard( final Shell shell, final Scenario scenario, final IProject project )
+  public static void startWizard( final Shell shell, final IScenario scenario, final IProject project )
   {
-    logger.info( Messages.getString("NewSimulationModelControlBuilder.10") );   //$NON-NLS-1$
-    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( Messages.getString("NewSimulationModelControlBuilder.11"), scenario );   //$NON-NLS-1$
+    logger.info( Messages.getString( "NewSimulationModelControlBuilder.10" ) ); //$NON-NLS-1$
+    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( Messages.getString( "NewSimulationModelControlBuilder.11" ), scenario ); //$NON-NLS-1$
 
-    Wizard iWizard = new Wizard()
+    final Wizard iWizard = new Wizard()
     {
 
       @Override
       public boolean performFinish( )
       {
-        NewSimulationModelWizardPage page = (NewSimulationModelWizardPage) getStartingPage();
-        boolean answer = page.getNewSimulaionControlBuilder().isValid();
+        final NewSimulationModelWizardPage page = (NewSimulationModelWizardPage) getStartingPage();
+        final boolean answer = page.getNewSimulaionControlBuilder().isValid();
         if( !answer )
         {
-          page.setErrorMessage( "" );    //$NON-NLS-1$
+          page.setErrorMessage( "" ); //$NON-NLS-1$
         }
         return answer;
       }
@@ -207,17 +207,17 @@ public class NewSimulationModelControlBuilder
 
     iWizard.addPage( wpage );
     // wpage.setTitle("spage");
-    WizardDialog wd = new WizardDialog( shell, iWizard );
-    wd.setTitle( Messages.getString("NewSimulationModelControlBuilder.13") );   //$NON-NLS-1$
+    final WizardDialog wd = new WizardDialog( shell, iWizard );
+    wd.setTitle( Messages.getString( "NewSimulationModelControlBuilder.13" ) ); //$NON-NLS-1$
     // wd.setMessage("Neue Simulationsmodell");
     // wd.setBlockOnOpen(true);
-    int decision = wd.open();
+    final int decision = wd.open();
     if( decision == WizardDialog.OK )
     {
-      String name = wpage.getNewSimulaionControlBuilder().getNewName();
+      final String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
       final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-      final ActiveWorkContext<Scenario> activeWorkContext = plugin.getActiveWorkContext();
+      final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
       try
       {
         final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
@@ -239,13 +239,13 @@ public class NewSimulationModelControlBuilder
       catch( final CoreException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( shell, Messages.getString("NewSimulationModelControlBuilder.15"), Messages.getString("NewSimulationModelControlBuilder.16"), status );     //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "NewSimulationModelControlBuilder.15" ), Messages.getString( "NewSimulationModelControlBuilder.16" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }
     else
     {
-      logger.info( Messages.getString("NewSimulationModelControlBuilder.17") + decision );   //$NON-NLS-1$
+      logger.info( Messages.getString( "NewSimulationModelControlBuilder.17" ) + decision ); //$NON-NLS-1$
     }
   }
 }

@@ -47,8 +47,6 @@ import java.net.URLDecoder;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -65,54 +63,14 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class ScenarioHelper
 {
-  public static String getProjectName( final Scenario scenario )
-  {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      return URLDecoder.decode( uri.getAuthority(), "UTF-8" );
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
 
-  public static IProject getProject( final Scenario scenario )
-  {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      final String authority = URLDecoder.decode( uri.getAuthority(), "UTF-8" );
-      return ResourcesPlugin.getWorkspace().getRoot().getProject( authority );
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  public static IFolder getFolder( final Scenario scenario )
+  public static IFolder getFolder( final IScenario scenario )
   {
     final String scenarioPath = getScenarioPath( scenario );
     if( scenarioPath == null )
       return null;
 
-    return getProject( scenario ).getFolder( scenarioPath );
+    return scenario.getProject().getFolder( scenarioPath );
   }
 
   /**
@@ -150,9 +108,9 @@ public class ScenarioHelper
    * Find the oldest parent (=root) of the given scenario.<br>
    * If the scenario has no parent, itself is returned.
    */
-  public static Scenario findRootScenario( final Scenario scenario )
+  public static IScenario findRootScenario( final IScenario scenario )
   {
-    final Scenario parentScenario = scenario.getParentScenario();
+    final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
       return scenario;
 
@@ -162,7 +120,7 @@ public class ScenarioHelper
   /**
    * Returns the path to a given scenario.
    */
-  public static String getScenarioPath( final Scenario scenario )
+  public static String getScenarioPath( final IScenario scenario )
   {
     try
     {
@@ -185,7 +143,7 @@ public class ScenarioHelper
     return null;
   }
 
-  public static Workflow findWorkflow( final Scenario scenario, final CaseHandlingProjectNature newProject )
+  public static Workflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
   {
     try
     {

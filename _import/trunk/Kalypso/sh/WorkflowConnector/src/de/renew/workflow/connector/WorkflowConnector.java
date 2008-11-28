@@ -30,11 +30,11 @@ import de.renew.workflow.ClientImpl;
 import de.renew.workflow.WorkItem;
 import de.renew.workflow.WorkflowManager;
 import de.renew.workflow.WorkflowManagerImpl;
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.ICase;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
-public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioChangeListener<Case>
+public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioChangeListener<ICase>
 {
   private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager"; //$NON-NLS-1$
 
@@ -62,11 +62,11 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
 
   private Client m_client;
 
-  private List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
+  private final List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
 
   private AgendaChangeListener m_listenerProxy;
 
-  private Case m_activeCase;
+  private ICase m_activeCase;
 
   /**
    * @return the WorkflowConnector if connection is established, null otherwise
@@ -116,23 +116,23 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
     }
     catch( final IOException e )
     {
-      logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.7"), e ); //$NON-NLS-1$
+      logger.log( Level.SEVERE, Messages.getString( "WorkflowConnector.7" ), e ); //$NON-NLS-1$
       WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
     }
     catch( final NotBoundException e )
     {
-      logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.8"), e ); //$NON-NLS-1$
+      logger.log( Level.SEVERE, Messages.getString( "WorkflowConnector.8" ), e ); //$NON-NLS-1$
       WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
     }
 
     _connected = success;
     if( success )
     {
-      logger.info( Messages.getString("WorkflowConnector.10") ); //$NON-NLS-1$
+      logger.info( Messages.getString( "WorkflowConnector.10" ) ); //$NON-NLS-1$
     }
     else
     {
-      logger.info( Messages.getString("WorkflowConnector.11") ); //$NON-NLS-1$
+      logger.info( Messages.getString( "WorkflowConnector.11" ) ); //$NON-NLS-1$
     }
   }
 
@@ -213,7 +213,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
      * Creates a new agenda change listener.
      * 
      * @exception RemoteException
-     *                An RMI problem occurred.
+     *              An RMI problem occurred.
      */
     AgendaChangeListenerProxy( ) throws RemoteException
     {
@@ -225,9 +225,9 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
      * Notifies the listener about a change in an agenda.
      * 
      * @param event
-     *            The agenda change event.
+     *          The agenda change event.
      * @exception RemoteException
-     *                An RMI problem occurred.
+     *              An RMI problem occurred.
      */
     public void notifyAgendaChange( final AgendaChangeEvent event )
     {
@@ -285,7 +285,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         m_login = null;
       }
     }
-    logger.info( Messages.getString("WorkflowConnector.12") ); //$NON-NLS-1$
+    logger.info( Messages.getString( "WorkflowConnector.12" ) ); //$NON-NLS-1$
   }
 
   public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener )
@@ -327,7 +327,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         }
         final Activity activity = getWorkItem( id ).request( m_login, m_client );
         final WorkItem workItem = activity.getWorkItem();
-        logger.info( Messages.getString("WorkflowConnector.13") + workItem.getTask().getName() ); //$NON-NLS-1$
+        logger.info( Messages.getString( "WorkflowConnector.13" ) + workItem.getTask().getName() ); //$NON-NLS-1$
         return workItem.getParameter();
       }
       catch( final RemoteException e )
@@ -335,7 +335,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         handleRemoteException( e );
       }
     }
-    logger.info( Messages.getString("WorkflowConnector.14") + id ); //$NON-NLS-1$
+    logger.info( Messages.getString( "WorkflowConnector.14" ) + id ); //$NON-NLS-1$
     return null;
   }
 
@@ -352,11 +352,11 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         final boolean confirmed = activity.confirm( m_login, m_client, result );
         if( confirmed )
         {
-          logger.info( Messages.getString("WorkflowConnector.15") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
+          logger.info( Messages.getString( "WorkflowConnector.15" ) + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
         }
         else
         {
-          logger.info( Messages.getString("WorkflowConnector.16") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
+          logger.info( Messages.getString( "WorkflowConnector.16" ) + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
         }
       }
       catch( final RemoteException e )
@@ -368,7 +368,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         handleSecurityException( e );
       }
     }
-    logger.info( Messages.getString("WorkflowConnector.17") + id ); //$NON-NLS-1$
+    logger.info( Messages.getString( "WorkflowConnector.17" ) + id ); //$NON-NLS-1$
   }
 
   /**
@@ -382,7 +382,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
       {
         final Activity activity = getActivity( id );
         activity.cancel( m_login, m_client );
-        logger.info( Messages.getString("WorkflowConnector.18") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
+        logger.info( Messages.getString( "WorkflowConnector.18" ) + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
       }
       catch( final RemoteException e )
       {
@@ -393,7 +393,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
         handleSecurityException( e );
       }
     }
-    logger.info( Messages.getString("WorkflowConnector.19") + id ); //$NON-NLS-1$
+    logger.info( Messages.getString( "WorkflowConnector.19" ) + id ); //$NON-NLS-1$
   }
 
   private Activity getActivity( final String id )
@@ -450,13 +450,13 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
 
   private void handleRemoteException( final RemoteException e )
   {
-    logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.21"), e ); //$NON-NLS-1$
+    logger.log( Level.SEVERE, Messages.getString( "WorkflowConnector.21" ), e ); //$NON-NLS-1$
     WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
   }
 
   private void handleSecurityException( final SecurityException e )
   {
-    logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.23"), e ); //$NON-NLS-1$
+    logger.log( Level.SEVERE, Messages.getString( "WorkflowConnector.23" ), e ); //$NON-NLS-1$
     WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
   }
 
@@ -469,7 +469,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioCha
    * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.context.CaseHandlingProjectNature,
    *      de.renew.workflow.cases.Case)
    */
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Case caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final ICase caze )
   {
     m_activeCase = caze;
   }

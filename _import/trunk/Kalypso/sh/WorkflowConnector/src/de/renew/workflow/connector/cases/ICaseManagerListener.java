@@ -1,11 +1,9 @@
 package de.renew.workflow.connector.cases;
 
-import de.renew.workflow.cases.Case;
-
 /**
  * @author Stefan Kurzbach
  */
-public interface ICaseManagerListener<T extends Case>
+public interface ICaseManagerListener<T extends ICase>
 {
   public void caseAdded( final T caze );
 

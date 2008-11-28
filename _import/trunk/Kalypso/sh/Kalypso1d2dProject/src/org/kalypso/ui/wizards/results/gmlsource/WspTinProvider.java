@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results.gmlsource;
 
@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioContentProvider;
@@ -94,7 +95,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
   private final List<GMLWorkspace> m_workspace = new ArrayList<GMLWorkspace>();
 
-  private final Map<IResultMeta, Scenario> m_resultParents = new HashMap<IResultMeta, Scenario>();
+  private final Map<IResultMeta, IScenario> m_resultParents = new HashMap<IResultMeta, IScenario>();
 
   private static final Object[] NO_CHILDREN = new Object[] {};
 
@@ -183,7 +184,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       final IDocumentResultMeta wspDoc = (IDocumentResultMeta) element;
       if( wspDoc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
       {
-        final Scenario scenario = findScenario( wspDoc );
+        final IScenario scenario = findScenario( wspDoc );
         final IFolder scenarioFolder = ScenarioHelper.getFolder( scenario );
 
         final IPath fullPath = wspDoc.getFullPath();
@@ -210,7 +211,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     return null;
   }
 
-  private Scenario findScenario( final IResultMeta meta )
+  private IScenario findScenario( final IResultMeta meta )
   {
     if( m_resultParents.containsKey( meta ) )
       return m_resultParents.get( meta );
@@ -232,9 +233,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
         final Object[] scenarioChildren = m_scenarioContentProvider.getChildren( parentElement );
         children.addAll( Arrays.asList( scenarioChildren ) );
 
-        if( parentElement instanceof Scenario )
+        if( parentElement instanceof IScenario )
         {
-          final Scenario scenario = (Scenario) parentElement;
+          final IScenario scenario = (IScenario) parentElement;
 
           final IFolder scenarioFolder = ScenarioHelper.getFolder( scenario );
           final IFile resultsFile = scenarioFolder.getFile( Path.fromPortableString( "models/scenarioResultMeta.gml" ) );
@@ -343,14 +344,14 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     if( element instanceof IProject )
       return null;
 
-    if( element instanceof Scenario )
+    if( element instanceof IScenario )
     {
-      final Scenario s = (Scenario) element;
-      final Scenario parentScenario = s.getParentScenario();
+      final IScenario s = (IScenario) element;
+      final IScenario parentScenario = s.getParentScenario();
       if( parentScenario != null )
         return parentScenario;
 
-      return ScenarioHelper.getProject( s );
+      return s.getProject();
     }
 
     if( element instanceof IResultMeta )

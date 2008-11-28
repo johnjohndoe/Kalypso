@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -26,11 +26,11 @@ public class ActivateScenarioHandler extends AbstractHandler
     {
       final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
       final Object firstElement = structuredSelection.getFirstElement();
-      if( firstElement instanceof Scenario )
+      if( firstElement instanceof IScenario )
       {
-        final Scenario scenario = (Scenario) firstElement;
+        final IScenario scenario = (IScenario) firstElement;
         final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-        final ActiveWorkContext<Scenario> activeWorkContext = plugin.getActiveWorkContext();
+        final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
         try
         {
           final ITaskExecutor taskExecutor = plugin.getTaskExecutor();

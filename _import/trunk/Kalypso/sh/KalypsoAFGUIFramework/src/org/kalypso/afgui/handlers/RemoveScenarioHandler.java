@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.afgui.handlers;
 
@@ -10,8 +10,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,9 +22,8 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.ScenarioList;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.IScenarioList;
 
 import de.renew.workflow.connector.cases.ICaseManager;
 
@@ -48,10 +45,10 @@ public class RemoveScenarioHandler extends AbstractHandler
     {
       final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
       final Object firstElement = structuredSelection.getFirstElement();
-      if( firstElement instanceof Scenario )
+      if( firstElement instanceof IScenario )
       {
-        final Scenario scenario = (Scenario) firstElement;
-        final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+        final IScenario scenario = (IScenario) firstElement;
+        final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
         if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
         {
           MessageDialog.openInformation( shell, Messages.getString( "RemoveScenarioHandler.0" ), Messages.getString( "RemoveScenarioHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -59,14 +56,12 @@ public class RemoveScenarioHandler extends AbstractHandler
         }
         else
         {
-          final String projectName = ScenarioHelper.getProjectName( scenario );
-          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-          final IProject project = workspace.getRoot().getProject( projectName );
+          final IProject project = scenario.getProject();
           try
           {
             final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-            final ICaseManager<Scenario> scenarioManager = nature.getCaseManager();
-            final List<Scenario> rootScenarios = scenarioManager.getCases();
+            final ICaseManager<IScenario> scenarioManager = nature.getCaseManager();
+            final List<IScenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
               MessageDialog.openInformation( shell, Messages.getString( "RemoveScenarioHandler.2" ), Messages.getString( "RemoveScenarioHandler.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$

@@ -9,7 +9,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -20,7 +19,7 @@ import org.eclipse.ui.internal.actions.NewWizardShortcutAction;
 import org.eclipse.ui.internal.wizards.NewWizardRegistry;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
@@ -29,7 +28,6 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -47,7 +45,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     try
     {
@@ -93,8 +91,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       action.run();
 
       /* Check if project creation succeeded */
-      final ActiveWorkContext<Scenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
-      CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
+      final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+      final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
       if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) )
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)
@@ -109,7 +107,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       // final Map<String, Integer> eventNameToAnnualityMap = new HashMap<String, Integer>();
       // for( final IRunoffEvent runoffEvent : eventsToProcess )
       // eventNameToAnnualityMap.put( runoffEvent.getName(), 0 );
-      //      
+      //
 
       /* --- demo code for accessing the depth grid coverage collections --- */
 
@@ -136,7 +134,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
       riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
@@ -149,7 +147,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
   /**
    * checks, if there are events selected which have no result coverages and filters them
    */
-  private IRunoffEvent[] checkEvents( IRunoffEvent[] selectedEvents, final Shell shell )
+  private IRunoffEvent[] checkEvents( final IRunoffEvent[] selectedEvents, final Shell shell )
   {
     // decision dialog for user, if he wants to overwrite existing data
     final List<IRunoffEvent> eventList = new LinkedList<IRunoffEvent>();

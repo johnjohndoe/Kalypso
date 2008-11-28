@@ -1,9 +1,7 @@
 package de.renew.workflow.connector.context;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +18,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.ICase;
 import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
@@ -30,7 +28,7 @@ import de.renew.workflow.connector.cases.ICaseManager;
  * 
  * @author Stefan Kurzbach
  */
-public class ActiveWorkContext<T extends Case> implements IResourceChangeListener
+public class ActiveWorkContext<T extends ICase> implements IResourceChangeListener
 {
   private ICaseManager<T> m_caseManager;
 
@@ -114,7 +112,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     if( currentCase == null && caze == null )
       return;
 
-    if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) )
+    if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) && currentCase.getProject().equals( caze.getProject() ) )
       return;
 
     // Set current project to the cases project
@@ -125,8 +123,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       else
       {
         final URI uri = new URI( caze.getURI() );
-        final String projectName = URLDecoder.decode( uri.getAuthority(), "UTF-8" );
-        final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+        final IProject project = caze.getProject();
         if( project.exists() )
         {
           // open a closed project, should we do this?
@@ -135,15 +132,11 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
         }
         else
         {
-          throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + projectName + " für den Case " + caze.getName() + " existiert nicht." ) );
+          throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
         }
       }
     }
     catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }

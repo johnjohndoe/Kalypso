@@ -65,7 +65,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.extension.INewProjectWizard;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -248,7 +248,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
           if( nature == null )
             return;
 
-          final Scenario caze = nature.getCaseManager().getCases().get( 0 );
+          final IScenario caze = nature.getCaseManager().getCases().get( 0 );
 
           if( m_activateScenario )
             KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );

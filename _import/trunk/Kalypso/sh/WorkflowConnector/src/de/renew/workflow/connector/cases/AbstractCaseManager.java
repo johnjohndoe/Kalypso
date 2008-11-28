@@ -58,27 +58,23 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 
-import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
-public abstract class AbstractCaseManager<T extends Case> implements ICaseManager<T>
+public abstract class AbstractCaseManager<T extends ICase> implements ICaseManager<T>
 {
   public static final String METADATA_FOLDER = ".metadata";
 
   public static final String METADATA_FILENAME = "cases.xml";
 
-  public static final String CASE_BASE_URI = "case://${project}/${casePath}";
-
   private final JAXBContext m_jc;
 
   private final List<ICaseManagerListener<T>> m_listeners = new ArrayList<ICaseManagerListener<T>>();
 
-  private CaseList m_cases;
+  private ICaseList m_cases;
 
   private T m_currentCase;
 
@@ -90,12 +86,12 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
    * Initializes the {@link ICaseManager} on the given project
    * 
    * @param project
-   *            the project, must not be <code>null</code>
+   *          the project, must not be <code>null</code>
    * @exception CoreException
-   *                if this method fails. Reasons include:
-   *                <ul>
-   *                <li> The metadata folder is not accessible.</li>
-   *                <li> There is a problem loading the database.</li>
+   *              if this method fails. Reasons include:
+   *              <ul>
+   *              <li>The metadata folder is not accessible.</li>
+   *              <li>There is a problem loading the database.</li>
    */
   public AbstractCaseManager( final IProject project, final JAXBContext jc ) throws CoreException
   {
@@ -125,7 +121,8 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
   {
     if( !m_metaDataFile.exists() )
     {
-      m_cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
+      final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
+      m_cases = new CaseListHandler( cases, m_project );
       createCase( "Basis" );
     }
     else
@@ -133,7 +130,8 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
       try
       {
         final URL url = m_metaDataFile.getRawLocationURI().toURL();
-        m_cases = (CaseList) m_jc.createUnmarshaller().unmarshal( url );
+        final CaseList cases = (CaseList) m_jc.createUnmarshaller().unmarshal( url );
+        m_cases = new CaseListHandler( cases, m_project );
       }
       catch( final Throwable e )
       {
@@ -147,14 +145,14 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
 
   public abstract void removeCase( final T caze, IProgressMonitor monitor ) throws CoreException;
 
-  protected final void internalAddCase( final Case caze )
+  protected final void internalAddCase( final ICase caze )
   {
-    m_cases.getCases().add( caze );
+    m_cases.getCaseList().getCases().add( caze.getCase() );
   }
 
-  protected final void internalRemoveCase( final Case caze )
+  protected final void internalRemoveCase( final ICase caze )
   {
-    m_cases.getCases().remove( caze );
+    m_cases.getCaseList().getCases().remove( caze.getCase() );
   }
 
   /**
@@ -176,13 +174,12 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
   /**
    * @see de.renew.workflow.connector.context.ICaseManager#getCases()
    */
-  public List<Case> internalGetCases( )
+  public List<ICase> internalGetCases( )
   {
     return m_cases.getCases();
   }
 
-  public void persist( @SuppressWarnings("unused")
-  final IProgressMonitor monitor )
+  public void persist( @SuppressWarnings("unused") final IProgressMonitor monitor )
   {
     // TODO: comment, why in a job?!
     final Job job = new Job( "" )
@@ -192,14 +189,13 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
        */
       @SuppressWarnings("synthetic-access")
       @Override
-      protected IStatus run( @SuppressWarnings("hiding")
-      IProgressMonitor monitor )
+      protected IStatus run( @SuppressWarnings("hiding") final IProgressMonitor monitor )
       {
         try
         {
           monitor.beginTask( "Szenarien speichern.", 5000 );
           final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          m_jc.createMarshaller().marshal( m_cases, bos );
+          m_jc.createMarshaller().marshal( m_cases.getCaseList(), bos );
           bos.close();
           monitor.worked( 2000 );
           final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );

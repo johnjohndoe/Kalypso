@@ -13,7 +13,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.base.Workflow;
@@ -39,14 +39,14 @@ public class WorkflowView extends ViewPart
 
   private WorkflowControl m_workflowControl;
 
-  protected ActiveWorkContext<Scenario> m_activeWorkContext;
+  protected ActiveWorkContext<IScenario> m_activeWorkContext;
 
-  private final IActiveScenarioChangeListener<Scenario> m_contextListener = new IActiveScenarioChangeListener<Scenario>()
+  private final IActiveScenarioChangeListener<IScenario> m_contextListener = new IActiveScenarioChangeListener<IScenario>()
   {
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
     {
       handleScenarioChanged( newProject, scenario );
     }
@@ -62,7 +62,7 @@ public class WorkflowView extends ViewPart
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
   {
     final String scenarioPath = ScenarioHelper.getScenarioPath( scenario );
     final String projectName = newProject == null ? null : newProject.getProject().getName();
