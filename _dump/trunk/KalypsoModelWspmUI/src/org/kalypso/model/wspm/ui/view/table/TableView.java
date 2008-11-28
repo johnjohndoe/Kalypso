@@ -79,10 +79,8 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -102,16 +100,16 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class TableView extends ViewPart implements IAdapterEater<IProfilProvider2>, IProfilProviderListener, ITupleResultViewerProvider
+public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
 {
   @SuppressWarnings("unchecked")
-  private final AdapterPartListener<IProfilProvider2> m_profilProviderListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   protected Form m_form;
 
   private FormToolkit m_toolkit;
 
-  private IProfilProvider2 m_provider;
+  private IProfilProvider m_provider;
 
   protected IProfil m_profile;
 
@@ -348,18 +346,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   }
 
-  /** Must be called in the swt thread */
-  protected void updatePartNameAndControl( final ProfilchartEditor editor )
-  {
-    setPartName( editor.getPartName() );
-    if( !m_form.isDisposed() ) // control may have been disposed in the meantime
-      updateControl();
-  }
-
   /**
    * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
    */
-  public void setAdapter( final IWorkbenchPart part, final IProfilProvider2 provider )
+  public void setAdapter( final IWorkbenchPart part, final IProfilProvider provider )
   {
     if( (m_provider == provider) && (provider != null) )
       return;
@@ -371,9 +361,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_provider != null )
       m_provider.addProfilProviderListener( this );
 
-    final ProfilViewData viewData = m_provider == null ? null : m_provider.getViewData();
     final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
-    onProfilProviderChanged( m_provider, m_profile, newProfile, null, viewData );
+    onProfilProviderChanged( m_provider, m_profile, newProfile );
   }
 
   /**
@@ -382,7 +371,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
    *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
-  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
+  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
