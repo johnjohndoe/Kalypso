@@ -45,8 +45,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -71,6 +73,19 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 public class VegetationTheme extends AbstractProfilTheme
 
 {
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    if( hint.isActivePointChanged() || hint.isPointValuesChanged() )
+    {
+      fireLayerContentChanged();
+    }
+  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#createLegendEntries()
@@ -167,9 +182,9 @@ public class VegetationTheme extends AbstractProfilTheme
     new ProfilOperationJob( operation ).schedule();
   }
 
-  public VegetationTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
+  public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super(profil, IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
+    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
     setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) );
   }
 
@@ -177,7 +192,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
   @Override
-  public IDataRange<Number> getTargetRange()
+  public IDataRange<Number> getTargetRange( )
   {
     // don't calculate axis size and ticks
     return null;
@@ -211,9 +226,7 @@ public class VegetationTheme extends AbstractProfilTheme
   protected void drawIcon( final GC gc, final Rectangle clipping )
   {
     getLineStyle().apply( gc );
-    if( clipping.width < 12 || clipping.height < 12 )
-      gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
-    else
+    if( clipping.width > 12 || clipping.height > 12 )
     {
       final int size = Math.min( Math.min( clipping.width, clipping.height ), 20 );
       final int left = clipping.x - size / 2;
@@ -225,6 +238,8 @@ public class VegetationTheme extends AbstractProfilTheme
       gc.drawLine( clipping.x, bottom, clipping.x, clipping.y );
       gc.drawOval( left + 2, top, right - left - 4, bottom - clipping.y + 4 );
     }
+    else
+      gc.drawLine( clipping.x, clipping.y - 12, clipping.x, clipping.y );
   }
 
   final boolean segmenthasVegetation( final IRecord point )
