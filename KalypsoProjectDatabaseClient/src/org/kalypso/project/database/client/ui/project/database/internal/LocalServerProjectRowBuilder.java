@@ -40,18 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database.internal;
 
-import java.util.Properties;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
@@ -106,21 +101,7 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
       lnk.setToolTipText( String.format( "Öffne Projekt: %s", getHandler().getName() ) );
       lnk.setText( getHandler().getName() );
 
-      lnk.addHyperlinkListener( new HyperlinkAdapter()
-      {
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( final HyperlinkEvent e )
-        {
-          final Properties properties = new Properties();
-          properties.setProperty( "project", getHandler().getProject().getName() );
-
-          final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
-          action.run( null, properties );
-        }
-      } );
+      addProjectOpenListener( lnk );
 
       // info
       getRemoteInfoLink( body, toolkit, m_isExpert );

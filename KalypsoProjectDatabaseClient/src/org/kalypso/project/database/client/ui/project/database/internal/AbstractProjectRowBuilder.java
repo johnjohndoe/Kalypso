@@ -43,9 +43,12 @@ package org.kalypso.project.database.client.ui.project.database.internal;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -59,6 +62,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -91,6 +96,34 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
     m_handler = handler;
     m_locker = locker;
 
+  }
+
+  protected void addProjectOpenListener( final ImageHyperlink lnk )
+  {
+    lnk.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        new UIJob( "" )
+        {
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor monitor )
+          {
+            final Properties properties = new Properties();
+            properties.setProperty( "project", getHandler().getProject().getName() );
+
+            final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
+            action.run( null, properties );
+
+            return Status.OK_STATUS;
+          }
+        }.schedule();
+      }
+    } );
   }
 
   protected void getSpacer( final Composite parent, final FormToolkit toolkit )

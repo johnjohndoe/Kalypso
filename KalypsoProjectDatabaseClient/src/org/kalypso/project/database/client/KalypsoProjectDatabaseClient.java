@@ -21,7 +21,7 @@ public class KalypsoProjectDatabaseClient extends Plugin
 
   private static IProjectDatabase m_service = null;
 
-  public static IProjectDatabase getService( ) throws WebServiceException
+  public static synchronized IProjectDatabase getService( ) throws WebServiceException
   {
     if( m_service == null )
     {
