@@ -68,6 +68,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 {
   private String m_wqString = null;
   private IWorkbenchPart m_part = null;
+  private String m_obsName;
 
   /**
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -88,12 +89,12 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       {
         final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( m_wqString ) ) );
 
-        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), "WQ-Beziehung", set );
+        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), m_obsName, set );
         dlg.open();
       }
       catch( final Exception e )
       {
-        // TODO message?
+        e.printStackTrace();
       }
     }
   }
@@ -119,6 +120,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
         {
           final URL url = ResourceUtilities.createURL( file );
           final IObservation obs = ZmlFactory.parseXML( url, "" );
+          m_obsName = obs.getName();
           m_wqString = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
           
           action.setEnabled( m_wqString != null );
