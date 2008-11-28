@@ -45,26 +45,28 @@ import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class NumberTableCellRenderer extends DefaultTableCellRenderer
 {
   private final NumberFormat m_nf = NumberFormat.getInstance();
 
-  public NumberTableCellRenderer(final int maximumFractionDigits  )
+  public NumberTableCellRenderer( final int maximumFractionDigits )
   {
     m_nf.setMaximumFractionDigits( maximumFractionDigits );
   }
-  
+
   /**
    * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
    *      boolean, boolean, int, int)
    */
-  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus,
-      final int row, final int column )
+  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
     final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-    
+
+    label.setHorizontalAlignment( SwingConstants.RIGHT );
+
     if( value != null )
       label.setText( m_nf.format( value ) );
 
