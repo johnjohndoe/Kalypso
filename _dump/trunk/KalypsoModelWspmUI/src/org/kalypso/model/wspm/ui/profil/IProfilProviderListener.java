@@ -41,12 +41,11 @@
 package org.kalypso.model.wspm.ui.profil;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
 /**
  * @author Gernot Belger
  */
 public interface IProfilProviderListener
 {
-  public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData );
+  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile);
 }
