@@ -624,7 +624,7 @@ public class WiskiTimeserie implements IObservation
         + " type= " + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= "
         + tsinfo.getWiskiIdAsString() );
 
-    final GetRatingTables call = new GetRatingTables( Long.valueOf( tsinfo.getWiskiStationId() ), to, type, from );
+    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiStationId(), to, type, from );
     try
     {
       rep.executeWiskiCall( call );
@@ -683,7 +683,7 @@ public class WiskiTimeserie implements IObservation
       KiWWException, RepositoryException
   {
     final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
-    final GetStationDetailList call = new GetStationDetailList( Long.valueOf( m_tsinfo.getWiskiStationId() ) );
+    final GetStationDetailList call = new GetStationDetailList( m_tsinfo.getWiskiStationId() );
     rep.executeWiskiCall( call );
 
     final HashMap details = call.getDetails();

@@ -37,9 +37,9 @@ public class GetRatingTables implements IWiskiCall
 
   private final String m_wiskiObjectType;
 
-  private WQTable m_wqTable;
-
   private final Date m_wqTableValidity;
+
+  private LinkedList m_tables;
 
   /**
    * Constructor
@@ -66,12 +66,7 @@ public class GetRatingTables implements IWiskiCall
     final HashMap tables = wiski.getRatingTables( userData, m_wiskiObjectType, new Long[]
     { m_id }, new Timestamp( m_validity.getTime() ) );
 
-    final LinkedList list = (LinkedList)tables.get( m_id );
-    if( list.size() > 0 )
-    {
-      final HashMap table = (HashMap)list.getFirst();
-      m_wqTable = convertTable( table, m_wqTableValidity );
-    }
+    m_tables = (LinkedList)tables.get( m_id );
   }
 
   /**
@@ -80,7 +75,8 @@ public class GetRatingTables implements IWiskiCall
    * @throws IllegalStateException
    * @throws IllegalArgumentException
    */
-  private static WQTable convertTable( final HashMap table, final Date wqTableValidity ) throws IllegalStateException, IllegalArgumentException
+  private static WQTable convertTable( final HashMap table, final Date wqTableValidity ) throws IllegalStateException,
+      IllegalArgumentException
   {
     final Number[] stage = (Number[])( (List)table.get( "curve_table_stage" ) ).toArray( new Number[0] );
     final Number[] flow = (Number[])( (List)table.get( "curve_table_flow" ) ).toArray( new Number[0] );
@@ -136,6 +132,10 @@ public class GetRatingTables implements IWiskiCall
   /** Returns the fetched wqTable, or null if none was found. */
   public WQTable getTable()
   {
-    return m_wqTable;
+    if( m_tables.size() == 0 )
+      return null;
+
+    final HashMap table = (HashMap)m_tables.getFirst();
+    return convertTable( table, m_wqTableValidity );
   }
 }

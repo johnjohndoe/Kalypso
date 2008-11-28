@@ -186,7 +186,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the internal id which is used within wiski. This id should not be used "outside of the program code"
    */
-  Long getWiskiId()
+  public Long getWiskiId()
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id", "-1" ) );
   }
@@ -194,7 +194,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the internal id of the parameter
    */
-  Long getWiskiParameterId()
+  public Long getWiskiParameterId()
   {
     return Long.valueOf( m_map.getProperty( "stationparameter_id", "-1" ) );
   }
@@ -221,9 +221,13 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return wiski internal station id
    */
-  String getWiskiStationId()
+  public Long getWiskiStationId()
   {
-    return m_map.getProperty( "station_id", "<?>" );
+    String stationIdString = m_map.getProperty( "station_id", null );
+    if( stationIdString == null )
+      return null;
+    
+    return Long.valueOf(stationIdString);
   }
 
   public boolean isActive()
