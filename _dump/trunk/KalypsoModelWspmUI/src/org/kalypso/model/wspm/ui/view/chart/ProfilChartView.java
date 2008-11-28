@@ -42,14 +42,11 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IMemento;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
@@ -71,7 +68,6 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -96,55 +92,43 @@ public class ProfilChartView implements IChartPart, IProfilListener
 
   public static final String ID_AXIS_RIGHT = "right";//$NON-NLS-1$
 
-  private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
-
-  private static final String MEM_LAYER_CLD = "layerChilds"; //$NON-NLS-1$
-
-  private static final String MEM_LAYER_DAT = "layerData"; //$NON-NLS-1$
-
-  private static final String MEM_LAYER_POS = "layerPosition"; //$NON-NLS-1$
-
-  private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
-
   private AxisDragHandlerDelegate m_axisDragHandler;
 
   private ChartComposite m_chartComposite = null;
 
   private IProfilLayerProvider m_layerProvider;
 
+  private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
+
   private ICoordinateMapper m_mapper;
 
   private PlotDragHandlerDelegate m_plotDragHandler;
 
-// private IMemento m_memento = null;
-
   private IProfil m_profile;
-
-  private final List<IProfilProviderListener> m_listener = new ArrayList<IProfilProviderListener>();
 
   private IStationResult[] m_results;
 
-// protected final Runnable m_updateControlRunnable = new Runnable()
-// {
-// public void run( )
-// {
-// updateControl();
-// }
-// };
+  protected final void activeLayerChanged( final IChartLayer layer )
+  {
+// if layer is deactivated do nothing
+    if( !layer.isActive() )
+      return;
+    // otherwise deactivate all others
+    for( final IChartLayer l : m_chartComposite.getChartModel().getLayerManager().getLayers() )
+    {
+      if( l != layer )
+        l.setActive( false );
+    }
+  }
 
-// public ProfilChartView( final Composite parent )
-// {
-// createControl( parent, parent.getStyle() );
-// }
-
-// public ProfilChartView()
-// {
-// super();
-// m_results = results == null ? new IStationResult[0] : results;
-//
-// if( getProfil() != null )
-// getProfil().addProfilListener( this );
-// }
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#addProfilChartViewProviderListener(org.kalypso
+   *      .model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
+   */
+  public void addProfilProviderListener( final IProfilProviderListener l )
+  {
+    m_listener.add( l );
+  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite,
@@ -212,65 +196,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     return m_chartComposite;
   }
 
-  protected final void activeLayerChanged( final IChartLayer layer )
-  {
-// if layer is deactivated do nothing
-    if( !layer.isActive() )
-      return;
-    // otherwise deactivate all others
-    for( final IChartLayer l : m_chartComposite.getChartModel().getLayerManager().getLayers() )
-    {
-      if( l != layer )
-        l.setActive( false );
-    }
-  }
-
-//  @SuppressWarnings("boxing")//$NON-NLS-1$
-// protected void createLayer( )
-// {
-// final ILayerManager lm = m_chartComposite.getChartModel().getLayerManager();
-// IChartLayer oldActiveLayer = null;
-//
-// for( final IChartLayer layer : lm.getLayers() )
-// {
-// if( layer.isActive() )
-// oldActiveLayer = layer;
-// lm.removeLayer( layer );
-// }
-//
-// if( m_profile != null )
-// {
-// if( m_layerProvider == null )
-// {
-// m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
-//
-// if( m_layerProvider == null )
-// // TODO: display userinformation
-// return;
-// }
-// // call provider
-// final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
-//
-// IChartLayer activeLayer = null;
-// for( final String layerId : requieredLayer )
-// {
-// final IProfilChartLayer layer = m_layerProvider.createLayer( layerId, this );
-// if( layer != null )
-// {
-// if( oldActiveLayer != null && layer.getId().equals( oldActiveLayer.getId() ) )
-// {
-// activeLayer = layer;
-// }
-// lm.addLayer( layer );
-// }
-// }
-// if( activeLayer == null )
-// lm.getLayers()[0].setActive( true );
-// else
-// activeLayer.setActive( true );
-// }
-// }
-
   public void dispose( )
   {
     if( (m_chartComposite != null) && !m_chartComposite.isDisposed() )
@@ -278,6 +203,12 @@ public class ProfilChartView implements IChartPart, IProfilListener
     m_axisDragHandler.dispose();
     m_plotDragHandler.dispose();
 
+  }
+
+  private void fireProfilChanged( final IProfil old )
+  {
+    for( final IProfilProviderListener l : m_listener )
+      l.onProfilProviderChanged( null, old, m_profile );
   }
 
   protected final IChartLayer getActiveLayer( ILayerManager mngr )
@@ -350,12 +281,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     return m_mapper;
   }
 
-  private IMemento getOrCreate( final IMemento memento, final String id )
-  {
-    final IMemento childNode = memento.getChild( id );
-    return childNode == null ? memento.createChild( id ) : childNode;
-  }
-
   /**
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
@@ -421,12 +346,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
     } );
   }
 
-  private void fireProfilChanged( final IProfil old )
-  {
-    for( final IProfilProviderListener l : m_listener )
-      l.onProfilProviderChanged( null, old, m_profile, null, null );
-  }
-
   protected void redrawChart( )
   {
     final ChartComposite chart = m_chartComposite;
@@ -441,100 +360,13 @@ public class ProfilChartView implements IChartPart, IProfilListener
       } );
   }
 
-  public void restoreState( final IMemento memento )
-  {
-    if( m_chartComposite == null )
-      return;
-    final ILayerManager manager = m_chartComposite.getChartModel().getLayerManager();
-    restoreState( memento, manager );
-    if( getActiveLayer( manager ) == null )
-      for( final IChartLayer layer : manager.getLayers() )
-      {
-        if( layer.isVisible() )
-        {
-          layer.setActive( true );
-          return;
-        }
-      }
-  }
-
-  private void restoreState( final IMemento memento, final ILayerManager mngr )
-  {
-    final SortedMap<Integer, String> sorted = new TreeMap<Integer, String>();
-    int i = 0;
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      String id = layer.getId().replace( '#', '_' );//$NON-NLS-1$
-      id = id.replace( ' ', '_' );//$NON-NLS-1$
-      final IMemento layermem = memento.getChild( id );
-      if( layermem != null )
-      {
-        final Boolean visible = layermem.getBoolean( MEM_LAYER_VIS );
-        if( visible != null )
-          layer.setVisible( visible );
-        final Boolean active = layermem.getBoolean( MEM_LAYER_ACT );
-        if( active != null )
-        {
-          layer.setActive( active );
-        }
-        final String data = layermem.getString( MEM_LAYER_DAT );
-        if( data != null )
-          layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data );
-        final Integer position = layermem.getInteger( MEM_LAYER_POS );
-        if( position != null )
-          sorted.put( position * 1000 + i++, layer.getId() );
-        final IMemento childMem = layermem.getChild( MEM_LAYER_CLD );
-        if( childMem != null && layer instanceof IExpandableChartLayer )
-          restoreState( childMem, ((IExpandableChartLayer) layer).getLayerManager() );
-      }
-    }
-    int pos = 0;
-    for( final String layerId : sorted.values() )
-    {
-      mngr.moveLayerToPosition( mngr.getLayerById( layerId ), pos++ );
-    }
-  }
-
   /**
-   * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.
+   *      kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
    */
-
-  public void saveState( final IMemento memento )
+  public void removeProfilProviderListener( final IProfilProviderListener l )
   {
-    if( m_chartComposite == null )
-      return;
-    saveState( memento, m_chartComposite.getChartModel().getLayerManager() );
-  }
-
-  private void saveState( final IMemento memento, final ILayerManager mngr )
-  {
-    int pos = 0;
-    for( final IChartLayer layer : mngr.getLayers() )
-      if( layer != null )
-      {
-        /**
-         * you mustn't use invalid characters
-         * 
-         * @see com.sun.org.apache.xerces.internal.util.CoreDocumentImpl#isXMLName(String)
-         */
-        String sibling_ID = layer.getId().replace( '#', '_' );//$NON-NLS-1$
-        sibling_ID = sibling_ID.replace( ' ', '_' );//$NON-NLS-1$
-
-        final IMemento layermem = getOrCreate( memento, sibling_ID );
-        layermem.putBoolean( MEM_LAYER_VIS, layer.isVisible() ); //$NON-NLS-1$
-        layermem.putBoolean( MEM_LAYER_ACT, layer.isActive() ); //$NON-NLS-1$
-        layermem.putInteger( MEM_LAYER_POS, pos++ ); //$NON-NLS-1$
-        final Object data = layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
-        if( data != null )
-        {
-          layermem.putString( MEM_LAYER_DAT, data.toString() );
-        }
-        if( layer instanceof IExpandableChartLayer )
-        {
-          final IMemento childmem = getOrCreate( layermem, MEM_LAYER_CLD );
-          saveState( childmem, ((IExpandableChartLayer) layer).getLayerManager() );
-        }
-      }
+    m_listener.remove( l );
   }
 
   public void setLayerProvider( IProfilLayerProvider layerProvider )
@@ -565,24 +397,6 @@ public class ProfilChartView implements IChartPart, IProfilListener
       updateLayer();
     }
     fireProfilChanged( old );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#addProfilChartViewProviderListener(org.kalypso
-   *      .model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
-   */
-  public void addProfilProviderListener( final IProfilProviderListener l )
-  {
-    m_listener.add( l );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#removeProfilChartViewProviderListener(org.
-   *      kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener)
-   */
-  public void removeProfilProviderListener( final IProfilProviderListener l )
-  {
-    m_listener.remove( l );
   }
 
   public void updateLayer( )
@@ -657,55 +471,4 @@ public class ProfilChartView implements IChartPart, IProfilListener
     }
   }
 
-// private void fireOnProfilChartViewChanged( )
-// {
-// for( final IProfilChartViewProviderListener l : m_listener )
-// l.onProfilChartViewChanged( getProfilChartView() );
-// }
-
-// public void updateControl( )
-// {
-//
-//    
-// if( m_chart == null || m_chart.isDisposed() )
-// return;
-//
-//
-// if( m_profile == null )
-// {
-// final Label label = new Label( m_chart, SWT.CENTER );
-// label.setText( Messages.AbstractProfilPart_0 );
-// final GridData gridData = new GridData();
-// gridData.grabExcessHorizontalSpace = true;
-// gridData.horizontalAlignment = SWT.FILL;
-// gridData.horizontalIndent = 10;
-// gridData.grabExcessVerticalSpace = true;
-// gridData.verticalAlignment = SWT.CENTER;
-// gridData.verticalIndent = 10;
-//
-// label.setLayoutData( gridData );
-// }
-// else
-// {
-// // final ArrayList<String> kommentare = (ArrayList<String>) m_pem.getProfil().getProperty(
-// // PROFIL_PROPERTY.KOMMENTAR );
-//
-// // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
-//      
-//     
-//      
-//      
-// m_chart = new ProfilChartView( m_profile );// , m_profilColorRegistry );
-// m_chartview.setLayerProvider( m_layerProvider );
-// m_chartview.createControl( m_control, SWT.BORDER );
-// m_chartview.restoreState( m_viewdata.getChartMemento() );
-//
-// // final Control chartControl = m_chartview.getControl();
-// // chartControl.setMenu( m_menuManager.createContextMenu( chartControl ) );
-// }
-//
-// m_control.layout();
-//
-// fireOnProfilChartViewChanged();
-// }
 }

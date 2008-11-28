@@ -57,7 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
+import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -65,7 +65,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 /**
  * @author kimwerner
  */
-public class ChartView extends AbstractProfilViewPart2 implements IChartPart, IProfilListener
+public class ChartView extends AbstractProfilViewPart implements IChartPart, IProfilListener
 {
 
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
@@ -123,7 +123,7 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart, IP
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2#dispose()
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilViewPart#dispose()
    */
   @Override
   public void dispose( )
@@ -164,11 +164,7 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart, IP
     return m_chart.getChartComposite();
   }
 
-  @Override
-  protected void saveState( )
-  {
-    //m_chart.saveState( getProfilViewData().getChartMemento() );
-  }
+ 
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
