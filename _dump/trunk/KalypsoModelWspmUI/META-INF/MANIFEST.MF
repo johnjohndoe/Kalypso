@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.kalypso.model.wspm.ui; singleton:=true
+Bundle-SymbolicName: org.kalypso.model.wspm.ui;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypso.sourceforge.net
@@ -19,8 +19,6 @@ Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
  org.kalypso.model.wspm.ui.adapter,
- org.kalypso.model.wspm.ui.editor,
- org.kalypso.model.wspm.ui.editor.actions,
  org.kalypso.model.wspm.ui.featureview,
  org.kalypso.model.wspm.ui.preferences,
  org.kalypso.model.wspm.ui.product,
