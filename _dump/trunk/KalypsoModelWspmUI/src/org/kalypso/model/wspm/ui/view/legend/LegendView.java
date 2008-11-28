@@ -67,10 +67,9 @@ import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.LayerView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -255,12 +254,12 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.IProfilProvider2,
+   * @see org.kalypso.model.wspm.ui.profil.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.IProfilProvider,
    *      org.kalypso.model.wspm.core.profil.IProfil, org.kalypso.model.wspm.core.profil.IProfil,
    *      org.kalypso.model.wspm.ui.view.ProfilViewData, org.kalypso.model.wspm.ui.view.ProfilViewData)
    */
   @Override
-  public void onProfilProviderChanged( IProfilProvider2 provider, IProfil oldProfile, IProfil newProfile, ProfilViewData oldViewData, ProfilViewData newViewData )
+  public void onProfilProviderChanged( IProfilProvider provider, IProfil oldProfile, IProfil newProfile )
   {
     updateChartLegend();
 
@@ -297,7 +296,6 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
           break;
         }
       }
-      // m_chartlegend.getTreeViewer().refresh();
       m_composite.layout();
     }
 
