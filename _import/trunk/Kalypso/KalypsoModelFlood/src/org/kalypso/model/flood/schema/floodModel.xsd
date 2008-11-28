@@ -75,6 +75,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
+					<element name="markedForProcessing" type="boolean" default="false" minOccurs="0" maxOccurs="1" />
 					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">

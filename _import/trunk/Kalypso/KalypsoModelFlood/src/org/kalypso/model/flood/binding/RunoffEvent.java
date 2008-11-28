@@ -106,4 +106,23 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   {
     getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#isMarkedForProcess()
+   */
+  @Override
+  public boolean isMarkedForProcessing( )
+  {
+    final Boolean value = (Boolean) getFeature().getProperty( QNAME_PROP_MARKEDFORPROCESSING );
+    return value == null ? false : value.booleanValue();
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setMarkedForProcess(boolean)
+   */
+  @Override
+  public void setMarkedForProcessing( final boolean value )
+  {
+    getFeature().setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
+  }
 }

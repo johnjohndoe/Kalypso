@@ -62,6 +62,8 @@ public interface IRunoffEvent extends IFeatureWrapper2
 
   public final static QName QNAME_PROP_DATAPATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "dataPath" );
 
+  public final static QName QNAME_PROP_MARKEDFORPROCESSING = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "markedForProcessing" );
+
   public ICoverageCollection getResultCoverages( );
 
   public void setResultCoverages( final ICoverageCollection collection );
@@ -71,4 +73,8 @@ public interface IRunoffEvent extends IFeatureWrapper2
   public IPath getDataPath( );
 
   public void setDataPath( final IPath path );
+
+  public boolean isMarkedForProcessing( );
+
+  public void setMarkedForProcessing( final boolean value );
 }

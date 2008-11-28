@@ -7,6 +7,14 @@
             class="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
             id="org.kalypso.model.flood.schema.UrlCatalogModelFlood"/>
    </extension>
+    <extension
+          point="org.kalypso.simulation.core.simulation">
+       <simulation
+            catalogClass="org.kalypso.model.flood.schema.UrlCatalogModelFlood"
+             simulationClass="org.kalypso.model.flood.core.SimulationKalypsoFlood"
+             typeID="KalypsoFloodSimulation">
+       </simulation>
+    </extension>
    <extension
          point="org.kalypso.core.catalogContribution">
       <catalogContribution

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.handlers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,9 +48,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -61,17 +63,16 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
-import org.kalypso.model.flood.core.FloodModelProcess;
+import org.kalypso.model.flood.core.SimulationKalypsoFlood;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -81,6 +82,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Gernot Belger
  * @author Thomas Jung
+ * @author Dejan Antanaskovic
  */
 public class ProcessFloodModelHandler extends AbstractHandler implements IHandler
 {
@@ -95,6 +97,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFloodModel model = dataProvider.getModel( IFloodModel.class );
       final IFeatureWrapperCollection<IRunoffEvent> events = model.getEvents();
@@ -146,25 +149,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IMapModell mapModell = mapPanel.getMapModell();
       final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
 
-      final IStatus processResult = runCalculation( model, eventsToProcess, dataProvider, wspTheme );
-
-      if( processResult.isOK() )
-        MessageDialog.openInformation( shell, "Flood-Modeller", "Flieﬂtiefen wurden erfolgreich erzeugt." );
-      else
-        ErrorDialog.openError( shell, "Flood-Modeller", "Flieﬂtiefen erzeugen", processResult );
-
-      if( processResult.isOK() )
-      {
-        // handle results if job is successful
-
-        // add all themes to map
-        for( final IRunoffEvent runoffEvent : eventsToProcess )
-        {
-          final int index = FloodModelHelper.findWspTheme( runoffEvent, wspTheme );
-          FloodModelHelper.addResultTheme( runoffEvent, wspTheme, index );
-        }
-      }
-
+      runCalculation( shell, scenarioFolder, model, eventsToProcess, dataProvider, wspTheme );
       return null;
     }
     catch( final Exception e )
@@ -175,41 +160,106 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     }
   }
 
-  private IStatus runCalculation( final IFloodModel model, final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider, final AbstractCascadingLayerTheme wspTheme )
+  private void runCalculation( final Shell shell, final IFolder scenarioFolder, final IFloodModel model, final IRunoffEvent[] eventsToProcess, final SzenarioDataProvider dataProvider, final AbstractCascadingLayerTheme wspTheme )
   {
     if( eventsToProcess.length == 0 )
-      return StatusUtilities.createInfoStatus( "Keine Ereignisse prozessiert." );
-
+    {
+      MessageDialog.openInformation( shell, "Flood-Modeller", "Keine Ereignisse prozessiert." );
+      return;
+    }
     // remove themes
     // TODO: only remove event coverages
     FloodModelHelper.removeWspTheme( wspTheme );
 
-    final FloodModelProcess process = new FloodModelProcess( model, eventsToProcess );
-
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    for( final IRunoffEvent runoffEvent : model.getEvents() )
+      runoffEvent.setMarkedForProcessing( false );
+    for( final IRunoffEvent runoffEvent : eventsToProcess )
+      runoffEvent.setMarkedForProcessing( true );
+    // REMARK: post an empty command in order to make the pool dirty, else save does not work.
+    final ICommand command = new EmptyCommand( "Feature Changed", false );
+    try
     {
-      public IStatus execute( IProgressMonitor monitor ) throws InvocationTargetException
+      dataProvider.postCommand( IFloodModel.class, command );
+      dataProvider.saveModel( IFloodModel.class, new NullProgressMonitor() );
+    }
+    catch( Exception e1 )
+    {
+      ErrorDialog.openError( shell, "Flood-Modeller", "Problem with saving the model.", Status.CANCEL_STATUS );
+      return;
+    }
+
+    final Job job = new Job( "Berechne..." )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
       {
+        final IStatus status;
         try
         {
-          final IStatus result = process.process( monitor );
-
-          // REMARK: post an empty command in order to make the pool dirty, else save does not work.
-          ICommand command = new EmptyCommand( "Feature Changed", false );
-          dataProvider.postCommand( IFloodModel.class, command );
-
-          dataProvider.saveModel( IFloodModel.class, monitor );
-
-          return result;
+          status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoFlood.getModeldata() );
+          if( status.isOK() )
+          {
+            // handle results if job is successful
+            // add all themes to map
+            for( final IRunoffEvent runoffEvent : eventsToProcess )
+            {
+              final int index = FloodModelHelper.findWspTheme( runoffEvent, wspTheme );
+              try
+              {
+                FloodModelHelper.addResultTheme( runoffEvent, wspTheme, index );
+              }
+              catch( final Exception e )
+              {
+                showErrorDialog( shell, "Could not create map layers: " + e.getLocalizedMessage() );
+                return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
+              }
+            }
+            showInfoDialog( shell, "Flieﬂtiefen wurden erfolgreich erzeugt." );
+          }
+          showErrorDialog( shell, "Flieﬂtiefen erzeugen", status );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-          throw new InvocationTargetException( e );
+          return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
         }
+        return status;
       }
     };
+    job.setUser( true );
+    job.schedule( 50 );
+  }
 
-    return ProgressUtilities.busyCursorWhile( operation, "Fehler beim Berechnen der Flieﬂtiefen" );
+  protected static void showInfoDialog( final Shell shell, final String message )
+  {
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        MessageDialog.openInformation( shell, "Flood-Modeller info", message );
+      }
+    } );
+  }
+
+  protected static void showErrorDialog( final Shell shell, final String message )
+  {
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        MessageDialog.openError( shell, "Flood-Modeller fehler", message );
+      }
+    } );
+  }
+
+  protected static void showErrorDialog( final Shell shell, final String message, final IStatus status )
+  {
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        ErrorDialog.openError( shell, "Flood-Modeller fehler", message, status );
+      }
+    } );
   }
 
 }

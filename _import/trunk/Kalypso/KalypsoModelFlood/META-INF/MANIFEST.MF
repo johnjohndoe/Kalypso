@@ -2,25 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelFlood Plug-in
 Bundle-SymbolicName: org.kalypso.model.flood;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.model.flood.KalypsoModelFloodPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.core.expressions,
- org.eclipse.ui.intro,
- org.kalypso.ui,
- de.renew.workflow.model,
+Require-Bundle: org.kalypso.ui,
  org.kalypso.afgui,
  org.kalypso.ModelSimulationBase,
  org.kalypso.gml.ui,
  org.kalypso.model1d2d,
- org.kalypso.contribs.ogc31,
- org.eclipse.ui.forms,
  org.kalypso.gml.processes,
  org.kalypso.risk,
- org.kalypso.project.database;bundle-version="1.0.0"
+ org.kalypso.simulation.ui;bundle-version="0.0.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.model.flood.extension
+Export-Package: org.kalypso.model.flood.extension,org.kalypso.model.flood.core
