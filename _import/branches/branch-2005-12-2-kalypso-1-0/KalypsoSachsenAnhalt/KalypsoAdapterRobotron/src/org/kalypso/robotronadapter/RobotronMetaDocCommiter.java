@@ -139,7 +139,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
   public RobotronMetaDocCommiter()
   {
-    String debugDirProp = System.getProperty( SYSPROP_DEBUG_DIR, null );
+    final String debugDirProp = System.getProperty( SYSPROP_DEBUG_DIR, null );
     if( debugDirProp != null )
     {
       m_debugDir = new File( debugDirProp );
@@ -244,7 +244,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     try
     {
       FileUtils.copyFileToDirectory( doc, m_debugDir );
-      final File xmlFile = new File( doc.getParentFile(), doc.getName() + ".xml" );
+      final File xmlFile = new File( m_debugDir, doc.getName() + ".xml" );
       FileUtils.writeStringToFile( xmlFile, metadataXml, "UTF-8" );
     }
     catch( Exception e )
