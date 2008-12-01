@@ -14,7 +14,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579015.zml">
-		<curve id="C2" name="%obsname%" color="0;107;178" >
+		<curve id="C2" name="%metadata-Label%" color="0;107;178" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -22,7 +22,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579045.zml">
-		<curve id="C4" name="%obsname%" color="110;187;253" >
+		<curve id="C4" name="%metadata-Label%" color="110;187;253" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -30,7 +30,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579070.zml">
-		<curve id="C6" name="%obsname%" color="4;225;196" >
+		<curve id="C6" name="%metadata-Label%" color="4;225;196" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -38,7 +38,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579085.zml">
-		<curve id="C8" name="%obsname%" color="24;222;3" >
+		<curve id="C8" name="%metadata-Label%" color="24;222;3" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -46,7 +46,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579000.zml">
-		<curve id="C10" name="%obsname%" color="18;114;3" >
+		<curve id="C10" name="%metadata-Label%" color="18;114;3" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -54,7 +54,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579001.zml">
-		<curve id="C12" name="%obsname%" color="255;0;0" >
+		<curve id="C12" name="%metadata-Label%" color="255;0;0" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
@@ -62,7 +62,7 @@
 
 	<!-- gerechnet -->
    	<observation linktype="zml" xlink:href="Ergebnisse/Durchfluss/579006.zml">
-		<curve id="C14" name="%obsname%" color="226;234;17" >
+		<curve id="C14" name="%metadata-Label%" color="226;234;17" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>
