@@ -206,16 +206,29 @@ public class TsInfoItem implements IRepositoryItem
 
   String getWiskiDescription()
   {
-    final String noValue = "<kein Eintrag:";
-
     final StringBuffer bf = new StringBuffer();
-    bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) )
+    bf.append( getWiskiParametertypeLongname() );
+    bf.append( getWiskiStationparameterName() ).append( " - " );
+    bf.append( getWiskiStationparameterLongname() )
         .append( " - " );
-    bf.append( m_map.getProperty( "station_name", noValue + "station_name>" ) );
+    bf.append( getWiskiStationName() );
 
     return bf.toString();
+  }
+
+  String getWiskiStationparameterLongname()
+  {
+    return m_map.getProperty( "stationparameter_longname", "" );
+  }
+
+  String getWiskiStationparameterName()
+  {
+    return m_map.getProperty( "stationparameter_name", "" );
+  }
+
+  String getWiskiParametertypeLongname()
+  {
+    return m_map.getProperty( "parametertype_longname", "" );
   }
 
   /**
@@ -247,7 +260,7 @@ public class TsInfoItem implements IRepositoryItem
 
   String getStationParameterName()
   {
-    return m_map.getProperty( "stationparameter_name", "" );
+    return getWiskiStationparameterName();
   }
   
   /**
