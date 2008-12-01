@@ -60,11 +60,15 @@ public class MetadataExtenderWithObservation
 
   /**
    * Helper that calls extendMetadata( Configuration, IObservation ) for each observation of the given items
+   * @param index If non-<code>null</code>, only the item with the given index is considered.
    */
-  public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items )
+  public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items, Integer index )
   {
     for( int i = 0; i < items.length; i++ )
-      extendMetadata( metadata, items[i].getObservation() );
+    {
+      if( index == null || i == index.intValue() ) 
+        extendMetadata( metadata, items[i].getObservation() );
+    }
   }
 
   /**

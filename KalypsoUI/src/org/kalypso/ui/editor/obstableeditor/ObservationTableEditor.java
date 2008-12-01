@@ -168,7 +168,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), "Tabelle" );
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), "Tabelle", null );
     return new IExportableObject[]
     { exportable };
   }

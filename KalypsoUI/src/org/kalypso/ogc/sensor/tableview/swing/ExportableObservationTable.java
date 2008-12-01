@@ -65,12 +65,19 @@ public class ExportableObservationTable implements IExportableObject
   private final ObservationTable m_table;
   private final String m_identifierPrefix;
   private final String m_category;
+  private Integer m_kennzifferIndex;
 
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category )
+  /**
+   * @param kennzifferIndex
+   *          If non- <code>null</code>, use only the observation-item with that index to generate the kennziffer.
+   *  
+   */
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_kennzifferIndex = kennzifferIndex;
   }
 
   /**
@@ -85,8 +92,7 @@ public class ExportableObservationTable implements IExportableObject
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
    *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     monitor.beginTask( "Export", 2 );
 
@@ -94,7 +100,7 @@ public class ExportableObservationTable implements IExportableObject
     try
     {
       // let update the metadata with the information we have
-      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems() );
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems(), m_kennzifferIndex );
 
       // scenario name header
       if( !m_table.getCurrentScenarioName().equals( "" ) )
