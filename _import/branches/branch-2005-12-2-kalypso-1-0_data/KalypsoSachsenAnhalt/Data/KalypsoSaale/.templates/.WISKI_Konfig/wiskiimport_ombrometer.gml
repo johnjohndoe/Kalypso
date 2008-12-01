@@ -296,7 +296,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43760">
-      <name>Luis.-Ohra</name>
+      <name>Luisenthal</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43760.zml"/>
       </lokal>
@@ -338,7 +338,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43811">
-      <name>Straussfurt</name>
+      <name>Straußfurt</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43811.zml"/>
       </lokal>
@@ -352,7 +352,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43935">
-      <name>Sondershsn.</name>
+      <name>Sondershausen</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43935.zml"/>
       </lokal>
@@ -436,7 +436,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44299">
-      <name>Weissenfels</name>
+      <name>Weißenfels</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44299.zml"/>
       </lokal>
@@ -450,7 +450,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43530">
-      <name>Halle-Kroellwitz</name>
+      <name>Halle-Kröllwitz</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43530.zml"/>
       </lokal>
@@ -464,7 +464,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44188">
-      <name>Kelbra</name>
+      <name>TS Kelbra</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44188.zml"/>
       </lokal>
@@ -492,7 +492,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44499">
-      <name>Beneckenstein</name>
+      <name>Benneckenstein</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44499.zml"/>
       </lokal>
@@ -548,7 +548,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44403">
-      <name>Elend RHB k. Bode</name>
+      <name>Elend (HWR Kalte Bode)</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44403.zml"/>
       </lokal>
@@ -562,7 +562,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44404">
-      <name>Ueberleitgsp.</name>
+      <name>Überleitungssperre</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44404.zml"/>
       </lokal>
@@ -576,7 +576,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44407">
-      <name>Rappbode TS</name>
+      <name>TS Rappbode</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44407.zml"/>
       </lokal>
@@ -604,7 +604,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44430">
-      <name>Zilierbach TS</name>
+      <name>TS Zillierbach</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44430.zml"/>
       </lokal>
@@ -618,7 +618,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-44498">
-      <name>Blankenbg. Harz</name>
+      <name>Blankenburg</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44498.zml"/>
       </lokal>
@@ -660,7 +660,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43478">
-      <name>Roetha</name>
+      <name>Rötha</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43478.zml"/>
       </lokal>
@@ -674,7 +674,7 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43451">
-      <name>Schoembach</name>
+      <name>Schömbach</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43451.zml"/>
       </lokal>

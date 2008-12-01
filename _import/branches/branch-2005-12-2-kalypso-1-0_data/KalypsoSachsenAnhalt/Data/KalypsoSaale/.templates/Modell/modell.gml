@@ -9169,7 +9169,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579014">
           <pegel:PNR>579014</pegel:PNR>
-          <pegel:Name>TS-Wendefurth, Bode-Anteil</pegel:Name>
+          <pegel:Name>TS Wendefurth, Bode-Anteil</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>60</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -9240,7 +9240,7 @@
       <pegel:PegelMember>
         <pegel:Pegel fid="Pegel-579006">
           <pegel:PNR>579006</pegel:PNR>
-          <pegel:Name>TS-Wendefurth-Abgabe</pegel:Name>
+          <pegel:Name>TS Wendefurth, Abgabe</pegel:Name>
           <pegel:Gewaesser>Bode</pegel:Gewaesser>
           <pegel:TS_Steuerung_Gruppe>70</pegel:TS_Steuerung_Gruppe>
           <pegel:ZG>-1</pegel:ZG>
@@ -19337,7 +19337,7 @@
           <speicher:PNR-Zufluss>570000</speicher:PNR-Zufluss>
           <speicher:PNR_ST>570270</speicher:PNR_ST>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
-          <speicher:TS_NAME>Saale-Talsperren</speicher:TS_NAME>
+          <speicher:TS_NAME>TS Saale</speicher:TS_NAME>
           <speicher:STEUNAME>Rudolstadt</speicher:STEUNAME>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
