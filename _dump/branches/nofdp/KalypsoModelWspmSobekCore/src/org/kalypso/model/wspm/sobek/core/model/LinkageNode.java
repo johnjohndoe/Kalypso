@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -81,23 +80,15 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
    */
   public IBranch getLinkToBranch( )
   {
-    final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
-    final Feature f;
-    if( objBranch instanceof XLinkedFeature_Impl )
-    {
-      final XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) objBranch;
-      f = lnk.getFeature();
-    }
-    else if( objBranch instanceof Feature )
-      // this branch should never be reached according to the schema file
-      f = (Feature) objBranch;
-    else
-      f = getFeature().getWorkspace().getFeature( (String) objBranch );
+    final Object property = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
+    Feature feature = FeatureUtils.resolveFeature( getFeature().getWorkspace(), property );
+    if( feature == null )
+      return null;
 
-    final IBranch result = new Branch( getModel(), f );
-
+    final IBranch result = new Branch( getModel(), feature );
     if( result == null )
       return null;
+
     return result;
   }
 
