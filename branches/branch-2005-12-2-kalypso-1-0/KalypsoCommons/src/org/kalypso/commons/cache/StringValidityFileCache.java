@@ -38,4 +38,9 @@ public class StringValidityFileCache
   {
     return (StringValidityKey)m_cache.getRealKey( key );
   }
+  
+  public void remove( final StringValidityKey key )
+  {
+    m_cache.remove( key );
+  }
 }
