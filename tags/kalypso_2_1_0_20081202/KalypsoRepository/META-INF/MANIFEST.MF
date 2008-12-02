@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoRepository
+Bundle-SymbolicName: org.kalypso.repository; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Localization: plugin
+Export-Package: org.kalypso.repository,
+ org.kalypso.repository.conf,
+ org.kalypso.repository.container,
+ org.kalypso.repository.factory,
+ org.kalypso.repository.file,
+ org.kalypso.repository.service
+Require-Bundle: org.kalypso.jwsdp,
+ org.junit;resolution:=optional
