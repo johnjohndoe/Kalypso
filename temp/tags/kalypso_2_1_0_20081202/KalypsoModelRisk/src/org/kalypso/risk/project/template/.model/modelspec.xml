@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoRisk">
+    <input id="VectorDataModel" path="models/VectorDataModel.gml" relativeToCalcCase="true"/>
+	<input id="RasterDataModel" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
+	<input id="RasterizationControlModel" path="models/RasterizationControlModel.gml" relativeToCalcCase="true"/>
+<!-- 
+<output id="RESULT_DIR_NAME" path="results" relativeToCalcCase="true"/>
+ -->
+</modeldata>
