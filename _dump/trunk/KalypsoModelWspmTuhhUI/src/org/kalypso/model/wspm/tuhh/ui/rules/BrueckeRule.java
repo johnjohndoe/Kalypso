@@ -210,7 +210,6 @@ public class BrueckeRule extends AbstractValidatorRule
 
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes );
       }
-
       int minmax = 0;
       int vegetation = Integer.MIN_VALUE;
       Double minOK = Double.MAX_VALUE;
@@ -245,7 +244,7 @@ public class BrueckeRule extends AbstractValidatorRule
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
-      if( vegetation>Integer.MIN_VALUE )
+      if( vegetation > Integer.MIN_VALUE )
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), vegetation, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) );
       }
