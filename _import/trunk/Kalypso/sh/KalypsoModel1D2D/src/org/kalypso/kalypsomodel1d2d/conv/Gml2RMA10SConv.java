@@ -88,7 +88,6 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -96,10 +95,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Converts discretisation model to RMA10s model
+ * Converts discretisation model to RMA·Kalypso model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -639,13 +637,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
   /**
    * @param formatter
    * @param nodeID
-   *          the id of the node
+   *            the id of the node
    * @param point
-   *          the geo point of the node
+   *            the geo point of the node
    * @param station
-   *          the station of the node (only for 1d nodes, else null)
+   *            the station of the node (only for 1d nodes, else null)
    * @param isMidside
-   *          flag, if the node is a midside node (for writing the restart file)
+   *            flag, if the node is a midside node (for writing the restart file)
    */
   private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station, final boolean isMidside ) throws IOException
   {
@@ -666,7 +664,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
 
-    writeRestartLines( formatter, nodeID, x, y, isMidside );
+    writeRestartLines( formatter, nodeID, point, isMidside );
   }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue ) throws IOException
@@ -852,7 +850,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     throw new UnsupportedOperationException();
   }
 
-  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final boolean isMidside ) throws IOException
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final GM_Point point, final boolean isMidside ) throws IOException
   {
     if( m_restartNodes == null )
       return;
@@ -860,15 +858,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restartNodes.getSize() == 0 )
       return;
 
-    final INodeResult node = m_restartNodes.getNodeResultAtPosition( x, y );
+    final INodeResult node = m_restartNodes.getNodeResultAtPosition( point );
     if( node == null )
     {
       // we check only corner nodes, because in 1d it could be the case that there are midside nodes without restart
       // data
       if( !isMidside )
       {
-        final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", point, null );
       }
       return;
     }
@@ -921,7 +918,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         velXComp = 0.0;
         velYComp = 0.0;
       }
-      else
+
+      else if( velTotal != null )
       {
         if( velTotal.get( 0 ) == null )
         {
@@ -933,6 +931,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           velXComp = velTotal.get( 0 );
           velYComp = velTotal.get( 1 );
+
         }
       }
 

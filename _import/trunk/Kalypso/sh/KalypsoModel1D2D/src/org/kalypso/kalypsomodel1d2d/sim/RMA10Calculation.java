@@ -41,11 +41,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
@@ -56,13 +54,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.kalypso.commons.KalypsoCommonsExtensions;
-import org.kalypso.commons.process.IProcess;
-import org.kalypso.commons.process.IProcessFactory;
+import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -87,7 +82,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Represents a calculation with a rma10s.exe. Helps generation of the ASCII input files and to start the process.
+ * Represents a calculation with a rma-kalypso.exe. Helps generation of the ASCII input files and to start the process.
  */
 public class RMA10Calculation implements ISimulation1D2DConstants
 {
@@ -136,9 +131,9 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   }
 
   /**
-   * Runs < rma10s calculation. The following steps are processed:
+   * Runs < RMA·Kalypso calculation. The following steps are processed:
    * <ul>
-   * <li>write rma10s ASCII files to temporary directory according to provided gml-models</li>
+   * <li>write RMA·Kalypso ASCII files to temporary directory according to provided gml-models</li>
    * <li>write .exe to temporary directory</li>
    * <li>execute the .exe</li>
    * <li>read .2d files and process them to the output directory</li>
@@ -206,12 +201,19 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
     try
     {
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe RMA10s-ASCII Dateien für FE-Simulation" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe RMA·Kalypso-ASCII Dateien für FE-Simulation" );
 
       /* Read restart data */
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Restart-Daten werden gelesen" );
       progress.subTask( "Schreibe ASCII-Daten: Restart-Daten werden gelesen..." );
-      final RestartNodes m_restartNodes = RestartNodes.createRestartNodes( m_scenarioFolder, m_controlModel );
+
+      RestartNodes m_restartNodes;
+
+      if( m_controlModel.getRestart() )
+        m_restartNodes = RestartNodes.createRestartNodes( m_scenarioFolder, m_controlModel );
+      else
+        m_restartNodes = null;
+
       ProgressUtilities.worked( progress, 20 );
 
       /* .2d File */
@@ -250,7 +252,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     }
     catch( final IOException e )
     {
-      final String msg = String.format( "Fehler beim Schreiben einer RMA10s-ASCII Datei: %s", e.getLocalizedMessage() );
+      final String msg = String.format( "Fehler beim Schreiben einer RMA·Kalypso-ASCII Datei: %s", e.getLocalizedMessage() );
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
     }
     finally
@@ -260,12 +262,12 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   }
 
   /**
-   * Runs the rma10s simulation, i.e. starts the rma10s.exe in the temp-dir and waits until the process returns.
+   * Runs the RMAKalypso simulation, i.e. starts the rma-kalypso_Version.exe in the temp-dir and waits until the process returns.
    */
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() );
-    progress.subTask( "RMA10s wird ausgeführt..." );
+    progress.subTask( "RMA·Kalypso wird ausgeführt..." );
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
     final File resultDir = new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
@@ -273,26 +275,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     resultDir.mkdirs();
     itrDir.mkdirs();
 
-    // Generate the process-factory-id
-    // TODO: at the moment, this is hard wired.... later we should get it from System.properties and/or from our own
-    // simulation-id (as we are no simulation, this does not work yet).
-    // Example1: org.kalypso.simulation.process.factory.<simulation-id>=<factory-id>
-    // For the moment, we could also provide it directly from outside or from a system-property
-    // (fall-back should always be the default factory)
-    final String processFactoryId = IProcessFactory.DEFAULT_PROCESS_FACTORY_ID;
-
-    // The iteration job (and its info) monitor the content of the output.itr file
-    // and inform the user about the current progress of the process.
-    // TODO: this is too deep inside this code and should probably be moved further away...
-    m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
-
-    final IterationInfoJob iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel, progress );
-
-    iterationJob.setSystem( true );
-    iterationJob.schedule();
-
-    OutputStream logOS = null;
-    OutputStream errorOS = null;
+    FileOutputStream logOS = null;
+    FileOutputStream errorOS = null;
     try
     {
       final File exeFile = findRma10skExe();
@@ -300,20 +284,33 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final String commandString = exeFile.getAbsolutePath();
 
       // Run the Calculation
-      logOS = new BufferedOutputStream( new FileOutputStream( new File( m_tmpDir, "exe.log" ) ) );
-      errorOS = new BufferedOutputStream( new FileOutputStream( new File( m_tmpDir, "exe.err" ) ) );
-
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
+      logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) );
+      errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) );
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
+      final Runnable idleRunnable = new Runnable()
+      {
+        public void run( )
+        {
+          updateIteration( progress );
+        }
+      };
 
-      final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, m_tmpDir, exeFile.toURI().toURL(), null );
-      process.startProcess( logOS, errorOS, null, progressCancelable );
+      /* Initialize Iteration Job */
+      m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
+
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA·Kalypso wird ausgeführt: %s", commandString );
+      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+
       // TODO: specific error message if exe was not found
 
-      // TODO: read other outputs
+      // TODO: read other outputs:
       // - error-log
       // - border conditions-log
+
+      /* Update the iteration one last time, it should be complete now... */
+      updateIteration( progress );
+      m_iterationInfo.finish(); // save the last observation
 
       // Check for success
       final File errorFile = findErrorFile( m_tmpDir );
@@ -325,10 +322,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final IStatus errorStatus = errorToStatus( errorMessage );
 
       return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, "Fehlermeldung vom Rechenkern (ERROR.DAT)", null );
-    }
-    catch( final OperationCanceledException e )
-    {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, "Abbruch der Berechnung durch Benutzer", e ) );
     }
     catch( final CoreException ce )
     {
@@ -344,9 +337,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
 
-      iterationJob.finish();
-
-
       ProgressUtilities.done( progress );
     }
   }
@@ -357,7 +347,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final String version = m_controlModel.getVersion();
     if( version == null || version.length() == 0 )
       // REMARK: maybe could instead use a default or the one with the biggest version number?
-      throw new CoreException( StatusUtilities.createErrorStatus( "RMA10SK Version nicht gesetzt. Wählen Sie die Version in den Berechnungseinstellungen." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( "RMA·Kalypso Version nicht gesetzt. Wählen Sie die Version in den Berechnungseinstellungen." ) );
 
     final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe";
 
@@ -369,8 +359,31 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     if( exeFile.exists() )
       return exeFile;
 
-    final String exeMissingMsg = String.format( "Die Ausführbare Datei (%s) ist nicht vorhanden.\nRMA10SK ist nicht Teil von Kalypso sondern muss gesondert erworden werden. Weitere Informationen finden Sie unter http://kalypso.sourceforge.net.", exeFile.getAbsolutePath() );
+    final String exeMissingMsg = String.format( "Die Ausführbare Datei (%s) ist nicht vorhanden.\nRMA·Kalypso ist nicht Teil von Kalypso sondern muss gesondert angefordert werden. Weitere Informationen finden Sie unter http://kalypso.sourceforge.net.", exeFile.getAbsolutePath() );
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
+  }
+
+  /**
+   * Will be called while the RMA·Kalypso process is running.<br>
+   * Updates the calculation progress monitor and reads the Output.itr.
+   */
+  protected void updateIteration( final IProgressMonitor monitor )
+  {
+    final int oldStepNr = m_iterationInfo.getStepNr();
+
+    m_iterationInfo.readIterFile();
+
+    final int stepNr = m_iterationInfo.getStepNr();
+    if( oldStepNr != stepNr )
+    {
+      String msg = "";
+      if( stepNr == 0 )
+        msg = String.format( "RMA·Kalypso wird ausgeführt - stationärer Schritt" );
+      else
+        msg = String.format( "RMA·Kalypso wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
+      monitor.subTask( msg );
+      monitor.worked( stepNr - oldStepNr );
+    }
   }
 
   /**
@@ -380,7 +393,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private static File findErrorFile( final File dir )
   {
-    // TODO: @Nico: we should stick to one defined error file in the future; whic one is it?
     final File errorDatFile = new File( dir, "ERROR.DAT" );
     final File errorOutFile = new File( dir, "ERROR.OUT" );
     final File errorErrFile = new File( dir, "exe.err" );
@@ -399,7 +411,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private IStatus errorToStatus( final String errorMessage )
   {
-    // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
+    // TODO: error or warning depends, if any steps where calculated; the RMA·Kalypso should determine if result processing
     // makes sense
 
     final String[] lines = errorMessage.split( "\n" );

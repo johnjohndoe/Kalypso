@@ -213,12 +213,17 @@
 		context="FenetMap">
 		<Help><![CDATA[Nach der Durchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-
+		<Task context="ResultMap"
+				URI="workflow1d2d_ResultDataManager">
+				<Help><![CDATA[Die Ergebnisdaten verwalten.]]></Help>
+				<Name>Ergebnisdaten verwalten</Name>
+		</Task>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapGroup"
 			context="ResultMap">
 			<Help><![CDATA[Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.]]></Help>
 			<Name>Kartenansicht</Name>
+
 			<Task context="ResultMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
 				<Help><![CDATA[Die Ergebniskarte konfigurieren.]]></Help>
@@ -234,7 +239,7 @@
 				<Name>Ganglinien erstellen</Name>
 			</Task>
 		</TaskGroup>
-		
+
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultLengthSectionViewGroup"
 			context="LengthSectionView">
@@ -245,7 +250,7 @@
 				<Help><![CDATA[Das Längsschnittdiagramm konfigurieren.]]></Help>
 				<Name>Längsschnitt konfigurieren</Name>
 			</Task>
-			<Task 
+			<Task
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
 				<Help><![CDATA[Einen Längsschnitt anzeigen.]]></Help>
 				<Name>Längsschnitt anzeigen</Name>

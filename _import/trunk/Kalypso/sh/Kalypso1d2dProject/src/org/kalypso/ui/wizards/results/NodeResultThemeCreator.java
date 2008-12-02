@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -101,21 +102,21 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   public void updateThemeCommandData( )
   {
     /* get infos about calc unit */
-    IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
-    IResultMeta timeStepMeta = m_documentResult.getParent();
+    final IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
+    final IResultMeta timeStepMeta = m_documentResult.getParent();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
-    String resFolder = resultsFolder.getFullPath().toPortableString();
+    final String resFolder = resultsFolder.getFullPath().toPortableString();
 
-    String featurePath = "nodeResultMember";
-    String source = "../" + m_documentResult.getFullPath().toPortableString();
-    String style = "Vector Style";
-    String themeName = m_documentResult.getName() + ", " + timeStepMeta.getName() + ", " + calcUnitMeta.getName();
+    final String featurePath = "nodeResultMember";
+    final String source = "../" + m_documentResult.getFullPath().toPortableString();
+    final String style = "Vector Style";
+    final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
     String styleLocation = null;
-    String type = "Node";
-    String styleLinkType = "sld";
-    String styleType = "simple";
-    String resultType = "gml";
+    final String type = "Node";
+    final String styleLinkType = "sld";
+    final String styleType = "simple";
+    final String resultType = "gml";
 
     // check, if there is a style already chosen, if not create one from default template
     if( m_nodeStyleComp == null )
@@ -138,7 +139,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
     /* default location depending on type */
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
-    IFolder sldFolder = stylesFolder.getFolder( type );
+    final IFolder sldFolder = stylesFolder.getFolder( type );
 
     final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
     final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;

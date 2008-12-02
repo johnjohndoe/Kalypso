@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
@@ -164,26 +165,30 @@ public class HydrographUtils
     newHydrograph.setResults( resultMap );
   }
 
-  public static IHydrographCollection getHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws MalformedURLException, Exception
+  public static IHydrographCollection getHydrograph( final ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws MalformedURLException, Exception
   {
     IDocumentResultMeta docResult;
     final IResultMeta child = calcUnitResult.getDocument( DOCUMENTTYPE.hydrograph );
     if( child != null )
     {
-
       // get the hydrograph
       docResult = (IDocumentResultMeta) child;
-      IPath docPath = docResult.getFullPath();
-      IFolder folder = scenarioFolder.getFolder( docPath );
+      final IPath docPath = docResult.getFullPath();
 
-      IFile file = folder.getFile( "" );
+      final URL scenarioURL = ResourceUtilities.createURL( scenarioFolder );
+      final URL hydrographURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
+      // TODO: resolve file from docpath
+      // TODO: maybe this check will fail, if it is a zip file!
+      final IFile file = scenarioFolder.getFile( docPath );
       if( !file.exists() )
       {
         // delete non-valid result meta entry
         calcUnitResult.removeChild( docResult );
         return null;
       }
-      final URL hydrographURL = ResourceUtilities.createURL( folder );
+
+      // final URL hydrographURL = ResourceUtilities.createURL( folder );
 
       final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
 

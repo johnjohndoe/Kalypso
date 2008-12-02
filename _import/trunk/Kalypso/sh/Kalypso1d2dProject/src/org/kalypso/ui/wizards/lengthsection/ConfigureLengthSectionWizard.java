@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -73,6 +74,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
@@ -335,12 +337,15 @@ public class ConfigureLengthSectionWizard extends Wizard
     GM_TriangulatedSurface surface = null;
 
     final IPath docPath = docResult.getFullPath();
-    final IFolder folder = m_scenarioFolder.getFolder( docPath );
+    if( docPath == null )
+      return null;
 
     try
     {
-      final URL surfaceURL = ResourceUtilities.createURL( folder );
-      GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
+      final URL scenarioURL = ResourceUtilities.createURL( m_scenarioFolder );
+      final URL surfaceURL = UrlUtilities.resolveWithZip( scenarioURL, docPath.toPortableString() );
+
+      final GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -349,9 +354,7 @@ public class ConfigureLengthSectionWizard extends Wizard
       final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
 
       if( geometryProperty instanceof GM_TriangulatedSurface )
-      {
         return (GM_TriangulatedSurface) geometryProperty;
-      }
     }
     catch( Exception e )
     {

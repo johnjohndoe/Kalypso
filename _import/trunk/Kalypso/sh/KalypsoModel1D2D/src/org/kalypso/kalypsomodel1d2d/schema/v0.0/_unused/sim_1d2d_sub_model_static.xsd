@@ -79,7 +79,7 @@
 						<li/> a terrain model, which contains a digital 
 							terrain models,	river pofiles and rougthness
 							area delimitation.
-						<li/>a dicretisation model, which provide an rma10s 
+						<li/>a dicretisation model, which provide an RMA·Kalypso 
 							compatible finite element discretisaion model. 
 						<li/>a flow resistance model, define the flow resistance 
 						properties, mostly correction factors e.g. to compute 

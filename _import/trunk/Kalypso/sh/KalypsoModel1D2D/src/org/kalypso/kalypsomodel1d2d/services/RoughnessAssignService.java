@@ -107,6 +107,8 @@ public class RoughnessAssignService extends Job
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
         assignRoughness( monitor, element );
+//        if( monitor.isCanceled() )
+//          return Status.CANCEL_STATUS;
         // TODO: do not cancel, does not work well with work area...
         // TODO: change this stuff, so that we have a queue of elements to be worked on
 // ProgressUtilities.worked( progress, 1 );

@@ -363,13 +363,9 @@ public class CreateChannelData
 
     final IProfil profil;
     if( m_selectedProfile == PROF.UP )
-    {
       profil = segment.getProfilUpOrg();
-    }
     else
-    {
       profil = segment.getProfilDownOrg();
-    }
 
     return profil;
   }
@@ -502,8 +498,13 @@ public class CreateChannelData
         {
           initSegments();
           updateSegment( true, i + 1 );
+          return;
         }
         // now the two lines are right oriented...
+
+        if( lines == null )
+          return;
+
         final LineString topLine = lines[0];
         final LineString rightLine = lines[1];
         final LineString bottomLine = lines[2];
@@ -565,7 +566,10 @@ public class CreateChannelData
         coordSegmentPointer = coordSegmentPointer + coordinates[0].length - 1;
       }
       if( coordYPosPointer != overallYCoordNum - 1 )
+      {
         System.out.println( "consolidateMesh: wrong number of coord array!! " );
+        return StatusUtilities.createErrorStatus( "consolidateMesh: wrong number of coord array!! " );
+      }
 
       m_meshCoords = newCoords;
 
@@ -623,15 +627,11 @@ public class CreateChannelData
     if( endpoint1.distance( startpoint2 ) < 0.001 ) // the distance method checks only in a 2d way!
     {
       for( int i = 0; i < coords1.length; i++ )
-      {
         coords1[i] = lines[0].getCoordinateN( i );
-      }
       final LineString line1 = factory1.createLineString( coords1 );
 
       for( int i = 0; i < coords2.length; i++ )
-      {
         coords2[i] = lines[1].getCoordinateN( i );
-      }
       final LineString line2 = factory2.createLineString( coords2 );
 
       lineArray[0] = line1;
@@ -641,9 +641,7 @@ public class CreateChannelData
     {
       // switch line 2
       for( int i = 0; i < coords1.length; i++ )
-      {
         coords1[i] = lines[0].getCoordinateN( i );
-      }
       final LineString line1 = factory1.createLineString( coords1 );
       final LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
 
@@ -656,9 +654,7 @@ public class CreateChannelData
       final LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
 
       for( int i = 0; i < coords2.length; i++ )
-      {
         coords2[i] = lines[1].getCoordinateN( i );
-      }
       final LineString line2 = factory1.createLineString( coords2 );
 
       lineArray[0] = line1;
@@ -691,9 +687,7 @@ public class CreateChannelData
     if( endpoint2.distance( startpoint3 ) < 0.001 ) // the distance method checks only in a 2d way!
     {
       for( int i = 0; i < coords3.length; i++ )
-      {
         coords3[i] = lines[2].getCoordinateN( i );
-      }
       final LineString line3 = factory3.createLineString( coords3 );
 
       lineArray[2] = line3;
@@ -724,9 +718,7 @@ public class CreateChannelData
     if( endpoint3.distance( startpoint4 ) < 0.001 ) // the distance method checks only in a 2d way!
     {
       for( int i = 0; i < coords4.length; i++ )
-      {
         coords4[i] = lines[3].getCoordinateN( i );
-      }
       final LineString line4 = factory4.createLineString( coords4 );
 
       lineArray[3] = line4;
@@ -751,9 +743,7 @@ public class CreateChannelData
     final Point startpoint = lineArray[0].getStartPoint();
 
     if( endpoint.distance( startpoint ) > 0.001 || error == true )
-    {
       System.out.println( "Flussschlauchgenerator: An error during the orientation of the segment lines occured " );
-    }
 
     return lineArray;
   }

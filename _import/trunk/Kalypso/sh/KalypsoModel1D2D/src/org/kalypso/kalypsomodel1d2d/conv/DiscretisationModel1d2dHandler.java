@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * The handler that converts the rma10s element events into discretisation model elements and links
+ * The handler that converts the RMA·Kalypso element events into discretisation model elements and links
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo

@@ -56,7 +56,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 
 /**
- * Helper class to write the building file of a RMA10S calculation.
+ * Helper class to write the building file of a RMA·Kalypso calculation.
  * 
  * @author Gernot Belger
  * 

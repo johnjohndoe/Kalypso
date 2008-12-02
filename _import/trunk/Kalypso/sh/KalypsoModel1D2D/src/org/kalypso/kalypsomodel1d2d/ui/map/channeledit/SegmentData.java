@@ -79,8 +79,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -582,7 +582,7 @@ public class SegmentData
 
         /* set values */
         final IRecord point = tmpProfil.createProfilPoint();
-        TupleResult pointOwner = point.getOwner();
+        final TupleResult pointOwner = point.getOwner();
 
         point.setValue( pointOwner.indexOfComponent( breiteComponent ), width );
         point.setValue( pointOwner.indexOfComponent( hoeheComponent ), heigth );
@@ -840,7 +840,7 @@ public class SegmentData
 
   /**
    * Intersects the selected bank lines with the two profiles of the segment. This method will be called at the very
-   * beginning. Here, the four intersection points will be initialised.
+   * beginning. Here, the four intersection points will be initialized.
    */
   private void intersectOrigBanks( )
   {
@@ -852,11 +852,21 @@ public class SegmentData
       final Feature bankFeature = bankEntry.getKey();
       final CreateChannelData.SIDE side = bankEntry.getValue();
 
-      final GM_MultiCurve multiline = (GM_MultiCurve) bankFeature.getDefaultGeometryProperty();
-      if( multiline.getSize() > 1 )
-        return;
-      final GM_Curve bankCurve = multiline.getCurveAt( 0 );
+      final GM_Object geometry = bankFeature.getDefaultGeometryProperty();
 
+      GM_Curve bankCurve = null;
+
+      if( geometry instanceof GM_MultiCurve )
+      {
+        final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
+        if( multiline.getSize() > 1 )
+          return;
+        bankCurve = multiline.getCurveAt( 0 );
+      }
+      else if( geometry instanceof GM_Curve )
+      {
+        bankCurve = (GM_Curve) geometry;
+      }
       /* convert bank curve into LineString */
       try
       {
@@ -1187,16 +1197,14 @@ public class SegmentData
         // store the old point to get the right bankline points
         final Point oldPoint = data.getPoint();
 
-        // TODO: here we have to create a point in the right coordinate system!!
+        // here we have to create a point in the right coordinate system!!
 
-        final GeometryFactory factory = new GeometryFactory();
-        final Coordinate coordinate = new Coordinate( gmpoint.getX(), gmpoint.getY(), gmpoint.getZ() );
-        final GM_Position position = JTSAdapter.wrap( coordinate );
+        final GM_Point createGM_Point = (GM_Point) gmpoint.clone();
 
-        final GM_Point createGM_Point = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( position, gmpoint.getCoordinateSystem() );
         final GM_Point transform = (GM_Point) transformer.transform( createGM_Point );
         final Coordinate coordinate2 = new Coordinate( transform.getX(), transform.getY(), transform.getZ() );
 
+        final GeometryFactory factory = new GeometryFactory();
         final Point point = factory.createPoint( coordinate2 );
         data.setPoint( point );
         data.setWidth( width );

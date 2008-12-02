@@ -61,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
@@ -79,8 +80,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RestartSelectWizard extends Wizard implements INewWizard
 {
-  private final String RESULTS_FILE_PATH = "/results.gml";
-
   private RestartSelectWizardPage1 m_restartSelectWizardPage1;
 
   private RestartSelectWizardPage2 m_restartSelectWizardPage2;
@@ -93,6 +92,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private final IFolder m_scenarioFolder;
 
+  @SuppressWarnings("unchecked")
   public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
@@ -124,13 +124,14 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
     m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, resultFilter, comparator, null, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$ //$NON-NLS-2$
-    configureRestartSelectPage();
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
 
     addPage( m_restartSelectWizardPage1 );
 
     m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString( "RestartSelectWizard.10" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_restartSelectWizardPage2 );
+
+    configureRestartSelectPage();
   }
 
   private void configureRestartSelectPage( )
@@ -145,14 +146,27 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     {
       final ICalcUnitResultMeta calcUnitMetaResult = m_resultModel.findCalcUnitMetaResult( restartInfo.getCalculationUnitID() );
       final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
-      final IFeatureWrapperCollection<IResultMeta> children = calcUnitMetaResult.getChildren();
-      for( final IResultMeta child : children )
+      final IFeatureWrapperCollection<IResultMeta> calcUnitChildren = calcUnitMetaResult.getChildren();
+      for( final IResultMeta calcUnitChild : calcUnitChildren )
       {
-        if( child instanceof IStepResultMeta )
+        if( calcUnitChild instanceof IStepResultMeta )
         {
-          final String childPath = child.getFullPath().toString() + RESULTS_FILE_PATH;
-          if( childPath.equals( stepResultFilePath ) )
-            checkedElements.add( child );
+          IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
+          IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+          for( IResultMeta resultMeta : children )
+          {
+            if( resultMeta instanceof IDocumentResultMeta )
+            {
+              IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+
+              if( docResult.getDocumentType().equals( IDocumentResultMeta.DOCUMENTTYPE.nodes ) )
+              {
+                final String docPath = docResult.getFullPath().toString();
+                if( docPath.equals( stepResultFilePath ) )
+                  checkedElements.add( calcUnitChild );
+              }
+            }
+          }
         }
       }
     }
@@ -182,7 +196,19 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getGmlID() );
-        restartInfo.setRestartFilePath( result.getFullPath() + RESULTS_FILE_PATH );
+
+        // TODO: implement accessing zip file!
+        IFeatureWrapperCollection<IResultMeta> children = result.getChildren();
+
+        for( IResultMeta resultMeta : children )
+        {
+          if( resultMeta instanceof IDocumentResultMeta )
+          {
+            IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
+              restartInfo.setRestartFilePath( docResult.getFullPath().toPortableString() );
+          }
+        }
       }
     }
     try

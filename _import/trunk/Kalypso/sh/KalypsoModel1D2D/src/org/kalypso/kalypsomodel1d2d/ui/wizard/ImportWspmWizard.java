@@ -622,6 +622,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
       if( profileMember == null )
         continue;
 
+      if( profileMember == null )
+        continue;
+
       final String crs = profileMember.getSrsName();
       final double station = profileMember.getStation();
 
@@ -752,6 +755,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : segments )
     {
       final IProfileFeature profileMember = segment.getProfileMember();
+
+      if( profileMember == null )
+        continue;
+
 
       if( profileMember == null )
         continue;

@@ -44,7 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
+import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * @author Dejan Antanaskovic
  * 
  */
-public class ControlModelGroup extends UnversionedModel implements IControlModelGroup
+public class ControlModelGroup extends VersionedModel implements IControlModelGroup
 {
 
   private IControlModel1D2DCollection cModelCollection;

@@ -220,6 +220,8 @@
       </dataSet>
    </extension>
    <extension
+       id="org.kalypso.core.adapters"
+       name="KalypsoFlood adapter factory"
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.kalypsodeegree.model.feature.Feature"

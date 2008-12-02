@@ -307,8 +307,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     final Set<String> timeZones = new TreeSet<String>();
     final String[] tz = TimeZone.getAvailableIDs();
     for( final String z : tz )
-       if( z.contains( "Europe/" ) )
-//      if( z.contains( "GMT" ) )
+      if( z.contains( "Europe/" ) || z.contains( "GMT" ) )
         timeZones.add( z );
 
     final FacadeComboViewer ComboTimeZones = new FacadeComboViewer( new FCVArrayDelegate( timeZones.toArray( new String[] {} ) ) );
@@ -333,7 +332,19 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     if( element instanceof String )
     {
-      final String TimeZoneID = (String) element;
+      String TimeZoneID = (String) element;
+      // BUG!!! Bug, bug, bug, nasty bug!
+
+      // Etc/GMT+1 is not the same as GMT+1
+      // Etc/GMT+1 has offset of -3600000
+      // GMT+1 has offset of 3600000
+      // i.e. Etc/GMT+1 is actually GMT-1 !!!
+
+      // As TimeZone.getAvailableIDs() does NOT offer GMT+1, only Etc/GMT+1, users will probably select Etc/GMT+1 which
+      // is wrong
+      if( TimeZoneID.startsWith( "Etc/" ) )
+        TimeZoneID = TimeZoneID.substring( 4 );
+
       m_timezone = TimeZone.getTimeZone( TimeZoneID );
     }
     else

@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -69,6 +70,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -297,6 +302,72 @@ public class ResultMeta1d2dHelper
     }
 
     return dates.toArray( new Date[dates.size()] );
+  }
+
+  public static void deleteResultThemeFromMap( final IStepResultMeta stepResult, final IKalypsoLayerModell modell, final ICommandTarget commandTarget )
+  {
+    final IKalypsoTheme[] allThemes = modell.getAllThemes();
+
+    final IResultMeta calcUnitMeta = stepResult.getParent();
+    final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+
+    for( final IResultMeta stepChild : children )
+    {
+      if( stepChild instanceof IDocumentResultMeta )
+      {
+        final IDocumentResultMeta docResult = (IDocumentResultMeta) stepChild;
+
+        // nodes:
+        final String resultNameNode = getNodeResultLayerName( docResult, stepResult, calcUnitMeta );
+
+        // tins:
+        final String resultNameIso = getIsolineResultLayerName( docResult, stepResult, calcUnitMeta );
+        final String resultNameIsoOld = getIsolineResultLayerNameOld( docResult, calcUnitMeta );
+        final String resultNameArea = getIsoareaResultLayerName( docResult, stepResult, calcUnitMeta );
+
+        for( final IKalypsoTheme kalypsoTheme : allThemes )
+        {
+          if( kalypsoTheme instanceof IKalypsoFeatureTheme )
+          {
+            // UARGHH. We should implement some other method to recognize the right theme
+            final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) kalypsoTheme;
+            final String kftName = kft.getName().getKey();
+
+            if( kftName.equals( resultNameNode ) || kftName.equals( resultNameIso ) || kftName.equals( resultNameIsoOld ) || kftName.equals( resultNameArea ) )
+            {
+              final RemoveThemeCommand removeThemeCommand = new RemoveThemeCommand( modell, kft );
+              commandTarget.postCommand( removeThemeCommand, null );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public static String getNodeResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  {
+    return docResult.getName() + ", " + stepResult.getName() + ", " + calcUnitMeta.getName();
+  }
+
+  public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  {
+    return docResult.getName() + " (Isolinien), " + stepResult.getName() + ", " + calcUnitMeta.getName();
+  }
+
+  /**
+   * old theme name
+   * 
+   * @deprecated old projects use this theme name.
+   */
+  @Deprecated
+  private static String getIsolineResultLayerNameOld( IResultMeta docResult, IResultMeta calcUnitMeta )
+  {
+    return docResult.getName() + " (Isolinien), " + calcUnitMeta.getName();
+  }
+
+  public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
+  {
+    return docResult.getName() + " (Isoflächen), " + stepResult.getName() + ", " + calcUnitMeta.getName();
   }
 
 }

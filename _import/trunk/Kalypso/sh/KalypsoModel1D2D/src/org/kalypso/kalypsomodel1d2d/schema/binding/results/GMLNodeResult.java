@@ -55,6 +55,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.sun.java_cup.internal.runtime.virtual_parse_stack;
+
 /**
  * @author Thomas Jung
  */
@@ -65,7 +67,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" );
 
   /*
-   * the virtual depth is calculated by the calculation core RMA10 and can differ from the true depth defined by water
+   * the virtual depth is calculated by the calculation core RMA·Kalypso and can differ from the true depth defined by water
    * level minus node elevation! (Marsh-Algorithm).
    * 
    * for that reason the true depth is computed separately.

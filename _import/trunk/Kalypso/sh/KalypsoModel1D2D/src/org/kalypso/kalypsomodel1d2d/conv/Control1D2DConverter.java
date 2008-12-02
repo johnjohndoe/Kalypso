@@ -96,10 +96,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
  */
 public class Control1D2DConverter
 {
-  /** Directory name for rma10s result files (Output...) files */
+  /** Directory name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_DIR_NAME = "result";
 
-  /** Base filename name for rma10s result files (Output...) files */
+  /** Base filename name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output";
 
   private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
@@ -147,7 +147,7 @@ public class Control1D2DConverter
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
-      // so no locale parameter for each format is needed any more .
+      // so no local parameter for each format is needed any more .
       formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
       writeR10File( formatter );
       FormatterUtils.checkIoException( formatter );
@@ -171,7 +171,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * Writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * Writes the Control Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10ControlDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -234,7 +234,13 @@ public class Control1D2DConverter
     formatter.format( "C4%14.1f%8.1f%8.1f%40d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ? 1 : 0 ); //$NON-NLS-1$
 
     // C5
-    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
+    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 0, 1, 0, 1, 1 ); //$NON-NLS-1$
+
+    // C6
+    if( m_controlModel.getIcpu() != 0 )
+      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() );
+    // C7
+    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 );
 
     // C6
     if( m_controlModel.getIcpu() != 0 )
@@ -261,7 +267,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * writes the Properties Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Properties Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10PropertiesDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -298,7 +304,7 @@ public class Control1D2DConverter
       throw new IllegalArgumentException( Messages.getString( "Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
-    formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+    formatter.format( "ED4%21.5f%8.3f%8.3f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
   }
@@ -307,13 +313,13 @@ public class Control1D2DConverter
   {
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
-    formatter.format( "ED4%21.5f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
+    formatter.format( "ED4%21.5f%8.3f%8.3f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
   }
 
   /**
-   * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Continuity Lines Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
 
   @SuppressWarnings("unchecked")
@@ -361,7 +367,7 @@ public class Control1D2DConverter
   }
 
   /**
-   * writes the Timestep Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
+   * writes the Timestep Data Block of the RMA·Kalypso controlFile (*.R10) into the PrintWriter
    */
   private void writeR10TimeStepDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
@@ -419,7 +425,7 @@ public class Control1D2DConverter
         final int indexTime = owner.indexOfComponent( componentTime );
         final int indexRelaxationsFaktor = owner.indexOfComponent( componentRelaxationsFaktor );
 
-        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
+        final XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
@@ -618,7 +624,13 @@ public class Control1D2DConverter
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+            // introduce FF for 'format free reading of line, although it's not completely format free. This would lead
+            // to big changes in Calculation core because, line reading must be much more flexible then. That's right
+            // now not the case.
+            if( stepValue > 9999.9 )
+              formatter.format( "QCFF%12d%8d%16.6e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+            else
+              formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
@@ -719,7 +731,7 @@ public class Control1D2DConverter
    * @return If unsteady calculation is selected, returns date/time of the first timestep from the control model.
    *         <p>
    *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this
-   *         value is not considered by RMA10s)
+   *         value is not considered by RMA·Kalypso)
    */
   private Date getFirstTimeStep( ) throws CoreException
   {

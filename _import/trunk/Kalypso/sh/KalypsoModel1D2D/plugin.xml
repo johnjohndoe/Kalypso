@@ -736,6 +736,19 @@
             </parameter>
          </defaultHandler>
       </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="%command.description.addrow"
+          id="org.kalypso.model1d2d.Command1D2DTimestepsAddRow"
+          name="%command.name.addrow">
+    </command>
+    <command
+          categoryId="org.kalypso.ui.tupleResult.category"
+          description="%command.description.interpolate"
+          id="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate"
+          name="%command.name.interpolate">
+    </command>
+      
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
@@ -968,6 +981,10 @@
            adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.OriginalDiscretizationModelAdaptor"
            featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}DiscretisationModel">
      </modelAdapter>
+     <modelAdapter
+           adapterClass="org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter"
+           featureType="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl}ControlModelGroup">
+     </modelAdapter>
   </extension>
   <extension
         name="1d2dChartCommands"
@@ -994,6 +1011,14 @@
            class="org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler"
            commandId="org.kalypso.model1d2d.saveBuildingParameter">
      </handler>
+    <handler
+          class="org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsAddRow"
+          commandId="org.kalypso.model1d2d.Command1D2DTimestepsAddRow">
+    </handler>
+    <handler
+          class="org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate"
+          commandId="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate">
+    </handler>
   </extension>
   <extension
         point="org.eclipse.ui.commandImages">
@@ -1005,6 +1030,14 @@
            commandId="org.kalypso.model1d2d.saveBuildingParameter"
            icon="icons/obj16/saveBuildingParameter.gif">
      </image>
+    <image
+          commandId="org.kalypso.model1d2d.Command1D2DTimestepsAddRow"
+          icon="icons/obj16/add.gif">
+    </image>
+    <image
+          commandId="org.kalypso.model1d2d.Command1D2DTimestepsInterpolate"
+          icon="icons/obj16/loop.gif">
+    </image>
   </extension>
   <extension
         id="velodiff2d"

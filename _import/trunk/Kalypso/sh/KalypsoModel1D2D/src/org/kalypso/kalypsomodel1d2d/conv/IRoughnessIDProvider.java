@@ -45,7 +45,7 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 /**
  * Provides a resversible id mapping between a native id system
  * and the gml roughness id. 
- * The native rma10 ids are positive integers and the  ids in the 
+ * The native RMA·Kalypso ids are positive integers and the  ids in the 
  * roughness db are strings 
  *  
  * @author Patrice Congo

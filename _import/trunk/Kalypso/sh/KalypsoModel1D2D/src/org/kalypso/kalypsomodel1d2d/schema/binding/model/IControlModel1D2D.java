@@ -152,10 +152,10 @@ public interface IControlModel1D2D extends IControlModel
 
   public IRestartInfo addRestartInfo( );
 
+
   boolean getPercentCheck( );
 
-  Integer getMFW( );
+  public Integer getMFW( );
 
-  Integer getBUFFSIZ( );
-
+  public Integer getBUFFSIZ( );
 }

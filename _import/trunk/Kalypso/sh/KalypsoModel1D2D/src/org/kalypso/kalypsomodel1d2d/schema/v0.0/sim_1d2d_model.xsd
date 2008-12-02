@@ -71,4 +71,59 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	 
+	 
+	 
+	<!-- 
+	<xs:element 
+		name="SimulationModel1D2D"
+		type="wb:SimulationModelType1D2D"
+		>
+		<xs:annotation>
+			<xs:documentation>
+				The model for 1D 2D unsteady simulation based on 
+				a modefication of RMAÂ·Kalypso
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType 
+		name="SimulationModelType1D2D">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">
+				This type represents a model for combined 1D 2D unteady flow process
+				simulaton .
+				It specialized the abstract simulation model type with 
+				concrete properties for the 1D 2D unsteady simulation, 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="wb:SimulationModelType">
+				<xs:sequence>
+					<xs:element 
+						name="staticModel" 
+						type="wb:StaticModelPropertyType1D2D"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:operationalModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:controlModel"
+						minOccurs="1" maxOccurs="1"/>
+					<xs:element 
+						ref="wb:resultModel"
+						minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element 
+						ref="wb:evaluationModel"
+						minOccurs="0" maxOccurs="1"/>
+					
+					<xs:element 
+						ref="wb:additionalModelProperties" 
+						minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType> 
+	-->
 </xs:schema>

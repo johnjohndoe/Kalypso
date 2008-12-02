@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- * A wizard showing the progress of a rma10s calculation.
+ * A wizard showing the progress of a RMA·Kalypso calculation.
  * 
  * @author Gernot Belger
  */
@@ -74,7 +74,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 {
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
-    public void pageChanged( final PageChangedEvent event )
+    public void pageChanged( PageChangedEvent event )
     {
       handlePageChanged( event );
     }
@@ -93,7 +93,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     m_unitFolder = unitFolder;
     m_geoLog = geoLog;
     m_calcPage = new RMA10CalculationPage( "calcPage", calculation );
-    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider );
+    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider, this  );
 
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
@@ -172,6 +172,13 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   public void addPages( )
   {
     addPage( m_calcPage );
+  }
+
+  public Integer getResultIntervalFromCalcPage( )
+  {
+    if( m_calcPage == null )
+      return 1;
+    return m_calcPage.getResultInterval();
   }
 
   private IStatus runCalculation( )
@@ -316,7 +323,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   {
     if( m_calcPage.getSimulationStatus() != null )
     {
-      /* If calculation was made, but user cancelled this dialog before result processing, put a message in the log. */
+      /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
       m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, "Ergebnisauswertung durch Benutzer abgebrochen.", null, null );
     }
 

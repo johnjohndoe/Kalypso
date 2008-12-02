@@ -56,6 +56,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -68,8 +69,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -85,6 +89,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
 {
+
   private final ResultManager m_resultManager;
 
   private IStatus m_simulationStatus;
@@ -105,13 +110,16 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   private Date[] m_selection = null;
 
-  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider )
+  private final RMA10CalculationWizard m_parentWizard;
+
+  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard )
   {
     super( pageName );
 
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
+    m_parentWizard = parentWizard;
 
     setTitle( "Ergebnisauswertung - " + resultManager.getControlModel().getCalculationUnit().getName() );
 
@@ -191,7 +199,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
       {
         if( element instanceof Date )
         {
-          Date date = (Date) element;
+          final Date date = (Date) element;
           if( date.equals( MAXI_DATE ) )
             return "Maximale Lösung";
           else if( date.equals( STEADY_DATE ) )
@@ -205,6 +213,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     final Date[] calculatedSteps = m_resultManager.findCalculatedSteps();
     m_resultProcessViewer.setInput( calculatedSteps );
+    m_selection = calculatedSteps;
+    m_resultManager.setStepsToProcess( m_selection, m_resultManager.getControlModel() );
+    getContainer().updateButtons();
 
     /* Info View for one result */
     final ResultInfoViewer infoViewer = new ResultInfoViewer( resultChooserComp, SWT.NONE );
@@ -286,19 +297,19 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
    * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for
    * selection events including button presses, and registers default buttons with its shell. The button id is stored as
    * the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be
-   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the
-   * new button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
+   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the new
+   * button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
    * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    * @param id
-   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *            the label from the button
+   *          the label from the button
    * @param defaultButton
-   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @return the new button
    * @see #getCancelButton
    * @see #getOKButton()
@@ -340,6 +351,88 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     m_resultManager.setStepsToProcess( m_selection, controlModel );
     getContainer().updateButtons();
+  }
+
+  private void addSpinner( final CheckboxTableViewer resultProcessViewer, final Composite composite )
+  {
+    final Composite buttonComposite = new Composite( composite, SWT.NONE );
+    final GridLayout layout = new GridLayout();
+    layout.numColumns = 2;
+    layout.marginWidth = 0;
+    layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    buttonComposite.setLayout( layout );
+    buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+
+    final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
+    spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
+    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    spinnerLabel.setLayoutData( gridData );
+
+    final Spinner spinNumStepProcessing = new Spinner( buttonComposite, SWT.NONE );
+
+    final GridData gridDataSpin = new GridData( SWT.RIGHT, SWT.CENTER, true, false );
+
+    spinNumStepProcessing.setLayoutData( gridDataSpin );
+    spinNumStepProcessing.setDigits( 0 );
+    spinNumStepProcessing.setMinimum( 1 );
+    spinNumStepProcessing.setMaximum( 100 );
+    final Integer resultIncrement = m_parentWizard.getResultIntervalFromCalcPage();
+    spinNumStepProcessing.setSelection( resultIncrement );
+    updateTableSelection( resultProcessViewer, spinNumStepProcessing );
+    updateSelection();
+
+    spinNumStepProcessing.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
+    spinNumStepProcessing.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+
+        updateTableSelection( resultProcessViewer, spinNumStepProcessing );
+        updateSelection();
+      }
+    } );
+
+  }
+
+  protected void updateTableSelection( TableViewer resultProcessViewer, Spinner spinNumStepProcessing )
+  {
+    final TableItem[] items = resultProcessViewer.getTable().getItems();
+    final int selection = spinNumStepProcessing.getSelection();
+
+    final int length = items.length;
+    int start = 0;
+
+    // TODO: handle only unsteady time steps
+    for( int i = 0; i < length; i++ )
+    {
+      final Object data = items[i].getData();
+      if( data instanceof Date )
+      {
+        final Date date = (Date) data;
+        if( date == MAXI_DATE || date == STEADY_DATE )
+        {
+          start++;
+          // always enable steady and maxi result
+          items[i].setChecked( true );
+        }
+      }
+    }
+
+    for( int i = start; i < length; i++ )
+    {
+      final double mod = ((i - start)) % selection;
+      if( mod == 0 )
+        items[i].setChecked( true );
+      else
+        items[i].setChecked( false );
+
+      if( i == length - 1 )
+        items[i].setChecked( true );
+    }
   }
 
   public void runResultProcessing( )

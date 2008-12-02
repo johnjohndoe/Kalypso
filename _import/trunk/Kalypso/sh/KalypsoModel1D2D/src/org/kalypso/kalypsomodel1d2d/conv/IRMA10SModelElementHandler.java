@@ -8,7 +8,7 @@ import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * The handler interface for rma10s model element. Class implementing this interface can be set to handle parsing events
+ * The handler interface for RMA·Kalypso model element. Class implementing this interface can be set to handle parsing events
  * from a {@link IRMA10SModelReader}
  * 
  * @author Patrice Congo

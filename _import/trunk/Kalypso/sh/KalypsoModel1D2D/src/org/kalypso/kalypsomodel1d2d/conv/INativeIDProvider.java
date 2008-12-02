@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * Implementer of this interface can provides native(RMA10S) IDs given a feature wrapper.
+ * Implementer of this interface can provides native(RMA·Kalypso) IDs given a feature wrapper.
  * 
  * @author Patrice Congo
  * @author Madanagopal

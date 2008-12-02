@@ -108,6 +108,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( resultsFolder )
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       protected void execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
@@ -121,26 +122,6 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
           final GMLWorkspace hydrographWorkspace = (GMLWorkspace) pool.getObject( hydrographKey );
           monitor.worked( 1 );
-
-          // // get files to process
-          // // TODO: change to access to ResultDB
-          // // TODO: change to project dependend db
-          // final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
-          // final ISimulationDescriptionCollection simDB = resultDB.getSimDB();
-          // final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors =
-          // simDB.getSimulationDescriptors();
-          // for( final ISimulationDescriptor simulationDescriptor : simulationDescriptors )
-          // {
-          // final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
-          //
-          // final IFeatureWrapperCollection<IResultModelDescriptor> resultModel =
-          // simulationDescriptor.getResultModel();
-          // for( final IResultModelDescriptor resultModelDescriptor : resultModel )
-          // {
-          // resultModelDescriptor.getTinDepth();
-          // resultModelDescriptor.getTime();
-          // }
-          // }
 
           final Map<Date, IFile> wspTimestepResults = resultsAcessor.getTimestepsFiles();
 

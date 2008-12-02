@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoFloodSimulation">
-    <input id="FLOOD_MODEL" path="models/flood.gml" relativeToCalcCase="true"/>
-    <input id="GRID_FOLDER" path="grids" relativeToCalcCase="true"/>
-	<input id="EVENTS_BASE_FOLDER" path="events" relativeToCalcCase="true"/>
-    <output id="FLOOD_MODEL" path="models/flood.gml" relativeToCalcCase="true"/>
-	<output id="EVENTS_BASE_FOLDER" path="events" relativeToCalcCase="true"/>
+    <input id="FLOOD_MODEL"/>
+    <input id="GRID_FOLDER"/>
+	<input id="EVENTS_BASE_FOLDER"/>
+    <output id="FLOOD_MODEL"/>
+	<output id="EVENTS_BASE_FOLDER"/>
 </modelspec>

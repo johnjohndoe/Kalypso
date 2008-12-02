@@ -195,10 +195,7 @@ public class FloodModelProcess
     // Binary search within min/max; we start in the middle
     final double currentWsp = (maxWsp + minWsp) / 2;
 
-    // System.out.println( "Current WSP: " + currentWsp );
     final double currentVolume = calcWsp( volumeGmObject, terrainModel, currentWsp );
-    // System.out.println( "Current Volume: " + currentVolume );
-    // System.out.println( "" );
 
     if( Math.abs( currentVolume - targetVolume ) < VOLUME_EPS )
       return currentWsp;
