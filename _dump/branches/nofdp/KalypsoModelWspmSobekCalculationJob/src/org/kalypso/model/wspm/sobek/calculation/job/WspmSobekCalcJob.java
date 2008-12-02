@@ -118,11 +118,12 @@ public class WspmSobekCalcJob implements ISimulation
 
     if( !points.exists() )
       throw new SimulationException( Messages.WspmSobekCalcJob_1 );
-    if( !structures.exists() )
-      throw new SimulationException( Messages.WspmSobekCalcJob_2 );
+// if( !structures.exists() )
+// throw new SimulationException( Messages.WspmSobekCalcJob_2 );
 
     resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
-    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
+    if( structures.exists() )
+      resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
 
     ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_3 );
     ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
