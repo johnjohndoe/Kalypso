@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
@@ -81,7 +81,6 @@ import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.i18n.Messages;
@@ -127,7 +126,6 @@ public class GrafikLauncher
 
   static
   {
-    GRAFIK_NF_W.setGroupingUsed( false ); // set to false, else we got '.' in 1000ers, causing the grafik exe to read it as 1.0
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
 
@@ -182,10 +180,6 @@ public class GrafikLauncher
     {
       e.printStackTrace();
       throw new SensorException( e );
-    }
-    finally
-    {
-      diag.dispose();
     }
   }
 
@@ -431,23 +425,17 @@ public class GrafikLauncher
       // find out which axes to use
       final IAxis[] axes = obs.getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-      // REMARK: we use the version with many classes, so no exception is thrown if now number-axis was found.
-      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClasses( axes, new Class[] {Number.class}, true );
-      // Just ignore this obs, if it has no number axises
-      if( numberAxes.length == 0 )
-        continue;
+      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes, Number.class, true );
 
       final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
 
-      final List<TypeCurve> curves = element.getCurve();
-      for( final TypeCurve tc : curves )
+      final List curves = element.getCurve();
+      for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
+        final TypeCurve tc = (TypeCurve) itc.next();
+
         // create a corresponding dat-File for the current observation file
-        final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
-            .getName() )
-            + "-" + cc + ".dat";
-        final String datFileName = datFileProtoName.replace( ' ', '_' );
-        final IFile datFile = dest.getFile( datFileName );
+        final IFile datFile = dest.getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -526,7 +514,6 @@ public class GrafikLauncher
       }
 
       // is this obs a forecast?
-      // TODO: check if odt wants forecast to be shown
       final DateRange fr = TimeserieUtils.isForecast( obs );
       if( fr != null )
       {
@@ -544,8 +531,7 @@ public class GrafikLauncher
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
         for( final String element2 : mds )
         {
-          final String alarmLevel = mdl.getProperty( element2 );
-          final Double value = NumberUtils.parseQuietDouble( alarmLevel );
+          final Double value = new Double( mdl.getProperty( element2 ) );
           yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }

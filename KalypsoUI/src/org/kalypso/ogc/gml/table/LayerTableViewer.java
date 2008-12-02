@@ -84,6 +84,7 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -332,7 +333,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
-      final boolean dummy )
+  final boolean dummy )
   {
     m_isApplyTemplate = true;
 
@@ -408,14 +409,14 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final ViewerFilter viewerFilter = new ViewerFilter()
       {
         @Override
-        public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+        public boolean select( Viewer viewer, Object parentElement, Object element )
         {
           try
           {
             final Feature feature = (Feature) element;
             return filter.evaluate( feature );
           }
-          catch( final FilterEvaluationException e )
+          catch( FilterEvaluationException e )
           {
             e.printStackTrace();
 
@@ -475,9 +476,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
-    tc.setToolTipText( tooltip );
     tc.setWidth( width );
     setColumnText( tc );
+
+    TableColumnTooltipListener.hookControl( tc );
 
     tc.addSelectionListener( m_headerListener );
     tc.addControlListener( m_headerControlListener );
@@ -490,6 +492,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   protected void setColumnText( final TableColumn tc )
   {
+// System.out.println("");
     final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
 
     final String label = (String) tc.getData( COLUMN_PROP_LABEL );
@@ -508,7 +511,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final String tooltipText = textAndTooltip[1];
 
     tc.setText( text );
-    tc.setToolTipText( tooltipText );
+    tc.setData( TableColumnTooltipListener.TOOLTIP_PROPERTY, tooltipText );
   }
 
   private String[] getLabelAndTooltip( final String label, final String tooltip, final String propertyName )

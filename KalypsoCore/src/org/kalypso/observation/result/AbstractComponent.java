@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public abstract class AbstractComponent implements IComponent
 {

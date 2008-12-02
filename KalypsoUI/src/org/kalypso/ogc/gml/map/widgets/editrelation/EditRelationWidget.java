@@ -77,7 +77,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -163,7 +163,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     }
     m_targetFE = null;
     final JMSelector selector = new JMSelector();
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
 
@@ -229,9 +229,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     moved( p );
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
   }
 
@@ -245,7 +245,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     if( m_srcFE == null )
       return;
     final JMSelector selector = new JMSelector();
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     final double r = transform.getSourceX( RADIUS ) - transform.getSourceX( 0 );
@@ -263,9 +263,9 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     updateProblemsText();
 
 // TODO: check if this repaint is necessary for the widget
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
   }
 
   @Override
@@ -295,7 +295,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       return;
     final GM_Point fromCenter = fromGeom.getCentroid();
     final GM_Point toCenter = toGeom.getCentroid();
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final int x1 = (int) transform.getDestX( fromCenter.getX() );
     final int y1 = (int) transform.getDestY( fromCenter.getY() );
@@ -308,7 +308,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     final List<FeatureList> result = new ArrayList<FeatureList>();
     final IKalypsoTheme activeTheme = getActiveTheme();
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     if( mapModell == null || activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return new CascadingFeatureList( result.toArray( new FeatureList[result.size()] ) );
@@ -377,7 +377,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         {
           final IStructuredContentProvider cProvider = new IStructuredContentProvider()
           {
-            public Object[] getElements( final Object inputElement )
+            public Object[] getElements( Object inputElement )
             {
               if( inputElement instanceof List )
               {
@@ -391,7 +391,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
               // m_input = null;
             }
 
-            public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+            public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
             {
               // m_input = newInput;
             }
@@ -638,7 +638,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           final Object element = item.getData();
           if( element != null )
           {
-            final boolean status = m_contentProvider.isChecked( element );
+            boolean status = m_contentProvider.isChecked( element );
 
             // Strange: this visitor is used for only one element. Is this really intended?
             try
@@ -665,19 +665,10 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
     refreshSettings();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
-  @Override
-  public String getPartName( )
-  {
-    return null;
   }
 }

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,7 +39,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.FileType;
+import ogc31.www.opengis.net.gml.ConversionToPreferredUnitType;
+import ogc31.www.opengis.net.gml.DerivationUnitTermType;
+import ogc31.www.opengis.net.gml.DirectionPropertyType;
+import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
@@ -49,6 +52,7 @@ import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.JAXBContextProvider;
+import org.kalypso.gmlschema.types.MetaDataPropertyTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -196,7 +200,9 @@ public class TypeHandlerUtilities
       // <element name="unsignedByte" type="unsignedByte" />
       final String[] shortTypes = { "short", "unsignedByte" };
       for( final String xmlType : shortTypes )
+      {
         registry.registerTypeHandler( new XsdBaseTypeHandlerShort( xmlType ) );
+      }
 
       // <element name="byte" type="byte" />
       registry.registerTypeHandler( new XsdBaseTypeHandlerByte() );
@@ -242,63 +248,34 @@ public class TypeHandlerUtilities
         throw new UnsupportedOperationException( "GMLVersion " + gmlVersion + " is not supported" );
       }
     };
+    // geometry types
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POLYGON_PROPERTY, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
 
-    // Basic GML 3 types
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+
+    // {http://www.opengis.net/gml}GeometryPropertyType
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GeometryPropertyType" ), GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
-    // Geometries
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_GEOMETRY, GeometryUtilities.QN_GEOMETRY, GM_Object.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_SURFACE, GeometryUtilities.QN_SURFACE, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POLYGON, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_POINT, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LINE_STRING, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POINT, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_LINE_STRING, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_MULTI_POLYGON, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
-    registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_POLYGON_PROPERTY, GeometryUtilities.QN_POLYGON, GM_Surface.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_POINT_PROPERTY, GeometryUtilities.QN_POINT, GM_Point.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING, GM_Curve.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_MULTI_POINT_PROPERTY, GeometryUtilities.QN_MULTI_POINT, GM_MultiPoint.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_MULTI_LINE_STRING, GM_MultiCurve.class,
-    // true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_MULTI_POLYGON_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-// // TODO: why QName QN_MULTI_POLYGON in next line?
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_GEOMETRY_PROPERTY, GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
-// registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
+    // other GML3 types:
+    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
 
-    // Coverages
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType"
-    // ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true ) );
-    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "File" ), FileType.class, false ) );
+    registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
 
-    // Never used: remove?
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider,
-    // GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false, true
-    // ) );
-// // for the elements of ConventionalUnitType
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ),
-    // ConversionToPreferredUnitType.class, false, true ) );
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "RoughConversionToPreferredUnitType" ), new QName( NS.GML3, "roughConversionToPreferredUnit" ),
-    // ConversionToPreferredUnitType.class, false, true ) );
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false,
-    // true ) );
+    // for the elements of ConventionalUnitType
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "ConversionToPreferredUnitType" ), new QName( NS.GML3, "conversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RoughConversionToPreferredUnitType" ), new QName( NS.GML3, "roughConversionToPreferredUnit" ), ConversionToPreferredUnitType.class, false, true, false ) );
+    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "DerivationUnitTermType" ), new QName( NS.GML3, "derivationUnitTerm" ), DerivationUnitTermType.class, false, true, false ) );
 
-    // http://www.opengis.net/swe
+    registry.registerTypeHandler( new MetaDataPropertyTypeHandler() );
+
     registry.registerTypeHandler( new RepresentationTypeHandler() );
   }
 }

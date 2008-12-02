@@ -54,13 +54,12 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
  * A kind of view over observations.
@@ -265,34 +264,21 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /**
-   * Loads an observation, if synchron is true, the load is performed synchronuously.
+   * Loads an observation, if synchro is true, the load is performed synchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions, final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions ); //$NON-NLS-1$
 
-    final Boolean isSynchron = Boolean.valueOf( synchron );
-
-    final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[] { this, data, tokenizedName, isSynchron }, synchron )
+    final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[] { this, data, tokenizedName }, synchron )
     {
       @Override
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
-        final PooledObsProvider provider = new PooledObsProvider( key, null );
-
+        final IObsProvider provider = new PooledObsProvider( key, null );
         try
         {
-          final boolean isSync = ( (Boolean)m_data[3] ).booleanValue();
-          if( isSync )
-          {
-            provider.objectLoaded( key, newValue, Status.OK_STATUS );
-          }
-
           ((ObsView) m_data[0]).addObservation( provider, (String) m_data[2], (ObsView.ItemData) m_data[1] );
-        }
-        catch( final Throwable t )
-        {
-          t.printStackTrace();
         }
         finally
         {

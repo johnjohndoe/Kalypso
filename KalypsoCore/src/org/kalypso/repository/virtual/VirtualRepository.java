@@ -51,7 +51,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;

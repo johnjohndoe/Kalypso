@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -43,7 +42,7 @@ final class RememberForSync
 
   private final long m_modificationStamp;
 
-  public RememberForSync( final IFile zmlFile, final IFile datFile, final IAxis numberAxis )
+  public RememberForSync( IFile zmlFile, IFile datFile, IAxis numberAxis )
   {
     m_zmlFile = zmlFile;
     m_datFile = datFile;
@@ -107,19 +106,17 @@ final class RememberForSync
 
       zmlReader = new BufferedReader( new InputStreamReader( m_zmlFile.getContents(), m_zmlFile.getCharset() ) );
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), m_zmlFile.getName(), ResourceUtilities
+      IObservation obs = ZmlFactory.parseXML( new InputSource( zmlReader ), m_zmlFile.getName(), ResourceUtilities
           .createURL( m_zmlFile ) );
       IOUtils.closeQuietly( zmlReader );
 
-      final ITuppleModel values = obs.getValues( null );
+      ITuppleModel values = obs.getValues( null );
 
-      final IAxis[] axes = obs.getAxisList();
+      IAxis[] axes = obs.getAxisList();
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      // IMPORTANT: copy complete list into ArrayList; the list returned by Array.asList cannot be
-      // modified (add/remove not implemented)
-      final List<IAxis> axisList = new ArrayList<IAxis>( java.util.Arrays.asList( axes ) );
+      final List axisList = java.util.Arrays.asList( axes );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
 
@@ -129,22 +126,22 @@ final class RememberForSync
         statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, m_numberAxis );
         axisList.remove( statusAxis );
       }
-      catch( final NoSuchElementException e )
+      catch( NoSuchElementException e )
       {
         // ignored
       }
 
       for( int l = 0; l < csv.getLines(); l++ )
       {
-        final Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
-        final double d = Double.parseDouble( csv.getItem( l, 1 ).replaceAll( ",", "." ) ); // replace all ',' with '.' so that //$NON-NLS-1$ //$NON-NLS-2$
+        Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
+        double d = Double.parseDouble( csv.getItem( l, 1 ).replaceAll( ",", "." ) ); // replace all ',' with '.' so that //$NON-NLS-1$ //$NON-NLS-2$
         // Double-parsing always works
 
         /*
          * Großes TODO: z.Z. werden durch das Grafiktool hinzugefügte oder gelöschte Werte nicht berücksichtigt. Ist
          * auch die Frage ob man es überhaupt unterstützen sollte...
          */
-        final int ix = values.indexOf( date, dateAxis );
+        int ix = values.indexOf( date, dateAxis );
 
         if( ix != -1 )
         {
@@ -162,7 +159,7 @@ final class RememberForSync
       obs.setValues( values );
       final Observation xml = ZmlFactory.createXML( obs, null );
 
-      final SetContentHelper helper = new SetContentHelper()
+      SetContentHelper helper = new SetContentHelper()
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable

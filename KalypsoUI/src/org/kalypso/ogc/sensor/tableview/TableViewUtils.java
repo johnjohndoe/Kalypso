@@ -62,11 +62,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
@@ -274,16 +274,12 @@ public final class TableViewUtils
     // features-list is optional
     if( xml.getFeatures() != null )
     {
-      view.clearFeatures();
-
       final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
       for( final String element : featureNames )
         view.setFeatureEnabled( element, true );
     }
 
-    final Boolean alphaSort = xml.isAlphaSort();
-    final boolean as = alphaSort == null ? false : alphaSort.booleanValue();
-    view.setAlphaSort( as );
+    view.setAlphaSort( xml.isAlphaSort() );
 
     // timezone is optional
     if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )

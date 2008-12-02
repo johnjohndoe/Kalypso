@@ -43,6 +43,7 @@ package org.kalypso.metadoc;
 
 import java.io.OutputStream;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
@@ -57,19 +58,19 @@ public interface IExportableObject
    * @return a unique identifier for this exportable object. The identifier should be unique within the scope of its
    *         exporter.
    */
-  public String getIdentifier( );
+  public String getIdentifier();
 
   /**
-   * @return a category describing what kind of document it is (in end-user terms). The category can be used to classify
-   *         the documents.
+   * @return a category describing what kind of document it is (in end-user terms). The category can be used to classify the
+   *         documents.
    */
-  public String getCategory( );
+  public String getCategory();
 
   /**
    * @return a name which is suitable as filename for this document. The name should have a filename-like structure with
    *         <code>basename.extension</code>.
    */
-  public String getPreferredDocumentName( );
+  public String getPreferredDocumentName();
 
   /**
    * Called by the metadoc framework when this object should be exported.
@@ -78,14 +79,10 @@ public interface IExportableObject
    * <ul>
    * <li>it should have a severity of WARNING for errors which are not dramatic, means the export can still be done,
    * some elements mights be missing due to this error, but it is not a big problem
-   * <li>it should have a severity of ERROR for unrecoverable errors, means the export doesn't make sense or is even not
-   * possible
+   * <li>it should have a severity of ERROR for unrecoverable errors, means the export doesn't make sense or is even
+   * not possible
    * </ul>
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor );
-
-  /**
-   * This function returns a ;-seperated list of stations associated with this object.
-   */
-  public String getStationIDs( );
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions );
 }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
@@ -67,9 +67,9 @@ public class GMLorExceptionContentHandler extends DelegateContentHandler
 {
   private int m_depth = 0;
 
-  public GMLorExceptionContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
+  public GMLorExceptionContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final boolean useGMLSchemaCatalog, final URL context, final IFeatureProviderFactory providerFactory )
   {
-    super( new GMLDocumentContentHandler( xmlReader, schemaLocationHint, context, providerFactory ) );
+    super( new GMLDocumentContentHandler( xmlReader, schemaLocationHint, useGMLSchemaCatalog, context, providerFactory ) );
   }
 
   /**

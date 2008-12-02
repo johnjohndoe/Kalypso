@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.phenomenon;
 
+import org.kalypso.core.i18n.Messages;
 
 /**
  * An {@link IPhenomenon} implementation based on a dictionary entry.

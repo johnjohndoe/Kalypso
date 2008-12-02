@@ -58,6 +58,7 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -65,24 +66,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-/**
- * This user style painter paints a list of features according to one (sld) user style.
- *
- * @author Gernot Belger
- */
 public class UserStylePainter
 {
-  private final KalypsoUserStyle m_style;
+  private final UserStyle m_style;
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public UserStylePainter( final KalypsoUserStyle style, final IFeatureSelectionManager selectionManager )
+  public UserStylePainter( final UserStyle style, final IFeatureSelectionManager selectionManager )
   {
     m_style = style;
     m_selectionManager = selectionManager;
   }
 
-  public void paintSelected( final GMLWorkspace workspace, final double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  public void paintSelected( final GMLWorkspace workspace, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     paintFeatureTypeStyles( workspace, scale, bbox, features, selected, monitor, delegate );
   }
@@ -91,15 +87,12 @@ public class UserStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.0"), m_style.getFeatureTypeStyles().length ); //$NON-NLS-1$
 
-    /* Only paint features contained in the current bounding box */
-    final List< ? > visibleFeatures = features.query( bbox, null );
-    // TODO: is this query enough? we should additionally check if this feature really touches the bounding box
-
     final FeatureTypeStyle[] fts = m_style.getFeatureTypeStyles();
+
     for( final FeatureTypeStyle element : fts )
     {
       final SubMonitor childProgres = progress.newChild( 1 );
-      paintFeatureTypeStyle( workspace, scale, visibleFeatures, selected, childProgres, element, paintDelegate );
+      paintFeatureTypeStyle( workspace, scale, bbox, features, selected, childProgres, element, paintDelegate );
       ProgressUtilities.done( childProgres );
     }
   }
@@ -108,7 +101,7 @@ public class UserStylePainter
    * @param selected
    *            Whether to paint selected or not-selected features. If <code>null</code>, paint all features.
    */
-  private void paintFeatureTypeStyle( final GMLWorkspace workspace, final Double scale, final List< ? > features, final Boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element, final IPaintDelegate delegate ) throws CoreException
+  private void paintFeatureTypeStyle( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element, final IPaintDelegate delegate ) throws CoreException
   {
     final QName qname = element.getFeatureTypeName();
 
@@ -119,28 +112,32 @@ public class UserStylePainter
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-      paintRule( workspace, scale, features, selected, childProgress, rule, qname, delegate );
+
+      paintRule( workspace, scale, bbox, features, selected, childProgress, rule, qname, delegate );
       ProgressUtilities.done( monitor );
     }
   }
 
-  private void paintRule( final GMLWorkspace workspace, final Double scale, final List< ? > features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final QName qname, final IPaintDelegate delegate ) throws CoreException
+  private void paintRule( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final QName qname, final IPaintDelegate delegate ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.1"), 100 ); //$NON-NLS-1$
 
+    final List< ? > visibleFeatures = features.query( bbox, null );
+
     ProgressUtilities.worked( progress, 15 );
 
-    final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( features.size() );
+    final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( visibleFeatures.size() );
 
-    for( final Object o : features )
+    final Filter filter = rule.getFilter();
+    for( final Object o : visibleFeatures )
     {
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( workspace, scale, selected, rule, o, qname, childProgress, delegate );
+      paintFeature( workspace, scale, selected, rule, filter, o, qname, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
 
-  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.2"), 100 ); //$NON-NLS-1$
 
@@ -151,17 +148,16 @@ public class UserStylePainter
     try
     {
       /* Only paint really visible features */
-      final Filter filter = rule.getFilter();
       if( filterFeature( feature, selected, filter ) )
       {
-        /* Only paint features which applies to the given qname */
+        /* Only paint features which apply to the given qname */
         if( qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname ) )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
           for( final Symbolizer symbolizer : symbolizers )
           {
             final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-            // TODO: should'nt there be at least some debug output if this happens?
+            // TODO: shoudlnt there be at least some debug output if this happens?
             if( displayElement != null )
             {
               /* does scale apply? */
@@ -174,29 +170,27 @@ public class UserStylePainter
     }
     catch( final CoreException e )
     {
-      e.printStackTrace();
       throw e;
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
   /**
-   * Determines if a feature should be drawn or not.<br>
-   * Checks for the sld:filter and current selection.
-   *
+   * Determines if a feature should be drawn or now
+   * 
    * @param selected
-   *          Whether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
+   *            Whether to filter selected or non-selected features. If <code>null</code>, selection is not tested.
    */
   private boolean filterFeature( final Feature feature, final Boolean selected, final Filter filter ) throws FilterEvaluationException
   {
     /* Is selected/unselected ? */
+    final boolean featureIsSelected = m_selectionManager.isSelected( feature );
+
     if( selected != null )
     {
-      final boolean featureIsSelected = m_selectionManager.isSelected( feature );
       if( selected && !featureIsSelected )
         return false;
 

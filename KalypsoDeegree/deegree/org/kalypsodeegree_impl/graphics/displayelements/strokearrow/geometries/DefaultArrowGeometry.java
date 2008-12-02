@@ -42,7 +42,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 @Deprecated
 public class DefaultArrowGeometry extends AbstractArrowGeometry

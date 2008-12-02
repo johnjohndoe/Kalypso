@@ -37,19 +37,21 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
+import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.TranProLinFilterType;
 
 /**
@@ -57,12 +59,14 @@ import org.kalypso.zml.filters.TranProLinFilterType;
  */
 public class TranProLinFilterUtilities
 {
-  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, int statusToMerge, final File resultFile, String sufix, final IRequest request ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, int statusToMerge, final File resultFile, String sufix ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
   {
     if( resultFile == null )
       return; // nothing to do
-    final TranProLinFilterType filter = FilterFactory.OF_FILTER.createTranProLinFilterType();
-
+    final ObjectFactory fac = new ObjectFactory();
+    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+    final TranProLinFilterType filter = fac.createTranProLinFilterType();
+    
     filter.setDateBegin( dateBegin );
     filter.setDateEnd( dateEnd );
     filter.setOperandBegin( operandBegin );
@@ -71,13 +75,14 @@ public class TranProLinFilterUtilities
     filter.setStatusToMerge( statusToMerge );
     filter.setAxisTypes( axisTypes );
     final StringWriter stringWriter = new StringWriter();
-
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( FilterFactory.JC_FILTER );
-    marshaller.marshal( FilterFactory.OF_FILTER.createTranProLinFilter( filter ), stringWriter );
+    
+    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
+    marshaller.marshal( filter, stringWriter );
     final String string = XMLUtilities.removeXMLHeader( stringWriter.toString() );
     final String filterInline = XMLUtilities.prepareInLine( string );
     final IObservation resultObservation = ZmlFactory.decorateObservation( baseObservation, filterInline, null );
     // write ZML
+    final IRequest request = new ObservationRequest( dateBegin.getTime(), dateEnd.getTime() );
     final Observation observationType = ZmlFactory.createXML( resultObservation, request );
     String name = observationType.getName();
     if( name == null )

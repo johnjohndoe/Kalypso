@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
+import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
  * Wechmann Parameters
@@ -68,13 +69,13 @@ public final class WechmannParams
    * <p>
    * this is a computed value, it is not serialized.
    */
-  private double m_Q4WGR;
+  private final double m_Q4WGR;
 
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
    * defined, thus the parameters are valid for all possible W values.
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2 ) 
+  public WechmannParams( double W1, double LNK1, double K2 ) throws WQException
   {
     this( W1, LNK1, K2, Double.MAX_VALUE );
   }
@@ -92,22 +93,14 @@ public final class WechmannParams
    *          obere Wasserstandsgrenze in cm
    *  
    */
-  public WechmannParams( final double W1, final double LNK1, final double K2, final double WGR ) 
+  public WechmannParams( double W1, double LNK1, double K2, double WGR ) throws WQException
   {
     m_W1 = W1;
     m_LNK1 = LNK1;
     m_K2 = K2;
     m_WGR = WGR;
 
-    try
-    {
-      m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      m_Q4WGR = Double.MAX_VALUE;
-    }
+    m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
   }
 
   /**

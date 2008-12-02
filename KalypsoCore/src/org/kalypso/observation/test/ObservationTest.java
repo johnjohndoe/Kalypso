@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
@@ -77,7 +80,10 @@ public class ObservationTest extends TestCase
       cal.add( Calendar.HOUR_OF_DAY, 1 );
     }
 
-    return new Observation<TupleResult>( "Test-Observation", "", tupleResult ); //$NON-NLS-1$ //$NON-NLS-2$
+    final List<MetadataObject> mdList = new ArrayList<MetadataObject>();
+    mdList.add( new MetadataObject( "Test", "Nothing" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void testDummy( )

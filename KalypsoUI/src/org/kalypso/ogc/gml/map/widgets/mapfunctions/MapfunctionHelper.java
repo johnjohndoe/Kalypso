@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.JMSelector;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapperEnvelopeProvider;
@@ -72,7 +72,7 @@ public class MapfunctionHelper
   /**
    * Find one feature on a map within a rectangle.
    * 
-   * @param IMapPanel
+   * @param mapPanel
    *            The map panel.
    * @param rectangle
    *            The rectangle contains the point, to which the radious is added.
@@ -82,7 +82,7 @@ public class MapfunctionHelper
    *            The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
-  public static EasyFeatureWrapper[] findFeatureToSelect( final IMapPanel mapPanel, final Rectangle rectangle, final EasyFeatureWrapper[] featureToSelectFrom, final int radius )
+  public static EasyFeatureWrapper[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final EasyFeatureWrapper[] featureToSelectFrom, final int radius )
   {
     if( mapPanel == null )
       return new EasyFeatureWrapper[] {};
@@ -126,7 +126,7 @@ public class MapfunctionHelper
    * <br>
    * REMARK: This function is used for processing shape file workspace (see new QName("namespace", "type"))
    * 
-   * @param IMapPanel
+   * @param mapPanel
    *            The map panel.
    * @param rectangle
    *            The rectangle contains the point, to which the radious is added.
@@ -136,7 +136,7 @@ public class MapfunctionHelper
    *            The radius, in which is searched.
    * @return All feature wrappers, whose features geometries lies within the radius.
    */
-  public static Feature[] findFeatureToSelect( final IMapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
+  public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
     if( mapPanel == null )
       return new Feature[] {};

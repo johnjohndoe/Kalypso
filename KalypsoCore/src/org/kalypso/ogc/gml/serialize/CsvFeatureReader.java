@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -146,8 +145,7 @@ public final class CsvFeatureReader
       if( ignoreFormatExceptions )
         return null;
 
-      final String colStr = ArrayUtils.toString( columns );
-      throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.10") + colStr, nfe ); //$NON-NLS-1$
+      throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.10") + columns, nfe ); //$NON-NLS-1$
     }
   }
 }

@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -52,16 +49,14 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
-import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,24 +65,26 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A {@link org.xml.sax.ContentHandler} implementation which parses GML fragment and produces a {@link Feature}
- * hierarchy from it.<br>
+ * A {@link org.xml.sax.ContentHandler} imeplementation which parses GML fragment and produces a {@link Feature}
+ * hirarchy from it.
+ * <p>
  * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
  * property-values to their corresponding {@link IMarshallingTypeHandler}s.
- *
+ * </p>
+ * 
  * @author Andreas von Doemming
  */
 public class GMLContentHandler extends DelegateContentHandler implements UnmarshallResultEater
 {
-  /* Additional schema locations parsed from the 'schemaLocation' attribute of the root element */
-  private final Map<String, URL> m_schemaLocations = new HashMap<String, URL>();
-
   private final URL m_context;
+
+  private final IGMLSchema m_schema;
 
   private final XMLReader m_xmlReader;
 
@@ -96,27 +93,15 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
   private IPropertyType m_scopeProperty = null;
 
-  /** Buffer for simple content, if this is about to be parsed */
-  private StringBuffer m_simpleContent = null;
-
   private Feature m_rootFeature;
 
   private final ContentHandler m_parentHandler;
 
-  private String m_version;
-
-  /**
-   * @param schemaLocations
-   *          If non-<code>null</code>, these locations will be used to load the corresponding schmema's (i.e. given to
-   *          the catalog). If the schema is already cached or a location is registered, the location will probably
-   *          ignored.
-   */
-  public GMLContentHandler( final XMLReader xmlReader, final URL context, final Map<String, URL> schemaLocations )
+  public GMLContentHandler( final XMLReader xmlReader, final URL context, final IGMLSchema schema )
   {
     m_xmlReader = xmlReader;
     m_context = context;
-    if( schemaLocations != null )
-      m_schemaLocations.putAll( schemaLocations );
+    m_schema = schema;
 
     m_parentHandler = m_xmlReader.getContentHandler();
   }
@@ -144,7 +129,8 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       return;
     }
 
-    final QName qname = new QName( uri, localName );
+    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
+    final QName qname = new QName( localUri, localName );
 
     if( (m_scopeFeature == null && m_scopeProperty == null) || (m_scopeFeature != null && m_scopeProperty instanceof IRelationType) )
       startFeature( atts, qname );
@@ -165,24 +151,22 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType pt = featureType.getProperty( qname );
     if( pt == null )
-    {
-      final String msg = String.format( "Found unknwon property '%s' for FeatureType '%s'", qname, featureType.getQName() );
-      throw new SAXException( msg );
-    }
+      throw new SAXException( "GML Type not supported (i.e. no property with that name found) for: " + qname );
 
     /* Go into scope with that feature */
     m_scopeProperty = pt;
 
+    // TODO: normally this should be enough. We should now activate a delegate contentHandler whih parses the content
+    // of a property
+
     if( pt instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) pt;
-      if( vpt.getTypeHandler() instanceof ISimpleMarshallingTypeHandler )
-        m_simpleContent = new StringBuffer();
-      else
-        startValueProperty( uri, localName, qName, atts, vpt );
+      startValueProperty( uri, localName, qName, atts, (IValuePropertyType) pt );
     }
     else if( pt instanceof IRelationType )// its a relation
+    {
       startXLinkedFeature( atts, feature, (IRelationType) pt );
+    }
     else
     {
       /* Should never happen. either its a value or a relation. */
@@ -195,7 +179,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     // TODO: we should distinguish between simple and complex types here and use different types of typeHandlers for
     // that. Reason1: get rid of overhead for simple types, just read the content as string and translate to the
     // corresponding simple type. Reason2: If it is clear for the complex types that they are complex, we may
-    // enhance parsing there (for example do not read the end element of the property).
+    // enhance parsing there (for example dont read the end element of the property).
 
     final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
 
@@ -209,39 +193,23 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       try
       {
-        final GMLSchema schema = findSchema( uri );
-        final String gmlVersion = schema.getGMLVersion();
+        final String gmlVersion = m_schema.getGMLVersion();
+        // TODO hack, check if there is a better way to set the attributes (maybe in
+        // IMarshallingTypeHandler.unmarshall()
+        // ?)
+        if( typeHandler.getClass() == GenericBindingTypeHandler.class )
+          ((GenericBindingTypeHandler) typeHandler).setAttributes( atts );
 
         // TODO: we SHOULD provide here the full information to the handler: qname, att, ...
         typeHandler.unmarshal( m_xmlReader, m_context, this, gmlVersion );
       }
       catch( final TypeRegistryException e )
       {
+        // TODO Auto-generated catch block
         e.printStackTrace();
 
         m_xmlReader.getErrorHandler().warning( new SAXParseException( "Failed to unmarshall property value: " + vpt, getLocator(), e ) );
       }
-    }
-  }
-
-  private GMLSchema findSchema( final String namespace ) throws SAXParseException
-  {
-    try
-    {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final URL locationHint = m_schemaLocations.get( namespace );
-      final GMLSchema schema = schemaCatalog.getSchema( namespace, m_version, locationHint );
-
-      if( m_version == null )
-        m_version = schema.getGMLVersion();
-
-      return schema;
-    }
-    catch( final InvocationTargetException e )
-    {
-      final Exception targetException = (Exception) e.getTargetException();
-      targetException.printStackTrace();
-      throw new SAXParseException( "Unknown schema for namespace: " + namespace, getLocator(), targetException );
     }
   }
 
@@ -278,14 +246,13 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
      * property type as scope.</p>
      */
 
-    // TODO: We should make sure that this element has no further content.
+    // TODO: We should make sure that this element has no futher content.
   }
 
   private void startFeature( final Attributes atts, final QName qname ) throws SAXException
   {
     /* Root feature or new sub-feature. */
-    final GMLSchema schema = findSchema( qname.getNamespaceURI() );
-    final IFeatureType featureType = schema.getFeatureType( qname );
+    final IFeatureType featureType = m_schema.getFeatureType( qname );
     if( featureType == null )
       throw new SAXException( "No feature type found for: " + qname );
 
@@ -307,29 +274,20 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
     /* First check, if a current scope is closing */
-    final String localUri = uri == null || uri.isEmpty() ? null /* schema.getTargetNamespace() */: uri;
 
-    if( m_simpleContent != null )
-    {
-      endSimpleContent( localUri, localName );
-      m_scopeProperty = null;
-      return;
-    }
+    final String localUri = (uri == null || uri.length() < 1) ? m_schema.getTargetNamespace() : uri;
 
     if( m_scopeProperty != null && QNameUtilities.equals( m_scopeProperty.getQName(), localUri, localName ) )
     {
-      // REMARK: this case happens, after the type-marshaler has already read the content of the element
-
       /* Closing current property */
       m_scopeProperty = null;
       setDelegate( null );
       return;
     }
-
-    if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
+    else if( m_scopeFeature != null && QNameUtilities.equals( m_scopeFeature.getFeatureType().getQName(), localUri, localName ) )
     {
       /* Closing current feature, scope changes back to parent feature. */
-      final Feature parent = m_scopeFeature.getOwner();
+      final Feature parent = m_scopeFeature.getParent();
       /* If the root gets closed we know the result feature. */
       if( parent == null )
         m_rootFeature = m_scopeFeature;
@@ -345,28 +303,6 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       super.endElement( uri, localName, qName );
       return;
     }
-  }
-
-  /**
-   * @see org.kalypso.contribs.org.xml.sax.DelegateContentHandler#characters(char[], int, int)
-   */
-  @Override
-  public void characters( final char[] ch, final int start, final int length ) throws SAXException
-  {
-    if( m_simpleContent == null )
-      super.characters( ch, start, length );
-    else
-      m_simpleContent.append( ch, start, length );
-  }
-
-  /**
-   * @see org.kalypso.contribs.org.xml.sax.DelegateContentHandler#ignorableWhitespace(char[], int, int)
-   */
-  @Override
-  public void ignorableWhitespace( final char[] ch, final int start, final int len )
-  {
-    if( m_simpleContent != null )
-      m_simpleContent.append( ch, start, len );
   }
 
   public Feature getRootFeature( ) throws GMLException
@@ -396,45 +332,6 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       return atts.getValue( id4 );
 
     return null;
-  }
-
-  /**
-   * Will be called, if simple content was parsed.
-   */
-  private void endSimpleContent( final String uri, final String localName ) throws SAXException
-  {
-    if( m_scopeProperty == null )
-      throw new SAXException( "Simple Content found outside of a property." );
-
-    if( !(m_scopeProperty instanceof IValuePropertyType) )
-      throw new SAXException( String.format( "Tried to parse simple content for non simple type: ", m_scopeProperty.getQName() ) );
-
-    if( !QNameUtilities.equals( m_scopeProperty.getQName(), uri, localName ) )
-      throw new SAXException( String.format( "Unbalanced XML at </{%s}%s>", uri, localName ) );
-
-    final IValuePropertyType valuePT = (IValuePropertyType) m_scopeProperty;
-    final ISimpleMarshallingTypeHandler< ? > simpleHandler = (ISimpleMarshallingTypeHandler< ? >) valuePT.getTypeHandler();
-    final String simpleString = m_simpleContent.toString();
-
-    try
-    {
-      final Object value = simpleHandler.convertToJavaValue( simpleString );
-      if( m_scopeProperty.isList() )
-        ((List) m_scopeFeature.getProperty( m_scopeProperty )).add( value );
-      else
-        m_scopeFeature.setProperty( m_scopeProperty, value );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final String msg = String.format( "Failed to parsed simple type. Content was '%s' for property '%s'", simpleString, m_scopeProperty.getQName() );
-      throw new SAXParseException( msg, getLocator(), e );
-    }
-    finally
-    {
-      // Always delete; simple content always stops at the next tag
-      m_simpleContent = null;
-    }
   }
 
   /**
@@ -469,5 +366,14 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       // equivalent to endElement( -property-qname- ); but we do not have that information at the moment
       m_scopeProperty = null;
     }
+  }
+
+  /**
+   * @see org.xml.sax.helpers.DefaultHandler#setDocumentLocator(org.xml.sax.Locator)
+   */
+  @Override
+  public void setDocumentLocator( final Locator locator )
+  {
+    super.setDocumentLocator( locator );
   }
 }

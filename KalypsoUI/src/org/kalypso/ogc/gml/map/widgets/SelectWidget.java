@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,61 +36,42 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
- * @author Gernot Belger
+ * @author doemming
  */
-public class SelectWidget extends AbstractDelegateWidget
+public class SelectWidget extends AbstractSelectWidget
 {
-  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+  public SelectWidget( String name, String toolTip )
+  {
+    super( name, toolTip );
+
+  }
 
   public SelectWidget( )
   {
-    super( "select widget", "", new SelectFeatureWidget( "", "", new QName[] { Feature.QNAME_FEATURE }, null ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "select widget", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( "Selektieren Features in der Karte." );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
-  public void paint( final Graphics g )
+  protected int getSelectionMode( )
   {
-    super.paint( g );
-
-    final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null )
-      return;
-
-    final Rectangle bounds = mapPanel.getScreenBounds();
-    final IWidget delegate = getDelegate();
-    if( delegate == null )
-      m_toolTipRenderer.setTooltip( "Kein Thema aktiv, Selektion nicht möglich.\nAktivieren Sie ein Thema in der Gliederung" );
-    else
-    {
-      final String delegateTooltip = delegate.getToolTip();
-      m_toolTipRenderer.setTooltip( delegateTooltip );
-    }
-
-    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    return MapPanel.MODE_SELECT;
   }
 
+  @Override
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
+   */
+  boolean allowOnlyOneSelectedFeature( )
+  {
+    return false;
+  }
 
 }

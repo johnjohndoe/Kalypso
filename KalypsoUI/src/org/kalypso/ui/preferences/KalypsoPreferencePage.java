@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
@@ -68,7 +68,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   {
     super( GRID );
     setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
-    setDescription( Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -78,7 +78,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void createFieldEditors( )
   {
-    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.1" ), getFieldEditorParent() ); //$NON-NLS-1$
+    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.1"), getFieldEditorParent() ); //$NON-NLS-1$
     addField( m_sfeCrs );
     m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben //$NON-NLS-1$
 
@@ -86,7 +86,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
-    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
+    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.3"), Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.4"), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
     addField( timeZoneFieldEditor );
   }
 

@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.dict;
 
 import junit.framework.TestCase;
 
-import org.kalypso.core.util.pool.KeyInfo;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

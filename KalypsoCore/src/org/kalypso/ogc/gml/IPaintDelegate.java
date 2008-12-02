@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public interface IPaintDelegate
 {

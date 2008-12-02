@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.celleditors;
 
@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * @author Belger
@@ -69,7 +69,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      if( vpt.isGeometry() || (!vpt.getQName().equals( Feature.QN_NAME ) && vpt.isList()) )
+      if( vpt.isGeometry() || (!vpt.getQName().equals( NamedFeatureHelper.GML_NAME ) && vpt.isList()) )
         return new ButtonModifier( vpt, fcl );
 
       final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );

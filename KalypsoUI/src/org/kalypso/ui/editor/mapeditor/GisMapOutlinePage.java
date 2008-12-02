@@ -69,7 +69,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -99,13 +99,13 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       handleMapModelChanged( newModel );
     }
   };
 
-  private IMapPanel m_panel = null;
+  private MapPanel m_panel = null;
 
   private List<PluginMapOutlineAction> m_actionDelegates = null;
 
@@ -267,7 +267,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapPanel getMapPanel( )
+  public MapPanel getMapPanel( )
   {
     return m_panel;
   }
@@ -275,9 +275,9 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapPanel( final IMapPanel panel )
+  public void setMapPanel( final MapPanel panel )
   {
-    final IMapPanel oldPanel = m_panel;
+    final MapPanel oldPanel = m_panel;
 
     if( m_panel != null )
       m_panel.removeMapPanelListener( m_mapPanelListener );
@@ -326,7 +326,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
     m_mapModellViewListeners.remove( l );
   }
 
-  private void fireMapModellViewChanged( final IMapPanel oldPanel, final IMapPanel newPanel )
+  private void fireMapModellViewChanged( final MapPanel oldPanel, final MapPanel newPanel )
   {
     final IMapModellViewListener[] listeners = m_mapModellViewListeners.toArray( new IMapModellViewListener[m_mapModellViewListeners.size()] );
     for( final IMapModellViewListener l : listeners )

@@ -61,7 +61,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 
@@ -108,19 +108,19 @@ public class MapWidgetView extends ViewPart
   /**
    * A map to remember the active widgets per map-part. For each part, there is at most one widget for this widget-view.
    */
-  private final Map<IMapPanel, WidgetInfo> m_widgetInfos = new HashMap<IMapPanel, WidgetInfo>();
+  private final Map<MapPanel, WidgetInfo> m_widgetInfos = new HashMap<MapPanel, WidgetInfo>();
 
-  private final IAdapterEater<IMapPanel> m_adapterEater = new IAdapterEater<IMapPanel>()
+  private final IAdapterEater<MapPanel> m_adapterEater = new IAdapterEater<MapPanel>()
   {
-    public void setAdapter( final IWorkbenchPart part, final IMapPanel panel )
+    public void setAdapter( final IWorkbenchPart part, final MapPanel panel )
     {
       mapActivated( panel );
     }
   };
 
-  private final IAdapterFinder<IMapPanel> m_adapterFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private final IAdapterFinder<MapPanel> m_adapterFinder = new EditorFirstAdapterFinder<MapPanel>();
 
-  private final AdapterPartListener<IMapPanel> m_partListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
+  private final AdapterPartListener<MapPanel> m_partListener = new AdapterPartListener<MapPanel>( MapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
   {
     /**
      * @see org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener#partActivated(org.eclipse.ui.IWorkbenchPartReference)
@@ -183,7 +183,7 @@ public class MapWidgetView extends ViewPart
     m_stackLayout = new StackLayout();
     m_group.setLayout( m_stackLayout );
 
-    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2" ), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
+    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2"), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
 
     m_stackLayout.topControl = m_noWidgetText;
 
@@ -196,9 +196,9 @@ public class MapWidgetView extends ViewPart
    * Sets to widget to show in this view for the given panel.
    * 
    * @param action
-   *          If the given action is non-null, it will be activated if the widget is reactivated.
+   *            If the given action is non-null, it will be activated if the widget is reactivated.
    */
-  public void setWidgetForPanel( final IMapPanel panel, final IWidgetWithOptions widget )
+  public void setWidgetForPanel( final MapPanel panel, final IWidgetWithOptions widget )
   {
     panel.getWidgetManager().addWidgetChangeListener( m_widgetListener );
 
@@ -227,7 +227,7 @@ public class MapWidgetView extends ViewPart
     mapActivated( panel );
   }
 
-  protected void mapActivated( final IMapPanel panel )
+  protected void mapActivated( final MapPanel panel )
   {
     if( m_group == null || m_group.isDisposed() )
       return;
@@ -235,27 +235,21 @@ public class MapWidgetView extends ViewPart
     final WidgetInfo widgetInfo = m_widgetInfos.get( panel );
 
     Control controlToShow = widgetInfo == null ? null : widgetInfo.getComposite();
-    final IWidgetWithOptions widget = widgetInfo == null ? null : widgetInfo.getWidget();
     if( controlToShow == null )
     {
       // was not yet created, create it now
+      final IWidgetWithOptions widget = widgetInfo == null ? null : widgetInfo.getWidget();
       if( widget == null )
       {
         // no widget at all active, just show a message
         controlToShow = m_noWidgetText;
-        m_group.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3" ) ); //$NON-NLS-1$
+        m_group.setText( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3") ); //$NON-NLS-1$
         m_group.setToolTipText( null );
-        // TODO: Evt. reset part name.
       }
       else
       {
         m_group.setText( widget.getName() );
         m_group.setToolTipText( widget.getToolTip() );
-
-        /* If the widget desires a different title, set it. */
-        final String partName = widget.getPartName();
-        if( partName != null && partName.length() > 0 )
-          setPartName( partName );
 
         final Composite widgetParent = m_toolkit.createComposite( m_group, SWT.NONE );
         widgetParent.setLayout( new FillLayout() );
@@ -274,9 +268,7 @@ public class MapWidgetView extends ViewPart
     m_stackLayout.topControl = controlToShow;
     controlToShow.setData( DATA_PANEL, panel );
 
-    onWidgetChanged( widget );
-
-    m_group.layout( true, true );
+    m_group.layout();
   }
 
   /**
@@ -285,7 +277,7 @@ public class MapWidgetView extends ViewPart
   @Override
   public void dispose( )
   {
-    for( final Entry<IMapPanel, WidgetInfo> entry : m_widgetInfos.entrySet() )
+    for( final Entry<MapPanel, WidgetInfo> entry : m_widgetInfos.entrySet() )
     {
       entry.getKey().getWidgetManager().removeWidgetChangeListener( m_widgetListener );
       final WidgetInfo info = entry.getValue();
@@ -312,15 +304,15 @@ public class MapWidgetView extends ViewPart
 
   protected void onWidgetChanged( final IWidget newWidget )
   {
-    final IMapPanel panel = (IMapPanel) m_stackLayout.topControl.getData( DATA_PANEL );
+    final MapPanel panel = (MapPanel) m_stackLayout.topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );
       final IWidgetWithOptions widget = info == null ? null : info.getWidget();
       if( newWidget == null || !newWidget.equals( widget ) )
-        setContentDescription( Messages.getString( "org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4" ) ); //$NON-NLS-1$
-      else
-        setContentDescription( "" ); //$NON-NLS-1$
+      {
+        setContentDescription( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4") ); //$NON-NLS-1$
+      }
     }
   }
 
@@ -333,14 +325,14 @@ public class MapWidgetView extends ViewPart
     if( topControl.isDisposed() )
       return;
 
-    final IMapPanel panel = (IMapPanel) topControl.getData( DATA_PANEL );
+    final MapPanel panel = (MapPanel) topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );
       if( info != null )
       {
         /* Activate my widget if not already done so */
-        /* Check if already present, in order to suppress map repaint */
+        /* Check if already presetn, in order to suppress map repaint */
         final IWidgetWithOptions widget = info.getWidget();
         if( widget != null && widget != panel.getWidgetManager().getActualWidget() )
         {
@@ -349,5 +341,6 @@ public class MapWidgetView extends ViewPart
         }
       }
     }
+
   }
 }

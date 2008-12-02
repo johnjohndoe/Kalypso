@@ -23,7 +23,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
   /**
    * The service URL.
    */
-  private final URL m_service;
+  private URL m_service;
 
   /**
    * The capabilities.
@@ -33,9 +33,9 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
   /**
    * The ID of the provider.
    */
-  private final String m_providerID;
+  private String m_providerID;
 
-  public CapabilitiesGetter( final URL service, final String providerID )
+  public CapabilitiesGetter( URL service, String providerID )
   {
     super();
 
@@ -50,22 +50,22 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    *            A progress monitor.
    * @return A status containing the result.
    */
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( IProgressMonitor monitor ) throws CoreException
   {
     /*
-     * This image provider should do nothing, but create the necessary image loader, so we need not to provide anything,
-     * except the providerID.
+     * This image provider should do nothing, but create the neccessary image loader, so we need not to provide
+     * anything, except the providerID.
      */
-    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", null, null, "", m_providerID );
+    IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", "", "", "", m_providerID );
 
     /* Get the loader. */
-    final ICapabilitiesLoader loader = imageProvider.getLoader();
+    ICapabilitiesLoader loader = imageProvider.getLoader();
 
     /* Init the loader. */
     loader.init( m_service );
 
     /* Load the capabilities. */
-    final WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( loader, monitor );
+    WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( loader, monitor );
 
     m_capabilities = capabilities;
 

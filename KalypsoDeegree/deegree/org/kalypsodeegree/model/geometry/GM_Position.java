@@ -35,7 +35,7 @@
  */
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is

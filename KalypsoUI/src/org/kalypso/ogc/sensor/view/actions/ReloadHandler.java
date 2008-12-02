@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
@@ -68,6 +67,7 @@ public class ReloadHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -92,8 +92,6 @@ public class ReloadHandler extends AbstractHandler
         {
           rep.reload();
 
-          ViewerUtilities.refresh( chooser.getViewer(), true );
-          
           monitor.worked( 1 );
         }
         catch( final RepositoryException e )

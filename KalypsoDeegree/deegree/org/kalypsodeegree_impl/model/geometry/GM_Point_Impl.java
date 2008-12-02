@@ -37,7 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
@@ -330,8 +330,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   protected void calculateParam( )
   {
     setValid( true );
-    
-    // TODO: why does the point does not calculate its envelope?!
   }
 
   @Override

@@ -11,11 +11,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewReference;
@@ -30,7 +26,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
@@ -63,12 +59,14 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private String m_widgetTooltipFromExtension;
 
+  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
 
-    if( isDeselecting( event.getTrigger() ) )
-      return null;
+    // TODO: this gets called twice if radio buttons are involved
+    // it would be nice to find out the check state of the command
+    // Maybe use Command#setState / #getState to do this?
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
     final String widgetParameter;
@@ -97,7 +95,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     final IWorkbenchWindow window = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final AbstractMapPart abstractMapPart = findMapPart( window );
-    final IMapPanel mapPanel = abstractMapPart == null ? null : abstractMapPart.getMapPanel();
+    final MapPanel mapPanel = abstractMapPart == null ? null : (MapPanel) abstractMapPart.getMapPanel();
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
@@ -117,32 +115,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     job.schedule();
 
     return null;
-  }
-
-  /**
-   * Checks if this command was executed as de-selection of a radio button/menu.<br>
-   * If this is the case, we just ignore it.<br>
-   * In doubt, we always execute.
-   */
-  private boolean isDeselecting( final Object trigger )
-  {
-    if( !(trigger instanceof Event) )
-      return false;
-
-    final Event event = (Event) trigger;
-    final Widget widget = event.widget;
-    if( widget instanceof ToolItem )
-    {
-      final ToolItem item = (ToolItem) widget;
-      return !item.getSelection();
-    }
-    if( widget instanceof MenuItem )
-    {
-      final MenuItem item = (MenuItem) widget;
-      return !item.getSelection();
-    }
-
-    return false;
   }
 
   /**
@@ -246,7 +218,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     if( activePart == null )
       return;
 
-    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+    final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
     if( mapPanel != null )
     {
       final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();

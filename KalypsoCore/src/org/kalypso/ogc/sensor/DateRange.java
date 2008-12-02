@@ -45,14 +45,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * Simple Date Range
  * 
  * @author schlienger
  */
-public class DateRange implements Comparable<DateRange>
+public class DateRange implements Comparable
 {
   private final Date m_from;
 
@@ -110,24 +110,9 @@ public class DateRange implements Comparable<DateRange>
    * <p>
    * 
    * @param date
-   * @return true if date is in ]from, to[
-   */
-  public boolean containsExclusive( final Date date )
-  {
-    if( date == null )
-      return false;
-
-    return m_from.compareTo( date ) < 0 && m_to.compareTo( date ) > 0;
-  }
-
-  /**
-   * Returns true when this range contains the given date.
-   * <p>
-   * 
-   * @param date
    * @return true if date is in [from, to]
    */
-  public boolean containsInclusive( final Date date )
+  public boolean contains( final Date date )
   {
     if( date == null )
       return false;
@@ -141,7 +126,7 @@ public class DateRange implements Comparable<DateRange>
   @Override
   public String toString( )
   {
-    final DateFormat df = TimeserieUtils.getDateFormat();
+    DateFormat df = DateFormat.getDateTimeInstance();
     return df.format( m_from ) + " - " + df.format( m_to ); //$NON-NLS-1$
   }
 
@@ -173,16 +158,21 @@ public class DateRange implements Comparable<DateRange>
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
-  public int compareTo( final DateRange other )
+  public int compareTo( final Object other )
   {
     if( other == null )
       return 1;
 
-    int cmp = this.m_from.compareTo( other.m_from );
+    if( !(other instanceof DateRange) )
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.DateRange.1") ); //$NON-NLS-1$
+
+    final DateRange dra = (DateRange) other;
+
+    int cmp = this.m_from.compareTo( dra.m_from );
     if( cmp != 0 )
       return cmp;
 
-    cmp = this.m_to.compareTo( other.m_to );
+    cmp = this.m_to.compareTo( dra.m_to );
     return cmp;
   }
 
@@ -192,7 +182,7 @@ public class DateRange implements Comparable<DateRange>
   @Override
   public boolean equals( Object obj )
   {
-    return compareTo( (DateRange) obj ) == 0;
+    return compareTo( obj ) == 0;
   }
 
   /**

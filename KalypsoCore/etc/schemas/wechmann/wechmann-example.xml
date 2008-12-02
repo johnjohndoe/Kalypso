@@ -2,7 +2,7 @@
 <wechmann xmlns="wechmann.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="wechmann.kalypso.org
 ./wechmann.xsd">
 	<set>
-		<validity format="dd.MM.yyyy">01.11.1997</validity>
+		<validity format="dd.MM.yyy">01.11.1997</validity>
 		<params>
 			<w1>0.43</w1>
 			<lnk1>-7.05799</lnk1>
@@ -16,7 +16,7 @@
 		</params>
 	</set>
 	<set>
-		<validity format="dd.MM.yyyy">01.11.1995</validity>
+		<validity format="dd.MM.yyy">01.11.1995</validity>
 		<params>
 			<w1>-28.97</w1>
 			<lnk1>-17.91270</lnk1>
@@ -30,7 +30,7 @@
 		</params>
 	</set>
 	<set>
-		<validity format="dd.MM.yyyy">01.11.1987</validity>
+		<validity format="dd.MM.yyy">01.11.1987</validity>
 		<params>
 			<w1>-3.5</w1>
 			<lnk1>-9.02470</lnk1>

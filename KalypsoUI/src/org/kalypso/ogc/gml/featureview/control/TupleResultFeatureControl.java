@@ -52,16 +52,11 @@ import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -77,8 +72,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -89,6 +82,9 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
+import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
+import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
@@ -120,7 +116,13 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private TupleResultContentProvider m_tupleResultContentProvider;
 
+  private LastLineContentProvider m_lastLineContentProvider;
+
   private TupleResultLabelProvider m_tupleResultLabelProvider;
+
+  private LastLineLabelProvider m_lastLineLabelProvider;
+
+  private Color m_lastLineBackground;
 
   private TupleResult m_tupleResult;
 
@@ -130,10 +132,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   private IExecutionListener m_executionListener;
 
   private final boolean m_recordsFixed;
-
-  private ExcelTableCursor m_cursor;
-
-  private ControlEditor m_controlEditor;
 
   public TupleResultFeatureControl( final Feature feature, final IPropertyType ftp, final IComponentUiHandlerProvider handlerProvider, final boolean showToolbar, final boolean recordsFixed )
   {
@@ -157,6 +155,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) ); //$NON-NLS-1$
       m_toolbar.update( true );
     }
+
     m_commands.add( commandId );
   }
 
@@ -174,29 +173,13 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     if( m_toolbar != null )
       m_toolbar.createControl( composite );
 
-    m_viewer = new TupleResultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
-
-    // dem Editor beibringen, nur dann eine Zelle zu editieren, wenn der EditMode aktiviert ist
-    ColumnViewerEditorActivationStrategy eas = new ColumnViewerEditorActivationStrategy( m_viewer )
-    {
-
-      /**
-       * @see org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy#isEditorActivationEvent(org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent)
-       */
-      @Override
-      protected boolean isEditorActivationEvent( ColumnViewerEditorActivationEvent event )
-      {
-        if( !isEditMode() )
-          return false;
-        return super.isEditorActivationEvent( event );
-      }
-
-    };
-
-    TableViewerEditor.create( m_viewer, eas, ColumnViewerEditor.DEFAULT );
-
+    m_viewer = new DefaultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
     final Table table = m_viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
 
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
@@ -204,31 +187,51 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     if( m_viewerFilter != null )
       m_viewer.addFilter( m_viewerFilter );
 
-    final ICellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
+    final TupleResultCellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
 
-    m_viewer.setContentProvider( m_tupleResultContentProvider );
-    m_viewer.setLabelProvider( m_tupleResultLabelProvider );
+    final TupleResultContentProvider tupleResultContentProvider = m_tupleResultContentProvider;
+    final LastLineCellModifier lastLineCellModifier = new LastLineCellModifier( tupleResultCellModifier )
+    {
+      @Override
+      protected Object createNewElement( )
+      {
+        final TupleResult result = tupleResultContentProvider.getResult();
+        if( result != null )
+          return result.createRecord();
 
-    m_viewer.setCellModifier( tupleResultCellModifier );
+        return null;
+      }
+
+      @Override
+      protected void addElement( final Object newElement, final String property, final Object value )
+      {
+        final TupleResult result = tupleResultContentProvider.getResult();
+        final IRecord record = (IRecord) newElement;
+        tupleResultCellModifier.modifyRecord( record, property, value );
+        result.add( record );
+      }
+    };
+
+    if( m_recordsFixed )
+    {
+      m_viewer.setContentProvider( m_tupleResultContentProvider );
+      m_viewer.setLabelProvider( m_tupleResultLabelProvider );
+    }
+    else
+    {
+      m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
+      m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
+      m_viewer.setContentProvider( m_lastLineContentProvider );
+      m_viewer.setLabelProvider( m_lastLineLabelProvider );
+    }
+
+    m_viewer.setCellModifier( lastLineCellModifier );
     m_viewer.setInput( null );
 
     updateControl();
 
     if( m_toolbar != null )
       hookExecutionListener( m_commands, m_viewer, m_toolbar );
-
-    if( isEditMode() )
-    {
-
-      m_cursor = new ExcelTableCursor( m_viewer, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-      m_controlEditor = new ControlEditor( m_cursor );
-      m_controlEditor.grabHorizontal = true;
-      m_controlEditor.grabVertical = true;
-
-      m_cursor.setVisible( true );
-      m_cursor.setEnabled( true );
-      // m_viewer.getColumnViewerEditor().addEditorActivationListener( m_cveal );
-    }
 
     return composite;
   }
@@ -238,7 +241,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     final IWorkbench serviceLocator = PlatformUI.getWorkbench();
     final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
     final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
-    final TupleResultFeatureControl trfc = this;
 
     m_executionListener = new IExecutionListener()
     {
@@ -256,11 +258,10 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
         final ToolBar parentToolbar = toolItem.getParent();
         final ToolBar managerToolbar = toolBar.getControl();
 
-        if( commands.contains( commandId ) && (parentToolbar == managerToolbar) )
+        if( commands.contains( commandId ) && parentToolbar == managerToolbar )
         {
           final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
           context.addVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME, tableViewer );
-          context.addVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME, trfc );
         }
       }
 
@@ -271,7 +272,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
-        currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
 
         // REMARK: it would be nice to have an error mesage here, but:
         // If we have several tabs, we get several msg-boxes, as we have several listeners.
@@ -289,7 +289,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
         final IEvaluationContext currentState = handlerService.getCurrentState();
         currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
-        currentState.removeVariable( TupleResultCommandUtils.ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
       }
     };
 
@@ -311,6 +310,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_tupleResultContentProvider.dispose();
     m_tupleResultLabelProvider.dispose();
+
+    if( m_lastLineContentProvider != null )
+      m_lastLineContentProvider.dispose();
+
+    if( m_lastLineLabelProvider != null )
+      m_lastLineLabelProvider.dispose();
+
+    m_lastLineBackground.dispose();
 
     if( m_tupleResult != null )
     {
@@ -511,13 +518,4 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     return tfc;
   }
-
-  boolean isEditMode( )
-  {
-    /**
-     * TODO check if table is editable
-     */
-    return true;
-  }
-
 }

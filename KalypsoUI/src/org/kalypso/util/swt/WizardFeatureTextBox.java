@@ -50,7 +50,6 @@ import java.util.Set;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -68,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * simple textbox wrapper rendering a qname of a feature
  * 
- * @author Dirk Kuch
+ * @author kuch
  */
 public class WizardFeatureTextBox
 {
@@ -86,9 +85,6 @@ public class WizardFeatureTextBox
 
   public WizardFeatureTextBox( final Feature feature, final QName qn )
   {
-    Assert.isNotNull( feature );
-    Assert.isNotNull( qn );
-
     m_feature = feature;
     m_qn = qn;
   }

@@ -18,15 +18,9 @@
  *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
-<<<<<<< .working
- * interface-compatibility to deegree is wanted but not retained always.
- * 
- * If you intend to use this software in other ways than in kalypso
-=======
  * interface-compatibility to deegree is wanted but not retained always.
  *
  * If you intend to use this software in other ways than in kalypso
->>>>>>> .merge-right.r3720
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
@@ -49,8 +43,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-
-import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -79,8 +71,8 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Class representing an ESRI Shape File.
  * <p>
- * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed by
- * the EXSE-Working group of of the geogr. institute of the university of Bonn
+ * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed
+ * by the EXSE-Working group of of the geogr. institute of the university of Bonn
  * (http://www.giub.uni-bonn.de/exse/results/welcome.html).
  * <p>
  * ------------------------------------------------------------------------
@@ -92,10 +84,6 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class ShapeFile
 {
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
-
-  public static final String GEOM = "GEOM";
-
   private DBaseFile m_dbf = null;
 
   private final SHP2WKS shpwks = new SHP2WKS();
@@ -312,7 +300,7 @@ public class ShapeFile
    * stored into the dbase file.
    * 
    * @param allowNull
-   *          if true, everything wich cannot parsed gets 'null' instaed of ""
+   *            if true, everything wich cannot parsed gets 'null' instaed of ""
    */
   public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
@@ -323,8 +311,7 @@ public class ShapeFile
 
     final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType pt = featureType.getProperty( new QName( featureType.getQName().getNamespaceURI(), GEOM ) );
+    final IPropertyType pt = feature.getFeatureType().getProperty( DBaseFile.PROPERTY_GEOMETRY );
     feature.setProperty( pt, geo );
 
     return feature;
@@ -385,7 +372,7 @@ public class ShapeFile
 
       final GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
 
-      if( polygons != null && polygons.length > 0 )
+      if( polygons != null )
       {
         // create multi surface
         final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
@@ -717,10 +704,6 @@ public class ShapeFile
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 0 ) );
       }
-      else if( clazz == Boolean.class )
-      {
-        fieldList.add( new FieldDescriptor( s, "L", (byte) 1, (byte) 0 ) );
-      }
       else
       {
         // System.out.println("no db-type:" + ftp[i].getType());
@@ -832,7 +815,7 @@ public class ShapeFile
       final SHPEnvelope mbr = shpGeom.getEnvelope();
 
       final int nbyte = shpGeom.size();
-      if( i == 0 || (i > 0 && shpmbr == null) )
+      if( i == 0 )
         shpmbr = mbr;
 
       // write bytearray to the shape file
@@ -874,7 +857,8 @@ public class ShapeFile
 
   }
 
-  private ISHPGeometry getShapeGeometry( final GM_Object geom, final byte outputShapeConstant )
+  @SuppressWarnings("unchecked")
+  private ISHPGeometry getShapeGeometry( GM_Object geom, byte outputShapeConstant )
   {
     if( geom == null )
       return null;

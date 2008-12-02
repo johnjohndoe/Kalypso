@@ -41,19 +41,17 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.sensor.ExportUtilities;
-import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
+import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -64,50 +62,48 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
-
   private final String m_identifierPrefix;
-
   private final String m_category;
 
-  private final String m_stationIDs;
-
-  private final String m_preferredDocumentName;
-
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final String preferredDocumentName )
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
-    m_preferredDocumentName = preferredDocumentName;
-    m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems() );
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName( )
+  public String getPreferredDocumentName()
   {
-    return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return "Tabelle.csv"; //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
-    monitor.beginTask( Messages.getString( "ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("ExportableObservationTable.1"), 2 ); //$NON-NLS-1$
 
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
     {
-      // scenario name header
-      final String currentScenarioName = m_table.getCurrentScenarioName();
-      if( !currentScenarioName.equals( "" ) ) //$NON-NLS-1$
-        writeTextLine( writer, currentScenarioName );
+      // let update the metadata with the information we have
+      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems() );
 
-      if( m_preferredDocumentName != null && m_preferredDocumentName.length() > 0  ) //$NON-NLS-1$
-        writeTextLine( writer, m_preferredDocumentName );
+      // scenario name header
+      if( !m_table.getCurrentScenarioName().equals( "" ) ) //$NON-NLS-1$
+      {
+        writer.write( m_table.getCurrentScenarioName() );
+        int columnCount = m_table.getColumnCount() - 1;
+        for( int i = 0; i < columnCount; i++ )
+          writer.write( ";" ); //$NON-NLS-1$
+        writer.newLine();
+      }
 
       monitor.worked( 1 );
 
@@ -123,7 +119,7 @@ public class ExportableObservationTable implements IExportableObject
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "ExportableObservationTable.5" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("ExportableObservationTable.5"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -133,21 +129,9 @@ public class ExportableObservationTable implements IExportableObject
   }
 
   /**
-   * Writes one line with only the first item set tu a given text and fill the rest with ';' according to the Number of current columns. 
-   */
-  private void writeTextLine( final BufferedWriter writer, final String text ) throws IOException
-  {
-    writer.write( text );
-    int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
-    for( int i = 0; i < columnCount; i++ )
-      writer.write( ";" ); //$NON-NLS-1$
-    writer.newLine();
-  }
-
-  /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     return m_identifierPrefix + getPreferredDocumentName();
   }
@@ -155,16 +139,8 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory( )
+  public String getCategory()
   {
     return m_category;
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return m_stationIDs;
   }
 }

@@ -46,8 +46,6 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.urls.XYURLGenerator;
 
 /**
- * TODO: is this needed at all?
- * 
  * @author schlienger
  */
 public class XYCurveRenderer extends StandardXYItemRenderer

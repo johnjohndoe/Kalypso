@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,10 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  --------------------------------------------------------------------------*/
 package org.kalypso.observation;
 
+import java.util.List;
+
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
@@ -54,6 +57,10 @@ public interface IObservation<T>
   public String getDescription( );
 
   public void setDescription( final String desc );
+
+  public List<MetadataObject> getMetadataList( );
+
+  public void setMedataList( final List<MetadataObject> list );
 
   /**
    * Returns the phenomenon the the observation.

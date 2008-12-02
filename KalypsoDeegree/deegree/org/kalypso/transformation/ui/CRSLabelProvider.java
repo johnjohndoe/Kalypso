@@ -52,19 +52,10 @@ import org.eclipse.swt.graphics.Image;
 public class CRSLabelProvider extends LabelProvider
 {
   /**
-   * If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
-   */
-  private boolean m_showCode;
-
-  /**
    * The constructor.
-   * 
-   * @param showCode
-   *            If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
    */
-  public CRSLabelProvider( boolean showCode )
+  public CRSLabelProvider( )
   {
-    m_showCode = showCode;
   }
 
   /**
@@ -85,15 +76,11 @@ public class CRSLabelProvider extends LabelProvider
     if( element instanceof CoordinateSystem )
     {
       CoordinateSystem crs = (CoordinateSystem) element;
-
       String name = crs.getCRS().getName();
-      if( name == null )
-        return crs.getCRS().getIdentifier();
-
-      if( !m_showCode )
+      if( name != null )
         return name;
 
-      return name + " (" + crs.getCRS().getIdentifier() + ")";
+      return crs.getCRS().getIdentifier();
     }
 
     return super.getText( element );

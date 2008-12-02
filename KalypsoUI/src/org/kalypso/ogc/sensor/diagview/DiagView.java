@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -136,21 +134,21 @@ public class DiagView extends ObsView
     return m_showLegend;
   }
 
-  public void setTitle( final String title )
+  public void setTitle( String title )
   {
     m_title = title;
 
     refreshView( null );
   }
 
-  public void setLegendName( final String name )
+  public void setLegendName( String name )
   {
     m_legendName = name;
 
     refreshView( null );
   }
 
-  public void setShowLegend( final boolean show )
+  public void setShowLegend( boolean show )
   {
     m_showLegend = show;
 
@@ -183,12 +181,12 @@ public class DiagView extends ObsView
   @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
   {
-    final List<String> ignoreTypeList = getIgnoreTypesAsList();
+    final List ignoreTypeList = getIgnoreTypesAsList();
 
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
-      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxisList(), new Class[] { Number.class, Boolean.class }, true );
+      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClass( obs.getAxisList(), Number.class, true );
       final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
 
       if( keyAxes.length == 0 )
@@ -198,7 +196,7 @@ public class DiagView extends ObsView
 
       for( int i = 0; i < valueAxis.length; i++ )
       {
-        if( valueAxis[i].isKey() )
+        if( keyAxis == valueAxis[i] )
           continue;
 
         final String valueAxisType = valueAxis[i].getType();
@@ -225,41 +223,31 @@ public class DiagView extends ObsView
           mappings[1] = new AxisMapping( valueAxis[i], daValue );
 
           // if color not defined, find suitable one
-          final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
-          final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
+          final Color color;
+          if( data.color != null )
+            color = data.color;
+          else
+          {
+            // look in existing items to see if one has same type
+            int found = 0;
+            final ObsViewItem[] items = getItems();
+            for( int j = 0; j < items.length; j++ )
+            {
+              final AxisMapping[] mps = ((DiagViewCurve) items[j]).getMappings();
+              if( mps[1].getObservationAxis().getType().equals( valueAxis[i].getType() ) )
+                found++;
+            }
+
+            color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
+          }
 
           final String name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
 
-          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
+          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, data.stroke, mappings );
 
           addItem( curve );
         }
       }
     }
-  }
-
-  private Color getColor( final String valueAxisType )
-  {
-    final int found = numberOfItemsWithType( valueAxisType );
-
-    final Color[] axisColors = TimeserieUtils.getColorsFor( valueAxisType );
-
-    if( found < axisColors.length )
-      return axisColors[found];
-
-    return ColorUtilities.random();
-  }
-
-  private int numberOfItemsWithType( final String valueAxisType )
-  {
-    int found = 0;
-    final ObsViewItem[] items = getItems();
-    for( int j = 0; j < items.length; j++ )
-    {
-      final AxisMapping[] mps = ((DiagViewCurve) items[j]).getMappings();
-      if( mps[1].getObservationAxis().getType().equals( valueAxisType ) )
-        found++;
-    }
-    return found;
   }
 }

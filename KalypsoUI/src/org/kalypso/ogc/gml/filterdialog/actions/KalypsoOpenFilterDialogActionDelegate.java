@@ -25,7 +25,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;

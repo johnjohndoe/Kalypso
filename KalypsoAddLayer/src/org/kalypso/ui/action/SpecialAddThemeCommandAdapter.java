@@ -41,7 +41,7 @@
 package org.kalypso.ui.action;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 abstract public class SpecialAddThemeCommandAdapter implements ISpecialAddThemeCommand
 {

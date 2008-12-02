@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable.test;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +12,8 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.xml.sax.InputSource;
+
+import com.sun.xml.bind.StringInputStream;
 
 /**
  * WQTableTest
@@ -1024,7 +1025,7 @@ public class WQTableTest extends TestCase
     assertTrue( table3.getValidity().equals( td3 ) );
 
     final String xml = WQTableFactory.createXMLString( tableSet );
-    final WQTableSet tmp = WQTableFactory.parse( new InputSource( new  ByteArrayInputStream( xml.getBytes() ) ) );
+    final WQTableSet tmp = WQTableFactory.parse( new InputSource( new StringInputStream( xml ) ) );
     final String xmlAgain = WQTableFactory.createXMLString( tmp );
     System.out.println( xml );
     System.out.println( xmlAgain );

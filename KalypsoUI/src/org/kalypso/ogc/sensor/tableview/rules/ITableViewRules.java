@@ -74,9 +74,4 @@ public interface ITableViewRules
   public List getRules( );
 
   public void removeAllRules( );
-  
-  /**
-   * Create a deep copy of this rule-set.
-   */
-  public ITableViewRules cloneRules();
 }

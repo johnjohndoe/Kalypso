@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers.parts;
 
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -59,7 +59,7 @@ public class PanToFeaturePart
   /**
    * A view part containing a map panel.
    */
-  private final IMapPanel m_mapPanel;
+  private IWorkbenchPart m_part;
 
   /**
    * The constructor.
@@ -67,9 +67,9 @@ public class PanToFeaturePart
    * @param part
    *            A view part containing a map panel.
    */
-  public PanToFeaturePart( final IMapPanel mapPanel )
+  public PanToFeaturePart( IWorkbenchPart part )
   {
-    m_mapPanel = mapPanel;
+    m_part = part;
   }
 
   /**
@@ -79,28 +79,34 @@ public class PanToFeaturePart
    * @param Feature
    *            The feature to center to.
    */
-  public void panTo( final Feature feature ) throws ExecutionException
+  public void panTo( Feature feature )
   {
+    /* Get the map panel. */
+    MapPanel mapPanel = (MapPanel) m_part.getAdapter( MapPanel.class );
+    if( mapPanel == null )
+      return;
+
     /* Get all geometrys. */
-    final GM_Object[] geometrys = feature.getGeometryProperties();
+    GM_Object[] geometrys = feature.getGeometryProperties();
 
     /* If the feature has no geometrys, there is nothing to do. */
     if( geometrys.length == 0 )
       return;
 
     /* If there are some geometrys, zoom to the first one. */
-    final GM_Object geometry = geometrys[0];
+    GM_Object geometry = geometrys[0];
 
     /* The center point. */
-    final GM_Point centroid = geometry.getCentroid();
+    GM_Point centroid = geometry.getCentroid();
 
     /* The extent of the map panel. */
-    final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    GM_Envelope boundingBox = mapPanel.getBoundingBox();
 
     /* Get the new paned bounding box to the centroid of the geometry. */
-    final GM_Envelope paned = boundingBox.getPaned( centroid );
+    GM_Envelope paned = boundingBox.getPaned( centroid );
 
     /* Finally set the bounding box. */
-    MapHandlerUtils.postMapCommand( m_mapPanel, new ChangeExtentCommand( m_mapPanel, paned ), null );
+    WidgetActionPart part = new WidgetActionPart( m_part );
+    part.postCommand( new ChangeExtentCommand( mapPanel, paned ), null );
   }
 }

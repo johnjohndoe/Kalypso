@@ -70,6 +70,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -207,8 +208,9 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
 
-    m_crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( parent );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       /**

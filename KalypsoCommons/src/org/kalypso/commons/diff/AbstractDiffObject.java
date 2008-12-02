@@ -29,6 +29,10 @@
  */
 package org.kalypso.commons.diff;
 
+import java.io.InputStream;
+
+import org.kalypso.contribs.java.io.StreamUtilities;
+
 /**
  * @author doemming
  */
@@ -39,7 +43,27 @@ public abstract class AbstractDiffObject implements IDiffObject
    */
   public IDiffComparator getDiffComparator( final String path )
   {
+    DiffComparatorRegistry instance = DiffComparatorRegistry.getInstance();
     final String suffix = "." + path.replaceAll( ".+\\.", "" );
-    return DiffUtils.getDiffComparatorFor( suffix, path );
+    if( instance.hasComparator( suffix ) )
+      return instance.getDiffComparator( suffix );
+    return new IDiffComparator()
+    {
+      /**
+       * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
+       *      java.lang.Object)
+       */
+      public boolean diff( IDiffLogger logger, Object content, Object content2 ) throws Exception
+      {
+        final InputStream c1 = (InputStream)content;
+        final InputStream c2 = (InputStream)content2;
+        final boolean hasDiff = !StreamUtilities.isEqual( c1, c2 );
+        if( hasDiff )
+          logger.log( IDiffComparator.DIFF_CONTENT, path );
+        else
+          logger.log( IDiffComparator.DIFF_OK, path );
+        return hasDiff;
+      }
+    };
   }
 }

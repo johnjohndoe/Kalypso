@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,6 +42,7 @@ package org.kalypsodeegree_impl.model.geometry;
  */
 public class AdapterGmlIO
 {
+
   private static AdapterBindingToValue GML31_Binding2Value = null;
 
   private static AdapterBindingToValue GML21_Binding2Value = null;
@@ -55,7 +56,7 @@ public class AdapterGmlIO
     // do not instantiate
   }
 
-  public static synchronized AdapterBindingToValue getGMLBindingToGM_ObjectAdapter( final String gmlVersion )
+  public static AdapterBindingToValue getGMLBindingToGM_ObjectAdapter( final String gmlVersion )
   {
     if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
     {
@@ -72,7 +73,7 @@ public class AdapterGmlIO
     throw new UnsupportedOperationException( "GML version " + gmlVersion + " is not supported by this method" );
   }
 
-  public static synchronized AdapterValueToGMLBinding getGM_ObjectToGMLBindingAdapter( final String gmlVersion )
+  public static AdapterValueToGMLBinding getGM_ObjectToGMLBindingAdapter( final String gmlVersion )
   {
     if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
     {

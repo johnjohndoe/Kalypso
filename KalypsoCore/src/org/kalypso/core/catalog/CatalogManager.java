@@ -62,11 +62,11 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
  * TODO: This catalog manager does two things, managing the catalogs and also knowning about what things are managed

@@ -43,27 +43,15 @@ package org.kalypso.ogc.gml;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
- * This class is for testing properties of {@link IKalypsoFeatureTheme}. Supported properties are:
- * <li> feature type (including substitution) </li>
- * 
  * @author Stefan Kurzbach
  */
 public class KalypsoFeatureThemeTester extends PropertyTester
 {
 
-  /**
-   * test the feature type of the theme
-   */
   private static final String FEATURE_TYPE = "featureType"; //$NON-NLS-1$
-
-  /**
-   * include this argument if the theme must substitute the given feature type instead of being equal to it
-   */
-  private static final String ARG_SUBSTITUTES = "substitutes"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
@@ -71,48 +59,29 @@ public class KalypsoFeatureThemeTester extends PropertyTester
    */
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    // can only test IKalypsoFeatureTheme
-    // return now if input is unexpected
-    if( !(receiver instanceof IKalypsoFeatureTheme) || property == null || expectedValue == null || !(expectedValue instanceof String) )
+    // ignore args and expectedValue, test if currently active scenario equals to this descriptors scenario
+    if( !(receiver instanceof IKalypsoFeatureTheme) )
       return false;
-
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) receiver;
 
-    // parse arguments
-    boolean substitute = false;
-    for( final Object arg : args )
+    // tests if the feature type qname string representation is equal to the expected value
+    if( property.equals( FEATURE_TYPE ) )
     {
-      if( ARG_SUBSTITUTES.equals( arg ) )
-        substitute = true;
-    }
-
-    // tests if the feature type qName string representation is equal to the expected value
-    if( FEATURE_TYPE.equals( property ) )
-    {
-      // check feature type of theme
       final IFeatureType featureType = theme.getFeatureType();
-
       // if feature type is null, return false
-      // ignore null qName?
       // TODO: maybe wait for feature type to become available? blocking might not be feasible though
-      if( featureType == null || featureType.getQName() == null )
+      if( featureType == null )
         return false;
 
-      if( substitute )
-      {
-        // check for substitution
-        final QName expectedQName = QName.valueOf( (String) expectedValue );
-        return GMLSchemaUtilities.substitutes( featureType, expectedQName );
-      }
-      else
-      {
-        // check for string equality
-        final String themeQName = featureType.getQName().toString();
-        return themeQName.equals( expectedValue );
-      }
-    }
-    // other properties here else if
+      final QName qname = featureType.getQName();
 
+      // ignore null qname?
+      if( qname == null )
+        return false;
+
+      return qname.toString().equals( expectedValue );
+    }
+    // other properties here elseif
     return false;
   }
 }

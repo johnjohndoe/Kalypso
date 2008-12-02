@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,9 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
+
+import org.kalypso.ogc.gml.map.MapPanel;
+
 
 /**
  * 
@@ -46,7 +49,7 @@ package org.kalypso.ogc.gml.map.widgets;
  */
 public class ToggleSelectWidget extends AbstractSelectWidget
 {
-  public ToggleSelectWidget( final String name, final String toolTip )
+  public ToggleSelectWidget( String name, String toolTip )
   {
     super( name, toolTip );
 
@@ -55,7 +58,7 @@ public class ToggleSelectWidget extends AbstractSelectWidget
   @Override
   protected int getSelectionMode()
   {
-    return MODE_TOGGLE;
+    return MapPanel.MODE_TOGGLE;
   }
 
   @Override /**

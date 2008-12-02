@@ -43,8 +43,6 @@ package org.kalypso.ogc.sensor.timeseries.envelope;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBElement;
-
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -73,9 +71,7 @@ public class TranProLinFilterCreator implements IFilterCreator
     final TranProLinFilter filter = new TranProLinFilter( ft.getDateBegin().getTime(), ft.getDateEnd().getTime(), ft
         .getOperator(), ft.getOperandBegin().doubleValue(), ft.getOperandEnd().doubleValue(), ft.getStatusToMerge(),axisTypes );
 
-    final JAXBElement< ? extends AbstractFilterType> innerFilterElement = ft.getFilter();
-    final AbstractFilterType innerFilter = innerFilterElement == null ? null : innerFilterElement.getValue();
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( innerFilter, baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

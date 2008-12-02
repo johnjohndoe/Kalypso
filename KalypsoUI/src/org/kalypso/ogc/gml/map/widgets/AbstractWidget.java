@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public abstract class AbstractWidget implements IWidget
 {
-  private IMapPanel m_mapPanel = null;
+  private MapPanel m_mapPanel = null;
 
   private ICommandTarget m_commandPoster;
 
@@ -78,7 +78,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     m_commandPoster = commandPoster;
     m_mapPanel = mapPanel;
@@ -98,7 +98,7 @@ public abstract class AbstractWidget implements IWidget
    *            TODO: maybe it is better to give the whole selection
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
   {
     return true;
   }
@@ -171,6 +171,7 @@ public abstract class AbstractWidget implements IWidget
   public void dragged( final Point p )
   {
     // not implemented by default
+
   }
 
   /**
@@ -186,6 +187,7 @@ public abstract class AbstractWidget implements IWidget
   public void leftClicked( final Point p )
   {
     // not implemented by default
+
   }
 
   /**
@@ -275,14 +277,14 @@ public abstract class AbstractWidget implements IWidget
    * Does not invalidate the map.<br>
    * Use this method, if the state of the widget changes.
    */
-  protected void repaintMap( )
+  protected void mapRepaint( )
   {
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
   }
 
-  protected final IMapPanel getMapPanel( )
+  protected final MapPanel getMapPanel( )
   {
     return m_mapPanel;
   }
@@ -316,7 +318,7 @@ public abstract class AbstractWidget implements IWidget
 
   protected void mouseFunctionChanged( )
   {
-    //
+    // 
   }
 
   /**

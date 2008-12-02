@@ -170,9 +170,8 @@ public class LineGeometryBuilder implements IGeometryBuilder
         poses[i] = transformedPoint.getPosition();
       }
 
-// m_result = createGeometry( poses );
-// return m_result;
-      return createGeometry( poses );
+      m_result = createGeometry( poses );
+      return m_result;
     }
 
     return null;
@@ -212,7 +211,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    // IMPORTANT: we remember GM_Points (not Point's) and re-transform them for painting
+    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
@@ -244,6 +243,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   public void reset( )
   {
+    m_cnt_points = 0;
     m_points.clear();
     m_result = null;
     if( m_extender != null )

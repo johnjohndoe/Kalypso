@@ -53,7 +53,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.TSM_KEY;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class PageCSVDetails extends WizardPage
 {

@@ -3,11 +3,9 @@ package org.kalypso.ui.actions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -20,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.i18n.Messages;
@@ -52,7 +49,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
    *      org.eclipse.ui.IWorkbenchPart)
    */
-  public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
+  public void setActivePart( IAction action, IWorkbenchPart targetPart )
   {
     m_action = action;
 
@@ -62,16 +59,16 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public void run( final IAction action )
+  public void run( IAction action )
   {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.1" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.1") ); //$NON-NLS-1$
   }
 
   /**
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public void selectionChanged( IAction action, ISelection selection )
   {
     m_action = action;
     m_selection = selection;
@@ -89,7 +86,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
   /**
    * @see org.eclipse.ui.IActionDelegate2#init(org.eclipse.jface.action.IAction)
    */
-  public void init( final IAction action )
+  public void init( IAction action )
   {
     m_action = action;
 
@@ -99,38 +96,33 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
   /**
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
-  public void runWithEvent( final IAction action, final Event event )
+  public void runWithEvent( IAction action, Event event )
   {
     /* Need a shell. */
     final Shell shell = event.display.getActiveShell();
-    final String title = Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.2" ); //$NON-NLS-1$
+    String title = Messages.getString("org.kalypso.ui.actions.ExportLegendAction.2"); //$NON-NLS-1$
 
     /* Get the selected elements. */
-    final IStructuredSelection sel = (IStructuredSelection) m_selection;
+    IStructuredSelection sel = (IStructuredSelection) m_selection;
     if( sel.isEmpty() )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.3" ) ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.3") ); //$NON-NLS-1$
       return;
     }
 
-    // TODO: copy/paste from org.kalypso.ui.actions.ExportLegendAction
-    // Put into utility method! (don't forget to remove obsolete message-string)
-
     /* Ask user for file */
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" ); //$NON-NLS-1$
-    final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
-    final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
+    IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" ); //$NON-NLS-1$
+    String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
+    FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
     fileDialog.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.gif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    fileDialog.setFilterNames( new String[] {
-        Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.8" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.9" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.10" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ui.actions.ExportLegendAction.8"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.9"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.10") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( title );
-    // TODO: use map-name for default name e.g. 'mapxxx-legend.png')
-    fileDialog.setFileName( Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.11" ) ); //$NON-NLS-1$
+    fileDialog.setFileName( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.11") ); //$NON-NLS-1$
     if( lastDirPath != null )
       fileDialog.setFilterPath( lastDirPath );
 
     /* Open the file dialog. */
-    final String result = fileDialog.open();
+    String result = fileDialog.open();
     if( result == null )
       return;
 
@@ -138,7 +130,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
     final File legendFile = new File( result );
     if( legendFile.exists() )
     {
-      final boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.12" ), Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.13" ) + legendFile.getName() + Messages.getString( "org.kalypso.ui.actions.ExportLegendAction.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.12"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.13") + legendFile.getName() + Messages.getString("org.kalypso.ui.actions.ExportLegendAction.14") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( !okPressed )
         return;
     }
@@ -146,28 +138,30 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
     /* Store it in the dialog settings. */
     dialogSettings.put( SETTINGS_LAST_DIR, legendFile.getParent() );
 
-    /* Collect all themes */
-    final List<IKalypsoTheme> themeList = new ArrayList<IKalypsoTheme>();
-    final Iterator< ? > iterator = sel.iterator();
+    /* Memory for the themes. */
+    final ArrayList<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+
+    /* Get the iterator. */
+    Iterator< ? > iterator = sel.iterator();
+
+    /* Collect them. */
     while( iterator.hasNext() )
     {
-      final Object object = iterator.next();
+      Object object = iterator.next();
       if( object instanceof IKalypsoTheme )
-        themeList.add( (IKalypsoTheme) object );
+        themes.add( (IKalypsoTheme) object );
     }
-    final IKalypsoTheme[] themes = themeList.toArray( new IKalypsoTheme[themeList.size()] );
 
     /* Create the export job. */
-    final Job job = new UIJob( "Export" )
+    shell.getDisplay().asyncExec( new Runnable()
     {
       /**
-       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+       * @see java.lang.Runnable#run()
        */
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public void run( )
       {
         /* Now save it to a file. */
-        final String suffix = FileUtilities.getSuffix( legendFile );
+        String suffix = FileUtilities.getSuffix( legendFile );
 
         int format = SWT.IMAGE_PNG;
         if( "PNG".equals( suffix ) ) //$NON-NLS-1$
@@ -178,11 +172,18 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
-        return MapUtilities.exportLegends( themes, legendFile, format, getDisplay(), null, -1, -1, monitor );
+        IStatus status = MapUtilities.exportLegends( themes, legendFile, format, new NullProgressMonitor() );
+        if( !status.isOK() )
+        {
+          /* Log the error. */
+          KalypsoGisPlugin.getDefault().getLog().log( status );
+
+          /* Open a error dialog. */
+          MessageDialog errorDialog = new MessageDialog( shell, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.18"), null, status.getMessage(), MessageDialog.ERROR, new String[] { Messages.getString("org.kalypso.ui.actions.ExportLegendAction.19") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
+          errorDialog.open();
+        }
       }
-    };
-    job.setUser( true );
-    job.schedule();
+    } );
   }
 
   /**

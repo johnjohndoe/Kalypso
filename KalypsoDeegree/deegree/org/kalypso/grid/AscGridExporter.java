@@ -88,7 +88,7 @@ public class AscGridExporter
    */
   public void export( final IGeoGrid inputGrid, final File outputFile, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Writing ascii file", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Schreibe ASCII", 100 );
 
     Formatter formatter = null;
     try
@@ -126,7 +126,7 @@ public class AscGridExporter
    */
   public void export( final IGeoGrid inputGrid, final Formatter destination, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Writing ascii file", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Schreibe ASCII", 100 );
 
     final Envelope envelope = inputGrid.getEnvelope();
     final int sizeX = inputGrid.getSizeX();

@@ -47,7 +47,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
-import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;

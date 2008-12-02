@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,7 +45,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.BindingUnmarshalingContentHandler;
@@ -54,6 +53,7 @@ import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshalResultProvider;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
@@ -63,6 +63,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * a generic typehandler for GM_Object geometries based on a bindingtypehandler<br>
@@ -137,7 +138,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
           }
         }
       };
-      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, eater, gmlVersion );
+      final BindingUnmarshalingContentHandler tmpContentHandler = new BindingUnmarshalingContentHandler( unmarshallerHandler, provider, eater, false, gmlVersion );
       tmpContentHandler.startDocument();
       xmlReader.setContentHandler( tmpContentHandler );
     }
@@ -152,7 +153,7 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
+  public void marshal( final QName propQName, final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
     {
@@ -163,10 +164,18 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
       // memory to xml
       final ContentHandler contentHandler = reader.getContentHandler();
 
+      final String namespaceURI = propQName.getNamespaceURI();
+      final String localPart = propQName.getLocalPart();
+      final String qNameString = propQName.getPrefix() + ":" + localPart;
+
+      contentHandler.startElement( namespaceURI, localPart, qNameString, new AttributesImpl() );
+
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
       final JAXBElement<Object> jaxElement = JaxbUtilities.createJaxbElement( xmlTagName, bindingObject );
       marshaller.marshal( jaxElement, contentHandler );
+
+      contentHandler.endElement( namespaceURI, localPart, qNameString );
     }
     catch( final JAXBException e )
     {

@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,10 +39,11 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
 {
+
   private final DatatypeFactory m_datatypeFactory;
 
   public XsdBaseTypeHandlerDuration( final DatatypeFactory datatypeFactory )
@@ -57,9 +58,6 @@ public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
   @Override
   public Duration convertToJavaValue( final String xmlString )
   {
-    if( xmlString == null || xmlString.isEmpty() )
-      return null;
-
     return m_datatypeFactory.newDuration( xmlString );
   }
 

@@ -44,7 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
@@ -84,9 +84,9 @@ public class ZoomInByRectWidget extends AbstractWidget
       m_endPoint = p;
     }
     // TODO: check if this repaint is really necessary
-    IMapPanel panel = getMapPanel();
+    MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
   }
 

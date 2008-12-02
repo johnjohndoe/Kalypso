@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.LineThemePredicater;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -55,7 +55,7 @@ public class KalypsoFeatureThemeHelper
   /**
    * Gets the linestring themes in the Kalypso theme list
    */
-  public static IKalypsoFeatureTheme[] getLineThemes( final IMapPanel panel )
+  public static IKalypsoFeatureTheme[] getLineThemes( final MapPanel panel )
   {
     /* implement visitor for cascading themes in mapPanel */
     final IMapModell mapModell = panel.getMapModell();

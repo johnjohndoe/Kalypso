@@ -133,7 +133,7 @@ public class ObservationViewerDialog extends Dialog
     m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable, createButtonControls() );
     updateViewer();
     // TODO label
-    getShell().setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
+    getShell().setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.0") ); //$NON-NLS-1$
     return composite;
   }
 
@@ -224,6 +224,7 @@ public class ObservationViewerDialog extends Dialog
       {
         public void widgetSelected( SelectionEvent e )
         {
+
           final String name = Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
           final Calendar startDate = Calendar.getInstance();
           startDate.set( 2000, 11, 15 );
@@ -259,13 +260,9 @@ public class ObservationViewerDialog extends Dialog
         public void widgetSelected( SelectionEvent e )
         {
           final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-          final Object content = clipboard.getContents( TextTransfer.getInstance() );
+          Object content = clipboard.getContents( TextTransfer.getInstance() );
           if( content != null && content instanceof String )
-          {
-            final IObservation inputObs = (IObservation) m_input;
-            final String name = inputObs == null ? "" : inputObs.getName();
-            setInput( ZmlFactory.createZMLFromClipboardString( name, "" + content, axis ) );
-          }
+            setInput( ZmlFactory.createZMLFromClipboardString( ((IObservation) m_input).getName(), (String) content, axis ) );
           // else
           // TODO messagebox
           clipboard.dispose();

@@ -43,17 +43,24 @@ package org.kalypso.metadoc.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.contribs.java.lang.ISupplier;
+import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExporter;
-import org.kalypso.metadoc.ui.ExportableTreeItem;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * This Exporter wraps multiple exporters (must all be of the same type) and exhibits them as one single exporter.
@@ -74,6 +81,8 @@ import org.kalypso.metadoc.ui.ExportableTreeItem;
 public class MultiExporter extends AbstractExporter
 {
   private IExporter[] m_exporters;
+
+  private ArrayChooserPage m_page;
 
   /**
    * @see org.kalypso.metadoc.impl.AbstractExporter#init(org.kalypso.contribs.java.lang.ISupplier)
@@ -110,16 +119,49 @@ public class MultiExporter extends AbstractExporter
   }
 
   /**
-   * @see org.kalypso.metadoc.impl.AbstractExporter#createTreeItems(org.kalypso.metadoc.ui.ExportableTreeItem)
+   * Returns all exportable-objecs of all exporters.
+   * 
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
-  @Override
-  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException
   {
-    final ExportableTreeItem[] items = new ExportableTreeItem[m_exporters.length];
-    for( int i = 0; i < m_exporters.length; i++ )
-      items[i] = m_exporters[i].createTreeItem( parent );
+    final Collection<IExportableObject> allObjects = new ArrayList<IExportableObject>();
 
-    return items;
+    final Object[] choosenExporters = m_page.getChoosen();
+
+    for( int i = 0; i < choosenExporters.length; i++ )
+    {
+      final IExporter exporter = (IExporter) choosenExporters[i];
+      final IExportableObject[] objects = exporter.createExportableObjects( configuration );
+      allObjects.addAll( Arrays.asList( objects ) );
+    }
+
+    return allObjects.toArray( new IExportableObject[allObjects.size()] );
+  }
+
+  /**
+   * Returns the wizard page for the first of its exporters.
+   * 
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException
+  {
+    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
+    final String pageTitle = arguments.getProperty( "pageTitle", "Wählen Sie die Exporter" );
+
+    final IWizardPage[] exporterPages = m_exporters[0].createWizardPages( configuration, defaultImage );
+
+    final IWizardPage[] myPages = new IWizardPage[exporterPages.length + 1];
+
+    // create wizard page for selecting the templates
+    m_page = new ArrayChooserPage( m_exporters, new Object[] {}, m_exporters, 0, "exporterSelection", pageTitle, null );
+    m_page.setImageDescriptor( defaultImage );
+
+    myPages[0] = m_page;
+    System.arraycopy( exporterPages, 0, myPages, 1, exporterPages.length );
+
+    return myPages;
   }
 
   /**
@@ -140,9 +182,10 @@ public class MultiExporter extends AbstractExporter
   {
     final Collection<IExporter> exporters = new ArrayList<IExporter>();
 
-    for( final Entry<String, Object> entry : arguments.entrySet() )
+    for( final Iterator aIt = arguments.entrySet().iterator(); aIt.hasNext(); )
     {
-      final String key = entry.getKey();
+      final Map.Entry entry = (Entry) aIt.next();
+      final String key = (String) entry.getKey();
       if( key.startsWith( exporterKey ) )
       {
         try

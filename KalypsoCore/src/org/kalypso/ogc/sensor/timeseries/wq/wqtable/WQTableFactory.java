@@ -19,9 +19,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.serializer.ISerializer;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 
@@ -83,11 +83,8 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final Date validity = ratingTable.getValidity().getTime();
         final Integer offset = ratingTable.getOffset();
 
-        final String xses = ratingTable.getX().trim();
-        final String yses = ratingTable.getY().trim();
-
-        final String[] strX = xses.length() == 0 ? new String[0] : xses.split( "," ); //$NON-NLS-1$
-        final String[] strY = yses.length() == 0 ? new String[0] : yses.split( "," ); //$NON-NLS-1$
+        final String[] strX = ratingTable.getX().split( "," ); //$NON-NLS-1$
+        final String[] strY = ratingTable.getY().split( "," ); //$NON-NLS-1$
 
         if( strX.length != strY.length )
           throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2") ); //$NON-NLS-1$

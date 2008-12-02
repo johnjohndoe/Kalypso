@@ -1,10 +1,8 @@
 package org.kalypso.featureview;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.plugin.*;
 import org.osgi.framework.BundleContext;
+import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.

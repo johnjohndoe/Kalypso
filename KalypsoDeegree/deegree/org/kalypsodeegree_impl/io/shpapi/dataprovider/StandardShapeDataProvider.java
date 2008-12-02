@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -163,13 +162,7 @@ public class StandardShapeDataProvider implements IShapeDataProvider
    */
   public GM_Object getGeometry( final int index )
   {
-    // FIXME nofdp IDSS deploy - hotfix (importing isar app dataset)
-    Feature feature = m_features[index];
-    IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
-
-    return (GM_Object) feature.getProperty( properties[0].getQName() );
-
-// return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
+    return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
   }
 
   /**

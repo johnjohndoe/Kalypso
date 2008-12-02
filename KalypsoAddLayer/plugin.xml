@@ -131,4 +131,13 @@
             id="org.kalypso.ui.gazetter.view.GazetterView"
             name="GazetterView"/>
    </extension>
+   <extension
+         point="org.kalypso.ui.addlayer.WMSImageProvider">
+      <imageProvider
+            class="org.kalypso.ogc.gml.wms.provider.WMSImageProvider"
+            id="org.kalypso.ui.addlayer.kalypsoImageProvider"
+            name="WMS Client">
+      </imageProvider>
+   </extension>
+
 </plugin>

@@ -43,8 +43,6 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Graphics;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -96,8 +94,10 @@ public interface IMapModell extends IWorkbenchAdapter
 
   /**
    * renders the map to the passed graphic context
+   * 
+   * @param g
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean select );
 
   // TODO: remove position stuff
   public IKalypsoTheme getTheme( final int pos );

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
  * Listeners on the {@link IMapModellView}, gets informed if the associated map panel changes.
@@ -49,5 +49,5 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IMapModellViewListener
 {
-  public void onMapPanelChanged( final IMapModellView source, final IMapPanel oldPanel, final IMapPanel newPanel );
+  public void onMapPanelChanged( final IMapModellView source, final MapPanel oldPanel, final MapPanel newPanel );
 }

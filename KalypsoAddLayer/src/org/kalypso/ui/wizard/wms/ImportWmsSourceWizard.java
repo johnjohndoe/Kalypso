@@ -56,8 +56,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.KalypsoServiceConstants;
@@ -206,9 +206,9 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
               providerID = "";
 
             String layerTitle = layer.getTitle();
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
+            source.append( "#" ).append( WMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
+            source.append( "#" ).append( WMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
+            source.append( "#" ).append( WMSImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
 
             AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
             m_outlineviewer.postCommand( command, null );

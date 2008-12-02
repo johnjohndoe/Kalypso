@@ -226,14 +226,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
 
       /* Get the provider attribute. */
-      final String layerProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
-      final String styleProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
+      final String layers = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
+      final String styles = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
       final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
       final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
       /* Create the image provider. */
-      final String[] layers = layerProp == null ? null : layerProp.split( "," );
-      final String[] styles = styleProp == null ? null : styleProp.split( "," );
       final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
 
       return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this, legendIcon, context, showChildren );
@@ -433,11 +431,11 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      double, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
-    m_modell.paint( g, p, bbox, scale, selected, monitor );
+    m_modell.paint( g, p, bbox, scale, selected );
   }
 
   public void removeTheme( final IKalypsoTheme theme )

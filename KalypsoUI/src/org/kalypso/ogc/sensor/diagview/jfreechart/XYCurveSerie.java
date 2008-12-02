@@ -159,12 +159,6 @@ class XYCurveSerie extends Series
     if( obj instanceof Number )
       return (Number)obj;
 
-    if( obj instanceof Boolean )
-    {
-      final Boolean b = (Boolean)obj;
-      return b.booleanValue() ? new Integer( 1 ) : new Integer( 0 );
-    }
-    
     return null;
   }
 

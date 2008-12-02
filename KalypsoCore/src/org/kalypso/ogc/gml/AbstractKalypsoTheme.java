@@ -59,11 +59,8 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -85,7 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * <p>
  * Implements common features to all KalypsoTheme's
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
@@ -142,19 +139,19 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
-   *          The name of the theme.
+   *            The name of the theme.
    * @param type
-   *          The type of the theme.
+   *            The type of the theme.
    * @param mapModel
-   *          The map model to use.
+   *            The map model to use.
    * @param legendIcon
-   *          Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
+   *            Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    * @param context
-   *          The context, if the theme is part of a template loaded from a file. May be null.
+   *            The context, if the theme is part of a template loaded from a file. May be null.
    * @param shouldShowChildren
-   *          True, if the theme should show its children in an outline. Otherwise false.
+   *            True, if the theme should show its children in an outline. Otherwise false.
    */
   public AbstractKalypsoTheme( final I10nString name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
@@ -267,7 +264,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Returns the type of the theme by default. Override if needed.
-   * 
+   *
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
   public String getTypeContext( )
@@ -302,7 +299,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the icon set in the style (StyledLayerType), if any.<br>
    * This may be icons with a relative path or icons, which are defined via some URNs.<br>
-   * 
+   *
    * @return If an user icon or URN is defined, this icon will be returned.<br>
    *         If not, it checks the number of styles and rules.<br>
    *         If only one style and rule exists, there is a generated icon returned, representing the first rule.<br>
@@ -414,7 +411,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the resolved URL for the legend icon or null, if none could be created.
-   * 
+   *
    * @return The resolved URL for the legend icon or null, if none could be created.
    */
   private URL getLegendIconURL( )
@@ -459,7 +456,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * <strong>Note:</strong><br>
    * <br>
    * This has only an effect, if the user does not define an URL or URN and the theme has more then one style or rule.
-   * 
+   *
    * @return The default image descriptor.
    */
   protected ImageDescriptor getDefaultIcon( )
@@ -502,29 +499,30 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   public org.eclipse.swt.graphics.Image getLegendGraphic( final org.eclipse.swt.graphics.Font font ) throws CoreException
   {
     final int BORDER = 0;
     final int ICON_SIZE = 16;
     final int GAP = 4;
 
-    final String label = getLabel( this );
-
-    final Device device = font.getDevice();
-    final Point textExtent = calcTextSize( label, font );
-
-    final int width = BORDER + ICON_SIZE + GAP + textExtent.x;
-    final int height = Math.max( 16, textExtent.y );
+    final int width = 300;
+    final int height = 16;
 
     /* Create the image. */
-    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( device, width, height );
+    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( Display.getCurrent(), width, height );
 
     /* Need a graphical context. */
     final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
+
+    /* Change the color. */
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
+
+    /* Draw on the context. */
+    gc.fillRectangle( 0, 0, width, height );
 
     /* Change the color. */
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
@@ -535,26 +533,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     /* Draw the icon. */
     final org.eclipse.swt.graphics.Image icon = descriptor.createImage();
     gc.drawImage( icon, BORDER, 0 );
-    icon.dispose();
 
     /* Draw the text. */
-    gc.drawString( label, BORDER + ICON_SIZE + GAP, 0, true );
-
-    gc.dispose();
+    gc.drawString( getLabel( this ), BORDER + ICON_SIZE + GAP, 0 );
 
     return image;
-  }
-
-  // TODO: move into helper class
-  public static Point calcTextSize( final String label, final Font font )
-  {
-    final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
-    final GC tmpGC = new GC( tmpImage );
-    tmpGC.setFont( font );
-    final Point textExtent = tmpGC.textExtent( label );
-    tmpGC.dispose();
-    tmpImage.dispose();
-    return textExtent;
   }
 
   /**
@@ -706,7 +689,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -724,7 +707,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the URL or URN defined by the user for an icon, which should be displayed in a legend or an
    * outline.
-   * 
+   *
    * @return The URL or URN string. May be null.
    */
   public String getLegendIcon( )
@@ -734,7 +717,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the context.
-   * 
+   *
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
   protected URL getContext( )
@@ -745,29 +728,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns true, if the theme allows showing its children in an outline. Otherwise, it will return
    * false.
-   * 
+   *
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
   public boolean shouldShowChildren( )
   {
     return m_shouldShowChildren;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.ICheckStateProvider#isChecked()
-   */
-  @Override
-  public boolean isChecked( )
-  {
-    return m_isVisible;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.ICheckStateProvider#isGrayed()
-   */
-  @Override
-  public boolean isGrayed( )
-  {
-    return false;
   }
 }

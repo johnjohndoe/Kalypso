@@ -13,14 +13,14 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/shiftone/shiftone-cache.jar,
  lib/xalan-j/xalan.jar,
  lib/xtiff-jai/xtiff-jai.jar,
- .
+ build/bin
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport
-Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: com.sun.media.jai.codec,
  com.sun.media.jai.codecimpl,
@@ -123,11 +123,9 @@ Export-Package: com.sun.media.jai.codec,
  org.kalypsodeegree_impl.model.sort,
  org.kalypsodeegree_impl.model.table,
  org.kalypsodeegree_impl.tools,
- org.kalypsodeegree_impl.tools.refinement,
  org.kalypsodeegree_impl.tools.shape,
  org.libtiff.jai,
  org.libtiff.jai.codec,
  org.libtiff.jai.codecimpl,
  org.libtiff.jai.operator,
- org.libtiff.jai.util,
- org.openjump.core.graph.delauneySimplexInsert
+ org.libtiff.jai.util

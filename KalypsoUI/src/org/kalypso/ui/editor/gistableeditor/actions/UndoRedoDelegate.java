@@ -46,7 +46,7 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
-import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 

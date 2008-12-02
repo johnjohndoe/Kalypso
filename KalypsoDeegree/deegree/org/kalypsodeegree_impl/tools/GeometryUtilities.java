@@ -48,7 +48,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -62,7 +61,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -75,30 +73,62 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
  */
 public class GeometryUtilities
 {
-  // TODO: move these properties to a general GML-constants interface
-  public static final QName QN_GEOMETRY = new QName( NS.GML3, "_Geometry" );
-
-  public static final QName QN_SURFACE = new QName( NS.GML3, "_Surface" );
-
   public static final QName QN_POLYGON = new QName( NS.GML3, "Polygon" );
+
+  public static final QName QN_POLYGON_PROPERTY = new QName( NS.GML3, "PolygonPropertyType" );
 
   public static final QName QN_POINT = new QName( NS.GML3, "Point" );
 
+  public static final QName QN_POINT_PROPERTY = new QName( NS.GML3, "PointPropertyType" );
+
   public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
+
+  public static final QName QN_LINE_STRING_PROPERTY = new QName( NS.GML3, "LineStringPropertyType" );
 
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
 
+  public static final QName QN_MULTI_POINT_PROPERTY = new QName( NS.GML3, "MultiPointPropertyType" );
+
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
+
+  public static final QName QN_MULTI_LINE_STRING_PROPERTY = new QName( NS.GML3, "MultiLineStringPropertyType" );
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
+  public static final QName QN_MULTI_POLYGON_PROPERTY = new QName( NS.GML3, "MultiPolygonPropertyType" );
+
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
+
+  public static final QName QN_LOCATION_PROPERTY = new QName( NS.GML3, "LocationPropertyType" );
 
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
 
-  private GeometryUtilities( )
+  public static final QName QN_DIRECTION_PROPERTY = new QName( NS.GML3, "DirectionPropertyType" );
+
+  public GeometryUtilities( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+    super();
+  }
+
+  public static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP ) throws GM_Exception
+  {
+    final GM_Position[] pos = new GM_Position[] { srcP.getPosition(), targetP.getPosition() };
+    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
+  }
+
+  public static GM_Curve createArrowLineString( final GM_Point srcP, final GM_Point targetP, final double weightLength, final double weightWidth ) throws GM_Exception
+  {
+    final double dx = targetP.getX() - srcP.getX();
+    final double dy = targetP.getY() - srcP.getY();
+
+    final GM_Position p1 = srcP.getPosition();
+    final GM_Position p4 = targetP.getPosition();
+    final GM_Position p2 = GeometryFactory.createGM_Position( p1.getX() + weightLength * dx, p1.getY() + weightLength * dy );
+    final GM_Position p3 = GeometryFactory.createGM_Position( p2.getX() + weightWidth * dy, p2.getY() - weightWidth * dx );
+    final GM_Position p5 = GeometryFactory.createGM_Position( p2.getX() - weightWidth * dy, p2.getY() + weightWidth * dx );
+
+    final GM_Position[] pos = new GM_Position[] { p1, p2, p3, p4, p5, p2 };
+    return GeometryFactory.createGM_Curve( pos, srcP.getCoordinateSystem() );
   }
 
   /**
@@ -175,12 +205,12 @@ public class GeometryUtilities
 
   /**
    * guess point that is on the surface
-   *
+   * 
    * @param surface
-   *          surface that should contain the result point
+   *            surface that should contain the result point
    * @param pointGuess
    * @param tries
-   *          numer of maximal interations
+   *            numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label point)
    */
   @SuppressWarnings("unchecked")
@@ -373,6 +403,7 @@ public class GeometryUtilities
   {
     // remember to use the same classes as used by the marshalling type handlers !!
     return ftp.getValueClass().equals( getPointClass() );
+
   }
 
   /**
@@ -528,7 +559,23 @@ public class GeometryUtilities
     if( !(pt instanceof IValuePropertyType) )
       return false;
     final IValuePropertyType gpt = (IValuePropertyType) pt;
-    return gpt.isGeometry();
+    if( isPointGeometry( gpt ) )
+      return true;
+    if( isMultiPointGeometry( gpt ) )
+      return true;
+    if( isLineStringGeometry( gpt ) )
+      return true;
+    if( isMultiLineStringGeometry( gpt ) )
+      return true;
+    if( isPolygonGeometry( gpt ) )
+      return true;
+    if( isMultiPolygonGeometry( gpt ) )
+      return true;
+    if( isAnyMultiGeometry( gpt ) )
+      return true;
+    // if( isEnvelopeGeometry( ftp ) )
+    // return true;
+    return false;
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
@@ -589,13 +636,13 @@ public class GeometryUtilities
   /**
    * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
    * polygon is wrapped to a multi polygon.
-   *
+   * 
    * @param geomToCheck
-   *          geometry object to check
+   *            geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
    *         itself
    * @exception a
-   *              GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
+   *                GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
    */
   @SuppressWarnings("unchecked")
   public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
@@ -613,7 +660,7 @@ public class GeometryUtilities
 
   /**
    * @param positions
-   *          array of ordered {@link GM_Position}, last must equal first one
+   *            array of ordered {@link GM_Position}, last must equal first one
    * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
    */
   public static double calcSignedAreaOfRing( final GM_Position[] positions )
@@ -638,9 +685,9 @@ public class GeometryUtilities
 
   /**
    * Finds the first geometry property of the given feature type.
-   *
+   * 
    * @param aPreferedGeometryClass
-   *          If non null, the first property of this type is returned.
+   *            If non null, the first property of this type is returned.
    */
   public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class< ? > aPreferedGeometryClass )
   {
@@ -660,10 +707,7 @@ public class GeometryUtilities
     return geometryProperty;
   }
 
-  /**
-   * Return the envelope for the given geometry. If its a point, return the singular envelope containing this point.<br>
-   * TODO Very dubious... why does the point does not provide an envelope?
-   */
+  /** Return the envelope for the given geometry. If its a point, return the singular envelope containing this point. */
   public static GM_Envelope getEnvelope( final GM_Object geometry )
   {
     if( geometry instanceof GM_Point )
@@ -677,11 +721,11 @@ public class GeometryUtilities
 
   /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
-   *
+   * 
    * @param newLine
-   *          the input linestring
+   *            the input linestring
    * @param value
-   *          the new z-value
+   *            the new z-value
    */
   public static GM_Curve setValueZ( final GM_LineString newLine, final double value ) throws GM_Exception
   {
@@ -698,11 +742,11 @@ public class GeometryUtilities
 
   /**
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
-   *
+   * 
    * @param curve
-   *          input curve to be simplified
+   *            input curve to be simplified
    * @param epsThinning
-   *          max. distance value for Douglas-Peucker-Algorithm
+   *            max. distance value for Douglas-Peucker-Algorithm
    */
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
@@ -757,31 +801,27 @@ public class GeometryUtilities
   /**
    * Same as {@link #findNearestFeature(GM_Point, double, FeatureList, QName)}, but only regards features of certain
    * qnames.
-   *
+   * 
    * @param allowedQNames
-   *          Only features that substitute one of these qnames are considered.
+   *            Only features that substitute one of these qnames are considered.
    */
   @SuppressWarnings("unchecked")
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName, final QName[] allowedQNames )
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-    final List< ? > foundElements = modelList.query( reqEnvelope, null );
+    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
 
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    final Feature parentFeature = modelList.getParentFeature();
-    final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
-    for( final Object object : foundElements )
+    for( final Feature feature : foundElements )
     {
-      final Feature feature = FeatureHelper.getFeature( workspace, object );
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
-        final Object property = feature.getProperty( geoQName );
+        final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
 
-        if( property instanceof GM_Object )
+        if( geom != null )
         {
-          final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
           final double curDist = point.distance( geom );
           if( min > curDist && curDist <= grabDistance )
           {
@@ -794,52 +834,9 @@ public class GeometryUtilities
     return nearest;
   }
 
-/**
-   * Same as
-   * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
-   *
-   * @param allowedQNames
-   *            Only features that substitute one of these qnames are considered.
-   */
-  @SuppressWarnings("unchecked")
-  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList[] modelLists, final QName geoQName, final QName[] allowedQNames )
-  {
-    Feature nearest = null;
-
-    for( final FeatureList modelList : modelLists )
-    {
-      if( modelList == null )
-        continue;
-
-      final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-      final List<Feature> foundElements = modelList.query( reqEnvelope, null );
-
-      double min = Double.MAX_VALUE;
-
-      for( final Feature feature : foundElements )
-      {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
-        {
-          final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
-
-          if( geom != null )
-          {
-            final double curDist = point.distance( geom );
-            if( min > curDist && curDist <= grabDistance )
-            {
-              nearest = feature;
-              min = curDist;
-            }
-          }
-        }
-      }
-    }
-    return nearest;
-  }
-
   /**
    * Calculates the direction (in degrees) from one position to another.
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
@@ -856,7 +853,7 @@ public class GeometryUtilities
    * <p>
    * Orientation is anti.clockwise (i.e. positive).
    * </p>
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
    */
   public static double directionFromVector( final double vx, final double vy )
@@ -895,11 +892,11 @@ public class GeometryUtilities
 
   /**
    * checks, if a position lies inside or outside of an polygon defined by a position array
-   *
+   * 
    * @param pos
-   *          position array of the polygon object
+   *            position array of the polygon object
    * @param position
-   *          position to be checked
+   *            position to be checked
    * @return 0 - if position lies outside of the polygon<BR>
    *         1 - if position lies inside of the polygon<BR>
    *         2 - if position lies on polygon's border.
@@ -1021,13 +1018,12 @@ public class GeometryUtilities
   }
 
   /**
-   * converts two given curves into a position array of a ccw oriented polygon.<br>
+   * converts two given curves into a position array of a ccw oriented, closed polygon.<br>
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
-   * inverse order.<br>
-   * <strong>The last point is missing, so they are not all positions for a closed polygon.</strong>
-   *
+   * inverse order.
+   * 
    * @param curves
-   *          the curves as {@link GM_Curve}
+   *            the curves as {@link GM_Curve}
    */
   public static GM_Position[] getPolygonfromCurves( final GM_Curve firstCurve, final GM_Curve secondCurve ) throws GM_Exception
   {
@@ -1049,9 +1045,9 @@ public class GeometryUtilities
 
   /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
-   *
+   * 
    * @param curves
-   *          the curves as {@link GM_Curve}
+   *            the curves as {@link GM_Curve}
    */
   public static GM_Position[] getPolygonfromCurves( final GM_Curve[] curves ) throws GM_Exception
   {
@@ -1069,7 +1065,7 @@ public class GeometryUtilities
 
   /**
    * Orientates a ring counter clock wise.
-   *
+   * 
    * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
    */
   public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
@@ -1091,46 +1087,19 @@ public class GeometryUtilities
   }
 
   /**
-   * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
-   * <b>It uses floats, so there can occur rounding problems!</b><br>
-   * To avoid this, we substract all values with its minimum value. And add it later.
-   *
+   * Triangulates a closed ring (must be oriented counter-clock-wise).
+   * 
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
   public static GM_Position[][] triangulateRing( final GM_Position[] ring )
   {
     final float[] posArray = new float[ring.length * 3];
 
-    double minX = Double.MAX_VALUE;
-    double minY = Double.MAX_VALUE;
-    double minZ = Double.MAX_VALUE;
-
-    // find minimum values
-    for( final GM_Position element : ring )
+    for( int i = 0; i < ring.length; i++ )
     {
-      minX = Math.min( minX, element.getX() );
-      minY = Math.min( minY, element.getY() );
-      minZ = Math.min( minZ, element.getZ() );
-    }
-
-    // if we have no z-value we fake one.
-    if( Double.isNaN( minZ ) )
-    {
-      for( int i = 0; i < ring.length; i++ )
-      {
-        posArray[i * 3] = (float) (ring[i].getX() - minX);
-        posArray[i * 3 + 1] = (float) (ring[i].getY() - minY);
-        posArray[i * 3 + 2] = new Float( 0.0 );
-      }
-    }
-    else
-    {
-      for( int i = 0; i < ring.length; i++ )
-      {
-        posArray[i * 3] = (float) (ring[i].getX() - minX);
-        posArray[i * 3 + 1] = (float) (ring[i].getY() - minY);
-        posArray[i * 3 + 2] = (float) (ring[i].getZ() - minZ);
-      }
+      posArray[i * 3] = (float) ring[i].getX();
+      posArray[i * 3 + 1] = (float) ring[i].getY();
+      posArray[i * 3 + 2] = (float) ring[i].getZ();
     }
 
     final float[] normal = { 0, 0, 1 };
@@ -1139,51 +1108,26 @@ public class GeometryUtilities
     final TriangulationUtils triangulator = new TriangulationUtils();
     final int num = triangulator.triangulateConcavePolygon( posArray, 0, numVertices, output, normal );
 
-    if( num < 0 )
-      return new GM_Position[0][0];
-
     final GM_Position[][] triangles = new GM_Position[num][3];
 
-    if( Double.isNaN( minZ ) )
+    for( int i = 0; i < num; i++ )
     {
-      for( int i = 0; i < num; i++ )
-      {
-        triangles[i] = new GM_Position[3];
+      triangles[i] = new GM_Position[3];
 
-        final double x1 = posArray[output[i * 3]] + minX;
-        final double y1 = posArray[output[i * 3] + 1] + minY;
-        final double z1 = Double.NaN;
-        final double x2 = posArray[output[i * 3 + 1]] + minX;
-        final double y2 = posArray[output[i * 3 + 1] + 1] + minY;
-        final double z2 = Double.NaN;
-        final double x3 = posArray[output[i * 3 + 2]] + minX;
-        final double y3 = posArray[output[i * 3 + 2] + 1] + minY;
-        final double z3 = Double.NaN;
-        triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
-        triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
-        triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
-      }
+      final double x1 = posArray[output[i * 3]];
+      final double y1 = posArray[output[i * 3] + 1];
+      final double z1 = posArray[output[i * 3] + 2];
+      final double x2 = posArray[output[i * 3 + 1]];
+      final double y2 = posArray[output[i * 3 + 1] + 1];
+      final double z2 = posArray[output[i * 3 + 1] + 2];
+      final double x3 = posArray[output[i * 3 + 2]];
+      final double y3 = posArray[output[i * 3 + 2] + 1];
+      final double z3 = posArray[output[i * 3 + 2] + 2];
+      triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
+      triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
+      triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
     }
-    else
-    {
-      for( int i = 0; i < num; i++ )
-      {
-        triangles[i] = new GM_Position[3];
 
-        final double x1 = posArray[output[i * 3]] + minX;
-        final double y1 = posArray[output[i * 3] + 1] + minY;
-        final double z1 = posArray[output[i * 3] + 2] + minZ;
-        final double x2 = posArray[output[i * 3 + 1]] + minX;
-        final double y2 = posArray[output[i * 3 + 1] + 1] + minY;
-        final double z2 = posArray[output[i * 3 + 1] + 2] + minZ;
-        final double x3 = posArray[output[i * 3 + 2]] + minX;
-        final double y3 = posArray[output[i * 3 + 2] + 1] + minY;
-        final double z3 = posArray[output[i * 3 + 2] + 2] + minZ;
-        triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
-        triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
-        triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
-      }
-    }
     return triangles;
   }
 

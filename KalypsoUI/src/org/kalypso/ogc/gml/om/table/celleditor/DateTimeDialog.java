@@ -62,7 +62,7 @@ import org.vafada.swtcalendar.SWTCalendarEvent;
 import org.vafada.swtcalendar.SWTCalendarListener;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class DateTimeDialog extends TitleAreaDialog
 {

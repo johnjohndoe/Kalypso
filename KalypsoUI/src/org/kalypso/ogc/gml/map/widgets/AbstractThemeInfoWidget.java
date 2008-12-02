@@ -102,7 +102,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 
     m_tooltipRenderer.setTooltip( tooltip );
 
-    getMapPanel().repaintMap();
+    getMapPanel().repaint();
   }
 
   /**
@@ -114,7 +114,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
     if( m_point == null )
       return;
 
-    m_tooltipRenderer.paintToolTip( m_point, g, getMapPanel().getScreenBounds() );
+    m_tooltipRenderer.paintToolTip( m_point, g, getMapPanel().getBounds() );
   }
 
   protected Point getCurrentPoint( )

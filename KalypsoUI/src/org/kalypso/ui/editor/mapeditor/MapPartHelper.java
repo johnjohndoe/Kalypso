@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,23 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import java.awt.Component;
 import java.awt.Frame;
-import java.awt.event.ComponentListener;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -66,28 +60,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
-import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -102,98 +88,31 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class MapPartHelper
 {
-  final static ISchedulingRule UI_JOB_MUTEXT = new MutexRule();
-
   private MapPartHelper( )
   {
     // will not be instantiated
   }
 
-  /**
-   * Does nothing more than create an empty form containing a {@link FillLayout}'ed body. This form is suitable to be
-   * filled next by {@link #createMapPanelInForm(Form, ICommandTarget, IFeatureSelectionManager).
-   */
-  public static Form createMapForm( final Composite parent )
+  public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site, boolean doCreateMenu )
   {
-    final FormToolkit formToolkit = new FormToolkit( parent.getDisplay() );
-    final Form form = formToolkit.createForm( parent );
-    form.setSeparatorVisible( true );
-    final Composite body = form.getBody();
-    body.setLayout( new FillLayout() );
-    return form;
-  }
-
-  /**
-   * Creates a {@link MapPanel} on a form. The body's layout must already have been set.<br>
-   * The form message will be reflecting the status of the {@link MapPanel}.
-   * 
-   * @see createMapForm
-   */
-  public static IMapPanel createMapPanelInForm( final Form form, final ICommandTarget commandTarget, final IFeatureSelectionManager selectionManager )
-  {
-    final IMapPanel mapPanel = createMapPanel( form.getBody(), SWT.NONE, null, commandTarget, selectionManager );
-
-    mapPanel.addMapPanelListener( new MapPanelAdapter()
-    {
-      /**
-       * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
-       */
-      @Override
-      public void onStatusChanged( final IMapPanel source )
-      {
-        final IStatus status = source.getStatus();
-
-        final UIJob job = new UIJob( "Update status" )
-        {
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
-          {
-            if( form.isDisposed() )
-              return Status.OK_STATUS;
-
-            final String oldMessage = form.getMessage();
-            final boolean ok = status.isOK();
-            if( ok )
-              form.setMessage( null );
-            else
-              MessageUtilitites.setMessage( form, status );
-            // TODO: add hyperlink listener if sub-messages exist. Show these sub-messages on click
-            // Same for tooltip support
-
-            // If visibility of header changed, send resize event, else the map has not the right extent
-            if( source instanceof ComponentListener && ((oldMessage == null && !ok) || (oldMessage != null && ok)) )
-              ((ComponentListener) source).componentResized( null );
-            return Status.OK_STATUS;
-          }
-        };
-        job.setRule( UI_JOB_MUTEXT );
-        job.setSystem( true );
-        job.schedule();
-      }
-    } );
-
-    return mapPanel;
-  }
-
-  public static IMapPanel createMapPanel( final Composite parent, final int style, final Object layoutData, final ICommandTarget commandTarget, final IFeatureSelectionManager selectionManager )
-  {
-    final MapPanel mapPanel = new MapPanel( commandTarget, selectionManager );
-    final Composite mapComposite = new Composite( parent, style | SWT.EMBEDDED | SWT.NO_BACKGROUND );
-    mapComposite.setLayoutData( layoutData );
-    final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
+    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.NO_BACKGROUND );
+    // create MapPanel
+    final Frame virtualFrame = SWT_AWT.new_Frame( composite );
+    virtualFrame.setVisible( true );
+    mapPanel.setVisible( true );
     virtualFrame.add( mapPanel );
 
     // channel focus to awt
-    mapComposite.addFocusListener( new FocusAdapter()
+    composite.addFocusListener( new FocusAdapter()
     {
       /**
        * @see org.eclipse.swt.events.FocusAdapter#focusGained(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusGained( final FocusEvent e )
+      public void focusGained( FocusEvent e )
       {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -205,39 +124,35 @@ public class MapPartHelper
       }
     } );
 
-// final MapCanvas mapPanel = new MapCanvas( parent, style, commandTarget, selectionManager );
-// mapPanel.setLayoutData( layoutData );
-
-    return mapPanel;
-  }
-
-  public static MenuManager createMapContextMenu( final Composite parent, final IMapPanel mapPanel, final IWorkbenchPartSite site )
-  {
     // create Context Menu
-    final MenuManager menuManager = new MenuManager();
-    menuManager.setRemoveAllWhenShown( true );
-    menuManager.addMenuListener( new IMenuListener()
+    if( doCreateMenu )
     {
-      public void menuAboutToShow( final IMenuManager manager )
+      final MenuManager menuManager = new MenuManager();
+      menuManager.setRemoveAllWhenShown( true );
+      menuManager.addMenuListener( new IMenuListener()
       {
-        fillMapContextMenu( site.getPart(), manager, mapPanel );
-      }
-    } );
+        public void menuAboutToShow( final IMenuManager manager )
+        {
+          handleMenuAboutToShow( site.getPart(), manager, mapPanel );
+        }
+      } );
 
-    final Menu mapMenu = menuManager.createContextMenu( parent );
-    parent.setMenu( mapMenu );
-    // register it
-    if( mapPanel instanceof Component )
-      ((Component) mapPanel).addMouseListener( new SWTAWT_ContextMenuMouseAdapter( parent, mapMenu ) );
+      final Menu mapMenu = menuManager.createContextMenu( composite );
+      composite.setMenu( mapMenu );
+      // register it
+      site.registerContextMenu( menuManager, mapPanel );
+      mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
+    }
 
-    return menuManager;
+    site.setSelectionProvider( mapPanel );
+
+    return composite;
   }
-
 
   /**
-   * Add some special actions to the menuManager, depending on the current selection.
+   * Add some special actions to the menuManager, dependend on the current selection.
    */
-  public static void fillMapContextMenu( final IWorkbenchPart part, final IMenuManager manager, final IMapPanel mapPanel )
+  public static void handleMenuAboutToShow( final IWorkbenchPart part, final IMenuManager manager, final MapPanel mapPanel )
   {
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
 
@@ -257,7 +172,7 @@ public class MapPartHelper
       final StructuredSelection themeSelection = new StructuredSelection( theme );
       final ISelectionProvider selectionProvider = new ISelectionProvider()
       {
-        public void addSelectionChangedListener( final ISelectionChangedListener listener )
+        public void addSelectionChangedListener( ISelectionChangedListener listener )
         {
         }
 
@@ -266,20 +181,20 @@ public class MapPartHelper
           return themeSelection;
         }
 
-        public void removeSelectionChangedListener( final ISelectionChangedListener listener )
+        public void removeSelectionChangedListener( ISelectionChangedListener listener )
         {
         }
 
-        public void setSelection( final ISelection selection )
+        public void setSelection( ISelection selection )
         {
         }
       };
-      final IMenuManager themeManager = new MenuManager( Messages.getString( "org.kalypso.ui.editor.mapeditor.MapPartHelper.2" ), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IMenuManager themeManager = new MenuManager( Messages.getString("org.kalypso.ui.editor.mapeditor.MapPartHelper.2"), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
       ObjectActionContributorManager.getManager().contributeObjectActions( part, themeManager, selectionProvider );
       manager.add( themeManager );
     }
 
-    // add additions separator: if not, eclipse whines
+    // add additions seperator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
@@ -367,7 +282,7 @@ public class MapPartHelper
     /**
      * @see org.eclipse.jface.viewers.IStructuredSelection#iterator()
      */
-    public Iterator<FeatureAssociationTypeElement> iterator( )
+    public Iterator iterator( )
     {
       return m_selection.iterator();
     }
@@ -391,7 +306,7 @@ public class MapPartHelper
     /**
      * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
      */
-    public List<FeatureAssociationTypeElement> toList( )
+    public List toList( )
     {
       return m_selection;
     }

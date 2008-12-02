@@ -68,7 +68,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class StatusComposite extends Composite
 {
   /**
@@ -76,23 +76,17 @@ public class StatusComposite extends Composite
    */
   public static final int DETAILS = SWT.SEARCH;
 
-  protected Label m_statusImgLabel;
+  private final Label m_statusImgLabel;
 
-  protected Label m_statusMessageLabel;
+  private final Label m_statusMessageLabel;
 
   private IStatus m_status;
 
-  protected Button m_detailsButton;
+  private final Button m_detailsButton;
 
   public StatusComposite( final Composite parent, final int style )
   {
     super( parent, style );
-
-    init( style );
-  }
-
-  protected void init( int style )
-  {
 
     final GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.marginHeight = 0;
@@ -108,7 +102,7 @@ public class StatusComposite extends Composite
     if( (style & DETAILS) != 0 )
     {
       m_detailsButton = new Button( this, SWT.PUSH );
-      m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
+      m_detailsButton.setText( Messages.getString("org.kalypso.util.swt.StatusComposite.1") ); //$NON-NLS-1$
       m_detailsButton.addSelectionListener( new SelectionAdapter()
       {
         /**
@@ -130,7 +124,7 @@ public class StatusComposite extends Composite
     if( m_status == null )
       return;
 
-    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString( "org.kalypso.util.swt.StatusComposite.2" ) ); //$NON-NLS-1$
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString("org.kalypso.util.swt.StatusComposite.2") ); //$NON-NLS-1$
     statusTableDialog.open();
   }
 
@@ -140,18 +134,9 @@ public class StatusComposite extends Composite
   @Override
   public void setLayout( final Layout layout )
   {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.util.swt.StatusComposite.3" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.util.swt.StatusComposite.3") ); //$NON-NLS-1$
   }
 
-  /**
-   * Sets the status of this composites and updates it to show it in the composite.
-   * 
-   * @exception SWTException
-   *              <ul>
-   *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-   *              </ul>
-   */
   public void setStatus( final IStatus status )
   {
     m_status = status;
@@ -163,7 +148,6 @@ public class StatusComposite extends Composite
     {
       m_statusImgLabel.setImage( null );
       m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
-      m_statusMessageLabel.setToolTipText( null );
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( false );
     }
@@ -171,8 +155,6 @@ public class StatusComposite extends Composite
     {
       m_statusImgLabel.setImage( getStatusImage( status ) );
       m_statusMessageLabel.setText( status.getMessage() );
-      // Set same text as tooltip, if label is too short to hold the complete text
-      m_statusMessageLabel.setToolTipText( status.getMessage() );
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( status.isMultiStatus() || status.getException() != null );
     }
@@ -193,7 +175,7 @@ public class StatusComposite extends Composite
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
   }
 
-  @SuppressWarnings("restriction")
+  @SuppressWarnings("restriction") //$NON-NLS-1$
   public static Image getStatusImage( final IStatus status )
   {
     switch( status.getSeverity() )

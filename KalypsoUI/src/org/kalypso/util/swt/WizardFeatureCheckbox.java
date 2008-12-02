@@ -55,7 +55,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class WizardFeatureCheckbox
 {

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -54,8 +54,6 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -71,15 +69,19 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.ThemeVisiblePredicate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
   private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
@@ -96,66 +98,46 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
    * The constructor.
    * 
    * @param commandTarget
-   *          The command target.
+   *            The command target.
    * @param mapModel
-   *          The map modell.
+   *            The map modell.
    * @param showStyle
-   *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
-   *          styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
+   *            If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
+   *            styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
    */
   public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel, final boolean showStyle )
   {
-    // TODO: temporary and only for debug purposes
-    // Change rendering to bold-font (or what else?); put flag into user preferences?
-    // get type of rendering from map-file (and also flag?)
-    // TODO: if committed to true, please set to false
-    final boolean showActive = true;
-
-    m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
+    m_labelProvider = new GisMapOutlineLabelProvider( showStyle );
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
   }
 
   public void dispose( )
   {
+    m_contentProvider.dispose();
+    m_labelProvider.dispose();
+
+    if( m_viewer != null )
+      m_viewer.getTree().dispose();
   }
 
   public void createControl( final Composite parent )
   {
-    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
-    m_viewer = viewer;
-    viewer.setContentProvider( m_contentProvider );
-    viewer.setLabelProvider( m_labelProvider );
+    m_viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    m_viewer.setContentProvider( m_contentProvider );
+    m_viewer.setLabelProvider( m_labelProvider );
 
-    final GisMapOutlineLabelProvider labelProvider = m_labelProvider;
     m_viewer.addCheckStateListener( new ICheckStateListener()
     {
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final Object data = event.getElement();
-
-        // Prevent deselction of gray-checked elements; they are here interpreted as disabled
-        if( labelProvider.isGrayed( data ) && !event.getChecked() )
-        {
-          viewer.setChecked( data, true );
-          return;
-        }
-
         if( data instanceof IKalypsoTheme )
         {
           final IKalypsoTheme theme = (IKalypsoTheme) data;
           final ICommand command = new EnableThemeCommand( theme, event.getChecked() );
           postCommand( command, null );
         }
-      }
-    } );
-
-    m_viewer.getTree().addTreeListener( new TreeAdapter()
-    {
-      @Override
-      public void treeExpanded( final TreeEvent e )
-      {
-        resetCheckState( e.data );
       }
     } );
 
@@ -269,37 +251,20 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
     }
   }
 
-// protected void resetCheckState( final IMapModell model )
-// {
-// final IKalypsoTheme[] visibleThemes;
-// if( model == null )
-// visibleThemes = new IKalypsoTheme[] {};
-// else
-// {
-// // TODO: get this from the content provider instead
-// final IKalypsoThemePredicate predicate = new ThemeVisiblePredicate();
-// final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-// model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-// visibleThemes = visitor.getFoundThemes();
-// }
-//
-// m_viewer.setCheckedElements( visibleThemes );
-// }
-
-  protected void resetCheckState( final Object object )
+  protected void resetCheckState( final IMapModell model )
   {
-    if( object == null )
-      return;
+    final IKalypsoTheme[] visibleThemes;
+    if( model == null )
+      visibleThemes = new IKalypsoTheme[] {};
+    else
+    {
+      final IKalypsoThemePredicate predicate = new ThemeVisiblePredicate();
+      final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+      model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+      visibleThemes = visitor.getFoundThemes();
+    }
 
-    final boolean checked = m_labelProvider.isChecked( object );
-    final boolean grayed = m_labelProvider.isGrayed( object );
-
-    m_viewer.setGrayed( object, grayed );
-    m_viewer.setChecked( object, grayed || checked );
-
-    final Object[] children = m_contentProvider.getChildren( object );
-    for( final Object child : children )
-      resetCheckState( child );
+    m_viewer.setCheckedElements( visibleThemes );
   }
 
   /**
@@ -346,7 +311,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
    * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
    * 
    * @param listener
-   *          a double-click listener
+   *            a double-click listener
    */
   public void addDoubleClickListener( final IDoubleClickListener listener )
   {
@@ -357,7 +322,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
    * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
    * 
    * @param listener
-   *          a double-click listener
+   *            a double-click listener
    */
   public void removeDoubleClickListener( final IDoubleClickListener listener )
   {

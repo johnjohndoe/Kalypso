@@ -41,6 +41,8 @@
 package org.kalypso.repository.conf;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
 import org.kalypso.repository.factory.IRepositoryFactory;
@@ -78,13 +80,12 @@ public class RepositoryFactoryConfig
    * @param readOnly
    *          when true repository should be read only
    */
-  protected RepositoryFactoryConfig( String name, String factory, String conf, boolean readOnly, final IRepositoryFactory rf )
+  protected RepositoryFactoryConfig( String name, String factory, String conf, boolean readOnly )
   {
     m_name = name;
     m_factory = factory;
     m_conf = conf;
     m_readOnly = readOnly;
-    m_rf = rf;
   }
 
   /**
@@ -92,7 +93,7 @@ public class RepositoryFactoryConfig
    */
   public RepositoryFactoryConfig( final IRepository rep )
   {
-    this( rep.getName(), rep.getFactory(), rep.getConfiguration(), rep.isReadOnly(), null );
+    this( rep.getName(), rep.getFactory(), rep.getConfiguration(), rep.isReadOnly() );
   }
 
   /**
@@ -101,19 +102,25 @@ public class RepositoryFactoryConfig
    */
   public RepositoryFactoryConfig( IRepositoryFactory rf, String name, String conf, boolean ro )
   {
-    this( name, rf.getClass().getName(), conf, ro, rf );
+    this( name, rf.getClass().getName(), conf, ro );
+
+    m_rf = rf;
   }
 
   /**
    * Creates the underlying factory.
    */
-  public IRepositoryFactory getFactory( ) throws CoreException
+  public IRepositoryFactory createFactory( final ClassLoader cl ) throws ClassUtilityException
   {
-    if( m_rf != null )
-      return m_rf;
+    final IRepositoryFactory rf;
 
-    final IRepositoryFactory rf = RepositoriesExtensions.retrieveExtensionFor( m_factory );
-    
+    // if member factory is defined, no need to create a new instance, just use
+    // it
+    if( m_rf != null )
+      rf = m_rf;
+    else
+      rf = (IRepositoryFactory)ClassUtilities.newInstance( m_factory, IRepositoryFactory.class, cl );
+
     rf.setReadOnly( m_readOnly );
     rf.setConfiguration( m_conf );
     rf.setRepositoryName( m_name );
@@ -126,11 +133,12 @@ public class RepositoryFactoryConfig
    * 
    * @return state
    */
-  public String saveState( )
+  public String saveState()
   {
     final StringBuffer bf = new StringBuffer();
 
-    bf.append( m_name ).append( SEPARATOR ).append( m_factory ).append( SEPARATOR ).append( m_conf ).append( SEPARATOR ).append( String.valueOf( m_readOnly ) );
+    bf.append( m_name ).append( SEPARATOR ).append( m_factory ).append( SEPARATOR ).append( m_conf ).append( SEPARATOR )
+        .append( String.valueOf( m_readOnly ) );
 
     return bf.toString();
   }
@@ -141,7 +149,7 @@ public class RepositoryFactoryConfig
    * 
    * @return a repository config item
    */
-  public static RepositoryFactoryConfig restore( final String state ) 
+  public static RepositoryFactoryConfig restore( final String state ) throws CoreException
   {
     final String[] splits = state.split( SEPARATOR );
 
@@ -153,14 +161,16 @@ public class RepositoryFactoryConfig
     final String conf = splits[2];
     final boolean readOnly = Boolean.valueOf( splits[3] ).booleanValue();
 
-    return new RepositoryFactoryConfig( repositoryName, factoryClassName, conf, readOnly, null );
+    // retrieve instance using extension mechanism,
+    // else class might not be found (ClassLoadingException)
+    return RepositoriesExtensions.retrieveExtensionFor( factoryClassName, repositoryName, conf, readOnly );
   }
 
   /**
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString( )
+  public String toString()
   {
     if( m_conf != null && m_conf.length() > 0 )
       return m_name + " (" + m_conf + ")";

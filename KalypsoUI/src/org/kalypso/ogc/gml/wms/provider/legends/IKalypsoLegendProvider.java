@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.legends;
 
@@ -52,11 +52,11 @@ import org.eclipse.swt.graphics.Image;
 public interface IKalypsoLegendProvider
 {
   /**
-   * This function returns an image, containing the legend of the theme, if one is available. Otherwise it will return
+   * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
    * null.
    * 
    * @param font
-   *          This font will be used for the self created text of the legend.
+   *            This font will be used for the self created text of the legend.
    * @return An legend graphic or null.
    */
   public Image getLegendGraphic( Font font ) throws CoreException;

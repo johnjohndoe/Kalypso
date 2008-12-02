@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
 {
@@ -137,7 +137,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
 
     final GMLWorkspace workspace = feature.getWorkspace();
     if( workspace == null )
-      throw (new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.KalypsoCascadingThemeSelection.0" ) )); //$NON-NLS-1$
+      throw (new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.KalypsoCascadingThemeSelection.0") )); //$NON-NLS-1$
 
     if( workspace instanceof CommandableWorkspace )
       return (CommandableWorkspace) workspace;

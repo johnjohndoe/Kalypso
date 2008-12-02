@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.mapfunctions;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
  * This is a interface for classes which do something on a map with a rectangle.
@@ -53,10 +53,10 @@ public interface IRectangleMapFunction
   /**
    * This function implements the actions, which should be executed.
    * 
-   * @param IMapPanel
-   *          The IMapPanel.
+   * @param mapPanel
+   *          The MapPanel.
    * @param rectangle
    *          The rectangle, which should be used for the actions (e.g. selecting features).
    */
-  public void execute( final IMapPanel mapPanel, final Rectangle rectangle );
+  public void execute( final MapPanel mapPanel, final Rectangle rectangle );
 }

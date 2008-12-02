@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,7 +48,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -113,7 +111,7 @@ public class FeatureHelper
       final String formatString = strings.length > 2 ? strings[2] : null;
 
       final QName qname = QNameUtilities.createQName( propName );
-      final Object property = FeatureHelper.getPropertyLax( feature, qname );
+      final Object property = feature.getProperty( qname );
 
       if( property == null )
         return "" + nullValue;
@@ -144,7 +142,7 @@ public class FeatureHelper
       final int listindex = Integer.parseInt( strings[1] );
       final String nullValue = strings.length > 2 ? strings[2] : null;
 
-      final List< ? > list = (List< ? >) FeatureHelper.getPropertyLax( feature, qname );
+      final List list = (List) feature.getProperty( qname );
 
       if( listindex >= list.size() )
         return "" + nullValue;
@@ -263,11 +261,11 @@ public class FeatureHelper
    * 
    * @throws CloneNotSupportedException
    * @throws IllegalArgumentException
-   *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
+   *             Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
    * @throws NullPointerException
-   *           falls eines der Argumente <codce>null</code> ist.
+   *             falls eines der Argumente <codce>null</code> ist.
    * @throws UnsupportedOperationException
-   *           Noch sind nicht alle Typen implementiert
+   *             Noch sind nicht alle Typen implementiert
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
   {
@@ -301,12 +299,12 @@ public class FeatureHelper
    * Clones a feature and puts it into the given parent feature at the given property.
    * 
    * @param newParentFeature
-   *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
+   *            The parent where the cloned feature will be put into. May live in the same or in another workspace.
    * @param relation
-   *          Property where to put the new feature. If a list, the new feature is added at the end of the list.
+   *            Property where to put the new feature. If a list, the new feature is added at the end of the list.
    * @param nullValuedProperties
-   *          qname of IPropertiesTypes whos values will not be copied. only the featuretype will exist and the property
-   *          of its is null in result feature
+   *            qname of IPropertiesTypes whos values will not be copied. only the featuretype will exist and the
+   *            property of its is null in result feature
    */
   public static Feature cloneFeature( final Feature newParentFeature, final IRelationType relation, final Feature featureToClone, final QName[] nullValuedProperties ) throws Exception
   {
@@ -383,7 +381,7 @@ public class FeatureHelper
   /**
    * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
-   *           If type of object is not supported for clone
+   *             If type of object is not supported for clone
    */
   private static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
   {
@@ -429,15 +427,15 @@ public class FeatureHelper
 
     if( typeHandler != null )
       try
-    {
+      {
         return typeHandler.cloneObject( object, gmlVersion );
-    }
-    catch( final Exception e )
-    {
-      final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
-      cnse.initCause( e );
-      throw cnse;
-    }
+      }
+      catch( final Exception e )
+      {
+        final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
+        cnse.initCause( e );
+        throw cnse;
+      }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
@@ -591,7 +589,7 @@ public class FeatureHelper
    * Create properties by using the property-value of the given feature for each of the replace-tokens
    * 
    * @param tokens
-   *          replace-tokens (tokenKey-featurePropertyName;...)
+   *            replace-tokens (tokenKey-featurePropertyName;...)
    */
   public static Properties createReplaceTokens( final Feature f, final String tokens )
   {
@@ -609,23 +607,6 @@ public class FeatureHelper
     }
 
     return properties;
-  }
-
-  /**
-   * Returns the property of a feature.<br>
-   * If the given qname contains no namespace (), it returns the first property with the same localPart.
-   */
-  public static Object getPropertyLax( final Feature feature, final QName property )
-  {
-    final IPropertyType pt = feature.getFeatureType().getProperty( property );
-    if( pt != null )
-      return feature.getProperty( pt );
-
-    if( XMLConstants.NULL_NS_URI.equals( property.getNamespaceURI() ) )
-      return feature.getProperty( property.getLocalPart() );
-
-    // Will throw an IllegalArgumentException as the property will not be found
-    return feature.getProperty( property );
   }
 
   /**
@@ -665,13 +646,13 @@ public class FeatureHelper
     final IPropertyType[] srcFTPs = srcFE.getFeatureType().getProperties();
     for( final IPropertyType element : srcFTPs )
       try
-    {
+      {
         FeatureHelper.copySimpleProperty( srcFE, targetFE, element );
-    }
-    catch( final Exception e )
-    {
-      multiException.addException( e );
-    }
+      }
+      catch( final Exception e )
+      {
+        multiException.addException( e );
+      }
     if( !multiException.isEmpty() )
       throw multiException;
   }
@@ -716,8 +697,9 @@ public class FeatureHelper
 
   /**
    * <ul>
-   * <li>If the property is not a list, just set the value</li> <li>If the property ist a list, a the given value to the
-   * list. If the given value is a list, add all its values to the list.</li>
+   * <li>If the property is not a list, just set the value</li>
+   * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
+   * the list.</li>
    * </ul>
    * 
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
@@ -749,8 +731,8 @@ public class FeatureHelper
    * Adds a new member to a property of the given feature. The property must be a feature list.
    * 
    * @param newFeatureName
-   *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
-   *          is taken.
+   *            The QName of the featureType of the newly generated feature. If null, the target feature-type of the
+   *            list is taken.
    * @return The new feature member
    */
   public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final int depth ) throws GMLSchemaException
@@ -781,15 +763,16 @@ public class FeatureHelper
    * Only works for non list feature property
    * 
    * @param feature
-   *          feature which list property receive the new feature
+   *            feature which list property receive the new feature
    * @param listProperty
-   *          the {@link QName} of the list property
+   *            the {@link QName} of the list property
    * @param featureProperties
-   *          the property of the feature to be set before adding the feature to the list
+   *            the property of the feature to be set before adding the feature to the list
    * @param featurePropQNames
-   *          the {@link QName} of the feature property to be set before adding it the the
-   * @param throws {@link IllegalArgumentException} if featureProperties and featurePropQNames are not all null or are
-   *        not all non null with differen lengths
+   *            the {@link QName} of the feature property to be set before adding it the the
+   * @param throws
+   *            {@link IllegalArgumentException} if featureProperties and featurePropQNames are not all null or are not
+   *            all non null with differen lengths
    */
   public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final Object[] featureProperties, final QName[] featurePropQNames ) throws GMLSchemaException, IllegalArgumentException
   {
@@ -846,10 +829,10 @@ public class FeatureHelper
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
    * 
    * @param qname
-   *          Must denote a property of type IRelationType of maxoccurs 1.
+   *            Must denote a property of type IRelationType of maxoccurs 1.
    * @param followXLinks
-   *          If true and the property is an xlinked Feature, return the Feature where the xlink points to. Else the
-   *          xlink itself is returned as feature.
+   *            If true and the property is an xlinked Feature, return the Feature where the xlink points to. Else the
+   *            xlink itself is returned as feature.
    */
   public static Feature resolveLink( final Feature feature, final QName qname, final boolean followXLinks )
   {
@@ -862,17 +845,17 @@ public class FeatureHelper
     if( value instanceof Feature )
       return (Feature) value;
     else /* Its a local link inside a xlinked-feature */
-      if( feature instanceof XLinkedFeature_Impl )
-      {
-        final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
-        final String href = xlinkedFeature.getUri() + "#" + value;
-        return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
-      }
-      else if( value == null )
-        return null;
-      else
-        /* A normal local link inside the same workspace */
-        return feature.getWorkspace().getFeature( (String) value );
+    if( feature instanceof XLinkedFeature_Impl )
+    {
+      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+      final String href = xlinkedFeature.getUri() + "#" + value;
+      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
+    }
+    else if( value == null )
+      return null;
+    else
+      /* A normal local link inside the same workspace */
+      return feature.getWorkspace().getFeature( (String) value );
 
   }
 
@@ -880,15 +863,15 @@ public class FeatureHelper
    * Resolves and adapts the linked feature. Note that the real feature is wrapped and return not the xlinked feature.
    * 
    * @param feature
-   *          the link property holder
+   *            the link property holder
    * @param propertyQName
-   *          the q-name of the link property
+   *            the q-name of the link property
    * @param adapterTargetClass
-   *          the class the link feature is to be adapted to
+   *            the class the link feature is to be adapted to
    * @throws IllegalArgumentException
-   *           if any of the parameter is null
+   *             if any of the parameter is null
    * @throws IllegalStateException
-   *           if xlink is broken (i.e. xlinked feature points to non existing real feature)
+   *             if xlink is broken (i.e. xlinked feature points to non existing real feature)
    * @return an adapter if the link feature or null if no linked feature is found or if the linked feature is not
    *         adaptable to the specified class
    */
@@ -931,13 +914,13 @@ public class FeatureHelper
    * list feature</b>
    * 
    * @param subjectFeature
-   *          the feature wrapper whose property is to be set
+   *            the feature wrapper whose property is to be set
    * @param propertyQName
-   *          the q-name denoting the property type
+   *            the q-name denoting the property type
    * @param objectFeature
-   *          the feature to set as property
+   *            the feature to set as property
    * @throws IllegalArgumentException
-   *           if subjectFeature or property q-name is null
+   *             if subjectFeature or property q-name is null
    */
   public static final <T> void setLocalLink( final IFeatureWrapper2 subjectFeature, final QName propertyQName, final IFeatureWrapper2 objectFeature )
   {
@@ -1007,13 +990,13 @@ public class FeatureHelper
 
     if( typeHandler != null )
       try
-    {
+      {
         return typeHandler.parseType( input[0] );
-    }
-    catch( final ParseException e )
-    {
-      e.printStackTrace();
-    }
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+      }
 
     return null;
   }
@@ -1028,7 +1011,7 @@ public class FeatureHelper
    * </p>
    * 
    * @throws IllegalArgumentException
-   *           If the target feature type of the given property is abstract.
+   *             If the target feature type of the given property is abstract.
    */
   public static Feature getSubFeature( final Feature parent, final QName propertyName )
   {
@@ -1108,8 +1091,8 @@ public class FeatureHelper
    * <ul>
    * <li>${id}: the gml:id of the feature</li>
    * <li>${property:_qname_}: the value of the property _qname_ parsed as string (via its marshalling handler). _qname_
-   * <li>${listProperty:_qname_;listindex}: Similar to ${property}, but the value is interpretated as List, and then the
-   * list item with index listindex is returned. Syntax: namespace#localPart</li>
+   * <li>${listProperty:_qname_;listindex}: Similar to ${property}, but the value is interpretated as List, and then
+   * the list item with index listindex is returned. Syntax: namespace#localPart</li>
    * </ul>
    * </p>
    */
@@ -1186,8 +1169,8 @@ public class FeatureHelper
 
   /**
    * @author thuel2
-   * @return <code>true</code> if <code>parent</code> is one of the ancestors of or equals <em>ALL</em>
-   *         <code>children</code>
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of or equals
+   *         <em>ALL</em> <code>children</code>
    */
   public static boolean isParentOfAllOrEquals( final Feature parent, final Feature[] children )
   {
@@ -1230,8 +1213,8 @@ public class FeatureHelper
 
   /**
    * @author thuel2
-   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> (in relation to
-   *         <code>workspace</code>)
+   * @return <code>true</code> if <code>parent</code> is one of the ancestors of <code>child</code> (in relation
+   *         to <code>workspace</code>)
    */
   public static boolean isParent( final GMLWorkspace workspace, final Object parent, final Object child )
   {
@@ -1403,69 +1386,5 @@ public class FeatureHelper
     }
     return fl;
   }
-
-  /**
-   * Converts a feature list into an array, and resolves all links while dooing this.<br>
-   * The size of the resulting array may be smaller than the given list, if contained links cannot be resolved.
-   */
-  public static Feature[] toArray( final FeatureList featureList )
-  {
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-
-    final List<Feature> features = new ArrayList<Feature>( featureList.size() );
-    for( final Object object : featureList )
-    {
-      final Feature feature = FeatureHelper.getFeature( workspace, object );
-      if( feature != null )
-        features.add( feature );
-    }
-
-    return features.toArray( new Feature[features.size()] );
-  }
-
-  /**
-   * Reads a property for every feature of an array of features and puts them into a new array.
-   */
-  @SuppressWarnings("unchecked")
-  public static <T> T[] getProperties( final Feature[] features, final String path, final T[] a )
-  {
-    final FeaturePath featurePath = new FeaturePath( path );
-
-    final T[] properties = a == null ? (T[]) Array.newInstance( a.getClass().getComponentType(), features.length ) : a;
-
-    for( int i = 0; i < features.length; i++ )
-    {
-      final Feature feature = features[i];
-      if( feature == null )
-        continue;
-
-      properties[i] = (T) featurePath.getFeatureForSegment( feature.getWorkspace(), feature, 0 );
-    }
-
-    return properties;
-  }
-
-  /**
-   * Calculates the minimal envelope containing all envelopes of the given features.
-   * 
-   * @return <code>null</code> if none of the given features contains a valid envelope.
-   */
-  public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
-  {
-    GM_Envelope result = null;
-
-    for( final IFeatureWrapper2 feature : features )
-    {
-      final GM_Envelope envelope = feature.getFeature().getEnvelope();
-      if( envelope != null )
-        if( result == null )
-          result = envelope;
-        else
-          result = result.getMerged( envelope );
-    }
-
-    return result;
-  }
-
 
 }

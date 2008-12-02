@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -61,11 +59,6 @@ public class FeatureChange
     m_feature = feature;
     m_property = property;
     m_newValue = newValue;
-  }
-
-  public FeatureChange( final Feature feature, final QName qname, final Object newValue )
-  {
-    this( feature, feature.getFeatureType().getProperty( qname ), newValue );
   }
 
   public Feature getFeature( )

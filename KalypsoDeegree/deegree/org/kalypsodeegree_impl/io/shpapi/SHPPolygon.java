@@ -143,7 +143,7 @@ public class SHPPolygon implements ISHPGeometry
       System.out.println( "SHPPolygon::" + e );
     }
 
-    Debug.debugMethodEnd(); 
+    Debug.debugMethodEnd();
   }
 
   /**

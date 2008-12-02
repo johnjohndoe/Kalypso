@@ -50,7 +50,6 @@ import java.util.Scanner;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.KalypsoDeegreeDebug;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -79,7 +78,7 @@ public class ConvertAscii2Binary
 
   public ConvertAscii2Binary( final URL asciiFileURL, final File ascbinFile, final int scale, final String sourceCRS )
   {
-    Assert.isTrue( scale >= 0, "Scale must not be negative" ); //$NON-NLS-1$
+    Assert.isTrue( scale >= 0, "Scale must not be negative" );
 
     m_asciiFileURL = asciiFileURL;
     m_ascbinFile = ascbinFile;
@@ -89,9 +88,9 @@ public class ConvertAscii2Binary
 
   public void doConvert( final IProgressMonitor monitor )
   {
-    KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary (" + m_ascbinFile.getName() + ")...\n" );
 
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("ConvertAscii2Binary.4"), 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere Raster in binäres Format", 100 );
 
     /* Convert to binary file */
     InputStream bis = null;
@@ -122,16 +121,9 @@ public class ConvertAscii2Binary
       final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, coordOrigin, offsetX, offsetY, m_sourceCRS, false );
       ProgressUtilities.worked( progress, 1 );
 
-      /* The current filename - */
-      final String asciiFileURL = m_asciiFileURL.getPath();
-      final String asciiFileName = FileUtilities.nameFromPath( asciiFileURL );
-
       final Double nan = Double.NaN;
       for( int y = 0; y < sizeY; y++ )
       {
-        if( y % 10 == 0 )
-          progress.subTask( String.format( "%s  %d / %d", asciiFileName, y, sizeY ) );
-
         for( int x = 0; x < sizeX; x++ )
         {
           final String next = scanner.next(); // do not use 'nextDouble' it is much too slow
@@ -153,12 +145,12 @@ public class ConvertAscii2Binary
 
       ProgressUtilities.worked( monitor, 1 );
 
-      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   done.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   done.\n" );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
-      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" );
     }
     finally
     {

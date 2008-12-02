@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.providers;
 
@@ -49,7 +49,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,7 +70,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IFeaturesProvider#getFeatures()
    */
-  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
+  public EasyFeatureWrapper[] getFeatures( final MapPanel mapPanel )
   {
     final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
 

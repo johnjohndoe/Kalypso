@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,11 +53,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -92,11 +89,6 @@ public class SplitSort implements FeatureList
         if( fe != null )
           return fe.getEnvelope();
       }
-      else if( object instanceof GM_Object )
-      {
-        final GM_Object geometry = (GM_Object) object;
-        return GeometryUtilities.getEnvelope( geometry );
-      }
 
       return null;
     }
@@ -117,33 +109,11 @@ public class SplitSort implements FeatureList
 
   private final IEnvelopeProvider m_envelopeProvider;
 
-  /**
-   * The constructor.
-   * 
-   * @param parentFeature
-   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
-   *            null then.
-   * @param parentFTP
-   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
-   *            parentFeature is also null then.
-   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
     this( parentFeature, parentFTP, null );
   }
 
-  /**
-   * The constructor.
-   * 
-   * @param parentFeature
-   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
-   *            null then.
-   * @param parentFTP
-   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
-   *            parentFeature is also null then.
-   * @param envelopeProvider
-   *            The provider returns evenlopes. If null, the default one is used.
-   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;
@@ -302,13 +272,7 @@ public class SplitSort implements FeatureList
       final Envelope bbox = m_index.getBoundingBox();
       if( bbox == null )
         return null;
-      final GM_Envelope env = JTSAdapter.wrap( bbox );
-      // REMARK: we just set here the default crs, as we assume, that all geometries already have been translated to
-      // this one.
-      // To be more precise, we should set a crs in the constructor of the SplitSort, and transform all added envelopes
-      // to this one.
-      env.setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      return env;
+      return JTSAdapter.wrap( bbox );
     }
   }
 

@@ -45,6 +45,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IObservation;
 
@@ -53,6 +54,7 @@ import org.kalypso.ogc.sensor.IObservation;
  */
 public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarshallingTypeHandler>
 {
+
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandlerFactory#registerTypeHandlers(org.kalypso.gmlschema.types.ITypeRegistry)
    */
@@ -64,7 +66,9 @@ public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarsh
       final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
       final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
+      final ResourceFileTypeHandler resourceFileTypeHandler = new ResourceFileTypeHandler();
 
+      marshallingRegistry.registerTypeHandler( resourceFileTypeHandler );
       marshallingRegistry.registerTypeHandler( wvqInline );
       marshallingRegistry.registerTypeHandler( taInline );
       marshallingRegistry.registerTypeHandler( wtKcLaiInline );

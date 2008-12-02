@@ -33,6 +33,8 @@ import java.awt.Frame;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.JScrollPane;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,11 +56,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -125,7 +129,7 @@ public class ObservationViewer extends Composite
     createControl( header, metaDataTable, chart, buttonControls );
   }
 
-  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, final ButtonControl[] buttonControls )
+  private final void createControl( final boolean withHeader, final boolean withMetaAndTable, final boolean withChart, ButtonControl[] buttonControls )
   {
     final GridLayout gridLayout = new GridLayout( 1, false );
     setLayout( gridLayout );
@@ -136,7 +140,7 @@ public class ObservationViewer extends Composite
     if( withHeader )
     {
       createHeaderForm( main );
-      m_show = false;
+      m_show=false;
     }
     else
       new Label( main, SWT.NONE );
@@ -178,8 +182,9 @@ public class ObservationViewer extends Composite
     final Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( buttonControls.length, false ) );
 
-    for( final ButtonControl control : buttonControls )
+    for( int i = 0; i < buttonControls.length; i++ )
     {
+      final ButtonControl control = buttonControls[i];
       final Button button = new Button( group, control.getStyle() );
       button.setText( control.getLabel() );
       button.setToolTipText( control.getTooltip() );
@@ -195,7 +200,7 @@ public class ObservationViewer extends Composite
 
     // 1. HREF
     m_lblObs = new Label( header, SWT.LEFT );
-    m_lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
+    m_lblObs.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.0") ); //$NON-NLS-1$
     m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
     m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
@@ -204,20 +209,19 @@ public class ObservationViewer extends Composite
 
     m_txtHref.addFocusListener( new FocusListener()
     {
-      public void focusGained( final FocusEvent e )
+      public void focusGained( FocusEvent e )
       {
         // nothing
       }
 
-      public void focusLost( final FocusEvent e )
+      public void focusLost( FocusEvent e )
       {
-        final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText();
-        setInput( m_txtHref.getText(), filterText, getShow() );
+        setInput( m_txtHref.getText(), m_txtFilter.getText(), getShow() );
       }
     } );
 
     m_btnSelectObsLocal = new Button( header, SWT.NONE );
-    m_btnSelectObsLocal.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.1" ) ); //$NON-NLS-1$
+    m_btnSelectObsLocal.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.1") ); //$NON-NLS-1$
     m_btnSelectObsLocal.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsLocal.addSelectionListener( new SelectionListener()
     {
@@ -238,13 +242,13 @@ public class ObservationViewer extends Composite
             {
               if( result[0] instanceof IFile )
               {
-                final IFile r = (IFile) result[0];
-                final URL url1 = m_context;
-                final URL url2 = ResourceUtilities.createURL( r );
+                IFile r = (IFile) result[0];
+                URL url1 = m_context;
+                URL url2 = ResourceUtilities.createURL( r );
 
-                final String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
+                String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.3" ) ); //$NON-NLS-1$
+                  m_txtHref.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.3") ); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
@@ -253,7 +257,7 @@ public class ObservationViewer extends Composite
             }
           }
         }
-        catch( final Exception e2 )
+        catch( Exception e2 )
         {
           e2.printStackTrace();
         }
@@ -273,8 +277,8 @@ public class ObservationViewer extends Composite
       {
         try
         {
-          final IProject project = ResourceUtilities.findProjectFromURL( m_context );
-          final IContainer baseDir = (project.getFolder( ".model" )).getParent(); //$NON-NLS-1$
+          IProject project = ResourceUtilities.findProjectFromURL( m_context );
+          IContainer baseDir = (project.getFolder( ".model" )).getParent(); //$NON-NLS-1$
           final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" ); //$NON-NLS-1$
           dialog.setBlockOnOpen( true );
           if( dialog.open() == Window.OK )
@@ -284,11 +288,11 @@ public class ObservationViewer extends Composite
             {
               if( result[0] instanceof IFile )
               {
-                final IFile r = (IFile) result[0];
-                final URL url1 = m_context;
-                final URL url2 = ResourceUtilities.createURL( r );
+                IFile r = (IFile) result[0];
+                URL url1 = m_context;
+                URL url2 = ResourceUtilities.createURL( r );
 
-                final String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
+                String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
                   m_txtHref.setText( "" ); //$NON-NLS-1$
                 else
@@ -299,7 +303,7 @@ public class ObservationViewer extends Composite
             }
           }
         }
-        catch( final Exception e2 )
+        catch( Exception e2 )
         {
           e2.printStackTrace();
         }
@@ -312,7 +316,7 @@ public class ObservationViewer extends Composite
     } );
     // 2. Anzeige
     showRadioButton = new Button( header, SWT.CHECK );
-    showRadioButton.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.8" ) ); //$NON-NLS-1$
+    showRadioButton.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.8") ); //$NON-NLS-1$
     showRadioButton.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     showRadioButton.setSelection( false );
     showRadioButton.addSelectionListener( new SelectionListener()
@@ -358,10 +362,13 @@ public class ObservationViewer extends Composite
     // TABLE
     m_table = new ObservationTable( m_tableView, false, false );
 
+    m_table.setBorder( null );
     final Composite tableComp = new Composite( form, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( tableComp );
     vFrame.setVisible( true );
-    vFrame.add( m_table );
+    final JScrollPane scrollPane = new JScrollPane( m_table );
+    scrollPane.setBorder( null );
+    vFrame.add( scrollPane );
 
     form.setWeights( new int[] { 2, 5 } );
   }
@@ -383,7 +390,7 @@ public class ObservationViewer extends Composite
     super.dispose();
   }
 
-  void setInput( final String href, final String filter, final boolean show )
+  void setInput( final String href, final String filter, boolean show )
   {
     // 1. basic href
     String hereHref = href;
@@ -432,7 +439,7 @@ public class ObservationViewer extends Composite
         {
           obs = ZmlFactory.parseXML( url, href );
         }
-        catch( final SensorException e1 )
+        catch( SensorException e1 )
         {
           e1.printStackTrace();
           return;
@@ -456,16 +463,24 @@ public class ObservationViewer extends Composite
       m_diagView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
       m_tableView.addObservation( pop, ObsViewUtils.DEFAULT_ITEM_NAME, itd );
     }
-    else if( obs != null )
+    else if( obs != null)
     {
       m_mdViewer.setInput( new ObservationPropertySource( obs ) );
     }
   }
 
+  protected static DateRange createFrom( final DateRangeInputControlStuct struct )
+  {
+    if( struct.useRange )
+      return new DateRange( struct.from, struct.to );
+
+    return DateRange.createFromPastDays( struct.days );
+  }
+
   /**
    * @param context
    */
-  public void setContext( final URL context )
+  public void setContext( URL context )
   {
     m_context = context;
   }
@@ -473,7 +488,7 @@ public class ObservationViewer extends Composite
   /**
    * @param input
    */
-  public void setInput( final Object input, final boolean show )
+  public void setInput( Object input, boolean show )
   {
     if( input != null && input.equals( m_input ) && show == m_show )
       return;

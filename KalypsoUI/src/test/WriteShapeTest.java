@@ -1,12 +1,9 @@
 package test;
 
-import java.io.File;
-
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -36,7 +33,7 @@ public class WriteShapeTest extends TestCase
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ); //$NON-NLS-1$
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
-    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT );
+    final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT_PROPERTY );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -65,10 +62,6 @@ public class WriteShapeTest extends TestCase
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR );
-
-    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
-
-    System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
+    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest", null ); //$NON-NLS-1$
   }
 }

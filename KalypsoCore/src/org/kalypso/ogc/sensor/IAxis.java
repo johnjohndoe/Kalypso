@@ -49,10 +49,7 @@ package org.kalypso.ogc.sensor;
  * <li>their types are identical</li>
  * <li>they have the same unit</li>
  * <li>the value of the key-property is identical</li>
- * <li>they have the same name (only if axes are KALYPSO-Status Axes)</li>
  * </ol>
- * 
- * Subclasses should extend AbstractAxis which already takes care of equals() and hashCode().
  * 
  * @author schlienger
  */

@@ -41,33 +41,22 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -89,9 +78,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class TimeserieUtils
 {
-  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties";
-
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
+  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" ); //$NON-NLS-1$
 
   private static String m_basename = "config"; //$NON-NLS-1$
 
@@ -100,25 +87,6 @@ public class TimeserieUtils
   private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
 
   private static NumberFormat m_defaultFormat = null;
-
-  /**
-   * Used by the ObservationTable and the observationDiagram
-   */
-  private static DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
-
-  static
-  {
-    final TimeZone timeZone;
-    // if the platform is runnning, use its time zone
-    if( Platform.isRunning() )
-    {
-      // Set the time zone according to the global settings
-      timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-      DF.setTimeZone( timeZone );
-    }
-    else
-      timeZone = TimeZone.getTimeZone( "UTC" );
-  }
 
   private TimeserieUtils( )
   {
@@ -131,9 +99,9 @@ public class TimeserieUtils
    * config.properties).
    * 
    * @param configUrl
-   *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
+   *            Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
-   *          base name of the config file (i.e. "config")
+   *            base name of the config file (i.e. "config")
    */
   public static void setConfigUrl( final URL configUrl, final String basename )
   {
@@ -159,10 +127,10 @@ public class TimeserieUtils
 
     final ArrayList<String> mds = new ArrayList<String>();
 
-    final Set<Object> keySet = mdl.keySet();
-    for( final Object object : keySet )
+    final Iterator it = mdl.keySet().iterator();
+    while( it.hasNext() )
     {
-      final String md = object.toString();
+      final String md = it.next().toString();
 
       if( md.startsWith( mdPrefix ) )
         mds.add( md );
@@ -200,54 +168,12 @@ public class TimeserieUtils
    * 
    * @return config of the timeseries package
    */
-  private static synchronized Properties getProperties( )
+  private static Properties getProperties( )
   {
     if( m_config == null )
     {
       m_config = new Properties();
-
-      final Properties defaultConfig = new Properties();
-      m_config = new Properties( defaultConfig );
-
-      // The config file in the sources is used as defaults
-      PropertiesUtilities.loadI18nProperties( defaultConfig, m_configBaseUrl, m_basename );
-
-      // TODO: also load configured properties via i18n mechanism
-      InputStream configIs = null;
-      try
-      {
-        // If we have a configured config file, use it as standard
-        final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
-        final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
-        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
-
-        try
-        {
-          if( timeseriesConfigUrl != null )
-            configIs = timeseriesConfigUrl.openStream();
-        }
-        catch( final FileNotFoundException ioe )
-        {
-          // ignore: there is no config file; we are using standard instead
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at " + timeseriesConfigUrl.toExternalForm()
-              + " does not exist. Using default settings.", null );
-          KalypsoCorePlugin.getDefault().getLog().log( status );
-        }
-
-        if( configIs != null )
-        {
-          m_config.load( configIs );
-          configIs.close();
-        }
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( configIs );
-      }
+      PropertiesUtilities.loadI18nProperties( m_config, m_configBaseUrl, m_basename );
     }
     return m_config;
   }
@@ -312,7 +238,9 @@ public class TimeserieUtils
    */
   public static String getUnit( final String type )
   {
-    return getProperties().getProperty( "AXISUNIT_" + type, "" );
+    final String strUnit = getProperties().getProperty( "AXISUNIT_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return strUnit;
   }
 
   /**
@@ -324,7 +252,9 @@ public class TimeserieUtils
    */
   public static String getName( final String type )
   {
-    return getProperties().getProperty( "AXISNAME_" + type, "" );
+    final String strName = getProperties().getProperty( "AXISNAME_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return strName;
   }
 
   /**
@@ -334,22 +264,15 @@ public class TimeserieUtils
    * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
-  public static Color[] getColorsFor( final String type )
+  public static Color getColorFor( final String type )
   {
     final String strColor = getProperties().getProperty( "AXISCOLOR_" + type ); //$NON-NLS-1$
 
-    if( strColor == null )
-      return new Color[] { ColorUtilities.random() };
+    if( strColor != null )
+      return StringUtilities.stringToColor( strColor );
 
-    final String[] strings = strColor.split( "#" );
-    if( strings.length == 0 )
-      return new Color[] { ColorUtilities.random() };
-
-    final Color[] colors = new Color[strings.length];
-    for( int i = 0; i < colors.length; i++ )
-      colors[i] = StringUtilities.stringToColor( strings[i] );
-
-    return colors;
+    // no color found? so return random one
+    return ColorUtilities.random();
   }
 
   /**
@@ -428,7 +351,7 @@ public class TimeserieUtils
    * TODO once on JDK 5.0 use formated printing if possible. Note that some refactoring might need to be done since we
    * currently work with NumberFormats.
    */
-  public static synchronized NumberFormat getNumberFormat( final String format )
+  public static NumberFormat getNumberFormat( final String format )
   {
     final NumberFormat nf = m_formatMap.get( format );
     if( nf != null )
@@ -462,7 +385,7 @@ public class TimeserieUtils
     return getDefaultFormat();
   }
 
-  private static synchronized NumberFormat getDefaultFormat( )
+  private static NumberFormat getDefaultFormat( )
   {
     if( m_defaultFormat == null )
     {
@@ -473,17 +396,7 @@ public class TimeserieUtils
     return m_defaultFormat;
   }
 
-  /**
-   * It is currently fix and is: "dd.MM.yy HH:mm"
-   * 
-   * @return the date format to use when displaying dates for observations/timeseries
-   */
-  public static DateFormat getDateFormat( )
-  {
-    return DF;
-  }
-
-  public static Class< ? > getDataClass( final String type )
+  public static Class getDataClass( final String type )
   {
     try
     {
@@ -508,7 +421,7 @@ public class TimeserieUtils
   }
 
   /**
-   * @return the default format string for the given type
+   * Returns the default format string for the given type
    */
   public static String getDefaultFormatString( final String type )
   {
@@ -516,25 +429,13 @@ public class TimeserieUtils
   }
 
   /**
-   * @return the default top margin defined for the given type or null if none
-   */
-  public static Double getTopMargin( final String type )
-  {
-    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
-    if( margin == null )
-      return null;
-
-    return Double.valueOf( margin );
-  }
-
-  /**
    * Create a test timeserie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
    * 
    * @param axisTypes
-   *          as seen in TimeserieConstants.TYPE_*
+   *            as seen in TimeserieConstants.TYPE_*
    * @param amountRows
-   *          amount of rows of the TuppleModel that is randomly created
+   *            amount of rows of the TuppleModel that is randomly created
    * @throws SensorException
    */
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
@@ -573,7 +474,7 @@ public class TimeserieUtils
 
   /**
    * @param gkr
-   *          the Gausskrüger Rechtswert as string
+   *            the Gausskrüger Rechtswert as string
    * @return the corresponding Gausskrüger Coordinate System Name
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
@@ -581,6 +482,8 @@ public class TimeserieUtils
     final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
     if( crsName == null )
       KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+//      KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
     return crsName;
   }
 
@@ -589,7 +492,7 @@ public class TimeserieUtils
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
    * 
    * @param axisType
-   *          the type of the axis for which to convert the alarm-level
+   *            the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
   public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException

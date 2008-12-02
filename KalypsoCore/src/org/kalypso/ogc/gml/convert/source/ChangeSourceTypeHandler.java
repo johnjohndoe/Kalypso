@@ -45,7 +45,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;

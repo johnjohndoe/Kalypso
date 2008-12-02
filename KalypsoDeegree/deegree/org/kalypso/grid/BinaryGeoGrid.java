@@ -49,11 +49,11 @@ import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.util.Assert;
 
 /**
  * A {@link IGeoGrid} implementation based on the Kalypso Binary-Grid-Format.
@@ -77,6 +77,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  *  Min:            Minimum value
  *  Max:            Maximum value
  * </pre>
+ * 
  * <p>
  * All values are encoded as lower endian integers (4 bytes).
  * </p>
@@ -114,7 +115,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Dispose the grid after it is no more needed in order to release the given resource.
    * 
    * @param writeable
-   *          If <code>true</code>, the grid is opened for writing and a {@link IWriteableGeoGrid} is returned.
+   *            If <code>true</code>, the grid is opened for writing and a {@link IWriteableGeoGrid} is returned.
    */
   public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException
   {
@@ -148,8 +149,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * The grid must be disposed afterwards in order to flush the written information. *
    * 
    * @param fillGrid
-   *          If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid values
-   *          are undetermined.
+   *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
+   *            values are undetermined.
    */
   public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
@@ -166,7 +167,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * @param binFile
-   *          If set, this file will be deleted on dispose
+   *            If set, this file will be deleted on dispose
    */
   private BinaryGeoGrid( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
@@ -192,8 +193,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * @param fillGrid
-   *          If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid values
-   *          are undetermined.
+   *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
+   *            values are undetermined.
    */
   public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
@@ -318,7 +319,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Sets the value of a grid cell. The given value is scaled to the scale of this grid.
    * 
    * @throws DoubleGridException
-   *           If the grid is not opened for write access.
+   *             If the grid is not opened for write access.
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
    */
   public void setValue( final int x, final int y, final double value ) throws GeoGridException
@@ -341,7 +342,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Sets the value of a grid cell. The given value is rescaled to the scale of this grid.
    * 
    * @throws DoubleGridException
-   *           If the grid is not opened for write access.
+   *             If the grid is not opened for write access.
    */
   public void setValue( final int x, final int y, final BigDecimal value ) throws GeoGridException
   {
@@ -365,9 +366,6 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   private void seekValue( final int x, final int y ) throws IOException
   {
-    Assert.isTrue( x >= 0 && x < m_sizeX );
-    Assert.isTrue( y >= 0 && y < m_sizeY );
-
     final long pos = y * m_sizeX * 4 + x * 4 + HEADER_SIZE;
     m_randomAccessFile.seek( pos );
   }
@@ -416,7 +414,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Gets the statistically values of this grid.
    * 
    * @throws IOException
-   *           If the file position is not valid.
+   *             If the file position is not valid.
    */
   public void getStatistically( ) throws IOException
   {
@@ -430,7 +428,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Sets the statistically values of this grid.
    * 
    * @throws IOException
-   *           If the grid is not opened for write access.
+   *             If the grid is not opened for write access.
    */
   public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
   {

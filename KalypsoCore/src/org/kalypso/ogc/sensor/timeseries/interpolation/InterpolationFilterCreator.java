@@ -42,8 +42,6 @@ package org.kalypso.ogc.sensor.timeseries.interpolation;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBElement;
-
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
@@ -69,15 +67,10 @@ public class InterpolationFilterCreator implements IFilterCreator
 
     final InterpolationFilterType ft = (InterpolationFilterType)aft;
 
-    final JAXBElement< ? extends AbstractFilterType> innerFilter = ft.getFilter();
-    final AbstractFilterType innerFilterValue = innerFilter == null ? null : innerFilter.getValue();
-    
-    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( innerFilterValue, baseObs, context );
+    final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
 
-    final String defaultValue = ft.getDefaultValue();
-    
     final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
-        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), defaultValue, ft.getDefaultStatus(), ft.isFillLastWithValid() );
+        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus(), ft.isFillLastWithValid() );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

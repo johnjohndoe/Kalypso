@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.IKalypsoCoreConstants;
 import org.kalypso.core.i18n.Messages;
 
@@ -117,12 +118,12 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       // This leads to a bug, where only the last (in case of the shape it is the .shx file) will be removed.
       // The other resources will remain in the map.
       // This solves it, but is an ugly hack.
-      final String pathFor = pathFor( resource );
+      String pathFor = pathFor( resource );
       if( pathFor.endsWith( ".shx" ) ) //$NON-NLS-1$
       {
-        final String path = pathFor.substring( 0, pathFor.length() - 4 );
-        final String shpPath = path + ".shp"; //$NON-NLS-1$
-        final String dbfPath = path + ".dbf"; //$NON-NLS-1$
+        String path = pathFor.substring( 0, pathFor.length() - 4 );
+        String shpPath = path + ".shp"; //$NON-NLS-1$
+        String dbfPath = path + ".dbf"; //$NON-NLS-1$
 
         m_resourceMap.remove( shpPath );
         m_resourceMap.remove( dbfPath );

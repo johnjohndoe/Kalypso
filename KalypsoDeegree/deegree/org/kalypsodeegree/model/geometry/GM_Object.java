@@ -35,7 +35,7 @@
  */
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.eclipse.core.runtime.IAdaptable;
 
 /**

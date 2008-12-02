@@ -49,7 +49,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;

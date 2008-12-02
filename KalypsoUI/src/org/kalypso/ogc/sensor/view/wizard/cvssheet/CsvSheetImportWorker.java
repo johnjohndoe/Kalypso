@@ -82,7 +82,7 @@ import au.com.bytecode.opencsv.CSVReader;
 /**
  * Perform finish worker for cvs import wizard.
  * 
- * @author Dirk Kuch
+ * @author kuch
  */
 public class CsvSheetImportWorker implements ICoreRunnableWithProgress
 {

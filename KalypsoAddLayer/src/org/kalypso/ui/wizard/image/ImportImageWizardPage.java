@@ -146,8 +146,9 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
     m_browseButton.addSelectionListener( this );
 
     /* CRS panel. */
-    m_crsPanel = new CRSSelectionPanel( m_topComposite, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( m_topComposite );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       /**

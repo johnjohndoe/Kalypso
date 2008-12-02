@@ -9,6 +9,7 @@ Export-Package: org.kalypso.repository,
  org.kalypso.repository.conf,
  org.kalypso.repository.container,
  org.kalypso.repository.factory,
- org.kalypso.repository.file
-Require-Bundle: org.junit;resolution:=optional,
- org.kalypso.commons;bundle-version="0.0.1"
+ org.kalypso.repository.file,
+ org.kalypso.repository.service
+Require-Bundle: org.kalypso.jwsdp,
+ org.junit;resolution:=optional

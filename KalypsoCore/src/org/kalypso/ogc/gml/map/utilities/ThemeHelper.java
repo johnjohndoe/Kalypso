@@ -43,11 +43,10 @@ package org.kalypso.ogc.gml.map.utilities;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class ThemeHelper
 {
@@ -60,17 +59,12 @@ public class ThemeHelper
    */
   public static IKalypsoTheme[] getThemeByProperty( final IKalypsoTheme[] themes, final String propertyID, final String propertyValue )
   {
-    return getThemeByProperties( themes, propertyID, new String[] { propertyValue } );
-  }
-
-  public static IKalypsoTheme[] getThemeByProperties( IKalypsoTheme[] themes, String themeId, String[] validThemes )
-  {
     final Set<IKalypsoTheme> myThemes = new LinkedHashSet<IKalypsoTheme>();
 
     for( final IKalypsoTheme theme : themes )
     {
-      final String property = theme.getProperty( themeId, "" );
-      if( ArrayUtils.contains( validThemes, property ) )
+      final String property = theme.getProperty( propertyID, "" );
+      if( property.equals( propertyValue ) )
         myThemes.add( theme );
     }
 

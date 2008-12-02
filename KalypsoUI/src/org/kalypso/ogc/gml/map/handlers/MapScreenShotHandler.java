@@ -54,7 +54,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.ExportableMap;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
 
@@ -66,15 +68,13 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  * <br>
  * command.addExecutionListener( new IExecutionListener() {<br>
  * <br>
- * public void postExecuteSuccess( final String commandId, final Object returnValue )<br>
- * <br>
+ * public void postExecuteSuccess( final String commandId, final Object returnValue )<br> {<br>
  * if( !(returnValue instanceof URL) )<br>
  * return;<br>
  * ... <br>
  * public void preExecute( final String commandId, final ExecutionEvent event ) {<br>
  * final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();<br>
- * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br>
- * ..<br>
+ * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br> ..<br>
  * 
  * @author Dirk Kuch
  */
@@ -89,15 +89,13 @@ public class MapScreenShotHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     BufferedOutputStream os = null;
 
     try
     {
-      // TODO: we should separate this handler into two, one, using a file dialog
-      // the other one using the preferences; everything else is too obscure
-      // The common code can just be factored out into a helper class
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
 
@@ -121,16 +119,16 @@ public class MapScreenShotHandler extends AbstractHandler
       else if( targetFile.isFile() )
         img = targetFile;
       else
-        // TODO: why not just present the file dialog here, if nothing is defined?
-        throw new NotImplementedException( "targetFile must be an file or directory and have to exists" ); //$NON-NLS-1$
+        throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" )); //$NON-NLS-1$
 
       /* generate and store img */
       os = new BufferedOutputStream( new FileOutputStream( img ) );
 
-      final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+      final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
-      export.exportObject( os, new NullProgressMonitor() );
+      export.exportObject( os, new NullProgressMonitor(), null );
 
       return img;
     }
@@ -145,7 +143,7 @@ public class MapScreenShotHandler extends AbstractHandler
     }
   }
 
-  public static File getTargetImageFile( final File targetDir, final String format ) throws IOException
+  private File getTargetImageFile( final File targetDir, final String format ) throws IOException
   {
     if( !targetDir.exists() )
       FileUtils.forceMkdir( targetDir );

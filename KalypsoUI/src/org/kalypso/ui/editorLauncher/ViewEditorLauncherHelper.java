@@ -142,6 +142,7 @@ public class ViewEditorLauncherHelper
     // klappt nicht?
     dialog.setInitialSelections( allTemplates.toArray() );
     final int dialogResult = dialog.open();
+    workbenchLabelProvider.dispose();
 
     if( dialogResult == Window.OK )
     {

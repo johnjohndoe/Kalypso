@@ -51,13 +51,11 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class WizardFeatureLabel
 {
   private String m_text;
-
-  private String m_fallback = "";
 
   public WizardFeatureLabel( final String text, final Composite body )
   {
@@ -89,7 +87,6 @@ public class WizardFeatureLabel
   @Deprecated
   public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body, final GridData gridData )
   {
-    m_fallback = fallback;
     if( feature == null )
       draw( fallback, body, gridData );
     else

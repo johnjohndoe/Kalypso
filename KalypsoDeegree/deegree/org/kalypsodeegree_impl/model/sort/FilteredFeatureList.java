@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
@@ -56,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
  * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
  * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
  * ändern auch die Originalliste.
- *
+ * 
  * @author belger
  */
 public class FilteredFeatureList implements FeatureList
@@ -76,7 +75,7 @@ public class FilteredFeatureList implements FeatureList
   /**
    * TODO: this is the key method of this implementation, but it probably does not work properly, as not all elements
    * must be features...
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   public Feature[] toFeatures( )
@@ -345,11 +344,10 @@ public class FilteredFeatureList implements FeatureList
     final int oldlength = result == null ? 0 : result.size();
 
     // only remove new elements, which do not match type
-    final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    for( final Iterator< ? > sIt = sublist.iterator(); sIt.hasNext(); )
+    final List sublist = originalList.subList( oldlength, originalList.size() );
+    for( final Iterator sIt = sublist.iterator(); sIt.hasNext(); )
     {
-      final Object next = sIt.next();
-      final Feature f = FeatureHelper.getFeature( m_original.getParentFeature().getWorkspace(), next );
+      final Feature f = (Feature) sIt.next();
       if( !m_filterVisitor.matchesType( f ) )
         sIt.remove();
     }

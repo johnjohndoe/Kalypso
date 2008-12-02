@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,7 +67,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;
@@ -78,6 +76,7 @@ import org.kalypso.commons.parser.impl.DateParser;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -126,9 +125,9 @@ import org.xml.sax.InputSource;
  */
 public class ZmlFactory
 {
-  public final static ObjectFactory OF = new ObjectFactory();
+  private final static ObjectFactory OF = new ObjectFactory();
 
-  public final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private static ParserFactory m_parserFactory = null;
 
@@ -141,7 +140,7 @@ public class ZmlFactory
     // not to be instanciated
   }
 
-  private static synchronized Properties getProperties( )
+  private static Properties getProperties( )
   {
     if( m_parserProps == null )
     {
@@ -157,7 +156,7 @@ public class ZmlFactory
 
         return m_parserProps;
       }
-      catch( final IOException e )
+      catch( IOException e )
       {
         throw new RuntimeException( e );
       }
@@ -291,20 +290,18 @@ public class ZmlFactory
       throw new SensorException( e );
     }
 
-    return binding2Obs( obs, identifier, context );
-  }
-
-  public static IObservation binding2Obs( final Observation obs, final String identifier, final URL context ) throws SensorException
-  {
     // metadata
     final MetadataList metadata = new MetadataList();
     metadata.put( ObservationConstants.MD_NAME, obs.getName() );
     TimeZone timeZone = null;
     if( obs.getMetadataList() != null )
     {
-      final List<MetadataType> mdList = obs.getMetadataList().getMetadata();
-      for( final MetadataType md : mdList )
+      final List mdList = obs.getMetadataList().getMetadata();
+
+      for( final Iterator it = mdList.iterator(); it.hasNext(); )
       {
+        final MetadataType md = (MetadataType) it.next();
+
         final String value;
         if( md.getValue() != null )
           value = md.getValue();
@@ -319,14 +316,14 @@ public class ZmlFactory
     }
 
     // axes and values
-    final List<AxisType> tmpList = obs.getAxis();
+    final List tmpList = obs.getAxis();
     final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( tmpList.size() );
 
     final String data = obs.getData(); // data is optional and can be null
 
     for( int i = 0; i < tmpList.size(); i++ )
     {
-      final AxisType tmpAxis = tmpList.get( i );
+      final AxisType tmpAxis = (AxisType) tmpList.get( i );
 
       final Properties props = PropertiesHelper.parseFromString( tmpAxis.getDatatype(), '#' );
       final String type = props.getProperty( "TYPE" ); //$NON-NLS-1$
@@ -346,13 +343,6 @@ public class ZmlFactory
         parser = getParserFactory().createParser( type, format );
         if( parser instanceof DateParser && timeZone != null )
           ((DateParser) parser).setTimezone( timeZone );
-
-        // if we have a date parser, set the right timezone to read the values
-        if( parser instanceof DateParser )
-        {
-          final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" );
-          ((DateParser)parser).setTimezone( TimeZone.getTimeZone( tzString ) );
-        }
 
         values = createValues( context, tmpAxis, parser, data );
       }
@@ -467,6 +457,9 @@ public class ZmlFactory
   {
     try
     {
+      if( timezone == null )
+        timezone = TimeZone.getTimeZone( "UTC" ); // in year 1928 GMT has been replaced by UTC //$NON-NLS-1$
+
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
 
@@ -474,16 +467,27 @@ public class ZmlFactory
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
+      boolean timeZonePresent = false;
+
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
-      for( final Entry<Object, Object> entry : obs.getMetadataList().entrySet() )
+      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
+        final Map.Entry entry = (Entry) it.next();
+
         final String mdKey = (String) entry.getKey();
-        final String mdValue = (String) entry.getValue();
+        String mdValue = (String) entry.getValue();
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
+
+        // HACK: check if timezone already present
+        if( mdKey.equals( TimeserieConstants.MD_TIMEZONE ) )
+        {
+          timeZonePresent = true;
+// mdValue = timezone.getID(); // override with our timezone
+        }
 
         // TRICKY: if this looks like an xml-string then pack it
         // into a CDATA section and use the 'data'-Element instead
@@ -495,28 +499,22 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      if( timezone == null )
-        timezone = TimeZone.getDefault();
-
-      // write timezone info into metadata
-      final MetadataType mdType = OF.createMetadataType();
-      mdType.setName( TimeserieConstants.MD_TIMEZONE );
-      mdType.setValue( timezone.getID() );
-      // Check, if value already exists and remove first
-      for( final Iterator<MetadataType> iterator = metadataList.iterator(); iterator.hasNext(); )
+      // HACK: only add timezone if not already there
+      if( !timeZonePresent )
       {
-        if( iterator.next().getName().equals( TimeserieConstants.MD_TIMEZONE ))
-          iterator.remove();
+        final MetadataType mdType = OF.createMetadataType();
+        mdType.setName( TimeserieConstants.MD_TIMEZONE );
+        mdType.setValue( timezone.getID() );
+        metadataList.add( mdType );
       }
-      metadataList.add( mdType );
 
       final List<AxisType> axisList = obsType.getAxis();
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-          {
+      {
 
-        public int compare( final IAxis a1, final IAxis a2 )
+        public int compare( IAxis a1, IAxis a2 )
         {
           String type1 = a1.getType();
           String type2 = a2.getType();
@@ -537,12 +535,12 @@ public class ZmlFactory
           return type1.compareTo( type2 );
         }
 
-          } );
+      } );
 
-      for( final IAxis axis : obs.getAxisList() )
+      for( IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );
 
-      for( final IAxis axis : sortedAxis )
+      for( IAxis axis : sortedAxis )
       {
         if( axis.isPersistable() )
         {
@@ -569,7 +567,7 @@ public class ZmlFactory
 
       return obsType;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new FactoryException( e );
     }
@@ -584,7 +582,7 @@ public class ZmlFactory
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringDateAxis( model, axis, sb, timezone );
-    else if( Number.class.isAssignableFrom( axis.getDataClass() ) || Boolean.class.isAssignableFrom( axis.getDataClass() ) )
+    else if( Number.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringNumberAxis( model, axis, sb );
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringAxis( model, axis, sb );
@@ -594,7 +592,7 @@ public class ZmlFactory
     return sb.toString();
   }
 
-  private static void buildStringAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb ) throws SensorException
+  private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -650,7 +648,7 @@ public class ZmlFactory
     return marshaller;
   }
 
-  public static Unmarshaller getUnmarshaller( ) throws JAXBException
+  private static Unmarshaller getUnmarshaller( ) throws JAXBException
   {
     final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
@@ -673,28 +671,14 @@ public class ZmlFactory
    * @throws SensorException
    *             if an IOException or a FactoryException is thrown internally
    */
-  public static void writeToFile( final IObservation filteredObs, final File file ) throws SensorException
-  {
-    writeToFile( filteredObs, file, null );
-  }
-
-  /**
-   * Helper method for simply writing the observation to a file
-   * 
-   * @param request
-   *          If non-<code>null</code>, this request will be applied to the access to the values of the given
-   *          observation.
-   * @throws SensorException
-   *           if an IOException or a FactoryException is thrown internally
-   */
-  public static void writeToFile( final IObservation obs, final File file, final IRequest request ) throws SensorException
+  public static void writeToFile( final IObservation obs, final File file ) throws SensorException
   {
     OutputStream outs = null;
     try
     {
-      final Observation xml = createXML( obs, request );
+      final Observation xml = createXML( obs, null );
 
-      outs = new BufferedOutputStream( new FileOutputStream( file ) );
+      outs = new FileOutputStream( file );
 
       getMarshaller().marshal( xml, outs );
 
@@ -722,8 +706,9 @@ public class ZmlFactory
   {
     final String[] rows = content.split( "\\n" ); //$NON-NLS-1$
     final List<Object[]> collector = new ArrayList<Object[]>();
-    for( final String row : rows )
+    for( int i = 0; i < rows.length; i++ )
     {
+      final String row = rows[i];
       final String[] cells = row.split( "\\t" ); //$NON-NLS-1$
       final Object[] rowValues = new Object[axis.length];
       for( int ax = 0; ax < axis.length; ax++ )
@@ -734,7 +719,7 @@ public class ZmlFactory
           try
           {
             final String stringValue = cells[ax];
-            final Class<?> dataClass = axis[ax].getDataClass();
+            final Class dataClass = axis[ax].getDataClass();
             Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
               keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
@@ -748,9 +733,8 @@ public class ZmlFactory
             }
             rowValues[ax] = keyValue;
           }
-          catch( final Exception e )
+          catch( Exception e )
           {
-            e.printStackTrace();
             break; // ignore this row
           }
         }
@@ -761,7 +745,7 @@ public class ZmlFactory
             if( cells.length > ax )
             {
               final String stringValue = cells[ax];
-              final Class<?> dataClass = axis[ax].getDataClass();
+              final Class dataClass = axis[ax].getDataClass();
               if( Number.class.isAssignableFrom( dataClass ) )
                 rowValues[ax] = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
               else
@@ -770,7 +754,7 @@ public class ZmlFactory
             else
               rowValues[ax] = null;
           }
-          catch( final Exception e )
+          catch( Exception e )
           {
             rowValues[ax] = null;
           }
@@ -782,9 +766,9 @@ public class ZmlFactory
     // copy from list to array
     final Object[][] values = new Object[collector.size()][axis.length];
     int r = 0;
-    for( final Iterator<Object[]> iter = collector.iterator(); iter.hasNext(); )
+    for( Iterator iter = collector.iterator(); iter.hasNext(); )
     {
-      values[r] = iter.next();
+      values[r] = (Object[]) iter.next();
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );
@@ -808,10 +792,10 @@ public class ZmlFactory
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
     final List<IAxis> list = new ArrayList<IAxis>();
     list.add( keyAxes[0] );
-    for( final IAxis axe : axes )
+    for( int i = 0; i < axes.length; i++ )
     {
-      if( axe != keyAxes[0] )
-        list.add( axe );
+      if( axes[i] != keyAxes[0] )
+        list.add( axes[i] );
     }
     final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
     for( int row = 0; row < count; row++ )
@@ -830,7 +814,7 @@ public class ZmlFactory
             stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true, false );
           result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           result.append( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.34") ); //$NON-NLS-1$
           // ignore
@@ -843,5 +827,4 @@ public class ZmlFactory
     }
     return result.toString();
   }
-
 }

@@ -40,7 +40,7 @@ import java.awt.Graphics2D;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public interface IAdditionalStrokePainter
 {

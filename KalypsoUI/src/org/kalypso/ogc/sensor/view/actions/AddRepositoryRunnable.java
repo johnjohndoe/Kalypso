@@ -93,7 +93,7 @@ public class AddRepositoryRunnable implements Runnable
         return;
 
       final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig) dlg.getResult()[0];
-      final IRepositoryFactory f = cfg.getFactory( );
+      final IRepositoryFactory f = cfg.createFactory( getClass().getClassLoader() );
 
       if( f.configureRepository() )
       {

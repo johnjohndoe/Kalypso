@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.providers.IHandlesProvider;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -81,7 +81,7 @@ public class DragFeatureWidget extends AbstractWidget
   /**
    * This is the provider, which provides the handles for the geometries of the feature.
    */
-  private final IHandlesProvider m_handlesProvider;
+  private IHandlesProvider m_handlesProvider;
 
   /**
    * The radius, in which a handle should be selectable.
@@ -142,12 +142,12 @@ public class DragFeatureWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
     /* Init the cursor. */
-    final Cursor cursor = Cursor.getPredefinedCursor( Cursor.HAND_CURSOR );
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.HAND_CURSOR );
     getMapPanel().setCursor( cursor );
   }
 
@@ -155,16 +155,16 @@ public class DragFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( final Point p )
+  public void leftReleased( Point p )
   {
     if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
       return;
 
     /* Memory to collect all active handles. */
-    final ArrayList<Handle> list = new ArrayList<Handle>();
+    ArrayList<Handle> list = new ArrayList<Handle>();
 
     /* Set all handles inactive. */
-    for( final IHandle handle : m_handles )
+    for( IHandle handle : m_handles )
     {
       if( handle.isActive() )
         list.add( new Handle( handle.getFeature(), handle.getValuePropertyType(), handle.getPosition() ) );
@@ -184,7 +184,7 @@ public class DragFeatureWidget extends AbstractWidget
     getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0") ); //$NON-NLS-1$
 
     /* Create the new geometry. */
-    final GeoTransform projection = getMapPanel().getProjection();
+    GeoTransform projection = getMapPanel().getProjection();
 
     final double gStartX = projection.getSourceX( m_startPoint.getX() );
     final double gStartY = projection.getSourceY( m_startPoint.getY() );
@@ -199,7 +199,7 @@ public class DragFeatureWidget extends AbstractWidget
     {
       m_workspace.postCommand( command );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }
@@ -215,7 +215,7 @@ public class DragFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( final Point p )
+  public void dragged( Point p )
   {
     if( m_handles == null || m_handles.size() == 0 )
       return;
@@ -226,17 +226,17 @@ public class DragFeatureWidget extends AbstractWidget
       m_startPoint = p;
 
       /* Get the feature of the first handle. */
-      final Feature feature = m_handles.get( 0 ).getFeature();
-      final GM_Envelope envelope = feature.getEnvelope();
+      Feature feature = m_handles.get( 0 ).getFeature();
+      GM_Envelope envelope = feature.getEnvelope();
 
-      final GeoTransform projection = getMapPanel().getProjection();
-      final double x = projection.getSourceX( p.getX() );
-      final double y = projection.getSourceY( p.getY() );
+      GeoTransform projection = getMapPanel().getProjection();
+      double x = projection.getSourceX( p.getX() );
+      double y = projection.getSourceY( p.getY() );
 
       if( envelope.contains( x, y ) )
       {
         /* Activate all handles, because we want to drag the whole feature. */
-        for( final IHandle handle : m_handles )
+        for( IHandle handle : m_handles )
           handle.setActive( true );
 
         getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2") ); //$NON-NLS-1$
@@ -248,37 +248,37 @@ public class DragFeatureWidget extends AbstractWidget
 
     // TODO: check if this repaint is really necessary
     // Answer: It is necessary, but it was at the wrong scope. Moved it out of the upper if-block.
-    final IMapPanel panel = getMapPanel();
+    MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( final Graphics g )
+  public void paint( Graphics g )
   {
     if( m_handles == null || m_handles.size() == 0 )
       return;
 
-    final Feature feature = m_handles.get( 0 ).getFeature();
-    final GM_Envelope envelope = feature.getEnvelope();
+    Feature feature = m_handles.get( 0 ).getFeature();
+    GM_Envelope envelope = feature.getEnvelope();
 
-    final double x = envelope.getMin().getX();
-    final double y = envelope.getMin().getY();
-    final double xx = envelope.getMax().getX();
-    final double yy = envelope.getMax().getY();
+    double x = envelope.getMin().getX();
+    double y = envelope.getMin().getY();
+    double xx = envelope.getMax().getX();
+    double yy = envelope.getMax().getY();
 
-    final GeoTransform projection = getMapPanel().getProjection();
+    GeoTransform projection = getMapPanel().getProjection();
 
-    final int destX = (int) projection.getDestX( x );
-    final int destY = (int) projection.getDestY( yy );
-    final int destXX = (int) projection.getDestX( xx );
-    final int destYY = (int) projection.getDestY( y );
+    int destX = (int) projection.getDestX( x );
+    int destY = (int) projection.getDestY( yy );
+    int destXX = (int) projection.getDestX( xx );
+    int destYY = (int) projection.getDestY( y );
 
-    final int width = destXX - destX;
-    final int height = destYY - destY;
+    int width = destXX - destX;
+    int height = destYY - destY;
 
     g.drawRect( destX, destY, width, height );
 
@@ -289,11 +289,11 @@ public class DragFeatureWidget extends AbstractWidget
     if( (m_startPoint != null) && (m_currentPoint != null) && (m_handles.get( 0 ).isActive()) )
     {
       /* Calculate the difference between the two points. */
-      final int da = (int) (m_currentPoint.getX() - m_startPoint.getX());
-      final int db = (int) (m_currentPoint.getY() - m_startPoint.getY());
+      int da = (int) (m_currentPoint.getX() - m_startPoint.getX());
+      int db = (int) (m_currentPoint.getY() - m_startPoint.getY());
 
-      final int a = (int) m_startPoint.getX();
-      final int b = (int) m_startPoint.getY();
+      int a = (int) m_startPoint.getX();
+      int b = (int) m_startPoint.getY();
 
       g.setColor( Color.BLUE );
       g.drawLine( a, b, a + da, b + db );
@@ -331,7 +331,7 @@ public class DragFeatureWidget extends AbstractWidget
     m_workspace = null;
 
     /* Reset the cursor to default. */
-    final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
     getMapPanel().setCursor( cursor );
   }
 
@@ -339,9 +339,9 @@ public class DragFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
   @Override
-  public void setSelection( final ISelection selection )
+  public void setSelection( ISelection selection )
   {
-    final EasyFeatureWrapper wrapper = checkSelection( selection );
+    EasyFeatureWrapper wrapper = checkSelection( selection );
 
     /* If no feature with geometries is found, do nothing. */
     if( wrapper == null )
@@ -351,7 +351,7 @@ public class DragFeatureWidget extends AbstractWidget
     }
 
     /* Store the feature and the workspace. */
-    final Feature feature = wrapper.getFeature();
+    Feature feature = wrapper.getFeature();
     m_workspace = wrapper.getWorkspace();
 
     /* Create a new list for the handles. */
@@ -365,20 +365,20 @@ public class DragFeatureWidget extends AbstractWidget
     return;
   }
 
-  private EasyFeatureWrapper checkSelection( final ISelection selection )
+  private EasyFeatureWrapper checkSelection( ISelection selection )
   {
     if( !(selection instanceof IFeatureSelection) )
       return null;
 
     /* On activation collect all handles of the selected feature. */
-    final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
+    EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
 
-    for( final EasyFeatureWrapper wrapper : allFeatures )
+    for( EasyFeatureWrapper wrapper : allFeatures )
     {
       /* Take the first feature, which is in this list and which has geometries. */
       if( wrapper.getFeature().getGeometryProperties().length > 0 )
       {
-        final IFeatureType featureType = wrapper.getFeature().getFeatureType();
+        IFeatureType featureType = wrapper.getFeature().getFeatureType();
 
         /*
          * If a list of qnames is specified and at least one qname exists in it, search only for features, which
@@ -386,7 +386,7 @@ public class DragFeatureWidget extends AbstractWidget
          */
         if( (m_qnames != null) && (m_qnames.length > 0) )
         {
-          for( final QName qname : m_qnames )
+          for( QName qname : m_qnames )
           {
             /* And it has to susbtitute one of the qnames. */
             if( GMLSchemaUtilities.substitutes( featureType, qname ) )
@@ -410,7 +410,7 @@ public class DragFeatureWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
     if( mapPanel == null )
       return false;

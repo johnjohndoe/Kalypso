@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.providers.tooltips;
 
@@ -46,7 +46,7 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
 import org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -89,7 +89,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
    * @param featuresProvider
    *          Provides the features, from which the tooltips can be build, if the mouse is hovering one.
    */
-  public PropertyTooltipProvider( final int radius, final ITooltipGenerator generator, final IFeaturesProvider featuresProvider )
+  public PropertyTooltipProvider( int radius, ITooltipGenerator generator, IFeaturesProvider featuresProvider )
   {
     m_radius = radius;
     m_generator = generator;
@@ -100,7 +100,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Rectangle)
    */
-  public String getTooltip( final IMapPanel mapPanel, final Rectangle rectangle )
+  public String getTooltip( MapPanel mapPanel, Rectangle rectangle )
   {
     final EasyFeatureWrapper[] wrappers = m_featuresProvider.getFeatures( mapPanel );
     final EasyFeatureWrapper[] wrappersToSelect = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, wrappers, m_radius );
@@ -115,9 +115,9 @@ public class PropertyTooltipProvider implements ITooltipProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics,
    *      java.lang.String)
    */
-  public void paintTooltip( final Graphics g, final Point p, final String tooltip )
+  public void paintTooltip( Graphics g, Point p, String tooltip )
   {
-    final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
+    Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
 
     g.setColor( new Color( 255, 255, 225 ) );
     g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );

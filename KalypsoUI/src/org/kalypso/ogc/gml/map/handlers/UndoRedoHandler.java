@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -44,11 +44,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.util.command.CommandJob;
@@ -61,11 +62,12 @@ import org.kalypso.util.command.CommandJob;
  */
 public abstract class UndoRedoHandler extends AbstractHandler
 {
+
   private final boolean m_undo;
 
   private boolean m_enabled = true;
 
-  public UndoRedoHandler( final boolean undo )
+  public UndoRedoHandler( boolean undo )
   {
     m_undo = undo;
   }
@@ -73,10 +75,21 @@ public abstract class UndoRedoHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  @Override
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
+
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+
+    if( part == null )
+      return null;
+
+    MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+
+    if( mapPanel == null )
+      return null;
+
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
     {
@@ -115,10 +128,10 @@ public abstract class UndoRedoHandler extends AbstractHandler
   protected void refreshAction( )
   {
 
-    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     if( activePart == null )
       return;
-    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+    final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
 
     if( mapPanel == null )
       return;

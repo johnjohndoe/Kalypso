@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -68,7 +68,7 @@ public class AbstractDelegateWidget extends AbstractWidget
     return m_delegate;
   }
 
-  public void setDelegate( final IWidget delegate )
+  public void setDelegate( IWidget delegate )
   {
     m_delegate = delegate;
   }
@@ -76,7 +76,7 @@ public class AbstractDelegateWidget extends AbstractWidget
   // TODO: check for null in all methods
 
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     m_delegate.activate( commandPoster, mapPanel );
 
@@ -84,31 +84,31 @@ public class AbstractDelegateWidget extends AbstractWidget
   }
 
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
     return m_delegate.canBeActivated( selection, mapPanel );
   }
 
   @Override
-  public void clickPopup( final Point p )
+  public void clickPopup( Point p )
   {
     m_delegate.clickPopup( p );
   }
 
   @Override
-  public void doubleClickedLeft( final Point p )
+  public void doubleClickedLeft( Point p )
   {
     m_delegate.doubleClickedLeft( p );
   }
 
   @Override
-  public void doubleClickedRight( final Point p )
+  public void doubleClickedRight( Point p )
   {
     m_delegate.doubleClickedRight( p );
   }
 
   @Override
-  public void dragged( final Point p )
+  public void dragged( Point p )
   {
     m_delegate.dragged( p );
   }
@@ -133,91 +133,91 @@ public class AbstractDelegateWidget extends AbstractWidget
   }
 
   @Override
-  public void keyPressed( final KeyEvent e )
+  public void keyPressed( KeyEvent e )
   {
     m_delegate.keyPressed( e );
   }
 
   @Override
-  public void keyReleased( final KeyEvent e )
+  public void keyReleased( KeyEvent e )
   {
     m_delegate.keyReleased( e );
   }
 
   @Override
-  public void keyTyped( final KeyEvent e )
+  public void keyTyped( KeyEvent e )
   {
     m_delegate.keyTyped( e );
   }
 
   @Override
-  public void leftClicked( final Point p )
+  public void leftClicked( Point p )
   {
     m_delegate.leftClicked( p );
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void leftPressed( Point p )
   {
     m_delegate.leftPressed( p );
   }
 
   @Override
-  public void leftReleased( final Point p )
+  public void leftReleased( Point p )
   {
     m_delegate.leftReleased( p );
   }
 
   @Override
-  public void middleClicked( final Point p )
+  public void middleClicked( Point p )
   {
     m_delegate.middleClicked( p );
   }
 
   @Override
-  public void middlePressed( final Point p )
+  public void middlePressed( Point p )
   {
     m_delegate.middlePressed( p );
   }
 
   @Override
-  public void middleReleased( final Point p )
+  public void middleReleased( Point p )
   {
     m_delegate.middleReleased( p );
   }
 
   @Override
-  public void moved( final Point p )
+  public void moved( Point p )
   {
     m_delegate.moved( p );
   }
 
   @Override
-  public void paint( final Graphics g )
+  public void paint( Graphics g )
   {
     m_delegate.paint( g );
   }
 
   @Override
-  public void rightClicked( final Point p )
+  public void rightClicked( Point p )
   {
     m_delegate.rightClicked( p );
   }
 
   @Override
-  public void rightPressed( final Point p )
+  public void rightPressed( Point p )
   {
     m_delegate.rightPressed( p );
   }
 
   @Override
-  public void rightReleased( final Point p )
+  public void rightReleased( Point p )
   {
     m_delegate.rightReleased( p );
   }
 
   @Override
-  public void setSelection( final ISelection selection )
+  public void setSelection( ISelection selection )
   {
     m_delegate.setSelection( selection );
   }

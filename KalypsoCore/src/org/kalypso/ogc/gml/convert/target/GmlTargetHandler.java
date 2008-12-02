@@ -3,7 +3,6 @@ package org.kalypso.ogc.gml.convert.target;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;

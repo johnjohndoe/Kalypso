@@ -57,11 +57,8 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -72,14 +69,6 @@ public class FeaturePage extends WizardPage
 {
   private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
 
-  private final ModellEventListener m_modellListener = new ModellEventListener()
-  {
-    public void onModellChange( final ModellEvent modellEvent )
-    {
-      handleModellChange();
-    }
-  };
-
   private FeatureComposite m_featureComposite;
 
   private final boolean m_overrideCanFlipToNextPage;
@@ -88,24 +77,13 @@ public class FeaturePage extends WizardPage
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final IFeatureviewFactory m_factory;
-
-  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory factory )
+  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager )
   {
     super( pagename, title, image );
 
-    m_factory = factory;
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
     m_feature = feature;
     m_selectionManager = selectionManager;
-
-    m_feature.getWorkspace().addModellListener( m_modellListener );
-  }
-
-  protected void handleModellChange( )
-  {
-    if( m_featureComposite != null )
-      m_featureComposite.updateControl();
   }
 
   /**
@@ -118,7 +96,9 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    m_featureComposite = new FeatureComposite( null, m_selectionManager, m_factory );
+    final CachedFeatureviewFactory factory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+
+    m_featureComposite = new FeatureComposite( null, m_selectionManager, factory );
     m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
@@ -155,8 +135,6 @@ public class FeaturePage extends WizardPage
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
-
-    m_feature.getWorkspace().removeModellListener( m_modellListener );
   }
 
   /**
@@ -165,7 +143,7 @@ public class FeaturePage extends WizardPage
   @Override
   public boolean isPageComplete( )
   {
-    return m_featureComposite != null && m_featureComposite.isValid();
+    return m_featureComposite.isValid();
   }
 
   /**

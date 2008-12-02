@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Thomas Jung

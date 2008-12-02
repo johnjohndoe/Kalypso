@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation;
 
+import java.util.List;
+
+import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
@@ -53,13 +56,16 @@ public class Observation<T> implements IObservation<T>
 
   private T m_result;
 
+  private List<MetadataObject> m_md;
+
   private IPhenomenon m_phenomenon;
 
-  public Observation( final String name, final String desc, final T result )
+  public Observation( final String name, final String desc, final T result, final List<MetadataObject> md )
   {
     m_name = name;
     m_desc = desc;
     m_result = result;
+    m_md = md;
   }
 
   /**
@@ -92,6 +98,22 @@ public class Observation<T> implements IObservation<T>
   public void setDescription( final String desc )
   {
     m_desc = desc;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#getMetadataList()
+   */
+  public List<MetadataObject> getMetadataList( )
+  {
+    return m_md;
+  }
+
+  /**
+   * @see org.kalypso.om.IObservation#setMedataList(java.util.List)
+   */
+  public void setMedataList( final List<MetadataObject> list )
+  {
+    m_md = list;
   }
 
   /**

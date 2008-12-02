@@ -50,10 +50,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 

@@ -53,13 +53,10 @@ import org.xml.sax.SAXException;
  * Ugo Taddei<br>
  * Changes:<br>
  * Holger Albert
- *
+ * 
  * @author <a href="mailto:taddei@lat-lon.de">Ugo Taddei</a>
- * @deprecated Do not use anymore, use {@link WFSClient} instead. Used only by Gazetteer stuff; remove when gazetter is
- *             refaktored.
  * @author Holger Albert
  */
-@Deprecated
 public class WFService
 {
   public static String WFS_PREFIX = "wfs"; //$NON-NLS-1$
@@ -78,12 +75,12 @@ public class WFService
   /**
    * Maps a feature type to its schem. Geometry property is not held here!
    */
-  private final Map<QName, IGMLSchema> m_ftToSchema;
+  private Map<QName, IGMLSchema> m_ftToSchema;
 
   /**
    * Maps a feature type to its geometry!
    */
-  private final Map<QName, QName[]> m_geoProperties;
+  private Map<QName, QName[]> m_geoProperties;
 
   private HttpClient m_httpClient;
 
@@ -91,7 +88,7 @@ public class WFService
 
   private String m_descrFtUrl;
 
-  public WFService( final String wfsURL ) throws Exception
+  public WFService( String wfsURL ) throws Exception
   {
     m_ftToSchema = new HashMap<QName, IGMLSchema>( 10 );
     m_geoProperties = new HashMap<QName, QName[]>( 10 );
@@ -100,23 +97,23 @@ public class WFService
 
     // TODO validate string
     setWfsURL( wfsURL + "?REQUEST=GetCapabilities&VERSION=1.1.0&SERVICE=WFS" ); //$NON-NLS-1$
-    final WFSCapabilitiesDocument wfsCapsDoc = new WFSCapabilitiesDocument();
+    WFSCapabilitiesDocument wfsCapsDoc = new WFSCapabilitiesDocument();
 
     try
     {
       wfsCapsDoc.load( new URL( this.m_wfsURL ) );
     }
-    catch( final MalformedURLException e )
+    catch( MalformedURLException e )
     {
       System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.2") + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.3") + this.m_wfsURL + Messages.getString("org.kalypso.ogc.wfs.WFService.4") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
       throw e;
     }
-    catch( final SAXException e )
+    catch( SAXException e )
     {
       throw e;
     }
@@ -125,7 +122,7 @@ public class WFService
     {
       m_wfsCapabilities = (WFSCapabilities) wfsCapsDoc.parseCapabilities();
     }
-    catch( final InvalidCapabilitiesException e )
+    catch( InvalidCapabilitiesException e )
     {
       System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.5") + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
@@ -134,14 +131,14 @@ public class WFService
 
   private String[] extractFeatureTypes( ) throws Exception
   {
-    final WFSFeatureType[] featTypes = m_wfsCapabilities.getFeatureTypeList().getFeatureTypes();
+    WFSFeatureType[] featTypes = m_wfsCapabilities.getFeatureTypeList().getFeatureTypes();
     m_featureTypeToQName = new HashMap<QName, QualifiedName>();
-    final String[] fts = new String[featTypes.length];
+    String[] fts = new String[featTypes.length];
     for( int i = 0; i < fts.length; i++ )
     {
 
-      final QualifiedName qn = featTypes[i].getName();
-      final String prefixedName = qn.getPrefixedName();
+      QualifiedName qn = featTypes[i].getName();
+      String prefixedName = qn.getPrefixedName();
       fts[i] = prefixedName;
 
       m_featureTypeToQName.put( new QName( qn.getNamespace().toASCIIString(), qn.getLocalName(), qn.getPrefix() ), qn );
@@ -152,15 +149,15 @@ public class WFService
 
   /**
    * Gets a document containing a valid description feature type (schema; XSD). Code adapted from deegree viewer
-   *
+   * 
    * @param featureType
    *            the feature type whose description should be returned
    * @return an XSD containing the type description
    * @throws Exception
    */
-  private IGMLSchema loadForFeatureType( final QName featureType ) throws Exception
+  private IGMLSchema loadForFeatureType( QName featureType ) throws Exception
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
+    org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
 
     boolean isGet = true;
 
@@ -170,7 +167,7 @@ public class WFService
       {
         if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
         {
-          final DCPType[] dcps = ops[i].getDCPs();
+          DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
           {
             m_descrFtUrl = ((HTTP) dcps[0].getProtocol()).getGetOnlineResources()[0].toString();
@@ -188,25 +185,25 @@ public class WFService
     if( m_descrFtUrl == null )
       throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.7") ); //$NON-NLS-1$
 
-    final QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
+    QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
     try
     {
       format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    catch( final UnsupportedEncodingException e )
+    catch( UnsupportedEncodingException e )
     {
       throw e;
     }
 
-    final String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    + ")"; //$NON-NLS-1$
+    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        + ")"; //$NON-NLS-1$
 
-    final String httpProtocolMethod = isGet ? "HTTP_GET" : "HTTP_POST"; //$NON-NLS-1$ //$NON-NLS-2$
+    String httpProtocolMethod = isGet ? "HTTP_GET" : "HTTP_POST"; //$NON-NLS-1$ //$NON-NLS-2$
 
     System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.17") + httpProtocolMethod + Messages.getString("org.kalypso.ogc.wfs.WFService.18") + m_descrFtUrl + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final HttpMethod httpMethod = createHttpMethod( httpProtocolMethod );// new GetMethod( serverUrl );
+    HttpMethod httpMethod = createHttpMethod( httpProtocolMethod );// new GetMethod( serverUrl );
 
     URI uri;
     try
@@ -215,7 +212,7 @@ public class WFService
       httpMethod.setURI( uri );
 
     }
-    catch( final URIException e )
+    catch( URIException e )
     {
       throw e;
     }
@@ -226,12 +223,12 @@ public class WFService
     {
       m_httpClient.executeMethod( httpMethod );
 
-      final GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( httpMethod.getResponseBodyAsStream(), null, new URL( m_descrFtUrl ) );
+      GMLSchema gmlSchema = GMLSchemaFactory.createGMLSchema( httpMethod.getResponseBodyAsStream(), null, new URL( m_descrFtUrl ) );
       return gmlSchema;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
-      final String mesg = Messages.getString("org.kalypso.ogc.wfs.WFService.19"); //$NON-NLS-1$
+      String mesg = Messages.getString("org.kalypso.ogc.wfs.WFService.19"); //$NON-NLS-1$
       System.out.println( mesg + Messages.getString("org.kalypso.ogc.wfs.WFService.20") + featureType + Messages.getString("org.kalypso.ogc.wfs.WFService.21") + uri + Messages.getString("org.kalypso.ogc.wfs.WFService.22") + m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       throw new Exception( mesg, e );
     }
@@ -239,48 +236,48 @@ public class WFService
 
   /**
    * Creates an String[] containing the attributes of a given feature type
-   *
+   * 
    * @param featureTypeName
    *            the name of the feature type
    * @throws Exception
    */
-  private void createSchemaForFeatureType( final QName featureTypeName ) throws Exception
+  private void createSchemaForFeatureType( QName featureTypeName ) throws Exception
   {
-    final IGMLSchema xsd = loadForFeatureType( featureTypeName );
+    IGMLSchema xsd = loadForFeatureType( featureTypeName );
     if( xsd == null )
       return;
 
     this.m_ftToSchema.put( featureTypeName, xsd );
 
-    final QName[] geoProp = guessGeomProperty( xsd );
+    QName[] geoProp = guessGeomProperty( xsd );
 
     this.m_geoProperties.put( featureTypeName, geoProp );
   }
 
   /**
    * guess which property might be "the" geometry property
-   *
+   * 
    * @param propNames
    * @return
    */
-  protected QName[] guessGeomProperty( final IGMLSchema schema )
+  protected QName[] guessGeomProperty( IGMLSchema schema )
   {
     QName[] geoPropNames = null;
-    final List<QName> tmpList = new ArrayList<QName>( 20 );
+    List<QName> tmpList = new ArrayList<QName>( 20 );
 
-    final IFeatureType[] fts = schema.getAllFeatureTypes();
-    for( final IFeatureType ft : fts )
+    IFeatureType[] fts = schema.getAllFeatureTypes();
+    for( int i = 0; i < fts.length; i++ )
     {
-      final IPropertyType[] props = ft.getAllGeomteryProperties();
-      for( final IPropertyType prop : props )
-        tmpList.add( prop.getQName() );
+      IPropertyType[] props = fts[i].getAllGeomteryProperties();
+      for( int j = 0; j < props.length; j++ )
+        tmpList.add( props[j].getQName() );
     }
 
     geoPropNames = tmpList.toArray( new QName[tmpList.size()] );
     return geoPropNames;
   }
 
-  public void setWfsURL( final String wfsURL )
+  public void setWfsURL( String wfsURL )
   {
     if( wfsURL == null || "".equals( wfsURL ) ) //$NON-NLS-1$
       throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFService.25") ); //$NON-NLS-1$
@@ -301,53 +298,53 @@ public class WFService
     return m_featureTypes;
   }
 
-  public QName[] getFeatureProperties( final QName featureType ) throws Exception
+  public QName[] getFeatureProperties( QName featureType ) throws Exception
   {
     createSchemaForFeatureType( featureType );
 
-    final List<QName> propsList = new ArrayList<QName>();
+    List<QName> propsList = new ArrayList<QName>();
 
-    final IGMLSchema schema = this.m_ftToSchema.get( featureType );
+    IGMLSchema schema = this.m_ftToSchema.get( featureType );
 
-    final IFeatureType[] fts = schema.getAllFeatureTypes();
-    for( final IFeatureType ft : fts )
+    IFeatureType[] fts = schema.getAllFeatureTypes();
+    for( int i = 0; i < fts.length; i++ )
     {
-      final IPropertyType[] props = ft.getProperties();
-      for( final IPropertyType prop : props )
+      IPropertyType[] props = fts[i].getProperties();
+      for( int j = 0; j < props.length; j++ )
       {
         // if( !(props[j].getType() == Types.GEOMETRY) )
-        propsList.add( prop.getQName() );
+        propsList.add( props[j].getQName() );
       }
     }
 
     return propsList.toArray( new QName[propsList.size()] );
   }
 
-  public IGMLSchema getSchemaForFeatureType( final QName featureType )
+  public IGMLSchema getSchemaForFeatureType( QName featureType )
   {
     return this.m_ftToSchema.get( featureType );
   }
 
-  public QName[] getGeometryProperties( final QName featureType )
+  public QName[] getGeometryProperties( QName featureType )
   {
     return this.m_geoProperties.get( featureType );
   }
 
-  public QualifiedName getQualiNameByFeatureTypeName( final QName ftName )
+  public QualifiedName getQualiNameByFeatureTypeName( QName ftName )
   {
     return m_featureTypeToQName.get( ftName );
   }
 
   public String getGetFeatureURL( )
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
+    org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
     m_getFeatureUrl = null;
 
     for( int i = 0; i < ops.length && m_getFeatureUrl == null; i++ )
     {
       if( ops[i].getName().equals( "GetFeature" ) ) //$NON-NLS-1$
       {
-        final DCPType[] dcps = ops[i].getDCPs();
+        DCPType[] dcps = ops[i].getDCPs();
         if( dcps.length > 0 )
           m_getFeatureUrl = ((HTTP) dcps[0].getProtocol()).getPostOnlineResources()[0].toString();
       }
@@ -359,14 +356,14 @@ public class WFService
     return m_getFeatureUrl;
   }
 
-  String getCrsForFeatureType( final QualifiedName featureTypeName )
+  String getCrsForFeatureType( QualifiedName featureTypeName )
   {
     String crs = null;
 
-    final FeatureTypeList ftl = this.m_wfsCapabilities.getFeatureTypeList();
+    FeatureTypeList ftl = this.m_wfsCapabilities.getFeatureTypeList();
 
-    final QualifiedName qn = featureTypeName;// getQualiNameByFeatureTypeName( featureType );
-    final WFSFeatureType ft = ftl.getFeatureType( qn );
+    QualifiedName qn = featureTypeName;// getQualiNameByFeatureTypeName( featureType );
+    WFSFeatureType ft = ftl.getFeatureType( qn );
     crs = ft.getDefaultSRS().toASCIIString();
 
     return crs;
@@ -376,14 +373,14 @@ public class WFService
   {
     m_httpClient = new HttpClient();
 
-    final HttpClientParams clientPars = new HttpClientParams();
+    HttpClientParams clientPars = new HttpClientParams();
     clientPars.setConnectionManagerTimeout( 60000 );
 
     m_httpClient.setParams( clientPars );
 
   }
 
-  private HttpMethod createHttpMethod( final String methodName )
+  private HttpMethod createHttpMethod( String methodName )
   {
     HttpMethod httpMethod = null;
 
@@ -399,7 +396,7 @@ public class WFService
 
   /**
    * This function returns the capabilities of the service.
-   *
+   * 
    * @return The wfs capabilities.
    */
   public WFSCapabilities getCapabilities( )
@@ -409,27 +406,27 @@ public class WFService
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   *
+   * 
    * @raturn All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
   {
-    final ArrayList<String> operators = new ArrayList<String>();
+    ArrayList<String> operators = new ArrayList<String>();
 
-    final SpatialOperator[] spatialOperators = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getSpatialOperators();
-    for( final SpatialOperator spatialOperator : spatialOperators )
+    SpatialOperator[] spatialOperators = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getSpatialOperators();
+    for( SpatialOperator spatialOperator : spatialOperators )
       operators.add( spatialOperator.getName() );
 
-    final QualifiedName[] geometryOperands = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getGeometryOperands();
-    for( final QualifiedName qualifiedName : geometryOperands )
+    QualifiedName[] geometryOperands = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getGeometryOperands();
+    for( QualifiedName qualifiedName : geometryOperands )
       operators.add( qualifiedName.getLocalName() );
 
-    final Operator[] arithmeticOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getArithmeticOperators();
-    for( final Operator operator : arithmeticOperators )
+    Operator[] arithmeticOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getArithmeticOperators();
+    for( Operator operator : arithmeticOperators )
       operators.add( operator.getName() );
 
-    final Operator[] comparisonOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getComparisonOperators();
-    for( final Operator operator : comparisonOperators )
+    Operator[] comparisonOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getComparisonOperators();
+    for( Operator operator : comparisonOperators )
       operators.add( operator.getName() );
 
     return operators.toArray( new String[] {} );
@@ -437,38 +434,38 @@ public class WFService
 
   /**
    * This function creates a gml workspace from a get feature request.
-   *
+   * 
    * @param featureTypeToLoad
    * @param targetCRS
    * @param filter
    * @param maxFeatureAsString
    */
-  public GMLWorkspace createGMLWorkspaceFromGetFeature( final QName featureTypeToLoad, final String targetCRS, final String filter, final String maxFeatureAsString ) throws Exception
+  public GMLWorkspace createGMLWorkspaceFromGetFeature( QName featureTypeToLoad, String targetCRS, String filter, String maxFeatureAsString ) throws Exception
   {
     BufferedInputStream inputStream = null;
     PrintStream postWriter = null;
 
     /* Create the GetFeature URL. */
-    final String getFeatureURL = getGetFeatureURL();
-    final URL getFeature = new URL( getFeatureURL );
+    String getFeatureURL = getGetFeatureURL();
+    URL getFeature = new URL( getFeatureURL );
 
     try
     {
-      final URLConnection con = getFeature.openConnection();
+      URLConnection con = getFeature.openConnection();
       con.setDoOutput( true );
       con.setDoInput( true );
 
       /* Write request to the WFS server. */
-      final OutputStream connectionOutputStream = con.getOutputStream();
+      OutputStream connectionOutputStream = con.getOutputStream();
       postWriter = new PrintStream( connectionOutputStream );
 
-      final String getFeaturePost = buildGetFeatureRequestPOST( m_wfsCapabilities, featureTypeToLoad, filter, maxFeatureAsString );
+      String getFeaturePost = buildGetFeatureRequestPOST( m_wfsCapabilities, featureTypeToLoad, filter, maxFeatureAsString );
       postWriter.print( getFeaturePost );
 
       /* Read response from the WFS server and create a GMLWorkspace. */
       inputStream = new BufferedInputStream( con.getInputStream() );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, buildDescribeURLForFeatureType( featureTypeToLoad ), null );
+      GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, buildDescribeURLForFeatureType( featureTypeToLoad ), false, null );
       inputStream.close();
 
       if( targetCRS != null )
@@ -485,25 +482,25 @@ public class WFService
 
   /**
    * This function builds a GetFeature request XML.
-   *
+   * 
    * @param wfsCaps
    * @param ftQName
    * @param filter
    * @param maxFeatureAsString
    * @return GetFeature request
    */
-  private String buildGetFeatureRequestPOST( final WFSCapabilities wfsCaps, final QName ftQName, final String filter, final String maxFeatureAsString )
+  private String buildGetFeatureRequestPOST( WFSCapabilities wfsCaps, final QName ftQName, final String filter, final String maxFeatureAsString )
   {
-    final StringBuffer sb = new StringBuffer();
+    StringBuffer sb = new StringBuffer();
 
     sb.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" ); //$NON-NLS-1$
     sb.append( "<wfs:GetFeature " ); //$NON-NLS-1$
 
-    final String oFormat = "text/xml; subtype=gml/3.1.1"; //$NON-NLS-1$
+    String oFormat = "text/xml; subtype=gml/3.1.1"; //$NON-NLS-1$
     if( oFormat != null )
       sb.append( " outputFormat=\"" + oFormat + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String version = wfsCaps.getVersion();
+    String version = wfsCaps.getVersion();
     if( version != null && version.length() > 0 )
       sb.append( " version=\"" + version + "\" " ); //$NON-NLS-1$ //$NON-NLS-2$
     sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " ); //$NON-NLS-1$
@@ -512,8 +509,8 @@ public class WFService
     if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
       sb.append( " maxFeatures=\"" + maxFeatureAsString + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
     sb.append( " >\n" ); //$NON-NLS-1$
-    final String namespaceURI = ftQName.getNamespaceURI();
-    final String localPart = ftQName.getLocalPart();
+    String namespaceURI = ftQName.getNamespaceURI();
+    String localPart = ftQName.getLocalPart();
     if( version == null ) // deegree1 gazetteer
       sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else if( namespaceURI != null && namespaceURI.length() > 0 )
@@ -532,9 +529,9 @@ public class WFService
     return sb.toString();
   }
 
-  public URL buildDescribeURLForFeatureType( final QName featureType ) throws Exception
+  public URL buildDescribeURLForFeatureType( QName featureType ) throws Exception
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
+    org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
 
     if( m_descrFtUrl == null )
     {
@@ -542,7 +539,7 @@ public class WFService
       {
         if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
         {
-          final DCPType[] dcps = ops[i].getDCPs();
+          DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
             m_descrFtUrl = ((HTTP) dcps[0].getProtocol()).getGetOnlineResources()[0].toString();
 
@@ -555,46 +552,47 @@ public class WFService
     if( m_descrFtUrl == null )
       throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.55") ); //$NON-NLS-1$
 
-    final QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
+    QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
     try
     {
       format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    catch( final UnsupportedEncodingException e )
+    catch( UnsupportedEncodingException e )
     {
       throw e;
     }
 
-    final String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    + ")"; //$NON-NLS-1$
+    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        + ")"; //$NON-NLS-1$
 
     return new URL( m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$
   }
 
   /**
    * This function returns the layer of the wfs.
-   *
+   * 
    * @return The layer of the wfs.
    */
   public IWFSLayer[] getLayer( )
   {
-    final List<IWFSLayer> list = new ArrayList<IWFSLayer>();
+    List<IWFSLayer> list = new ArrayList<IWFSLayer>();
 
     final FeatureTypeList featureTypeList = m_wfsCapabilities.getFeatureTypeList();
     final WFSFeatureType[] featureTypes = featureTypeList.getFeatureTypes();
-    for( final WFSFeatureType ft : featureTypes )
+    for( int i = 0; i < featureTypes.length; i++ )
     {
+      final WFSFeatureType ft = featureTypes[i];
       final QualifiedName name = ft.getName();
       final String title = ft.getTitle();
       final String srs = ft.getDefaultSRS().toASCIIString();
-      final QName qName = new QName( name.getNamespace().toASCIIString(), name.getLocalName(), name.getPrefix() );
+      QName qName = new QName( name.getNamespace().toASCIIString(), name.getLocalName(), name.getPrefix() );
       URL url = null;
       try
       {
         url = buildDescribeURLForFeatureType( qName );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }

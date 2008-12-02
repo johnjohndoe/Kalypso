@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.filter.test;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -50,10 +51,12 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.zml.filters.IntervallFilterType;
+import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.ZmlFilterType;
 import org.w3._1999.xlinkext.SimpleLinkType;
 
@@ -61,6 +64,8 @@ public class IntervallFilterTest extends TestCase
 {
   public void testIntervallFilter( ) throws Exception
   {
+    final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
+
     Writer writer = null;
     try
     {
@@ -72,27 +77,28 @@ public class IntervallFilterTest extends TestCase
       xlink.setHref( href );
       xlink.setType( "simple" ); //$NON-NLS-1$
 
+      final ObjectFactory fac = new ObjectFactory();
       // TODO: probably the second filter factory will be forgotten everywhere
       // so move instantiation into central helper class and use it everywhere
 
       final JAXBContext jc = FilterFactory.JC_FILTER;
 
-      final ZmlFilterType zmlFilter = FilterFactory.OF_FILTER.createZmlFilterType();
+      final ZmlFilterType zmlFilter = fac.createZmlFilterType();
       zmlFilter.setZml( xlink );
 
-      final IntervallFilterType intervallFilter = FilterFactory.OF_FILTER.createIntervallFilterType();
+      final IntervallFilterType intervallFilter = fac.createIntervallFilterType();
       intervallFilter.setAmount( 10 );
       intervallFilter.setCalendarField( Messages.getString("org.kalypso.ogc.sensor.filter.test.IntervallFilterTest.3") ); //$NON-NLS-1$
       intervallFilter.setMode( "sum" ); //$NON-NLS-1$
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
-      intervallFilter.setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
+      intervallFilter.setFilter( fac.createZmlFilter( zmlFilter ) );
       writer = new StringWriter();
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jc, true );
-      marshaller.marshal( FilterFactory.OF_FILTER.createIntervallFilter( intervallFilter ), writer );
+      marshaller.marshal( fac.createIntervallFilter( intervallFilter ), writer );
       writer.close();
-//      final String string = XMLUtilities.removeXMLHeader( writer.toString() );
-//      final String filterInline = XMLUtilities.prepareInLine( string );
+      final String string = XMLUtilities.removeXMLHeader( writer.toString() );
+      final String filterInline = XMLUtilities.prepareInLine( string );
       
       // REMARK: this is all crap! Many of the used characters in the filter are not allowed in
       // URLs. So any URL parser may change them or do something strange.
@@ -100,7 +106,7 @@ public class IntervallFilterTest extends TestCase
       // The concrete problem here is, that the double '//' are removed by the URL-parser
       // So later, the filter will not be parsed correctly.
       // I have no idea how to fix this at the moment, so the test is commented out
-//      final URL zmlURL = new URL( resource, href + "?" + filterInline ); //$NON-NLS-1$
+      final URL zmlURL = new URL( resource, href + "?" + filterInline ); //$NON-NLS-1$
 //      final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
 //
 //      // ZML geht von

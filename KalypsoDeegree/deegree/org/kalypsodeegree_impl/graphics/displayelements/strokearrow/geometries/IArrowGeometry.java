@@ -36,7 +36,7 @@
 package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public interface IArrowGeometry
 {

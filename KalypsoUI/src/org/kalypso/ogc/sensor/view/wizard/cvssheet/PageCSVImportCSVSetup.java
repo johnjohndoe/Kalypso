@@ -71,7 +71,7 @@ import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.TSM_K
 import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.WQ_KIND;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class PageCSVImportCSVSetup extends WizardPage
 {

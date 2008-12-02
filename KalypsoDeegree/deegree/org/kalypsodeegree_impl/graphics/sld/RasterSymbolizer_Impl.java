@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -194,16 +194,12 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     gc.setLineAttributes( new LineAttributes( 1 ) );
 
     /* we draw 2 rects in the colors of the color map and a black rectangle around it */
-    final Color colorAwtStart = m_colors[0];
-    final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtStart.getRed(), colorAwtStart.getGreen(), colorAwtStart.getBlue() );
+    final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), m_colors[0].getRed(), m_colors[0].getGreen(), m_colors[0].getBlue() );
     gc.setBackground( colorStart );
-    gc.setAlpha( colorAwtStart.getAlpha() );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
-    final Color colorAwtEnd = m_colors[m_colors.length - 1];
-    final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtEnd.getRed(), colorAwtEnd.getGreen(), colorAwtEnd.getBlue() );
+    final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), m_colors[m_colors.length - 1].getRed(), m_colors[m_colors.length - 1].getGreen(), m_colors[m_colors.length - 1].getBlue() );
     gc.setBackground( colorEnd );
-    gc.setAlpha( colorAwtEnd.getAlpha() );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
     // the black border

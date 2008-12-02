@@ -46,9 +46,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.PoolableObjectWaiter;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -60,6 +57,9 @@ import org.kalypso.ogc.sensor.template.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.PoolableObjectWaiter;
 
 /**
  * A TableViewColumnXMLLoader wraps an IObservation. It can provide a TableViewColumn for each value axis of the
@@ -78,9 +78,11 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
    * @param columnPosition
    *          the position of the column in the template is used to order the columns in the table
    */
-  public TableViewColumnXMLLoader( final TableView view, final TypeObservation xmlObs, final URL context, final boolean synchron, final int columnPosition )
+  public TableViewColumnXMLLoader( final TableView view, final TypeObservation xmlObs, final URL context,
+      final boolean synchron, final int columnPosition )
   {
-    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[] { view, xmlObs }, synchron );
+    super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
+    { view, xmlObs }, synchron );
 
     m_columnPosition = columnPosition;
   }
@@ -92,22 +94,22 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
-    final IObservation obs = (IObservation) newValue;
+    final IObservation obs = (IObservation)newValue;
 
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
     if( keyAxes.length == 0 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.0" ) ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.0") ); //$NON-NLS-1$
 
     final IAxis keyAxis = keyAxes[0];
 
-    final TypeObservation xmlObs = (TypeObservation) m_data[1];
-    final TableView m_view = (TableView) m_data[0];
+    final TypeObservation xmlObs = (TypeObservation)m_data[1];
+    final TableView m_view = (TableView)m_data[0];
 
     final List ignoreTypeList = m_view.getIgnoreTypesAsList();
 
     for( final Iterator itCols = xmlObs.getColumn().iterator(); itCols.hasNext(); )
     {
-      final TypeColumn tcol = (TypeColumn) itCols.next();
+      final TypeColumn tcol = (TypeColumn)itCols.next();
 
       try
       {
@@ -117,17 +119,21 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
         {
           final String colName = tcol.getName() != null ? tcol.getName() : tcol.getAxis();
           final String name = ObsViewUtils.replaceTokens( colName, obs, valueAxis );
-          final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils.getDefaultFormatString( valueAxis.getType() );
+          final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeserieUtils
+              .getDefaultFormatString( valueAxis.getType() );
 
-          final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key, null );
-          final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, format, m_columnPosition );
+          final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
+              : new PooledObsProvider( key, null );
+          final TableViewColumn column = new TableViewColumn( m_view, provider, name, tcol.isEditable(), tcol
+              .getWidth(), keyAxis, valueAxis, format, m_columnPosition );
 
           m_view.addItem( column );
         }
       }
       catch( final NoSuchElementException e )
       {
-        Logger.getLogger( getClass().getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.1" ) + e.getLocalizedMessage() ); //$NON-NLS-1$
+        Logger.getLogger( getClass().getName() ).warning(
+            Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.1") + e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
   }
@@ -135,7 +141,6 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
-  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub

@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -91,35 +91,36 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter#marshall(java.lang.Object,
-   *      org.w3c.dom.Document, java.net.URL)
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#marshall(java.lang.Object, org.w3c.dom.Node,
+   *      java.net.URL)
    */
   @Deprecated
   @Override
-  public Element marshall( final Object object, final Document document, final URL context ) throws TypeRegistryException
+  public void marshall( final Object object, final Node node, final URL context ) throws TypeRegistryException
   {
     final RectifiedGridDomain gridDomain = (RectifiedGridDomain) object;
+    final Document ownerDocument = node.getOwnerDocument();
 
-    final Element e_rectifiedGrid = document.createElementNS( NS.GML3, "gml:RectifiedGrid" );
+    final Element e_rectifiedGrid = ownerDocument.createElementNS( NS.GML3, "gml:RectifiedGrid" );
     e_rectifiedGrid.setAttribute( "dimension", "2" );
 
-    final Element e_limits = document.createElementNS( NS.GML3, "gml:limits" );
-    final Element e_gridEnvelope = document.createElementNS( NS.GML3, "gml:GridEnvelope" );
+    final Element e_limits = ownerDocument.createElementNS( NS.GML3, "gml:limits" );
+    final Element e_gridEnvelope = ownerDocument.createElementNS( NS.GML3, "gml:GridEnvelope" );
     final GridRange gridRange = gridDomain.getGridRange();
     final double[] lows = gridRange.getLow();
     final String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
     final double[] highs = gridRange.getHigh();
     final String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
-    final Element e_low = document.createElementNS( NS.GML3, "gml:low" );
-    e_low.appendChild( document.createTextNode( stringLows ) );
-    final Element e_high = document.createElementNS( NS.GML3, "gml:high" );
-    e_high.appendChild( document.createTextNode( stringHighs ) );
+    final Element e_low = ownerDocument.createElementNS( NS.GML3, "gml:low" );
+    e_low.appendChild( ownerDocument.createTextNode( stringLows ) );
+    final Element e_high = ownerDocument.createElementNS( NS.GML3, "gml:high" );
+    e_high.appendChild( ownerDocument.createTextNode( stringHighs ) );
     e_gridEnvelope.appendChild( e_low );
     e_gridEnvelope.appendChild( e_high );
     e_limits.appendChild( e_gridEnvelope );
     e_rectifiedGrid.appendChild( e_limits );
 
-    final Element e_origin = document.createElementNS( NS.GML3, "gml:origin" );
+    final Element e_origin = ownerDocument.createElementNS( NS.GML3, "gml:origin" );
     GM_Point origin;
     try
     {
@@ -129,7 +130,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     {
       throw new TypeRegistryException( "origin error", e1 );
     }
-    final Element e_point = document.createElementNS( NS.GML3, "gml:Point" );
+    final Element e_point = ownerDocument.createElementNS( NS.GML3, "gml:Point" );
     try
     {
       final String coordinateSystem = origin.getCoordinateSystem();
@@ -141,12 +142,12 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
       e.printStackTrace();
     }
 
-    final Element e_coordinates = document.createElementNS( NS.GML3, "gml:pos" );
+    final Element e_coordinates = ownerDocument.createElementNS( NS.GML3, "gml:pos" );
     // e_coordinates.setAttribute( "cs", "," );
     // e_coordinates.setAttribute( "decimal", "." );
     // e_coordinates.setAttribute( "ts", " " );
     final String stringOrigin = new String( origin.getX() + " " + origin.getY() );
-    e_coordinates.appendChild( document.createTextNode( stringOrigin ) );
+    e_coordinates.appendChild( ownerDocument.createTextNode( stringOrigin ) );
     e_point.appendChild( e_coordinates );
     e_origin.appendChild( e_point );
     e_rectifiedGrid.appendChild( e_origin );
@@ -154,16 +155,15 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final OffsetVector offsetX = gridDomain.getOffsetX();
     final OffsetVector offsetY = gridDomain.getOffsetY();
 
-    final Element e_offsetVector1 = document.createElementNS( NS.GML3, "rgc:offsetVector" );
+    final Element e_offsetVector1 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
     final String offsetVector1 = new String( offsetX.getGeoX() + " " + offsetX.getGeoY() );
-    e_offsetVector1.appendChild( document.createTextNode( offsetVector1 ) );
+    e_offsetVector1.appendChild( ownerDocument.createTextNode( offsetVector1 ) );
     e_rectifiedGrid.appendChild( e_offsetVector1 );
-    final Element e_offsetVector2 = document.createElementNS( NS.GML3, "rgc:offsetVector" );
+    final Element e_offsetVector2 = ownerDocument.createElementNS( NS.GML3, "rgc:offsetVector" );
     final String offsetVector2 = new String( offsetY.getGeoX() + " " + offsetY.getGeoY() );
-    e_offsetVector2.appendChild( document.createTextNode( offsetVector2 ) );
+    e_offsetVector2.appendChild( ownerDocument.createTextNode( offsetVector2 ) );
     e_rectifiedGrid.appendChild( e_offsetVector2 );
-
-    return e_rectifiedGrid;
+    ((Element) node).appendChild( e_rectifiedGrid );
   }
 
   /**
@@ -174,7 +174,9 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   @Override
   public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
   {
-    final Node node_limits = ((Element) node).getElementsByTagNameNS( NS.GML3, "limits" ).item( 0 );
+    final Node node_rg = ((Element) node).getElementsByTagNameNS( NS.GML3, "RectifiedGrid" ).item( 0 );
+
+    final Node node_limits = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "limits" ).item( 0 );
     final Node node_gridEnv = ((Element) node_limits).getElementsByTagNameNS( NS.GML3, "GridEnvelope" ).item( 0 );
     final Node n_low = ((Element) node_gridEnv).getElementsByTagNameNS( NS.GML3, "low" ).item( 0 );
     final String[] lows = n_low.getFirstChild().getNodeValue().trim().split( " " );
@@ -190,14 +192,14 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
 
     final GridRange gridRange = new GridRange_Impl( low, high );
 
-    final Node n_origin = ((Element) node).getElementsByTagNameNS( NS.GML3, "origin" ).item( 0 );
+    final Node n_origin = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "origin" ).item( 0 );
     final Node n_point = ((Element) n_origin).getElementsByTagNameNS( NS.GML3, "Point" ).item( 0 );
     try
     {
       final AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
       final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
 
-      final NodeList nl_offSetVector = ((Element) node).getElementsByTagNameNS( NS.GML3, "offsetVector" );
+      final NodeList nl_offSetVector = ((Element) node_rg).getElementsByTagNameNS( NS.GML3, "offsetVector" );
       final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<OffsetVector>();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
@@ -258,6 +260,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    */
   public boolean isGeometry( )
   {
+    // TODO check this
     return false;
   }
 

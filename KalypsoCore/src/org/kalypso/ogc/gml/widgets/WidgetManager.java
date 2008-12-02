@@ -50,7 +50,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 
@@ -59,25 +59,25 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
  * 
  * @author vdoemming
  */
-public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener, IWidgetManager
+public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener
 {
   private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
-    public void selectionChanged( final IFeatureSelection selection )
+    public void selectionChanged( IFeatureSelection selection )
     {
       onSelectionChanged( selection );
     }
   };
 
-  private final IMapPanel m_mapPanel;
+  private final MapPanel m_mapPanel;
 
   private final ICommandTarget m_commandTarget;
 
   private IWidget m_actualWidget = null;
 
-  public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
+  public WidgetManager( final ICommandTarget commandTarget, final MapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
     m_commandTarget = commandTarget;
@@ -90,11 +90,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     setActualWidget( null );
 
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
-  }
-
-  public ICommandTarget getCommandTarget( )
-  {
-    return m_commandTarget;
   }
 
   // MouseAdapter
@@ -117,7 +112,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-        break;
+          break;
 
         case MouseEvent.BUTTON2:
           actualWidget.middleClicked( e.getPoint() );
@@ -130,7 +125,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-        break;
+          break;
 
         default:
           break;
@@ -144,7 +139,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
-    m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
+    m_mapPanel.fireMouseMouveEvent( e );
   }
 
   // MouseMotionAdapter:
@@ -252,13 +247,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     fireWidgetChangeEvent( newWidget );
 
     if( m_mapPanel != null )
-      m_mapPanel.repaintMap();
+      m_mapPanel.repaint();
   }
 
   /**
    * Adds a listener to this manager.
    * <p>
-   * Has no effect, if the same listener was already registered.
+   * Has no effekt, if the same listener was already registered.
    */
   public void addWidgetChangeListener( final IWidgetChangeListener listener )
   {
@@ -268,7 +263,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * Removes a listener from this manager.
    * <p>
-   * Has no effect, if this listener was not added to this manager before.
+   * Has no effekt, if this listener was not added to this manager before.
    */
   public void removeWidgetChangeListener( final IWidgetChangeListener listener )
   {

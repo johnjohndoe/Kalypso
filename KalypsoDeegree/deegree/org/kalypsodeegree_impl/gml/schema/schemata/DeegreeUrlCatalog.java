@@ -56,7 +56,6 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
     // schemas related close to ogc have been moved to URLCatalogOGC
     catalog.put( "obslink.zml.kalypso.org", getClass().getResource( "obslink/obslink.xsd" ) );
     catalog.put( "org.kalypso.dwd.geolayer", myClass.getResource( "dwd/v0.1/dwdGeoLayer.xsd" ) );
-    catalog.put( "org.kalypso.dwd.rcm", myClass.getResource( "dwd/v0.1/rainfallCatchmentModel.xsd" ) ); // Rainfall-Catchment-Model
     catalog.put( "inline.zml.kalypso.org", getClass().getResource( "obslink/zmlinline.xsd" ) );
   }
 }

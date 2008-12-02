@@ -43,7 +43,8 @@ package org.kalypso.ui.editor.featureeditor;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
+import javax.xml.bind.JAXBContext;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -60,18 +61,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.IPoolListener;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.KeyComparator;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -80,8 +75,15 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.KeyComparator;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -91,11 +93,11 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 {
-  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
+  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  private final FeatureviewHelper m_featureViewHelper = new FeatureviewHelper();
+  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
 
-  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( m_featureViewHelper );
+  private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
 
   private final FeatureComposite m_featureComposite = new FeatureComposite( null, new FeatureSelectionManager2(), m_fvFactory );
 
@@ -119,7 +121,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       // getLayerTable().setFocusedFeature( feature, ftp );
@@ -145,8 +147,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   private final int m_marginHeight;
 
   private boolean m_disposed = false;
-
-  private Featuretemplate m_template;
 
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget, final int marginHeight, final int marginWidth )
   {
@@ -178,16 +178,14 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
   }
 
-  public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
+  public void setTemplate( Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
-    m_template = template;
-
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
       m_fvFactory.addView( featureviewType );
@@ -301,7 +299,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
     final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
 
-    final String errorMessage = Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4" ) + m_featurePath; //$NON-NLS-1$
+    final String errorMessage = Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4") + m_featurePath; //$NON-NLS-1$
 
     try
     {
@@ -320,51 +318,22 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       if( m_workspace == null )
       {
         m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5" ) ); //$NON-NLS-1$
+        m_label.setText( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5") ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }
 
       if( feature != null )
       {
-        m_featureComposite.addChangeListener( m_changeListener );
         m_featureComposite.setFeature( feature );
-
-        /* process rendering properties */
-        int style = SWT.NONE;
-
-        if( m_template != null )
-        {
-          if( m_template.isToolkit() )
-          {
-            m_featureComposite.setFormToolkit( new FormToolkit( m_panel.getDisplay() ) );
-          }
-
-          // FIXME ask gernot for an existing helper which can interpret swt-flags
-          final String swtflag = m_template.getSwtflags();
-          final String[] flags = swtflag.split( " | " );
-          for( final String flag : flags )
-          {
-            if( flag.length() < 1 )
-              continue;
-
-            final String f = flag.trim();
-            if( "SWT.BORDER".equals( f ) )
-            {
-              style = style | SWT.BORDER;
-            }
-            else
-              throw new NotImplementedException();
-          }
-
-        }
-
-        final Control control = m_featureComposite.createControl( m_panel, style, feature.getFeatureType() );
+        final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         m_featureComposite.setFeature( feature );
         m_featureComposite.updateControl();
 
         m_panel.layout();
+
+        m_featureComposite.addChangeListener( m_changeListener );
 
         m_commandtarget.resetDirty();
       }
@@ -442,17 +411,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   public boolean isDisposed( )
   {
     return m_disposed;
-  }
-
-  /**
-   * @return true, if this template own an data object. This is the case, if in
-   *         {@link #loadInput(Reader, URL, IProgressMonitor, Properties)}the properties parameter has an entry 'href'.
-   *         This Option was needed to fix the annoying bug concerning display of FeatureView in Sachsen/Sachsen-Anhalt
-   *         Wizards.
-   */
-  public boolean hasAdditionalDataObject( )
-  {
-    return m_key != null;
   }
 
   /**

@@ -44,11 +44,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.CSV;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
@@ -77,24 +77,25 @@ public class ExportableLayerTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName( )
+  public String getPreferredDocumentName()
   {
     // TODO besserer Name zurückgeben
-    return FileUtilities.validateName( "GisTabelle.csv", "_" ); //$NON-NLS-1$ $NON-NLS-2$
+    return "GisTabelle.csv"; //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
+      final Configuration metadataExtensions )
   {
     final LayerTableViewer layerTable = m_layerTable;
     final boolean onlyRows = m_onlyRows;
 
     final Runnable runnable = new Runnable()
     {
-      public void run( )
+      public void run()
       {
         final String[][] csv = layerTable.exportTable( onlyRows );
         final PrintWriter pw = new PrintWriter( new OutputStreamWriter( output ) );
@@ -111,7 +112,7 @@ public class ExportableLayerTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier( )
+  public String getIdentifier()
   {
     // TODO bessere Id zurückgeben
     return getPreferredDocumentName();
@@ -120,17 +121,9 @@ public class ExportableLayerTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory( )
+  public String getCategory()
   {
     // TODO bessere Category zurückgeben
-    return Messages.getString( "org.kalypso.ogc.gml.table.command.ExportableLayerTable.1" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return "";
+    return Messages.getString("org.kalypso.ogc.gml.table.command.ExportableLayerTable.1"); //$NON-NLS-1$
   }
 }

@@ -45,17 +45,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.FileValueModelType;
-
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -82,9 +78,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper class for {@link IGeoGrid}s.
@@ -102,7 +96,7 @@ public class GeoGridUtilities
    * Calclates the geo-position of the given cell.
    * 
    * @param c
-   *          If c is null, a new coordinate is returned, else its values are changed.
+   *            If c is null, a new coordinate is returned, else its values are changed.
    */
   public static Coordinate toCoordinate( final IGeoGrid grid, final int x, final int y, final Coordinate c ) throws GeoGridException
   {
@@ -124,13 +118,8 @@ public class GeoGridUtilities
   }
 
   /**
-   * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a grid point as a center point
+   * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a gird point as a center point
    * representation.
-   * 
-   * @param pos
-   *          The search position, must be in the saem coordinate system as the grid.
-   * @return The grid cell that contains the given position. Always returns a value, even if the position is not
-   *         contained inside the grid.
    */
   public static GeoGridCell cellFromPosition( final IGeoGrid raster, final Coordinate pos ) throws GeoGridException
   {
@@ -153,7 +142,8 @@ public class GeoGridUtilities
   /**
    * Returns the origin cell of a grid.
    */
-  public static GeoGridCell originAsCell( @SuppressWarnings("unused") final IGeoGrid grid )
+  public static GeoGridCell originAsCell( @SuppressWarnings("unused")
+  final IGeoGrid grid )
   {
     return new GeoGridCell( 0, 0 );
   }
@@ -171,7 +161,6 @@ public class GeoGridUtilities
    */
   public static Envelope asEnvelope( final IGeoGrid grid, final int i, final int j ) throws GeoGridException
   {
-    // TODO What with offsetX.y and offsetY.x
     final Coordinate origin = grid.getOrigin();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
@@ -185,8 +174,7 @@ public class GeoGridUtilities
   }
 
   /**
-   * Opens a {@link IGeoGrid} for a resource of a given mime-type.<br/>
-   * The grid is opened read-only.
+   * Opens a {@link IGeoGrid} for a resource of a given mime-type.<br/> The grid is opened read-only.
    */
   public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
@@ -197,10 +185,10 @@ public class GeoGridUtilities
    * Opens a {@link IGeoGrid} for a resource of a given mime-type.
    * 
    * @param writeable
-   *          if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid} will
-   *          be returned.
+   *            if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid}
+   *            will be returned.
    * @throws UnsupportedOperationException
-   *           If a grid is opened for write access that does not support it.
+   *             If a grid is opened for write access that does not support it.
    */
   public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException
   {
@@ -225,7 +213,6 @@ public class GeoGridUtilities
    */
   public static Envelope toEnvelope( final IGeoGrid grid ) throws GeoGridException
   {
-    // TODO What with offsetX.y and offsetY.x
     final Coordinate origin = grid.getOrigin();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
@@ -243,10 +230,10 @@ public class GeoGridUtilities
    * This function creates the surface of a grid.
    * 
    * @param grid
-   *          The grid.
+   *            The grid.
    * @param targetCRS
-   *          The coordinate system will be used to transform the surface, after it was created and before it is
-   *          returned.
+   *            The coordinate system will be used to transform the surface, after it was created and before it is
+   *            returned.
    * @return The surface of the given grid.
    */
   public static GM_Surface< ? > createSurface( final IGeoGrid grid, final String targetCRS ) throws GeoGridException
@@ -296,18 +283,18 @@ public class GeoGridUtilities
    * with the grid point as center point of the surface.
    * 
    * @param grid
-   *          The grid.
+   *            The grid.
    * @param x
-   *          The (cell-)coordinate x.
+   *            The (cell-)coordinate x.
    * @param y
-   *          The (cell-)coordinate y.
+   *            The (cell-)coordinate y.
    * @param targetCRS
-   *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
+   *            The coordinate system will be used to transform the cell, after it was created and before it is
+   *            returned.
    * @return The cell at the given (cell-)coordinates in the grid.
    */
   public static GM_Surface< ? > createCell( final IGeoGrid grid, final int x, final int y, final String targetCRS ) throws GeoGridException
   {
-    // TODO What with offsetX.y and offsetY.x
     try
     {
       final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
@@ -387,9 +374,9 @@ public class GeoGridUtilities
    * ATTENTION: this does not work for every walker implementation! *
    * 
    * @param walkingArea
-   *          If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
+   *            If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
-  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
+  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( "Visiting coverages", coverages.size() );
 
@@ -410,32 +397,6 @@ public class GeoGridUtilities
     }
   }
 
-  /**
-   * This function creates a writable geo grid.
-   * 
-   * @param mimeType
-   *          The mime type for this grid (e.g. "image/bin").
-   * @param file
-   *          The file for this grid.
-   * @param sizeX
-   *          The amount of cells in x - direction.
-   * @param sizeY
-   *          the amount of cells in y - direction.
-   * @param scale
-   *          The scale of the value. The value is saved as an int (because it uses less space then a double) and the
-   *          scale is needed then, to indicate the fraction digits.
-   * @param origin
-   *          The origin of the grid.
-   * @param offsetX
-   *          The x-offset.
-   * @param offsetY
-   *          The y-offset.
-   * @param sourceCRS
-   *          The coordinate system of the grid.
-   * @param fillGrid
-   *          Should the values be filled with Double.NaN?
-   * @return The writable geo grid.
-   */
   public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
     // HACK: internal binary grid
@@ -450,22 +411,22 @@ public class GeoGridUtilities
    * to the outputCoverages.
    * 
    * @param coverages
-   *          The new coverage will be added to this collection.
+   *            The new coverage will be added to this collection
    * @param grid
-   *          The values of the new coverage will be read from this grid.
+   *            The values of the new coverage will be read from this grid.
    * @param file
-   *          The new coverage will be serialized to this file.
+   *            The new coverage will be serialized to this file.
    * @param filePath
-   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
-   *          file.
+   *            the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *            file.
    * @param mimeType
-   *          The mime type of the created underlying file.
+   *            The mime type of the created underlying file.
    * @throws GeoGridException
-   *           If the access to the given grid fails.
+   *             If the access to the given grid fails.
    * @throws IOException
-   *           If writing to the output file fails.
+   *             If writing to the output file fails.
    * @throws CoreException
-   *           If the monitor is canceled.
+   *             If the monitor is canceled.
    */
   public static ICoverage addCoverage( final ICoverageCollection coverages, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
@@ -511,22 +472,22 @@ public class GeoGridUtilities
    * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
    * 
    * @param coverage
-   *          The coverage that refers the grid
+   *            The coverage that refers the grid
    * @param grid
-   *          The values of the new coverage will be read from this grid.
+   *            The values of the new coverage will be read from this grid.
    * @param file
-   *          The new coverage will be serialized to this file.
+   *            The new coverage will be serialized to this file.
    * @param filePath
-   *          the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
-   *          file.
+   *            the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *            file.
    * @param mimeType
-   *          The mime type of the created underlying file.
+   *            The mime type of the created underlying file.
    * @throws GeoGridException
-   *           If the acces to the given grid fails.
+   *             If the acces to the given grid fails.
    * @throws IOException
-   *           If writing to the output file fails.
+   *             If writing to the output file fails.
    * @throws CoreException
-   *           If the monitor is cancelled.
+   *             If the monitor is cancelled.
    */
   public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final File file, final String filePath, final String mimeType, final IProgressMonitor monitor ) throws Exception
   {
@@ -541,7 +502,7 @@ public class GeoGridUtilities
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
       outputGrid.dispose();
-      setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
+      CoverageCollection.setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
     }
     finally
@@ -550,20 +511,6 @@ public class GeoGridUtilities
         outputGrid.dispose();
       progress.done();
     }
-  }
-
-  private static void setCoverage( final RectifiedGridCoverage coverage, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
-  {
-    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-
-    // file name relative to the gml
-    rangeSetFile.setFileName( externalResource );
-    rangeSetFile.setMimeType( mimeType );
-    rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
-
-    coverage.setDescription( "Imported via Kalypso" );
-    coverage.setGridDomain( domain );
-    coverage.setRangeSet( rangeSetFile );
   }
 
   private static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
@@ -737,11 +684,11 @@ public class GeoGridUtilities
    * This function transforms the coordinate crd from its coordinate system to the grid coordinate system.
    * 
    * @param grid
-   *          The grid.
+   *            The grid.
    * @param crd
-   *          The coordinate.
+   *            The coordinate.
    * @param positionCRS
-   *          The coordinate system of the position.
+   *            The coordinate system of the position.
    * @return The transformed coordinate.
    */
   public static Coordinate transformCoordinate( final IGeoGrid grid, final Coordinate crd, final String positionCRS ) throws GeoGridException
@@ -762,7 +709,7 @@ public class GeoGridUtilities
     }
   }
 
-  public static void walkGeoGrid( final IWriteableGeoGrid grid, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
+  public static void walkGeoGrid( final IWriteableGeoGrid grid, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( "Visiting geoGrid", 1 );
 
@@ -785,17 +732,19 @@ public class GeoGridUtilities
    * calculates the common envelope for an array of {@link ICoverageCollection}s.
    * 
    * @param collections
-   *          the collections
+   *            the collections
    * @param intersection
-   *          if true, the envelope results from an intersection of all coverages of the collections. If false, the
-   *          envelope gets calculated by union of the several envelopes.
+   *            if true, the envelope results from an intersection of all coverages of the collections. If false, the
+   *            envelope gets calculated by union of the several envelopes.
    */
-  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, final boolean intersection ) throws Exception, GeoGridException, GM_Exception
+  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, boolean intersection ) throws Exception, GeoGridException, GM_Exception
   {
     Geometry globalEnv = null;
 
-    for( final ICoverageCollection collection : collections )
+    for( int i = 0; i < collections.length; i++ )
     {
+      final ICoverageCollection collection = collections[i];
+
       Geometry unionGeom = null;
       for( int j = 0; j < collection.size(); j++ )
       {
@@ -853,12 +802,12 @@ public class GeoGridUtilities
    * Flattens several grids into one grid, that has the value set for the category as cell value
    * 
    * @param gridCategories
-   *          the categories with which the grid get flattened
+   *            the categories with which the grid get flattened
    * @param intersection
-   *          if true, the envelope results from an intersection of all grids of the categories. If false, the envelope
-   *          gets calculated by union of the several envelopes.
+   *            if true, the envelope results from an intersection of all grids of the categories. If false, the
+   *            envelope gets calculated by union of the several envelopes.
    */
-  public static FlattenToCategoryGrid getFlattedGrid( final GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
+  public static FlattenToCategoryGrid getFlattedGrid( GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
   {
     Geometry globalGridSurfaceBoundary = null;
     Geometry unionGeom = null;
@@ -866,11 +815,15 @@ public class GeoGridUtilities
     /* calculate min cell sizes */
     double minCellSizeX = Double.MAX_VALUE;
     double minCellSizeY = Double.MAX_VALUE;
-    for( final GridCategoryWrapper category : gridCategories )
+    for( int i = 0; i < gridCategories.length; i++ )
     {
+      final GridCategoryWrapper category = gridCategories[i];
+
       final IGeoGrid[] grids = category.getGrids();
-      for( final IGeoGrid grid : grids )
+      for( int j = 0; j < grids.length; j++ )
       {
+        final IGeoGrid grid = grids[j];
+
         minCellSizeX = Math.min( Math.abs( grid.getOffsetX().x + grid.getOffsetY().x ), minCellSizeX );
         minCellSizeY = Math.min( Math.abs( grid.getOffsetX().y + grid.getOffsetY().y ), minCellSizeY );
 
@@ -906,8 +859,8 @@ public class GeoGridUtilities
 
     /* create grid */
     // get Bounding box, +1 zelle
-    final double originX = newGridEnv.getMin().getX() + minCellSizeX / 2;
-    final double originY = newGridEnv.getMin().getY() + minCellSizeY / 2;
+    double originX = newGridEnv.getMin().getX() + minCellSizeX / 2;
+    double originY = newGridEnv.getMin().getY() + minCellSizeY / 2;
 
     /* calculate necessary number of cells */
     final double dX = newGridEnv.getMax().getX() - minCellSizeX / 2 - originX;
@@ -926,75 +879,5 @@ public class GeoGridUtilities
     final Coordinate offsetY = new Coordinate( 0, -minCellSizeY );
 
     return new FlattenToCategoryGrid( gridCategories, globalGridSurfaceBoundary, origin, offsetX, offsetY, sourceCRS, numOfColumns, numOfRows );
-  }
-
-  /**
-   * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a polygon
-   * with the grid point as center point of the polygon.
-   * 
-   * @param grid
-   *          The grid.
-   * @param x
-   *          The (cell-)coordinate x.
-   * @param y
-   *          The (cell-)coordinate y.
-   * @return The cell at the given (cell-)coordinates in the grid.
-   */
-  public static Polygon createCellPolygon( final IGeoGrid grid, final int x, final int y ) throws GeoGridException
-  {
-    // TODO What with offsetX.y and offsetY.x
-    final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
-
-    final double offsetX = grid.getOffsetX().x;
-    final double offsetY = grid.getOffsetY().y;
-
-    final double cellX1 = cellCoordinate.x - offsetX / 2;
-    final double cellY1 = cellCoordinate.y - offsetY / 2;
-
-    final double cellX2 = cellX1 + offsetX;
-    final double cellY2 = cellY1 + offsetY;
-
-    final com.vividsolutions.jts.geom.GeometryFactory factory = new com.vividsolutions.jts.geom.GeometryFactory();
-
-    /* Create the coordinates for the outer ring. */
-    final Coordinate c1 = new Coordinate( cellX1, cellY1 );
-    final Coordinate c2 = new Coordinate( cellX2, cellY1 );
-    final Coordinate c3 = new Coordinate( cellX2, cellY2 );
-    final Coordinate c4 = new Coordinate( cellX1, cellY2 );
-
-    final LinearRing ring = factory.createLinearRing( new Coordinate[] { c1, c2, c3, c4, c1 } );
-
-    return factory.createPolygon( ring, new LinearRing[] {} );
-  }
-
-  /**
-   * Returns the value of a grid at a given position. Returns {@link Double#NaN} if the coordinate is outside the
-   * bounding box.
-   * 
-   * @see IGeoGrid#getValueChecked(int, int)
-   */
-  public static double getValueChecked( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
-  {
-    final GeoGridCell cell = cellFromPosition( grid, crd );
-    return grid.getValueChecked( cell.x, cell.y );
-  }
-
-  /**
-   * Writes a value to the grid at a specified position. The value is written to the cell covering the given coordinate.
-   * 
-   * @return <code>true</code>, if and only if the coordinate lies within the grid and the value could be written.
-   * @see #cellFromPosition(IGeoGrid, Coordinate)
-   */
-  public static boolean setValueChecked( final IWriteableGeoGrid writeableGrid, final Coordinate crd, final double value ) throws GeoGridException
-  {
-    final GeoGridCell cell = GeoGridUtilities.cellFromPosition( writeableGrid, crd );
-
-    if( cell.x < 0 || cell.x >= writeableGrid.getSizeX() )
-      return false;
-    if( cell.y < 0 || cell.y >= writeableGrid.getSizeY() )
-      return false;
-
-    writeableGrid.setValue( cell.x, cell.y, value );
-    return true;
   }
 }

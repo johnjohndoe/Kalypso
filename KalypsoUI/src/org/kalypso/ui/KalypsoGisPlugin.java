@@ -40,9 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -51,14 +56,19 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.i18n.Messages;
+import org.kalypso.loader.DefaultLoaderFactory;
+import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -66,7 +76,9 @@ import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree_impl.graphics.sld.DefaultStyleFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -74,12 +86,38 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
+  private static final String SCHEMA_CATALOG = "SCHEMA_CATALOG_URL"; //$NON-NLS-1$
+
+  private static final String MODELL_REPOSITORY = "MODELL_REPOSITORY"; //$NON-NLS-1$
+
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
+
+  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-1$
+
+  /** location of the pool properties file */
+  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-1$
 
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
+  private ResourceBundle m_resourceBundle = null;
+
   /** Manages the list of repositories. */
   private IRepositoryContainer m_tsRepositoryContainer = null;
+
+  /**
+   * Configuration of this client. The configuration is build using the system properties as well as remote properties
+   * defined on the potential kalypso-servers.
+   * <p>
+   * The properties is basically a hashmap mapping string keys to string representation of URLs or other kind of
+   * objects.
+   */
+  private final Properties m_mainConf = new Properties();
+
+  private ResourcePool m_pool;
+
+  private final Properties m_poolproperties = new Properties();
+
+  private ILoaderFactory m_loaderFactory;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
 
@@ -96,13 +134,133 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      // for AWT and Swing stuff used with SWT_AWT so that they look like OS controls
+      // for AWT and Swing stuff used with SWT_AWT so that they look like OS
+      // controls
       UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
     }
     catch( final Exception e1 )
     {
       e1.printStackTrace();
     }
+  }
+
+  /**
+   * Loads the client configuration from the various server that were configured in the kalypso plugin preferences page.
+   */
+  private void configure( final Properties mainConf )
+  {
+    // put system properties
+    mainConf.putAll( System.getProperties() );
+
+    // overwrite the user settings if list was provided as program argument or system property
+    final String confUrls = System.getProperty( "kalypso.client-ini-locations", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    if( confUrls.length() == 0 )
+    {
+      final IStatus warningStatus = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.6" ) ); //$NON-NLS-1$
+      getLog().log( warningStatus );
+    }
+
+    // try to load conf file
+    final String[] locs = confUrls.split( "," ); //$NON-NLS-1$
+
+    // for each of the locations, fetch configuration and merge them with main
+    // conf
+    for( int i = 0; i < locs.length; i++ )
+    {
+      InputStream stream = null;
+
+      final String location = locs[i].trim();
+      if( location.length() == 0 )
+      {
+        continue;
+      }
+
+      try
+      {
+        final URL url = new URL( location );
+
+        stream = new BufferedInputStream( url.openStream() );
+
+        final Properties conf = new Properties();
+        conf.load( stream );
+
+        // merge the conf
+        for( final Object element : conf.keySet() )
+        {
+          final String key = (String) element;
+
+          // TRICKY: the convention of the conf-file says that if the
+          // property ends with '_URL' then its value is either a relative
+          // or absolute URL. In the case of relative URL (relative to the
+          // conf-file), we need to resolve them here because it's the only
+          // place where we know the URL of the conf-file.
+          final String value;
+          if( (key != null) && key.endsWith( "URL" ) ) //$NON-NLS-1$
+          {
+            value = new URL( url, conf.getProperty( key ) ).toString();
+          }
+          else
+          {
+            value = conf.getProperty( key );
+          }
+
+          if( m_mainConf.containsKey( key ) )
+          {
+            String prop = m_mainConf.getProperty( key );
+            prop += ',' + value;
+
+            m_mainConf.put( key, prop );
+          }
+          else
+          {
+            m_mainConf.put( key, value );
+          }
+        }
+      }
+      catch( final Exception e ) // gen ex for simplicity
+      {
+        // do nothing, try with next location
+        // e.printStackTrace();
+
+        String msg = Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.9" ) + location + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        if( i == locs.length - 1 )
+        {
+          msg += Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.11" ); //$NON-NLS-1$
+        }
+        else
+        {
+          msg += Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.12" ) + locs[i + 1]; //$NON-NLS-1$
+        }
+
+        KalypsoGisPlugin.LOGGER.warning( msg );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( stream );
+      }
+    }
+  }
+
+  /**
+   * Loads the pool configuration
+   * 
+   * @throws IOException
+   */
+  private void configurePool( ) throws IOException
+  {
+    m_poolproperties.load( this.getClass().getResourceAsStream( KalypsoGisPlugin.POOL_PROPERTIES ) );
+  }
+
+  /**
+   * Sets service proxy factory specific properties and creates the proxy factory object.
+   * 
+   * @param mainConf
+   */
+  private void configureServiceProxyFactory( final Properties mainConf )
+  {
+    KalypsoServiceCoreClientPlugin.getDefault().configureProxies( mainConf );
   }
 
   private void configureLogger( )
@@ -149,13 +307,33 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
+  public ILoaderFactory getLoaderFactory( )
+  {
+    if( m_loaderFactory == null )
+    {
+      m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
+    }
+
+    return m_loaderFactory;
+  }
+
   /**
-   * @deprecated use {@link KalypsoCorePlugin#getPool()} instead.
+   * use {@link KalypsoDeegreePlugin#getDefaultStyleFactory()} instead
    */
   @Deprecated
+  public static DefaultStyleFactory getDefaultStyleFactory( )
+  {
+    return KalypsoDeegreePlugin.getDefaultStyleFactory();
+  }
+
   public ResourcePool getPool( )
   {
-    return KalypsoCorePlugin.getDefault().getPool();
+    if( m_pool == null )
+    {
+      m_pool = new ResourcePool( getLoaderFactory() );
+    }
+
+    return m_pool;
   }
 
   /**
@@ -170,9 +348,79 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     m_imgProvider.resetTmpFiles();
     configureLogger();
 
-    deleteTempDirs();
+    try
+    {
+      m_resourceBundle = ResourceBundle.getBundle( KalypsoGisPlugin.BUNDLE_NAME );
+    }
+    catch( final MissingResourceException ex )
+    {
+      m_resourceBundle = null;
 
-    getPreferenceStore().addPropertyChangeListener( this );
+      ex.printStackTrace();
+    }
+
+    try
+    {
+      reconfigure();
+
+      getPreferenceStore().addPropertyChangeListener( this );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Reconfigure the plugin according to server properties and more.
+   */
+  private void reconfigure( ) throws IOException
+  {
+    m_mainConf.clear();
+
+    configure( m_mainConf );
+    configurePool();
+    configureServiceProxyFactory( m_mainConf );
+
+    // muss NACH dem streamHandler konfiguriert werden!
+    // configureDefaultStyleFactory();
+
+    deleteTempDirs();
+  }
+
+  public IUrlCatalog loadRemoteSchemaCatalog( )
+  {
+    final Properties catalog = new Properties();
+    InputStream is = null;
+    String catalogLocation = null;
+    URL url = null;
+    try
+    {
+      catalogLocation = m_mainConf.getProperty( KalypsoGisPlugin.SCHEMA_CATALOG );
+      if( catalogLocation != null )
+      {
+        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.18" ) ); //$NON-NLS-1$
+        url = new URL( catalogLocation );
+        is = new BufferedInputStream( url.openStream() );
+
+        catalog.load( is );
+        is.close();
+
+        return new PropertyUrlCatalog( url, catalog );
+      }
+    }
+    catch( final IOException e )
+    {
+      // exceptions ignorieren: nicht schlimm, Eintrag ist optional
+      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.19" ) ); //$NON-NLS-1$
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
+    // If no catalog could be loaded, return an empty catalog
+    return new PropertyUrlCatalog( null, catalog );
   }
 
   /**
@@ -191,8 +439,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // clear the observation cache
     ObservationCache.clearCache();
 
+    // clear the default styles
+    // KalypsoGisPlugin.m_defaultStyleFactory.clear();
+
     if( m_tsRepositoryContainer != null )
+    {
       m_tsRepositoryContainer.dispose();
+    }
+
+    m_resourceBundle = null;
 
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
@@ -222,14 +477,52 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
+   * @param key
+   * @return string from the plugin's resource bundle, or 'key' if not found.
+   */
+  public static String getResourceString( final String key )
+  {
+    final ResourceBundle bundle = KalypsoGisPlugin.getDefault().getResourceBundle();
+    try
+    {
+      return (bundle != null) ? bundle.getString( key ) : key;
+    }
+    catch( final MissingResourceException e )
+    {
+      e.printStackTrace();
+
+      return key;
+    }
+  }
+
+  /**
+   * @return plugin's resource bundle
+   */
+  public ResourceBundle getResourceBundle( )
+  {
+    return m_resourceBundle;
+  }
+
+  /**
    * @return the timeZone as defined in the KALYPSO preferences. If unknown, the JVM default timezone is returned.
    */
   public TimeZone getDisplayTimeZone( )
   {
-    final String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
 
+    String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
     try
     {
+      // BUG!!! Bug, bug, bug, nasty bug!
+      
+      // Etc/GMT+1 is not the same as GMT+1
+      // Etc/GMT+1 has offset of -3600000
+      // GMT+1 has offset of 3600000
+      // i.e. Etc/GMT+1 is actually GMT-1 !!!
+      
+      // As TimeZone.getAvailableIDs() does NOT offer GMT+1, only Etc/GMT+1, users will probably select Etc/GMT+1 which is wrong
+      
+      if(timeZoneID.startsWith( "Etc/" ))
+        timeZoneID=timeZoneID.substring( 4 );
       return TimeZone.getTimeZone( timeZoneID );
     }
     catch( final Exception e )
@@ -242,7 +535,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()} instead.
+   * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()}} instead.
    */
   @Deprecated
   public String getCoordinatesSystem( )
@@ -279,6 +572,27 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
     }
     return m_defaultFeatureControlFactory;
+  }
+
+  public File getServerModelRoot( )
+  {
+    final String location = m_mainConf.getProperty( KalypsoGisPlugin.MODELL_REPOSITORY, null );
+    if( location == null )
+      return null;
+
+    final String[] locations = location.split( "," ); //$NON-NLS-1$
+    if( locations.length == 0 )
+      return null;
+
+    try
+    {
+      return new File( locations[0] );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new IllegalStateException( e.getLocalizedMessage() );
+    }
   }
 
   public static PluginImageProvider getImageProvider( )

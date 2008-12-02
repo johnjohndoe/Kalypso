@@ -61,26 +61,34 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 public class OpenOutlineHandler extends AbstractHandler
 {
   /**
+   * The constructor.
+   */
+  public OpenOutlineHandler( )
+  {
+  }
+
+  /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  @Override
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.0") ); //$NON-NLS-1$
 
-    final IWorkbenchPartSite site = part.getSite();
+    IWorkbenchPartSite site = part.getSite();
     if( site == null )
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.1") ); //$NON-NLS-1$
 
-    final IWorkbenchPage page = site.getPage();
+    IWorkbenchPage page = site.getPage();
     if( page == null )
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.2") ); //$NON-NLS-1$
 
     try
     {
-      final IViewPart view = page.findView( GisMapOutlineView.ID );
+      IViewPart view = page.findView( GisMapOutlineView.ID );
       if( view != null )
       {
         page.hideView( view );
@@ -96,7 +104,7 @@ public class OpenOutlineHandler extends AbstractHandler
 
       return Status.OK_STATUS;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.3"), e ); //$NON-NLS-1$
     }

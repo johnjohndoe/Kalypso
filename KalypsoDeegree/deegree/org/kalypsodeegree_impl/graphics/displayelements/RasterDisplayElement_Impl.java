@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,10 +45,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -58,25 +56,13 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
-import org.kalypso.transformation.GeoTransformer;
-import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
-import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
-import org.kalypsodeegree.graphics.sld.Graphic;
-import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -115,7 +101,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     if( m_grid != null )
     {
-      // m_grid.dispose();
+// m_grid.dispose();
       m_grid = null;
     }
   }
@@ -132,7 +118,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       if( grid != null )
       {
         final String targetCrs = projection.getSourceRect().getCoordinateSystem();
-        Assert.isNotNull( targetCrs );
         final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
         paintGrid( (Graphics2D) g, grid, projection, symbolizer, targetCrs, monitor );
       }
@@ -282,9 +267,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
         ProgressUtilities.worked( monitor, 1 );
       }
     }
-
-    /* DEBUG: This can be used to paint the grid cells and its center point. */
-    // paintCells( g, grid, projection, targetCRS, true, true );
   }
 
   // REMARK: below is an essay of using geotools to render the coverages, but it
@@ -371,13 +353,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     final GridCacheKey gridCacheKey = new GridCacheKey( feature.getId(), feature.getWorkspace().getContext() );
 
-// final WeakReference<IGeoGrid> ref = WEAK_CACHE.get( gridCacheKey );
-// if( ref != null )
-// {
-// final IGeoGrid cachedGrid = ref.get();
-// if( cachedGrid != null )
-// return cachedGrid;
-// }
+    final WeakReference<IGeoGrid> ref = WEAK_CACHE.get( gridCacheKey );
+    if( ref != null )
+    {
+      final IGeoGrid cachedGrid = ref.get();
+      if( cachedGrid != null )
+        return cachedGrid;
+    }
 
     // Grid not available, create it
     final IGeoGrid newGrid = new RectifiedGridCoverageGeoGrid( feature );
@@ -426,67 +408,4 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  /**
-   * This function paints the cells and/or the cells center points.
-   */
-  @SuppressWarnings("unused")
-  // REMARK: not used, normally; but is used for debugging the raster stuff. Maybe add tracing option to switch this
-  // on/off
-  private void paintCells( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final boolean cells, final boolean centerPoints )
-  {
-    try
-    {
-      for( int x = 0; x < grid.getSizeX(); x++ )
-      {
-        for( int y = 0; y < grid.getSizeY(); y++ )
-        {
-          if( cells )
-          {
-            /* Define how the cell will be drawn. */
-            final PolygonSymbolizer cellSymbolizer = new PolygonSymbolizer_Impl();
-            cellSymbolizer.getFill().setOpacity( 0 );
-            cellSymbolizer.getFill().setFill( Color.RED );
-            cellSymbolizer.getStroke().setStroke( Color.BLACK );
-            cellSymbolizer.getStroke().setWidth( 1 );
-
-            /* Create the cells geometry. */
-            final GM_Surface< ? > surface = GeoGridUtilities.createCell( grid, x, y, targetCRS );
-
-            /* Paint the cell at this position. */
-            final PolygonDisplayElement cellDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, cellSymbolizer );
-            cellDisplayElement.paint( g, projection, new NullProgressMonitor() );
-          }
-
-          if( centerPoints )
-          {
-            /* Define how the center point will be drawn. */
-            final PointSymbolizer centerPointSymbolizer = new PointSymbolizer_Impl();
-
-            /* Create the mark. */
-            final Mark mark = StyleFactory.createMark( "square", Color.BLACK, Color.BLACK, 2 );
-            final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 2, 0 );
-            centerPointSymbolizer.setGraphic( graphic );
-
-            /* Get the center point. */
-            final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
-
-            /* This is the center point in the coordinate system of the grid. */
-            final GM_Point centerPoint = GeometryFactory.createGM_Point( coordinate.x, coordinate.y, grid.getSourceCRS() );
-
-            /* Transform it to the target coordinate system. */
-            final GeoTransformer geo = new GeoTransformer( targetCRS );
-            final GM_Object transformedCenterPoint = geo.transform( centerPoint );
-
-            /* Draw the center point. */
-            final PointDisplayElement centerPointDisplayElement = DisplayElementFactory.buildPointDisplayElement( null, transformedCenterPoint, centerPointSymbolizer );
-            centerPointDisplayElement.paint( g, projection, new NullProgressMonitor() );
-          }
-        }
-      }
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-    }
-  }
 }

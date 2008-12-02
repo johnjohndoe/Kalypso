@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,19 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.catalogs;
 
 import java.net.URL;
 import java.util.Map;
-import java.util.Properties;
 
 import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO: does not work any more: remove or fix.<br>
  * Represents the server side url catalog based on a properties file.
  * 
  * @author Gernot Belger
@@ -60,7 +58,7 @@ public class ServerPropertiesUrlCatalog implements IUrlCatalog
   public IUrlCatalog getInternalCatalog( )
   {
     if( m_catalog == null )
-      m_catalog = new PropertyUrlCatalog( null, new Properties() );
+      m_catalog = KalypsoGisPlugin.getDefault().loadRemoteSchemaCatalog();
 
     return m_catalog;
   }

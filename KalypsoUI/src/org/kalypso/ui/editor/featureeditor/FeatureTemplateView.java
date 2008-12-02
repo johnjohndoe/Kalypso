@@ -114,7 +114,7 @@ public class FeatureTemplateView extends ViewPart
   {
     // TODO: add listener to data, in order to show in title if data is dirty
 
-    m_templateviewer.createControls( parent, SWT.NONE );
+    m_templateviewer.createControls( parent, SWT.BORDER );
 
 // // Stefan: Now we can restore the file if the view is configured to do so
 // final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
@@ -131,19 +131,13 @@ public class FeatureTemplateView extends ViewPart
 
   /**
    * @exception SWTException
-   *              <ul>
-   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
-   *              </ul>
+   *                <ul>
+   *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+   *                </ul>
    */
   public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
     m_templateviewer.setTemplate( template, context, featurePath, href, linkType );
-
-    final String title = template.getViewtitle();
-    if( title.length() > 0 )
-    {
-      setPartName( title );
-    }
 
     final String partName = template.getName();
 
@@ -160,7 +154,7 @@ public class FeatureTemplateView extends ViewPart
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           setPartName( m_partName );

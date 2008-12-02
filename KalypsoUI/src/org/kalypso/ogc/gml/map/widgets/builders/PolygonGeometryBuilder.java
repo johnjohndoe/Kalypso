@@ -85,10 +85,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
-   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
+   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
-   *          The target coordinate system.
+   *            The target coordinate system.
    */
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs, final IGeometryBuilderExtensionProvider extender )
   {
@@ -110,10 +110,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
-   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
+   *            If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding
+   *            the count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
-   *          The target coordinate system.
+   *            The target coordinate system.
    */
   public PolygonGeometryBuilder( final int cnt_points, final String targetCrs )
   {
@@ -188,9 +188,9 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
         poses[i] = transformedPoint.getPosition();
       }
 
-// m_result = createGeometry( poses );
-// return m_result;
-      return createGeometry( poses );
+      m_result = createGeometry( poses );
+
+      return m_result;
     }
 
     return null;
@@ -230,7 +230,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
+    // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
     if( !m_points.isEmpty() )
@@ -262,14 +262,10 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public void reset( )
   {
+    m_cnt_points = 0;
     m_points.clear();
     m_result = null;
     if( m_extender != null )
       m_extender.setCursor( CROSSHAIR_CURSOR );
-  }
-
-  public int size( )
-  {
-    return m_points.size();
   }
 }

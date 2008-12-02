@@ -35,7 +35,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -142,7 +142,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
 
-    final IValuePropertyType geometryProperty = featureToEdit.getGeometryProperty();
+    IValuePropertyType geometryProperty = featureToEdit.getGeometryProperty();
 
     if( geometryProperty == null )
       return null;
@@ -154,7 +154,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractFeatureGeometeryWidget#update(org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  protected void update( final IMapPanel mapPanel )
+  protected void update( MapPanel mapPanel )
   {
     if( m_feature == null )
     {

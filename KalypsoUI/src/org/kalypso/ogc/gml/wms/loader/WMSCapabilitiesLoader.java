@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.loader;
 
@@ -67,7 +67,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * The timeout for the access.
    */
-  private final int m_timeout;
+  private int m_timeout;
 
   /**
    * The conbstructor.
@@ -75,7 +75,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
    * @param timeout
    *            The timeout for the access.
    */
-  public WMSCapabilitiesLoader( final int timeout )
+  public WMSCapabilitiesLoader( int timeout )
   {
     m_baseURL = null;
     m_timeout = timeout;
@@ -84,7 +84,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#init(java.net.URL)
    */
-  public void init( final URL baseURL )
+  public void init( URL baseURL )
   {
     m_baseURL = baseURL;
   }
@@ -92,7 +92,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   /**
    * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#getCapabilitiesStream(org.eclipse.core.runtime.IProgressMonitor)
    */
-  public InputStream getCapabilitiesStream( final IProgressMonitor monitor ) throws CoreException
+  public InputStream getCapabilitiesStream( IProgressMonitor monitor ) throws CoreException
   {
     if( m_baseURL == null )
       return null;
@@ -104,28 +104,25 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
       monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1") ); //$NON-NLS-1$
 
       /* Create the capabilities URL. */
-      final URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
+      URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
 
       monitor.worked( 25 );
       monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2") ); //$NON-NLS-1$
 
-      // TODO: why this getter stuff? why not just open the stream of the url?
-      // At least, please comment!
-
       /* Create a getter for retrieving the URL. */
-      final URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
+      URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
 
       monitor.worked( 25 );
       monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.3") ); //$NON-NLS-1$
 
       /* Execute. */
-      final IStatus status = getter.execute( new SubProgressMonitor( monitor, 50 ) );
+      IStatus status = getter.execute( new SubProgressMonitor( monitor, 50 ) );
       if( !status.isOK() )
         throw new Exception( status.getException() );
 
       return getter.getResult();
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5") + m_baseURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }

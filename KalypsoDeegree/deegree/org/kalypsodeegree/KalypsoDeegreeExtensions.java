@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -74,11 +74,11 @@ public class KalypsoDeegreeExtensions
   /* Empty implementation which does nothing. */
   private static final IGmlWorkspaceListener INVALID_PROXY = new GmlWorkspaceListener()
   {
-    public void init( final GMLWorkspace workspace )
+    public void init( GMLWorkspace workspace )
     {
     }
 
-    public void onModellChange( final ModellEvent modellEvent )
+    public void onModellChange( ModellEvent modellEvent )
     {
     }
   };
@@ -89,11 +89,7 @@ public class KalypsoDeegreeExtensions
 
   private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
 
-  private final static String FEATUREBINDING_EXTENSION_POINT = "org.kalypso.deegree.featureBinding";
-
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
-
-  private static Map<QName, IConfigurationElement> FEATURE_BINDINGS = null;
 
   private static Map<String, IConfigurationElement> FUNCTION_EXPRESSION = null;
 
@@ -199,7 +195,7 @@ public class KalypsoDeegreeExtensions
    * Get all listeners which are associated with the given qname.
    * 
    * @param qname
-   *          If null, the listeners are returned which are not associated with any qname.
+   *            If null, the listeners are returned which are not associated with any qname.
    */
   public static IGmlWorkspaceListener[] createGmlWorkspaceListeners( final QName qname )
   {
@@ -247,32 +243,6 @@ public class KalypsoDeegreeExtensions
       result.addAll( commonRules );
 
     return result.toArray( new IFeatureRule[result.size()] );
-  }
-
-  /**
-   * @return list of feature binding handlers, handling a special featureType qname
-   */
-  public synchronized static IConfigurationElement getFeatureBinding( final QName qname )
-  {
-    // fill binding map
-    if( FEATURE_BINDINGS == null )
-    {
-      FEATURE_BINDINGS = new HashMap<QName, IConfigurationElement>();
-
-      /* get extension points */
-      final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( FEATUREBINDING_EXTENSION_POINT );
-
-      for( final IConfigurationElement configurationElement : elements )
-      {
-        final String qnameAttrribute = configurationElement.getAttribute( "qname" );
-        final QName qn = QName.valueOf( qnameAttrribute );
-
-        FEATURE_BINDINGS.put( qn, configurationElement );
-      }
-    }
-
-    return FEATURE_BINDINGS.get( qname );
   }
 
   private synchronized static Map<QName, List<IFeatureRule>> getFeatureRules( )

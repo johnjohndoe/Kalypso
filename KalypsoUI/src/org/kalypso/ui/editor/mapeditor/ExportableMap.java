@@ -7,10 +7,10 @@
  Institute of River and coastal engineering
  Denickestr. 22
  21073 Hamburg, Germany
- http://www.tuhh.de/wbprivate final ExportMapOptionsPage
+ http://www.tuhh.de/wbprivate final ExportMapOptionsPage 
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
@@ -46,13 +46,13 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -67,9 +67,9 @@ public class ExportableMap implements IExportableObject
 
   private final String m_format;
 
-  private final IMapPanel m_panel;
+  private final MapPanel m_panel;
 
-  public ExportableMap( final IMapPanel panel, final int width, final int height, final String format )
+  public ExportableMap( final MapPanel panel, final int width, final int height, final String format )
   {
     m_panel = panel;
     m_width = width;
@@ -82,31 +82,31 @@ public class ExportableMap implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    // TODO besserer Name? JA: mapModell.getName()!
-    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
+    // TODO besserer Name?
+    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.0") + m_format; //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     try
     {
-      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.1"), 1000 ); //$NON-NLS-1$
 
       final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
 
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.2") + m_format, null ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.3"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -131,14 +131,6 @@ public class ExportableMap implements IExportableObject
   public String getCategory( )
   {
     // TODO bessere category
-    return Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.4" ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
-   */
-  public String getStationIDs( )
-  {
-    return "";
+    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.4"); //$NON-NLS-1$
   }
 }

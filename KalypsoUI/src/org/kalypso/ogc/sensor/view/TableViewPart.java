@@ -42,6 +42,9 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -71,14 +74,9 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 {
   public static final String ID = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
 
-  protected TableView m_tableView;
+  protected final TableView m_tableView = new TableView();
 
   private ObservationTable m_table;
-
-  public TableViewPart( )
-  {
-    m_tableView = new TableView();
-  }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -94,7 +92,9 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     vFrame.setVisible( true );
     m_table.setVisible( true );
 
-    vFrame.add( m_table );
+    final JScrollPane pane = new JScrollPane( m_table );
+    pane.setBorder( BorderFactory.createEmptyBorder() );
+    vFrame.add( pane );
 
     getSite().getPage().addPartListener( this );
   }
@@ -103,7 +103,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
     getSite().getPage().removePartListener( this );
 
@@ -121,7 +121,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   @Override
   public void setFocus( )
   {
-    // noch nix
+  // noch nix
   }
 
   /**
@@ -132,17 +132,18 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     // always remove items first (we don't know which selection we get)
     m_tableView.removeAllItems();
 
-    final StructuredSelection selection = (StructuredSelection) event.getSelection();
+    final StructuredSelection selection = (StructuredSelection)event.getSelection();
 
-    if( !(selection.getFirstElement() instanceof IRepositoryItem) )
+    if( !( selection.getFirstElement() instanceof IRepositoryItem ) )
       return;
 
-    final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
+    final IRepositoryItem item = (IRepositoryItem)selection.getFirstElement();
 
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
     {
-      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
+      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper
+          .makeDateRange( item ) ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
     }
   }
 
@@ -152,7 +153,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partActivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).addSelectionChangedListener( this );
   }
 
   /**
@@ -160,7 +161,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partBroughtToTop( IWorkbenchPart part )
   {
-    // nada
+  // nada
   }
 
   /**
@@ -169,7 +170,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partClosed( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -178,7 +179,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void partDeactivated( IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
-      ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+      ( (RepositoryExplorerPart)part ).removeSelectionChangedListener( this );
   }
 
   /**
@@ -186,6 +187,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
    */
   public void partOpened( IWorkbenchPart part )
   {
-    // Siehe partActivated...
+  // Siehe partActivated...
   }
 }

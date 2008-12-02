@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,20 +36,21 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
-import java.net.URL;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.commons.bind.JaxbUtilities;
+import org.apache.commons.io.IOUtils;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.conf.Repconf.Repository;
 
 /**
  * Utility class for the repository config package.
@@ -71,21 +72,24 @@ public class RepositoryConfigUtils
    * @param ins
    * @throws RepositoryException
    */
-  public static List<RepositoryFactoryConfig> loadConfig( final URL location ) throws RepositoryException
+  public static List loadConfig( final InputStream ins ) throws RepositoryException
   {
     try
     {
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
-      final Repconf repconf = (Repconf) unmarshaller.unmarshal( location );
+      final Repconf repconf = (Repconf) unmarshaller.unmarshal( ins );
+      ins.close();
 
-      final List<Repconf.Repository> list = repconf.getRepository();
+      final List list = repconf.getRepository();
 
       final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
 
-      for( final Repository elt : list )
+      for( final Iterator it = list.iterator(); it.hasNext(); )
       {
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
+        final Repconf.Repository elt = (Repconf.Repository) it.next();
+
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
         fConfs.add( item );
       }
 
@@ -93,7 +97,11 @@ public class RepositoryConfigUtils
     }
     catch( final Exception e )
     {
-      throw new RepositoryException( "Unable to load repository config from location: " + location, e );
+      throw new RepositoryException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( ins );
     }
   }
 }

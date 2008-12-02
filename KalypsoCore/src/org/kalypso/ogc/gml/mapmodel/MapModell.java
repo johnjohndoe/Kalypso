@@ -41,18 +41,16 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
@@ -253,55 +251,26 @@ public class MapModell implements IMapModell
     return m_coordinatesSystem;
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
-    final IKalypsoTheme[] themes = getVisibleThemes( selected );
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.ThemePainter.0" ), themes.length ); //$NON-NLS-1$
+    final IProgressMonitor monitor = new NullProgressMonitor();
 
-    for( int i = themes.length - 1; i >= 0; i-- )
+    try
     {
-      final IKalypsoTheme theme = themes[i];
-
-      final SubMonitor childProgress = progress.newChild( 1 );
-      theme.paint( g, p, bbox, scale, selected, childProgress );
-      childProgress.done();
-    }
-  }
-
-  /** If selected is true, return only feature themes, as these are the only one that can be selected. */
-  private IKalypsoTheme[] getVisibleThemes( final Boolean selected )
-  {
-    final List<IKalypsoTheme> visibleThemes = new ArrayList<IKalypsoTheme>();
-    final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
-    {
-      public boolean visit( final IKalypsoTheme theme )
+      // directly access themes in order to avoid synchronization problems
+      final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+      // paint themes in reverse order
+      for( int i = themes.length; i > 0; i-- )
       {
-        if( theme instanceof IMapModell )
-        {
-          if( theme.isVisible() )
-          {
-            // do not add it to the themes, we paint them ourselfes (the cascading modells paint method would also paint
-            // all is children)
-            return true;
-          }
-
-          // do not descent
-          return false;
-        }
-
+        final IKalypsoTheme theme = themes[i - 1];
         if( theme.isVisible() )
-        {
-          if( theme instanceof IKalypsoFeatureTheme || selected == null || !selected )
-            visibleThemes.add( theme );
-        }
-
-        // if it is not a map modell we do not recurse
-        return false;
+          theme.paint( g, p, scale, bbox, selected, monitor );
       }
-    };
-
-    accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-    return visibleThemes.toArray( new IKalypsoTheme[visibleThemes.size()] );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public IKalypsoTheme getTheme( final int pos )

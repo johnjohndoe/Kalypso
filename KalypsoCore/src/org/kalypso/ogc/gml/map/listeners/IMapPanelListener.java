@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.listeners;
 
-import org.kalypso.ogc.gml.map.IMapPanel;
+import java.awt.Point;
+
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -52,9 +54,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IMapPanelListener
 {
-  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
+  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
 
-  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel );
+  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel );
 
   /**
    * This function is invoked from the mapPanel, in cases its message has changed.
@@ -62,12 +64,8 @@ public interface IMapPanelListener
    * @param message
    *            The new message, which is set in the mapPanel.
    */
-  public void onMessageChanged( final IMapPanel source, final String message );
+  public void onMessageChanged( final MapPanel source, final String message );
 
-  public void onStatusChanged( final IMapPanel source );
-
-  // REMARK: we are using mouseX and mouseY (instead of some point) in order to be independend of the window toolkit
-  // Should be changed as soon as we totally switch so SWT
-  public void onMouseMoveEvent( final IMapPanel source, GM_Point gmPoint, final int mouseX, int mouseY );
+  public void onMouseMoveEvent( final MapPanel source, GM_Point gmPoint, final Point mousePosition );
 
 }

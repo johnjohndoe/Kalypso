@@ -10,7 +10,6 @@
    <extension-point id="featureviewComparator" name="featureviewComparator" schema="schema/featureviewComparator.exsd"/>
    <extension-point id="themeInfo" name="Kalypso Theme Info" schema="schema/themeInfo.exsd"/>
    <extension-point id="gmlSourceProvider" name="GML Source Provider" schema="schema/gmlSourceProvider.exsd"/>
-   <extension-point id="poolLoader" name="poolLoader" schema="schema/poolLoader.exsd"/>
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">
@@ -193,17 +192,6 @@
     <typeHandler
           factory="org.kalypso.core.KalypsoCoreTypeHandlerFactory">
     </typeHandler>
- </extension>
- <extension
-       point="org.kalypso.core.poolLoader">
-    <loader
-          class="org.kalypso.ogc.gml.loader.GmlLoader"
-          type="gml">
-    </loader>
-    <loader
-          class="org.kalypso.ogc.gml.loader.ShapeLoader"
-          type="shape">
-    </loader>
  </extension>
 
 </plugin>

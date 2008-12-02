@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
@@ -44,20 +44,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
@@ -69,74 +65,67 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 public class LegendPropertyPage extends PropertyPage implements IWorkbenchPropertyPage
 {
   /**
+   * The constructor.
+   */
+  public LegendPropertyPage( )
+  {
+  }
+
+  /**
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( final Composite parent )
+  protected Control createContents( Composite parent )
   {
     /* Get the theme. */
-    final IKalypsoTheme theme = getTheme();
+    IKalypsoTheme theme = getTheme();
 
     /* Create a composite. */
-    final Display display = parent.getDisplay();
-    final Composite composite = new Composite( parent, SWT.NONE );
+    Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 1, false ) );
 
     /* If there is no theme, no legend could be shown. */
     if( theme == null )
-      return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) ); //$NON-NLS-1$
+      return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.0") ); //$NON-NLS-1$
 
     /* Get the legend graphic. */
+    Image legendGraphic = null;
 
     try
     {
       /* Get the legend graphic. */
-      final Font font = new Font( display, "Arial", 10, SWT.NORMAL );
-      final Image legendGraphic = theme.getLegendGraphic( font );
-      /* No legend available. */
-      if( legendGraphic == null )
-        return createError( composite, Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) ); //$NON-NLS-1$
-
-      /* Create a group. */
-      final Composite group = new Composite( composite, SWT.BORDER );
-      group.setLayout( new GridLayout( 1, false ) );
-      group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      group.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-
-      /* Create a scrolled composite. */
-      final ScrolledComposite sComposite = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL );
-      sComposite.setLayout( new GridLayout( 1, false ) );
-      final GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
-      sComposite.setLayoutData( sCompData );
-      sComposite.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-
-      /**
-       * And finally display it. <br>
-       * REMARK: We are using an real ImageCanvas instead of just setting the background, as this will not work for
-       * transparent images
-       */
-      final ImageCanvas canvas = new ImageCanvas( sComposite, SWT.NONE );
-      final Rectangle legendBounds = legendGraphic.getBounds();
-      canvas.setSize( legendBounds.width, legendBounds.height );
-      canvas.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-      canvas.setImage( legendGraphic );
-
-      sComposite.setContent( canvas );
-
-      canvas.addDisposeListener( new DisposeListener()
-      {
-        public void widgetDisposed( final DisposeEvent e )
-        {
-          legendGraphic.dispose();
-          font.dispose();
-        }
-      } );
-
+      legendGraphic = theme.getLegendGraphic( new Font( composite.getDisplay(), "Arial", 10, SWT.NORMAL ) ); //$NON-NLS-1$
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       return createError( composite, e.getLocalizedMessage() );
     }
+
+    /* No legend available. */
+    if( legendGraphic == null )
+      return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.2") ); //$NON-NLS-1$
+
+    /* Create a group. */
+    Composite group = new Composite( composite, SWT.BORDER );
+    group.setLayout( new GridLayout( 1, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    group.setBackground( group.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+
+    /* Create a scrolled composite. */
+    ScrolledComposite sComposite = new ScrolledComposite( group, SWT.H_SCROLL | SWT.V_SCROLL );
+    sComposite.setLayout( new GridLayout( 1, false ) );
+    GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    sCompData.widthHint = 300;
+    sCompData.heightHint = 300;
+    sComposite.setLayoutData( sCompData );
+    sComposite.setBackground( sComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+
+    /* And finally display it. */
+    Canvas canvas = new Canvas( sComposite, SWT.NONE );
+    canvas.setSize( legendGraphic.getBounds().width, legendGraphic.getBounds().height );
+    canvas.setBackgroundImage( legendGraphic );
+
+    sComposite.setContent( canvas );
 
     return composite;
   }
@@ -145,15 +134,15 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * This function creates an error message in the given composite.
    * 
    * @param parent
-   *          The parent composite.
+   *            The parent composite.
    * @param message
-   *          The error message.
+   *            The error message.
    */
-  private Control createError( final Composite parent, final String message )
+  private Control createError( Composite parent, String message )
   {
     /* Create the label. */
-    final Label messageLabel = new Label( parent, SWT.NONE );
-    final GridData messageData = new GridData( SWT.FILL, SWT.NONE, true, false );
+    Label messageLabel = new Label( parent, SWT.NONE );
+    GridData messageData = new GridData( SWT.FILL, SWT.NONE, true, false );
     messageData.widthHint = 300;
     messageLabel.setLayoutData( messageData );
 
@@ -170,8 +159,8 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    */
   private IKalypsoTheme getTheme( )
   {
-    final IAdaptable element = getElement();
-    final IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
+    IAdaptable element = getElement();
+    IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
 
     return theme;
   }

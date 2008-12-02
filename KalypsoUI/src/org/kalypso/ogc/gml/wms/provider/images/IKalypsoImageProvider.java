@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.images;
 
@@ -74,20 +74,20 @@ public interface IKalypsoImageProvider
   public final static String KEY_PROVIDER = "PROVIDER"; //$NON-NLS-1$
 
   /**
-   * Initialises this image provider. This function must be called.
+   * Initializes this image provider. This function must be called.
    * 
    * @param themeName
-   *          The name of the theme.
+   *            The name of the theme.
    * @param layers
-   *          The layers.
+   *            The layers.
    * @param styles
-   *          The styles.
+   *            The styles.
    * @param service
-   *          The service.
+   *            The service.
    * @param localSRS
-   *          The client coordinate system.
+   *            The client coordinate system.
    */
-  public void init( String themeName, String[] layers, String[] styles, String service, String localSRS );
+  public void init( String themeName, String layers, String styles, String service, String localSRS );
 
   /**
    * This function will create the image and return it.

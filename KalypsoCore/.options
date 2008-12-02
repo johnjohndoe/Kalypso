@@ -1,4 +1,5 @@
 # Activates or reactivates validation of bindings while marshaling/unmarshaling
+
 org.kalypso.core/debug/validatebinding/gismapview = false
 org.kalypso.core/debug/validatebinding/featureview = false
 
@@ -10,9 +11,3 @@ org.kalypso.core/debug/mapModell = false
 
 # Spatial Index
 org.kalypso.core/debug/spatialIndex/paint = false
-
-# MapPanel output
-org.kalypso.core/debug/mapPanel = false
-
-# ResourcePool output
-org.kalypso.core/debug/resourcepool/keys = false

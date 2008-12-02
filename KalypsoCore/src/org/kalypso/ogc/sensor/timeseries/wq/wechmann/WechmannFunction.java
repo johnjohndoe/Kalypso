@@ -90,7 +90,10 @@ public class WechmannFunction
   public static final double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WQException
   {
     if( W - W1 < 0 )
-      throw new WQException( "W < W1, ln( W - W1 ) nicht möglich" ); //$NON-NLS-1$
+    {
+      throw new WQException( "( W - W1 ) < 0, ln( W - W1 ) nicht möglich" ); //$NON-NLS-1$
+      //return 0;
+    }
 
     return Math.exp( LNK1 + Math.log( W - W1 ) * K2 );
   }

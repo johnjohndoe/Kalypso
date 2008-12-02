@@ -31,10 +31,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypso.view.gazetter.ObjectFactory;
@@ -237,7 +237,7 @@ public class GazetterView extends ViewPart
               {
                 final GM_Object geom = (GM_Object) property;
                 // GM_Point centroid = geom.getCentroid();
-                final IMapPanel mapPanel = ((IMapPanelProvider) activeEditor).getMapPanel();
+                final MapPanel mapPanel = ((IMapPanelProvider) activeEditor).getMapPanel();
                 final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, geom.getEnvelope() );
                 ((ICommandTarget) activeEditor).postCommand( command, null );
               }

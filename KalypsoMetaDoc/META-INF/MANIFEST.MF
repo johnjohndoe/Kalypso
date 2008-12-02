@@ -19,5 +19,6 @@ Export-Package: org.apache.commons.configuration,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- org.kalypso.commons
+ org.kalypso.commons,
+ org.kalypso.jwsdp
 Eclipse-LazyStart: true

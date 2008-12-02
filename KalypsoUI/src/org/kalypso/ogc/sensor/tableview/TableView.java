@@ -86,10 +86,6 @@ public class TableView extends ObsView
     return m_alphaSort;
   }
 
-  /**
-  * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
-  * order.
-  */
   public void setAlphaSort( boolean alphaSort )
   {
     m_alphaSort = alphaSort;

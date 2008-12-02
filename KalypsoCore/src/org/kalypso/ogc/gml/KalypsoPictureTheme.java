@@ -69,7 +69,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) ) //$NON-NLS-1$
       return new KalypsoPictureThemeGml( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
 
-    throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.5" ) + layerType.getLinktype() ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.5") + layerType.getLinktype() ); //$NON-NLS-1$
   }
 
   private TiledImage m_image = null;
@@ -137,7 +137,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     catch( final Exception e2 )
     {
       e2.printStackTrace();
-      KalypsoPictureTheme.LOGGER.warning( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.9" ) ); //$NON-NLS-1$
+      KalypsoPictureTheme.LOGGER.warning( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.9") ); //$NON-NLS-1$
     }
     return bbox;
   }
@@ -164,13 +164,12 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  @Override
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
-    if( selected != null && selected )
+    if( selected )
       return;
 
     try
@@ -189,9 +188,6 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   protected void setImage( final TiledImage image )
   {
-    if( m_image != null )
-      m_image.dispose();
-
     m_image = image;
   }
 

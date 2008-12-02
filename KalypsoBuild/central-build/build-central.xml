@@ -27,7 +27,6 @@
 		<!--ant antfile="${workspace}/KalypsoModelSaale/etc/ant/build.xml" target="deploy" inheritall="false" /-->
 		<ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml" target="deploy" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoModelTubig/etc/ant/build.xml" target="deploy" inheritall="false" />
-		<ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml" target="deploy" inheritall="false" />
 	</target>
 	
 	<target name="junit" depends="build">
@@ -51,7 +50,6 @@
 		<ant antfile="${workspace}/KalypsoModelSaale/etc/ant/build.xml" target="test" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml" target="test" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoModelTubig/etc/ant/build.xml" target="test" inheritall="false" />
-		<ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml" target="test" inheritall="false" />
 	</target>
 	
 	<target name="javadoc" depends="build">
@@ -75,7 +73,6 @@
 		<ant antfile="${workspace}/KalypsoModelSaale/etc/ant/build.xml" target="javadoc" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml" target="javadoc" inheritall="false" />
 		<ant antfile="${workspace}/KalypsoModelTubig/etc/ant/build.xml" target="javadoc" inheritall="false" />
-		<ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml" target="javadoc" inheritall="false" />
 	</target>
 	
 	<target name="zip-javadoc" depends="javadoc">

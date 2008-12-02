@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
@@ -44,7 +44,6 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Set;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
@@ -58,9 +57,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class DiagViewCurve extends ObsViewItem
 {
-  private Color m_color;
+  private final Color m_color;
 
-  private Stroke m_stroke;
+  private final Stroke m_stroke;
 
   private final AxisMapping[] m_mappings;
 
@@ -83,19 +82,9 @@ public class DiagViewCurve extends ObsViewItem
     return m_color;
   }
 
-  public void setColor( final Color color )
-  {
-    m_color = color;
-  }
-
   public Stroke getStroke( )
   {
     return m_stroke;
-  }
-
-  public void setStroke( final Stroke stroke )
-  {
-    m_stroke = stroke;
   }
 
   /**
@@ -128,9 +117,9 @@ public class DiagViewCurve extends ObsViewItem
 
     for( int i = 0; i < alarms.length; i++ )
     {
-      final String alarmProperty = mdl.getProperty( alarms[i] );
-      final double value = NumberUtils.parseQuietDouble( alarmProperty );
-      als[i] = new AlarmLevel( value, alarms[i] );
+      final Double value = new Double( mdl.getProperty( alarms[i] ) );
+
+      als[i] = new AlarmLevel( value.doubleValue(), alarms[i] );
     }
 
     return als;

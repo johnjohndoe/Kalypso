@@ -51,9 +51,9 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -82,6 +82,8 @@ import org.kalypsodeegree_impl.tools.TimeTools;
 public class DBaseFile
 {
   public static final String SHP_NAMESPACE_URI = "org.kalypso.shape";
+
+  public static final QName PROPERTY_GEOMETRY = new QName( SHP_NAMESPACE_URI, "GEOM" );
 
   private final String m_customNamespaceURI;
 
@@ -186,16 +188,6 @@ public class DBaseFile
    */
   public DBaseFile( final String url, final FieldDescriptor[] fieldDesc )
   {
-    this(url, fieldDesc, null);
-  }
-
-  /**
-   * constructor <BR>
-   * only for writing a dBase file <BR>
-   * name of the charset string value will be encoded with. If null, the default charset will be used.
-   */
-  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc, final String charset )
-  {
     m_defaultFileShapeType = -1;
     fname = url;
 
@@ -206,7 +198,7 @@ public class DBaseFile
     header = new DBFHeader( fieldDesc );
 
     // create data section
-    dataSection = new DBFDataSection( fieldDesc, charset );
+    dataSection = new DBFDataSection( fieldDesc );
 
     filemode = 1;
   }
@@ -390,8 +382,6 @@ public class DBaseFile
       }
       else if( column.type.equalsIgnoreCase( "L" ) )
       {
-        // TODO: This is wrong: L should be parsed as boolean; is there already some code which depends on this
-        // wrong implementation?
         th = stringTH;
       }
       else if( column.type.equalsIgnoreCase( "D" ) )
@@ -415,28 +405,24 @@ public class DBaseFile
     // final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class< ? extends GM_Object> geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
-
-    final String geometryPropertyTypeString = "gml:"+ geoTH.getShortname();
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTH, 1, 1, false );
 
     try
     {
       final InputStream schemaTemplateInput = getClass().getResource( "resources/shapeCustomTemplate.xsd" ).openStream();
       String schemaString = IOUtils.toString( schemaTemplateInput );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
-      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), elementsString );
-
       final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
       tempFile.deleteOnExit();
       final FileOutputStream fileOutputStream = new FileOutputStream( tempFile );
       fileOutputStream.write( schemaString.getBytes( "UTF8" ) );
       fileOutputStream.flush();
       fileOutputStream.close();
-      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
       // final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( new StringInputStream( schemaString ), "3.1.1", new
       // File( fname ).getParentFile().toURL() );
-      return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
+      return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema );
     }
     catch( final IOException e )
     {
@@ -459,7 +445,7 @@ public class DBaseFile
   {
     switch( m_defaultFileShapeType )
     {
-      // remember: the geometry classes must be the same
+      // remeber: the geometry classes must be the same
       // as the one used by the marshalling type handlers
       case ShapeConst.SHAPE_TYPE_POINT:
         return GeometryUtilities.getPointClass();

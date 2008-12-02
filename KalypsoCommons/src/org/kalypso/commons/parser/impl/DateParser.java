@@ -72,7 +72,7 @@ public class DateParser extends AbstractParser
    *          siehe Spezifikation in SimpleDateFormat
    * @see SimpleDateFormat
    */
-  public DateParser( final String format )
+  public DateParser( String format )
   {
     m_format = format;
 

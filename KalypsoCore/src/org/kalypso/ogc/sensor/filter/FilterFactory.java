@@ -51,11 +51,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -83,9 +83,6 @@ public class FilterFactory
 
   );
 
-  /** jaxb object factory for filter stuff */
-  public static final ObjectFactory OF_FILTER = new ObjectFactory();
-
   /**
    * Constructor. Reads the properties and creates the factory.
    */
@@ -97,7 +94,7 @@ public class FilterFactory
     {
       props.load( ins );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }
@@ -149,6 +146,7 @@ public class FilterFactory
     {
       final Unmarshaller unmarshaller = JC_FILTER.createUnmarshaller();
       final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
+      // final IntervallFilterType ift = (IntervallFilterType) value.getValue();
       final AbstractFilterType af = value.getValue();
       sr.close();
       final IFilterCreator creator = getCreatorInstance( af );
@@ -201,7 +199,7 @@ public class FilterFactory
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new SensorException( e );
     }
@@ -219,7 +217,7 @@ public class FilterFactory
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       throw new SensorException( e );
     }

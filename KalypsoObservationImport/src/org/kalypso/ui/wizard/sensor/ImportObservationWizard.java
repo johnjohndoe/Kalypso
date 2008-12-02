@@ -54,7 +54,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
-import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -178,7 +178,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           final WQTuppleModel wq = (WQTuppleModel) (tuppelModelTarget);
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
           final ITuppleModel model = new SimpleTuppleModel( axesNew, newValues );
-          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq.getDestStatusAxisPos() );
+          newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter() );
         }
         else
         {

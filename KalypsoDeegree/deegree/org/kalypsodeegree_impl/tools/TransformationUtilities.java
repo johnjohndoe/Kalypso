@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,10 +35,13 @@
  */
 package org.kalypsodeegree_impl.tools;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
 
 import org.kalypso.transformation.GeoTransformer;
@@ -137,11 +140,10 @@ public class TransformationUtilities
 
     /* Get the gridExtent for the envelope of the surface. */
     int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
-    // Make it a bit larger in order to avoid undrawn border
-    int lowX = gridExtent[0] - 2;
-    int lowY = gridExtent[1] - 2;
-    int highX = gridExtent[2] + 2;
-    int highY = gridExtent[3] + 2;
+    int lowX = gridExtent[0];
+    int lowY = gridExtent[1];
+    int highX = gridExtent[2];
+    int highY = gridExtent[3];
 
     /* Calculate imageExtent from gridExtent. */
     int minX = lowX;
@@ -150,7 +152,7 @@ public class TransformationUtilities
     int height = highY - lowY;
 
     /* Get the required subImage according to the gridExtent (size of the screen). */
-    TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
+    PlanarImage image = rasterImage.getSubImage( minX, minY, width, height );
 
     /* If the requested sub image is not on the screen (map panel) nothing to display. */
     if( image == null )
@@ -171,8 +173,8 @@ public class TransformationUtilities
     GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
 
     /* Calculate the height and width of the image on screen. */
-    double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
     double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
+    double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
 
     /* If one of the values is <=0, there could nothing displayed. */
     if( destImageHeight <= 0 || destImageWidth <= 0 )
@@ -186,19 +188,14 @@ public class TransformationUtilities
     double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
     double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
 
-    /* Calculate the required extent of the bufferedImage. */
-    GM_Position scaledImage_min = pixel_ulCorner;
-    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
-
-    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
-    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max, targetCS );
+    GM_Surface< ? > orgDestSurface = gridDomain.getGM_Surface( targetCS );
+    GM_Position orgULCorner = orgDestSurface.getSurfaceBoundary().getExteriorRing().getPositions()[3];
+    GM_Position pixel_orgULCorner = projection.getDestPoint( orgULCorner );
 
     AffineTransform trafo = new AffineTransform();
-    trafo.translate( (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY() );
 
     /* Translate the image, so that the subImage is at the right position. */
-    trafo.translate( -image.getMinX() * scaleX, -image.getMinY() * scaleY );
+    trafo.translate( pixel_orgULCorner.getX() - pixel_ulCorner.getX(), pixel_orgULCorner.getY() - pixel_ulCorner.getY() );
 
     /* Scale the image. */
     trafo.scale( scaleX, scaleY );
@@ -207,7 +204,15 @@ public class TransformationUtilities
     trafo.translate( Math.abs( shearX ) / Math.abs( scaleX ), Math.abs( shearY ) / Math.abs( scaleY ) );
 
     /* Shear the image. */
-    trafo.shear( shearX / destImageWidth, shearY / destImageHeight );
+    trafo.shear( shearX / destImageHeight, shearY / destImageWidth );
+
+    /* Calculate the required extent of the bufferedImage. */
+    GM_Position scaledImage_min = pixel_ulCorner;
+    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
+
+    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
+    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
+    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max, targetCS );
 
     /* We cannot draw, if the image would have one or both side with 0 pixels. */
     int width2 = (int) buffImageEnv.getWidth();
@@ -215,15 +220,17 @@ public class TransformationUtilities
     if( width2 <= 0 || height2 <= 0 )
       return;
 
-    // TODO: maybe this code was used to support transparent tiffs (like TK); check it that worked before; if not leave
-    // it or introduce flag
-// BufferedImage buffer = new BufferedImage( width2, height2, BufferedImage.TYPE_INT_ARGB );
-// Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
-    /* Draw a transparent background on the bufferedImage. Why !? */
-// bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-// bufferGraphics.fillRect( 0, 0, width2, height2 );
-// bufferGraphics.drawRenderedImage( image, trafo );
-// g2d.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
-    g2d.drawRenderedImage( image, trafo );
+    BufferedImage buffer = new BufferedImage( width2, height2, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
+
+    /* Draw a transparent backround on the bufferedImage. */
+    bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
+    bufferGraphics.fillRect( 0, 0, width2, height2 );
+
+    /* Draw the image with the given transformation. */
+    bufferGraphics.drawRenderedImage( image, trafo );
+
+    /* Draw bufferedImage on the screen. */
+    g2d.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
   }
 }

@@ -79,9 +79,9 @@ public class RulesFactory
   }
 
   /**
-   * @return default rules for Kalypso (only a copy is returned!)
+   * @return default rules for Kalypso
    */
-  public static synchronized ITableViewRules getDefaultRules()
+  public static ITableViewRules getDefaultRules()
   {
     // lazy loading
     if( DEFAULT_RULES == null )
@@ -104,6 +104,6 @@ public class RulesFactory
       }
     }
 
-    return DEFAULT_RULES.cloneRules();
+    return DEFAULT_RULES;
   }
 }

@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -62,8 +61,6 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public IFeatureType getFeatureType( );
 
-  public String getFeaturePath();
-
   public void addStyle( final KalypsoUserStyle style );
 
   public void removeStyle( final KalypsoUserStyle style );
@@ -76,5 +73,6 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 
   public IFeatureSelectionManager getSelectionManager( );
 
-  public void paint( final double scale, final GM_Envelope bbox, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException;
+  public void paintInternal( IPaintInternalDelegate delegate ) throws CoreException;
+
 }

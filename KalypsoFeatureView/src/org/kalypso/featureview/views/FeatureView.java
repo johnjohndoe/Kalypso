@@ -109,11 +109,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * </p>
  * <ul>
  * <li>Shows the current selected feature in either a view or an editor. The latter can only be recieved, if the editor
- * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or {@linked
- * org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
+ * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or
+ * {@linked org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
- * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by the
- * user) in the feature-control will be immediately postet into the given
+ * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by
+ * the user) in the feature-control will be immediately postet into the given
  * {@link org.kalypso.ogc.gml.mapmodel.CommandableWorkspace}.</li>
  * <li>If the current selection changes to something not viewable, the last shown feature continues to be shown. If the
  * source of the shown feature is closed, the view releases the feature.</li>
@@ -186,7 +186,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   private final ScrolledCompositeCreator m_creator = new ScrolledCompositeCreator( null )
   {
     @Override
-    protected Control createContents( final Composite scrollParent, final int style )
+    protected Control createContents( final Composite scrollParent, int style )
     {
       return m_featureComposite.createControl( scrollParent, style );
     }
@@ -382,7 +382,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
   public void createPartControl( final Composite parent )
   {
     // Comment this in, if you want to use the FormToolkit for FeatureView.
-// m_toolkit = new FormToolkit( parent.getDisplay() );
+    // m_toolkit = new FormToolkit( parent.getDisplay() );
 
     m_featureComposite.setFormToolkit( m_toolkit );
 
@@ -449,7 +449,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   /**
    * @param force
-   *          if true, alwys reset this view, else, only if feature has really changed.
+   *            if true, alwys reset this view, else, only if feature has really changed.
    */
   protected void activateFeature( final Feature feature, final boolean force, final ISelection selection )
   {
@@ -493,11 +493,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
           creator.createControl( mainGroup, SWT.V_SCROLL, SWT.NONE );
 
-          final FormToolkit toolkit = getToolkit();
+          FormToolkit toolkit = getToolkit();
 
-          final Control contentControl = creator.getContentControl();
+          Control contentControl = creator.getContentControl();
 
-          final ScrolledComposite scrolledComposite = creator.getScrolledComposite();
+          ScrolledComposite scrolledComposite = creator.getScrolledComposite();
           scrolledComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
           /* If a toolkit is set, use it. */

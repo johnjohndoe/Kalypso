@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,7 +39,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * default implementation of the GM_MultiCurve interface from package jago.model.
  * ------------------------------------------------------------
- *
+ * 
  * @version 12.6.2001
  * @author Andreas Poth
  */
@@ -63,7 +63,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param crs
    */
   public GM_MultiCurve_Impl( final String crs )
@@ -73,7 +73,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param gmc
    */
   public GM_MultiCurve_Impl( final GM_Curve[] gmc )
@@ -88,7 +88,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   *
+   * 
    * @param gmc
    * @param crs
    */
@@ -113,7 +113,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * inserts a GM_Curve in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * 
    * @param gmc
    *            GM_Curve to insert.
    * @param index
@@ -127,7 +127,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * 
    * @param gmc
    *            GM_Curve to set.
    * @param index
@@ -140,7 +140,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * removes the submitted GM_Curve from the aggregation
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurve( final GM_Curve gmc )
@@ -151,7 +151,7 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * removes the GM_Curve at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurveAt( final int index ) throws GM_Exception

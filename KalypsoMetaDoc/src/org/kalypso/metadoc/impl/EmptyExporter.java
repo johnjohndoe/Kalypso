@@ -41,7 +41,12 @@
 
 package org.kalypso.metadoc.impl;
 
+import org.apache.commons.configuration.Configuration;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.contribs.java.lang.ISupplier;
+import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * An exporter without wizard-page which procudes no documents.
@@ -54,8 +59,25 @@ public class EmptyExporter extends AbstractExporter
    * @see org.kalypso.metadoc.IExporter#init(org.kalypso.contribs.java.lang.ISupplier)
    */
   @Override
-  public void init( final ISupplier supplier )
+  public void init( final ISupplier supploer )
   {
   // nothing to do
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
+  public IExportableObject[] createExportableObjects( final Configuration configuration )
+  {
+    return new IExportableObject[] {};
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
+   */
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  {
+    return new IWizardPage[] {};
   }
 }

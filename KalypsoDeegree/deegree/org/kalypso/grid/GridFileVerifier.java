@@ -78,7 +78,7 @@ public class GridFileVerifier
     ePNG
   }
 
-  public static boolean verify( final URL urlImage )
+  public boolean verify( final URL urlImage )
   {
     /* file exists? */
     if( urlImage == null )
@@ -98,7 +98,7 @@ public class GridFileVerifier
     return true;
   }
 
-  public static IGridMetaReader getRasterMetaReader( final URL urlImage, final String cs )
+  public IGridMetaReader getRasterMetaReader( final URL urlImage, final String cs )
   {
     final RASTER_TYPE raster_type = determineType( urlImage );
     if( raster_type == null )
@@ -130,7 +130,7 @@ public class GridFileVerifier
     }
   }
 
-  private static RASTER_TYPE determineType( final URL urlImage )
+  private RASTER_TYPE determineType( final URL urlImage )
   {
     /* determin image type */
     final IMAGE_TYPE image_type = determineImageType( urlImage );
@@ -158,7 +158,7 @@ public class GridFileVerifier
     return null;
   }
 
-  private static boolean isAsciGrid( final URL urlImage )
+  private boolean isAsciGrid( final URL urlImage )
   {
     if( urlImage == null )
       throw new IllegalStateException();
@@ -175,7 +175,7 @@ public class GridFileVerifier
     return false;
   }
 
-  private static boolean isGeoTiff( final URL urlImage )
+  private boolean isGeoTiff( final URL urlImage )
   {
     if( urlImage == null )
       throw new IllegalStateException();
@@ -203,7 +203,7 @@ public class GridFileVerifier
     return false;
   }
 
-  private static URL getWorldFile( final URL urlImage )
+  private URL getWorldFile( final URL urlImage )
   {
     if( urlImage == null )
       throw new IllegalStateException();
@@ -238,7 +238,7 @@ public class GridFileVerifier
     return null;
   }
 
-  private static IMAGE_TYPE determineImageType( final URL urlImage )
+  private IMAGE_TYPE determineImageType( final URL urlImage )
   {
     if( urlImage == null )
       throw new IllegalStateException();

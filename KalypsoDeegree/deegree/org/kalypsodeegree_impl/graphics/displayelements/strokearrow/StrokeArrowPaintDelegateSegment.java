@@ -46,7 +46,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowH
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
 public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDelegate
 {

@@ -44,20 +44,16 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
@@ -87,15 +83,13 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * already selected features gets toggled by the new selection (already selected get de-selected, not selected get
  * selected).<br>
  * ADD (on via pressed 'SHIFT' key):<br>
- * the new selection is added to the current selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
+ * the new selection is added to the scurrent selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
  * If pressed selection is done by using INTERSECT-method.
- *
+ * 
  * @author Thomas Jung
  */
 public class SelectFeatureWidget extends AbstractWidget
 {
-  public static final int GRAB_RADIUS = 20;
-
   private IGeometryBuilder m_selectionTypeDelegate;
 
   private IKalypsoFeatureTheme[] m_themes;
@@ -112,17 +106,13 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private boolean m_addMode;
 
+  private final int m_grabRadius = 20;
+
   private Point m_currentPoint;
 
   private boolean m_intersectMode;
 
-  /**
-   * @param qnamesToSelect
-   *          Only feature, that substitutes at least one of the given feature types (as qnames), will be selected from
-   *          the map. If all feature should be selected, use new QName[]{ Feature.QNAME }
-   * @param geomQName
-   */
-  public SelectFeatureWidget( final String name, final String toolTip, final QName qnamesToSelect[], final QName geomQName )
+  public SelectFeatureWidget( String name, String toolTip, final QName qnamesToSelect[], final QName geomQName )
   {
     super( name, toolTip );
     m_qnamesToSelect = qnamesToSelect;
@@ -134,7 +124,7 @@ public class SelectFeatureWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -152,9 +142,9 @@ public class SelectFeatureWidget extends AbstractWidget
     m_featureLists = null;
     m_foundFeature = null;
 
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-    mapPanel.repaintMap();
+    mapPanel.repaint();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
@@ -171,7 +161,7 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( final Point p )
+  public void moved( Point p )
   {
     m_currentPoint = p;
     final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
@@ -181,17 +171,18 @@ public class SelectFeatureWidget extends AbstractWidget
     if( m_featureLists == null )
       return;
 
-    for( final FeatureList featureList : m_featureLists )
+    for( int i = 0; i < m_featureLists.length; i++ )
     {
+      FeatureList featureList = m_featureLists[i];
+
       if( featureList == null )
         continue;
 
       if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
       {
         /* Grab next feature */
-        final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, GRAB_RADIUS * 2 );
-        final QName geomQName = findGeomQName( featureList, m_geomQName );
-        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQName, m_qnamesToSelect );
+        final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
+        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, m_geomQName, m_qnamesToSelect );
 
         /* grap to the first feature that you can get */
         if( m_foundFeature != null )
@@ -199,22 +190,23 @@ public class SelectFeatureWidget extends AbstractWidget
       }
     }
 
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( final Point p )
+  public void dragged( Point p )
   {
+
     m_currentPoint = p;
 
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
     super.dragged( p );
   }
@@ -223,9 +215,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftPressed( final Point p )
+  public void leftPressed( Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -234,16 +226,17 @@ public class SelectFeatureWidget extends AbstractWidget
       if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
       {
         final GM_Point point = MapUtilities.transform( mapPanel, p );
-        final GM_Object object = m_selectionTypeDelegate.addPoint( point );
+        GM_Object object = m_selectionTypeDelegate.addPoint( point );
         if( object != null )
         {
-          doSelect( object );
+          doSelect( object, m_featureLists );
           m_selectionTypeDelegate.reset();
         }
       }
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -254,9 +247,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( final Point p )
+  public void leftClicked( Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -270,8 +263,7 @@ public class SelectFeatureWidget extends AbstractWidget
         {
           final List<Feature> selectedFeatures = new ArrayList<Feature>();
           selectedFeatures.add( m_foundFeature );
-          final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-          changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
+          manageSelection( selectedFeatures );
         }
         m_selectionTypeDelegate.reset();
       }
@@ -281,8 +273,9 @@ public class SelectFeatureWidget extends AbstractWidget
         m_selectionTypeDelegate.addPoint( point );
       }
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     super.leftClicked( p );
@@ -292,9 +285,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
-  public void doubleClickedLeft( final Point p )
+  public void doubleClickedLeft( Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -303,12 +296,13 @@ public class SelectFeatureWidget extends AbstractWidget
     {
       m_selectionTypeDelegate.addPoint( point );
       final GM_Object selectGeometry = m_selectionTypeDelegate.finish();
-      doSelect( selectGeometry );
+      doSelect( selectGeometry, m_featureLists );
       m_selectionTypeDelegate.reset();
 
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     super.doubleClickedLeft( p );
@@ -318,9 +312,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyPressed( final KeyEvent e )
+  public void keyPressed( KeyEvent e )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -328,7 +322,7 @@ public class SelectFeatureWidget extends AbstractWidget
     m_addMode = false;
     m_intersectMode = false;
 
-    final int keyCode = e.getKeyCode();
+    int keyCode = e.getKeyCode();
 
     switch( keyCode )
     {
@@ -357,29 +351,32 @@ public class SelectFeatureWidget extends AbstractWidget
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
         selectionManager.clear();
         break;
-    }
 
-    mapPanel.repaintMap();
+    }
+    mapPanel.repaint();
+
+    super.keyPressed( e );
+
   }
 
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( final KeyEvent e )
+  public void keyReleased( KeyEvent e )
   {
     m_toggleMode = false;
     m_addMode = false;
     m_intersectMode = false;
 
-    final IMapPanel mapPanel = getMapPanel();
+    MapPanel mapPanel = getMapPanel();
     if( mapPanel != null )
-      mapPanel.repaintMap();
+      mapPanel.repaint();
 
     super.keyReleased( e );
   }
 
-  private void changeGeometryBuilder( final IMapPanel mapPanel )
+  private void changeGeometryBuilder( MapPanel mapPanel )
   {
     if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
       m_selectionTypeDelegate = new PolygonGeometryBuilder( 0, mapPanel.getMapModell().getCoordinatesSystem() );
@@ -393,9 +390,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( final Graphics g )
+  public void paint( Graphics g )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -403,10 +400,7 @@ public class SelectFeatureWidget extends AbstractWidget
       m_selectionTypeDelegate.paint( g, mapPanel.getProjection(), m_currentPoint );
 
     if( m_foundFeature != null )
-    {
-      final QName geomQName = m_geomQName != null ? m_geomQName : m_foundFeature.getFeatureType().getDefaultGeometryProperty().getQName();
-      MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, geomQName );
-    }
+      MapUtils.paintGrabbedFeature( g, mapPanel, m_foundFeature, m_geomQName );
 
     super.paint( g );
   }
@@ -415,9 +409,9 @@ public class SelectFeatureWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */
   @Override
-  public void leftReleased( final Point p )
+  public void leftReleased( Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null || m_selectionTypeDelegate == null )
       return;
 
@@ -430,135 +424,114 @@ public class SelectFeatureWidget extends AbstractWidget
         final GM_Object selectGeometry = m_selectionTypeDelegate.addPoint( point );
         if( selectGeometry != null )
         {
-          doSelect( selectGeometry );
+          doSelect( selectGeometry, m_featureLists );
           m_selectionTypeDelegate.reset();
         }
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
+        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
   }
 
-  private void doSelect( final GM_Object selectGeometry )
+  private void doSelect( GM_Object selectGeometry, FeatureList[] featureLists )
   {
     if( selectGeometry == null )
       return;
     // select feature from featureList by using the selectGeometry
-    if( m_featureLists == null )
+    if( featureLists == null )
       return;
 
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
 
-    for( final FeatureList featureList : m_featureLists )
+    for( int i = 0; i < featureLists.length; i++ )
     {
-      if( featureList == null )
-        continue;
-
-      final QName geomQName = findGeomQName( featureList, m_geomQName );
-
-      final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQName, m_intersectMode );
+      final List<Feature> selectedSubList = selectFeatures( featureLists[i], selectGeometry, m_qnamesToSelect, m_geomQName, m_intersectMode );
       if( selectedSubList != null )
         selectedFeatures.addAll( selectedSubList );
     }
 
+    manageSelection( selectedFeatures );
+  }
+
+  private void manageSelection( final List<Feature> selectedFeatures )
+  {
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
-  }
-
-  /**
-   * Finds the geometry property to select from.<br>
-   * If a default type is specified, this will always be used.<br>
-   * Else, the default geometry property of the target type of the list will be taken.
-   */
-  public static QName findGeomQName( final FeatureList featureList, final QName defaultGeometry )
-  {
-    if( defaultGeometry != null )
-      return defaultGeometry;
-
-    final IFeatureType targetFeatureType = featureList.getParentFeatureTypeProperty().getTargetFeatureType();
-    return targetFeatureType.getDefaultGeometryProperty().getQName();
-  }
-
-  public static void changeSelection( final IFeatureSelectionManager selectionManager, final List<Feature> selectedFeatures, final IKalypsoFeatureTheme[] themes, final boolean add, final boolean toggle )
-  {
     if( selectedFeatures.size() == 0 )
       selectionManager.clear();
 
     final List<Feature> toRemove = new ArrayList<Feature>();
     final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
 
-    for( final IKalypsoFeatureTheme theme : themes )
+    for( int i = 0; i < m_themes.length; i++ )
     {
       /* consider the selection modes */
-      final CommandableWorkspace workspace = theme.getWorkspace();
+      final CommandableWorkspace workspace = m_themes[i].getWorkspace();
 
-      for( final Feature feature : selectedFeatures )
+      if( m_addMode == true )
       {
-        if( add )
+        // Add selection
+        for( final Feature feature : selectedFeatures )
         {
           if( !selectionManager.isSelected( feature ) )
-            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
+            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
         }
-        else if( toggle )
+      }
+      else if( m_toggleMode == true )
+      {
+        // Toggle selection
+        for( final Feature feature : selectedFeatures )
         {
           if( selectionManager.isSelected( feature ) )
             toRemove.add( feature );
           else
-            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
+            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
         }
-        else
-          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getOwner(), feature.getParentRelation() ) );
       }
-    }
-
-    if( !add && !toggle )
-    {
-      // REMARK: instead of invoking
-      // selectionManager.clear();
-      // We add all features to the remove-list; else we get two selection-change events here
-      final EasyFeatureWrapper[] allFeatures = selectionManager.getAllFeatures();
-      for( final EasyFeatureWrapper feature : allFeatures )
-        toRemove.add( feature.getFeature() );
+      else
+      {
+        selectionManager.clear();
+        for( final Feature feature : selectedFeatures )
+        {
+          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        }
+      }
     }
 
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  private List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
   {
-    final Collection<Feature> selectedFeatures = new HashSet<Feature>();
+    final List<Feature> selectedFeatures = new ArrayList<Feature>();
 
-    // why the check here?
     if( selectGeometry instanceof GM_Surface )
     {
-      final GM_Envelope envelope = selectGeometry.getEnvelope();
+      final GM_Surface surface = (GM_Surface) selectGeometry;
+
+      final GM_Envelope envelope = surface.getEnvelope();
       final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-      final List< ? > result = featureList.query( envelope, null );
+      final List result = featureList.query( envelope, null );
 
       for( final Object object : result )
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );
-        final IFeatureType featureType = feature.getFeatureType();
 
-        if( GMLSchemaUtilities.substitutes( featureType, qnamesToSelect ) )
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), qnamesToSelect ) )
         {
-          final IPropertyType pt = featureType.getProperty( geomQName );
-          final Object property = feature.getProperty( pt );
+          final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
 
-          if( pt.isList() )
+          if( intersectMode == true )
           {
-            final List<?> list = (List< ? >) property;
-            for( final Object elmt : list )
-            {
-              if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
-                selectedFeatures.add( feature );
-            }
+            if( geom != null && surface.intersects( geom ) )
+              selectedFeatures.add( feature );
           }
           else
           {
-            if( intersects( selectGeometry, (GM_Object) property, intersectMode ) )
+            if( geom != null && surface.contains( geom ) )
               selectedFeatures.add( feature );
           }
         }
@@ -568,24 +541,13 @@ public class SelectFeatureWidget extends AbstractWidget
     return selectedFeatures;
   }
 
-  private boolean intersects( final GM_Object selectGeom, final GM_Object geom, final boolean intersectMode )
-  {
-    if( geom == null )
-      return false;
-
-    if( intersectMode == true )
-      return selectGeom.intersects( geom );
-
-    return selectGeom.contains( geom );
-  }
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#getToolTip()
    */
   @Override
   public String getToolTip( )
   {
-    final StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
+    StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
 
     if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.2" ) ); //$NON-NLS-1$
@@ -604,7 +566,8 @@ public class SelectFeatureWidget extends AbstractWidget
     return sb.toString();
   }
 
-  public void setThemes( final IKalypsoFeatureTheme[] themes )
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  public void setThemes( IKalypsoFeatureTheme[] themes )
   {
     m_themes = new IKalypsoFeatureTheme[themes.length];
     m_themes = themes;
@@ -622,34 +585,9 @@ public class SelectFeatureWidget extends AbstractWidget
       if( m_themes[i] != null )
       {
         final FeatureList featureList = m_themes[i].getFeatureList();
-        m_featureLists[i] = featureList;
+        if( featureList != null )
+          m_featureLists[i] = featureList;
       }
     }
-  }
-
-  public static Feature grabNextFeature( final IMapPanel mapPanel, final GM_Point currentPos, final IKalypsoFeatureTheme[] themes, final QName[] qnamesToSelect, final QName geomQName )
-  {
-    for( final IKalypsoFeatureTheme theme : themes )
-    {
-      if( theme == null )
-        continue;
-
-      final FeatureList featureList = theme.getFeatureList();
-      if( featureList == null )
-        continue;
-
-      /* Grab next feature */
-      final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, SelectFeatureWidget.GRAB_RADIUS * 2 );
-      final QName geomQNameToSelect = SelectFeatureWidget.findGeomQName( featureList, geomQName );
-      final Feature foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, geomQNameToSelect, qnamesToSelect );
-      if( foundFeature != null )
-      {
-        final FeatureList visibles = theme.getFeatureListVisible( foundFeature.getEnvelope() );
-        if( visibles != null && visibles.contains( foundFeature ) )
-          return foundFeature;
-      }
-    }
-
-    return null;
   }
 }

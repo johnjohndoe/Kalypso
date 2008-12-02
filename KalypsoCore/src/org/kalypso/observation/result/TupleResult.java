@@ -575,7 +575,7 @@ public class TupleResult implements List<IRecord>
    * removes all components of type IComponent
    * 
    * @param comp
-   *          interpreted as type!!!
+   *            interpreted as type!!!
    */
   public boolean removeComponent( final IComponent comp )
   {

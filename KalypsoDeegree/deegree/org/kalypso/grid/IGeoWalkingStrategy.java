@@ -43,6 +43,8 @@ package org.kalypso.grid;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * A walking strategy to iterate thorugh a grid.<br>
  * Different types of grids need different imeplementations of walking strategies in order to optimize the grid access.
@@ -55,8 +57,7 @@ public interface IGeoWalkingStrategy
    * Apply the given walker to this grid.<br>
    * 
    * @param walkingArea
-   *          This argument defines which part of the grid will be visited. If <code>null</code>, the whole grid is
-   *          walked.
+   *            If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
-  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException;
+  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, Geometry walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException;
 }

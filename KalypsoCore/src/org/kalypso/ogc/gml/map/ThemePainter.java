@@ -60,14 +60,71 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class ThemePainter
 {
-  private final IMapPanel m_mapPanel;
+
+  private final MapPanel m_mapPanel;
 
   private static final IKalypsoTheme[] NO_THEMES = new IKalypsoTheme[0];
 
-  public ThemePainter( final IMapPanel mapPanel )
+  public ThemePainter( final MapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.IPainter#paint(java.awt.Graphics2D)
+   */
+  public void paintThemes( final Graphics2D gr, final boolean selected, final IProgressMonitor monitor ) throws CoreException
+  {
+    final IMapModell mapModell = m_mapPanel.getMapModell();
+    final IKalypsoTheme[] m_themes = getVisibleThemes( mapModell );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.map.ThemePainter.0"), m_themes.length ); //$NON-NLS-1$
 
+    final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    final GeoTransform projection = m_mapPanel.getProjection();
+    final double scale = MapModellHelper.calcScale( mapModell, boundingBox, m_mapPanel.getWidth(), m_mapPanel.getHeight() );
+    for( int i = m_themes.length - 1; i >= 0; i-- )
+    {
+      final IKalypsoTheme theme = m_themes[i];
+
+      final SubMonitor childProgress = progress.newChild( 1 );
+      theme.paint( gr, projection, scale, boundingBox, selected, childProgress );
+      childProgress.done();
+    }
+  }
+
+  private IKalypsoTheme[] getVisibleThemes( final IMapModell model )
+  {
+    if( model == null )
+    {
+      return NO_THEMES;
+    }
+    final List<IKalypsoTheme> visibleThemes = new ArrayList<IKalypsoTheme>();
+    final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
+    {
+      public boolean visit( final IKalypsoTheme theme )
+      {
+        if( theme instanceof IMapModell )
+        {
+          if( theme.isVisible() )
+          {
+            // dont add it to the themes, we paint them ourselfes (the cascading modells paint method would also paint
+            // all is children)
+            return true;
+          }
+
+          // dont descent
+          return false;
+        }
+
+        if( theme.isVisible() )
+          visibleThemes.add( theme );
+
+        // if it is not a map modell we dont recurse
+        return false;
+      }
+    };
+
+    model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    return visibleThemes.toArray( new IKalypsoTheme[visibleThemes.size()] );
+  }
 }

@@ -137,7 +137,7 @@ public class TableViewColumn extends ObsViewItem
       getObservation().fireChangedEvent( eventSource );
   }
 
-  public Class<?> getColumnClass( )
+  public Class getColumnClass( )
   {
     return m_valueAxis.getDataClass();
   }

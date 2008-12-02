@@ -104,6 +104,8 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   }
 
   /**
+   * TODO: Remove this, it is awful! Use two different display elements instead...
+   * <p>
    * marks the <tt>DisplayElement</tt> as highlighted or not
    */
   public void setHighlighted( final boolean highlighted )

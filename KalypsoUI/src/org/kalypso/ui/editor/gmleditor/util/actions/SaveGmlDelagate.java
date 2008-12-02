@@ -56,7 +56,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
-import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 
 public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
 {

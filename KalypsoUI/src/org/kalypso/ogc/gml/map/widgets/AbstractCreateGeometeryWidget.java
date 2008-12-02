@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -163,9 +163,9 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       leftClicked( p );
 
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
   }
 
@@ -180,9 +180,9 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       m_currentPoint = p;
 
 // TODO: check if this repaint is necessary for the widget
-      final IMapPanel panel = getMapPanel();
+      final MapPanel panel = getMapPanel();
       if( panel != null )
-        panel.repaintMap();
+        panel.repaint();
     }
   }
 
@@ -353,7 +353,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     update( mapPanel );
@@ -382,7 +382,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
   protected abstract boolean canEdit( );
 
-  protected abstract void update( final IMapPanel mapPanel );
+  protected abstract void update( final MapPanel mapPanel );
 
   protected abstract String getCoordinatesSystem( );
 

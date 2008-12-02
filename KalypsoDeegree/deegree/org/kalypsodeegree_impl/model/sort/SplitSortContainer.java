@@ -177,20 +177,9 @@ public class SplitSortContainer
       return;
     }
 
-    if( new Exception().getStackTrace().length > 100 )
-    {
-      System.out.println();
-    }
-
-    // HACK:
-    if( createSubContainers() )
-    {
-      resort();
-      add( object, env );
-    }
-    else
-      m_objects.put( object, env );
-
+    createSubContainers();
+    resort();
+    add( object, env );
   }
 
   public void createSubContainers( final SplitSortContainer container )
@@ -285,16 +274,8 @@ public class SplitSortContainer
     return result;
   }
 
-  /**
-   * @return <code>false</code>, if splitting this container fails (for example if the envelope is only one point).
-   *         Subcontainers in this case do not make sense; every object will be added to this container instead.
-   */
-  private boolean createSubContainers( )
+  private void createSubContainers( )
   {
-    // Do not split, if envelope is only one point, else we get endless loop
-    if( Math.abs( m_envelope.getWidth() ) < 1e10 && Math.abs( m_envelope.getHeight() ) < 1e10 )
-      return false;
-
     final double maxX = m_envelope.getMaxX();
     final double maxY = m_envelope.getMaxY();
 
@@ -303,10 +284,7 @@ public class SplitSortContainer
 
     final double midX = (minX + maxX) / 2d;
     final double midY = (minY + maxY) / 2d;
-
     createSubContainers( midX, midY );
-
-    return true;
   }
 
   private void createSubContainers( final double midX, final double midY )

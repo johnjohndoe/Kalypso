@@ -79,19 +79,18 @@ public class FeatureFactory
    * IFeatureType.
    * 
    * @param id
-   *          unique id of the <CODE>Feature</CODE>
+   *            unique id of the <CODE>Feature</CODE>
    * @param featureType
-   *          <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
+   *            <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
    * @param properties
-   *          properties (content) of the <CODE>Feature</CODE>
+   *            properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
     // / TODO: but the feature into the workspace!
-    ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    Feature feature = factory.getFeature( parent, parentRelation, featureType, id, properties );
-    return feature;
+
+    return new Feature_Impl( parent, parentRelation, featureType, id, properties );
   }
 
   /**
@@ -106,16 +105,18 @@ public class FeatureFactory
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
    * 
    * @param initializeWithDefaults
-   *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
-   *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
+   *            set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
+   *            set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
   @SuppressWarnings("unchecked")
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
+    if( featureType == null )
+      throw new IllegalArgumentException( "must provide a featuretype" );
+
     final IPropertyType[] ftp = featureType.getProperties();
 
-    ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    Feature feature = factory.getFeature( parent, parentRelation, featureType, id, new Object[ftp.length] );
+    final Feature feature = new Feature_Impl( parent, parentRelation, featureType, id, new Object[ftp.length] );
 
     // TODO: shouldn't we move this to the Feature_Impl constructor?
     for( final IPropertyType pt : ftp )

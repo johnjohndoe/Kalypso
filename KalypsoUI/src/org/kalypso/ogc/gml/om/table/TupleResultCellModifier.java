@@ -65,7 +65,7 @@ public class TupleResultCellModifier implements ICellModifier
     final IRecord record = (IRecord) element;
     final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
 
-    return handler.doGetValue( record );
+    return handler.getValue( record );
   }
 
   public void modify( final Object element, final String property, final Object value )
@@ -86,6 +86,6 @@ public class TupleResultCellModifier implements ICellModifier
   {
     final IComponentUiHandler compHandler = m_contentProvider.getHandler( handlerId );
 
-    compHandler.doSetValue( record, value );
+    compHandler.setValue( record, value );
   }
 }

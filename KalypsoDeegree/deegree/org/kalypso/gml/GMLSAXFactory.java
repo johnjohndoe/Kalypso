@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.util.HashMap;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.commons.xml.NSUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -59,49 +59,44 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * Writes an GMLWorkspace into a {@link XMLReader}.
- * 
- * @author Andreas von Dömming
+ * @author doemming
  */
 public class GMLSAXFactory
 {
   private final NSPrefixProvider m_nsMapper = NSUtilities.getNSProvider();
 
-  /** Namespace -> prefix: Contains the namespaces, whose prefix was already registered in the content handler. */
-  private final Map<String, String> m_usedPrefixes = new HashMap<String, String>();
-
-  private final XMLReader m_xmlReader;
+  private final List<String> m_usedPrefixes = new ArrayList<String>();
 
   private final QName m_xlinkQN;
 
-  private final String x_linkElementQname;
+  /**
+   * (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  private final Map<String, String> m_idMap;
+
+  private final XMLReader m_xmlReader;
 
   /**
    * @param idMap
-   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final XMLReader xmlReader ) throws SAXException
+  public GMLSAXFactory( final XMLReader xmlReader, final Map<String, String> idMap ) throws SAXException
   {
     m_xmlReader = xmlReader;
+    m_idMap = idMap;
 
     // initialize after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
-    x_linkElementQname = m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart();
   }
 
   public void process( final GMLWorkspace workspace ) throws SAXException
@@ -110,35 +105,21 @@ public class GMLSAXFactory
 
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
-    // handle mandatory prefixes...
+    // handle prefixes...
+    // these are mandatory
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
 
-    final IFeatureType rootFT = rootFeature.getFeatureType();
-    final QName rootQName = rootFT.getQName();
-
-    final String rootNamespace = rootQName.getNamespaceURI();
-    final boolean noRootPrefix = !m_nsMapper.hasPrefix( rootNamespace );
-    if( noRootPrefix )
-    {
-      contentHandler.startPrefixMapping( "", rootNamespace );
-      m_usedPrefixes.put( rootNamespace, "" );
-    }
-
-    // generate used prefixes
     final IGMLSchema gmlSchema = workspace.getGMLSchema();
+
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
     {
       final QName qName = element.getQName();
-      if( !noRootPrefix || !qName.getNamespaceURI().equals( rootNamespace ) )
-        getPrefixedQName( qName );
+      // generate used prefixes
+      getPrefixedQName( qName );
     }
-
-    // TODO: bug... this may cause too much namespaces to bee written into the gml-file
-    // Either, we must only write what we really have, or
-    // we should have another look at the import of substituting namespaces
 
     // we may have additional schema, but no features using them (now)
     // We save these namespaces as prefixes, so if we reload the gml
@@ -156,41 +137,24 @@ public class GMLSAXFactory
     // Add schemalocation string: wouldn't it be better to create it?
     final AttributesImpl a = new AttributesImpl();
     final String schemaLocationString = workspace.getSchemaLocationString();
-    if( schemaLocationString != null && schemaLocationString.length() > 0 )
+    if( (schemaLocationString != null) && (schemaLocationString.length() > 0) )
     {
       final String qName = m_nsMapper.getPreferredPrefix( NS.XSD, null ) + ":" + "schemaLocation";
       a.addAttribute( NS.XSD, "schemaLocation", qName, "CDATA", schemaLocationString );
     }
-    processFeature( rootFeature, a );
+    process( rootFeature, a );
   }
 
-  private QName getPrefixedQName( final QName qName ) throws SAXException
-  {
-    final String uri = qName.getNamespaceURI();
-    // Check if already registered; return the qname from the map, because qName is not prefixed
-    final String prefix;
-    if( m_usedPrefixes.containsKey( uri ) )
-      prefix = m_usedPrefixes.get( uri );
-    else
-    {
-      // Create new prefix and register it
-      prefix = m_nsMapper.getPreferredPrefix( uri, null );
-      m_xmlReader.getContentHandler().startPrefixMapping( prefix, uri );
-      m_usedPrefixes.put( uri, prefix );
-    }
-
-    return new QName( qName.getNamespaceURI(), qName.getLocalPart(), prefix );
-  }
-
-  private void processFeature( final Feature feature, final AttributesImpl a ) throws SAXException
+  private void process( final Feature feature, final AttributesImpl a ) throws SAXException
   {
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
     final IFeatureType featureType = feature.getFeatureType();
 
-    /* Add gml:id or fid attribute */
-    final String id = feature.getId();
-    if( id != null && id.length() > 0 )
+    String id = feature.getId();
+    if( m_idMap.containsKey( id ) )
+      id = m_idMap.get( id );
+    if( (id != null) && (id.length() > 0) )
     {
       final String version = featureType.getGMLSchema().getGMLVersion();
       final QName idQName = getPrefixedQName( GMLSchemaUtilities.getIdAttribute( version ) );
@@ -199,178 +163,153 @@ public class GMLSAXFactory
       a.addAttribute( namespaceUri, localPart, idQName.getPrefix() + ":" + localPart, "CDATA", id );
     }
 
-    /* Write opening tag */
+    final IPropertyType[] properties = featureType.getProperties();
+
     final QName prefixedQName = getPrefixedQName( feature.getFeatureType().getQName() );
     final String localPart = prefixedQName.getLocalPart();
     final String uri = prefixedQName.getNamespaceURI();
-    final String qname = elementQName( prefixedQName );
-    contentHandler.startElement( uri, localPart, qname, a );
 
-    /* Write properties */
-    final IPropertyType[] properties = featureType.getProperties();
+    contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
+
     for( final IPropertyType pt : properties )
     {
-      // Virtual properties are properties which does not get serialised...
+      // Virtual properties are properties which does not get serialized...
       if( pt.isVirtual() )
         continue;
 
-      // REMARK: this only works for sequences of the property!
-      // If the content of (i.e. the element itself has the maxOccurs > 1 this will not
-      // work. In order to support this, we need a FeatureProperty object as value object (as in deeree2)
-      final Object value = feature.getProperty( pt );
-      if( pt.isList() )
-      {
-        final List< ? > values = (List< ? >) value;
-        if( values != null )
-        {
-          for( final Object propertyValue : values )
-            processProperty( feature, pt, propertyValue );
-        }
-      }
+      if( pt instanceof IRelationType )
+        process( feature, (IRelationType) pt );
+      else if( pt instanceof IValuePropertyType )
+        process( feature, (IValuePropertyType) pt );
       else
-      {
-        // If value == null && minOccurs == 0 do not write an element
-        if( value != null || pt.getMinOccurs() > 0 )
-          processProperty( feature, pt, value );
-      }
+        throw new UnsupportedOperationException();
     }
 
-    /* Write closing tag */
-    contentHandler.endElement( uri, localPart, qname );
+    contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }
 
-  private String elementQName( final QName prefixedQName )
+  private QName getPrefixedQName( final QName qName ) throws SAXException
   {
-    final String prefix = prefixedQName.getPrefix();
-    if( prefix.isEmpty() )
-      return prefixedQName.getLocalPart();
-
-    return prefix + ":" + prefixedQName.getLocalPart();
+    final String uri = qName.getNamespaceURI();
+    final String prefix = m_nsMapper.getPreferredPrefix( uri, null );
+    if( !(m_usedPrefixes.contains( prefix )) )
+      m_xmlReader.getContentHandler().startPrefixMapping( prefix, uri );
+    m_usedPrefixes.add( prefix );
+    return new QName( qName.getNamespaceURI(), qName.getLocalPart(), prefix );
   }
 
-  /**
-   * Writes one single property
-   */
-  private void processProperty( final Feature feature, final IPropertyType pt, final Object propertyValue ) throws SAXException
+  private void process( final Feature feature, final IValuePropertyType vpt ) throws SAXException
   {
-    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
-
-    final QName name = pt.getQName();
-    final QName prefixedQName = getPrefixedQName( name );
+    final QName prefixedQName = getPrefixedQName( vpt.getQName() );
     final String uri = prefixedQName.getNamespaceURI();
     final String localPart = prefixedQName.getLocalPart();
 
-    // Find attributes for the current property
-    final Attributes atts = attributeForProperty( pt, propertyValue );
+    final Object value = feature.getProperty( vpt );
 
-    /* Write starting tag */
-    final String qname = elementQName( prefixedQName );
-    contentHandler.startElement( uri, localPart, qname, atts );
+    final IGMLSchema gmlSchema = feature.getWorkspace().getGMLSchema();
+    final String version = gmlSchema.getGMLVersion();
 
-    if( pt instanceof IRelationType )
-    {
-      // Write the feature as content. If it is a reference (i.e. no feature), nothing is written, as the href was
-      // already set as an attribute
-      if( propertyValue instanceof Feature && !(propertyValue instanceof XLinkedFeature_Impl) )
-        processFeature( (Feature) propertyValue, new AttributesImpl() );
-    }
-    else if( pt instanceof IValuePropertyType )
-      processValueType( feature, (IValuePropertyType) pt, propertyValue, prefixedQName );
+    final IMarshallingTypeHandler th = vpt.getTypeHandler();
+
+    if( vpt.isList() )
+      for( final Object singleValue : ((List< ? >) value) )
+        processValue( prefixedQName, uri, localPart, th, null, singleValue, true, version );
     else
-      throw new UnsupportedOperationException();
+    {
+      final boolean isMandatory = vpt.getMinOccurs() > 0;
+      processValue( prefixedQName, uri, localPart, th, null, value, isMandatory, version );
+    }
 
-    /* Write ending tag */
-    contentHandler.endElement( uri, localPart, qname );
   }
 
-  private Attributes attributeForProperty( final IPropertyType pt, final Object propertyValue )
+  private void processValue( final QName prefixedQName, final String uri, final String localPart, final IMarshallingTypeHandler th, final URL context, final Object singleValue, final boolean isMandatory, final String gmlVersion ) throws SAXException
   {
-    final AttributesImpl atts = new AttributesImpl();
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
-    if( pt instanceof IRelationType )
+    if( singleValue != null )
+      th.marshal( prefixedQName, singleValue, m_xmlReader, context, gmlVersion );
+    else if( isMandatory )
     {
-      final String href;
-      if( propertyValue instanceof String )
-        href = "#" + (String) propertyValue;
-      else if( propertyValue instanceof XLinkedFeature_Impl )
-        href = ((XLinkedFeature_Impl) propertyValue).getHref();
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+      // TODO: put default value if element is not nullable?
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
+    }
+    else
+    {
+      // optional null value: do nothing
+    }
+  }
+
+  /**
+   * featureMember<br>
+   * ..FeatureA <br>
+   * ... (...)<br>
+   * ..FeatureA <br>
+   * featureMember<br>
+   * <br>
+   * or<br>
+   * <br>
+   * featureMember xlink:href="#fid"<br>
+   */
+  private void process( final Feature feature, final IRelationType rt ) throws SAXException
+  {
+    final QName prefixedQName = getPrefixedQName( rt.getQName() );
+
+    final Object property = feature.getProperty( rt );
+    if( property == null )
+    {
+      if( rt.getMinOccurs() > 0 )
+      {
+        // what?
+      }
+      return; // TODO check ? write empty element?
+    }
+    if( rt.isList() )
+    {
+      final FeatureList list = (FeatureList) property;
+      for( final Object next : list )
+        processFeatureLink( next, prefixedQName );
+    }
+    else
+      processFeatureLink( property, prefixedQName );
+  }
+
+  private void processFeatureLink( final Object next, final QName prefixedQName ) throws SAXException
+  {
+    final ContentHandler contentHandler = m_xmlReader.getContentHandler();
+
+    final String uri = prefixedQName.getNamespaceURI();
+    final String localPart = prefixedQName.getLocalPart();
+
+    if( (next instanceof XLinkedFeature_Impl) || (next instanceof String) )
+    {
+      String fid;
+      if( next instanceof String )
+      {
+        // local xlinks, used for backwards compability, should be changes soon
+        fid = (String) next;
+        if( m_idMap.containsKey( fid ) )
+          fid = m_idMap.get( fid );
+
+        fid = "#" + fid;
+      }
       else
-        href = null;
+        fid = ((XLinkedFeature_Impl) next).getHref();
 
-      if( href != null )
-        atts.addAttribute( NS.XLINK, "href", x_linkElementQname, "CDATA", href );
+      final AttributesImpl atts = new AttributesImpl();
+      atts.addAttribute( NS.XLINK, "href", m_xlinkQN.getPrefix() + ":" + m_xlinkQN.getLocalPart(), "CDATA", fid );
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, atts );
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
-
-    return atts;
-  }
-
-  private String printSimpleValue( final IValuePropertyType pt, final ISimpleMarshallingTypeHandler<Object> th, final Object propertyValue ) throws SAXException
-  {
-    if( pt.isFixed() )
-      return pt.getFixed();
-
-    if( propertyValue == null )
-      return null;
-
-    try
+    else if( next instanceof Feature )
     {
-      return th.convertToXMLString( propertyValue );
+      contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
+
+      process( (Feature) next, new AttributesImpl() );
+
+      contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
     }
-    // TODO: exception type?
-    catch( final Exception e )
-    {
-      final String msg = String.format( "Could not convert value '%s' for property '%s'", pt.getQName() );
-      throw new SAXException( msg, e );
-    }
-  }
-
-  private void processValueType( final Feature feature, final IValuePropertyType pt, final Object propertyValue, final QName prefixedQName ) throws SAXException
-  {
-    final IMarshallingTypeHandler th = pt.getTypeHandler();
-
-    if( th instanceof ISimpleMarshallingTypeHandler )
-    {
-      final String xmlString = printSimpleValue( pt, (ISimpleMarshallingTypeHandler<Object>) th, propertyValue );
-      if( xmlString != null )
-      {
-        // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
-        // to look for a specific value. This must of course be decided in a more general way.
-        // Maybe we register extensions for specific qnames?
-        // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
-        final LexicalHandler lexicalHandler = (LexicalHandler) m_xmlReader.getProperty( "http://xml.org/sax/properties/lexical-handler" );
-        if( prefixedQName.equals( new QName( NS.OM, "result" ) ) )
-          lexicalHandler.startCDATA();
-
-        m_xmlReader.getContentHandler().characters( xmlString.toCharArray(), 0, xmlString.length() );
-
-        if( prefixedQName.equals( new QName( NS.OM, "result" ) ) )
-          lexicalHandler.endCDATA();
-      }
-
-      return;
-    }
-
-    if( propertyValue != null )
-    {
-      final IGMLSchema gmlSchema = feature.getWorkspace().getGMLSchema();
-      final String version = gmlSchema.getGMLVersion();
-      try
-      {
-        th.marshal( propertyValue, m_xmlReader, null, version );
-      }
-      catch( final Exception e )
-      {
-        // Catch any exception here: we should always continue to write data in order to minimise data loss here
-
-        // TODO: we need an error handler! Else the user does not get any information about errors
-
-        // TODO Distinguish between normal exceptions and SaxParseExpcetion
-        final ErrorHandler errorHandler = m_xmlReader.getErrorHandler();
-        if( errorHandler == null )
-          KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        else
-          errorHandler.error( new SAXParseException( "Failed to write property: " + pt.getQName(), null, e ) );
-      }
-    }
+    else
+      throw new UnsupportedOperationException( "Could not process: " + next );
   }
 }

@@ -99,7 +99,7 @@ public class WechmannSet
    * 
    * @return iterator over WechmannParams objects
    */
-  public Iterator<WechmannParams> iterator( )
+  public Iterator iterator( )
   {
     return m_mapW.values().iterator();
   }
@@ -124,11 +124,9 @@ public class WechmannSet
     if( i < 0 )
       i = -i - 1;
 
-    if( i < ds.length )
-      return m_mapW.get( ds[i] );
+    // TODO: produces ArrayIndexOutOfBoundsException, if W gets to big
 
-    // W was too big for current parameters, just use last branch of Wechmann-Set
-    return null;
+    return m_mapW.get( ds[i] );
   }
 
   /**

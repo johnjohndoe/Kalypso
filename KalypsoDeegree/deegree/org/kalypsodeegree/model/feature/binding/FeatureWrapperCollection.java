@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -75,7 +75,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   /**
    * the list of the feature properties
    */
-  private FeatureList m_featureList;
+  private final FeatureList m_featureList;
 
   /**
    * The {@link QName} of the list property of the feature(-collection)
@@ -93,11 +93,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
    * 
    * @param featureCol
-   *          the feature or feature collection with a list property to wrap
+   *            the feature or feature collection with a list property to wrap
    * @param fwClass
-   *          the base class representing the property feature in the list
+   *            the base class representing the property feature in the list
    * @param featureMemberProp
-   *          the list property linking the feature and its properties
+   *            the list property linking the feature and its properties
    */
   public FeatureWrapperCollection( final Feature featureCol, final Class<FWCls> fwClass, final QName featureMemberProp )
   {
@@ -105,14 +105,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     m_defaultWrapperClass = fwClass;
     m_featureCollection = featureCol;
     m_featureMemberProp = featureMemberProp;
-  }
-
-  FeatureList getFeatureList( )
-  {
-    if( m_featureList == null )
-      m_featureList = (FeatureList) m_featureCollection.getProperty( m_featureMemberProp );
-
-    return m_featureList;
+    m_featureList = (FeatureList) m_featureCollection.getProperty( featureMemberProp );
   }
 
   /**
@@ -150,13 +143,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   public void add( final int index, final FWCls element )
   {
     final Feature f = element.getFeature();
-    getFeatureList().add( index, f );
+    m_featureList.add( index, f );
   }
 
   public boolean add( final FWCls o )
   {
     final Feature f = o.getFeature();
-    return getFeatureList().add( f );
+    return m_featureList.add( f );
   }
 
   public FWCls addNew( final QName newChildType )
@@ -169,7 +162,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     Feature feature = null;
     try
     {
-      feature = FeatureHelper.createFeatureForListProp( getFeatureList(), newChildType, -1 );
+      feature = FeatureHelper.createFeatureForListProp( m_featureList, newChildType, -1 );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
@@ -217,7 +210,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( getFeatureList(), newChildType, index );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_featureList, newChildType, index );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
@@ -234,17 +227,17 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public boolean addAll( final Collection< ? extends FWCls> c )
   {
-    return getFeatureList().addAll( FeatureHelper.toFeatureList( c ) );
+    return m_featureList.addAll( FeatureHelper.toFeatureList( c ) );
   }
 
   public boolean addAll( final int index, final Collection< ? extends FWCls> c )
   {
-    return getFeatureList().addAll( index, FeatureHelper.toFeatureList( c ) );
+    return m_featureList.addAll( index, FeatureHelper.toFeatureList( c ) );
   }
 
   public void clear( )
   {
-    getFeatureList().clear();
+    m_featureList.clear();
   }
 
   public boolean contains( final Object o )
@@ -256,7 +249,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     throw new UnsupportedOperationException();
     /*
-     * TODO: see comment at 'contains' / return featureList.containsAll(c);
+     * TODO: see comment at 'contains' /* return featureList.containsAll(c);
      */
     /*
      * TOASK i do not understand that one. and featureList.containsAll(c) will only work if featureList contains real
@@ -266,7 +259,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public FWCls get( final int index )
   {
-    final Object property = getFeatureList().get( index );
+    final Object property = m_featureList.get( index );
     final Feature f = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), property );
     return getAdaptedFeature( f );
   }
@@ -297,7 +290,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         {
           // FIXME: this is no good! This fixing of a bad model should not happen here, this is too dangerous!
           // bad link removing it
-          System.out.println( "removing bad link:" + getFeatureList().get( i ) );
+          System.out.println( "removing bad link:" + m_featureList.get( i ) );
           remove( i );
           continue;
         }
@@ -312,14 +305,14 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public boolean isEmpty( )
   {
-    return getFeatureList().isEmpty();
+    return m_featureList.isEmpty();
   }
 
   public Iterator<FWCls> iterator( )
   {
     return new Iterator<FWCls>()
     {
-      private final Iterator it = getFeatureList().iterator();
+      private final Iterator it = m_featureList.iterator();
 
       private final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
@@ -352,7 +345,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      return getFeatureList().lastIndexOf( ((IFeatureWrapper2) o).getFeature() );
+      return m_featureList.lastIndexOf( ((IFeatureWrapper2) o).getFeature() );
     }
     else
     {
@@ -369,7 +362,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     return new ListIterator<FWCls>()
     {
-      private final ListIterator lit = getFeatureList().listIterator( index );
+      private final ListIterator lit = m_featureList.listIterator( index );
 
       @SuppressWarnings("unchecked")
       public void add( final FWCls o )
@@ -426,7 +419,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public FWCls remove( final int index )
   {
-    final FWCls wrapper = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), getFeatureList().remove( index ), m_defaultWrapperClass );
+    final FWCls wrapper = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), m_featureList.remove( index ), m_defaultWrapperClass );
     return wrapper;
   }
 
@@ -434,18 +427,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      boolean removed = getFeatureList().remove( ((IFeatureWrapper2) o).getFeature() );
+      boolean removed = m_featureList.remove( ((IFeatureWrapper2) o).getFeature() );
       if( !removed )
-        removed = getFeatureList().remove( ((IFeatureWrapper2) o).getFeature().getId() );
+        removed = m_featureList.remove( ((IFeatureWrapper2) o).getFeature().getId() );
       return removed;
     }
     else if( o instanceof String )
     {
-      return getFeatureList().remove( o );
+      return m_featureList.remove( o );
     }
     else
     {
-      return getFeatureList().remove( o );
+      return m_featureList.remove( o );
     }
   }
 
@@ -467,13 +460,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     final FWCls r = get( index );
     final Feature f = element.getFeature();
 
-    getFeatureList().set( index, f );
+    m_featureList.set( index, f );
     return r;
   }
 
   public int size( )
   {
-    return getFeatureList().size();
+    return m_featureList.size();
   }
 
   public List<FWCls> subList( final int fromIndex, final int toIndex )
@@ -486,8 +479,8 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     final Object objs[] = new Object[size()];
     for( int i = 0; i < objs.length; i++ )
     {
-      final Object fObj = getFeatureList().get( i );
-      final Feature feature = FeatureHelper.getFeature( getFeatureList().getParentFeature().getWorkspace(), fObj );
+      final Object fObj = m_featureList.get( i );
+      final Feature feature = FeatureHelper.getFeature( m_featureList.getParentFeature().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
       final Object object = getAdaptedFeature( feature );
@@ -527,7 +520,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( obj instanceof FeatureWrapperCollection )
     {
-      return getFeatureList().equals( ((FeatureWrapperCollection) obj).getFeatureList() );
+      return m_featureList.equals( ((FeatureWrapperCollection) obj).m_featureList );
     }
     else if( obj instanceof IFeatureWrapperCollection )
     {
@@ -569,7 +562,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public FeatureList getWrappedList( )
   {
-    return getFeatureList();
+    return m_featureList;
   }
 
   /**
@@ -580,7 +573,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     if( toRemove == null )
       return;
     final String gmlID = toRemove.getGmlID();
-    getFeatureList().remove( gmlID );
+    m_featureList.remove( gmlID );
   }
 
   /**
@@ -590,11 +583,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final String gmlID = toAdd.getGmlID();
     // TODO: this can cause major performance leaks
-    if( getFeatureList().contains( gmlID ) )
+    if( m_featureList.contains( gmlID ) )
     {
       return false;
     }
-    return getFeatureList().add( gmlID );
+    return m_featureList.add( gmlID );
   }
 
   /**
@@ -603,7 +596,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public List<FWCls> query( final GM_Surface selectionSurface, final boolean containedOnly )
   {
-    final List selectedFeature = getFeatureList().query( selectionSurface.getEnvelope(), null );
+    final List selectedFeature = m_featureList.query( selectionSurface.getEnvelope(), null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
     final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
@@ -635,7 +628,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public List<FWCls> query( final GM_Envelope envelope )
   {
-    final List selectedFeature = getFeatureList().query( envelope, null );
+    final List selectedFeature = m_featureList.query( envelope, null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
     for( final Object linkOrFeature : selectedFeature )
     {
@@ -652,7 +645,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public List<FWCls> query( final GM_Position position )
   {
-    final List selectedFeature = getFeatureList().query( position, null );
+    final List selectedFeature = m_featureList.query( position, null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
     final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
@@ -684,7 +677,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public void cloneInto( final FWCls toClone ) throws Exception
   {
-    final IRelationType relationType = getFeatureList().getParentFeatureTypeProperty();
+    final IRelationType relationType = m_featureList.getParentFeatureTypeProperty();
     FeatureHelper.cloneFeature( getFeature(), relationType, toClone.getFeature() );
   }
 

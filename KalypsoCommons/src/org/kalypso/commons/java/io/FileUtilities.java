@@ -56,7 +56,6 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFolder;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -83,16 +82,16 @@ public class FileUtilities
    * 
    * @param charMode
    * @param prefix
-   *          prefix of new file name
+   *            prefix of new file name
    * @param suffix
-   *          suffix of new file name
+   *            suffix of new file name
    * @param url
-   *          data is read from this url
+   *            data is read from this url
    * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   *            if true tries to use an existing file with these prefix/suffix
    * @return newly created file
    * @throws IOException
-   *           there are problems!
+   *             there are problems!
    */
   public static File makeFileFromUrl( final boolean charMode, final String prefix, final String suffix, final URL url, final boolean useCache ) throws IOException
   {
@@ -115,11 +114,11 @@ public class FileUtilities
    * 
    * @param charMode
    * @param url
-   *          data is read from this url
+   *            data is read from this url
    * @param the
-   *          content of the url is written into this file
+   *            content of the url is written into this file
    * @throws IOException
-   *           there are problems!
+   *             there are problems!
    */
   public static void makeFileFromUrl( final URL url, final File file, final boolean charMode ) throws IOException
   {
@@ -142,16 +141,16 @@ public class FileUtilities
    * 
    * @param charMode
    * @param prefix
-   *          prefix of file name
+   *            prefix of file name
    * @param suffix
-   *          suffix of file name
+   *            suffix of file name
    * @param ins
-   *          the input stream, that is the source
+   *            the input stream, that is the source
    * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   *            if true tries to use an existing file with these prefix/suffix
    * @return the newly created file or null if an exception was thrown.
    * @throws IOException
-   *           problems reading from stream or writing to temp. file
+   *             problems reading from stream or writing to temp. file
    */
   public static File makeFileFromStream( final boolean charMode, final String prefix, final String suffix, final InputStream ins, final boolean useCache ) throws IOException
   {
@@ -198,10 +197,8 @@ public class FileUtilities
     }
     else
     {
-      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
-      // Call this after the file-access, as this one will seldom throw an exception; if we put it first,
-      // the stream wil not be closed in case of errors.
       final BufferedInputStream in = new BufferedInputStream( ins );
+      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
 
       StreamUtilities.streamCopy( in, out );
     }
@@ -213,13 +210,13 @@ public class FileUtilities
    * more than one such file is found, returns the first of them.
    * 
    * @param prefix
-   *          name of the file should begin with this prefix
+   *            name of the file should begin with this prefix
    * @param suffix
-   *          name of the file should end with this suffix
+   *            name of the file should end with this suffix
    * @param path
    * @return the (first) File found
    * @throws FileNotFoundException
-   *           when file was not found or path does not denote a directory
+   *             when file was not found or path does not denote a directory
    * @see PrefixSuffixFilter
    */
   public static File fileExistsInDir( final String prefix, final String suffix, final String path ) throws FileNotFoundException
@@ -243,8 +240,8 @@ public class FileUtilities
    * Rekursives löschen von Dateien und Verzeichnissen
    * 
    * @param file
-   *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt aller
-   *          darin liegenden Verzeichnisse und Dateien gelöscht.
+   *            Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt
+   *            aller darin liegenden Verzeichnisse und Dateien gelöscht.
    */
   public static void deleteRecursive( final File file )
   {
@@ -266,7 +263,7 @@ public class FileUtilities
    * 
    * @param prefix
    * @return temporary directory
-   * @see FileUtilities#createNewTempDir(String, File )
+   * @see FileUtilities#createNewTempDir( String, File )
    */
   public static File createNewTempDir( final String prefix )
   {
@@ -292,8 +289,8 @@ public class FileUtilities
   }
 
   /**
-   * Creates a temp file inside the given folder. It uses <code>System.currentTimeMillis</code> for naming the new temp
-   * file. This method can hang a little while in the case the file it tries to create already exist.
+   * Creates a temp file inside the given folder. It uses <code>System.currentTimeMillis</code> for naming the new
+   * temp file. This method can hang a little while in the case the file it tries to create already exist.
    * 
    * @param prefix
    * @param parentDir
@@ -310,8 +307,8 @@ public class FileUtilities
   }
 
   /**
-   * Creates a unique file name inside the given folder. It uses <code>System.currentTimeMillis</code> for creating the
-   * new file name. This method can hang a little while in the case the file it tries to create already exist.
+   * Creates a unique file name inside the given folder. It uses <code>System.currentTimeMillis</code> for creating
+   * the new file name. This method can hang a little while in the case the file it tries to create already exist.
    * 
    * @param prefix
    * @param extension
@@ -336,8 +333,8 @@ public class FileUtilities
    * 
    * @param basedir
    * @param absoluteFile
-   * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir von
-   *         <code>absoluteFile</code> ist
+   * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir
+   *         von <code>absoluteFile</code> ist
    */
   public static File getRelativeFileTo( final File basedir, final File absoluteFile )
   {
@@ -353,7 +350,7 @@ public class FileUtilities
    * this method won't produce a good result. Use the <code>getRelativeFileTo()</code> method instead.
    * 
    * @param basedir
-   *          if null, the absolute path of absoluteFile is returned.
+   *            if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
@@ -415,7 +412,7 @@ public class FileUtilities
 
   /**
    * @param name
-   *          name of path of the file
+   *            name of path of the file
    * @return characters after last "." of given file name
    */
   public static String getSuffix( final String name )
@@ -441,8 +438,32 @@ public class FileUtilities
    * Example:
    * 
    * <pre>
+   * 
    *     test.foo -- test
    *     robert.tt -- robert
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
    * </pre>
    * 
    * @param fileName
@@ -461,7 +482,7 @@ public class FileUtilities
    * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin enthaltenen Dateien besuchen.
    * 
    * @param recurse
-   *          Falls true, werden auch Unterverzeichnisse besucht
+   *            Falls true, werden auch Unterverzeichnisse besucht
    * @throws IOException
    */
   public static void accept( final File root, final FileVisitor visitor, final boolean recurse ) throws IOException
@@ -548,8 +569,7 @@ public class FileUtilities
    * </p>
    * <p>
    * E.g. <code>C:/mydirectory/file.txt</code> gets <code>file.txt</code>
-   * </p>
-   * .
+   * </p>.
    */
   public static String nameFromPath( final String path )
   {
@@ -578,11 +598,11 @@ public class FileUtilities
    * after the last '.') it will be replaced.
    * 
    * @param suffix
-   *          The suffix without the point '.'
+   *            The suffix without the point '.'
    */
   public static String setSuffix( final String fileName, final String suffix )
   {
-    final int index = fileName.lastIndexOf( '.' );
+    final int index = fileName.indexOf( '.' );
     if( index == -1 )
       return fileName + '.' + suffix;
 
@@ -593,7 +613,7 @@ public class FileUtilities
    * Copies the content of a url into a string.
    * 
    * @param encoding
-   *          The encoding to read the content, if <code>null</code> the platforms default encoding will be used.
+   *            The encoding to read the content, if <code>null</code> the platforms default encoding will be used.
    */
   public static String toString( final URL input, final String encoding ) throws IOException
   {
@@ -617,7 +637,7 @@ public class FileUtilities
    * Moves the complete content of one directory into another.
    * 
    * @throws IOException
-   *           If the move failed.
+   *             If the move failed.
    */
   public static void moveContents( final File sourceDir, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
   {
@@ -633,9 +653,9 @@ public class FileUtilities
    * Moves one single file/dir into another directory.
    * 
    * @param deleteExisting
-   *          If <code>true</code>, the destDir will be deleted before removal, if existant.
+   *            If <code>true</code>, the destDir will be deleted before removal, if existant.
    * @throws IOException
-   *           If the move failed.
+   *             If the move failed.
    */
   public static void move( final File source, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
   {
@@ -681,27 +701,5 @@ public class FileUtilities
         throw new IOException( message );
       }
     }
-  }
-
-  /**
-   * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
-   * and looks if file already exists in baseFolder
-   * 
-   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
-   *         replaced by the given replacement-string
-   */
-  public static String validateName( final IFolder baseFolder, final String name, final String replacement )
-  {
-    final String myBaseName = validateName( name, replacement );
-    String myName = myBaseName;
-
-    int count = 0;
-    while( baseFolder.getFile( myName ).exists() )
-    {
-      myName = String.format( "%s%d", myBaseName, count );
-      count++;
-    }
-
-    return myName;
   }
 }

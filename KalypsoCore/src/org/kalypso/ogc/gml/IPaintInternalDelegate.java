@@ -44,7 +44,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author Dirk Kuch "paint" themes internal not on screen. used by KalypsoGoogleEarthExport
+ * @author kuch "paint" themes internal not on screen. used by KalypsoGoogleEarthExport
  */
 public interface IPaintInternalDelegate extends IPaintDelegate
 {

@@ -52,7 +52,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
-import org.kalypso.ogc.sensor.tableview.swing.tablemodel.IObservationTableModel;
+import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
 
 /**
  * Handles the rendering with the given NumberFormat and for each value asks the ObservationTableModel for possible
@@ -62,9 +62,9 @@ import org.kalypso.ogc.sensor.tableview.swing.tablemodel.IObservationTableModel;
  */
 public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
 {
-  private final IObservationTableModel m_model;
+  private final ObservationTableModel m_model;
 
-  public MaskedNumberTableCellRenderer( final IObservationTableModel model )
+  public MaskedNumberTableCellRenderer( final ObservationTableModel model )
   {
     m_model = model;
 

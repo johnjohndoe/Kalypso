@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -55,7 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
 /**
@@ -75,9 +75,9 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 
   public ThemeInfoWidget( )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setNoThemesTooltip( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.2" ) ); //$NON-NLS-1$
+    setNoThemesTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.2") ); //$NON-NLS-1$
   }
 
   public ThemeInfoWidget( final String name, final String toolTip )
@@ -90,7 +90,7 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -100,14 +100,14 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     final GisMapOutlineView outlineView = (GisMapOutlineView) page.findView( GisMapOutlineView.ID );
     if( outlineView == null )
     {
-      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3" ) ); //$NON-NLS-1$
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3") ); //$NON-NLS-1$
       return;
     }
 
-    final IMapPanel outlineMapPanel = outlineView.getMapPanel();
+    final MapPanel outlineMapPanel = outlineView.getMapPanel();
     if( outlineMapPanel != mapPanel )
     {
-      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4" ) ); //$NON-NLS-1$
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4") ); //$NON-NLS-1$
       return;
     }
 
@@ -149,4 +149,5 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     if( getMapPanel() != null )
       moved( getCurrentPoint() );
   }
+
 }

@@ -156,7 +156,7 @@ public class ParameterValueType_Impl implements ParameterValueType, Marshallable
               sb.append( object );
           }
         }
-        else if( expr != null )
+        else
           sb.append( expr );
       }
       else if( component != null && component instanceof String )

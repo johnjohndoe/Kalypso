@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,6 +40,7 @@ import java.net.URL;
 
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
+import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.model.feature.Feature;
@@ -72,14 +73,36 @@ public class CoverageCollection extends FeatureWrapperCollection<ICoverage> impl
     rangeSetFile.setMimeType( mimeType );
     rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
+    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
+    rangeSet.setFile( rangeSetFile );
+
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverages.addNew( RectifiedGridCoverage.QNAME );
 
     coverage.setDescription( "Imported via Kalypso" );
     coverage.setGridDomain( domain );
-    coverage.setRangeSet( rangeSetFile );
+    coverage.setRangeSet( rangeSet );
 
     coverage.getFeature().invalidEnvelope();
 
     return coverage;
   }
+
+  // TOOD: still needed? else: remove
+  public static void setCoverage( final RectifiedGridCoverage coverage, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
+  {
+    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
+
+    // file name relative to the gml
+    rangeSetFile.setFileName( externalResource );
+    rangeSetFile.setMimeType( mimeType );
+    rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
+
+    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
+    rangeSet.setFile( rangeSetFile );
+
+    coverage.setDescription( "Imported via Kalypso" );
+    coverage.setGridDomain( domain );
+    coverage.setRangeSet( rangeSet );
+  }
+
 }

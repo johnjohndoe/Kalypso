@@ -41,11 +41,9 @@
 package org.kalypso.ogc.gml.outline;
 
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.ICheckStateProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
@@ -54,7 +52,6 @@ import org.kalypso.ogc.gml.ThemeStyleTreeObject;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 {
   /**
@@ -63,8 +60,6 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
    */
   private final boolean m_showStyle;
 
-  private final boolean m_showActive;
-
   /**
    * The constructor.
    * 
@@ -72,10 +67,9 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
    *            If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
    *            styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
    */
-  public GisMapOutlineLabelProvider( final boolean showStyle, final boolean showActive )
+  public GisMapOutlineLabelProvider( final boolean showStyle )
   {
     m_showStyle = showStyle;
-    m_showActive = showActive;
   }
 
   public void elementsChanged( final Object... elements )
@@ -89,61 +83,33 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
   @Override
   protected String decorateText( final String input, final Object element )
   {
+    /* Standard behaviour, if the style name for a single style of a theme should not be added. */
+    if( m_showStyle == false )
+      return input;
+
     if( element instanceof IWorkbenchAdapter && element instanceof IKalypsoTheme )
     {
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) element;
-      final IKalypsoTheme theme = (IKalypsoTheme) element;
-
-      final boolean isActive = theme.getMapModell().isThemeActivated( theme );
-      final String isActiveMsg = isActive && m_showActive ? "# " : "";
-
-      /* Standard behaviour, if the style name for a single style of a theme should not be added. */
-      if( m_showStyle == false )
-        return isActiveMsg + input;
 
       final Object[] children = adapter.getChildren( element );
       if( !(children instanceof ThemeStyleTreeObject[]) )
-        return isActiveMsg + input;
+        return input;
 
       if( children != null && (children.length == 0 || children.length > 1) )
-        return isActiveMsg + input;
+        return input;
 
       final ThemeStyleTreeObject style = (ThemeStyleTreeObject) children[0];
       final String label = style.getLabel( style );
 
       if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )
-        return isActiveMsg + input;
+        return input;
 
       if( label.trim().equals( "" ) ) //$NON-NLS-1$
-        return isActiveMsg + input;
+        return input;
 
-      return isActiveMsg + input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      return input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return input;
   }
-
-  public boolean isChecked( final Object element )
-  {
-    final ICheckStateProvider provider = getCheckStateProvider( element );
-    if( provider == null )
-      return false;
-
-    return provider.isChecked();
-  }
-
-  public boolean isGrayed( final Object element )
-  {
-    final ICheckStateProvider provider = getCheckStateProvider( element );
-    if( provider == null )
-      return true;
-
-    return provider.isGrayed();
-  }
-
-  private ICheckStateProvider getCheckStateProvider( final Object element )
-  {
-    return (ICheckStateProvider) Util.getAdapter( element, ICheckStateProvider.class );
-  }
-
 }

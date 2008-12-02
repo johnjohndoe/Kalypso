@@ -64,9 +64,6 @@ public class DefaultCommandManager implements ICommandManager
 
   private boolean m_dirty;
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#postCommand(org.kalypso.commons.command.ICommand)
-   */
   public void postCommand( final ICommand command ) throws Exception
   {
     if( command instanceof InvisibleCommand )
@@ -111,9 +108,6 @@ public class DefaultCommandManager implements ICommandManager
 
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#redo()
-   */
   public void redo( ) throws Exception
   {
     if( stackPos < stack.size() - 1 )
@@ -136,9 +130,6 @@ public class DefaultCommandManager implements ICommandManager
     checkStatus();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#undo()
-   */
   public void undo( ) throws Exception
   {
     if( stackPos >= 0 )
@@ -172,17 +163,11 @@ public class DefaultCommandManager implements ICommandManager
     fireCommandManagerChanged();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#addCommandManagerListener(org.kalypso.commons.command.ICommandManagerListener)
-   */
   public void addCommandManagerListener( final ICommandManagerListener l )
   {
     m_listenerList.add( ICommandManagerListener.class, l );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#removeCommandManagerListener(org.kalypso.commons.command.ICommandManagerListener)
-   */
   public void removeCommandManagerListener( final ICommandManagerListener l )
   {
     m_listenerList.remove( ICommandManagerListener.class, l );
@@ -233,17 +218,11 @@ public class DefaultCommandManager implements ICommandManager
     return "<cannot redo>";
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#isDirty()
-   */
   public boolean isDirty( )
   {
     return m_dirty;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#resetDirty()
-   */
   public void resetDirty( )
   {
     m_dirty = false;

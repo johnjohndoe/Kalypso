@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -101,7 +101,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   @Override
   public void leftPressed( final Point p )
   {
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     m_p1 = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     m_p2 = null;
@@ -127,16 +127,16 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   public void dragged( final Point p )
   {
     m_movePoint = p;
-    final IMapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     final GeoTransform transform = mapPanel.getProjection();
     final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
     if( m_p1 != null )
       m_p2 = point;
     updateInfoText();
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
   }
 
@@ -151,7 +151,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     {
       if( p != null )
       {
-        final IMapPanel mapPanel = getMapPanel();
+        final MapPanel mapPanel = getMapPanel();
         final GeoTransform transform = mapPanel.getProjection();
         final GM_Point point = GeometryFactory.createGM_Point( p, transform, mapPanel.getMapModell().getCoordinatesSystem() );
         if( m_p1 != null )
@@ -165,9 +165,9 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     updateInfoText();
 
 // TODO: check if this repaint is necessary for the widget
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
   }
 
   /**
@@ -198,7 +198,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   {
     if( m_p1 != null && m_p2 != null )
     {
-      final IMapPanel mapPanel = getMapPanel();
+      final MapPanel mapPanel = getMapPanel();
       final GeoTransform transform = mapPanel.getProjection();
       final int x1 = (int) transform.getDestX( m_p1.getX() );
       final int y1 = (int) transform.getDestY( m_p1.getY() );
@@ -321,14 +321,5 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
-  @Override
-  public String getPartName( )
-  {
-    return null;
   }
 }

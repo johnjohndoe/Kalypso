@@ -43,10 +43,7 @@ package org.kalypso.grid;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 /**
- * Implementors of this interface are used to read the meta-data (bounding box and such) of grid-files.<br>
- * TODO: Refaktor: these classes are nice.. but can only be used from the user interface they where written for. Better:
- * return values as doubles in gml-style (or even just a RectifiedGridDomain); trhe user interface should decide how to
- * show it to the user.
+ * Implementors of this interface are used to read the meta-data (bounding box and such) of grid-files.
  * 
  * @author Dirk Kuch
  */
@@ -65,10 +62,7 @@ public interface IGridMetaReader
   public String getOriginCornerY( );
 
   /**
-   * TODO: PLEASE! Bitte nicht am .asc format orientieren sondern an GML! d.h. es gibt keine Upper-Left Corner! Bitte
-   * auch im user interface vom 'Origin' reden und nicht von diesen seltsamen .asc konstrukten....<br>
-   * Der Effekt hier ist: wir pressen alles (d.h auch geotiffs usw.) in die '.asc' logik und konvertieren dann alles
-   * wieder nach gml...
+   * params can be modified by user editing
    */
   public RectifiedGridDomain getCoverage( RectifiedGridDomain.OffsetVector offsetX, RectifiedGridDomain.OffsetVector offsetY, Double[] upperLeftCorner, String crs ) throws Exception;
 }

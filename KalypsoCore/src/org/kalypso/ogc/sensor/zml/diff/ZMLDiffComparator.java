@@ -106,10 +106,6 @@ public class ZMLDiffComparator implements IDiffComparator
       logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.3") + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
       return true;
     }
-    
-    if( max1 == 0 )
-      return false;
-    
     final double v1 = ( (Double)values1.getElement( 0, valueAxis1 ) ).doubleValue();
     final double v2 = ( (Double)values2.getElement( 0, valueAxis2 ) ).doubleValue();
     double maxValue1 = v1;

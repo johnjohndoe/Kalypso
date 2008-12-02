@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.maker;
 
@@ -77,7 +77,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_showTables;
   }
 
-  public void setShouldAddValidator( final boolean shouldAddValidator )
+  public void setShouldAddValidator( boolean shouldAddValidator )
   {
     m_shouldAddValidator = shouldAddValidator;
   }
@@ -87,7 +87,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_shouldAddValidator;
   }
 
-  public void setShouldShowButton( final boolean shouldShowButton )
+  public void setShouldShowButton( boolean shouldShowButton )
   {
     m_shouldShowButton = shouldShowButton;
   }
@@ -117,7 +117,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     griddata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     featureview.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( griddata ) );
 
-    // REMARK: it is important that the maker is re-created each time. as the makers sometimes
+    // REMARK: it is importent that the maker is re-created each time. as the makers sometimes
     // do store state information
     final IControlMaker controlMaker = createControlMaker();
     // PARANOIA: createControlMaker may have been overwritten and so may return null.
@@ -126,20 +126,22 @@ public class FeatureviewHelper implements IFeatureviewFactory
 
     final List<JAXBElement< ? extends ControlType>> controlList = featureview.getControl();
     for( final IPropertyType ftp : featureType.getProperties() )
+    {
       try
       {
         controlMaker.addControls( controlList, gridLayout, featureType, ftp, feature );
       }
-      catch( final AbortCreationException e )
+      catch( AbortCreationException e )
       {
         // just eat the exception, nothing shall be added for this property
       }
+    }
 
     return featureview;
   }
 
   /**
-   * Creates the control maker, ready to be overwritten by re-implementors.
+   * Creates the control maker, ready to be overwritten by reimplementors.
    * <p>
    * The default implementation creates a {@link DefaultControlMakerStrategy}.
    */

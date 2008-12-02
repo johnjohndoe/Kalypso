@@ -120,10 +120,6 @@ public class DateTimeCellEditor extends CellEditor
       final XMLGregorianCalendar calendar = (XMLGregorianCalendar) value;
       m_dialog.setDateTime( calendar.toGregorianCalendar() );
     }
-    else if( value == null )
-    {
-      m_dialog.setDateTime( null );
-    }
     else
       throw new IllegalStateException();
   }

@@ -43,40 +43,22 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.command.JMSelector;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author doemming
  */
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  protected static final int MODE_SELECT = 0;
-
-  protected static final int MODE_TOGGLE = 1;
-
-  protected static final int MODE_UNSELECT = 2;
-
   public AbstractSelectWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
@@ -115,9 +97,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       m_endPoint = p;
 
     // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
+    final MapPanel panel = getMapPanel();
     if( panel != null )
-      panel.repaintMap();
+      panel.repaint();
 
   }
 
@@ -138,7 +120,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
 
     try
     {
-      select( m_startPoint, m_endPoint, m_radius, getSelectionMode(), allowOnlyOneSelectedFeature() );
+      getMapPanel().select( m_startPoint, m_endPoint, m_radius, getSelectionMode(), allowOnlyOneSelectedFeature() );
     }
     finally
     {
@@ -146,7 +128,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       m_endPoint = null;
 
       /* Always repaint, maybe the selection has not changed, then we dont get any repaint from the selection manager */
-      getMapPanel().repaintMap();
+      getMapPanel().repaint();
     }
   }
 
@@ -237,126 +219,5 @@ public abstract class AbstractSelectWidget extends AbstractWidget
       // }
 
     }
-  }
-
-  private void select( final Point startPoint, final Point endPoint, final int radius, final int selectionMode, final boolean useOnlyFirstChoosen )
-  {
-    final IMapPanel mapPanel = getMapPanel();
-    final GeoTransform transform = mapPanel.getProjection();
-    final IMapModell model = mapPanel.getMapModell();
-    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-
-    final IKalypsoTheme activeTheme = model.getActiveTheme();
-    if( (activeTheme == null) || !(activeTheme instanceof IKalypsoFeatureTheme) )
-      return;
-
-    if( startPoint != null )
-    {
-      final double g1x = transform.getSourceX( startPoint.getX() );
-      final double g1y = transform.getSourceY( startPoint.getY() );
-
-      if( endPoint == null ) // not dragged
-      {
-        // TODO depends on featuretype
-        // line and point with radius
-        // polygon without radius
-        final double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
-        final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, model.getCoordinatesSystem() );
-
-        final Feature fe = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
-
-        final List<Feature> listFe = new ArrayList<Feature>();
-        if( fe != null )
-          listFe.add( fe );
-
-        changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
-      }
-      else
-        // dragged
-      {
-        final double g2x = transform.getSourceX( endPoint.getX() );
-        final double g2y = transform.getSourceY( endPoint.getY() );
-        boolean withinStatus = false;
-
-        if( (endPoint.getX() > startPoint.getX()) && (endPoint.getY() > startPoint.getY()) )
-          withinStatus = true;
-
-        final double minX = g1x < g2x ? g1x : g2x;
-        final double maxX = g1x > g2x ? g1x : g2x;
-        final double minY = g1y < g2y ? g1y : g2y;
-        final double maxY = g1y > g2y ? g1y : g2y;
-
-        if( (minX != maxX) && (minY != maxY) )
-        {
-          final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, model.getCoordinatesSystem() );
-          final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
-
-          if( useOnlyFirstChoosen && !features.isEmpty() )
-          {
-            // delete all but first if we shall only the first selected
-            final Feature object = (Feature) features.get( 0 );
-            features.clear();
-            features.add( object );
-          }
-
-          changeSelection( features, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
-        }
-      }
-    }
-  }
-
-  private void changeSelection( final List< ? > features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
-  {
-    // nothing was chosen by the user, clear selection
-    if( features.isEmpty() )
-      selectionManager2.clear();
-    // TODO: this should do the widget-manager?
-
-    // remove all selected features from this theme
-    // TODO: maybe only visible??
-    final FeatureList featureList = theme.getFeatureList();
-    if( featureList == null )
-      return;
-
-    final Feature parentFeature = featureList.getParentFeature();
-    final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
-
-    // add all selected features
-    final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
-    for( int i = 0; i < features.size(); i++ )
-    {
-      final Feature f = (Feature) features.get( i );
-      selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f, parentFeature, parentProperty );
-    }
-
-    final Feature[] toRemove;
-    final EasyFeatureWrapper[] toAdd;
-
-    switch( selectionMode )
-    {
-      case MODE_TOGGLE: // dreht die selection der auswahl um
-        // BUG: past nicht mehr zur beschreibung!
-        toRemove = new Feature[0];
-        toAdd = selectedWrapped;
-        break;
-
-      case MODE_SELECT: // selectert genau das, was ausgewählt wurde
-        // toRemove = featureList.toFeatures();
-        final EasyFeatureWrapper[] allFeatures = selectionManager2.getAllFeatures();
-        toRemove = new Feature[allFeatures.length];
-        for( int i = 0; i < allFeatures.length; i++ )
-          toRemove[i] = allFeatures[i].getFeature();
-        toAdd = selectedWrapped;
-        break;
-
-      case MODE_UNSELECT: // löscht alles augewählte aus der selection
-        toRemove = featureList.toFeatures();
-        toAdd = new EasyFeatureWrapper[0];
-
-      default:
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.18" ) + selectionMode ); //$NON-NLS-1$
-    }
-
-    selectionManager2.changeSelection( toRemove, toAdd );
   }
 }

@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.ArrayList;
 
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;

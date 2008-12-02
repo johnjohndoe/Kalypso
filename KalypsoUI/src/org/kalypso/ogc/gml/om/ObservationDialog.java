@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
@@ -64,7 +65,7 @@ public class ObservationDialog extends ResizableDialog
 
   protected ObservationDialog( final Shell parentShell, final IObservation<TupleResult> obs )
   {
-    super( parentShell, null );
+    super( parentShell, KalypsoGisPlugin.getDefault().getResourceBundle() );
 
     m_obs = obs;
   }

@@ -44,11 +44,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.util.pool.IPoolListener;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.IPoolListener;
+import org.kalypso.util.pool.IPoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**

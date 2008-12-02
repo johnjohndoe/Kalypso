@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
  */
 public class BaseMapSchedulingRule implements IMapSchedulingRule
 {
-  private final IMapPanel m_mapPanel;
+  private final MapPanel m_mapPanel;
 
   private final IResource m_mapFile;
 
@@ -56,7 +56,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
 
   private SelectWidgetSchedulingRule m_selectWidgetSchedulingRule;
 
-  public BaseMapSchedulingRule( final IMapPanel mapPanel, final IResource mapFile )
+  public BaseMapSchedulingRule( final MapPanel mapPanel, final IResource mapFile )
   {
 // Assert.isNotNull( mapPanel );
 // Assert.isNotNull( mapFile );
@@ -83,7 +83,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
     return m_selectWidgetSchedulingRule;
   }
 
-  public IMapPanel getMapPanel( )
+  public MapPanel getMapPanel( )
   {
     return m_mapPanel;
   }
@@ -145,7 +145,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       m_parent = parent;
     }
 
-    public IMapPanel getMapPanel( )
+    public MapPanel getMapPanel( )
     {
       return m_parent.getMapPanel();
     }
@@ -192,7 +192,7 @@ public class BaseMapSchedulingRule implements IMapSchedulingRule
       m_parent = parent;
     }
 
-    public IMapPanel getMapPanel( )
+    public MapPanel getMapPanel( )
     {
       return m_parent.getMapPanel();
     }

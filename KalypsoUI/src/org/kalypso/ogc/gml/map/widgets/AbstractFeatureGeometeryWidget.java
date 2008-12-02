@@ -31,7 +31,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -61,7 +61,7 @@ public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeome
   }
 
   @Override
-  protected void update( final IMapPanel mapPanel )
+  protected void update( final MapPanel mapPanel )
   {
     m_featureToEdit = null;
 

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.i18n;
 
@@ -45,6 +45,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author kuch
+ *
  */
 public class Messages
 {
@@ -56,27 +57,15 @@ public class Messages
   {
   }
 
-  public static String getString( final String key )
+  public static String getString( String key )
   {
     try
     {
       return RESOURCE_BUNDLE.getString( key );
     }
-    catch( final MissingResourceException e )
+    catch( MissingResourceException e )
     {
       return '!' + key + '!';
     }
-  }
-
-  /**
-   * Formats the resource for the given key with the given argument, according to
-   * {@link String#format(String, Object...)}.
-   * 
-   * @see String#format(String, Object...)
-   */
-  public static String format( final String key, final Object... args )
-  {
-    final String string = getString( key );
-    return String.format( string, args );
   }
 }

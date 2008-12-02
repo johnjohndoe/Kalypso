@@ -29,12 +29,9 @@
  */
 package org.kalypso.commons;
 
-import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -43,8 +40,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.process.IProcess;
-import org.kalypso.commons.process.IProcessFactory;
+import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 
 /**
  * Extensions of <code>org.kalypso.commons</code>.
@@ -55,20 +51,16 @@ public class KalypsoCommonsExtensions
 {
   private final static String I10N_TRANSLATOR_EXTENSION_POINT = "org.kalypso.commons.i18n";
 
-  private final static String PROCESS_EXTENSION_POINT = "org.kalypso.commons.process";
-
-  private static Map<String, IConfigurationElement> m_i10nExtensions;
-
-  private static Map<String, IConfigurationElement> m_processExtensions;
+  private static Map<String, IConfigurationElement> m_i10nextensions;
 
   public static synchronized ITranslator createTranslator( final String id )
   {
     if( id == null )
       return null;
 
-    if( m_i10nExtensions == null )
+    if( m_i10nextensions == null )
     {
-      m_i10nExtensions = new HashMap<String, IConfigurationElement>();
+      m_i10nextensions = new HashMap<String, IConfigurationElement>();
 
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -79,12 +71,12 @@ public class KalypsoCommonsExtensions
       for( final IConfigurationElement element : configurationElements )
       {
         final String elementId = element.getAttribute( "id" );
-        m_i10nExtensions.put( elementId, element );
+        m_i10nextensions.put( elementId, element );
       }
     }
 
-    final KalypsoCommonsPlugin activator = KalypsoCommonsPlugin.getDefault();
-    final IConfigurationElement element = m_i10nExtensions.get( id );
+    final JavaApiContributionsPlugin activator = JavaApiContributionsPlugin.getDefault();
+    final IConfigurationElement element = m_i10nextensions.get( id );
     if( element == null )
     {
       final Status status = new Status( IStatus.ERROR, activator.getBundle().getSymbolicName(), 1, "No i10nTranslator with id: " + id, null );
@@ -101,53 +93,5 @@ public class KalypsoCommonsExtensions
       activator.getLog().log( e.getStatus() );
       return null;
     }
-  }
-
-  /**
-   * @param factoryId
-   *          The extension-id of the {@link IProcessFactory} that should be used in order to create the new process.
-   * @see IProcessFactory#newProcess(File, String, String[])
-   */
-  public static synchronized IProcess createProcess( final String factoryId, final File workingDir, final URL executeable, final String[] commandlineArgs ) throws CoreException
-  {
-    Assert.isNotNull( factoryId );
-
-    final IProcessFactory factory = getProcessFactory( factoryId );
-    if( factory == null )
-    {
-      final Status status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 1, "No process factory with id: " + factoryId, null );
-      throw new CoreException( status );
-    }
-
-    return factory.newProcess( workingDir, executeable, commandlineArgs );
-  }
-
-  private static IProcessFactory getProcessFactory( final String id ) throws CoreException
-  {
-    synchronized( PROCESS_EXTENSION_POINT )
-    {
-      if( m_processExtensions == null )
-      {
-        m_processExtensions = new HashMap<String, IConfigurationElement>();
-
-        final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-        final IExtensionPoint extensionPoint = registry.getExtensionPoint( PROCESS_EXTENSION_POINT );
-
-        final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-
-        for( final IConfigurationElement element : configurationElements )
-        {
-          final String elementId = element.getAttribute( "id" );
-          m_processExtensions.put( elementId, element );
-        }
-      }
-    }
-
-    final IConfigurationElement element = m_processExtensions.get( id );
-    if( element == null )
-      return null;
-
-    return (IProcessFactory) element.createExecutableExtension( "class" );
   }
 }

@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
  * TODO: name and comment wrong. This is something which holds a MapPanel, not a MapModell.
@@ -53,9 +53,9 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IMapModellView extends ISelectionProvider, ICommandTarget
 {
-  public IMapPanel getMapPanel( );
+  public MapPanel getMapPanel( );
 
-  public void setMapPanel( final IMapPanel panel );
+  public void setMapPanel( final MapPanel panel );
 
   public void dispose( );
 

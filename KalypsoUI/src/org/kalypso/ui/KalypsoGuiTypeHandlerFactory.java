@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
@@ -57,6 +58,7 @@ import org.kalypso.ogc.sensor.IObservation;
  */
 public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTypeHandler>
 {
+
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandlerFactory#registerTypeHandlers(org.kalypso.gmlschema.types.ITypeRegistry)
    */
@@ -75,6 +77,11 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
       guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+      guiRegistry.registerTypeHandler( new ResourceFileGuiTypeHandler() );
+
+      // TODO find out how to register the observation gui type handler
+      // this, as it is here, does not work
+      // guiRegistry.registerTypeHandler( new ObservationGuiTypeHandler() );
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {

@@ -108,8 +108,6 @@ public class ImageProvider
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = ImageProvider.id( "icons/full/elcl16/remove.gif" ); //$NON-NLS-1$
-  
-  public static final ImageDescriptor IMAGE_OBSVIEW_CURVE_PROPERTIES = ImageProvider.id( "icons/full/elcl16/obsviewCurveProperties.gif" ); //$NON-NLS-1$
 
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
@@ -156,9 +154,9 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_ICON_OTT = ImageProvider.id( "icons/kalypso_ott.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON = ImageProvider.id( "icons/kalypso16.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON = ImageProvider.id( "org.kalypso.product", "etc/kalypso16.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = ImageProvider.id( "icons/kalypso32.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = ImageProvider.id( "org.kalypso.product", "etc/kalypso32.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = ImageProvider.id( "icons/util/checked.gif" ); //$NON-NLS-1$
 

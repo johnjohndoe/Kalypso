@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -43,7 +43,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -96,7 +95,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     final Graphics2D g2 = (Graphics2D) g;
 
     final LineSymbolizer sym = (LineSymbolizer) getSymbolizer();
-    final Stroke stroke = sym.getStroke();
+    final org.kalypsodeegree.graphics.sld.Stroke stroke = sym.getStroke();
     final UOM uom = sym.getUom();
 
     // no stroke defined -> don't draw anything

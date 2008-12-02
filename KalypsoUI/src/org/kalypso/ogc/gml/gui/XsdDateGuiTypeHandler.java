@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
@@ -96,7 +96,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
 
   private final boolean m_show_button;
 
-  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler handler, final DateFormat df, final boolean show_button )
+  public XsdDateGuiTypeHandler( final XsdBaseTypeHandler handler, DateFormat df, boolean show_button )
   {
     super( handler );
     m_df = df;
@@ -179,8 +179,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     if( xmlCal == null )
       return ""; //$NON-NLS-1$
 
-    final GregorianCalendar gc = xmlCal.toGregorianCalendar();
-    return m_df.format( gc.getTime() );
+    return m_df.format( xmlCal.toGregorianCalendar().getTime() );
   }
 
   /**
@@ -198,6 +197,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     final Calendar cal = Calendar.getInstance();
     cal.setTime( date );
 
-    return new XMLGregorianCalendarImpl( (GregorianCalendar) cal );
+    final XMLGregorianCalendarImpl gregorianCalendar = new XMLGregorianCalendarImpl( (GregorianCalendar) cal );
+    return gregorianCalendar;
   }
 }

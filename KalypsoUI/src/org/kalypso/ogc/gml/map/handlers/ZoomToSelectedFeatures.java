@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -47,7 +47,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.handlers.parts.ZoomToFeaturesPart;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,7 +81,7 @@ public class ZoomToSelectedFeatures extends AbstractHandler
    * @param percent
    *          Percentage for increasing the new extend.
    */
-  public ZoomToSelectedFeatures( final int percent )
+  public ZoomToSelectedFeatures( int percent )
   {
     m_percent = 5;
     if( percent > 0 )
@@ -88,17 +91,24 @@ public class ZoomToSelectedFeatures extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  @Override
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( part == null )
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures.0") ); //$NON-NLS-1$
+
+    MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+    if( mapPanel == null )
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures.1") ); //$NON-NLS-1$
 
     /* Collect the features. */
-    final ArrayList<Feature> features = new ArrayList<Feature>();
-    final EasyFeatureWrapper[] allFeatures = mapPanel.getSelectionManager().getAllFeatures();
-    for( final EasyFeatureWrapper allFeature : allFeatures )
+    ArrayList<Feature> features = new ArrayList<Feature>();
+    EasyFeatureWrapper[] allFeatures = mapPanel.getSelectionManager().getAllFeatures();
+    for( int i = 0; i < allFeatures.length; i++ )
     {
-      final Feature feature = allFeature.getFeature();
+      Feature feature = allFeatures[i].getFeature();
       features.add( feature );
     }
 
@@ -106,7 +116,7 @@ public class ZoomToSelectedFeatures extends AbstractHandler
       return Status.OK_STATUS;
 
     /* Create the piece, which will zoom to the features. */
-    final ZoomToFeaturesPart piece = new ZoomToFeaturesPart( mapPanel, features, m_percent );
+    ZoomToFeaturesPart piece = new ZoomToFeaturesPart( part, features, m_percent );
 
     /* Zoom to the features. */
     piece.zoomTo();

@@ -29,21 +29,14 @@
  */
 package org.kalypso.commons.diff;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipException;
 
-import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 
 /**
@@ -51,65 +44,14 @@ import org.kalypso.contribs.java.util.logging.ILogger;
  */
 public class DiffUtils
 {
-  /** Compares to single urls */
-  public static boolean diffUrls( final ILogger logger, final URL file1, final URL file2 ) throws Exception
-  {
-    final IDiffLogger diffLogger = new DiffLogger( logger );
-
-    final String extension = "." + FileUtilities.getSuffix( file1.getFile() );
-
-    final IDiffComparator diffComp = getDiffComparatorFor( extension, file1.toString() );
-
-    BufferedInputStream bis1 = null;
-    BufferedInputStream bis2 = null;
-
-    try
-    {
-      bis1 = new BufferedInputStream( file1.openStream() );
-      bis2 = new BufferedInputStream( file2.openStream() );
-
-      return diffComp.diff( diffLogger, bis1, bis2 );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( bis1 );
-      IOUtils.closeQuietly( bis2 );
-    }
-  }
-
-  /** Compares to single files */
-  public static boolean diffFiles( final ILogger logger, final File file1, final File file2 ) throws Exception
-  {
-    final IDiffLogger diffLogger = new DiffLogger( logger );
-
-    final String extension = FileUtilities.getSuffix( "." + file1 );
-    final IDiffComparator diffComp = getDiffComparatorFor( extension, file1.getName() );
-
-    BufferedInputStream bis1 = null;
-    BufferedInputStream bis2 = null;
-
-    try
-    {
-      bis1 = new BufferedInputStream( new FileInputStream( file1 ) );
-      bis2 = new BufferedInputStream( new FileInputStream( file2 ) );
-
-      return diffComp.diff( diffLogger, bis1, bis2 );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( bis1 );
-      IOUtils.closeQuietly( bis2 );
-    }
-  }
-
-  public static boolean diffZips( final ILogger logger, final File zip1, final File zip2, final String[] ignorePath ) throws ZipException, IOException
+  public static boolean diffZips( final ILogger logger, File zip1, File zip2, String[] ignorePath ) throws ZipException, IOException
   {
     final IDiffObject a = new ZipDiffObject( zip1 );
     final IDiffObject b = new ZipDiffObject( zip2 );
     return diff( logger, a, b, ignorePath );
   }
 
-  public static boolean diff( final ILogger logger, final IDiffObject a, final IDiffObject b, final String[] ignorePath )
+  public static boolean diff( ILogger logger, IDiffObject a, IDiffObject b, String[] ignorePath )
   {
     boolean result = false;
     final IDiffLogger diffLogger = new DiffLogger( logger );
@@ -121,22 +63,24 @@ public class DiffUtils
     else
       ignores = new ArrayList();
 
-    for( final String path : pathesA )
+    for( int i = 0; i < pathesA.length; i++ )
     {
+      final String path = pathesA[i];
       try
       {
 
         if( !ignore( ignores, path ) )
           result |= visitor.diff( diffLogger, path, b );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
     }
     final String[] pathesB = b.getPathes();
-    for( final String path : pathesB )
+    for( int i = 0; i < pathesB.length; i++ )
     {
+      final String path = pathesB[i];
       if( !ignore( ignores, path ) && !a.exists( path ) )
       {
         diffLogger.log( IDiffComparator.DIFF_ADDED, path );
@@ -151,12 +95,12 @@ public class DiffUtils
    * @param path
    * @return true if path should be ignored
    */
-  private static boolean ignore( final List ignores, final String path )
+  private static boolean ignore( List ignores, String path )
   {
     if( ignores.contains( path ) )
       return true;
     // check for jokers '*'
-    for( final Iterator iter = ignores.iterator(); iter.hasNext(); )
+    for( Iterator iter = ignores.iterator(); iter.hasNext(); )
     {
       final String ignorePath = (String) iter.next();
       if( ignorePath.startsWith( "*" ) ) // *foo
@@ -180,13 +124,13 @@ public class DiffUtils
    * @param infoMessage
    * @return boolean
    */
-  public static boolean diffIgnoreOrder( final IDiffLogger logger, final List list1, final List list2, final String infoMessage )
+  public static boolean diffIgnoreOrder( IDiffLogger logger, List list1, List list2, String infoMessage )
   {
     logger.block();
     logger.log( IDiffComparator.DIFF_INFO, infoMessage );
 
     boolean result = false;
-    for( final Iterator iter = list1.iterator(); iter.hasNext(); )
+    for( Iterator iter = list1.iterator(); iter.hasNext(); )
     {
       final String element = (String) iter.next();
       if( list2.contains( element ) )
@@ -200,7 +144,7 @@ public class DiffUtils
         result = true;
       }
     }
-    for( final Iterator iter = list2.iterator(); iter.hasNext(); )
+    for( Iterator iter = list2.iterator(); iter.hasNext(); )
     {
       final String element = (String) iter.next();
       logger.log( IDiffComparator.DIFF_REMOVED, element );
@@ -208,34 +152,5 @@ public class DiffUtils
     }
     logger.unblock( result );
     return result;
-  }
-
-  /**
-   * Search for a diff comparator with the given suffix. If the suffix is not registere yet, we return a diffcomparator
-   * which just compares the streams bytewise.
-   */
-  final public static IDiffComparator getDiffComparatorFor( final String suffix, final String logMsg )
-  {
-    final DiffComparatorRegistry instance = DiffComparatorRegistry.getInstance();
-    if( instance.hasComparator( suffix ) )
-      return instance.getDiffComparator( suffix );
-    return new IDiffComparator()
-    {
-      /**
-       * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
-       *      java.lang.Object)
-       */
-      public boolean diff( final IDiffLogger logger, final Object content, final Object content2 ) throws Exception
-      {
-        final InputStream c1 = (InputStream) content;
-        final InputStream c2 = (InputStream) content2;
-        final boolean hasDiff = !StreamUtilities.isEqual( c1, c2 );
-        if( hasDiff )
-          logger.log( IDiffComparator.DIFF_CONTENT, logMsg );
-        else
-          logger.log( IDiffComparator.DIFF_OK, logMsg );
-        return hasDiff;
-      }
-    };
   }
 }

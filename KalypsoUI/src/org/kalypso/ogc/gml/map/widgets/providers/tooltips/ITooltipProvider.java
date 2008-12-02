@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.providers.tooltips;
 
@@ -44,7 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
  * This interface provides a set of functions for classes which should provide tooltips.
@@ -58,7 +58,7 @@ public interface ITooltipProvider
    * 
    * @return The tooltip.
    */
-  public String getTooltip( IMapPanel mapPanel, Rectangle rectangle );
+  public String getTooltip( MapPanel mapPanel, Rectangle rectangle );
 
   /**
    * Paints the tooltip.

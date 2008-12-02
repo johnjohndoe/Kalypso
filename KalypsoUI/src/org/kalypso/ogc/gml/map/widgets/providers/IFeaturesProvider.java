@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.providers;
 
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 
 /**
@@ -48,5 +48,5 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
  */
 public interface IFeaturesProvider
 {
-  public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel );
+  public EasyFeatureWrapper[] getFeatures( final MapPanel mapPanel );
 }

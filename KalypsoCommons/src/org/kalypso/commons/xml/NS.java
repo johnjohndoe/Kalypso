@@ -92,18 +92,15 @@ public interface NS
 
   public static final String KALYPSO_OBSLINK = "obslink.zml.kalypso.org";
 
-  /**
-   * @deprecated Does not belong here, use constants from rrm plug-ins
-   */
-  @Deprecated
   public static final String KALYPSO_RRM = "http://www.tuhh.de/kalypsoNA";
 
   public static final String KALYPSO_OM = "http://www.ksp.org/om";
 
   public static final String CATALOG = "urn:oasis:names:tc:entity:xmlns:xml:catalog";
 
+  // TODO check if ADV is korrekt
   // used by GML-Application-Schemas from "Arbeitsgemeinschaft deutscher Vermesser" (ADV)
-  public static final String ADV_NAS = "http://www.adv-online.de/nas";
+  public static final String ADV = "http://www.adv-online.de";
 
   public static final String SLD = "http://www.opengis.net/sld";
 

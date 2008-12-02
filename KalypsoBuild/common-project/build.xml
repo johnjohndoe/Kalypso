@@ -61,7 +61,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	</target>
 
 	<target name="deploy" depends="prepare">
-		<echo message="Erzeuge Jar Files from ${project.bin} ..." />
+		<echo message="Erzeuge Jar Files ..." />
 		<jar destfile="${project.deploy}/${project-name}.jar">
 			<fileset dir="${project.bin}" includes="**/*" />
 		</jar>
@@ -82,9 +82,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 	<target name="clean">
 		<echo message="Raeume auf..." />
-		<delete dir="${project.bin}" failonerror="false"/>
-		<delete dir="${project.deploy}" failonerror="false"/>
-		<delete dir="${project.doc}" failonerror="false"/>
+		<delete dir="${project.deploy}" />
+		<delete dir="${project.doc}" />
 	</target>
 
 </project>

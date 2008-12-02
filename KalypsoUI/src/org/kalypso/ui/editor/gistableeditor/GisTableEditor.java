@@ -74,12 +74,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -294,7 +294,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IKalypsoFeatureTheme theme = m_layerTable.getTheme();
-    if( theme == null || theme.getFeatureType() == null )
+    if( theme == null )
       return;
 
     final IPropertyType[] ftps = theme.getFeatureType().getProperties();

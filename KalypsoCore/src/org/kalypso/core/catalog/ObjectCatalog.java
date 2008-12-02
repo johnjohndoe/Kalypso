@@ -68,14 +68,15 @@ public abstract class ObjectCatalog<O> extends Storage
 
   private final Class<O> m_supportingClass;
 
-  public ObjectCatalog( final File repositoryBase, final CatalogManager manager, final Class<O> supportingClass )
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  public ObjectCatalog( File repositoryBase, CatalogManager manager, Class<O> supportingClass )
   {
     super( repositoryBase );
     m_manager = manager;
     m_supportingClass = supportingClass;
   }
 
-  public O getValue( final IUrlResolver2 resolver, final String systemID, final String publicID )
+  public O getValue( IUrlResolver2 resolver, String systemID, String publicID )
   {
     InputStream is = null;
     try
@@ -137,7 +138,7 @@ public abstract class ObjectCatalog<O> extends Storage
     add( object, storeLocation, false );
   }
 
-  private void add( final O object, final URI storeLocation, final boolean relative ) throws Exception
+  private void add( final O object, final URI storeLocation, boolean relative ) throws Exception
   {
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     if( generator == null )
@@ -155,7 +156,7 @@ public abstract class ObjectCatalog<O> extends Storage
 
   }
 
-  public List<String> getEntryURNs( final Object parent ) throws Exception
+  public List<String> getEntryURNs( Object parent ) throws Exception
   {
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     final String patternURN = generator.generateURNPatternForRelated( parent );
@@ -170,6 +171,7 @@ public abstract class ObjectCatalog<O> extends Storage
       if( generator == null )
         return null;
       final String defaultURN = generator.generateDefaultURNForRelated( parent );
+      // System.out.println( "defaultURN: " + defaultURN );
       return getValue( resolver, defaultURN, defaultURN );
     }
     catch( final Exception e )
@@ -180,7 +182,7 @@ public abstract class ObjectCatalog<O> extends Storage
     }
   }
 
-  protected URI getStore( final String entryURN )
+  protected URI getStore( String entryURN )
   {
     final String storageHref = getStorageHref( entryURN );
     final File file = new File( getStorageBase(), storageHref );
@@ -197,7 +199,7 @@ public abstract class ObjectCatalog<O> extends Storage
       write( object, outStream );
       return file.toURI();
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return null;

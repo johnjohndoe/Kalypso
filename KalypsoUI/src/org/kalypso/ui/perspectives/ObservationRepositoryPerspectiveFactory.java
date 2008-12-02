@@ -43,7 +43,6 @@ package org.kalypso.ui.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.ui.IKalypsoUIConstants;
 
 /**
@@ -56,7 +55,6 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   /**
    * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
    */
-  @SuppressWarnings("restriction")
   public void createInitialLayout( final IPageLayout layout )
   {
     final IFolderLayout topLeft = layout
@@ -76,10 +74,6 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
 
     setContentsOfShowViewMenu( layout );
     layout.setEditorAreaVisible( false );
-    
-    // a bit dirty, but this perspective should be minimalistic
-    if( layout instanceof PageLayout )
-      ((PageLayout) layout).getActionSets().clear();
   }
 
   /**
@@ -87,7 +81,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
    * 
    * @param layout
    */
-  protected void setContentsOfShowViewMenu( final IPageLayout layout )
+  protected void setContentsOfShowViewMenu( IPageLayout layout )
   {
     layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
     layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );

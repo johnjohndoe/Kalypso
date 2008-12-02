@@ -45,7 +45,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -104,11 +103,6 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
     if( modifier == null )
       return ""; //$NON-NLS-1$
 
-    final IPropertyType pt = modifier.getFeatureTypeProperty();
-    final IPropertyType realPt = feature.getFeatureType().getProperty( pt.getQName() );
-    if( realPt == null )
-      return "<Eigenschaft nicht vorhanden>";
-    
     final String label = modifier.getLabel( feature );
     return label == null ? "" : label; //$NON-NLS-1$
   }

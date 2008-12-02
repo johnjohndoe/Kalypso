@@ -5,7 +5,6 @@
    <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
    <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
    <extension-point id="functionExpression" name="functionExpression" schema="schema/functionExpression.exsd"/>
-   <extension-point id="featureBinding" name="featureBinding" schema="schema/featureBinding.exsd"/>
 
      <extension
          id="org.kalypso.deegree.catalog"
@@ -164,17 +163,8 @@
             function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
             isList="false"
             qname="{virtual}rasterGridDomainBoundary"
-            value="{http://www.opengis.net/gml}Polygon">
+            value="{http://www.opengis.net/gml}PolygonPropertyType">
       </virtualProperty>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
-            class="org.kalypso.preferences.KalypsoDeegreePreferencePage"
-            id="org.kalypso.deegree.preferences.KalypsoDeegreePreferencePage"
-            name="Koordinaten-Systeme">
-      </page>
    </extension>
 
 </plugin>

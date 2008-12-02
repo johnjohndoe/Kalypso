@@ -40,7 +40,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.process.internal.StreamStreamer;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
@@ -48,6 +47,52 @@ import org.kalypso.contribs.java.lang.ICancelable;
  */
 public class ProcessHelper
 {
+  public static class StreamStreamer extends Thread
+  {
+    private final OutputStream m_os;
+
+    private final InputStream m_is;
+
+    public StreamStreamer( final InputStream is, final OutputStream os )
+    {
+      m_os = os;
+      m_is = is;
+
+      start();
+    }
+
+    @Override
+    public void run( )
+    {
+      if( m_is == null )
+        return;
+
+      try
+      {
+        final byte[] stuff = new byte[2048];
+
+        while( true )
+        {
+          final int read = m_is.read( stuff );
+          if( read == -1 )
+            break;
+
+          // System.out.print( new String( stuff, 0, read ) );
+
+          if( m_os != null )
+            m_os.write( stuff, 0, read );
+
+          // This thread is already blocked by the read method, so normally we don_'t need to wait here, but who nows...
+// sleep( 25 );
+        }
+      }
+      catch( final IOException ioe )
+      {
+        ioe.printStackTrace();
+      }
+    }
+  }
+
   public ProcessHelper( )
   {
     // wird nicht instantiiert

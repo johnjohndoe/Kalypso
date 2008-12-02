@@ -63,7 +63,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -93,7 +93,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
      */
     @Override
-    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       handleMapModelChanged( newModel );
     }
@@ -113,7 +113,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
      * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partOpened(org.eclipse.ui.IWorkbenchPart)
      */
     @Override
-    public void partOpened( final IWorkbenchPart part )
+    public void partOpened( IWorkbenchPart part )
     {
       // TODO: this is not always correct, we should do this only if the active part is not a map part
       // But: this makes it too complicated now... see the TODO on the class comment; we do not need this view at all
@@ -161,7 +161,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     }
   };
 
-  private IMapPanel m_panel;
+  private MapPanel m_panel;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -217,7 +217,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
         m_commandTarget = commandTarget;
         m_viewer.setCommandTarget( commandTarget );
       }
-      setMapPanel( (IMapPanel) m_mapPart.getAdapter( IMapPanel.class ) );
+      setMapPanel( (MapPanel) m_mapPart.getAdapter( MapPanel.class ) );
     }
     else
       setMapPanel( null );
@@ -253,7 +253,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
-  public IMapPanel getMapPanel( )
+  public MapPanel getMapPanel( )
   {
     return m_panel;
   }
@@ -261,9 +261,9 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
    */
-  public void setMapPanel( final IMapPanel panel )
+  public void setMapPanel( final MapPanel panel )
   {
-    final IMapPanel oldPanel = m_panel;
+    final MapPanel oldPanel = m_panel;
 
     if( m_panel != null )
       m_panel.removeMapPanelListener( m_mapPanelListener );
@@ -354,7 +354,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     m_mapModellViewListeners.remove( l );
   }
 
-  private void fireMapModellViewChanged( final IMapPanel oldPanel, final IMapPanel newPanel )
+  private void fireMapModellViewChanged( final MapPanel oldPanel, final MapPanel newPanel )
   {
     final IMapModellViewListener[] listeners = m_mapModellViewListeners.toArray( new IMapModellViewListener[m_mapModellViewListeners.size()] );
     for( final IMapModellViewListener l : listeners )

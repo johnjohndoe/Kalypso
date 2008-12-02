@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -56,21 +56,13 @@ public class ChangeExtentCommand implements ICommand
 
   private final GM_Envelope m_undoBoundingBox;
 
-  private final IMapPanel m_mapPanel;
+  private final MapPanel m_mapPanel;
 
-  private final boolean m_useHistory;
-
-  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox )
-  {
-    this( mapPanel, boundingBox, true );
-  }
-
-  public ChangeExtentCommand( final IMapPanel mapPanel, final GM_Envelope boundingBox, final boolean useHistory )
+  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
   {
     m_mapPanel = mapPanel;
-    m_useHistory = useHistory;
-    m_doBoundingBox = boundingBox;
     m_undoBoundingBox = mapPanel.getBoundingBox();
+    m_doBoundingBox = boundingBox;
   }
 
   public boolean isUndoable( )
@@ -80,7 +72,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void process( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( m_doBoundingBox, m_useHistory );
+    m_mapPanel.setBoundingBox( m_doBoundingBox );
   }
 
   public void redo( ) throws Exception
@@ -90,7 +82,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void undo( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( m_undoBoundingBox, m_useHistory );
+    m_mapPanel.setBoundingBox( m_undoBoundingBox );
   }
 
   /**

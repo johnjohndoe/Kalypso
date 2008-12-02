@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -45,9 +45,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
-import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -58,18 +62,21 @@ public class FullExtentHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  @Override
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( part == null )
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.FullExtentHandler.0") ); //$NON-NLS-1$
 
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+    if( mapPanel == null )
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.FullExtentHandler.1") ); //$NON-NLS-1$
 
     final IMapModell modell = mapPanel.getMapModell();
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
-    final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, fullExtent );
-
-    MapHandlerUtils.postMapCommand( mapPanel, command, null );
-
+    new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, fullExtent ), null );
     return Status.OK_STATUS;
   }
 }
