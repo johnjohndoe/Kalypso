@@ -3,15 +3,12 @@ package org.kalypso.wiskiadapter;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
@@ -274,19 +271,8 @@ public class WiskiTimeserie implements IObservation
 
       try
       {
-        final String useType;
-        if( req != null && Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_WATERLEVEL ) >= 0 )
-          useType = TimeserieConstants.TYPE_WATERLEVEL;
-        else if( req != null && Arrays.binarySearch( req.getAxisTypes(), TimeserieConstants.TYPE_VOLUME ) >= 0 )
-          useType = TimeserieConstants.TYPE_VOLUME;
-        else
-          useType = TimeserieConstants.TYPE_RUNOFF;
-
         // fetch WQTable now since we know the time-range
-        fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
-
-        if( bDump )
-          System.out.println( "useType: " + useType );
+        fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo() );
       }
       catch( final Exception e )
       {
@@ -508,45 +494,25 @@ public class WiskiTimeserie implements IObservation
    * <p>
    * The rating table cache is only asked if nothing is found in the live system, thus as a last mean.
    */
-  private void fetchWQTable( final MetadataList metadata, final Date dateFrom, final Date dateTo, final String requestType )
+  private void fetchWQTable( final MetadataList metadata, final Date dateFrom, final Date dateTo )
   {
     // HACK: Q-Förderstrom (Speicherabgabe Bode/Ilse) darf eigentlich keine WQ-Beziehung haben
     final String paramName = m_tsinfo.getStationParameterName();
     if( paramName != null && paramName.startsWith( "QF" ) )
     {
       LOG.info( "Type QF detected, will not search a Rating Table for: " + getName() );
-
       return;
     }
 
-    // TODO: check this stuff; it's obscure....!
-
     final String sourceType = m_axes[1].getType();
-    final String destType;
-    if( sourceType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      destType = TimeserieConstants.TYPE_WATERLEVEL; // force to W
-    else if( sourceType.equals( TimeserieConstants.TYPE_VOLUME ) )
-      destType = TimeserieConstants.TYPE_WATERLEVEL; // force to W
-    else if( sourceType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      destType = requestType; // here use the Type found in the request
-    else
-      return;
-
-    // TRICKY: wiski always delivers WQTable with stage -> flow conversion
-    // our observation does not know at first if the fromType is a stage (W)
-    // so we build a set containing both types and remove the W to know which
-    // is the toType...
-    final Set set = new HashSet();
-    set.add( sourceType );
-    set.add( destType );
-    set.remove( TimeserieConstants.TYPE_WATERLEVEL );
-    final String fromType = TimeserieConstants.TYPE_WATERLEVEL;
-    final String toType = (String)set.toArray()[0];
+    final String destType = findWQDestType( sourceType );
 
     /////// find table and put into metadata
-    final WQTableSetPlusSource wqss = findAndCacheWQTable( dateFrom, dateTo, fromType, toType );
+    final WQTableSetPlusSource wqss = findAndCacheWQTable( dateFrom, dateTo, destType, sourceType );
     if( wqss != null )
     {
+      LOG.info( "Schlüsselkurven für " + getName() + " gefunden: " + wqss.source );
+
       try
       {
         metadata.setProperty( MD_WISKI_WQ_SOURCE, wqss.source );
@@ -560,6 +526,32 @@ public class WiskiTimeserie implements IObservation
     }
     else
       LOG.warning( "Keine Schlüsselkurve gefunden für: " + getName() );
+  }
+
+  /**
+   * Returns the destination type (of the WQ-Table) for a given source type. <br>
+   * This is hard coded, because this information can neither be obtained from WISKI nor from the request.<br>
+   * We only support the three different cases:
+   * <ul>
+   *  <li>W -> Q</li>
+   *  <li>Q -> W</li>
+   *  <li>V -> NN</li>
+   *</ul>
+   *
+   * So this only works, if we never ask for a W corrsesponding to a V. This is ensured by convention of the WISKI konfiguration. 
+   */
+  private String findWQDestType( String sourceType )
+  {
+    if( sourceType.equals( TimeserieConstants.TYPE_RUNOFF ) )
+      return TimeserieConstants.TYPE_WATERLEVEL;
+    
+    if( sourceType.equals( TimeserieConstants.TYPE_VOLUME ) )
+      return TimeserieConstants.TYPE_NORMNULL;
+    
+    if( sourceType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      return TimeserieConstants.TYPE_RUNOFF;
+    
+    return null;
   }
 
   /**
@@ -578,13 +570,10 @@ public class WiskiTimeserie implements IObservation
       return wqss;
     }
 
-    // Try to find from cache
+    // No table found :-( Try to find from cache
     final WQTableSet wqsFromCache = RatingTableCache.getInstance().get( m_tsinfo.getIdentifier(), to );
     if( wqsFromCache != null )
-    {
-      LOG.info( "Found WQ-Table in cache for " + getName() );
       return new WQTableSetPlusSource( wqsFromCache, "Kalypso-Server (Cache)" );
-    }
 
     return null;
   }
@@ -596,7 +585,7 @@ public class WiskiTimeserie implements IObservation
    */
   private WQTableSetPlusSource findWQTable( final Date from, final Date to, final String fromType, final String toType )
   {
-    final WQTableSet wqsFromTs = findWQTable( KiWWDataProviderInterface.OBJECT_TIMESERIES, m_tsinfo.getWiskiId(), from, to, fromType, toType );
+    final WQTableSet wqsFromTs = fetchWQTable( KiWWDataProviderInterface.OBJECT_TIMESERIES, m_tsinfo.getWiskiId(), from, to, fromType, toType );
     if( wqsFromTs != null )
     {
       final String wqSource = Format.sprintf( "Zeitreihe: %s", new Object[]
@@ -605,64 +594,40 @@ public class WiskiTimeserie implements IObservation
       return new WQTableSetPlusSource( wqsFromTs, wqSource );
     }
 
-    final WQTableSet wqsFromStation = findWQTable( KiWWDataProviderInterface.OBJECT_STATION, m_tsinfo.getWiskiStationId(), from, to, fromType, toType );
-    if( wqsFromStation != null )
+    // If we have a corresponding group; look if we have a timeserie on the same station in that group
+    final String siblingGroup = WiskiUtils.getProperty( "WQSEARCH_" + m_tsinfo.getWiskiGroupName(), null );
+    final TsInfoItem siblingTs = siblingGroup == null ? null : m_tsinfo.findSibling( siblingGroup );
+    if( siblingTs != null )
     {
-      final String wqSource = Format.sprintf( "Station: %s (%s)", new Object[]
+      final WQTableSet wqsFromSibling = fetchWQTable( KiWWDataProviderInterface.OBJECT_TIMESERIES, siblingTs.getWiskiId(), from, to, toType, fromType );
+      if( wqsFromSibling != null )
       {
-          m_tsinfo.getWiskiStationName(),
-          m_tsinfo.getWiskiStationNo() } );
-      return new WQTableSetPlusSource( wqsFromStation, wqSource );
+        final String wqSource = Format.sprintf( "Zeitreihe, indirekt: %s", new Object[]
+        { siblingTs.getIdentifier() } );
+
+        return new WQTableSetPlusSource( wqsFromSibling, wqSource );
+      }
     }
 
-    // REMARK: old falback code (guess fitting parameter which might have the associated table). Did never really work
-    // for all cases
-    // Left here if we might use it once again...
-
-    //    // 1. first try: using the normal way (our tsinfo)
-    //    WQTable wqt = fetchWQTableIntern( m_tsinfo, rep, dateFrom, dateTo );
-    //
-    //    if( wqt == null )
+    // Last resort: looking up via station; we do not do this any more, as more than one different schluesseklkurven can
+    // be configured per station
+    //    final WQTableSet wqsFromStation = fetchWQTable( KiWWDataProviderInterface.OBJECT_STATION,
+    // m_tsinfo.getWiskiStationId(), from, to, fromType, toType );
+    //    if( wqsFromStation != null )
     //    {
-    //      // TODO: das macht keinen Sinn, weil fetchWQTableIntern nur noch über die Station sucht
-    //      // wenn aber die Station keine Schlüsselkurve hat, wird man hier auch nichts mehr finden
-    //      LOG.info( "Trying to find WQ-Table with sibling for " + getName() );
-    //
-    //      // 2. this failed, so next try is using sibling of other type
-    //      // which might also contain a usable rating table
-    //
-    //      // try with sibling of other parameter
-    //      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + destType );
-    //      if( prop != null )
+    //      final String wqSource = Format.sprintf( "Station: %s (%s)", new Object[]
     //      {
-    //        LOG.info( "Sibling " + prop + " is being asked for WQ-Table" );
-    //
-    //        try
-    //        {
-    //          final TsInfoItem tsi = m_tsinfo.findSibling( prop );
-    //          if( tsi != null )
-    //          {
-    //            wqt = fetchWQTableIntern( tsi, rep, dateFrom, dateTo );
-    //            if( wqt != null )
-    //              LOG.info( "Found WQ-Table in sibling: " + prop );
-    //            else
-    //              LOG.info( "Did not find WQ-Table in sibling: " + prop );
-    //          }
-    //        }
-    //        catch( final RepositoryException e )
-    //        {
-    //          // should not occur
-    //          LOG.warning( e.getLocalizedMessage() );
-    //        }
-    //      }
+    //          m_tsinfo.getWiskiStationName(),
+    //          m_tsinfo.getWiskiStationNo() } );
+    //      return new WQTableSetPlusSource( wqsFromStation, wqSource );
     //    }
 
     return null;
   }
 
-  private WQTableSet findWQTable( final String type, final Long id, final Date from, final Date to, final String fromType, final String toType )
+  private WQTableSet fetchWQTable( final String type, final Long id, final Date from, final Date to, final String fromType, final String toType )
   {
-    LOG.info( "Calling getRatingTables() with validity= " + to + " type= " + type + " ts-id= " + id );
+    //    LOG.info( "Calling getRatingTables() with validity= " + to + " type= " + type + " ts-id= " + id );
 
     try
     {
@@ -711,7 +676,7 @@ public class WiskiTimeserie implements IObservation
         }
         catch( final IllegalArgumentException e )
         {
-          LOG.warning( "Metadata-Eigenschaft nicht erkannt: " + level );
+          LOG.warning( "Unbekanntes Alarmlevel von WISKI erhalten: " + level );
 
           // set the property without Kalyso-Meaning, even if not recognized
           md.setProperty( level, value );

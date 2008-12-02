@@ -209,8 +209,7 @@ public class TsInfoItem implements IRepositoryItem
     final StringBuffer bf = new StringBuffer();
     bf.append( getWiskiParametertypeLongname() );
     bf.append( getWiskiStationparameterName() ).append( " - " );
-    bf.append( getWiskiStationparameterLongname() )
-        .append( " - " );
+    bf.append( getWiskiStationparameterLongname() ).append( " - " );
     bf.append( getWiskiStationName() );
 
     return bf.toString();
@@ -239,15 +238,15 @@ public class TsInfoItem implements IRepositoryItem
     String stationIdString = m_map.getProperty( "station_id", null );
     if( stationIdString == null )
       return null;
-    
-    return Long.valueOf(stationIdString);
+
+    return Long.valueOf( stationIdString );
   }
 
   public boolean isActive()
   {
-    return m_groupEntryList.isActive( getWiskiIdAsString() ); 
+    return m_groupEntryList.isActive( getWiskiIdAsString() );
   }
-  
+
   /**
    * Return the station number (in german: Messstellennummer) in the Wiski sense.
    * <p>
@@ -262,7 +261,7 @@ public class TsInfoItem implements IRepositoryItem
   {
     return getWiskiStationparameterName();
   }
-  
+
   /**
    * Return the name of the group/parameter. The group of a TsInfoItem is actually the Parameter in the Wiski sense.
    * <p>
@@ -304,15 +303,14 @@ public class TsInfoItem implements IRepositoryItem
     if( strWiskiUnit == null )
       throw new IllegalStateException( "Wiski does not deliver which time-unit to use (Property: tsinfo_distunit)" );
 
-   return Integer.valueOf( strWiskiUnit ).intValue();
+    return Integer.valueOf( strWiskiUnit ).intValue();
   }
 
   int getWiskiDistValue()
   {
     final String strWiskiValue = m_map.getProperty( "tsinfo_distcount" );
     if( strWiskiValue == null )
-      throw new IllegalStateException(
-          "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
+      throw new IllegalStateException( "Wiski does not deliver which amount of the given time-unit to use (Property: tsinfo_distvalue)" );
 
     return Integer.valueOf( strWiskiValue ).intValue();
   }
@@ -320,16 +318,23 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * Helper: finds a sibling timeserie (under same station) of the given parameter
    */
-  TsInfoItem findSibling( final String parameterName ) throws RepositoryException
+  TsInfoItem findSibling( final String parameterName )
   {
-    final SuperGroupItem supergroup = (SuperGroupItem)m_group.getParent();
-    final GroupItem group = supergroup.findGroup( parameterName );
+    try
+    {
+      final SuperGroupItem supergroup = (SuperGroupItem)m_group.getParent();
+      final GroupItem group = supergroup.findGroup( parameterName );
 
-    if( group == null )
-      throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName
-          + ", supergroup is: " + supergroup.getName() );
+      if( group == null )
+        throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName + ", supergroup is: " + supergroup.getName() );
 
-    return group.findTsInfo( "station_no", getWiskiStationNo() );
+      return group.findTsInfo( "station_no", getWiskiStationNo() );
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**

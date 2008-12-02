@@ -3,10 +3,10 @@ package org.kalypso.wiskiadapter;
 import java.io.File;
 import java.util.Date;
 
-import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
-import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.commons.cache.StringValidityFileCache;
 import org.kalypso.commons.cache.StringValidityKey;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 
 /**
  * RatingTableCache
@@ -19,8 +19,15 @@ public class RatingTableCache
 
   private final StringValidityFileCache m_cache;
 
-  private RatingTableCache()
+  private final long m_expireTime;
+
+  /**
+   * @param expireTime Time (in ms) for how long items are kept in the cache.
+   */
+  private RatingTableCache( final long expireTime )
   {
+    m_expireTime = expireTime;
+    
     final File dir = new File( System.getProperty( "java.io.tmpdir" ) + File.separator + "wiskiRatingTables" );
     if( !dir.exists() )
       dir.mkdir();
@@ -31,7 +38,7 @@ public class RatingTableCache
   public static RatingTableCache getInstance()
   {
     if( m_instance == null )
-      m_instance = new RatingTableCache();
+      m_instance = new RatingTableCache( 1000 * 60 * 60 * 24 * 7 ); // 7 days
 
     return m_instance;
   }
@@ -43,7 +50,11 @@ public class RatingTableCache
    */
   public WQTableSet get( final String tsInfoName, final Date validity )
   {
-    return (WQTableSet)m_cache.get( new StringValidityKey( tsInfoName, validity ) );
+    final StringValidityKey key = new StringValidityKey( tsInfoName, validity );
+
+    checkValidity( key );
+
+    return (WQTableSet)m_cache.get( key );
   }
 
   /**
@@ -53,11 +64,33 @@ public class RatingTableCache
   {
     final StringValidityKey key = new StringValidityKey( tsInfoName, to );
 
+    checkValidity( key );
+
     final StringValidityKey cacheKey = m_cache.getRealKey( key );
 
     if( cacheKey != null && cacheKey.getValidity().after( to ) )
-      return; // no need to overwrite if more recent in the cache
+      return; // no need to overwrite if more recent is in the cache
 
     m_cache.addObject( key, wqTableSet );
   }
+
+  /**
+   * Removes entries that are too old from the cache.
+   */
+  private void checkValidity( final StringValidityKey key )
+  {
+    final StringValidityKey realKey = m_cache.getRealKey( key );
+    if( realKey == null )
+      return;
+    
+    final Date validity = realKey.getValidity();
+
+    final long cacheTime = validity.getTime();
+    final long currentTime = System.currentTimeMillis();
+    
+    // If the object is too old, remove it from the cache
+    if( currentTime - cacheTime > m_expireTime )
+      m_cache.remove(key);
+  }
+
 }
