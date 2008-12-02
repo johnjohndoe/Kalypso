@@ -41,6 +41,7 @@ import java.util.TimeZone;
  */
 public class NATimeSettings
 {
+  public static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC";
 
   private static NATimeSettings m_instance = null;
 
@@ -50,8 +51,7 @@ public class NATimeSettings
 
   private NATimeSettings( )
   {
-    m_timeZone = TimeZone.getTimeZone( "GMT+1" );
-    // new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
+    m_timeZone = TimeZone.getTimeZone( CALCULATION_CORE_TIMEZONE );
     m_calendar = Calendar.getInstance( m_timeZone );
   }
 
@@ -62,7 +62,7 @@ public class NATimeSettings
     return m_instance;
   }
 
-  public DateFormat getTimeZonedDateFormat( DateFormat dateFormat )
+  public DateFormat getTimeZonedDateFormat( final DateFormat dateFormat )
   {
     dateFormat.setTimeZone( (TimeZone) m_timeZone.clone() );
     return dateFormat;
