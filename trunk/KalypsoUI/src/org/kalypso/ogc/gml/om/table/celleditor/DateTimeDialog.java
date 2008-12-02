@@ -2,46 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.celleditor;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.vafada.swtcalendar.SWTCalendar;
 import org.vafada.swtcalendar.SWTCalendarEvent;
 import org.vafada.swtcalendar.SWTCalendarListener;
@@ -67,6 +69,8 @@ public class DateTimeDialog extends TitleAreaDialog
   private GregorianCalendar m_gregorianCalendar;
 
   private GregorianCalendar m_preSettedDateTime;
+
+  private TimeZone m_dataTimeZone;
 
   public DateTimeDialog( final Shell parent )
   {
@@ -83,7 +87,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
 
-    newShell.setText( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.0") ); //$NON-NLS-1$
+    newShell.setText( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -94,7 +98,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.1" ) ); //$NON-NLS-1$
     setMessage( null );
 
     return contents;
@@ -122,9 +126,10 @@ public class DateTimeDialog extends TitleAreaDialog
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
-    lTime.setText( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.2") ); //$NON-NLS-1$
+    lTime.setText( Messages.getString( "org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.2" ) ); //$NON-NLS-1$
 
     final DateTime time = new DateTime( composite, SWT.TIME );
+
     time.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     if( m_preSettedDateTime != null )
       preSetDateTime( m_preSettedDateTime, time );
@@ -158,10 +163,14 @@ public class DateTimeDialog extends TitleAreaDialog
 
   private void preSetDateTime( final GregorianCalendar calendar, final DateTime dateTime )
   {
+    m_dataTimeZone = calendar.getTimeZone();
+
+    calendar.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+
     dateTime.setDay( calendar.get( Calendar.DAY_OF_MONTH ) );
     dateTime.setMonth( calendar.get( Calendar.MONTH ) );
     dateTime.setYear( calendar.get( Calendar.YEAR ) );
-    dateTime.setHours( calendar.get( Calendar.HOUR ) );
+    dateTime.setHours( calendar.get( Calendar.HOUR_OF_DAY ) );
     dateTime.setMinutes( calendar.get( Calendar.MINUTE ) );
     dateTime.setSeconds( calendar.get( Calendar.SECOND ) );
   }
@@ -169,6 +178,7 @@ public class DateTimeDialog extends TitleAreaDialog
   protected void setDateTime( final SWTCalendar calendar, final DateTime time )
   {
     final Calendar date = calendar.getCalendar();
+
     final int day = date.get( Calendar.DAY_OF_MONTH );
     final int month = date.get( Calendar.MONTH );
     final int year = date.get( Calendar.YEAR );
@@ -177,11 +187,32 @@ public class DateTimeDialog extends TitleAreaDialog
     final int minutes = time.getMinutes();
     final int seconds = time.getSeconds();
 
-    m_gregorianCalendar = new GregorianCalendar( year, month, day, hours, minutes, seconds );
+    /* HACK: create a new calendar with default (display time zone) */
+    // this is necessary, because the SWTCalendar cannot handle any time zone. So we have to convert the date for it by
+    // our own.
+    // If the user edits an calendar entry, he is working always in the kalypso default time zone(!?).
+    GregorianCalendar gregorianCalendar = new GregorianCalendar();
+    gregorianCalendar.set( year, month, day, hours, minutes, seconds );
+
+    m_gregorianCalendar = gregorianCalendar;
   }
 
   public GregorianCalendar getDateTime( )
   {
+    /* HACK: for getting the calendar, we create a new calendar, that has the same time zone set as the input data */
+    final int day = m_gregorianCalendar.get( Calendar.DAY_OF_MONTH );
+    final int month = m_gregorianCalendar.get( Calendar.MONTH );
+    final int year = m_gregorianCalendar.get( Calendar.YEAR );
+    final int hours = m_gregorianCalendar.get( Calendar.HOUR_OF_DAY );
+    final int minutes = m_gregorianCalendar.get( Calendar.MINUTE );
+    final int seconds = m_gregorianCalendar.get( Calendar.SECOND );
+
+    if( m_dataTimeZone == null )
+      m_dataTimeZone = KalypsoGisPlugin.getDefault().getDisplayTimeZone();
+
+    GregorianCalendar gregorianCalendar = new GregorianCalendar( m_dataTimeZone );
+    gregorianCalendar.set( year, month, day, hours, minutes, seconds );
+
     return m_gregorianCalendar;
   }
 
@@ -189,4 +220,5 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     m_preSettedDateTime = dateTime;
   }
+
 }

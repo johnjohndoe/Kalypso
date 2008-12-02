@@ -35,6 +35,8 @@
  */
 package org.kalypsodeegree_impl.gml.schema;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -244,6 +246,24 @@ public class SpecialPropertyMapper
       public Object map( final Object srcObject )
       {
         return new Integer( ((Number) srcObject).intValue() );
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( Date.class, String.class )
+    {
+      @Override
+      public Object map( final Object srcObject )
+      {
+        return SimpleDateFormat.getDateTimeInstance().format( (Date) srcObject ).toString();
+      }
+    } );
+
+    m_instance.register( m_instance.new SpecialMapper( String.class, Date.class )
+    {
+      @Override
+      public Object map( final Object srcObject )
+      {
+        return new Date( srcObject.toString() );
       }
     } );
 

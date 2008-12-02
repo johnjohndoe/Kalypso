@@ -122,7 +122,7 @@ public class TimeserieUtils
 
   private TimeserieUtils( )
   {
-    // no instanciation
+    // no instantiation
   }
 
   /**
@@ -131,9 +131,9 @@ public class TimeserieUtils
    * config.properties).
    * 
    * @param configUrl
-   *            Base location of the config file(s) (i.e. getClass().getResource("resources")).
+   *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
-   *            base name of the config file (i.e. "config")
+   *          base name of the config file (i.e. "config")
    */
   public static void setConfigUrl( final URL configUrl, final String basename )
   {
@@ -144,7 +144,7 @@ public class TimeserieUtils
   /**
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
-   * This is for instance usefull for the Alarmstufen
+   * This is for instance useful for the Alarmstufen
    * 
    * @param obs
    * @param mdPrefix
@@ -158,7 +158,6 @@ public class TimeserieUtils
     final MetadataList mdl = obs.getMetadataList();
 
     final ArrayList<String> mds = new ArrayList<String>();
-
 
     final Set<Object> keySet = mdl.keySet();
     for( final Object object : keySet )
@@ -179,7 +178,7 @@ public class TimeserieUtils
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-    return findOutMDBeginningWith( obs, Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2") ); //$NON-NLS-1$
+    return findOutMDBeginningWith( obs, Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -189,7 +188,7 @@ public class TimeserieUtils
    */
   public final static Color getColorForAlarmLevel( final String mdAlarm )
   {
-    final String strColor = getProperties().getProperty( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3") + mdAlarm ); //$NON-NLS-1$
+    final String strColor = getProperties().getProperty( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3" ) + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
       return Color.RED;
 
@@ -220,8 +219,7 @@ public class TimeserieUtils
         // If we have a configured config file, use it as standard
         final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
         final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
-        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl,
-            timeseriesConfigLocation );
+        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl, timeseriesConfigLocation );
 
         try
         {
@@ -231,8 +229,8 @@ public class TimeserieUtils
         catch( final FileNotFoundException ioe )
         {
           // ignore: there is no config file; we are using standard instead
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at "
-              + timeseriesConfigUrl.toExternalForm() + " does not exist. Using default settings.", null );
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at " + timeseriesConfigUrl.toExternalForm()
+              + " does not exist. Using default settings.", null );
           KalypsoCorePlugin.getDefault().getLog().log( status );
         }
 
@@ -341,13 +339,11 @@ public class TimeserieUtils
     final String strColor = getProperties().getProperty( "AXISCOLOR_" + type ); //$NON-NLS-1$
 
     if( strColor == null )
-      return new Color[]
-                       { ColorUtilities.random() };
+      return new Color[] { ColorUtilities.random() };
 
     final String[] strings = strColor.split( "#" );
     if( strings.length == 0 )
-      return new Color[]
-                       { ColorUtilities.random() };
+      return new Color[] { ColorUtilities.random() };
 
     final Color[] colors = new Color[strings.length];
     for( int i = 0; i < colors.length; i++ )
@@ -438,6 +434,14 @@ public class TimeserieUtils
     if( nf != null )
       return nf;
 
+    if( format.equals( "%d" ) )
+    {
+      final NumberFormat wf = NumberFormat.getIntegerInstance();
+      wf.setGroupingUsed( false );
+      m_formatMap.put( format, wf );
+      return wf;
+    }
+
     // parse the format spec and only take the min-fraction-digit part
     final String regex = "%([0-9]*)\\.?([0-9]*)f"; //$NON-NLS-1$
     final Pattern pattern = Pattern.compile( regex );
@@ -474,12 +478,12 @@ public class TimeserieUtils
    * 
    * @return the date format to use when displaying dates for observations/timeseries
    */
-  public static DateFormat getDateFormat()
+  public static DateFormat getDateFormat( )
   {
     return DF;
   }
 
-  public static Class<?> getDataClass( final String type )
+  public static Class< ? > getDataClass( final String type )
   {
     try
     {
@@ -487,7 +491,7 @@ public class TimeserieUtils
     }
     catch( final ClassNotFoundException e )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.19") + type ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.19" ) + type ); //$NON-NLS-1$
     }
   }
 
@@ -528,9 +532,9 @@ public class TimeserieUtils
    * randomly generated.
    * 
    * @param axisTypes
-   *            as seen in TimeserieConstants.TYPE_*
+   *          as seen in TimeserieConstants.TYPE_*
    * @param amountRows
-   *            amount of rows of the TuppleModel that is randomly created
+   *          amount of rows of the TuppleModel that is randomly created
    * @throws SensorException
    */
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
@@ -569,7 +573,7 @@ public class TimeserieUtils
 
   /**
    * @param gkr
-   *            the Gausskrüger Rechtswert as string
+   *          the Gausskrüger Rechtswert as string
    * @return the corresponding Gausskrüger Coordinate System Name
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
@@ -577,7 +581,6 @@ public class TimeserieUtils
     final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
     if( crsName == null )
       KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
     return crsName;
   }
 
@@ -586,7 +589,7 @@ public class TimeserieUtils
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
    * 
    * @param axisType
-   *            the type of the axis for which to convert the alarm-level
+   *          the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
   public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
@@ -599,6 +602,6 @@ public class TimeserieUtils
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) || axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
       return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
 
-    throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22") + axisType + Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23") ); //$NON-NLS-1$ //$NON-NLS-2$
+    throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22" ) + axisType + Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

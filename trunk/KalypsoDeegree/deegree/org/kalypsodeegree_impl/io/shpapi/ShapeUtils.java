@@ -59,9 +59,9 @@ public class ShapeUtils
    * Reads a point record. A point record is a double representing the x value and a double representing a y value.
    * 
    * @param b
-   *            the raw data buffer
+   *          the raw data buffer
    * @param off
-   *            the offset into the buffer where the int resides
+   *          the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
   public static SHPPoint readPoint( byte[] b, int off )
@@ -78,9 +78,9 @@ public class ShapeUtils
    * Reads the min. and max. z-value of a shpz-file (as double).
    * 
    * @param b
-   *            the raw data buffer
+   *          the raw data buffer
    * @param off
-   *            the offset into the buffer where the int resides
+   *          the offset into the buffer where the int resides
    * @return the z-value of the lowest and highest point (zmin and zmax) as doubles.
    */
   public static SHPZRange readZRange( byte[] b, int off )
@@ -96,9 +96,9 @@ public class ShapeUtils
    * Reads a bounding box record. A bounding box is four double representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
-   *            the raw data buffer
+   *          the raw data buffer
    * @param off
-   *            the offset into the buffer where the int resides
+   *          the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
   public static SHPEnvelope readBox( byte[] b, int off )
@@ -124,11 +124,11 @@ public class ShapeUtils
    * followed by a double representing y.
    * 
    * @param b
-   *            the data buffer
+   *          the data buffer
    * @param off
-   *            the offset into the buffer where writing should occur
+   *          the offset into the buffer where writing should occur
    * @param point
-   *            the point to write
+   *          the point to write
    * @return the number of bytes written
    */
   public static int writePoint( byte[] b, int off, final double x, final double y )
@@ -148,11 +148,11 @@ public class ShapeUtils
    * doubles representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
-   *            the data buffer
+   *          the data buffer
    * @param off
-   *            the offset into the buffer where writing should occur
+   *          the offset into the buffer where writing should occur
    * @param box
-   *            the bounding box to write
+   *          the bounding box to write
    * @return the number of bytes written
    */
   public static int writeBox( byte[] b, int off, SHPEnvelope box )
@@ -178,11 +178,11 @@ public class ShapeUtils
    * representing, in order, zmin and zmax.
    * 
    * @param b
-   *            the data buffer
+   *          the data buffer
    * @param off
-   *            the offset into the buffer where writing should occur
+   *          the offset into the buffer where writing should occur
    * @param SHPZRange
-   *            the Z-Range to write
+   *          the Z-Range to write
    * @return the number of bytes written
    */
   public static int writeZRange( byte[] b, int off, SHPZRange zrange )

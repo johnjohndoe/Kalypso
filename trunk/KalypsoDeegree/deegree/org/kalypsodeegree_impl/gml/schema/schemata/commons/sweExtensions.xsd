@@ -52,7 +52,19 @@
 			<extension base="swe:RecordDefinitionType">
 				<sequence>
 					<element name="sortedComponent"
-						type="swe:SWE_RecordSchemaPropertyType " maxOccurs="unbounded" />
+						type="swe:SWE_RecordSchemaPropertyType" maxOccurs="unbounded" />
+					<element name="ordinalNumberComponent"
+						type="swe:SWE_RecordSchemaPropertyType">
+						<annotation>
+							<documentation>
+								Column that contains ordinal number(s)
+								of the observation records. If set,
+								values of this column will be renumbered
+								automatically on any tuple result set
+								change.
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

@@ -126,7 +126,11 @@ public class TransformUtilities
     Point3d coords = new Point3d( geo.getX(), geo.getY(), geo.getZ() );
     Point3d newCoords = trans.doTransform( coords );
 
-    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : Double.NaN, targetCRS.getIdentifier() );
+    // REMARK: here we have to write a z-value in any case!
+    // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
+    // dimensions)
+    // We either put the old z value or the transformed value
+    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : geo.getZ(), targetCRS.getIdentifier() );
   }
 
   /**
@@ -157,7 +161,11 @@ public class TransformUtilities
     Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
     Point3d newCoords = trans.doTransform( coords );
 
-    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, newCoords.z );
+    // REMARK: here we have to write a z-value in any case!
+    // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
+    // dimensions)
+    // We either put the old z value or the transformed value
+    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : pos.getZ() );
   }
 
   /**

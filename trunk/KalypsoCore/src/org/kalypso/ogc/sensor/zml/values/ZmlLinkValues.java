@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
@@ -73,7 +73,7 @@ public class ZmlLinkValues implements IZmlValues
 
   private final IParser m_parser;
 
-  private Map<Object, Integer> m_helper = new Hashtable<Object, Integer>();
+  private final Map<Object, Integer> m_helper = new Hashtable<Object, Integer>();
 
   private final int m_column;
 
@@ -81,14 +81,14 @@ public class ZmlLinkValues implements IZmlValues
    * Constructor
    * 
    * @param vl
-   *          binding type
+   *            binding type
    * @param parser
-   *          configured values parser
+   *            configured values parser
    * @param context
-   *          context into which original file was loaded
+   *            context into which original file was loaded
    * @param data
-   *          [optional] contains the values in a block format within CDATA tags if the values are linked
-   *          ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
+   *            [optional] contains the values in a block format within CDATA tags if the values are linked
+   *            ZML-internally. This will be used if Href is not specified, is empty, or contains "#data"
    * @throws MalformedURLException
    * @throws IOException
    */
