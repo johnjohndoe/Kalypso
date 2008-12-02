@@ -61,6 +61,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
@@ -87,7 +88,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
- * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @author Dejan Antanaskovic
  */
 public class ImportLanduseWizard extends Wizard implements INewWizard
 {
@@ -102,6 +103,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   private static final String PREDEFINED_DATASET_PATH = "models/PredefinedDataset.gml"; //$NON-NLS-1$
 
   private static final int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
+
+  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" ); //$NON-NLS-1$
 

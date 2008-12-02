@@ -57,6 +57,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;

@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.Messages;
@@ -28,6 +29,8 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableWithProgress
 {
+
+  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
