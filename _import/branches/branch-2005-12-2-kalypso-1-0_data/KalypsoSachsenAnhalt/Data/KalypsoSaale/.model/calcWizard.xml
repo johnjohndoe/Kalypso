@@ -248,7 +248,7 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Inhalt"/>
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="NN"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
@@ -1044,7 +1044,7 @@
 		<!-- bräunlich, entspricht (160, 130, 70) -->
 		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
 		<!-- hell blau, entspricht (160, 255, 255) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="NN;W"/>
 		<!-- 
         Tabelle -->
 	</page>
@@ -3089,7 +3089,7 @@
 		<!-- bräunlich, entspricht (160, 130, 70) -->
 		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
 		<!-- hell blau, entspricht (160, 255, 255) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="NN;W"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -3247,7 +3247,7 @@
 					<arg name="label" value="Gewässer"/>
 					<arg name="content" value="metadata:Gewässer"/>
 				</arg>
-				<arg name="axisType" value="W"/>
+				<arg name="axisType" value="NN"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
 				
