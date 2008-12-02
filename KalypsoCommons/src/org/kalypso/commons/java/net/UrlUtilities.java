@@ -43,9 +43,12 @@ package org.kalypso.commons.java.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 
 /**
  * @author belger
@@ -53,7 +56,7 @@ import org.apache.commons.io.IOUtils;
 public class UrlUtilities
 {
   private UrlUtilities( )
-  { 
+  {
     // will not get instantiated
   }
 
@@ -97,6 +100,29 @@ public class UrlUtilities
     {
       IOUtils.closeQuietly( is );
     }
+  }
+
+  public static URL resolveWithZip( final URL context, final String source ) throws MalformedURLException
+  {
+    return resolveWithZip( context, source, UrlResolverSingleton.getDefault() );
+  }
+
+  public static URL resolveWithZip( final URL context, final String source, final IUrlResolver resolver ) throws MalformedURLException
+  {
+    // HACK
+    // TODO comment
+    final int indexOf = source.indexOf( "!" );
+    if( indexOf == -1 )
+      return resolver.resolveURL( context, source );
+
+    final String zipPath = source.substring( 0, indexOf );
+    final String refInZip = source.substring( indexOf );
+
+    final URL zipUrl = resolver.resolveURL( context, zipPath );
+
+    final URL jarUrl = new URL( "jar:" + zipUrl.toExternalForm() + refInZip );
+
+    return jarUrl;
   }
 
 }

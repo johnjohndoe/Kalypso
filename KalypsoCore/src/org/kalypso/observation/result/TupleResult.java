@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,6 +74,10 @@ public class TupleResult implements List<IRecord>
   private final Set<IComponent> m_sortComponents = new LinkedHashSet<IComponent>();
 
   private final Set<ITupleResultChangedListener> m_listeners = new HashSet<ITupleResultChangedListener>();
+
+  private IComponent m_ordinalNumberComponent = null;
+
+  private int m_ordinalNumberComponentIndex = -1;
 
   /** Internal sort state. Initially <code>true</code> as the empty list is sorted. */
   private boolean m_isSorted = true;
@@ -128,9 +133,36 @@ public class TupleResult implements List<IRecord>
     fireRecordsChanged( null, TYPE.CHANGED );
   }
 
+  public void setOrdinalNumberComponent( final IComponent component )
+  {
+    m_ordinalNumberComponent = component;
+    if( m_ordinalNumberComponent != null )
+      for( int i = 0; i < m_components.size(); i++ )
+        if( m_ordinalNumberComponent.equals( m_components.get( i ) ) )
+        {
+          m_ordinalNumberComponentIndex = i;
+          break;
+        }
+  }
+
+  private void renumber( )
+  {
+    if( m_ordinalNumberComponent != null )
+    {
+      int i = 1;
+      for( final IRecord record : m_records )
+        record.setValue( m_ordinalNumberComponentIndex, new BigInteger( new Integer( i++ ).toString() ) );
+    }
+  }
+
   public IComponent[] getSortComponents( )
   {
     return m_sortComponents.toArray( new IComponent[m_sortComponents.size()] );
+  }
+
+  public IComponent getOrdinalNumberComponent( )
+  {
+    return m_ordinalNumberComponent;
   }
 
   /**
@@ -165,6 +197,8 @@ public class TupleResult implements List<IRecord>
     Collections.sort( m_records, m_sortComparator );
 
     m_isSorted = true;
+
+    renumber();
   }
 
   /**
@@ -181,9 +215,9 @@ public class TupleResult implements List<IRecord>
     m_interpolationHandler = handler;
   }
 
-  public boolean doInterpolation(  final TupleResult result, final IRecord record, final int index, final Double distance)
+  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )
   {
-    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record,index,distance );
+    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record, index, distance );
   }
 
   /**
@@ -194,7 +228,6 @@ public class TupleResult implements List<IRecord>
     checkRecord( element );
 
     m_records.add( index, element );
-
     fireRecordsChanged( new IRecord[] { element }, TYPE.ADDED );
   }
 
@@ -220,7 +253,6 @@ public class TupleResult implements List<IRecord>
     checkRecords( c );
 
     final boolean result = m_records.addAll( c );
-
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
     return result;
@@ -234,7 +266,6 @@ public class TupleResult implements List<IRecord>
     checkRecords( c );
 
     final boolean result = m_records.addAll( index, c );
-
     fireRecordsChanged( c.toArray( new IRecord[c.size()] ), TYPE.ADDED );
 
     return result;
@@ -341,7 +372,6 @@ public class TupleResult implements List<IRecord>
     sort();
 
     final IRecord result = m_records.remove( index );
-
     fireRecordsChanged( new IRecord[] { result }, TYPE.REMOVED );
 
     return result;
@@ -355,7 +385,9 @@ public class TupleResult implements List<IRecord>
     final boolean result = m_records.remove( o );
 
     if( result )
+    {
       fireRecordsChanged( new IRecord[] { (IRecord) o }, TYPE.REMOVED );
+    }
 
     return result;
   }
@@ -382,6 +414,8 @@ public class TupleResult implements List<IRecord>
    */
   public boolean retainAll( final Collection< ? > c )
   {
+    // TODO check if this works? Hmm...
+
     fireRecordsChanged( null, TYPE.REMOVED );
 
     return m_records.retainAll( c );
@@ -511,11 +545,10 @@ public class TupleResult implements List<IRecord>
 
     if( m_sortComponents.contains( comp ) )
       m_isSorted = false;
-
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
     return added;
   }
-  
+
   /**
    * Adds a component to this tuple result. Does nothing if an equal component was already added.
    * <p>
@@ -542,7 +575,7 @@ public class TupleResult implements List<IRecord>
    * removes all components of type IComponent
    * 
    * @param comp
-   *            interpreted as type!!!
+   *          interpreted as type!!!
    */
   public boolean removeComponent( final IComponent comp )
   {
@@ -553,7 +586,6 @@ public class TupleResult implements List<IRecord>
 
     if( m_sortComponents.contains( comp ) )
       m_isSorted = false;
-
     fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
 
     if( m_components.contains( comp ) )
@@ -624,6 +656,7 @@ public class TupleResult implements List<IRecord>
 
   /* default */void fireRecordsChanged( final IRecord[] records, final TYPE type )
   {
+    renumber();
     final ITupleResultChangedListener[] listeners = m_listeners.toArray( new ITupleResultChangedListener[m_listeners.size()] );
     for( final ITupleResultChangedListener l : listeners )
     {

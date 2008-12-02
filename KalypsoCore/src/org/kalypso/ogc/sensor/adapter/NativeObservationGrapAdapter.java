@@ -72,7 +72,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
 {
   private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
-  public static Pattern m_grapPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2}).+?([0-9\\.]+)" ); //$NON-NLS-1$
+  public static Pattern m_grapPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private String m_title;
 

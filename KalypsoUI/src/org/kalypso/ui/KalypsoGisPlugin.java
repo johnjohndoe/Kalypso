@@ -177,7 +177,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   *
+   * 
    * @param context
    * @throws Exception
    */
@@ -207,7 +207,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   *
+   * 
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
@@ -220,7 +220,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     return KalypsoGisPlugin.THE_PLUGIN;
   }
-
 
   /**
    * @return the timeZone as defined in the KALYPSO preferences. If unknown, the JVM default timezone is returned.
@@ -243,7 +242,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   }
 
   /**
-   * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()}} instead.
+   * @deprecated Use {@link KalypsoCorePlugin#getCoordinatesSystem()} instead.
    */
   @Deprecated
   public String getCoordinatesSystem( )

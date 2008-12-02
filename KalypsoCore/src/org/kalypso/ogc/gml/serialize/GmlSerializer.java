@@ -44,6 +44,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,8 +54,12 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
@@ -207,6 +212,40 @@ public final class GmlSerializer
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
     }
   }
+  /**
+   * @param idMap
+   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   */
+  public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
+  {
+    try
+    {
+      final XMLReader reader = new GMLWorkspaceReader(  );
+      reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
+      reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
+
+      final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
+      inputSource.setEncoding( charsetEncoding );
+
+      final Source source = new SAXSource( reader, inputSource );
+
+      // TODO: change to stream instead of writer
+      final StreamResult result = new StreamResult( writer );
+
+      final TransformerFactory tFac = TransformerFactory.newInstance();
+      final Transformer transformer = tFac.newTransformer();
+      transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
+      transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+      transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
+      // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
+      transformer.transform( source, result );
+    }
+    catch( final Exception e )
+    {
+      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
+    }
+  }
+
 
   /**
    * Reads a {@link GMLWorkspace} from the contents of an {@link URL}.
@@ -424,5 +463,31 @@ public final class GmlSerializer
 
     /* Refresh the file. */
     file.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+  }
+  /**
+   * serializes a workspace into a zipfile
+   */
+  public static void serializeWorkspaceToZipFile( final File gmlZipResultFile, final GMLWorkspace resultWorkspace, final String zipEntryName ) throws FileNotFoundException
+  {
+    final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( gmlZipResultFile ) ) );
+    try
+    {
+      final ZipEntry newEntry = new ZipEntry( zipEntryName );
+      zos.putNextEntry( newEntry );
+      final OutputStreamWriter gmlWriter = new OutputStreamWriter( zos, "CP1252" );
+
+      serializeWorkspace( gmlWriter, resultWorkspace, "CP1252", new HashMap<String, String>() );
+
+      zos.closeEntry();
+      zos.close();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( zos );
+    }
   }
 }
