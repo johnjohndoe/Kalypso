@@ -46,9 +46,6 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
 
     m_values = new Double[m_data.length];
     m_kalypsoStati = new Integer[m_data.length];
-
-    for( int i = 0; i < axes.length; i++ )
-      mapAxisToPos( axes[i], i );
   }
 
   public ArchiveData[] getData()
