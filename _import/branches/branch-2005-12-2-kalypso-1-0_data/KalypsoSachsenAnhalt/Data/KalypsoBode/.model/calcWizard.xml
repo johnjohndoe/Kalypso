@@ -287,7 +287,7 @@
 		Diagramm -->
 		<arg name="diagShowLegend" value="false"/>
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% [%axisunit%]#linkColumn=Ganglinie_gemessen"/>
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="NN"/>
 		<arg name="ignoreType2" value="V"/>
 		<arg name="ignoreLabel1" value="Volumen"/>
 		<arg name="ignoreLabel2" value="Wasserstand"/>
