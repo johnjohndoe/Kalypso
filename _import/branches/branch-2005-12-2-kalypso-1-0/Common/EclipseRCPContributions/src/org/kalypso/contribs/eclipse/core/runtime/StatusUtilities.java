@@ -411,7 +411,7 @@ public final class StatusUtilities
       else
         msg = message;
 
-      final int result = openSpecialErrorDialog( shell, title, msg, child, false );
+      final int result = openSpecialErrorDialog( shell, title, msg, child, displayMask, false );
       if( result == Window.CANCEL )
         return result;
     }
