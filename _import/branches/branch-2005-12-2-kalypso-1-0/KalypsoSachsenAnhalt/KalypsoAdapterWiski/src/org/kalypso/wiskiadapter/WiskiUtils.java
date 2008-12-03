@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -17,15 +19,8 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
  * 
  * @author schlienger
  */
-public final class WiskiUtils
+public final class WiskiUtils implements IWiskiConstants
 {
-  /** name of the property that delivers the group names */
-  final static String PROP_SUPERGROUPNAMES = "SUPERGROUPNAMES";
-
-  /**
-   * name of the properties delivering the number of days in the past that can be used as default date-range
-   */
-  final static String PROP_NUMBER_OF_DAYS = "NUMBER_OF_DAYS";
 
   // TODO: do not make it static...
   // TODO: move properties tuff into extra, non-static, class
@@ -45,8 +40,7 @@ public final class WiskiUtils
     if( PROPS != null )
       return PROPS;
 
-    final InputStream ins = WiskiRepository.class
-        .getResourceAsStream( "/org/kalypso/wiskiadapter/resources/config.ini" );
+    final InputStream ins = WiskiRepository.class.getResourceAsStream( "/org/kalypso/wiskiadapter/resources/config.ini" );
 
     PROPS = new Properties();
     try
@@ -166,23 +160,23 @@ public final class WiskiUtils
 
     switch( timeLevel )
     {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    {
+      final int valueType = item.getWiskiValueType();
+      switch( valueType )
+      {
       case 1:
       case 2:
       case 3:
       case 4:
-      {
-        final int valueType = item.getWiskiValueType();
-        switch( valueType )
-        {
-          case 1:
-          case 2:
-          case 3:
-          case 4:
-            return true;
-        }
+        return true;
       }
-      default:
-        return false;
+    }
+    default:
+      return false;
     }
   }
 
@@ -192,7 +186,7 @@ public final class WiskiUtils
   public static boolean needsTimeAdjustment( final TsInfoItem item )
   {
     final int timeLevel = item.getWiskiTimeLevel();
-    /* At the moment, only dayly values get a explicit timestamp from wdp (wiskiBegin)*/
+    /* At the moment, only dayly values get a explicit timestamp from wdp (wiskiBegin) */
     return timeLevel == 1;
   }
 
@@ -211,16 +205,16 @@ public final class WiskiUtils
   {
     switch( tsinfo_distunit )
     {
-      case 1:
-        return Calendar.SECOND;
-      case 2:
-        return Calendar.MINUTE;
-      case 3:
-        return Calendar.HOUR_OF_DAY;
-      case 4:
-        return Calendar.DAY_OF_MONTH;
-      default:
-        throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
+    case 1:
+      return Calendar.SECOND;
+    case 2:
+      return Calendar.MINUTE;
+    case 3:
+      return Calendar.HOUR_OF_DAY;
+    case 4:
+      return Calendar.DAY_OF_MONTH;
+    default:
+      throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
     }
   }
 
@@ -233,16 +227,103 @@ public final class WiskiUtils
   {
     switch( tsinfo_timelevel )
     {
-      case 1:
-        return Calendar.DAY_OF_MONTH;
-      case 2:
-        return Calendar.MONTH;
-      case 3:
-        return Calendar.YEAR;
-      case 4:
-        return Calendar.WEEK_OF_YEAR;
-      default:
-        throw new IllegalStateException( "unsupported time level" );
+    case 1:
+      return Calendar.DAY_OF_MONTH;
+    case 2:
+      return Calendar.MONTH;
+    case 3:
+      return Calendar.YEAR;
+    case 4:
+      return Calendar.WEEK_OF_YEAR;
+    default:
+      throw new IllegalStateException( "unsupported time level" );
     }
+  }
+
+  /**
+   * Sets all 'Missing' values to a given default value. Teh status is not changed.
+   */
+  public static void fillMissing( LinkedList data, Double fillValue )
+  {
+    for( final Iterator dataIter = data.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap)dataIter.next();
+      final String status = (String)map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        map.put( WISKI_DATA_AXIS_VALUE, fillValue );
+    }
+  }
+
+  /**
+   * (Linear-)interpolates missing values in wiski data. <br>
+   */
+  public static void interpolateMissing( final LinkedList data )
+  {
+    int lastValid = -1;
+    for( int i = 0; i < data.size(); i++ )
+    {
+      final HashMap iMap = (HashMap)data.get( i );
+      final String status = (String)iMap.get( WISKI_DATA_AXIS_QUALITY );
+      if( !WISKI_STATUS_MISSING.equals( status ) )
+      {
+        fillMissingHole( lastValid, i, data );
+        lastValid = i;
+      }
+    }
+  }
+
+  private static void fillMissingHole( final int from, final int to, LinkedList filteredData )
+  {
+    if( from < 0 || to > filteredData.size() - 1 || to - from < 2 )
+      return;
+
+    final HashMap fromData = (HashMap)filteredData.get( from );
+    final HashMap toData = (HashMap)filteredData.get( to );
+
+    final double fromValue = ( (Number)fromData.get( WISKI_DATA_AXIS_VALUE ) ).doubleValue();
+    final double toValue = ( (Number)toData.get( WISKI_DATA_AXIS_VALUE ) ).doubleValue();
+
+    // Iterate over missing values (if we have no hole, this is the empty for-loop)
+    for( int i = from + 1; i < to; i++ )
+    {
+      // REMARK: we assume, that WISKI always delivers equidistant values; so we just do
+      // linear interpolation via the index.
+      final double interpolatedValue = fromValue + ( i - from ) * ( toValue - fromValue ) / ( to - from );
+
+      final HashMap map = (HashMap)filteredData.get( i );
+      map.put( WISKI_DATA_AXIS_VALUE, new Double( interpolatedValue ) );
+    }
+  }
+
+  /**
+   * Removes all 'Missing' values from start and end of the given list.
+   */
+  public static LinkedList trimMissing( LinkedList data )
+  {
+    final LinkedList trimmedData = new LinkedList( data );
+
+    /* Remove values missing from start of timeserie */
+    for( final Iterator dataIter = trimmedData.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap)dataIter.next();
+      final String status = (String)map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        dataIter.remove();
+      else
+        break; // stop at first real good value
+    }
+
+    /* Remove values missing from end of timeserie */
+    for( final ListIterator dataIter = trimmedData.listIterator( trimmedData.size() ); dataIter.hasPrevious(); )
+    {
+      final HashMap map = (HashMap)dataIter.previous();
+      final String status = (String)map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        dataIter.remove();
+      else
+        break; // stop at first real good value
+    }
+
+    return trimmedData;
   }
 }

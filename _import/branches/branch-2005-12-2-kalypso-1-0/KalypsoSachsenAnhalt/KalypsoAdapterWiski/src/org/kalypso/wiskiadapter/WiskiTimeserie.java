@@ -54,17 +54,8 @@ import de.kisters.wiski.webdataprovider.common.util.KiWWException;
  * 
  * @author schlienger
  */
-public class WiskiTimeserie implements IObservation
+public class WiskiTimeserie implements IObservation, IWiskiConstants
 {
-  private final static String MD_WISKI_PARAMETER_TYPE = "Wiski_ParameterType";
-  private final static String MD_WISKI_PARAMETER_TYPE_LONGNAME = "Wiski_ParametertypeLongname";
-  private final static String MD_WISKI_STATION_NAME = "Wiski_StationName";
-  private final static String MD_WISKI_STATION_NO = "Wiski_StationNo";
-  private final static String MD_WISKI_STATION_PARAMETER_NAME = "Wiski_StationparameterName";
-  private final static String MD_WISKI_STATION_PARAMETER_LONGNAME = "Wiski_StationparameterLongname";
-  private final static String MD_WISKI_UNIT = "Wiski_Unit";
-  private final static String MD_WISKI_WQ_SOURCE = "Wiski_Quelle_Schluesselkurve";
-
   private final TsInfoItem m_tsinfo;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
@@ -243,7 +234,7 @@ public class WiskiTimeserie implements IObservation
       // tricky: when no date range specified, we create a default one
       if( req == null || req.getDateRange() == null )
       {
-        dr = DateRange.createFromPastDays( Integer.valueOf( WiskiUtils.getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
+        dr = DateRange.createFromPastDays( Integer.valueOf( WiskiUtils.getProperty( PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
       }
       else
       {

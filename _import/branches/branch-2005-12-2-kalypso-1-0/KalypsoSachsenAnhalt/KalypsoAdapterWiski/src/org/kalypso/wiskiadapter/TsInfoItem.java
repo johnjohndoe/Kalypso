@@ -207,9 +207,8 @@ public class TsInfoItem implements IRepositoryItem
   String getWiskiDescription()
   {
     final StringBuffer bf = new StringBuffer();
-    bf.append( getWiskiParametertypeLongname() );
+    bf.append( getWiskiParametertypeLongname() ).append( " - " );
     bf.append( getWiskiStationparameterName() ).append( " - " );
-    bf.append( getWiskiStationparameterLongname() ).append( " - " );
     bf.append( getWiskiStationName() );
 
     return bf.toString();
