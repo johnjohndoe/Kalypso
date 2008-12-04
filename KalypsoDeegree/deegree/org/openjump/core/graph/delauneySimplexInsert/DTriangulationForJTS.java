@@ -12,9 +12,16 @@ package org.openjump.core.graph.delauneySimplexInsert;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -98,15 +105,20 @@ public class DTriangulationForJTS
         count++;
       }
 
+      final double widthx = argmaxx - argminx;
+      final double widthy = argmaxy - argminy;
+
+      final Pnt lowerLeftPnt1 = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
+
       // Create a rectangular boundary
       final GeometryFactory gf = new GeometryFactory();
       final Coordinate[] coords = new Coordinate[5];
-      coords[0] = new Coordinate( this.lowerLeftPnt.coord( 0 ) + 1 * this.dx, this.lowerLeftPnt.coord( 1 ) + 0.5 * this.dy ); // lowerleft
-      coords[1] = new Coordinate( this.lowerLeftPnt.coord( 0 ) + 3 * this.dx, this.lowerLeftPnt.coord( 1 ) + 0.5 * this.dy ); // lowerright
-      coords[2] = new Coordinate( this.lowerLeftPnt.coord( 0 ) + 3 * this.dx, this.lowerLeftPnt.coord( 1 ) + 2.5 * this.dy ); // topright
-      coords[3] = new Coordinate( this.lowerLeftPnt.coord( 0 ) + 1 * this.dx, this.lowerLeftPnt.coord( 1 ) + 2.5 * this.dy ); // topleft
+      coords[0] = new Coordinate( argminx + 1 * widthx, argminy + 0.5 * widthy ); // lowerleft
+      coords[1] = new Coordinate( argminx + 3 * widthx, argminy + 0.5 * widthy ); // lowerright
+      coords[2] = new Coordinate( argminx + 3 * widthx, argminy + 2.5 * widthy ); // topright
+      coords[3] = new Coordinate( argminx + 1 * widthx, argminy + 2.5 * widthy ); // topleft
       // -- to close linestring
-      coords[4] = new Coordinate( this.lowerLeftPnt.coord( 0 ) + 1 * this.dx, this.lowerLeftPnt.coord( 1 ) + 0.5 * dy ); // lowerleft
+      coords[4] = new Coordinate( lowerLeftPnt1.coord( 0 ) + 1 * widthx, lowerLeftPnt1.coord( 1 ) + 0.5 * widthy ); // lowerleft
       final LinearRing lr = gf.createLinearRing( coords );
       m_thiessenBoundary = gf.createPolygon( lr, null );
     }
@@ -129,10 +141,9 @@ public class DTriangulationForJTS
     // the meeting point will be the mirrored bbox-center on the top edge
     this.initialTriangle = new Simplex( new Pnt[] { new Pnt( argminx - (1.5 * dx), argminy - dy ), // lower left
         new Pnt( argmaxx + (1.5 * dx), argminy - dy ), // lower right
-        // new Pnt(argminx+(dx/2.0), argmaxy+(dy/2.0))}); //center, top
         new Pnt( argminx + (dx / 2.0), argmaxy + 1.5 * dy ) } ); // center, top
 
-    this.lowerLeftPnt = new Pnt( argminx - (1.5 * dx), argminy - dy );
+    this.lowerLeftPnt = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
     this.dt = new DelaunayTriangulation( initialTriangle );
     this.addPoints( pointList );
   }
@@ -143,8 +154,10 @@ public class DTriangulationForJTS
     {
       try
       {
-        final Pnt point = new Pnt( jtsPt.getX(), jtsPt.getY() );
-        dt.delaunayPlace( point );
+        final Coordinate coord = jtsPt.getCoordinate();
+
+        final Pnt pt = new Pnt( coord.x, coord.y );
+        dt.delaunayPlace( pt );
       }
       catch( final Exception e )
       {
@@ -159,6 +172,16 @@ public class DTriangulationForJTS
     final Pnt point = new Pnt( x, y );
     if( debug )
       System.out.println( "Click " + point );
+
+    dt.delaunayPlace( point );
+  }
+
+  public void addPoint( final double x, final double y, final double z )
+  {
+    final Pnt point = new Pnt( x, y, z );
+    if( debug )
+      System.out.println( "Click " + point );
+
     dt.delaunayPlace( point );
   }
 
@@ -180,13 +203,106 @@ public class DTriangulationForJTS
         final Set facet = (Set) otherIt.next();
         final Pnt[] endpoint = (Pnt[]) facet.toArray( new Pnt[2] );
         final Coordinate[] coords = new Coordinate[2];
+
         coords[0] = new Coordinate( endpoint[0].coord( 0 ), endpoint[0].coord( 1 ) );
         coords[1] = new Coordinate( endpoint[1].coord( 0 ), endpoint[1].coord( 1 ) );
+
         final LineString ls = gf.createLineString( coords );
         lines.add( ls );
       }
     }
     return lines;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<GM_Triangle> getAllTriangles( final String crs ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangles = new ArrayList<GM_Triangle>();
+
+    // Loop through all the edges of the DT (each is done twice)
+    for( final Iterator it = dt.iterator(); it.hasNext(); )
+    {
+      final Simplex triangle = (Simplex) it.next();
+
+      // loop over all vertices of the current triangle
+      final Set<Coordinate> coordSet = new HashSet<Coordinate>();
+
+      for( final Iterator otherIt = triangle.facets().iterator(); otherIt.hasNext(); )
+      {
+        // get all vertex points and add them to a set
+        final Set triangleVertex = (Set) otherIt.next();
+        final Pnt[] vertexPoints = (Pnt[]) triangleVertex.toArray( new Pnt[2] );
+
+        coordSet.add( new Coordinate( vertexPoints[0].coord( 0 ), vertexPoints[0].coord( 1 ) ) );
+        coordSet.add( new Coordinate( vertexPoints[1].coord( 0 ), vertexPoints[1].coord( 1 ) ) );
+      }
+
+      // now we have a list with all vertex coords
+      final List<GM_Position> posList = new ArrayList<GM_Position>();
+      for( final Coordinate coord : coordSet )
+        posList.add( JTSAdapter.wrap( coord ) );
+
+      final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
+      final GM_Triangle_Impl gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( poses, crs );
+      triangles.add( gmTriangle );
+    }
+
+    return triangles;
+  }
+
+  public List<GM_Triangle> getInnerTriangles( final String crs ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangles = new ArrayList<GM_Triangle>();
+
+    final List<GM_Triangle> allTriangles = getAllTriangles( crs );
+
+    final Coordinate[] initialTriangleCoords = getInitialTriangleCoords();
+
+    // check for outer coords
+    for( final GM_Triangle triangle : allTriangles )
+    {
+      final GM_Position[] positions = triangle.getExteriorRing();
+
+      boolean inner = true;
+      for( final GM_Position pos : positions )
+      {
+        final Coordinate ptCoord = JTSAdapter.export( pos );
+        if( isTriangleCoord( initialTriangleCoords, ptCoord ) )
+        {
+          inner = false;
+          break;
+        }
+      }
+      if( inner == true )
+        triangles.add( triangle );
+    }
+    return triangles;
+  }
+
+  private static boolean isTriangleCoord( final Coordinate[] triangleCoords, final Coordinate ptCoord )
+  {
+    for( final Coordinate coord : triangleCoords )
+    {
+      if( ptCoord.distance( coord ) < 0.01 )
+        return true;
+    }
+    return false;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Coordinate[] getInitialTriangleCoords( )
+  {
+    final Set<Coordinate> coordSet = new HashSet<Coordinate>();
+    for( final Iterator otherIt = initialTriangle.facets().iterator(); otherIt.hasNext(); )
+    {
+      // get all vertex points and add them to a set
+      final Set triangleVertex = (Set) otherIt.next();
+      final Pnt[] vertexPoints = (Pnt[]) triangleVertex.toArray( new Pnt[2] );
+      coordSet.add( new Coordinate( vertexPoints[0].coord( 0 ), vertexPoints[0].coord( 1 ) ) );
+      coordSet.add( new Coordinate( vertexPoints[1].coord( 0 ), vertexPoints[1].coord( 1 ) ) );
+    }
+
+    return coordSet.toArray( new Coordinate[coordSet.size()] );
   }
 
   /**
@@ -348,6 +464,31 @@ public class DTriangulationForJTS
       }
     }
     return finalPolys;
+  }
+
+  public List<GM_Triangle> getAllTrianglesWithZValues( final GM_Position[] ring, final String crs ) throws GM_Exception
+  {
+    final List<GM_Triangle> triangles = getAllTriangles( crs );
+
+    for( final GM_Triangle triangle : triangles )
+    {
+      final GM_Position[] positions = triangle.getExteriorRing();
+      for( int i = 0; i < positions.length; i++ )
+      {
+        GM_Position position = positions[i];
+        for( int j = 0; j < ring.length; j++ )
+        {
+          final GM_Position ringPos = ring[i];
+          if( position.getDistance( ringPos ) < 0.01 )
+          {
+            position = ringPos;
+            break;
+          }
+        }
+      }
+    }
+    return triangles;
+
   }
 
 }

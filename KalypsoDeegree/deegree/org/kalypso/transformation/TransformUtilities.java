@@ -76,7 +76,7 @@ public class TransformUtilities
    */
   public static boolean shouldTransform( )
   {
-    String transform = getTransformProperty();
+    final String transform = getTransformProperty();
     if( (transform != null) && (transform.equalsIgnoreCase( "false" )) )
     {
       Debug.TRANSFORM.printf( "Should not transform ...\n" );
@@ -101,20 +101,20 @@ public class TransformUtilities
    * This function transformes a point.
    *
    * @param geo
-   *            The point, which should be transformed.
+   *          The point, which should be transformed.
    * @param trans
-   *            The transformation.
+   *          The transformation.
    * @return The transformed point.
    */
-  public static GM_Point transform( GM_Point geo, CRSTransformation trans ) throws TransformationException
+  public static GM_Point transform( final GM_Point geo, final CRSTransformation trans ) throws TransformationException
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
       return geo;
 
     /* Get the coordinate systems. */
-    CoordinateSystem sourceCRS = trans.getSourceCRS();
-    CoordinateSystem targetCRS = trans.getTargetCRS();
+    final CoordinateSystem sourceCRS = trans.getSourceCRS();
+    final CoordinateSystem targetCRS = trans.getTargetCRS();
 
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
@@ -123,8 +123,8 @@ public class TransformUtilities
     Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
     /* Transform. */
-    Point3d coords = new Point3d( geo.getX(), geo.getY(), geo.getZ() );
-    Point3d newCoords = trans.doTransform( coords );
+    final Point3d coords = new Point3d( geo.getX(), geo.getY(), geo.getZ() );
+    final Point3d newCoords = trans.doTransform( coords );
 
     // REMARK: here we have to write a z-value in any case!
     // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
@@ -137,20 +137,20 @@ public class TransformUtilities
    * This function transforms a position.
    *
    * @param pos
-   *            The position, which should be transformed.
+   *          The position, which should be transformed.
    * @param trans
-   *            The transformation.
+   *          The transformation.
    * @return The transformed position.
    */
-  public static GM_Position transform( GM_Position pos, CRSTransformation trans ) throws TransformationException
+  public static GM_Position transform( final GM_Position pos, final CRSTransformation trans ) throws TransformationException
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
       return pos;
 
     /* Get the coordinate systems. */
-    CoordinateSystem sourceCRS = trans.getSourceCRS();
-    CoordinateSystem targetCRS = trans.getTargetCRS();
+    final CoordinateSystem sourceCRS = trans.getSourceCRS();
+    final CoordinateSystem targetCRS = trans.getTargetCRS();
 
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
@@ -158,8 +158,8 @@ public class TransformUtilities
 
     Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
-    Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
-    Point3d newCoords = trans.doTransform( coords );
+    final Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
+    final Point3d newCoords = trans.doTransform( coords );
 
     // REMARK: here we have to write a z-value in any case!
     // We only have to check if the z value was transformed because of a 3d transformation (therefore the check for
@@ -173,14 +173,14 @@ public class TransformUtilities
    * It uses the function {@link #transform(GM_Position, CRSTransformation)} for each position.
    *
    * @param pos
-   *            The array of positions.
+   *          The array of positions.
    * @param trans
-   *            The transformation.
+   *          The transformation.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans ) throws TransformationException
+  public static GM_Position[] transform( final GM_Position[] pos, final CRSTransformation trans ) throws TransformationException
   {
-    ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
+    final ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 
     for( int i = 0; i < pos.length; i++ )
       newPos.add( transform( pos[i], trans ) );
