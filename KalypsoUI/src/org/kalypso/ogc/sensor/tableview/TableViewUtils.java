@@ -47,9 +47,11 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
@@ -75,6 +77,7 @@ import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.ObstableviewType.RulesType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.ResourcePool;
 import org.xml.sax.InputSource;
 
 /**
@@ -332,47 +335,47 @@ public final class TableViewUtils
   /**
    * Save the dirty observations
    */
-  public static IStatus saveDirtyObservations( final List tableViewColumns, final IProgressMonitor monitor )
+  public static IStatus saveDirtyObservations( final IObservation[] observations, final IProgressMonitor monitor )
   {
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
-    final Map map = buildObservationColumnsMap( tableViewColumns );
+    monitor.beginTask( "Zeitreihen speichern", observations.length );
 
-    monitor.beginTask( "Zeitreihen speichern", map.size() );
-
-    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    for( int i = 0; i < observations.length; i++ )
     {
-      final Map.Entry entry = (Entry)it.next();
-      final IObservation obs = (IObservation)entry.getKey();
-      final List cols = (List)entry.getValue();
-
-      boolean obsSaved = false;
-
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      final IObservation obs = observations[i];
+      try
       {
-        final TableViewColumn col = (TableViewColumn)itCols.next();
-
-        if( col.isDirty() && !obsSaved )
-        {
-          try
-          {
-            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-
-            obsSaved = true;
-          }
-          catch( final LoaderException e )
-          {
-            e.printStackTrace();
-            status.addMessage( "Fehler beim Speichern von " + obs, e );
-          }
-        }
-
-        col.setDirty( false, null );
+        System.out.println("Save dirty observation: " + obs.getName() );
+        pool.saveObject( obs, monitor );
+      }
+      catch( final LoaderException e )
+      {
+        e.printStackTrace();
+        status.addMessage( "Fehler beim Speichern von " + obs, e );
       }
 
       monitor.worked( 1 );
     }
 
     return status;
+  }
+
+  /**
+   * Return all observations of dirty columns.
+   */
+  public static IObservation[] findDirtyObservations( TableViewColumn[] columns )
+  {
+    Set result = new HashSet();
+    
+    for( int i = 0; i < columns.length; i++ )
+    {
+        final TableViewColumn column = columns[i];
+        if( column.isDirty() )
+          result.add( column.getObservation() );
+    }
+    
+    return (IObservation[])result.toArray( new IObservation[result.size()] );
   }
 }
