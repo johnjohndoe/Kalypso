@@ -442,7 +442,14 @@ public class ShapeFile
     }
     else
     {
-      throw (new NotImplementedException());
+      final String shapeConstantAsString = ShapeConst.getShapeConstantAsString( (byte) shpType );
+      if( shapeConstantAsString != null )
+      {
+        final String msg = String.format( "Shape Type %s cannot by handled.\n", shapeConstantAsString );
+        throw (new NotImplementedException( msg ));
+      }
+      else
+        throw (new NotImplementedException());
     }
 
     return geom;
