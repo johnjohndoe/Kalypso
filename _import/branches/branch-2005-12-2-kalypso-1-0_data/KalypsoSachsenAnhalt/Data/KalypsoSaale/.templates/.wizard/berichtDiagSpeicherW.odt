@@ -40,7 +40,7 @@
 
 	<!-- Steuerung_gerechnet -->
    	<observation linktype="zml" xlink:href="%href6%">
-		<curve id="C8" name="Steuerung" color="160;130;70" >
+		<curve id="C8" name="Steuerung (lt. Betriebsplan)" color="160;130;70" >
 			<mapping observation-axis="Datum" diagram-axis="D" />
 			<mapping observation-axis="Abfluss" diagram-axis="Q" />
 	   	</curve>

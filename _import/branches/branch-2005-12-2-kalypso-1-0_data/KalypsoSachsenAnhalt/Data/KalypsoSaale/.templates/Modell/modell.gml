@@ -70,6 +70,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570210.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -247,6 +253,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572010.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -418,6 +430,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570000.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -589,6 +607,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572115.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -766,6 +790,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570270.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -943,6 +973,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570330.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1120,6 +1156,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572890.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1297,6 +1339,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/572920.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1468,6 +1516,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/574210.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1645,6 +1699,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573010.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1816,6 +1876,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573090.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -1987,6 +2053,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575110.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2158,6 +2230,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575240.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2335,6 +2413,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573110.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2506,6 +2590,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575660.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2677,6 +2767,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575500.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -2854,6 +2950,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575400.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3025,6 +3127,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575700.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3196,6 +3304,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575710.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3373,6 +3487,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573360.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3544,6 +3664,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570500.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3721,6 +3847,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576470.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -3892,6 +4024,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576520.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4063,6 +4201,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576610.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4240,6 +4384,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/577570.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4423,6 +4573,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576900.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4594,6 +4750,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570810.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4765,6 +4927,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578410.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -4936,6 +5104,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578420.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5107,6 +5281,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/578430.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5278,6 +5458,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570910.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5449,6 +5635,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579305.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5620,6 +5812,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579205.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5791,6 +5989,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579405.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -5968,6 +6172,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579011.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6145,6 +6355,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6322,6 +6538,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579610.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6493,6 +6715,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579620.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6664,6 +6892,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579045.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -6835,6 +7069,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579712.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7012,6 +7252,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579070.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7189,6 +7435,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579085.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7360,6 +7612,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570930.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7531,6 +7789,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/553050.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7708,6 +7972,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/553061.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
           <pegel:AE>0.0</pegel:AE>
           <pegel:Snownr>0</pegel:Snownr>
@@ -7885,6 +8155,16 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570250.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/570000.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/570000.zml"/>
+          </pegel:SchneeInfo>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -7956,6 +8236,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570340.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8027,6 +8313,16 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573100.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/573090.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/573090.zml"/>
+          </pegel:SchneeInfo>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8098,6 +8394,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575245.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8169,6 +8471,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573200.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8240,6 +8548,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575402.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8311,6 +8625,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575406.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8382,6 +8702,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575410.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8453,6 +8779,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575450.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8524,6 +8856,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576631.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8595,6 +8933,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/576950.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8666,6 +9010,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579621.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8737,6 +9087,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8808,6 +9164,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579330.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8879,6 +9241,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -8950,6 +9318,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9021,6 +9395,16 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579012.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579011.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579011.zml"/>
+          </pegel:SchneeInfo>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9092,6 +9476,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579013.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9163,6 +9553,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579001.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9234,6 +9630,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9305,6 +9707,16 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579006.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579015.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579015.zml"/>
+          </pegel:SchneeInfo>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>true</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9376,6 +9788,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579713.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9447,6 +9865,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579069.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -9518,6 +9942,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579084.zml"/>
           </pegel:Durchfluss_gerechnet>
+          <pegel:NiederschlagInfo/>
+          <pegel:SchneeInfo/>
+          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_2/>
+          <pegel:ganglinie_reserve_3/>
+          <pegel:ganglinie_reserve_4/>
           <pegel:istErgebnisPegel>false</pegel:istErgebnisPegel>
         </pegel:Pegel>
       </pegel:PegelMember>
@@ -19336,9 +19766,13 @@
           <speicher:MaxInhalt>411.4</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>570000</speicher:PNR-Zufluss>
           <speicher:PNR_ST>570270</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>570270</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
+          <speicher:PNR_TS>570</speicher:PNR_TS>
           <speicher:TS_NAME>TS Saale</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>Rudolstadt</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>Rudolstadt</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19395,6 +19829,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570270.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/570270.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
@@ -19406,9 +19843,13 @@
           <speicher:MaxInhalt>18.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>573090</speicher:PNR-Zufluss>
           <speicher:PNR_ST>573110</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>573110</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
+          <speicher:PNR_TS>573</speicher:PNR_TS>
           <speicher:TS_NAME>TS Straußfurt</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>Oldisleben</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>Oldisleben</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19465,6 +19906,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573110.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/573110.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
@@ -19476,9 +19920,13 @@
           <speicher:MaxInhalt>35.6</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>575402</speicher:PNR-Zufluss>
           <speicher:PNR_ST>575410</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>575410</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
+          <speicher:PNR_TS>575407</speicher:PNR_TS>
           <speicher:TS_NAME>TS Kelbra</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>Bennungen</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>Bennungen</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19535,6 +19983,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575410.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/575410.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
@@ -19546,9 +19997,13 @@
           <speicher:MaxInhalt>4.47</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579306</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579000</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>579000</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
+          <speicher:PNR_TS>579320</speicher:PNR_TS>
           <speicher:TS_NAME>HWR Kalte Bode</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>Überleitungssperre, Zulauf</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>Überleitungssperre, Zulauf</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19605,6 +20060,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
@@ -19616,9 +20074,13 @@
           <speicher:MaxInhalt>1.2</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579000</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579014</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>579014</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>579999</speicher:PNR_NA>
+          <speicher:PNR_TS>579000</speicher:PNR_TS>
           <speicher:TS_NAME>Überleitungssperre</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>TS Wendefurth, Bode-Anteil</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>TS Wendefurth, Bode-Anteil</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>Überleitung zur Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19675,6 +20137,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </speicher:Überleitung_gerechnet>
@@ -19688,9 +20153,13 @@
           <speicher:MaxInhalt>109.08</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579011</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579015</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>579015</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>579013</speicher:PNR_NA>
+          <speicher:PNR_TS>579430</speicher:PNR_TS>
           <speicher:TS_NAME>TS Rappbode</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>TS Wendefurth, Zulauf</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>TS Wendefurth, Zulauf</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>TS Rappbode, TWA</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19747,6 +20216,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579013.zml"/>
           </speicher:Überleitung_gerechnet>
@@ -19760,9 +20232,13 @@
           <speicher:MaxInhalt>9.22</speicher:MaxInhalt>
           <speicher:PNR-Zufluss>579015</speicher:PNR-Zufluss>
           <speicher:PNR_ST>579045</speicher:PNR_ST>
+          <speicher:PNR_ST_Betriebsplan>579045</speicher:PNR_ST_Betriebsplan>
           <speicher:PNR_NA>-1</speicher:PNR_NA>
+          <speicher:PNR_TS>579005</speicher:PNR_TS>
           <speicher:TS_NAME>TS Wendefurth</speicher:TS_NAME>
+          <speicher:ZuflussName/>
           <speicher:STEUNAME>Wegeleben</speicher:STEUNAME>
+          <speicher:STEUNAME_Betriebsplan>Wegeleben</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -19819,6 +20295,9 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579045.zml"/>
           </speicher:Steuerung_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579045.zml"/>
+          </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
