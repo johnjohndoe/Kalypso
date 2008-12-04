@@ -190,6 +190,7 @@ public class NAControlConverter
     // boolean onlyRootNodeResult = FeatureHelper.booleanIsTrue( controlWorkspace.getRootFeature(),
     // "resultForRootNodeOnly", true );
     final String rootNodeID = (String) controlWorkspace.getRootFeature().getProperty( NaModelConstants.NACONTROL_ROOTNODE_PROP );
+    b.append( "99999\n" );
     for( int i = 0; i < nodeFEs.length; i++ )
     {
       // fuer root node immer ein ergebnis generieren
