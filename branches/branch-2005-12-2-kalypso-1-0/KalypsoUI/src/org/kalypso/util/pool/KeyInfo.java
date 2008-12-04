@@ -245,4 +245,17 @@ public final class KeyInfo extends Job implements ILoaderListener
   {
     return m_object;
   }
+  
+  public void reload( )
+  {
+    try
+    {
+      onLoaderObjectInvalid( getObject(), false );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+  
 }
