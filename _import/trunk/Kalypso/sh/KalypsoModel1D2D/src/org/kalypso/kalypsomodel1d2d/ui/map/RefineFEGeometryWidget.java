@@ -92,13 +92,17 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.refinement.Refinement;
-import org.kalypsodeegree_impl.tools.refinement.RefinementUtils;
+import org.openjump.core.graph.delauneySimplexInsert.DTriangulationForJTS;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * This widget is used in order to refine an existing 2D mesh by drawing a refinement line. The user gets a preview
@@ -182,7 +186,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
    */
   @SuppressWarnings("unchecked")
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     m_warning = false;
 
@@ -525,9 +529,20 @@ public class RefineFEGeometryWidget extends AbstractWidget
             /* split all elements that have more than 4 corners */
             // -> right now: simple polygon triangulation
             // make a polygon from the curves (polygon must be oriented ccw)
-            final GM_Surface<GM_SurfacePatch>[] triangulatedPolygon = RefinementUtils.triangulatePolygon( crs, ring );
-            for( final GM_Surface<GM_SurfacePatch> triangle : triangulatedPolygon )
-              refinementList.add( triangle );
+            final List<com.vividsolutions.jts.geom.Point> pointList = new ArrayList<com.vividsolutions.jts.geom.Point>();
+
+            for( final GM_Position position : ring )
+            {
+              final Coordinate coord = JTSAdapter.export( position );
+              final com.vividsolutions.jts.geom.GeometryFactory gf = new com.vividsolutions.jts.geom.GeometryFactory();
+              final com.vividsolutions.jts.geom.Point jtspoint = gf.createPoint( coord );
+              pointList.add( jtspoint );
+            }
+            final DTriangulationForJTS triangulationForJTS = new DTriangulationForJTS( pointList, null );
+            final List<GM_Triangle> triangles = triangulationForJTS.getInnerTriangles( crs );
+            triangulationForJTS.getAllTrianglesWithZValues( ring, crs );
+            for( final GM_Triangle triangle : triangles )
+              refinementList.add( GeometryFactory.createGM_Surface( triangle ) );
           }
           else
             refinementList.add( surface );
