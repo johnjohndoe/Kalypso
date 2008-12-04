@@ -121,6 +121,21 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     if( m_warning == true )
       m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
+
+    if( m_pointSnapper != null )
+    {
+      final IFE1D2DNode snapNode = m_pointSnapper.getSnapNode();
+      if( snapNode == null )
+        return;
+
+      final double z = snapNode.getPoint().getZ();
+      if( !Double.isNaN( z ) )
+      {
+        final String format = String.format( " Knotenhöhe: %.3f", z );
+        getMapPanel().setMessage( format );
+      }
+    }
+
   }
 
   /**
@@ -188,7 +203,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
    */
   @SuppressWarnings("unchecked")
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     final Object newNode = checkNewNode( p );
 
@@ -275,10 +290,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
       m_warning = false;
     else
     {
-      if (status.getMessage().equals( "Warnung! Element ohne Geometrie in Modell vorhanden." ))
+      if( status.getMessage().equals( "Warnung! Element ohne Geometrie in Modell vorhanden." ) )
       {
         // TODO: delete element!
-        
+
       }
       m_warning = true;
       m_warningRenderer.setTooltip( status.getMessage() );
