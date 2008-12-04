@@ -17,27 +17,27 @@ import org.kalypso.ui.wizards.imports.Messages;
 
 public class PageSecond extends WizardPage
 {
-  private DataContainer m_data;
+  private final DataContainer m_data;
 
   private Combo[] m_comboRoughnessIDs;
 
   private ArrayList<String> m_shpNamesList;
 
-  protected PageSecond( DataContainer data ) throws Exception
+  protected PageSecond( final DataContainer data ) throws Exception
   {
     super( "Select Files and Relate" );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ));//$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ));//$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ) );//$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ) );//$NON-NLS-1$
     m_data = data;
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.BORDER | SWT.V_SCROLL );
-    Composite composite = new Composite( scrolledComposite, SWT.NONE );
+    final ScrolledComposite scrolledComposite = new ScrolledComposite( parent, SWT.BORDER | SWT.V_SCROLL );
+    final Composite composite = new Composite( scrolledComposite, SWT.NONE );
     scrolledComposite.setContent( composite );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
@@ -52,56 +52,64 @@ public class PageSecond extends WizardPage
 
   public void delayedCreateControl( )
   {
-    Composite composite = (Composite) getControl();
+    final Composite composite = (Composite) getControl();
     if( m_comboRoughnessIDs != null && m_comboRoughnessIDs.length > 0 )
     {
-      Control[] controls = composite.getChildren();
+      final Control[] controls = composite.getChildren();
       for( int i = 0; i < controls.length; i++ )
         controls[i].dispose();
     }
-    String[] names = new String[m_data.getRoughnessStaticCollectionMap().size()];
+
+    /* introduce some headers */
+    new Label( composite, SWT.BOLD ).setText( "importierte Klasse" ); //$NON-NLS-1$
+    new Label( composite, SWT.BOLD ).setText( "zugewiesene Klasse" ); //$NON-NLS-1$
+
+    final String[] names = new String[m_data.getRoughnessStaticCollectionMap().size()];
     int i = 0;
-    for( String key : m_data.getRoughnessStaticCollectionMap().keySet() )
+    for( final String key : m_data.getRoughnessStaticCollectionMap().keySet() )
       names[i++] = key;
-    LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
+    final LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
     m_shpNamesList = new ArrayList<String>();
     m_comboRoughnessIDs = new Combo[map.size()];
-    for( String key : map.keySet() )
+    for( final String key : map.keySet() )
     {
       if( !m_shpNamesList.contains( map.get( key ) ) )
       {
-        GridData gridDataID = new GridData();
-        int nextEntryNr = m_shpNamesList.size();
+        final GridData gridDataID = new GridData();
+        final int nextEntryNr = m_shpNamesList.size();
         m_shpNamesList.add( map.get( key ) );
         new Label( composite, SWT.NONE ).setText( map.get( key ) ); //$NON-NLS-1$
         m_comboRoughnessIDs[nextEntryNr] = new Combo( composite, SWT.READ_ONLY );
         m_comboRoughnessIDs[nextEntryNr].setLayoutData( gridDataID );
         m_comboRoughnessIDs[nextEntryNr].setItems( names );
-        m_comboRoughnessIDs[nextEntryNr].select( getSelectionIndex(names, map.get( key )) );
+        m_comboRoughnessIDs[nextEntryNr].select( getSelectionIndex( names, map.get( key ) ) );
+
+        m_comboRoughnessIDs[nextEntryNr].setToolTipText( "Bitte wählen Sie eine Rauheitsklasse aus der Datenbank aus, die der importierten Klasse zugewiesen wird." );
       }
     }
     composite.layout();
     composite.pack();
-    Point pt = composite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    
+    final Point pt = composite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+
     int minimumSizeX = pt.x + 30;
-    if(minimumSizeX < 400)
+    if( minimumSizeX < 400 )
       minimumSizeX = 400;
     composite.getShell().setSize( minimumSizeX, composite.getShell().getSize().y );
     composite.getShell().setMinimumSize( minimumSizeX, composite.getShell().getSize().y );
-    
+
     // composite.getParent().layout();
     setPageComplete( true );
   }
-  
-  private int getSelectionIndex(final String[] array, final String key) {
+
+  private int getSelectionIndex( final String[] array, final String key )
+  {
     final String userSelected = m_data.getUserSelectionMap().get( key );
-    for(int i=0; i<array.length; i++)
-      if(array[i].equals( userSelected ))
+    for( int i = 0; i < array.length; i++ )
+      if( array[i].equals( userSelected ) )
         return i;
     return -1;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
@@ -119,19 +127,19 @@ public class PageSecond extends WizardPage
   {
     if( isCurrentPage() )
     {
-      LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
+      final LinkedHashMap<String, String> map = m_data.getRoughnessShapeStaticRelationMap();
       String shpName, dbName;
-      for( String shpID : map.keySet() )
+      for( final String shpID : map.keySet() )
       {
         shpName = map.get( shpID );
         dbName = m_comboRoughnessIDs[m_shpNamesList.indexOf( shpName )].getText();
         map.put( shpID, m_data.getRoughnessStaticCollectionMap().get( dbName ) );
       }
-      LinkedHashMap<String,String> userSelectionMap = m_data.getUserSelectionMap();
-      for(int i=0; i<m_shpNamesList.size(); i++)
+      final LinkedHashMap<String, String> userSelectionMap = m_data.getUserSelectionMap();
+      for( int i = 0; i < m_shpNamesList.size(); i++ )
       {
         final String text = m_comboRoughnessIDs[i].getText();
-        if(text != null && text.trim() != "")
+        if( text != null && text.trim() != "" )
           userSelectionMap.put( m_shpNamesList.get( i ), text );
       }
     }
