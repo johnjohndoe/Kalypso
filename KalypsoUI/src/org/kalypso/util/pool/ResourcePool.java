@@ -181,6 +181,26 @@ public class ResourcePool
     }
   }
 
+  /** Get the key info which is responsible for a given object. */
+  public KeyInfo getInfo( final Object object )
+  {
+    synchronized( m_keyInfos )
+    {
+      if( object == null )
+        return null;
+
+      final Collection values = m_keyInfos.values();
+      for( Iterator iter = values.iterator(); iter.hasNext(); )
+      {
+        final KeyInfo info = (KeyInfo)iter.next();
+        if( info.getObject() == object )
+          return info;
+      }
+
+      return null;
+    }
+  }
+  
   public KeyInfo[] getInfos()
   {
     return (KeyInfo[])m_keyInfos.values().toArray( new KeyInfo[0] );
