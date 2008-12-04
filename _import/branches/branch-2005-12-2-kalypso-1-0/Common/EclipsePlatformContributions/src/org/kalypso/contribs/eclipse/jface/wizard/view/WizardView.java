@@ -60,6 +60,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -104,6 +105,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -121,6 +123,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
 public class WizardView extends ViewPart implements IWizardContainer3
 {
   public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
+
+  public static final int RESET_ID = IDialogConstants.CLIENT_ID + 2;
 
   private RGB m_defaultTitleBackground;
 
@@ -411,7 +415,10 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
-    if( m_wizard instanceof IWizard2 && ((IWizard2)m_wizard).isSaveAvailable() )
+    // Reset button; will be invisible if current page is not resetable (see IResetableWizard).
+    createButton( parent, RESET_ID, "Zurücksetzen", "doReset", false );
+
+    if( m_wizard instanceof IWizard2 && ( (IWizard2)m_wizard ).hasSaveButton() )
       createButton( parent, SAVE_ID, "Speichern", "doSave", false );
 
     if( m_wizard.isHelpAvailable() )
@@ -480,8 +487,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * 
    * @return the new button
    */
-  protected Button createButton( final Composite parent, final int id, final String defaultLabel,
-      final String handlerMethod, final boolean defaultButton )
+  protected Button createButton( final Composite parent, final int id, final String defaultLabel, final String handlerMethod, final boolean defaultButton )
   {
     final Integer buttonID = new Integer( id );
     final String label = m_buttonLabels.containsKey( buttonID ) ? (String)m_buttonLabels.get( buttonID ) : defaultLabel;
@@ -683,9 +689,14 @@ public class WizardView extends ViewPart implements IWizardContainer3
     boolean canFlipToNextPage = false;
     boolean canFinish = m_wizard.canFinish();
 
+    boolean canReset = m_wizard instanceof IResetableWizard ? ( (IResetableWizard)m_wizard ).canReset() : false;
+    boolean showReset = m_wizard instanceof IResetableWizard ? ( (IResetableWizard)m_wizard ).showResetButton() : false;
+
     final Button backButton = getButton( IDialogConstants.BACK_ID );
     final Button nextButton = getButton( IDialogConstants.NEXT_ID );
     final Button finishButton = getButton( IDialogConstants.FINISH_ID );
+    final Button resetButton = getButton( RESET_ID );
+
     if( backButton != null )
       backButton.setEnabled( m_currentPage.getPreviousPage() != null );
 
@@ -698,6 +709,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
     if( finishButton != null )
       finishButton.setEnabled( canFinish );
 
+    if( resetButton != null )
+    {
+      resetButton.setVisible( showReset );
+      resetButton.setEnabled( canReset );
+    }
+
     // finish is default unless it is diabled and next is enabled
     //    if( canFlipToNextPage && !canFinish )
     // cancel is default unless it is disabled or non-existent
@@ -705,6 +722,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
       getShell().setDefaultButton( nextButton );
     else
       getShell().setDefaultButton( finishButton );
+
   }
 
   /**
@@ -767,8 +785,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
    * @see org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean,
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
-  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
-      throws InvocationTargetException, InterruptedException
+  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable ) throws InvocationTargetException, InterruptedException
   {
     final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     progressService.run( fork, cancelable, runnable );
@@ -885,8 +902,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected final void fireWizardChanged( final IWizard newwizard, final int reason )
   {
-    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners
-        .toArray( new IWizardContainerListener[m_listeners.size()] );
+    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners.toArray( new IWizardContainerListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final IWizardContainerListener listener = listeners[i];
@@ -902,8 +918,7 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected final void firePageChanged( final IWizardPage newpage )
   {
-    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners
-        .toArray( new IWizardContainerListener[m_listeners.size()] );
+    final IWizardContainerListener[] listeners = (IWizardContainerListener[])m_listeners.toArray( new IWizardContainerListener[m_listeners.size()] );
     for( int i = 0; i < listeners.length; i++ )
     {
       final IWizardContainerListener listener = listeners[i];
@@ -1023,6 +1038,19 @@ public class WizardView extends ViewPart implements IWizardContainer3
     return false;
   }
 
+  public boolean doReset()
+  {
+    Assert.isTrue( m_wizard instanceof IResetableWizard );
+
+    final IResetableWizard resetableWizard = (IResetableWizard)m_wizard;
+
+    Assert.isTrue( resetableWizard.canReset() );
+
+    resetableWizard.performReset();
+
+    return true;
+  }
+
   public boolean doSave()
   {
     final IWizard wizard = getWizard();
@@ -1031,10 +1059,15 @@ public class WizardView extends ViewPart implements IWizardContainer3
     {
       final IWizard2 wizard2 = (IWizard2)wizard;
 
+      if( wizard2.doAskForSave() )
+      {
+        if( !MessageDialog.openQuestion( getShell(), "Speichern", "Daten jetzt speichern?" ) )
+          return false;
+      }
+
       final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
       {
-        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
-            InterruptedException
+        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
         {
           return wizard2.saveAllPages( monitor );
         }

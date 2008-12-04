@@ -77,5 +77,10 @@ public interface IWizard2 extends IWizard
   /**
    * @return Return <code>true</code>, if a 'save' button should be visible for this wizard.
    */
-  public boolean isSaveAvailable();
+  public boolean hasSaveButton();
+
+  /**
+   * @return If the user should be aksed before any save. 
+   */
+  public boolean doAskForSave();
 }
