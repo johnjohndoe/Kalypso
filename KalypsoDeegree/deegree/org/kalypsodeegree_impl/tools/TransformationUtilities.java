@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.tools;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 
 import javax.media.jai.TiledImage;
@@ -127,37 +128,35 @@ public class TransformationUtilities
     GM_Surface< ? > sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
 
     GM_Surface< ? > destScreenSurface;
-    if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
+    final String domainCrs = gridDomain.getOrigin( null ).getCoordinateSystem();
+    if( !targetCS.equals( domainCrs ) )
     {
-      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
+      GeoTransformer geoTrans1 = new GeoTransformer( domainCrs );
       destScreenSurface = (GM_Surface< ? >) geoTrans1.transform( sourceScreenSurface );
     }
     else
       destScreenSurface = sourceScreenSurface;
 
     /* Get the gridExtent for the envelope of the surface. */
-    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
+    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), domainCrs );
     // Make it a bit larger in order to avoid undrawn border
-    int lowX = gridExtent[0] - 2;
-    int lowY = gridExtent[1] - 2;
-    int highX = gridExtent[2] + 2;
-    int highY = gridExtent[3] + 2;
+    Point pLow = new Point( gridExtent[0] - 2, gridExtent[1] - 2 );
+    Point pHigh = new Point( gridExtent[2] + 2, gridExtent[3] + 2 );
 
     /* Calculate imageExtent from gridExtent. */
-    int minX = lowX;
-    int minY = rasterImage.getHeight() - highY;
-    int width = highX - lowX;
-    int height = highY - lowY;
+    Point pMin = new Point( pLow.x, rasterImage.getHeight() - pHigh.y );
+    int width = pHigh.x - pLow.x;
+    int height = pHigh.y - pLow.y;
 
     /* Get the required subImage according to the gridExtent (size of the screen). */
-    TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
+    TiledImage image = rasterImage.getSubImage( pMin.x, pMin.y, width, height );
 
     /* If the requested sub image is not on the screen (map panel) nothing to display. */
     if( image == null )
       return;
 
     /* Get the destinationSurface in target coordinates. */
-    GM_Surface< ? > destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
+    GM_Surface< ? > destSurface = gridDomain.getGM_Surface( pLow.x, pLow.y, pHigh.x, pHigh.y, targetCS );
     GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
     GM_Position llCorner = destExtRing.getPositions()[0];
     GM_Position lrCorner = destExtRing.getPositions()[1];
