@@ -190,7 +190,7 @@ public final class TableViewUtils
     final ObstableviewType xmlTemplate = OTT_OF.createObstableview();
 
     xmlTemplate.setFeatures( StringUtils.join( template.getEnabledFeatures(), ';' ) );
-    
+
     xmlTemplate.setAlphaSort( template.isAlphaSort() );
 
     // rendering rules
@@ -260,8 +260,7 @@ public final class TableViewUtils
     return xmlTemplate;
   }
 
-  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context,
-      final boolean synchron, final String ignoreHref )
+  public static IStatus applyXMLTemplate( final TableView view, final ObstableviewType xml, final URL context, final boolean synchron, final String ignoreHref )
   {
     view.removeAllItems();
 
@@ -269,7 +268,7 @@ public final class TableViewUtils
     if( xml.getFeatures() != null )
     {
       view.clearFeatures();
-      
+
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
@@ -290,7 +289,7 @@ public final class TableViewUtils
     final List stati = new ArrayList();
 
     final List list = xml.getObservation();
-    final TypeObservation[] tobs = (TypeObservation[])list.toArray(new TypeObservation[list.size()]);
+    final TypeObservation[] tobs = (TypeObservation[])list.toArray( new TypeObservation[list.size()] );
     for( int i = 0; i < tobs.length; i++ )
     {
       // check, if href is ok
@@ -302,7 +301,7 @@ public final class TableViewUtils
         Logger.getLogger( TableViewUtils.class.getName() ).warning( "Href ignored: " + href );
         continue;
       }
-      
+
       final TableViewColumnXMLLoader loader = new TableViewColumnXMLLoader( view, tobs[i], context, synchron, i );
       stati.add( loader.getResult() );
     }
@@ -335,19 +334,19 @@ public final class TableViewUtils
   /**
    * Save the dirty observations
    */
-  public static IStatus saveDirtyObservations( final IObservation[] observations, final IProgressMonitor monitor )
+  public static IStatus saveDirtyColumns( final TableViewColumn[] columns, final IProgressMonitor monitor )
   {
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
 
-    monitor.beginTask( "Zeitreihen speichern", observations.length );
+    monitor.beginTask( "Zeitreihen speichern", columns.length );
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    for( int i = 0; i < observations.length; i++ )
+    for( int i = 0; i < columns.length; i++ )
     {
-      final IObservation obs = observations[i];
+      final TableViewColumn column = columns[i];
+      final IObservation obs = column.getObservation();
       try
       {
-        System.out.println("Save dirty observation: " + obs.getName() );
         pool.saveObject( obs, monitor );
       }
       catch( final LoaderException e )
@@ -368,14 +367,14 @@ public final class TableViewUtils
   public static IObservation[] findDirtyObservations( TableViewColumn[] columns )
   {
     Set result = new HashSet();
-    
+
     for( int i = 0; i < columns.length; i++ )
     {
-        final TableViewColumn column = columns[i];
-        if( column.isDirty() )
-          result.add( column.getObservation() );
+      final TableViewColumn column = columns[i];
+      if( column.isDirty() )
+        result.add( column.getObservation() );
     }
-    
+
     return (IObservation[])result.toArray( new IObservation[result.size()] );
   }
 }
