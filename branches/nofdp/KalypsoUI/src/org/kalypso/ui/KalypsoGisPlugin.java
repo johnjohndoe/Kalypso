@@ -45,9 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -93,14 +91,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
 
-  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-1$
-
   /** location of the pool properties file */
   private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-1$
 
   private static KalypsoGisPlugin THE_PLUGIN = null;
-
-  private ResourceBundle m_resourceBundle = null;
 
   /** Manages the list of repositories. */
   private IRepositoryContainer m_tsRepositoryContainer = null;
@@ -351,17 +345,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      m_resourceBundle = ResourceBundle.getBundle( KalypsoGisPlugin.BUNDLE_NAME );
-    }
-    catch( final MissingResourceException ex )
-    {
-      m_resourceBundle = null;
-
-      ex.printStackTrace();
-    }
-
-    try
-    {
       reconfigure();
 
       getPreferenceStore().addPropertyChangeListener( this );
@@ -448,8 +431,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_tsRepositoryContainer.dispose();
     }
 
-    m_resourceBundle = null;
-
     m_imgProvider.resetTmpFiles();
     m_imgProvider = null;
 
@@ -473,33 +454,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       throw new NullPointerException( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.20" ) ); //$NON-NLS-1$
 
     return KalypsoGisPlugin.THE_PLUGIN;
-  }
-
-  /**
-   * @param key
-   * @return string from the plugin's resource bundle, or 'key' if not found.
-   */
-  public static String getResourceString( final String key )
-  {
-    final ResourceBundle bundle = KalypsoGisPlugin.getDefault().getResourceBundle();
-    try
-    {
-      return (bundle != null) ? bundle.getString( key ) : key;
-    }
-    catch( final MissingResourceException e )
-    {
-      e.printStackTrace();
-
-      return key;
-    }
-  }
-
-  /**
-   * @return plugin's resource bundle
-   */
-  public ResourceBundle getResourceBundle( )
-  {
-    return m_resourceBundle;
   }
 
   /**

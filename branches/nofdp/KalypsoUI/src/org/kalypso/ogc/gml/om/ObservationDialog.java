@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
@@ -65,7 +64,7 @@ public class ObservationDialog extends ResizableDialog
 
   protected ObservationDialog( final Shell parentShell, final IObservation<TupleResult> obs )
   {
-    super( parentShell, KalypsoGisPlugin.getDefault().getResourceBundle() );
+    super( parentShell, null );
 
     m_obs = obs;
   }
