@@ -103,9 +103,14 @@ public class RoughnessLayer extends AbstractProfilLayer
     final int breite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     for( int i = 0; i < len - 1; i++ )
     {
-      final int x1 = dom.numericToScreen( (Double) profilPoints[i].getValue( breite ) );
-      final int y1 = tar.numericToScreen( (Double) profilPoints[i].getValue( index ) );
-      final int x2 = dom.numericToScreen( (Double) profilPoints[i + 1].getValue( breite ) );
+      final Double dX1 = (Double) profilPoints[i].getValue( breite );
+      final Double dY1 = (Double) profilPoints[i].getValue( index );
+      final Double dX2 = (Double) profilPoints[i + 1].getValue( breite );
+      if( dX1 == null || dX2 == null || dY1 == null )
+        continue;
+      final int x1 = dom.numericToScreen( dX1 );
+      final int y1 = tar.numericToScreen( dY1 );
+      final int x2 = dom.numericToScreen( dX2 );
       fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
     }

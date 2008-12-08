@@ -109,6 +109,8 @@ public class StationLineLayer extends ComponentLayer
     for( IRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
+      if( point == null )
+        continue;
       drawLine( gc, new Rectangle( point.x, point.y, 0, baseLine ) );
     }
   }

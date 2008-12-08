@@ -67,12 +67,13 @@ public class PointsLineLayer extends AbstractProfilLayer
 {
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    if(hint.isPointsChanged()||hint.isPointValuesChanged())
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() )
       getEventHandler().fireLayerContentChanged( this );
   }
 
@@ -157,7 +158,13 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final int active = profil.indexOfPoint( profil.getActivePoint() );
     for( int i = 0; i < len; i++ )
-      points[i] = toScreen( profilPoints[i] );
+    {
+      final Point p = toScreen( profilPoints[i] );
+      if( p == null )
+        //TODO: user message
+        return;
+      points[i] = p;
+    }
 
     final PolylineFigure pf = new PolylineFigure();
 
