@@ -40,50 +40,97 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.editor.IProfilchartEditorListener;
-import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
-import org.kalypso.model.wspm.ui.view.chart.action.StatusPosContributionItem;
-
+import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public abstract class AbstractProfilViewPart extends ViewPart implements IProfilViewPart,
-    IProfilchartEditorListener, IProfilViewDataListener
+public abstract class AbstractProfilViewPart extends ViewPart implements IProfilProviderListener, IAdapterEater<IProfilProvider>
 {
-  private ProfilchartEditor m_editor;
+  private final AdapterPartListener<IProfilProvider> m_adapterPartListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, new EditorFirstAdapterFinder<IProfilProvider>(), new EditorFirstAdapterFinder<IProfilProvider>() );
+
+  private IProfil m_profile = null;
 
   private Composite m_control;
 
-  private ActionGroup m_actionGroup;
+  private IProfilProvider m_provider;
 
-  private StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" ); //$NON-NLS-1$
+  /** The part where the profile provider came from. */
+  private IWorkbenchPart m_profilProviderPart = null;
+
+  private final UIJob m_updateProfilJob = new UIJob( Messages.AbstractProfilViewPart2_4 )
+  {
+    @Override
+    public IStatus runInUIThread( IProgressMonitor monitor )
+    {
+      handleProfilChanged();
+      return Status.OK_STATUS;
+    }
+
+  };
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
 
-    final IActionBars actionBars = site.getActionBars();
-    actionBars.getStatusLineManager().add( m_statusLineItem );
+    final IWorkbenchPage page = site.getPage();
 
-    // we want to register the globalActions (from the profileditor) here
-    // but we may have not editor yes
-    // so we register instead everytime setActiveEditor is called
+    m_adapterPartListener.init( page );
+
+  }
+
+  public IProfil getProfil( )
+  {
+    return m_profile;
+  }
+
+  public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
+  {
+    if( adapter == m_provider )
+    {
+      // for first initialization, provider empty profile
+      if( adapter == null )
+        onProfilProviderChanged( null, null, null );
+      return;
+    }
+
+    if( m_provider != null )
+    {
+      m_provider.removeProfilProviderListener( this );
+      m_provider = null;
+    }
+
+    final IProfil oldProfile = m_profile;
+
+    m_provider = adapter;
+    m_profilProviderPart = part;
+
+    if( m_provider != null )
+      m_provider.addProfilProviderListener( this );
+
+    final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
+
+    onProfilProviderChanged( m_provider, oldProfile, newProfile );
   }
 
   /**
@@ -92,20 +139,13 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
   @Override
   public void dispose( )
   {
+    m_adapterPartListener.dispose();
+
+    m_control.dispose();
+
+    m_profilProviderPart = null;
+
     super.dispose();
-
-    if( m_actionGroup != null )
-    {
-      m_actionGroup.dispose();
-      m_actionGroup = null;
-    }
-
-    if( m_editor != null )
-    {
-      saveState();
-      m_editor.removeProfilchartEditorListener( this );
-      m_editor.getViewData().removeProfilViewDataListener( this );
-    }
   }
 
   /**
@@ -115,65 +155,56 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
   public final void createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
-    m_control.setLayout( new GridLayout() );
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    m_control.setLayout( gridLayout );
 
-    final IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-    if( activeEditor instanceof ProfilchartEditor )
-      setProfilchartEditor( (ProfilchartEditor)activeEditor );
- 
-    
-    
-    
+    onProfilProviderChanged( m_provider, null, m_profile );
   }
 
-  public final ProfilViewData getViewData( )
+  /**
+   * @see com.bce.profil.ui.view.IProfilProviderListener#onProfilProviderChanged(com.bce.eind.core.profil.IProfilEventManager,
+   *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
+   *      com.bce.profil.ui.view.ProfilViewData)
+   */
+  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
-    return m_editor == null ? null : m_editor.getViewData();
+
+    setPartNames( Messages.AbstractProfilViewPart2_0, Messages.AbstractProfilViewPart2_1 );
+
+    m_profile = newProfile;
+
+    onProfilChanged();
   }
 
-  public final ProfilchartEditor getProfilchartEditor( )
+  /** Returns the part which provides the current profile. */
+  public IWorkbenchPart getProfileProviderPart( )
   {
-    return m_editor;
+    return m_profilProviderPart;
   }
 
-  public final void setProfilchartEditor( final ProfilchartEditor editor )
+  private void setPartNames( final String partName, final String tooltip )
   {
-    if( m_editor == editor )
-      return;
-
-    setContentDescription( "" ); //$NON-NLS-1$
-    setPartName( "" ); //$NON-NLS-1$
-
-    if( m_editor != null )
+    final Composite control = getControl();
+    if( control != null && !control.isDisposed() )
     {
-      saveState();
-      m_editor.removeProfilchartEditorListener( this );
-      m_editor.getViewData().removeProfilViewDataListener( this );
+      final Runnable object = new Runnable()
+      {
+        public void run( )
+        {
+          if( !control.isDisposed() )
+            setPartNamesInternal( partName, tooltip );
+        }
+      };
+      control.getDisplay().asyncExec( object );
     }
+  }
 
-    m_editor = editor;
-
-    if( m_editor != null )
-    {
-      m_editor.addProfilchartEditorListener( this );
-
-      final ProfilViewData viewData = m_editor.getViewData();
-      viewData.addProfilViewDataListener( this );
-
-      setPartName( m_editor.getPartName() );
-      setContentDescription( m_editor.getContentDescription() );
-    }
-
-//    m_statusLineItem.setEditor( editor );
-
-    if( m_editor != null )
-    {
-      final IActionBars bars = getViewSite().getActionBars();
-      m_editor.registerCommonGlobalActions( bars );
-      bars.updateActionBars();
-    }
-
-    onProfilChanged( m_editor, m_editor == null ? null : m_editor.getProfil() );
+  protected void setPartNamesInternal( final String partName, final String tooltip )
+  {
+    setTitleToolTip( tooltip );
+    setPartName( partName );
   }
 
   @Override
@@ -182,44 +213,13 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
     m_control.setFocus();
   }
 
-  /**
-   * @see com.bce.profil.eclipse.editor.IProfilchartEditorListener#onProfilChanged(com.bce.profil.eclipse.editor.ProfilchartEditor,
-   *      com.bce.profil.profilinterface.IProfil)
-   */
-  public final void onProfilChanged( final ProfilchartEditor editor, final IProfil newprofil )
+  /** Recreates the control */
+  private final void onProfilChanged( )
   {
-    if( m_actionGroup != null )
-    {
-      m_actionGroup.dispose();
-      m_actionGroup = null;
-    }
-
-    if( editor != null )
-    {
-      m_actionGroup = new UndoRedoActionGroup( editor.getSite(), new ProfilUndoContext( editor
-          .getProfil() ), true );
-      final IActionBars actionBars = getViewSite().getActionBars();
-      m_actionGroup.fillActionBars( actionBars );
-    }
-
-    if( m_control != null && !m_control.isDisposed() )
-      m_control.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          final Composite parent = getControl();
-          if( parent == null || parent.isDisposed() )
-            return;
-
-          for( final Control c : parent.getChildren() )
-            c.dispose();
-
-          final Control control = createContent( parent );
-          if( control != null )
-            control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-          parent.layout();
-        }
-      } );
+    // REMARK: this makes this code a bit more robust, if too many profil changes go in...
+    // we quickly cancel still pending jobs and reschedule again (with a small schedule)
+    m_updateProfilJob.cancel();
+    m_updateProfilJob.schedule( 100 );
   }
 
   protected Composite getControl( )
@@ -227,7 +227,25 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
     return m_control;
   }
 
+  /** Used internally. Must be called in the SWT-Thread. */
+  protected void handleProfilChanged( )
+  {
+    if( m_control == null || m_control.isDisposed() )
+      return;
+
+    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation(); //$NON-NLS-1$
+    final String tooltip = null;
+
+    setPartNames( partName, tooltip );
+
+    final Composite parent = getControl();
+    if( parent == null || parent.isDisposed() )
+      return;
+
+    createContent( parent );
+    parent.layout();
+  }
+
   protected abstract Control createContent( final Composite parent );
 
-  protected abstract void saveState( );
 }
