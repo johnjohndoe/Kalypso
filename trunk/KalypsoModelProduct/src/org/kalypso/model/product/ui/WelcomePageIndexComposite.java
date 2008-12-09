@@ -134,7 +134,7 @@ public class WelcomePageIndexComposite extends Composite
         }
       };
 
-      mainCanvas.addImage( handler.getIcon(), iconSizeHandler );
+      mainCanvas.addImage( handler.getIcon(), handler.getHoverIcon(), iconSizeHandler );
       mainCanvas.addText( handler.getLabel(), MyFonts.WELCOME_PAGE_MODULE, MyColors.COLOR_WELCOME_PAGE_HEADING, new IHyperCanvasSizeHandler()
       {
         @Override
