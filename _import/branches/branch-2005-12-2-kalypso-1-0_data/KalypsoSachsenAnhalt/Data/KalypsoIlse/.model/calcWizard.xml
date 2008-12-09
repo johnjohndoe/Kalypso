@@ -171,7 +171,7 @@
 		<arg name="resultProperty" value="Ganglinie_gerechnet"/>
 		<!-- für alle Vorhersagepegel Q-Diag, W-Diag,  D-Q/W/P-Tabelle-->
 		<arg name="exporter1">
-			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="id" value="featureWithTemplateExporterTree"/>
 			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="800"/>
