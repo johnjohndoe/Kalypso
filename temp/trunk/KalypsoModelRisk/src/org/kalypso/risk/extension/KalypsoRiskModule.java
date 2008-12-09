@@ -25,7 +25,9 @@ import de.renew.workflow.connector.WorkflowProjectNature;
 
 public class KalypsoRiskModule implements IKalypsoModule
 {
-  protected static final Image IMG_MODEL_RISK = new Image( null, KalypsoRiskModule.class.getResourceAsStream( "icons/button_risk.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoRiskModule.class.getResourceAsStream( "icons/risk_no.gif" ) );
+
+  protected static final Image IMG_HOVER = new Image( null, KalypsoRiskModule.class.getResourceAsStream( "icons/risk_hover.gif" ) );
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -41,7 +43,7 @@ public class KalypsoRiskModule implements IKalypsoModule
       @Override
       public Image getIcon( )
       {
-        return IMG_MODEL_RISK;
+        return IMG;
       }
 
       @Override
@@ -54,6 +56,12 @@ public class KalypsoRiskModule implements IKalypsoModule
       public String getTooltip( )
       {
         return "KalypsoRisk öffnen";
+      }
+
+      @Override
+      public Image getHoverIcon( )
+      {
+        return IMG_HOVER;
       }
     };
   }
