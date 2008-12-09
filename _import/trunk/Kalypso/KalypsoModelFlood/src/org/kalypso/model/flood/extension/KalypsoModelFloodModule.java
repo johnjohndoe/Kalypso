@@ -26,7 +26,9 @@ import de.renew.workflow.connector.WorkflowProjectNature;
 
 public class KalypsoModelFloodModule implements IKalypsoModule
 {
-  protected static final Image IMG_MODEL_FLOOD_MODULE = new Image( null, KalypsoModelFloodModule.class.getResourceAsStream( "icons/button_flood.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoModelFloodModule.class.getResourceAsStream( "icons/flood_no.gif" ) );
+
+  protected static final Image IMG_HOVER = new Image( null, KalypsoModelFloodModule.class.getResourceAsStream( "icons/flood_hover.gif" ) );
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -42,7 +44,7 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       @Override
       public Image getIcon( )
       {
-        return IMG_MODEL_FLOOD_MODULE;
+        return IMG;
       }
 
       @Override
@@ -56,6 +58,12 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       {
         return "KalypsoFlood öffnen";
       }
+
+      @Override
+      public Image getHoverIcon( )
+      {
+        return IMG_HOVER;
+      }
     };
   }
 
@@ -67,7 +75,6 @@ public class KalypsoModelFloodModule implements IKalypsoModule
   {
     return new IKalypsoModuleEnteringPageHandler()
     {
-
       @Override
       public IProjectDatabaseFilter getDatabaseFilter( )
       {
