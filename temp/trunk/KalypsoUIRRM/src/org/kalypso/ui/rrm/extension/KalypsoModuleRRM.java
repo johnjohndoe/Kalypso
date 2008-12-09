@@ -22,7 +22,9 @@ import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 public class KalypsoModuleRRM implements IKalypsoModule
 {
-  protected static final Image IMG_MODULE = new Image( null, KalypsoModuleRRM.class.getResourceAsStream( "icons/button_na.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoModuleRRM.class.getResourceAsStream( "icons/hydrology_no.gif" ) );
+
+  protected static final Image IMG_HOVER = new Image( null, KalypsoModuleRRM.class.getResourceAsStream( "icons/hydrology_hover.gif" ) );
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -38,7 +40,7 @@ public class KalypsoModuleRRM implements IKalypsoModule
       @Override
       public Image getIcon( )
       {
-        return IMG_MODULE;
+        return IMG;
       }
 
       @Override
@@ -51,6 +53,12 @@ public class KalypsoModuleRRM implements IKalypsoModule
       public String getTooltip( )
       {
         return "KalypsoHydrology öffnen";
+      }
+
+      @Override
+      public Image getHoverIcon( )
+      {
+        return IMG_HOVER;
       }
     };
   }
