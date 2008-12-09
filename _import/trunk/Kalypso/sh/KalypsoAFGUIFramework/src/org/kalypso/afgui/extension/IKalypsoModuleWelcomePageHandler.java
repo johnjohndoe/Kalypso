@@ -55,6 +55,11 @@ public interface IKalypsoModuleWelcomePageHandler
   Image getIcon( );
 
   /**
+   * @return hover icon of module
+   */
+  Image getHoverIcon( );
+
+  /**
    * @return label of model icon (placed at the right side of the icon)
    */
   String getLabel( );
