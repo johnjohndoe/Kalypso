@@ -25,7 +25,9 @@ import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
-  protected static final Image IMG_MODULE = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/button_wspm.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) );
+
+  protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) );
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -41,7 +43,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public Image getIcon( )
       {
-        return IMG_MODULE;
+        return IMG;
       }
 
       @Override
@@ -54,6 +56,12 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       public String getTooltip( )
       {
         return "KalypsoWSPM öffnen";
+      }
+
+      @Override
+      public Image getHoverIcon( )
+      {
+        return IMG_HOVER;
       }
     };
   }
