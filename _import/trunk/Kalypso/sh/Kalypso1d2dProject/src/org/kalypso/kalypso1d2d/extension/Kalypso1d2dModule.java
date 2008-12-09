@@ -25,7 +25,9 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
-  protected static final Image IMG_1D_2D_MODULE = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/button_1d2d.gif" ) );
+  protected static final Image IMG = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_no.gif" ) );
+
+  protected static final Image IMG_HOVER = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_hover.gif" ) );
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -38,11 +40,10 @@ public class Kalypso1d2dModule implements IKalypsoModule
   {
     return new IKalypsoModuleWelcomePageHandler()
     {
-
       @Override
       public Image getIcon( )
       {
-        return IMG_1D_2D_MODULE;
+        return IMG;
       }
 
       @Override
@@ -55,6 +56,12 @@ public class Kalypso1d2dModule implements IKalypsoModule
       public String getTooltip( )
       {
         return "Kalypso1D2D öffnen";
+      }
+
+      @Override
+      public Image getHoverIcon( )
+      {
+        return IMG_HOVER;
       }
     };
   }
