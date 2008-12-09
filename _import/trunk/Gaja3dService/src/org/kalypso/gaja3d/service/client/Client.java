@@ -25,10 +25,8 @@ import org.kalypso.gaja3d.service.factory.stubs.Gaja3DResourceFactoryPortType;
 import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.stubs.Boundary;
-import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateTinParametersType;
-import org.kalypso.gaja3d.service.stubs.DemGrid;
 import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesParametersType;
 import org.kalypso.gaja3d.service.stubs.Gaja3DPortType;
@@ -64,7 +62,7 @@ public class Client {
 	 * for skipping grid creation
 	 */
 	private static final String DEMGRID_FILENAME = "resources/DemGrid.asc";
-	
+
 	/*
 	 * for skipping breakline creation
 	 */
@@ -131,16 +129,15 @@ public class Client {
 		printResourceProperties(gaja3d);
 
 		// call Execute_createGrid
-//		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
-//		gaja3d.execute_createGrid(execute_createGrid);
-//		printResourceProperties(gaja3d);
+		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
+		gaja3d.execute_createGrid(execute_createGrid);
+		printResourceProperties(gaja3d);
 
 		// call Execute_detectBreaklines
-		// final DetectBreaklinesParametersType detectBreaklinesParameters =
-		// buildExecuteDetectBreaklines();
-		// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-		// printResourceProperties(gaja3d);
-		
+		final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
+		gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+		printResourceProperties(gaja3d);
+
 		// call Execute_createTin
 		final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
 		gaja3d.execute_createTin(createTinParameters);
@@ -154,46 +151,45 @@ public class Client {
 		}
 
 	}
-	
+
 	private static CreateTinParametersType buildExecuteCreateTin() {
 		final CreateTinParametersType execute_createTin = new CreateTinParametersType();
 		/*
 		 * remove comment when skipping breakline detection
 		 */
-		try {
-//			final Boundary boundary = new Boundary();
-//			boundary.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-//					Gaja3dQNames.RP_BOUNDARY));
-//			final URI boundaryHref = new URI(Client.class.getResource(
-//					BOUNDARY_FILENAME).toURI().toString());
-//			boundary.setHref(boundaryHref);
-//			execute_createTin.setBoundary(boundary);
-			
-			final Breaklines breaklines = new Breaklines();
-			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_BREAKLINES));
-			final URI breaklinesHref = new URI(Client.class.getResource(
-					BREAKLINES_FILENAME).toURI().toString());
-			breaklines.setHref(breaklinesHref);
-			execute_createTin.setBreaklines(breaklines);
-		} catch (final MalformedURIException e) {
-			e.printStackTrace();
-		} catch (final URISyntaxException e) {
-			e.printStackTrace();
-		}
+		// try {
+		// final Boundary boundary = new Boundary();
+		// boundary.setIdentifier(CodeTypeUtil.fillCodeType(new
+		// Identifier(),
+		// Gaja3dQNames.RP_BOUNDARY));
+		// final URI boundaryHref = new URI(Client.class.getResource(
+		// BOUNDARY_FILENAME).toURI().toString());
+		// boundary.setHref(boundaryHref);
+		// execute_createTin.setBoundary(boundary);
+		//
+		// final Breaklines breaklines = new Breaklines();
+		// breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
+		// new Identifier(), Gaja3dQNames.RP_BREAKLINES));
+		// final URI breaklinesHref = new URI(Client.class.getResource(
+		// BREAKLINES_FILENAME).toURI().toString());
+		// breaklines.setHref(breaklinesHref);
+		// execute_createTin.setBreaklines(breaklines);
+		// } catch (final MalformedURIException e) {
+		// e.printStackTrace();
+		// } catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
+		final MinAngle minAngle = new MinAngle();
+		minAngle.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+				Gaja3dQNames.RP_MIN_ANGLE));
+		minAngle.setAngle(22);
+		execute_createTin.setMinAngle(minAngle);
 
-//		final MinAngle minAngle = new MinAngle();
-//		minAngle.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-//				Gaja3dQNames.RP_MIN_ANGLE));
-//		minAngle.setAngle(1000);
-//		execute_createTin.setMinAngle(minAngle);
-//		
-//		final MaxArea maxArea = new MaxArea();
-//		maxArea.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-//				Gaja3dQNames.RP_MAX_AREA));
-//		maxArea.setArea(1000);
-//		execute_createTin.setMaxArea(maxArea);
-		
+		final MaxArea maxArea = new MaxArea();
+		maxArea.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+				Gaja3dQNames.RP_MAX_AREA));
+		maxArea.setArea(1000);
+		execute_createTin.setMaxArea(maxArea);
 
 		return execute_createTin;
 	}
@@ -203,29 +199,27 @@ public class Client {
 		/*
 		 * remove comment for skipping grid creation
 		 */
-		try {
-			final Boundary boundary = new Boundary();
-			boundary.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_BOUNDARY));
-			final URI boundaryHref = new URI(Client.class.getResource(
-					BOUNDARY_FILENAME).toURI().toString());
-			boundary.setHref(boundaryHref);
-			execute_detectBreaklines.setBoundary(boundary);
-
-			final DemGrid demGrid = new DemGrid();
-			demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_DEM_GRID));
-			final URI demGridHref = new URI(Client.class.getResource(
-					DEMGRID_FILENAME).toURI().toString());
-			demGrid.setHref(demGridHref);
-			execute_detectBreaklines.setDemGrid(demGrid);
-		} catch (final MalformedURIException e) {
-			e.printStackTrace();
-		} catch (final URISyntaxException e) {
-			e.printStackTrace();
-		}
-		// ////
-
+		// try {
+		// final Boundary boundary = new Boundary();
+		// boundary.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+		// Gaja3dQNames.RP_BOUNDARY));
+		// final URI boundaryHref = new URI(Client.class.getResource(
+		// BOUNDARY_FILENAME).toURI().toString());
+		// boundary.setHref(boundaryHref);
+		// execute_detectBreaklines.setBoundary(boundary);
+		//
+		// final DemGrid demGrid = new DemGrid();
+		// demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+		// Gaja3dQNames.RP_DEM_GRID));
+		// final URI demGridHref = new URI(Client.class.getResource(
+		// DEMGRID_FILENAME).toURI().toString());
+		// demGrid.setHref(demGridHref);
+		// execute_detectBreaklines.setDemGrid(demGrid);
+		// } catch (final MalformedURIException e) {
+		// e.printStackTrace();
+		// } catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
 		final SmoothFilter smoothFilter = new SmoothFilter();
 		smoothFilter.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 				Gaja3dQNames.RP_SMOOTH_FILTER));

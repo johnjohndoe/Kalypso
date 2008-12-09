@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.gaja3d.simulation.CreateTinSimulation;
+import org.kalypso.service.wps.client.BlockingWPSRequest;
 import org.kalypso.service.wps.client.WPSRequest;
 
 /**
@@ -108,12 +109,10 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 		outputs.add("stderr");
 
 		/* Create the delegate which can handle ISimulations. */
-		final String serviceEndpoint = System
-				.getProperty("org.kalypso.service.wps.service");
+		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
-		final WPSRequest simulationJob = new WPSRequest(CreateTinSimulation.ID,
+		final BlockingWPSRequest simulationJob = new BlockingWPSRequest(CreateTinSimulation.ID,
 				serviceEndpoint, 300000);
-		simulationJob.init(new NullProgressMonitor());
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());
 
@@ -134,14 +133,12 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 
 	@Override
 	public void setMaxArea(double maxArea) {
-		// TODO Auto-generated method stub
-
+		this.maxArea = maxArea;
 	}
 
 	@Override
 	public void setMinAngle(double minAngle) {
-		// TODO Auto-generated method stub
-
+		this.minAngle = minAngle;
 	}
 
 }
