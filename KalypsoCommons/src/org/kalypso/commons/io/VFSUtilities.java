@@ -187,7 +187,7 @@ public class VFSUtilities
         if( FileType.FOLDER.equals( destination.getType() ) )
           destinationFile = destination.resolveFile( source.getName().getBaseName() );
 
-        if( overwrite || !destination.exists() )
+        if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize())
         {
           /* Copy file. */
           Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
