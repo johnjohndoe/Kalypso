@@ -109,7 +109,25 @@
 					<documentation>In this use, the DescriptionType shall describe this process input. </documentation>
 				</annotation>
 				<sequence>
-					<group ref="wps:InputFormChoice"/>
+					<!-- SK: inlined choice for axis -->
+					<choice>
+						<element name="ComplexData" type="wps:SupportedComplexDataType">
+							<annotation>
+								<documentation>Indicates that this input shall be a complex data structure (such as a GML document), and provides a list of formats and encodings supported for this Input. The value of this ComplexData structure can be input either embedded in the Execute request or remotely accessible to the server.
+								This element also provides a list of formats, encodings, and schemas supported for this output. The client can select from among the identified combinations of formats, encodings, and schemas to specify the form of the output. This allows for complete specification of particular versions of GML, or image formats. </documentation>
+							</annotation>
+						</element>
+						<element name="LiteralData" type="wps:LiteralInputType">
+							<annotation>
+								<documentation>Indicates that this input shall be a simple numeric value or character string that is embedded in the execute request, and describes the possible values. </documentation>
+							</annotation>
+						</element>
+						<element name="BoundingBoxData" type="wps:SupportedCRSsType">
+							<annotation>
+								<documentation>Indicates that this input shall be a BoundingBox data structure that is embedded in the execute request, and provides a list of the CRSs supported for this Bounding Box. </documentation>
+							</annotation>
+						</element>
+					</choice>
 					<element name="MinimumOccurs" minOccurs="0">
 						<annotation>
 							<documentation>The minimum number of times that values for this parameter are required. If MinimumOccurs is "0", this data input is optional. If MinimumOccurs is "1" or if this element is omitted, this process input is required. </documentation>
@@ -157,7 +175,24 @@
 		<complexContent>
 			<extension base="wps:LiteralOutputType">
 				<sequence>
-					<group ref="wps:LiteralValuesChoice"/>
+					<!-- SK: inlined choice for axis -->
+					<choice>
+						<element ref="ows:AllowedValues">
+							<annotation>
+								<documentation>Indicates that there are a finite set of values and ranges allowed for this input, and contains list of all the valid values and/or ranges of values. Notice that these values and ranges can be displayed to a human client. </documentation>
+							</annotation>
+						</element>
+						<element ref="ows:AnyValue">
+							<annotation>
+								<documentation>Indicates that any value is allowed for this input. This element shall be included when there are no restrictions, except for data type, on the allowable value of this input. </documentation>
+							</annotation>
+						</element>
+						<element ref="ows:ValuesReference">
+							<annotation>
+								<documentation>Indicates that there are a finite set of values and ranges allowed for this input, which are specified in the referenced list. </documentation>
+							</annotation>
+						</element>
+					</choice>
 					<element ref="ows:DefaultValue" minOccurs="0">
 						<annotation>
 							<documentation>Optional default value for this quantity, which should be included when this quantity has a default value. </documentation>
@@ -290,7 +325,25 @@
 				<annotation>
 					<documentation>In this use, the DescriptionType shall describe this process output. </documentation>
 				</annotation>
-				<group ref="wps:OutputFormChoice"/>
+				<!-- SK: inlined choice for axis -->
+				<choice>
+					<element name="ComplexOutput" type="wps:SupportedComplexDataType">
+						<annotation>
+							<documentation>Indicates that this Output shall be a complex data structure (such as a GML fragment) that is returned by the execute operation response. The value of this complex data structure can be output either embedded in the execute operation response or remotely accessible to the client. When this output form is indicated, the process produces only a single output, and "store" is "false, the output shall be returned directly, without being embedded in the XML document that is otherwise provided by execute operation response. 
+							This element also provides a list of format, encoding, and schema combinations supported for this output. The client can select from among the identified combinations of formats, encodings, and schemas to specify the form of the output. This allows for complete specification of particular versions of GML, or image formats. </documentation>
+						</annotation>
+					</element>
+					<element name="LiteralOutput" type="wps:LiteralOutputType">
+						<annotation>
+							<documentation>Indicates that this output shall be a simple literal value (such as an integer) that is embedded in the execute response, and describes that output. </documentation>
+						</annotation>
+					</element>
+					<element name="BoundingBoxOutput" type="wps:SupportedCRSsType">
+						<annotation>
+							<documentation>Indicates that this output shall be a BoundingBox data structure, and provides a list of the CRSs supported in these Bounding Boxes. This element shall be included when this process output is an ows:BoundingBox element. </documentation>
+						</annotation>
+					</element>
+				</choice>
 			</extension>
 		</complexContent>
 	</complexType>

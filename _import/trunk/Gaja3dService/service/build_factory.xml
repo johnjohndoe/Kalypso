@@ -11,7 +11,11 @@
 	
 	<!-- Default target "all" generates the GAR file -->
 	<target name="all">
-		<ant antfile="build.xml" target="all"/>
+		<copy todir="build/schema">
+			<fileset dir="${schema.local}" includes="**/*" />
+		</copy>
+		<ant antfile="build.xml" target="all" />
+		<delete dir="tmp" />
 	</target>
 
 </project>

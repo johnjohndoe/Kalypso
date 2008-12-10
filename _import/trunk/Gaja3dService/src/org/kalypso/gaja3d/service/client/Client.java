@@ -9,6 +9,15 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import net.opengeospatial.ows.stubs.AcceptVersionsType;
+import net.opengeospatial.ows.stubs.CodeType;
+import net.opengeospatial.ows.stubs.GetCapabilitiesType;
+import net.opengeospatial.wps.stubs.Capabilities;
+import net.opengeospatial.wps.stubs.DescribeProcess;
+import net.opengeospatial.wps.stubs.ProcessBriefType;
+import net.opengeospatial.wps.stubs.ProcessDescriptions;
+import net.opengeospatial.wps.stubs.ProcessOfferings;
+
 import org.apache.axis.message.MessageElement;
 import org.apache.axis.message.addressing.Address;
 import org.apache.axis.message.addressing.EndpointReferenceType;
@@ -37,6 +46,7 @@ import org.kalypso.gaja3d.service.stubs.MaxArea;
 import org.kalypso.gaja3d.service.stubs.MinAngle;
 import org.kalypso.gaja3d.service.stubs.SmoothFilter;
 import org.kalypso.gaja3d.service.stubs.SmoothFilterMethod;
+import org.kalypso.service.wps.utils.MarshallUtilities;
 import org.oasis.wsrf.lifetime.Destroy;
 import org.oasis.wsrf.properties.GetMultipleResourcePropertiesResponse;
 import org.oasis.wsrf.properties.GetMultipleResourceProperties_Element;
@@ -46,7 +56,11 @@ import org.xml.sax.InputSource;
 
 /**
  * This client creates a new Gaja3dService instance through a
- * Gaja3dResourceFactoryService.
+ * Gaja3dResourceFactoryService or by using the file "test.epr" as
+ * EndPointReference.
+ * 
+ * The service's GetCapabilities, DescribeProcess, CreateGrid, DetectBreaklines
+ * and CreateTin operations are called in order.
  */
 public class Client {
 
@@ -91,9 +105,9 @@ public class Client {
 				e.printStackTrace();
 			}
 
-			Gaja3DResourceFactoryPortType mathFactory;
+			Gaja3DResourceFactoryPortType gaja3dFactory;
 			try {
-				mathFactory = factoryLocator
+				gaja3dFactory = factoryLocator
 						.getGaja3dResourceFactoryPortTypePort(factoryEPR);
 			} catch (final ServiceException e) {
 				e.printStackTrace();
@@ -102,7 +116,7 @@ public class Client {
 
 			// create instance
 			final CreateResource request = new CreateResource();
-			final CreateResourceResponse createResponse = mathFactory
+			final CreateResourceResponse createResponse = gaja3dFactory
 					.createResource(request);
 			instanceEPR = createResponse.getEndpointReference();
 		}
@@ -117,31 +131,33 @@ public class Client {
 				.getGaja3dPortTypePort(instanceEPR);
 		System.out.println("Retrieved service instance.");
 		setSecurity(gaja3d);
+
+		// call GetCapabilities
+		final Capabilities capabilities = callGetCapabilities(gaja3d);
+		// call DescribeProcess for all offered processes
+		callDescribeProcess(gaja3d, capabilities);
+
 		/*
-		 * // call GetCapabilities final Capabilities capabilities =
-		 * callGetCapabilities(gaja3d); // call DescribeProcess for all offered
-		 * processes callDescribeProcess(gaja3d, capabilities);
+		 * // set Boundary RP final SetResourceProperties_Element
+		 * setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
+		 * gaja3d.setResourceProperties(setResourcePropertiesRequest);
+		 * printResourceProperties(gaja3d);
+		 * 
+		 * // call Execute_createGrid final CreateGridParametersType
+		 * execute_createGrid = buildExecuteCreateGrid();
+		 * gaja3d.execute_createGrid(execute_createGrid);
+		 * printResourceProperties(gaja3d);
+		 * 
+		 * // call Execute_detectBreaklines final DetectBreaklinesParametersType
+		 * detectBreaklinesParameters = buildExecuteDetectBreaklines();
+		 * gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+		 * printResourceProperties(gaja3d);
+		 * 
+		 * // call Execute_createTin final CreateTinParametersType
+		 * createTinParameters = buildExecuteCreateTin();
+		 * gaja3d.execute_createTin(createTinParameters);
+		 * printResourceProperties(gaja3d);
 		 */
-
-		// set Boundary RP
-		final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
-		gaja3d.setResourceProperties(setResourcePropertiesRequest);
-		printResourceProperties(gaja3d);
-
-		// call Execute_createGrid
-		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
-		gaja3d.execute_createGrid(execute_createGrid);
-		printResourceProperties(gaja3d);
-
-		// call Execute_detectBreaklines
-		final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
-		gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-		printResourceProperties(gaja3d);
-
-		// call Execute_createTin
-		final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
-		gaja3d.execute_createTin(createTinParameters);
-		printResourceProperties(gaja3d);
 
 		if (!SAVE_EPR) {
 			// call Destroy
@@ -288,24 +304,35 @@ public class Client {
 		return setResourcePropertiesRequest;
 	}
 
-	// private static void callDescribeProcess(final Gaja3DPortType gaja3d,
-	// final Capabilities capabilities) throws RemoteException {
-	// final DescribeProcess describeProcess =
-	// buildDescribeProcess(capabilities);
-	// final ProcessDescriptions processDescriptions = gaja3d
-	// .describeProcess(describeProcess);
-	// System.out.println("Got process descriptions: "
-	// + processDescriptions.getProcessDescription().length);
-	// }
-	//
-	// private static Capabilities callGetCapabilities(final Gaja3DPortType
-	// gaja3d)
-	// throws RemoteException {
-	// final GetCapabilitiesType getCapabilities = buildGetCapabilities();
-	// final Capabilities capabilities = gaja3d
-	// .getCapabilities(getCapabilities);
-	// return capabilities;
-	// }
+	private static void callDescribeProcess(final Gaja3DPortType gaja3d,
+			final Capabilities capabilities) throws RemoteException {
+		final DescribeProcess describeProcess = buildDescribeProcess(capabilities);
+		final ProcessDescriptions processDescriptions = gaja3d
+				.describeProcess(describeProcess);
+		try {
+			final String pds = ObjectSerializer.toString(processDescriptions,
+					new javax.xml.namespace.QName(
+							"http://www.opengeospatial.net/wps",
+							"ProcessDescriptions"));
+			System.out.println("Got process descriptions:");
+			// don't know how to pretty print the ProcessDescriptions using
+			// GT4 ObjectSerializer, so we use KalypsoWPS JAXB
+			final Object fromKalypsoWPS = MarshallUtilities.unmarshall(pds);
+			System.out.println(MarshallUtilities.marshall(fromKalypsoWPS));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static Capabilities callGetCapabilities(final Gaja3DPortType gaja3d)
+			throws RemoteException {
+		final GetCapabilitiesType getCapabilities = buildGetCapabilities();
+		final Capabilities capabilities = gaja3d
+				.getCapabilities(getCapabilities);
+		System.out.println("Got process capabilities:");
+
+		return capabilities;
+	}
 
 	private static void setSecurity(final Gaja3DPortType gaja3d) {
 		// final String secDescFile = Client.class.getResource(
@@ -332,7 +359,9 @@ public class Client {
 	// final ComplexValueReferenceType complexValueReference = new
 	// ComplexValueReferenceType(
 	// new URI("uri:TheTinLocation"), null, null, null);
-	// input.setComplexValueReference(complexValueReference);
+	// final ValueFormChoice valueFormChoice = new ValueFormChoice();
+	// valueFormChoice.setComplexValueReference(complexValueReference);
+	// input.setValueFormChoice(valueFormChoice);
 	// } catch (final MalformedURIException e) {
 	// e.printStackTrace();
 	// }
@@ -350,31 +379,31 @@ public class Client {
 	// execute.setOutputDefinitions(outputDefinitions);
 	// return execute;
 	// }
-	//
-	// private static DescribeProcess buildDescribeProcess(
-	// Capabilities capabilities) {
-	// final ProcessOfferings processOfferings = capabilities
-	// .getProcessOfferings();
-	// final ProcessBriefType[] processes = processOfferings.getProcess();
-	// final CodeType[] processIds = new CodeType[processes.length];
-	// int i = 0;
-	// for (final ProcessBriefType processBriefType : processes) {
-	// processIds[i++] = processBriefType.getIdentifier();
-	// }
-	// final DescribeProcess describeProcess = new DescribeProcess();
-	// describeProcess.setService("WPS");
-	// describeProcess.setVersion("0.4");
-	// describeProcess.setIdentifier(processIds);
-	// return describeProcess;
-	// }
-	//
-	// private static GetCapabilitiesType buildGetCapabilities() {
-	// final GetCapabilitiesType getCapabilities = new GetCapabilitiesType();
-	// final AcceptVersionsType acceptVersions = new AcceptVersionsType();
-	// acceptVersions.setVersion(new String[] { "0.4" });
-	// getCapabilities.setAcceptVersions(acceptVersions);
-	// return getCapabilities;
-	// }
+
+	private static DescribeProcess buildDescribeProcess(
+			Capabilities capabilities) {
+		final ProcessOfferings processOfferings = capabilities
+				.getProcessOfferings();
+		final ProcessBriefType[] processes = processOfferings.getProcess();
+		final CodeType[] processIds = new CodeType[processes.length];
+		int i = 0;
+		for (final ProcessBriefType processBriefType : processes) {
+			processIds[i++] = processBriefType.getIdentifier();
+		}
+		final DescribeProcess describeProcess = new DescribeProcess();
+		describeProcess.setService("WPS");
+		describeProcess.setVersion("0.4");
+		describeProcess.setIdentifier(processIds);
+		return describeProcess;
+	}
+
+	private static GetCapabilitiesType buildGetCapabilities() {
+		final GetCapabilitiesType getCapabilities = new GetCapabilitiesType();
+		final AcceptVersionsType acceptVersions = new AcceptVersionsType();
+		acceptVersions.setVersion(new String[] { "0.4" });
+		getCapabilities.setAcceptVersions(acceptVersions);
+		return getCapabilities;
+	}
 
 	private static void writeEPRtoFile(final EndpointReferenceType instanceEPR) {
 		try {
@@ -394,15 +423,15 @@ public class Client {
 	}
 
 	/*
-	 * This method prints out MathService's resource properties by using the
+	 * This method prints out Gaja3dService's resource properties by using the
 	 * GetResourceProperty operation.
 	 */
-	private static void printResourceProperties(final Gaja3DPortType math)
+	private static void printResourceProperties(final Gaja3DPortType gaja3d)
 			throws RemoteException {
 		final GetMultipleResourceProperties_Element getMultipleResourcePropertiesRequest = new GetMultipleResourceProperties_Element();
 		getMultipleResourcePropertiesRequest
 				.setResourceProperty(Gaja3dQNames.ALL_RPS);
-		final GetMultipleResourcePropertiesResponse response = math
+		final GetMultipleResourcePropertiesResponse response = gaja3d
 				.getMultipleResourceProperties(getMultipleResourcePropertiesRequest);
 
 		try {

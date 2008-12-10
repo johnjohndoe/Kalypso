@@ -45,7 +45,7 @@
    
 <!-- IMPORTS -->
 <xsd:import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd" schemaLocation="../wsrf/faults/WS-BaseFaults.xsd" />
-<!-- <xsd:import namespace="http://www.opengeospatial.net/wps" schemaLocation="wps/0.4.0/wpsAll.xsd"/> -->
+<xsd:import namespace="http://www.opengeospatial.net/wps" schemaLocation="wps/0.4.0/wpsAll.xsd"/>
 <xsd:include schemaLocation="wpsExecute_gaja3d_0.4.xsd"/>
       
 <!-- RESOURCE PROPERTIES -->
@@ -68,7 +68,6 @@
   ============================================================-->
 
 <!-- Generic WPS messages -->
-<!-- 
 <message name="GetCapabilitiesRequest">
 	<part name="parameters" element="ows:GetCapabilities" />
 </message>
@@ -87,7 +86,6 @@
 <message name="ExecuteResponse">
 	<part name="Body" element="wps:ExecuteResponse" />
 </message>
- -->
  
 <!-- Special Gaja3d messages -->
 <message name="Execute_createGridRequest">
@@ -126,7 +124,6 @@
 	wsrp:ResourceProperties="tns:Gaja3dResourceProperties">
 
 <!-- Generic WPS operations -->
-<!-- 
 <operation name="GetCapabilities">
 	<documentation>This standard web method is automatically generated to give a full description of this operation. The response will be an embedded WPS XML GetCapabilities Response. Please consult the OGC Web Site for the WPS 1.0.0 specification.</documentation>
 	<input name="GetCapabilitiesRequest" message="tns:GetCapabilitiesRequest" />
@@ -142,7 +139,6 @@
 	<input name="ExecuteRequest" message="tns:ExecuteRequest" />
 	<output name="ExecuteResponse" message="tns:ExecuteResponse" />
 </operation>
- -->
  
 <!-- Specific Gaja3d operations -->
 <operation name="Execute_createGrid">

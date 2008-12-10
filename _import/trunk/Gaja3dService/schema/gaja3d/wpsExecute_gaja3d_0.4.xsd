@@ -9,13 +9,11 @@
 						I M P O R T S
 	
 	============================================================-->
-	
-	<!-- 
+
 <import namespace="http://www.opengeospatial.net/wps"
 	schemaLocation="wps/0.4.0/wpsAll.xsd" />
 <import namespace="http://www.opengeospatial.net/ows"
 	schemaLocation="ows/1.0.0/owsAll.xsd" />
-	 -->
 <import namespace="http://www.w3.org/1999/xlink"
 	schemaLocation="xlink/1.0.0/xlinks.xsd" />
 	
@@ -28,13 +26,12 @@
 <element name="Identifier">
 	<complexType>
 		<simpleContent>
-			<restriction base="string"><!-- ows:CodeType -->
+			<restriction base="ows:CodeType">
 				<enumeration value="Boundary"/>
 				<enumeration value="DemPoints"/>
 				<enumeration value="DemGrid"/>
 				<enumeration value="Breaklines"/>
 				<enumeration value="ModelTin"/>
-				<attribute name="codeSpace" type="anyURI" fixed="http://org.kalypso.gaja3d.service" />
 			</restriction>
 		</simpleContent>
 	</complexType>

@@ -32,7 +32,13 @@
 			<documentation>Valid domain (or allowed set of values) of one quantity, with needed metadata but without a quantity name or identifier. </documentation>
 		</annotation>
 		<sequence>
-			<group ref="ows:PossibleValues"/>
+			<!-- SK: inlined choice for axis -->
+			<choice>
+				<element ref="ows:AllowedValues"/>
+				<element ref="ows:AnyValue"/>
+				<element ref="ows:NoValues"/>
+				<element ref="ows:ValuesReference"/>
+			</choice>
 			<element ref="ows:DefaultValue" minOccurs="0">
 				<annotation>
 					<documentation>Default value this quantity, which should be included when this quantity has a default value. </documentation>

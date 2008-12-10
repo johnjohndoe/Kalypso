@@ -7,6 +7,8 @@ import java.util.Calendar;
 
 import javax.xml.namespace.QName;
 
+import net.opengeospatial.ows.stubs.CodeType;
+
 import org.apache.axis.AxisFault;
 import org.apache.axis.message.MessageElement;
 import org.apache.axis.types.URI;
@@ -392,10 +394,11 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 			return;
 
 		final Identifier valueIdentifier = newValue.getIdentifier();
-		final URI namespaceURI = valueIdentifier.getCodeSpace();
+		final CodeType codeType = valueIdentifier.get_value();
+		final URI namespaceURI = codeType.getCodeSpace();
 		final boolean qNamesEqual = namespaceURI.toString().equals(
 				qName.getNamespaceURI());
-		final String localPart = valueIdentifier.get_value();
+		final String localPart = codeType.get_value();
 		final boolean localPartEqual = localPart.equals(qName.getLocalPart());
 		if (!(localPartEqual && qNamesEqual)) {
 			throw new IllegalArgumentException(
