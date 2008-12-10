@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.gaja3d.simulation.DetectBreaklinesSimulation;
-import org.kalypso.service.wps.client.BlockingWPSRequest;
 import org.kalypso.service.wps.client.WPSRequest;
 
 /**
@@ -139,7 +138,7 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
 		/* Start the simulation with a timeout of 300000 ms. */
-		final BlockingWPSRequest simulationJob = new BlockingWPSRequest(
+		final WPSRequest simulationJob = new WPSRequest(
 				DetectBreaklinesSimulation.ID, serviceEndpoint, 300000);
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());

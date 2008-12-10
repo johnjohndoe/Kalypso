@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.gaja3d.simulation.CreateGridSimulation;
-import org.kalypso.service.wps.client.BlockingWPSRequest;
 import org.kalypso.service.wps.client.WPSRequest;
 
 /**
@@ -110,7 +109,7 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 		/* Create the delegate which can handle ISimulations. */
 		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
-		final BlockingWPSRequest simulationJob = new BlockingWPSRequest(
+		final WPSRequest simulationJob = new WPSRequest(
 				CreateGridSimulation.ID, serviceEndpoint, 300000);
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());
