@@ -152,9 +152,12 @@
 		</kalypso.copyObservation>
 
 		<!-- LEERe Zeitreihen für die Speicherabgabe für den Vorhersagezeitraum -->
+	                                <!-- betrifft nur die Überleitungssperre (TS Königshütte) und die braucht eine Kennziffer für die Berichtsablage -->
+	        <!-- und die wird hier erzwungen... -->
 		<kalypso.copyObservation gml="${project.url}/.templates/.WISKI_Konfig/wiskiimport_speicherabgabe_vorhersage.gml" featurePath="WiskiMember" context="${calc.url}" targetObservation="lokal" forecastfrom="${startforecast}" forecastto="${stopsim_120}" tokens="featureName-name">
 			<source property="${wiski_vergangenheit_link}" from="${startforecast}" to="${stopsim_120}" filter="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;name&gt;featureName&lt;/name&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;&lt;filter&gt;&lt;interpolationFilter xmlns=&quot;filters.zml.kalypso.org&quot; calendarField=&quot;HOUR_OF_DAY&quot; amount=&quot;1&quot; forceFill=&quot;true&quot; defaultValue=&quot;0.0&quot; defaultStatus=&quot;2&quot; fillLastWithValid=&quot;true&quot;/&gt;&lt;/filter&gt;"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
+		                                <metadata name="Kennziffer" value="${property;FID;579000}"/>
 		</kalypso.copyObservation>
 
 		<!-- LEERe Zeitreihen für den Gebietsniederschlag über den Gesamtzeitraum -->

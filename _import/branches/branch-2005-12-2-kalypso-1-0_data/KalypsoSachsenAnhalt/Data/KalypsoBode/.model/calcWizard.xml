@@ -352,7 +352,7 @@
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange, entspricht (255,128,64) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="W;NN"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -390,7 +390,7 @@
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange, entspricht (255,128,64) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="W;NN"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -428,7 +428,7 @@
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss##linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange, entspricht (255,128,64) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="W;NN"/>
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -498,6 +498,18 @@
 				<arg name="label" value="Wasserstandsgrafik"/>
 				<arg name="category" value="Pegel;Wasserstandsgrafik"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtDiagW.odt"/>
+							        <!-- AUSCHLUSS-Pegel: 
+			                Neugattersleben (WLM_Neugattersleben)
+			               
+			                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+			                <ogc:FeatureId fid="WLM_Neugattersleben"/>
+			                </ogc:Filter>
+			                
+			                
+			        -->
+			        <arg name="excludes">
+			                <arg name="filter" value="project:/.model/excludeFilterPegelW.xml"/>
+			        </arg>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (Q / W / P)"/>
@@ -806,7 +818,7 @@
 		<arg name="timeserie3" value="nameString=Abgabe#linkColumn=Abgabe"/>
 		<arg name="timeserie4" value="nameString=Zufluss#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!-- orange, entspricht (255,128,64) -->
-		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreType1" value="W;NN"/>
 		<!-- 
 		Tabelle -->
 		<!-- 
@@ -837,6 +849,7 @@
 			<arg name="templateTable">
 				<arg name="label" value="Übersichtstabelle (V / W / Z / A)"/>
 				<arg name="category" value="Speicher;Übersichtstabelle (V / W / Z / A)"/>
+			                               <arg name="kennzifferIndex" value="2"/>
 				<arg name="href" value="project:/.templates/.wizard/berichtTabelleSpeicher.ott"/>
 			</arg>
 		</arg>
