@@ -4,11 +4,11 @@
   <!-- Input -->
   <input id="Boundary" type="xs:anyURI" description="The boundary for restricting the points." />
   <input id="Breaklines" type="xs:anyURI" description="The breaklines for the model tin." />
-  <input id="MaxArea" type="double" optional="true" description="" />
-  <input id="MinAngle" type="double" optional="true" description="" />
+  <input id="MaxArea" type="xs:double" optional="true" description="" />
+  <input id="MinAngle" type="xs:double" optional="true" description="" />
 
   <!-- Output -->
-  <input id="_ModelTin" type="string" description="File name for tin output."/>
+  <input id="_ModelTin" type="xs:string" description="File name for tin output."/>
   <output id="ModelTin" type="xs:anyURI" description="The created model tin." />
   
   <!-- Logging -->

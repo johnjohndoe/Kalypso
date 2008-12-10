@@ -49,7 +49,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
-import org.kalypso.gaja3d.simulation.grid.SimulationGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -59,64 +58,64 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author kurzbach
- * 
  */
-public class CreateTinSimulation implements ISimulation {
-	/**
-	 * The model specification.
-	 */
-	private static final String SIMULATION_SPEC = "createTin_specification.xml";
+public class CreateTinSimulation implements ISimulation
+{
+  /**
+   * The model specification.
+   */
+  private static final String SIMULATION_SPEC = "createTin_specification.xml";
 
-	public static final String INPUT_BOUNDARY = "Boundary";
-	public static final String INPUT_BREAKLINES = "Breaklines";
+  public static final String INPUT_BOUNDARY = "Boundary";
 
-	public static final String INPUT_MAX_AREA = "MaxArea";
-	public static final String INPUT_MIN_ANGLE = "MinAngle";
+  public static final String INPUT_BREAKLINES = "Breaklines";
 
-	public static final String OUTPUT_MODEL_TIN = "ModelTin";
+  public static final String INPUT_MAX_AREA = "MaxArea";
 
-	public static final String ID = "Gaja3d_createTin";
+  public static final String INPUT_MIN_ANGLE = "MinAngle";
 
-	/**
-	 * The constructor.
-	 */
-	public CreateTinSimulation() {
-	}
+  public static final String OUTPUT_MODEL_TIN = "ModelTin";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-	 */
-	public URL getSpezifikation() {
-		return getClass().getResource(SIMULATION_SPEC);
-	}
+  public static final String ID = "Gaja3d_createTin";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#run(java.io.File,
-	 *      org.kalypso.simulation.core.ISimulationDataProvider,
-	 *      org.kalypso.simulation.core.ISimulationResultEater,
-	 *      org.kalypso.simulation.core.ISimulationMonitor)
-	 */
-	public void run(final File tmpdir,
-			final ISimulationDataProvider inputProvider,
-			final ISimulationResultEater resultEater,
-			final ISimulationMonitor monitor) throws SimulationException {
-		final URL spezifikation = getSpezifikation();
-		Modelspec modelSpec = null;
-		try {
-			final Unmarshaller unmarshaller = JaxbUtilities.createQuiet(
-					org.kalypso.simulation.core.simspec.ObjectFactory.class)
-					.createUnmarshaller();
-			modelSpec = (Modelspec) unmarshaller.unmarshal(spezifikation);
-		} catch (final JAXBException e) {
-			throw new SimulationException("Could not read model spec.", e);
-		}
+  /**
+   * The constructor.
+   */
+  public CreateTinSimulation( )
+  {
+  }
 
-		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("createTin");
-		arguments.add("true");
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+   */
+  public URL getSpezifikation( )
+  {
+    return getClass().getResource( SIMULATION_SPEC );
+  }
 
-		final SimulationGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-		jobSubmitter.submitJob(modelSpec, tmpdir, inputProvider, resultEater,
-				monitor, arguments);
-	}
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   */
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  {
+    final URL spezifikation = getSpezifikation();
+    Modelspec modelSpec = null;
+    try
+    {
+      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
+      modelSpec = (Modelspec) unmarshaller.unmarshal( spezifikation );
+    }
+    catch( final JAXBException e )
+    {
+      throw new SimulationException( "Could not read model spec.", e );
+    }
+
+    final ArrayList<String> arguments = new ArrayList<String>();
+    arguments.add( "createTin" );
+    arguments.add( "true" );
+
+    final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
+    jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );
+  }
 }

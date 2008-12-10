@@ -49,7 +49,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
-import org.kalypso.gaja3d.simulation.grid.SimulationGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -59,63 +58,64 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author kurzbach
- * 
  */
-public class CreateGridSimulation implements ISimulation {
-	/**
-	 * The model specification.
-	 */
-	private static final String SIMULATION_SPEC = "createGrid_specification.xml";
+public class CreateGridSimulation implements ISimulation
+{
+  /**
+   * The model specification.
+   */
+  private static final String SIMULATION_SPEC = "createGrid_specification.xml";
 
-	public static final String INPUT_BOUNDARY = "Boundary";
-	public static final String INPUT_DEM_POINTS = "DemPoints";
-	public static final String INPUT_DX = "gridx";
-	public static final String INPUT_DY = "gridy";
+  public static final String INPUT_BOUNDARY = "Boundary";
 
-	public static final String OUTPUT_DEM_GRID = "DemGrid";
+  public static final String INPUT_DEM_POINTS = "DemPoints";
 
-	public static final String ID = "Gaja3d_createGrid";
+  public static final String INPUT_DX = "gridx";
 
-	/**
-	 * The constructor.
-	 */
-	public CreateGridSimulation() {
-	}
+  public static final String INPUT_DY = "gridy";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-	 */
-	public URL getSpezifikation() {
-		return getClass().getResource(SIMULATION_SPEC);
-	}
+  public static final String OUTPUT_DEM_GRID = "DemGrid";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#run(java.io.File,
-	 *      org.kalypso.simulation.core.ISimulationDataProvider,
-	 *      org.kalypso.simulation.core.ISimulationResultEater,
-	 *      org.kalypso.simulation.core.ISimulationMonitor)
-	 */
-	public void run(final File tmpdir,
-			final ISimulationDataProvider inputProvider,
-			final ISimulationResultEater resultEater,
-			final ISimulationMonitor monitor) throws SimulationException {
-		final URL spezifikation = getSpezifikation();
-		Modelspec modelSpec = null;
-		try {
-			final Unmarshaller unmarshaller = JaxbUtilities.createQuiet(
-					org.kalypso.simulation.core.simspec.ObjectFactory.class)
-					.createUnmarshaller();
-			modelSpec = (Modelspec) unmarshaller.unmarshal(spezifikation);
-		} catch (final JAXBException e) {
-			throw new SimulationException("Could not read model spec.", e);
-		}
+  public static final String ID = "Gaja3d_createGrid";
 
-		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("createGrid");
-		arguments.add("true");
+  /**
+   * The constructor.
+   */
+  public CreateGridSimulation( )
+  {
+  }
 
-		final SimulationGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-		jobSubmitter.submitJob(modelSpec, tmpdir, inputProvider, resultEater,
-				monitor, arguments);
-	}
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+   */
+  public URL getSpezifikation( )
+  {
+    return getClass().getResource( SIMULATION_SPEC );
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   */
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  {
+    final URL spezifikation = getSpezifikation();
+    Modelspec modelSpec = null;
+    try
+    {
+      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
+      modelSpec = (Modelspec) unmarshaller.unmarshal( spezifikation );
+    }
+    catch( final JAXBException e )
+    {
+      throw new SimulationException( "Could not read model spec.", e );
+    }
+
+    final ArrayList<String> arguments = new ArrayList<String>();
+    arguments.add( "createGrid" );
+    arguments.add( "true" );
+
+    final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
+    jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );
+  }
 }

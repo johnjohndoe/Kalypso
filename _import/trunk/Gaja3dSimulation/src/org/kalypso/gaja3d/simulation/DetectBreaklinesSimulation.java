@@ -49,7 +49,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
-import org.kalypso.gaja3d.simulation.grid.SimulationGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -59,69 +58,74 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author kurzbach
- * 
  */
-public class DetectBreaklinesSimulation implements ISimulation {
-	/**
-	 * The model specification.
-	 */
-	private static final String SIMULATION_SPEC = "detectBreaklines_specification.xml";
+public class DetectBreaklinesSimulation implements ISimulation
+{
+  /**
+   * The model specification.
+   */
+  private static final String SIMULATION_SPEC = "detectBreaklines_specification.xml";
 
-	public static final String INPUT_BOUNDARY = "Boundary";
-	public static final String INPUT_DEM_GRID = "DemGrid";
+  public static final String INPUT_BOUNDARY = "Boundary";
 
-	public static final String INPUT_EDGE_FILTER = "EdgeFilter";
-	public static final String INPUT_SMOOTH_FILTER = "SmoothFilter";
-	public static final String INPUT_SMOOTH = "smooth";
-	public static final String INPUT_FEATURE_DETECTOR = "FeatureDetector";
-	public static final String INPUT_HIGH_THRESH = "highThresh";
-	public static final String INPUT_LOW_THRESH = "lowThresh";
-	public static final String INPUT_DISTANCE_TOLERANCE = "distanceTolerance";
+  public static final String INPUT_DEM_GRID = "DemGrid";
 
-	public static final String OUTPUT_BREAKLINES = "Breaklines";
+  public static final String INPUT_EDGE_FILTER = "EdgeFilter";
 
-	public static final String ID = "Gaja3d_detectBreaklines";
+  public static final String INPUT_SMOOTH_FILTER = "SmoothFilter";
 
-	/**
-	 * The constructor.
-	 */
-	public DetectBreaklinesSimulation() {
-	}
+  public static final String INPUT_SMOOTH = "smooth";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-	 */
-	public URL getSpezifikation() {
-		return getClass().getResource(SIMULATION_SPEC);
-	}
+  public static final String INPUT_FEATURE_DETECTOR = "FeatureDetector";
 
-	/**
-	 * @see org.kalypso.simulation.core.ISimulation#run(java.io.File,
-	 *      org.kalypso.simulation.core.ISimulationDataProvider,
-	 *      org.kalypso.simulation.core.ISimulationResultEater,
-	 *      org.kalypso.simulation.core.ISimulationMonitor)
-	 */
-	public void run(final File tmpdir,
-			final ISimulationDataProvider inputProvider,
-			final ISimulationResultEater resultEater,
-			final ISimulationMonitor monitor) throws SimulationException {
-		final URL spezifikation = getSpezifikation();
-		Modelspec modelSpec = null;
-		try {
-			final Unmarshaller unmarshaller = JaxbUtilities.createQuiet(
-					org.kalypso.simulation.core.simspec.ObjectFactory.class)
-					.createUnmarshaller();
-			modelSpec = (Modelspec) unmarshaller.unmarshal(spezifikation);
-		} catch (final JAXBException e) {
-			throw new SimulationException("Could not read model spec.", e);
-		}
+  public static final String INPUT_HIGH_THRESH = "highThresh";
 
-		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("detectBreaklines");
-		arguments.add("true");
+  public static final String INPUT_LOW_THRESH = "lowThresh";
 
-		final SimulationGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-		jobSubmitter.submitJob(modelSpec, tmpdir, inputProvider, resultEater,
-				monitor, arguments);
-	}
+  public static final String INPUT_DISTANCE_TOLERANCE = "distanceTolerance";
+
+  public static final String OUTPUT_BREAKLINES = "Breaklines";
+
+  public static final String ID = "Gaja3d_detectBreaklines";
+
+  /**
+   * The constructor.
+   */
+  public DetectBreaklinesSimulation( )
+  {
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+   */
+  public URL getSpezifikation( )
+  {
+    return getClass().getResource( SIMULATION_SPEC );
+  }
+
+  /**
+   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
+   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
+   */
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  {
+    final URL spezifikation = getSpezifikation();
+    Modelspec modelSpec = null;
+    try
+    {
+      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
+      modelSpec = (Modelspec) unmarshaller.unmarshal( spezifikation );
+    }
+    catch( final JAXBException e )
+    {
+      throw new SimulationException( "Could not read model spec.", e );
+    }
+
+    final ArrayList<String> arguments = new ArrayList<String>();
+    arguments.add( "detectBreaklines" );
+    arguments.add( "true" );
+
+    final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
+    jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );
+  }
 }

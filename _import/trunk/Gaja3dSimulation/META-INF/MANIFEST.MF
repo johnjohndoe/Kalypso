@@ -7,7 +7,7 @@ Bundle-Activator: org.kalypso.gaja3d.simulation.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.simulation.core;bundle-version="1.0.0",
- de.unihannover.rvs.gdi.jobsubmit;bundle-version="1.0.0"
+ org.kalypso.simulation.grid;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.gaja3d.simulation

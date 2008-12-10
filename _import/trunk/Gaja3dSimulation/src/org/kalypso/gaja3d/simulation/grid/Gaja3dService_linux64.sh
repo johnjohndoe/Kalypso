@@ -11,9 +11,5 @@ echo building...
 . build.sh
 echo running...
 ./run_Gaja3dService.sh $MCRROOT $*
-echo cleaning up...
-rm -rf Gaja3dService*
-rm -rf *.jar
-rm -f *.sh
-rm -rf exec
-rm -f triangle.zip
+rm -rf Gaja3dService_* exec
+rm -f Gaja3dService Gaja3dService.ctf *.jar *.sh
