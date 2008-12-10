@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.java.lang.ICancelable;
 
@@ -88,4 +89,14 @@ public interface IProcess
    *           If a timeout was set (see {@link #setTimeout(long)}) and the process run longer than this specified time.
    */
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException, OperationCanceledException;
+
+  /**
+   * Sets a progress monitor (optional). Process implementations may ignore the monitor.
+   * 
+   * @param monitor
+   *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
+   *          done() on the given monitor. Accepts null, indicating that no progress should be reported and that the
+   *          operation cannot be cancelled.
+   */
+  public void setProgressMonitor( final IProgressMonitor monitor );
 }

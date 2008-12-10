@@ -54,6 +54,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -199,6 +200,15 @@ public class DefaultProcess implements IProcess
     }
 
     return iRetVal;
+  }
+
+  /**
+   * @see org.kalypso.commons.process.IProcess#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void setProgressMonitor( final IProgressMonitor monitor )
+  {
+    // ignore at this time
   }
 
 }
