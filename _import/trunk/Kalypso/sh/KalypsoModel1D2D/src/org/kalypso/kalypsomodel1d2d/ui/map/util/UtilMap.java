@@ -197,7 +197,8 @@ public class UtilMap
                   loadingNotFinished = true;
                 final IFeatureType featureType = ftheme.getFeatureType();
                 if( featureType != null )
-                  result.add( ftheme );
+                  if( !result.contains( ftheme ) )
+                    result.add( ftheme );
               }
             }
           }
