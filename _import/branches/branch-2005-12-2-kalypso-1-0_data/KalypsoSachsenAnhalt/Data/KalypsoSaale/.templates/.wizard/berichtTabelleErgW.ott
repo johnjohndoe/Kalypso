@@ -4,9 +4,6 @@
     <observation linktype="zml" ns1:href="Ergebnisse/Durchfluss/570910.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c1" name="%metadata-Label% [%axisunit%]" width="50"/>
     </observation>
-    <observation linktype="zml" ns3:href="Ergebnisse/Durchfluss/579330.zml" xmlns:ns3="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c3" name="%metadata-Label% [%axisunit%]" width="50"/>
-    </observation>
     <observation linktype="zml" ns4:href="Ergebnisse/Durchfluss/579085.zml" xmlns:ns4="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c4" name="%metadata-Label% [%axisunit%]" width="50"/>
     </observation>

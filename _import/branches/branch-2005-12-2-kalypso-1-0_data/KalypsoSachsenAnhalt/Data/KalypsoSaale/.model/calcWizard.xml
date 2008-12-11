@@ -1122,12 +1122,16 @@
 			                TS Straußfurt, Abgabe (573100)
 			                TS Kelbra, Zulauf (575402)
 			                Überleitungssperre, Abgabe (579001)
+			                HWR Kalte Bode, Abgabe (579330)
+			                TS Wendefurth, Abgabe (579006)
 			                
 			                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 			                <ogc:FeatureId fid="Pegel-570250"/>
 			                <ogc:FeatureId fid="Pegel-573100"/>
 			                <ogc:FeatureId fid="Pegel-575402"/>
 			                <ogc:FeatureId fid="Pegel-579001"/>
+			                <ogc:FeatureId fid="Pegel-579330"/>
+			                <ogc:FeatureId fid="Pegel-579006"/>
 			                </ogc:Filter>
 			                
 			                
@@ -1416,18 +1420,6 @@
 					<arg name="label" value="%metadata-Label%"/>
 					<!-- <arg name="label" value="Trautenstein"/> -->
 					<arg name="href" value="./Ergebnisse/Durchfluss/579405.zml"/>
-				</arg>
-
-				<arg name="obs50">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="Königsh./HWR - Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579330.zml"/>
-				</arg>
-
-				<arg name="obs59">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="TS-Wendefurth-Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
 				</arg>
 				<arg name="obs60">
 					<arg name="label" value="%metadata-Label%"/>
@@ -2917,16 +2909,6 @@
 				<arg name="axisType" value="Q"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-				<arg name="obs1">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-				</arg>
-				<arg name="obs2">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-				</arg>
 				<arg name="obs3">
 					<arg name="label" value="%metadata-Label%"/>
 					<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
@@ -2995,16 +2977,6 @@
 				<arg name="axisType" value="Q"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-				<arg name="obs1">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="TS-K B -Zulauf"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-				</arg>
-				<arg name="obs2">
-					<arg name="label" value="%metadata-Label%"/>
-					<!-- <arg name="label" value="TS-K B - Abgabe"/> -->
-					<arg name="href" value="./Ergebnisse/Durchfluss/579006.zml"/>
-				</arg>
 				<arg name="obs3">
 					<arg name="label" value="%metadata-Label%"/>
 					<!-- <arg name="label" value="Rappbode-TS-Zulauf"/> -->
@@ -3266,10 +3238,6 @@
 				<arg name="obs3">
 					<arg name="label" value="%metadata-Label%"/>
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
-				</arg>
-				<arg name="obs4">
-					<arg name="label" value="%metadata-Label%"/>
-					<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
 				</arg>
 				<arg name="obs5">
 					<arg name="label" value="%metadata-Label%"/>

@@ -157,9 +157,6 @@
     <observation linktype="zml" ns61:href="Durchfluss/579610.zml" xmlns:ns61="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c61" name="%metadata-Label% [%axisunit%]" width="50"/>
     </observation>
-    <observation linktype="zml" ns62:href="Durchfluss/579006.zml" xmlns:ns62="http://www.w3.org/1999/xlink">
-        <column axis="Wasserstand" editable="true" id="c62" name="%metadata-Label% [%axisunit%]" width="50"/>
-    </observation>
     <observation linktype="zml" ns65:href="Durchfluss/575410.zml" xmlns:ns65="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c65" name="%metadata-Label% [%axisunit%]" width="50"/>
     </observation>
