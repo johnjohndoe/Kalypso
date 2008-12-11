@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database.internal;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -453,7 +452,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
               RemoteProjectHelper.importRemoteProject( new ProjectTemplate[] { template }, mapping );
             }
-            catch( final MalformedURLException e1 )
+            catch( final Exception e1 )
             {
               KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
             }
@@ -501,7 +500,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
             RemoteProjectHelper.importRemoteProject( new ProjectTemplate[] { template }, mapping );
           }
-          catch( final MalformedURLException e1 )
+          catch( final Exception e1 )
           {
             KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
           }

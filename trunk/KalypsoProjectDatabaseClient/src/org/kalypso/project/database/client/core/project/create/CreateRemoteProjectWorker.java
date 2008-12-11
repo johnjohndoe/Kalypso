@@ -41,11 +41,9 @@
 package org.kalypso.project.database.client.core.project.create;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -149,11 +147,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       destination.close();
       destination.delete();
     }
-    catch( final FileSystemException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
