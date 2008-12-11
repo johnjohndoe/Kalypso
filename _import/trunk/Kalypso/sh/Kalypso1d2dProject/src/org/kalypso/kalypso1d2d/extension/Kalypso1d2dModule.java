@@ -63,6 +63,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
       {
         return IMG_HOVER;
       }
+
     };
   }
 
@@ -171,6 +172,12 @@ public class Kalypso1d2dModule implements IKalypsoModule
       public String getImportWizardLabel( )
       {
         return null;
+      }
+
+      @Override
+      public Integer getPriority( )
+      {
+        return 3;
       }
     };
   }
