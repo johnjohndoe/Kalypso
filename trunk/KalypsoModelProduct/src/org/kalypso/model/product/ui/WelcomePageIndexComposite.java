@@ -106,7 +106,7 @@ public class WelcomePageIndexComposite extends Composite
 
       final IHyperCanvasSizeHandler iconSizeHandler = new IHyperCanvasSizeHandler()
       {
-        public int m_y0 = -1;
+        public int y_offset = (IMG_OFFSET += 80) - 80;
 
         @Override
         public int getX( )
@@ -115,22 +115,14 @@ public class WelcomePageIndexComposite extends Composite
 
           // fixed start position
           final int x = canvasSize.x / 2 - canvasSize.x / 8;
+
           return x;
         }
 
         @Override
         public int getY( )
         {
-          if( m_y0 == -1 )
-          {
-            final Rectangle imgBounds = handler.getIcon().getBounds();
-            m_y0 = IMG_OFFSET;
-            IMG_OFFSET += imgBounds.height + 15;
-
-            return m_y0;
-          }
-          else
-            return m_y0;
+          return y_offset;
         }
       };
 
