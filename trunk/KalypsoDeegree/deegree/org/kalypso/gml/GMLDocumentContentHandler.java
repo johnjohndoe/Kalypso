@@ -46,12 +46,14 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -72,7 +74,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * All the rest of parsing is delegated to the {@link GMLContentHandler} content handler.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class GMLDocumentContentHandler extends DelegateContentHandler
@@ -112,7 +114,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     {
       // first element may have schema-location
       m_schemaLocationString = getSchemaLocation( atts );
-
+      
+      //SK
+      initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
       /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
       if( m_schemaLocationHint != null )
@@ -124,54 +128,53 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     super.startElement( uri, localName, qName, atts );
   }
 
-// /**
-// * Loads the main application schema and also all (via xmlns) references schemas.
-// * <p>
-// * TODO: move into helper class.
-// * </p>
-// */
-// private static GMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString,
-  // final URL locationHint, final URL context ) throws SAXException
-// {
-// // the main schema is the schema defining the root elements namespace
-// // REMARK: schemaLocationHint only used for main schema
-// final GMLSchema gmlSchema = loadGMLSchema( uri, schemaLocationString, locationHint, context );
-//
-// // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
-// // the main schema.
-// // This allows to introduce necessary schemata (for example which introduce new elements
-// // via substitution).
-// final int attLength = atts.getLength();
-// for( int i = 0; i < attLength; i++ )
-// {
-// // STRANGE: shouldn't it work like this?
-// // if( NS.XML_PREFIX_DEFINITION_XMLNS.equals( atts.getURI( i ) ) )
-// // But atts.getURI gives empty string for xmlns entries.
-// // so we ask for the qname
-// final String qname = atts.getQName( i );
-// if( qname != null && qname.startsWith( "xmlns:" ) )
-// {
-// final String xmlnsUri = atts.getValue( i );
-// // HM: are there any other possible namespaces we do NOT want to load?
-// if( !xmlnsUri.equals( NS.XSD ) )
-// {
-// try
-// {
-// // make sure that all dependent schemas are loaded
-// gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );
-// }
-// catch( final GMLSchemaException e )
-// {
-// // Just log it, this is probably not a critical error
-// final IStatus status = StatusUtilities.statusFromThrowable( e );
-// KalypsoDeegreePlugin.getDefault().getLog().log( status );
-// }
-// }
-// }
-// }
-//
-// return gmlSchema;
-// }
+  /**
+   * Loads the main application schema and also all (via xmlns) references schemas.
+   * <p>
+   * TODO: move into helper class.
+   * </p>
+   */
+  private static GMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString, final URL locationHint, final URL context ) throws SAXException
+  {
+    // the main schema is the schema defining the root elements namespace
+    // REMARK: schemaLocationHint only used for main schema
+    final GMLSchema gmlSchema = loadGMLSchema( uri, schemaLocationString, locationHint, context );
+
+    // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
+    // the main schema.
+    // This allows to introduce necessary schemata (for example which introduce new elements
+    // via substitution).
+    final int attLength = atts.getLength();
+    for( int i = 0; i < attLength; i++ )
+    {
+      // STRANGE: shouldn't it work like this?
+      // if( NS.XML_PREFIX_DEFINITION_XMLNS.equals( atts.getURI( i ) ) )
+      // But atts.getURI gives empty string for xmlns entries.
+      // so we ask for the qname
+      final String qname = atts.getQName( i );
+      if( qname != null && qname.startsWith( "xmlns:" ) )
+      {
+        final String xmlnsUri = atts.getValue( i );
+        // HM: are there any other possible namespaces we do NOT want to load?
+        if( !xmlnsUri.equals( NS.XSD ) )
+        {
+          try
+          {
+            // make sure that all dependent schemas are loaded
+            gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );
+          }
+          catch( final GMLSchemaException e )
+          {
+            // Just log it, this is probably not a critical error
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            KalypsoDeegreePlugin.getDefault().getLog().log( status );
+          }
+        }
+      }
+    }
+
+    return gmlSchema;
+  }
 
   private static GMLSchema loadGMLSchema( final String uri, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
   {
