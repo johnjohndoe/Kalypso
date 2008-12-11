@@ -64,6 +64,7 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       {
         return IMG_HOVER;
       }
+
     };
   }
 
@@ -178,6 +179,12 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       public String getImportWizardLabel( )
       {
         return null;
+      }
+
+      @Override
+      public Integer getPriority( )
+      {
+        return 4;
       }
     };
   }
