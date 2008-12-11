@@ -63,6 +63,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       {
         return IMG_HOVER;
       }
+
     };
   }
 
@@ -168,6 +169,12 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       public String getImportWizardLabel( )
       {
         return "Importiere WspWin Projekt";
+      }
+
+      @Override
+      public Integer getPriority( )
+      {
+        return 2;
       }
 
     };
