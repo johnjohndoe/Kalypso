@@ -62,7 +62,8 @@ public class ProjectModelUrlResolver
 
   public static URL getUrlAsHttp( final IResolverInterface delegate, final String localPath ) throws MalformedURLException
   {
-    final String url = String.format( "%s%s", delegate.getPath(), localPath );
+    String url = String.format( "%s%s", delegate.getPath(), localPath );
+    url = url.replaceAll( " ", "%20" );
 
     return new URL( url );
   }
