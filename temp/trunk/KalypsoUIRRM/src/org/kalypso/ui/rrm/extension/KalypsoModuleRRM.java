@@ -60,6 +60,7 @@ public class KalypsoModuleRRM implements IKalypsoModule
       {
         return IMG_HOVER;
       }
+
     };
   }
 
@@ -154,6 +155,12 @@ public class KalypsoModuleRRM implements IKalypsoModule
       public String getImportWizardLabel( )
       {
         return null;
+      }
+
+      @Override
+      public Integer getPriority( )
+      {
+        return 1;
       }
     };
   }
