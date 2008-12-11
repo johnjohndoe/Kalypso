@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.info;
 
-import java.net.MalformedURLException;
-
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -218,7 +216,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
               unix.setText( project.getUnixName() );
               url.setText( project.getUrl().toExternalForm() );
             }
-            catch( final MalformedURLException e )
+            catch( final Exception e )
             {
               KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
             }
