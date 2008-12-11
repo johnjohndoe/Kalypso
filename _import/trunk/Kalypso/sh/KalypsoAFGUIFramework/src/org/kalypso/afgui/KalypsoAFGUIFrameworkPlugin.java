@@ -23,6 +23,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.extension.IKalypsoModule;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -219,7 +220,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -229,7 +230,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   *
+   * 
    * @param path
    *          the path
    * @return the image descriptor
@@ -318,7 +319,14 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         @Override
         public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
         {
-          return o1.getModuleEnteringPage().getHeader().compareTo( o2.getModuleEnteringPage().getHeader() );
+          final IKalypsoModuleEnteringPageHandler p1 = o1.getModuleEnteringPage();
+          final IKalypsoModuleEnteringPageHandler p2 = o2.getModuleEnteringPage();
+
+          final int compare = p1.getPriority().compareTo( p2.getPriority() );
+          if( compare == 0 )
+            return p1.getHeader().compareTo( p2.getHeader() );
+
+          return compare;
         }
       };
 

@@ -58,6 +58,11 @@ public interface IKalypsoModuleEnteringPageHandler
   String getHeader( );
 
   /**
+   * @return welcome page module placement priority
+   */
+  Integer getPriority( );
+
+  /**
    * @return Informations about the module. URL links to a html page
    */
   URL getInfoURL( ) throws MalformedURLException;
