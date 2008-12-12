@@ -362,8 +362,11 @@ public final class StatusUtilities
   public static int openSpecialErrorDialog( final Shell shell, final String title, final String message,
       final IStatus status, final boolean showMultipleDialogs )
   {
-    return openSpecialErrorDialog( shell, title, message, status, IStatus.OK | IStatus.INFO | IStatus.WARNING
-        | IStatus.ERROR, showMultipleDialogs );
+    
+    // TODO: für Sachsen-Anhalt wollen wir nur einen Dialog für Fehler sehen
+    // Sollte vermutlich konfigurierbar sein (machen wir im head)
+    final int displayMask = /* IStatus.OK | IStatus.INFO | IStatus.WARNING | */IStatus.ERROR;
+    return openSpecialErrorDialog( shell, title, message, status, displayMask, showMultipleDialogs );
   }
 
   /**
