@@ -548,9 +548,9 @@
                                         <element name="NiederschlagInfo" type="obslink:TimeseriesLinkFeatureProperty">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <label>Niederschlag (am Zuflusspegel, zur Info)</label>
-                                                                <tooltip>Niederschlag (am Zuflusspegel, zur Info)</tooltip>
-                                                                <description>Niederschlag (am Zuflusspegel, zur Info)</description>
+                                                                <label>Niederschlag ( zur Info)</label>
+                                                                <tooltip>Niederschlag (am Zufluss- oder Abgabepegel, zur Info)</tooltip>
+                                                                <description>Niederschlag (am Zufluss- oder Abgabepegel, zur Info)</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
