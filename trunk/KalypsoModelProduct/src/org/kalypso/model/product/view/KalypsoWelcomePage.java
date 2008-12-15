@@ -70,9 +70,9 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
 
   protected static final Image IMG_FOOTER = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/footer.gif" ) );
 
-  protected static final Image IMG_HELP = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/help_browser.png" ) );
+  protected static final Image IMG_HELP = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/help_browser.gif" ) );
 
-  protected static final Image IMG_HOME = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/back.png" ) );
+  protected static final Image IMG_HOME = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/back.gif" ) );
 
   private Composite m_contentArea;
 
