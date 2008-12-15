@@ -31,7 +31,7 @@ public final class HandleDoneJobChangeAdapter extends AutoRemoveJobChangeAdapter
   public HandleDoneJobChangeAdapter( final Shell shell, final String messageTitle, final String messageFirstline,
       final boolean autoRemoveListener, final boolean showMultipleDialogs )
   {
-    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING,
+    this( shell, messageTitle, messageFirstline, autoRemoveListener, IStatus.CANCEL | IStatus.INFO | IStatus.WARNING | IStatus.ERROR,
         showMultipleDialogs );
   }
 
