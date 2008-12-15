@@ -8550,7 +8550,9 @@
           </pegel:Durchfluss_gerechnet>
           <pegel:NiederschlagInfo/>
           <pegel:SchneeInfo/>
-          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_1>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44188.zml"/>
+          </pegel:ganglinie_reserve_1>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
           <pegel:ganglinie_reserve_4/>
@@ -8627,7 +8629,9 @@
           </pegel:Durchfluss_gerechnet>
           <pegel:NiederschlagInfo/>
           <pegel:SchneeInfo/>
-          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_1>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44188.zml"/>
+          </pegel:ganglinie_reserve_1>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
           <pegel:ganglinie_reserve_4/>
@@ -9087,8 +9091,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579306.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:NiederschlagInfo/>
-          <pegel:SchneeInfo/>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579305.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579305.zml"/>
+          </pegel:SchneeInfo>
           <pegel:ganglinie_reserve_1/>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
@@ -9164,8 +9172,12 @@
           <pegel:Durchfluss_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579330.zml"/>
           </pegel:Durchfluss_gerechnet>
-          <pegel:NiederschlagInfo/>
-          <pegel:SchneeInfo/>
+          <pegel:NiederschlagInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Niederschlag/579305.zml"/>
+          </pegel:NiederschlagInfo>
+          <pegel:SchneeInfo>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Schnee/579305.zml"/>
+          </pegel:SchneeInfo>
           <pegel:ganglinie_reserve_1/>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
@@ -9243,7 +9255,9 @@
           </pegel:Durchfluss_gerechnet>
           <pegel:NiederschlagInfo/>
           <pegel:SchneeInfo/>
-          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_1>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44404.zml"/>
+          </pegel:ganglinie_reserve_1>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
           <pegel:ganglinie_reserve_4/>
@@ -9555,7 +9569,9 @@
           </pegel:Durchfluss_gerechnet>
           <pegel:NiederschlagInfo/>
           <pegel:SchneeInfo/>
-          <pegel:ganglinie_reserve_1/>
+          <pegel:ganglinie_reserve_1>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44404.zml"/>
+          </pegel:ganglinie_reserve_1>
           <pegel:ganglinie_reserve_2/>
           <pegel:ganglinie_reserve_3/>
           <pegel:ganglinie_reserve_4/>
@@ -20003,7 +20019,7 @@
           <speicher:TS_NAME>HWR Kalte Bode</speicher:TS_NAME>
           <speicher:ZuflussName/>
           <speicher:STEUNAME>Überleitungssperre, Zulauf</speicher:STEUNAME>
-          <speicher:STEUNAME_Betriebsplan>Überleitungssperre, Zulauf</speicher:STEUNAME_Betriebsplan>
+          <speicher:STEUNAME_Betriebsplan/>
           <speicher:UELNAME>ohne</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -20060,9 +20076,7 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
           </speicher:Steuerung_gerechnet>
-          <speicher:Steuerung_Betriebsplan_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579000.zml"/>
-          </speicher:Steuerung_Betriebsplan_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet/>
           <speicher:Überleitung_gerechnet/>
         </speicher:Speicher>
       </speicher:SpeicherMember>
@@ -20080,7 +20094,7 @@
           <speicher:TS_NAME>Überleitungssperre</speicher:TS_NAME>
           <speicher:ZuflussName/>
           <speicher:STEUNAME>TS Wendefurth, Bode-Anteil</speicher:STEUNAME>
-          <speicher:STEUNAME_Betriebsplan>TS Wendefurth, Bode-Anteil</speicher:STEUNAME_Betriebsplan>
+          <speicher:STEUNAME_Betriebsplan/>
           <speicher:UELNAME>Überleitung zur Rappbode</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -20137,9 +20151,7 @@
           <speicher:Steuerung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
           </speicher:Steuerung_gerechnet>
-          <speicher:Steuerung_Betriebsplan_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579014.zml"/>
-          </speicher:Steuerung_Betriebsplan_gerechnet>
+          <speicher:Steuerung_Betriebsplan_gerechnet/>
           <speicher:Überleitung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </speicher:Überleitung_gerechnet>
@@ -20159,7 +20171,7 @@
           <speicher:TS_NAME>TS Rappbode</speicher:TS_NAME>
           <speicher:ZuflussName/>
           <speicher:STEUNAME>TS Wendefurth, Zulauf</speicher:STEUNAME>
-          <speicher:STEUNAME_Betriebsplan>TS Wendefurth, Zulauf</speicher:STEUNAME_Betriebsplan>
+          <speicher:STEUNAME_Betriebsplan>Überleitung zur Rappbode</speicher:STEUNAME_Betriebsplan>
           <speicher:UELNAME>TS Rappbode, TWA</speicher:UELNAME>
           <speicher:DATEINAME/>
           <speicher:ST_Art>1</speicher:ST_Art>
@@ -20217,7 +20229,7 @@
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
           </speicher:Steuerung_gerechnet>
           <speicher:Steuerung_Betriebsplan_gerechnet>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579015.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579999.zml"/>
           </speicher:Steuerung_Betriebsplan_gerechnet>
           <speicher:Überleitung_gerechnet>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Durchfluss/579013.zml"/>

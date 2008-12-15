@@ -783,8 +783,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -817,8 +818,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -846,8 +848,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -875,8 +878,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -904,8 +908,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -933,8 +938,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -962,8 +968,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -991,8 +998,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -1020,8 +1028,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Niederschlag#linkColumn=Niederschlag"/>
-	        <arg name="timeserie4" value="nameString=Niederschlag (am Zuflusspegel der TS)#linkColumn=NiederschlagInfo"/>
-		<arg name="ignoreType1" value="Q"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        <arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
@@ -1049,13 +1058,14 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Inhalt_gerechnet#color=0x0000ff"/>
 		<!--arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/-->
-		<arg name="timeserie4" value="nameString=Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
-		<arg name="timeserie5" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<arg name="timeserie4" value="nameString=TS-Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<arg name="timeserie5" value="nameString=TS-Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
 		<!--arg name="timeserie6" value="nameString=Steuerpegel (%featureprop%)#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/-->
-	        <arg name="timeserie6" value="nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
+	        <arg name="timeserie6" value="nameString=%metadata-Label%#nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
+	        
 		<!-- bräunlich, entspricht (160, 130, 70) -->
-		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
-		<!-- hell blau, entspricht (160, 255, 255) -->
+	        <arg name="timeserie7" value="nameString=%metadata-Label%#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
+	        <!-- hell blau, entspricht (160, 255, 255) -->
 		<arg name="ignoreType1" value="NN;W"/>
 		<!-- 
         Tabelle -->
@@ -3069,9 +3079,9 @@
 		<!--arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/-->
 		<arg name="timeserie4" value="nameString=Vorhersage#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
 		<arg name="timeserie5" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-	        <arg name="timeserie6" value="nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
+	        <arg name="timeserie6" value="nameString=%metadata-Label%#nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
 		<!-- bräunlich, entspricht (160, 130, 70) -->
-		<arg name="timeserie7" value="nameString=Überleitung#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
+	        <arg name="timeserie7" value="nameString=%metadata-Label%#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
 		<!-- hell blau, entspricht (160, 255, 255) -->
 		<arg name="ignoreType1" value="NN;W"/>
 		<!-- 
