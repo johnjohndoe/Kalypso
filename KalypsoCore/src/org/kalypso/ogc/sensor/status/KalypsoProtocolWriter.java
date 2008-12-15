@@ -137,10 +137,10 @@ public class KalypsoProtocolWriter
           final String message = sb.toString();
 
           if( axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_CHECK ) )
-            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
           else if( !axis.isPersistable()
               && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
-            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
         }
 
       }
