@@ -77,10 +77,10 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/61520.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.41642"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Niederschlag.41642"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
@@ -259,10 +259,10 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43032.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.43032"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Niederschlag.43032"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
@@ -310,15 +310,15 @@
   </WiskiMember>
   <WiskiMember>
     <Wiski fid="Ombrometer-43198">
-      <name>Zeigerheim-Rudolst.</name>
+      <name>Zeigerheim-Rudolstadt</name>
       <lokal>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/43198.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/.WISKI_Konfig/OmbrometerVorlagen/.Vorlage.43198.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="project://.templates/.WISKI_Konfig/OmbrometerVorlagen/.Vorlage.43198.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
@@ -497,10 +497,10 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44499.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.44499"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Niederschlag.44499"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>

@@ -20649,7 +20649,7 @@
       </ombrometer:OmbrometerMember>
       <ombrometer:OmbrometerMember>
         <ombrometer:Ombrometer fid="Ombrometer-43198">
-          <ombrometer:Name>Zeigerheim-Rudolst.</ombrometer:Name>
+          <ombrometer:Name>Zeigerheim-Rudolstadt</ombrometer:Name>
           <ombrometer:NR>43198</ombrometer:NR>
           <ombrometer:NR-Ersatz>43038</ombrometer:NR-Ersatz>
           <gml:location>
