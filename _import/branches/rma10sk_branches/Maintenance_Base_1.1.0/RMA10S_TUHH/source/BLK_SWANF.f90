@@ -1,0 +1,19 @@
+!CIPK JAN03 ADD SWANPTS
+module BLKSWANF
+
+implicit none
+
+!unit definitions
+!----------------
+integer (kind = 4) :: unitSwan
+!unitSwan: unit number of general SWAN input file
+
+CHARACTER (len = 96)  :: SWANEX,SWANFC,SWANCTL
+CHARACTER (len = 72)  :: SWANFL1,SWANFL2,SWANFL3,SWANOUT,SWANPTS
+CHARACTER (len = 120) :: SWANDAT(100,3)
+
+INTEGER :: IDAYSW,NLINSW1,NLINSW2,IDAYSW1,IYRSW, ISWMESH, NLINSW3
+REAL    :: HOURSW,TPSW,DIRSW,SPRSW,TIDSW,HOURSW1,TPSW1,DIRSW1 ,SPRSW1,TIDSW1,HSSW1,HSSW
+
+end module
+
