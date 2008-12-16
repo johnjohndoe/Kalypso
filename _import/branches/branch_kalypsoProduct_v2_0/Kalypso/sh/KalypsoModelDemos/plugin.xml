@@ -21,16 +21,8 @@
             category="org.kalypso.kalypso1d2d.pjt.demoProject"
             data="etc/demos/2DDemo.zip"
             description="Ein einfaches reines 2D-Beispielprojekt."
-            label="2D Demo Projekt"
+            label="1D2D Demo Projekt"
             projectName="2DDemo">
       </project>
-      <project
-            category="org.kalypso.kalypso1d2d.pjt.demoProject"
-            data="etc/demos/1d2dDemo.zip"
-            description="Ein einfaches gekoppeltes 1D/2D-Beispielprojekt"
-            label="1D2D Demo Projekt"
-            projectName="1d2dDemo">
-      </project>
    </extension>
-
 </plugin>
