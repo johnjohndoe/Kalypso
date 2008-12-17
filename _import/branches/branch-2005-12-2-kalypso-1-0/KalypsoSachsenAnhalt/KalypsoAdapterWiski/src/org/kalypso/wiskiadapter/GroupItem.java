@@ -150,13 +150,14 @@ public class GroupItem implements IRepositoryItem
       if( list.size() == 0 )
         return null;
 
-      final HashMap map = (HashMap)list.get( 0 );
-
-      /* Only return active ts-info-items */
-      final TsInfoItem tsInfoItem = new TsInfoItem( this, map, call2 );
-      if( tsInfoItem.isActive() )
-        return tsInfoItem;
-
+      /* return first active ts-info-item */
+      for( int ii = 0; ii < list.size(); ii++ )
+      {
+        final HashMap map = (HashMap)list.get( ii );
+        final TsInfoItem tsInfoItem = new TsInfoItem( this, map, call2 );
+        if( tsInfoItem.isActive() )
+          return tsInfoItem;
+      }
       return null;
     }
     catch( final Exception e ) // KiWWException and RemoteException
