@@ -581,10 +581,10 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ombrometer/44407.zml"/>
       </lokal>
       <wiski_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.44407"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale.Niederschlag.579430"/>
       </wiski_vergangenheit>
       <wiski_simulation_vergangenheit>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Niederschlag.44407"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Sim.Niederschlag.579430"/>
       </wiski_simulation_vergangenheit>
     </Wiski>
   </WiskiMember>
