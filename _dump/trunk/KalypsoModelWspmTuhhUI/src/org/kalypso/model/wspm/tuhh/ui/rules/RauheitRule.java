@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author kimwerner
@@ -88,12 +89,12 @@ public class RauheitRule extends AbstractValidatorRule
       final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
       if( value.isNaN() )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Datentyp für " + pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.0") + pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
       else if( value <= 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + value + "]", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule.2", value ), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         break;
       }
     }

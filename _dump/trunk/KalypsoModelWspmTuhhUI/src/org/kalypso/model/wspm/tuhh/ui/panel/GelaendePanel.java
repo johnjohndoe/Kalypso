@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -92,16 +93,16 @@ public class GelaendePanel extends AbstractProfilView
     panel.setLayout( new GridLayout() );
 
     final Group editgroup = new Group( panel, SWT.NONE );
-    editgroup.setText( "Editieren" );
+    editgroup.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.0") ); //$NON-NLS-1$
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     editgroup.setLayoutData( gridData );
     editgroup.setLayout( new GridLayout() );
 
     toolkit.adapt( editgroup );
 
-    final Button horzbutton = toolkit.createButton( editgroup, "Horizontal", SWT.CHECK );
+    final Button horzbutton = toolkit.createButton( editgroup, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.1"), SWT.CHECK ); //$NON-NLS-1$
     horzbutton.setSelection( allowHorizontal() );
-    final Button vertbutton = toolkit.createButton( editgroup, "Vertikal", SWT.CHECK );
+    final Button vertbutton = toolkit.createButton( editgroup, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.2"), SWT.CHECK ); //$NON-NLS-1$
     vertbutton.setSelection( allowVertical() );
 
     horzbutton.addSelectionListener( new SelectionAdapter()
@@ -122,7 +123,7 @@ public class GelaendePanel extends AbstractProfilView
       }
     } );
     final Group cg = new Group( panel, SWT.None );
-    cg.setText( "Kommentar:" );
+    cg.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.3") ); //$NON-NLS-1$
     final GridData cgData = new GridData( SWT.FILL, SWT.FILL, true, true );
 
     cg.setLayoutData( cgData );
@@ -148,7 +149,7 @@ public class GelaendePanel extends AbstractProfilView
            * we need both methods to stay synchronized with featureView
            */
           getProfil().setComment( m_comment.getText() );
-          final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
+          final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
           new ProfilOperationJob( operation ).schedule();
         }
       }

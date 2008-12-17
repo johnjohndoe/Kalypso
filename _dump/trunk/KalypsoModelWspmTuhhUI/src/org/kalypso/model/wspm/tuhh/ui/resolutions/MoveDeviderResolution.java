@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -68,7 +69,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    */
   public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, final int pointIndex )
   {
-    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution.0"), null, null ); //$NON-NLS-1$
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_pointIndex = pointIndex;
@@ -77,10 +78,8 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 
   public MoveDeviderResolution( )
   {
-    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
-    m_deviderIndex = -1;
-    m_deviderTyp = "";
-    m_pointIndex = -1;
+    this(-1,"",-1); //$NON-NLS-1$
+    m_initialized = false;
   }
 
   /**
@@ -89,7 +88,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter() + ";" + m_deviderIndex + ";" + m_deviderTyp + ";" + m_pointIndex;
+    return super.getSerializedParameter() + ";" + m_deviderIndex + ";" + m_deviderTyp + ";" + m_pointIndex; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**

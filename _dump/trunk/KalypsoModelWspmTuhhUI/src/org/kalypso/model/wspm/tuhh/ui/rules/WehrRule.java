@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -86,7 +87,7 @@ public class WehrRule extends AbstractValidatorRule
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.0"), e ) ); //$NON-NLS-1$
     }
   }
 
@@ -101,9 +102,9 @@ public class WehrRule extends AbstractValidatorRule
     final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
     final int index4 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "1. Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.1"), "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     if( index2 > index4 )
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "letzter Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.3"), "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
@@ -125,7 +126,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( !(vAX.isNaN() || vAY.isNaN() || vDP.isNaN()) && vAX + vAY + vDP > 0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchs im Wehrbereich", "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId,new DelBewuchsResolution() );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.5"), "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId,new DelBewuchsResolution() ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
     }
@@ -149,7 +150,7 @@ public class WehrRule extends AbstractValidatorRule
         final Object objValue = devider.getValue();
         if( (objValue == null) || !(objValue instanceof Double) || (((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.7"), "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
           break;
         }
       }
@@ -162,7 +163,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> ist ungültig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.9", property.getName() ), "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         break;
       }
     }
@@ -188,7 +189,7 @@ public class WehrRule extends AbstractValidatorRule
       final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
       final Double wk = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_TYP_WEHR, point );
       if( !h.isNaN() && !wk.isNaN() && wk < h )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrkante unter Geländehöhe", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.12"), "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -217,7 +218,7 @@ public class WehrRule extends AbstractValidatorRule
       point = lastPoint;
     if( point != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-Wehrkante", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.WehrRule.14"), "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

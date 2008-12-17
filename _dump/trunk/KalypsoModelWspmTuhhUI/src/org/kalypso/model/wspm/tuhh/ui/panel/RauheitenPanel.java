@@ -76,6 +76,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -112,7 +113,7 @@ public class RauheitenPanel extends AbstractProfilView
     final String[] components = provider.getPointProperties();
     for( final String componentID : components )
     {
-      if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) )
+      if( componentID.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT") )  //$NON-NLS-1$
       {
         final IComponent component = provider.getPointProperty( componentID );
         m_RauheitTypes.put( componentID, component );
@@ -178,7 +179,7 @@ public class RauheitenPanel extends AbstractProfilView
 
         if( component != null && old != null && !m_rauheitTyp.equals( component.getId() ) )
         {
-          final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfil(), true );
+          final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.1"), getProfil(), true ); //$NON-NLS-1$
           operation.addChange( new PointPropertyAdd( getProfil(), component, old ) );
           operation.addChange( new PointPropertyRemove( getProfil(), old ) );
           new ProfilOperationJob( operation ).schedule();
@@ -186,10 +187,10 @@ public class RauheitenPanel extends AbstractProfilView
       }
     } );
     toolkit.adapt( m_rauheitCombo.getCombo() );
-    addLabel( toolkit, panel, "Rauheitstyp", "Rauheitstyp" );
+    addLabel( toolkit, panel, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.2"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.3") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Group auto = new Group( panel, SWT.None );
-    auto.setText( "Rauhheiten für Fliesszonen" );
+    auto.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.4") ); //$NON-NLS-1$
     auto.setLayout( new GridLayout( 2, false ) );
     auto.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) auto.getLayoutData()).horizontalSpan = 2;
@@ -200,11 +201,11 @@ public class RauheitenPanel extends AbstractProfilView
     m_updateOnDeviderMove = toolkit.createButton(  auto,null, SWT.CHECK );
     m_updateOnDeviderMove.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) m_updateOnDeviderMove.getLayoutData()).horizontalSpan = 2;
-    m_updateOnDeviderMove.setText( "aktualisieren bei Trenneränderung" );
+    m_updateOnDeviderMove.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.5") ); //$NON-NLS-1$
     m_updateOnDeviderMove.setSelection( checkValues() );
     // Rauheitswerte Vorland links
 
-    addLabel( toolkit, auto, "Vorland links", "" );
+    addLabel( toolkit, auto, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.6"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.7") ); //$NON-NLS-1$ //$NON-NLS-2$
     final Text t_li = addText( toolkit, auto, m_li );
 
     t_li.addFocusListener( new FocusAdapter()
@@ -242,7 +243,7 @@ public class RauheitenPanel extends AbstractProfilView
 
     // Rauheitswerte Hauptöffnung
 
-    addLabel( toolkit, auto, "Flußschlauch", "" );
+    addLabel( toolkit, auto, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.8"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.9") ); //$NON-NLS-1$ //$NON-NLS-2$
     final Text t_hf = addText( toolkit, auto, m_hf );
     t_hf.addFocusListener( new FocusAdapter()
     {
@@ -278,7 +279,7 @@ public class RauheitenPanel extends AbstractProfilView
     } );
     // Rauheitswerte Vorland rechts
 
-    addLabel( toolkit, auto, "Vorland rechts", "" );
+    addLabel( toolkit, auto, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.10"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.11") ); //$NON-NLS-1$ //$NON-NLS-2$
     final Text t_re = addText( toolkit, auto, m_re );
     t_re.addFocusListener( new FocusAdapter()
     {
@@ -318,7 +319,7 @@ public class RauheitenPanel extends AbstractProfilView
   protected void setValues( final int l, final int r, final Double value )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Rauheiten ändern", profil, true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.12"), profil, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyEdit( profil.getPoints( l, r ), profil.hasPointProperty( m_rauheitTyp ), value ) );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -328,7 +329,7 @@ public class RauheitenPanel extends AbstractProfilView
 
     final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
 
-    final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel.13"), getProfil(), true ); //$NON-NLS-1$
     try
     {
       Double value = m_li;
@@ -358,7 +359,7 @@ public class RauheitenPanel extends AbstractProfilView
     final GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-    final Text t = toolkit.createText( panel, "" + value, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
+    final Text t = toolkit.createText( panel, "" + value, SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
     t.setLayoutData( data );
     t.addModifyListener( doubleModifyListener );
 

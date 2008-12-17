@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -67,7 +68,7 @@ public class DeviderTheme extends AbstractProfilTheme
 
   public DeviderTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_DEVIDER, "Flieﬂzonen", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_DEVIDER, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.DeviderTheme.0"), chartLayers, cm ); //$NON-NLS-1$
 
   }
 

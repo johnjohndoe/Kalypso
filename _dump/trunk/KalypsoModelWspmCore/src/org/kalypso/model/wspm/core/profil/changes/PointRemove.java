@@ -58,13 +58,12 @@ public class PointRemove implements IProfilChange
 
   private IRecord m_pointBefore;
 
-  private String m_info = null;
 
   public PointRemove( final IProfil profil, final IRecord point )
   {
     m_profil = profil;
     m_point = point;
-  }
+   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
@@ -82,9 +81,7 @@ public class PointRemove implements IProfilChange
     else
     {
       m_profil.setActivePoint( m_point );
-
-      m_info = Messages.PointRemove_0 + String.format( Messages.PointRemove_1, ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) );
-      throw new IllegalProfileOperationException( Messages.PointRemove_2, this );
+      throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1"), this );
     }
   }
 
@@ -101,7 +98,7 @@ public class PointRemove implements IProfilChange
    */
   public String getInfo( )
   {
-    return m_info;
+    return   Messages.getFormatString("org.kalypso.model.wspm.core.profil.changes.PointRemove.0", ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, m_point ) );
   }
 
   /**

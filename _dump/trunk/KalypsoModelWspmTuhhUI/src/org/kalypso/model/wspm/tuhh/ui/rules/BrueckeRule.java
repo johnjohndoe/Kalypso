@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
@@ -88,7 +89,7 @@ public class BrueckeRule extends AbstractValidatorRule
         final Object oValue = building.getValue( property );
         if( oValue == null || (oValue instanceof Double && ((Double) oValue).isNaN()) )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.0") + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           break;
         }
       }
@@ -117,7 +118,7 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( innerLeft == -1 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückengeometrie unvollständig", "km " + Double.toString( profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.3"), "km " + Double.toString( profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
 
@@ -141,12 +142,12 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( innerRight == outerRight )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.5"), "km " + Double.toString( profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         hasErrors = true;
       }
       if( innerLeft == outerLeft )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.7"), "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         hasErrors = true;
       }
 
@@ -167,21 +168,21 @@ public class BrueckeRule extends AbstractValidatorRule
 
         if( !h_0.isNaN() && !ukB_0.isNaN() && Math.abs( h_0 - ukB_0 ) > delta )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.9"), "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) ); //$NON-NLS-1$ //$NON-NLS-2$
           hasErrors = true;
         }
         if( !h_2.isNaN() && !ukB_2.isNaN() && Math.abs( h_2 - ukB_2 ) > delta )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.11"), "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) ); //$NON-NLS-1$ //$NON-NLS-2$
           hasErrors = true;
         }
 
         if( !hasErrors )
         {
           if( !h_1.isNaN() && !ukB_1.isNaN() && ukB_1 - h_1 < delta )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.13"), "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) ); //$NON-NLS-1$ //$NON-NLS-2$
           if( !h_3.isNaN() && !ukB_3.isNaN() && ukB_3 - h_3 < delta )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.15"), "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
           // mehr als eine Öffnung
           for( int i = innerLeft + 1; i < innerRight; i++ )
@@ -190,7 +191,7 @@ public class BrueckeRule extends AbstractValidatorRule
             final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
             if( !h.isNaN() && !ukB.isNaN() && (Math.abs( h - ukB ) < delta) )
             {
-              collector.createProfilMarker( IMarker.SEVERITY_INFO, "Mehrfeldbrücke oder Öffnung außerhalb des Flussschlauchs", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+              collector.createProfilMarker( IMarker.SEVERITY_INFO, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.17"), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
               break;
             }
           }
@@ -208,7 +209,7 @@ public class BrueckeRule extends AbstractValidatorRule
           delRes[i] = new DelDeviderResolution( brdvp.length - 1 - i, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
         }
 
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.19"), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       int minmax = 0;
       int vegetation = Integer.MIN_VALUE;
@@ -229,9 +230,9 @@ public class BrueckeRule extends AbstractValidatorRule
         }
         // Schnittkanten
         if( ukB - okB > delta )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten schneiden sich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.21"), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
         if( h - okB > delta || h - ukB > delta )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten unter Geländehöhe", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.23"), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
 
         // Bewuchs unter der Brücke
         if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) == null )
@@ -242,17 +243,17 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( minmax > 0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.25"), "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if( vegetation > Integer.MIN_VALUE )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), vegetation, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.27"), "km " + Double.toString( profil.getStation() ), vegetation, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule.29"), e ) ); //$NON-NLS-1$
     }
 
   }

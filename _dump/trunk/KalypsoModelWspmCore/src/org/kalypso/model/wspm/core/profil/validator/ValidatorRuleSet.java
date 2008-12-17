@@ -95,7 +95,7 @@ public class ValidatorRuleSet
 
     return new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0,
         stati.toArray( new IStatus[stati.size()] ),
-        Messages.ValidatorRuleSet_0, null );
+        Messages.getString( "org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet.0"), null );
   }
 
   public IValidatorRule[] getRules( )

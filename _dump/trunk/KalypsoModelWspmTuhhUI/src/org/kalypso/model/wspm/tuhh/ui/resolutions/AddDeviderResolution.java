@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -58,14 +59,14 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    */
   public AddDeviderResolution( final String deviderType )
   {
-    super( "fehlende Trennflächen erzeugen", null, null );
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution.0" ), null, null ); //$NON-NLS-1$
     m_deviderType = deviderType;
   }
 
   public AddDeviderResolution( )
   {
-    super( "fehlende Trennflächen erzeugen", null, null );
-    m_deviderType = "";
+    this( "" );//$NON-NLS-1$
+
   }
 
   /**
@@ -75,9 +76,9 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
 
   public boolean resolve( final IProfil profil )
   {
-    if( m_deviderType == "" || profil.getPoints().length <1)
+    if( m_deviderType == "" || profil.getPoints().length < 1 ) //$NON-NLS-1$
       throw new IllegalStateException();
-   
+
     final IComponent cTarget = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( cTarget == null )
     {
@@ -139,7 +140,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter() + ";" + m_deviderType;
+    return super.getSerializedParameter() + ";" + m_deviderType; //$NON-NLS-1$
   }
 
 }

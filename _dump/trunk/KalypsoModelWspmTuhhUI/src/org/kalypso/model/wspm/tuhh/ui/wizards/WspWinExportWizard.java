@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author thuel2
@@ -101,7 +102,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
     m_selection = currentSelection;
-    setWindowTitle( "WSP-Modell (TU-HH)" );
+    setWindowTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -126,11 +127,11 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "WspWin Datenexport", 100 );
+        monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.1"), 100 ); //$NON-NLS-1$
 
         try
         {
-          monitor.subTask( " - Datenexport" );
+          monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.2") ); //$NON-NLS-1$
           final IStatus status = WspWinExporter.exportWspmProject( modelGml, wspwinDir, new SubProgressMonitor( monitor, 90 ) );
           if( !status.isOK() )
             throw new CoreException( status );
@@ -145,7 +146,7 @@ public class WspWinExportWizard extends Wizard implements IExportWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, operation );
     if( !status.isOK() )
       StatusUtilities.printStackTraces( status );
-    ErrorDialog.openError( shell, "WspWin Daten", "Fehler beim Datenexport", status );
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.3"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportWizard.4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return status.isOK();
   }

@@ -122,7 +122,7 @@ public abstract class AbstractProfil implements IProfil
   public void addPointProperty( final IComponent pointProperty )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( Messages.AbstractProfil_1 );
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" ));
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -134,7 +134,7 @@ public abstract class AbstractProfil implements IProfil
   public void addPointProperty( final IComponent pointProperty, final Object defaultValue )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( Messages.AbstractProfil_2 );
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" ) );
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -146,7 +146,7 @@ public abstract class AbstractProfil implements IProfil
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( Messages.AbstractProfil_2 );
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.core.profil.impl.AbstractProfil.0" ));
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )

@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.TubePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -64,7 +65,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
 
   public BuildingTubesTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_TUBES, "Rohrdurchlass", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_TUBES, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.0"), chartLayers, cm ); //$NON-NLS-1$
 
   }
 
@@ -88,7 +89,7 @@ public class BuildingTubesTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Rohrprofil entfernen", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingTubesTheme.1"), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
     new ProfilOperationJob( operation ).schedule();
   }

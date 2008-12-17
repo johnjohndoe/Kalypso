@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -80,8 +81,8 @@ public class DoppelterPunktRule extends AbstractValidatorRule
         if( prevPoint != null )
           if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
           {
-            final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( iB ) );
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), cB.getId(), pluginId );
+            final String msg = Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.0" , point.getValue( iB ) ); //$NON-NLS-1$
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), cB.getId(), pluginId ); //$NON-NLS-1$
           }
         prevPoint = point;
       }
@@ -89,7 +90,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
     catch( final CoreException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule.2"), e ) ); //$NON-NLS-1$
     }
   }
 }

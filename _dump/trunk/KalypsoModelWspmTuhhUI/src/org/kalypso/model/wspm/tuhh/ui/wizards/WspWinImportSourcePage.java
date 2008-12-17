@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * This wizard page lets the user choose a wspwin project.
@@ -64,24 +65,24 @@ import org.eclipse.swt.widgets.Text;
  */
 public class WspWinImportSourcePage extends WizardPage
 {
-  private static final String SETTINGS_FILE_PATH = "filePath";
+  private static final String SETTINGS_FILE_PATH = "filePath"; //$NON-NLS-1$
 
   private Text m_text;
 
-  protected static String KWERT_PRPOPERTIES_FILE = "kwert-project.properties";
+  protected static String KWERT_PRPOPERTIES_FILE = "kwert-project.properties"; //$NON-NLS-1$
 
-  protected static String HYDRAULIC_PRPOPERTIES_FILE = "hydraulic.properties";
+  protected static String HYDRAULIC_PRPOPERTIES_FILE = "hydraulic.properties"; //$NON-NLS-1$
 
   private File m_dir;
 
-  private static final String STR_TOOLTIP_PATH = "Pfad auf ein WspWin Projektverzeichnis. Das Verzeichnis muss die Unterverzeichnisse 'prof' und 'dath' enthalten.";
+  private static final String STR_TOOLTIP_PATH = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.3"); //$NON-NLS-1$
 
   public WspWinImportSourcePage( final String pageName )
   {
     super( pageName );
 
-    setTitle( "WspWin Daten importieren" );
-    setDescription( "In diesem Dialog wählen Sie das WspWin Projekt aus." );
+    setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.4") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.5") ); //$NON-NLS-1$
 
     setPageComplete( false );
   }
@@ -98,20 +99,20 @@ public class WspWinImportSourcePage extends WizardPage
 
     /* The label for the path */
     final Label label = new Label( group, SWT.NONE );
-    label.setText( "Projekt-Pfad: " );
+    label.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.6") ); //$NON-NLS-1$
     label.setToolTipText( STR_TOOLTIP_PATH );
     
     /* The text field for the path. */
     final Text text = new Text( group, SWT.BORDER );
     m_text = text;
     m_text.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
-    m_text.setText( "" );
+    m_text.setText( "" ); //$NON-NLS-1$
     m_text.setToolTipText( STR_TOOLTIP_PATH );
 
     /* The button for opening the FileDialog. */
     final Button button = new Button( group, SWT.NONE );
     button.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    button.setText( "..." );
+    button.setText( "..." ); //$NON-NLS-1$
 
     m_text.addModifyListener( new ModifyListener()
     {
@@ -123,7 +124,7 @@ public class WspWinImportSourcePage extends WizardPage
         if( !kwert_file.exists() )
         {
           /* Die Datei wurde nicht gefunden. */
-          setErrorMessage( "Die ausgewählte Datei existiert nicht." );
+          setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.9") ); //$NON-NLS-1$
 
           /* The wizard-page could not be completed. */
           setPageComplete( false );
@@ -137,7 +138,7 @@ public class WspWinImportSourcePage extends WizardPage
         if( kwert_file.isFile() )
         {
           /* Die Datei wurde nicht gefunden. */
-          setErrorMessage( "Es wurde muss Verzeichnis ausgewählt werden." );
+          setErrorMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.10") ); //$NON-NLS-1$
 
           /* The wizard-page could not be completed. */
           setPageComplete( false );
@@ -148,8 +149,8 @@ public class WspWinImportSourcePage extends WizardPage
         }
 
         /* Ists ein WspWin Verzeichnis? */
-        final File profDir = new File( kwert_file, "prof" );
-        final File wspcfgfile = new File( profDir, "wsp.cfg" );
+        final File profDir = new File( kwert_file, "prof" ); //$NON-NLS-1$
+        final File wspcfgfile = new File( profDir, "wsp.cfg" ); //$NON-NLS-1$
         if( !profDir.exists() || !wspcfgfile.exists() )
         {
           setErrorMessage( "Kein WspWin Projektverzeichnis ausgewählt (Verzeichnis enthält keine Datei prof/wsp.cfg)" ); //$NON-NLS-1$
@@ -168,7 +169,7 @@ public class WspWinImportSourcePage extends WizardPage
     } );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    if( dialogSettings != null && (dialogSettings.get( SETTINGS_FILE_PATH ) != null) && (!dialogSettings.get( SETTINGS_FILE_PATH ).equals( "" )) )
+    if( dialogSettings != null && (dialogSettings.get( SETTINGS_FILE_PATH ) != null) && (!dialogSettings.get( SETTINGS_FILE_PATH ).equals( "" )) ) //$NON-NLS-1$
       m_text.setText( dialogSettings.get( SETTINGS_FILE_PATH ) );
 
     button.addSelectionListener( new SelectionListener()
@@ -178,11 +179,11 @@ public class WspWinImportSourcePage extends WizardPage
       {
         final DirectoryDialog dialog = new DirectoryDialog( group.getShell() );
 
-        dialog.setText( "Pfad zu den Daten der Hydraulik" );
+        dialog.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.14") ); //$NON-NLS-1$
 
         final File f = new File( getText() );
         dialog.setFilterPath( f.getPath() );
-        dialog.setMessage( "Wählen Sie ein WspWin Projekt Verzeichnis aus. Das Verzeichnis muss die Unterverzeichnisse 'prof' und 'dath' enthalten." );
+        dialog.setMessage( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinImportSourcePage.15") ); //$NON-NLS-1$
 
         final String loadPath = dialog.open();
 

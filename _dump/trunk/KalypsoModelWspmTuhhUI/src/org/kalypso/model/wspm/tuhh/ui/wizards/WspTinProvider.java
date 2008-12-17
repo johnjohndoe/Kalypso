@@ -35,6 +35,7 @@ import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 public class WspTinProvider implements IGmlSourceProvider
@@ -56,15 +57,15 @@ public class WspTinProvider implements IGmlSourceProvider
       if( resource instanceof IContainer )
       {
         final IContainer c = (IContainer) resource;
-        final IResource member = c.findMember( new Path( "_aktuell/Daten/WspTin.gml" ) );
+        final IResource member = c.findMember( new Path( "_aktuell/Daten/WspTin.gml" ) ); //$NON-NLS-1$
         if( member instanceof IFile )
         {
           try
           {
             final URL url = ResourceUtilities.createURL( member );
-            final String name = c.getProject().getName() + " - " + c.getName();
+            final String name = c.getProject().getName() + " - " + c.getName(); //$NON-NLS-1$
             final String desc = c.getName();
-            final IGmlSource source = new GmlSource( name, desc, url, new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", null ) );
+            final IGmlSource source = new GmlSource( name, desc, url, new GMLXPath( "TriangulatedSurfaceFeature/triangulatedSurfaceMember", null ) ); //$NON-NLS-1$
             m_tins.add( source );
 
             return false;
@@ -106,7 +107,7 @@ public class WspTinProvider implements IGmlSourceProvider
 
         final List<IGmlSource> tins = new ArrayList<IGmlSource>();
 
-        final IFolder resultsFolder = project.getFolder( "Ergebnisse" );
+        final IFolder resultsFolder = project.getFolder( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.3") ); //$NON-NLS-1$
         if( resultsFolder.exists() )
         {
           IResourceVisitor tinVisitor = new TinVisitor( tins );
@@ -154,7 +155,7 @@ public class WspTinProvider implements IGmlSourceProvider
           continue;
 
         // As wspm projects do not have a special nature, we just check for the .gmv file
-        final IResource gmvMember = project.findMember( new Path( "WSPM.gmv" ) );
+        final IResource gmvMember = project.findMember( new Path( "WSPM.gmv" ) ); //$NON-NLS-1$
         if( gmvMember != null )
           result.add( project );
       }
@@ -224,7 +225,7 @@ public class WspTinProvider implements IGmlSourceProvider
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, true ) );
 
-    label.setText( "Keine Info verfügbar" );
+    label.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider.5") ); //$NON-NLS-1$
   }
 
   public IGmlSource createSource( final Object element )

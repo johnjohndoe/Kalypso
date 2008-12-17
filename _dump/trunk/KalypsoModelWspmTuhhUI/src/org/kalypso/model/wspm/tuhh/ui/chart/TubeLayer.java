@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
@@ -74,7 +75,7 @@ public class TubeLayer extends AbstractProfilLayer
   @Override
   public String getId( )
   {
-    return getTube() == null ? "unknown ProfileObject" : getTube().getObservation().getName();
+    return getTube() == null ? Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.TubeLayer.0") : getTube().getObservation().getName(); //$NON-NLS-1$
   }
 
   private IProfileObject getTube( )
@@ -91,7 +92,7 @@ public class TubeLayer extends AbstractProfilLayer
   @Override
   public String getTitle( )
   {
-    return getTube() == null ? "" : getTube().getObservation().getDescription();
+    return getTube() == null ? "" : getTube().getObservation().getDescription(); //$NON-NLS-1$
   }
 
   /**

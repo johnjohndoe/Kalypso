@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -79,14 +80,14 @@ public class DurchlassRule extends AbstractValidatorRule
       final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( b instanceof Double && h instanceof Double && (Double) h <= (Double) b )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Eiprofil muss per Definition höher sein als breit", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.0"), "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ) )
     {
       final Object b = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Object h = building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( b instanceof Double && h instanceof Double &&  (Double)b <= (Double)h )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Maulprofil muss per Definition breiter sein als hoch", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.2"), "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
 
@@ -97,7 +98,7 @@ public class DurchlassRule extends AbstractValidatorRule
         final Object oValue = building.getValue( property );
         if( oValue == null || ((Double) oValue).isNaN() )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.4", property.getName()), "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           break;
         }
       }
@@ -105,7 +106,7 @@ public class DurchlassRule extends AbstractValidatorRule
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule.7"), e ) ); //$NON-NLS-1$
     }
 
   }

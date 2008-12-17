@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * Wizard to create a new wspm tuhh project.<br>
@@ -104,7 +105,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     }
   }
 
-  private static final String STR_WINDOW_TITLE = "Neues Projekt - Spiegellinienberechnung";
+  private static final String STR_WINDOW_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.0"); //$NON-NLS-1$
 
   private final WizardNewProjectCreationPage m_createProjectPage;
 
@@ -139,16 +140,16 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( dialogSettings );
 
-    final String templateCategory = showDemoPage ? "org.kalypso.model.wspm.tuhh.demoProjects" : "org.kalypso.model.wspm.tuhh.projectTemplate";
+    final String templateCategory = showDemoPage ? "org.kalypso.model.wspm.tuhh.demoProjects" : "org.kalypso.model.wspm.tuhh.projectTemplate"; //$NON-NLS-1$ //$NON-NLS-2$
     m_demoProjectPage = new ProjectTemplatePage( templateCategory );
     if( showDemoPage )
       // We only add this page here, if we only want the default template, we just use the page to transport the
       // template data
       addPage( m_demoProjectPage );
 
-    m_createProjectPage = new WizardNewProjectCreationPage( "newProjectPage" );
-    m_createProjectPage.setTitle( "Neues Spiegellinienberechnung-Projekt erzeugen" );
-    m_createProjectPage.setDescription( "Dieser Dialog erstellt ein neues Spiegellinienberechnung-Projekt im Arbeitsbereich." );
+    m_createProjectPage = new WizardNewProjectCreationPage( "newProjectPage" ); //$NON-NLS-1$
+    m_createProjectPage.setTitle( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.4") ); //$NON-NLS-1$
+    m_createProjectPage.setDescription( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.5") ); //$NON-NLS-1$
     m_createProjectPage.setImageDescriptor( KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.NEWPROJECT_PROJECT_PAGE_WIZBAN ) );
 
     addPage( m_createProjectPage );
@@ -217,7 +218,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( status.matches( IStatus.ERROR ) )
     {
-      ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
+      ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.6"), status ); //$NON-NLS-1$
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( status );
       deleteProject( m_project );
     }
@@ -228,12 +229,12 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     else
     {
       if( !status.isOK() )
-        ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, "Fehler beim Erzeugen des Projekts", status );
+        ErrorDialog.openError( getShell(), STR_WINDOW_TITLE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.7"), status ); //$NON-NLS-1$
 
       BasicNewProjectResourceWizard.updatePerspective( m_config );
       BasicNewResourceWizard.selectAndReveal( m_project, m_workbench.getActiveWorkbenchWindow() );
 
-      final IFile fileToOpen = m_project.getFile( "WSPM.gmv" );
+      final IFile fileToOpen = m_project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
       openTreeView( fileToOpen );
       return true;
     }
@@ -243,7 +244,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
   private void openTreeView( final IFile file )
   {
-    final UIJob job = new UIJob( "Öffne Spiegellinienmodell" )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.9") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -251,7 +252,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
         try
         {
           final FileEditorInput input = new FileEditorInput( file );
-          getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor( input, "org.kalypso.ui.editor.GmlEditor" );
+          getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor( input, "org.kalypso.ui.editor.GmlEditor" ); //$NON-NLS-1$
 
           return Status.OK_STATUS;
         }
@@ -280,7 +281,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, runnable );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "Das zwischenzeitlich erzeugte Projekt konnte nicht gelöscht werden, ist aber vermutlich nicht korrekt initialisiert worden.\nBitte löschen Sie das Projekt im Navigator per Hand.", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.11"), status ); //$NON-NLS-1$
     }
   }
 
@@ -303,7 +304,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    */
   protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Neues Spiegellinienprojekt", 4 );
+    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.12"), 4 ); //$NON-NLS-1$
 
     final ProjectTemplate demoProject = m_demoProjectPage.getSelectedProject();
 

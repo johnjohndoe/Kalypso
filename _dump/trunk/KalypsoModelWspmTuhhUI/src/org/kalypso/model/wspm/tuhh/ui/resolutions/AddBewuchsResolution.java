@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -58,16 +59,16 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 
   public AddBewuchsResolution( final int pointIndex, final boolean orientationLeft )
   {
-    super( "Bewuchsparameter erzeugen", null, null );
+    super( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution.0" ), null, null ); //$NON-NLS-1$
     m_pointIndex = pointIndex;
     m_orientationLeft = orientationLeft;
   }
+
   public AddBewuchsResolution( )
   {
-    super( "Bewuchsparameter erzeugen", null, null );
-    m_pointIndex = -1;
-    m_orientationLeft = false;
+    this( -1, false );
   }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
@@ -121,7 +122,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter()+";" + m_pointIndex + ";" + m_orientationLeft;
+    return super.getSerializedParameter() + ";" + m_pointIndex + ";" + m_orientationLeft; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

@@ -74,6 +74,7 @@ import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -148,7 +149,7 @@ public class TubePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
+            final ProfilOperation operation = new ProfilOperation( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -194,18 +195,18 @@ public class TubePanel extends AbstractProfilView
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
       {
         if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = "untere Seite";
+          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.1"); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = "Durchmesser";
+          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.2"); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = "größte Breite";
+          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.3"); //$NON-NLS-1$
         else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( getProfil().getProfileObjects()[0].getId() ) )
-          label = "größte Breite";
+          label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.4"); //$NON-NLS-1$
       }
     }
     finally
     {
-      return label + " [" + property.getUnit() + "]";
+      return Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.5",label,property.getUnit()); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -220,7 +221,7 @@ public class TubePanel extends AbstractProfilView
     m_propPanel = m_toolkit.createComposite( parent );
     m_propPanel.setLayout( new GridLayout( 2, false ) );
 
-    m_toolkit.createLabel( m_propPanel, "Querschnittsform", style );
+    m_toolkit.createLabel( m_propPanel, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.7"), style ); //$NON-NLS-1$
 
     m_cmb = new ComboViewer( m_propPanel );
     m_cmb.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.CENTER, false, false ) );
@@ -250,7 +251,7 @@ public class TubePanel extends AbstractProfilView
 
         if( tube != null && !tube.getId().equals( old.getId() ) )
         {
-          final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
+          final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TubePanel.8"), getProfil(), true ); //$NON-NLS-1$
           getProfil().addProfileObjects( new IProfileObject[] { tube } );
           for( final IComponent cmp : tube.getObjectProperties() )
           {

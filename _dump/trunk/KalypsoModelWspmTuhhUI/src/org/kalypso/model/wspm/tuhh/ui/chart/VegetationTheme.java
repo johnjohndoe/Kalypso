@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -164,7 +165,7 @@ public class VegetationTheme extends AbstractProfilTheme
     final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
     final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
     final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
-    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } );
+    return String.format( " AX: %.4f %n AY: %.4f %n DP: %.4f", new Object[] { ax, ay, dp } ); //$NON-NLS-1$
   }
 
   /**
@@ -174,7 +175,7 @@ public class VegetationTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.1"), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[] {} ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ) ) );
@@ -184,8 +185,8 @@ public class VegetationTheme extends AbstractProfilTheme
 
   public VegetationTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
-    setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) );
+    super( profil, IWspmTuhhConstants.LAYER_BEWUCHS, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.VegetationTheme.2"), chartLayers, cm ); //$NON-NLS-1$
+    setLineStyle( styleProvider.getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", ILineStyle.class ) ); //$NON-NLS-1$
   }
 
   /**

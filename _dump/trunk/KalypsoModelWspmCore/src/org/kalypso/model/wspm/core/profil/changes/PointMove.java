@@ -108,7 +108,7 @@ public class PointMove implements IProfilChange
    */
   public String getInfo( )
   {
-    return Messages.PointMove_0;
+    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0");
   }
 
   /**

@@ -19,12 +19,16 @@ import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
+
+ 
+
   protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) );
 
   protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) );
@@ -49,13 +53,13 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "KalypsoWSPM";
+        return "KalypsoWSPM"; //$NON-NLS-1$
       }
 
       @Override
       public String getTooltip( )
       {
-        return "KalypsoWSPM öffnen";
+        return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule.2" ); //$NON-NLS-1$
       }
 
       @Override
@@ -78,7 +82,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "KalypsoWSPM";
+        return "KalypsoWSPM"; //$NON-NLS-1$
       }
 
       @Override
@@ -92,7 +96,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
             if( handler.isLocal() )
             {
               final IProject project = handler.getProject();
-              final IFile file = project.getFile( "WSPM.gmv" );
+              final IFile file = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
 
               return file.exists();
             }
@@ -111,11 +115,11 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
           try
           {
             /* info page of plugin */
-            final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" );
+            final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" ); //$NON-NLS-1$
             try
             {
               final IPath stateLocation = KalypsoModelWspmTuhhUIPlugin.getDefault().getStateLocation();
-              final File targetDir = new File( stateLocation.toFile(), "infoPage" );
+              final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
               // final boolean mkdir = dir.mkdir();
 
               ZipUtilities.unzip( zipStream, targetDir );
@@ -137,7 +141,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
         final IPath stateLocation = KalypsoModelWspmTuhhUIPlugin.getDefault().getStateLocation();
         final URL baseUrl = stateLocation.toFile().toURI().toURL();
 
-        final URL url = new URL( baseUrl, "infoPage/index.html" );
+        final URL url = new URL( baseUrl, "infoPage/index.html" ); //$NON-NLS-1$
         return url;
       }
 
@@ -156,7 +160,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getRemoteCommitType( )
       {
-        return "KalypsoWspmModel";
+        return "KalypsoWspmModel"; //$NON-NLS-1$
       }
 
       @Override
@@ -168,7 +172,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       @Override
       public String getImportWizardLabel( )
       {
-        return "Importiere WspWin Projekt";
+        return Messages.getString( "org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule.9" ); //$NON-NLS-1$
       }
 
       @Override

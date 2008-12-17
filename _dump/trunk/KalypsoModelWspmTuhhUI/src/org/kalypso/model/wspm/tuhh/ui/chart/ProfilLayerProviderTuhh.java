@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
@@ -154,7 +155,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), 0.0 );
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), 0.0 );
       changes[2] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
-      final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.0"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;// new BewuchsLayer( view );
     }
@@ -163,7 +164,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfilChange[] changes = new IProfilChange[2];
       changes[0] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.1"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;// new HochRechtsLayer( view );
     }
@@ -172,14 +173,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfilChange[] changes = new IProfilChange[2];
       changes[0] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) );
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final ProfilOperation operation = new ProfilOperation( "Profillinie einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.2"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;// new GelaendeLayer( view );
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
-      final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfil(), true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.3"), view.getProfil(), true ); //$NON-NLS-1$
       final IComponent rauheit = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
       if( rauheit != null )
       {
@@ -198,7 +199,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingBruecke( profil ) } );
 
-      final ProfilOperation operation = new ProfilOperation( "Brücke einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.4"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;// new BrueckeBuildingLayer( view );
     }
@@ -207,7 +208,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { new BuildingWehr( profil ) } );
 
-      final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.5"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;// new WehrBuildingLayer( view );
     }
@@ -216,7 +217,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       final IProfileObject building = new BuildingKreis( profil );
       final IProfilChange[] changes = new IProfilChange[1];
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
-      final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh.6"), view.getProfil(), changes, true ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
       return null;
     }

@@ -44,6 +44,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
 import org.kalypso.observation.result.IRecord;
 
@@ -83,13 +84,13 @@ public class StationLineLayer extends ComponentLayer
   @Override
   public String getId( )
   {
-    return super.getId() + "_STATIONLINE";
+    return super.getId() + "_STATIONLINE"; //$NON-NLS-1$
   }
 
   @Override
   public String getTitle( )
   {
-    return "stationlines";
+    return Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.StationLineLayer.1"); //$NON-NLS-1$
   }
 
   /**

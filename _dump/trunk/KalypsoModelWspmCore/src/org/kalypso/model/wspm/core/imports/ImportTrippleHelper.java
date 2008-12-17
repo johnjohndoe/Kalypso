@@ -76,7 +76,7 @@ public class ImportTrippleHelper
    * imports the profile trippel data and converts it into IProfils
    * 
    * @param trippleFile
-   *            file with profile tripples
+   *          file with profile tripples
    */
   public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType )
   {
@@ -161,7 +161,7 @@ public class ImportTrippleHelper
         else
         {
           // inform the user that his profile has not enough values...
-          final String message = Messages.ImportTrippleHelper_24 + (numStations + 1) + Messages.ImportTrippleHelper_25 + count + Messages.ImportTrippleHelper_26;
+          final String message = Messages.getFormatString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0" ,(numStations + 1),count );
           throw new Exception( message );
           // continue;
         }
@@ -193,11 +193,11 @@ public class ImportTrippleHelper
    * stores all gathered profile points in a new profile and adds it to the profile list
    * 
    * @param profilPointList
-   *            the list of the profile points of one profile
+   *          the list of the profile points of one profile
    * @param station
-   *            the current profile station
+   *          the current profile station
    * @param profiles
-   *            the list of the already imported profiles
+   *          the list of the already imported profiles
    */
   private static void storeProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final List<IProfil> profiles )
   {
@@ -206,8 +206,8 @@ public class ImportTrippleHelper
       profile.addPoint( point );
 
     profile.setStation( station );
-    profile.setName( Messages.ImportTrippleHelper_27 );
-    profile.setDescription( Messages.ImportTrippleHelper_28 );
+    profile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) );
+    profile.setDescription( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.2" ) );
 
     profiles.add( profile );
   }
@@ -216,9 +216,9 @@ public class ImportTrippleHelper
    * creates a new profile point and adds it to the point list of the current profile
    * 
    * @param profilPointList
-   *            point list of the current profile
+   *          point list of the current profile
    * @param tokenizer
-   *            holds the point data (x, y, z)
+   *          holds the point data (x, y, z)
    */
   private static boolean createProfilePoint( final IRecord point, final List<IRecord> profilPointList, final StringTokenizer tokenizer )
   {
@@ -281,7 +281,7 @@ public class ImportTrippleHelper
    * calculates the width coordinate by the segment length (2-dim distance of the profile points)
    * 
    * @param profilPointList
-   *            point list of the current profile
+   *          point list of the current profile
    */
   private static double calculateSegmentLength( final List<IRecord> profilPointList, final IRecord profilPoint )
   {

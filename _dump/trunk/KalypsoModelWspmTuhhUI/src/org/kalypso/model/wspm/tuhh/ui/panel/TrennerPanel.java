@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -130,14 +131,14 @@ public class TrennerPanel extends AbstractProfilView
     panel.setLayout( new GridLayout( 1, true ) );
 
     final Group fliesszoneGroup = new Group( panel, SWT.NONE );
-    fliesszoneGroup.setText( "Trennflächen" );
+    fliesszoneGroup.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.0") ); //$NON-NLS-1$
     fliesszoneGroup.setLayout( new GridLayout( 2, false ) );
     fliesszoneGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( fliesszoneGroup );
-    final Label posllabel = toolkit.createLabel( fliesszoneGroup, "links", SWT.NONE );
+    final Label posllabel = toolkit.createLabel( fliesszoneGroup, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.1"), SWT.NONE ); //$NON-NLS-1$
     posllabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
 
-    final Label posrlabel = toolkit.createLabel( fliesszoneGroup, "rechts", SWT.NONE );
+    final Label posrlabel = toolkit.createLabel( fliesszoneGroup, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.2"), SWT.NONE ); //$NON-NLS-1$
     posrlabel.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER ) );
 
     m_fzl_text = toolkit.createText( fliesszoneGroup, null, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
@@ -165,8 +166,8 @@ public class TrennerPanel extends AbstractProfilView
       public String getText( Object element )
       {
         if( element.equals( true ) )
-          return "Böschungsfuß";
-        return "Vorland";
+          return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.3"); //$NON-NLS-1$
+        return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.4"); //$NON-NLS-1$
       }
     } );
 
@@ -187,7 +188,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         final PointMarkerEdit edit = new PointMarkerEdit( devider, value );
 
-        final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", profil, edit, true );
+        final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.5"), profil, edit, true ); //$NON-NLS-1$
         new ProfilOperationJob( operation ).schedule();
       }
     } );
@@ -207,8 +208,8 @@ public class TrennerPanel extends AbstractProfilView
       public String getText( Object element )
       {
         if( element.equals( true ) )
-          return "Böschungsfuß";
-        return "Vorland";
+          return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.6"); //$NON-NLS-1$
+        return Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.7"); //$NON-NLS-1$
       }
     } );
 
@@ -229,7 +230,7 @@ public class TrennerPanel extends AbstractProfilView
           return;
         final PointMarkerEdit edit = new PointMarkerEdit( devider, value );
 
-        final ProfilOperation operation = new ProfilOperation( "Lage der Trennfläche ändern", profil, edit, true );
+        final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.8"), profil, edit, true ); //$NON-NLS-1$
         new ProfilOperationJob( operation ).schedule();
       }
     } );
@@ -238,7 +239,7 @@ public class TrennerPanel extends AbstractProfilView
     toolkit.adapt( m_fzl_combo.getCombo() );
 
     final Group durchstroemteGroup = new Group( panel, SWT.NONE );
-    durchstroemteGroup.setText( "Durchströmter Bereich" );
+    durchstroemteGroup.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.9") ); //$NON-NLS-1$
     durchstroemteGroup.setLayout( new GridLayout( 2, false ) );
     durchstroemteGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( durchstroemteGroup );
@@ -254,7 +255,7 @@ public class TrennerPanel extends AbstractProfilView
     m_dbr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 1 ) );
 
     final Group bordvollGroup = new Group( panel, SWT.NONE );
-    bordvollGroup.setText( "Bordvollpunkte" );
+    bordvollGroup.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.10") ); //$NON-NLS-1$
     bordvollGroup.setLayout( new GridLayout( 2, false ) );
     bordvollGroup.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
     toolkit.adapt( bordvollGroup );
@@ -268,7 +269,7 @@ public class TrennerPanel extends AbstractProfilView
     m_bvr_text.addModifyListener( doubleModifyListener );
     m_bvr_text.addFocusListener( new TrennerFocusListener( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 1 ) );
 
-    m_bv_add = toolkit.createButton( bordvollGroup, "mit Bordvollpunkten", SWT.CHECK );
+    m_bv_add = toolkit.createButton( bordvollGroup, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.11"), SWT.CHECK ); //$NON-NLS-1$
     m_bv_add.setSelection( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL )!=null );
     final GridData bv_addData = new GridData( GridData.FILL_HORIZONTAL );
     bv_addData.horizontalSpan = 2;
@@ -286,7 +287,7 @@ public class TrennerPanel extends AbstractProfilView
           final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
           if( db_devs.length < 2 )
             return;
-          final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", profil, true );
+          final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.12"), profil, true ); //$NON-NLS-1$
 
           final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
           final IComponent bordvoll = provider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
@@ -302,7 +303,7 @@ public class TrennerPanel extends AbstractProfilView
         else
         {
 
-          final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", profil, true );
+          final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.13"), profil, true ); //$NON-NLS-1$
           operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ) );
           new ProfilOperationJob( operation ).schedule();
         }
@@ -335,21 +336,21 @@ public class TrennerPanel extends AbstractProfilView
       {
         if( fz_devs.length > 0 )
         {
-          m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[0].getPoint() ) ) );
+          m_fzl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[0].getPoint() ) ) ); //$NON-NLS-1$
           m_fzl_combo.setSelection( new StructuredSelection( fz_devs[0].getIntepretedValue() ) );
         }
         else
-          m_fzl_text.setText( "unbekannt" );
+          m_fzl_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
       }
       if( !m_fzr_text.isDisposed() )
       {
         if( fz_devs.length > 1 )
         {
-          m_fzr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[1].getPoint() ) ) );
+          m_fzr_text.setText( String.format("%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, fz_devs[1].getPoint() ) ) ); //$NON-NLS-1$
           m_fzr_combo.setSelection( new StructuredSelection( fz_devs[1].getIntepretedValue() ) );
         }
         else
-          m_fzr_text.setText( "unbekannt" );
+          m_fzr_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
       }
 
       if( fz_devs.length > 0 )
@@ -357,16 +358,16 @@ public class TrennerPanel extends AbstractProfilView
         if( !m_dbl_text.isDisposed() )
         {
           if( db_devs.length > 0 )
-            m_dbl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[0].getPoint() ) ) );
+            m_dbl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[0].getPoint() ) ) ); //$NON-NLS-1$
           else
-            m_dbl_text.setText( "unbekannt" );
+            m_dbl_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
         }
       if( !m_dbr_text.isDisposed() )
       {
         if( db_devs.length > 1 )
-          m_dbr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[1].getPoint() ) ) );
+          m_dbr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, db_devs[1].getPoint() ) ) ); //$NON-NLS-1$
         else
-          m_dbr_text.setText( "unbekannt" );
+          m_dbr_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
       }
       if( bv_devs.length == 0 )
       {
@@ -388,21 +389,21 @@ public class TrennerPanel extends AbstractProfilView
           if( bv_devs.length > 0 )
           {
             m_bvl_text.setVisible( true );
-            m_bvl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[0].getPoint() ) ) );
+            m_bvl_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[0].getPoint() ) ) ); //$NON-NLS-1$
 
           }
           else
-            m_bvl_text.setText( "unbekannt" );
+            m_bvl_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
         }
         if( !m_bvr_text.isDisposed() )
         {
           if( bv_devs.length > 1 )
           {
             m_bvr_text.setVisible( true );
-            m_bvr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[1].getPoint() ) ) );
+            m_bvr_text.setText( String.format( "%.4f", ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, bv_devs[1].getPoint() ) ) ); //$NON-NLS-1$
           }
           else
-            m_bvr_text.setText( "unbekannt" );
+            m_bvr_text.setText( Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.15") ); //$NON-NLS-1$
         }
       }
     }
@@ -473,11 +474,11 @@ public class TrennerPanel extends AbstractProfilView
         }
 
         final IRecord pointCloseTo = ProfilUtil.findNearestPoint( profil, value );
-        final ProfilOperation operation = new ProfilOperation( "", profil, true );
+        final ProfilOperation operation = new ProfilOperation( "", profil, true ); //$NON-NLS-1$
 
         if( devs.length <= m_pos )
         {
-          operation.setLabel( m_type.toString() + " hinzufügen" );
+          operation.setLabel( m_type.toString() + Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.27") ); //$NON-NLS-1$
           operation.addChange( new PointMarkerEdit( new ProfilDevider( m_type, pointCloseTo ), true ) );
         }
         else
@@ -491,7 +492,7 @@ public class TrennerPanel extends AbstractProfilView
             return;
           }
 
-          operation.setLabel( key.toString() + " verschieben" );
+          operation.setLabel( key.toString() + Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel.28") ); //$NON-NLS-1$
           operation.addChange( new PointMarkerSetPoint( key, pointCloseTo ) );
           operation.addChange( new ActiveObjectEdit( profil, pointCloseTo, null ) );
         }

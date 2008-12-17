@@ -79,6 +79,7 @@ import org.eclipse.ui.internal.ide.DialogUtil;
 import org.eclipse.ui.internal.ide.dialogs.ResourceTreeAndListGroup;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author thuel2
@@ -104,19 +105,19 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   protected Button deselectAllButton;
 
   // messages and labels
-  private static final String SELECT_ALL_TITLE = "Select All";
+  private static final String SELECT_ALL_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.0"); //$NON-NLS-1$
 
-  private static final String DESELECT_ALL_TITLE = "Deselect All";
+  private static final String DESELECT_ALL_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.1"); //$NON-NLS-1$
 
-  private static final String SELECT_DESTINATION_MESSAGE = "WspWin-Verzeichnis wählen";
+  private static final String SELECT_DESTINATION_MESSAGE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.2"); //$NON-NLS-1$
 
-  private static final String SELECT_DESTINATION_TITLE = "Exportiert WSP-Modell (TU-HH) als WspWin-Projekt";
+  private static final String SELECT_DESTINATION_TITLE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.3"); //$NON-NLS-1$
 
-  private static final String DESTINATION_BROWSE = "Durchsuchen";
+  private static final String DESTINATION_BROWSE = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.4"); //$NON-NLS-1$
 
-  private static final String DESTINATION_LABEL = "WspWin-Verzeichnis:";
+  private static final String DESTINATION_LABEL = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.5"); //$NON-NLS-1$
 
-  private static final String OVERWRITE_EXISTING_CHECK_LABEL = "Overwrite existing files without warning";
+  private static final String OVERWRITE_EXISTING_CHECK_LABEL = Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.WspWinExportPage.6"); //$NON-NLS-1$
 
   // dialog store id constants
   private final static String STORE_DESTINATION_NAMES_ID = "WspWinExportPage.STORE_DESTINATION_NAMES_ID";//$NON-NLS-1$
@@ -146,7 +147,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   public WspWinExportPage( final IStructuredSelection selection )
   {
-    this( "WspWinExportPage", selection );
+    this( "WspWinExportPage", selection ); //$NON-NLS-1$
 
   }
 

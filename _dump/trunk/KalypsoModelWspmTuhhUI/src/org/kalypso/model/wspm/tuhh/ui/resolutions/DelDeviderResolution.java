@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -64,7 +65,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
    */
   public DelDeviderResolution( final int deviderIndex, final String deviderTyp )
   {
-    super( "Löschen der Trennfläche", null, null );
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution.0"), null, null ); //$NON-NLS-1$
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_initialized = true;
@@ -72,9 +73,8 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
 
   public DelDeviderResolution( )
   {
-    super( "Löschen der Trennfläche", null, null );
-    m_deviderIndex = -1;
-    m_deviderTyp = "";
+    this(-1,""); //$NON-NLS-1$
+    m_initialized = false;
   }
 
   /**
@@ -83,7 +83,7 @@ public class DelDeviderResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter() + ";" + m_deviderIndex + ";" + m_deviderTyp;
+    return super.getSerializedParameter() + ";" + m_deviderIndex + ";" + m_deviderTyp; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

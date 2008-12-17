@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -193,8 +194,8 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     } );
 
     final MenuManager manager = new MenuManager();
-    manager.add( new ChangeCheckstateAction( "&Check selected", true ) );
-    manager.add( new ChangeCheckstateAction( "&Uncheck selected", false ) );
+    manager.add( new ChangeCheckstateAction( Messages.getString("org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.0"), true ) ); //$NON-NLS-1$
+    manager.add( new ChangeCheckstateAction( Messages.getString("org.kalypso.model.wspm.tuhh.ui.featureview.ReachSegmentFeatureControl.1"), false ) ); //$NON-NLS-1$
 
     final Table table = m_viewer.getTable();
     table.setMenu( manager.createContextMenu( table ) );

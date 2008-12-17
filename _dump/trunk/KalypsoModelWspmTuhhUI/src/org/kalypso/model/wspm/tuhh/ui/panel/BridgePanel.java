@@ -63,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -133,7 +134,7 @@ public class BridgePanel extends AbstractProfilView
             if( val == value )
               return;
 
-            final ProfilOperation operation = new ProfilOperation( "Wert ändern", getProfil(), true );
+            final ProfilOperation operation = new ProfilOperation( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.0",m_property.getName()), getProfil(), true ); //$NON-NLS-1$
             operation.addChange( new ProfileObjectEdit( building, m_property, value ) );
             new ProfilOperationJob( operation ).schedule();
           }
@@ -177,13 +178,13 @@ public class BridgePanel extends AbstractProfilView
     {
 // TUHH Hack
       if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
-        label = "größte Breite";
+        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.1"); //$NON-NLS-1$
       if( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT.equals( property.getId() ) )
-        label = "Pfeilerformbeiwert";
+        label = Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.2"); //$NON-NLS-1$
     }
     finally
     {
-      return label + " [" + property.getUnit() + "]";
+      return Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel.3",label, property.getUnit()); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

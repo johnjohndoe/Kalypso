@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -79,11 +80,11 @@ public class RuecksprungRule extends AbstractValidatorRule
       final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i - 1] );
       final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
       if( x1.isNaN() || x2.isNaN() || y1.isNaN() || y2.isNaN() )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Ungültiger Datentyp für = " + cB.getName(), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.0", cB.getName()), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       else if(  x1 - x2  > deltaX )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE,  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.2",  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
       else if( Math.abs( x2 - x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
-        collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE,  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_WARNING, Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule.4",  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

@@ -53,6 +53,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +68,7 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
   @Override
   public void addPages( )
   {
-    m_wspWinImportPage = new WspWinImportSourcePage( "pageImportWspwin" );
+    m_wspWinImportPage = new WspWinImportSourcePage( "pageImportWspwin" ); //$NON-NLS-1$
     addPage( m_wspWinImportPage );
 
     super.addPages();
@@ -118,7 +119,7 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
   @Override
   protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Import aus WspWin", 10 );
+    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.1"), 10 ); //$NON-NLS-1$
 
     super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
 

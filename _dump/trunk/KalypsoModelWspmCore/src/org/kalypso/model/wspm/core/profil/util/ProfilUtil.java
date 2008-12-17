@@ -92,7 +92,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
+        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) );
       values[i] = value;
       i++;
     }
@@ -127,7 +127,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
+        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) );
       values[i] = value;
       i++;
     }
@@ -423,7 +423,7 @@ public class ProfilUtil
 
     final int i = points.indexOf( point );
     if( i == -1 )
-      throw new IllegalArgumentException( Messages.ProfilUtil_1 + point );
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) );
 
     return points.get( i - 1 );
   }
@@ -463,7 +463,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( Messages.ProfilUtil_2 + point );
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil_1", point ) );
 
     return points.get( pos + 1 );
   }
@@ -501,15 +501,11 @@ public class ProfilUtil
 
   public static Point2D getPoint2D( final IRecord p, final IComponent pointProperty )
   {
-    final int index = p.getOwner().indexOf( pointProperty );
-    final IComponent breite = ProfilUtil.getComponentForID( p.getOwner().getComponents(), IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iBreite = p.getOwner().indexOf( breite );
-    final Object x = p.getValue( iBreite );
-    final Object y = p.getValue( index );
-    if( x == null || y == null || !(x instanceof Double) || !(y instanceof Double) )
-      throw new IllegalArgumentException( pointProperty.getName() + Messages.ProfilUtil_7 );
-    return new Point2D.Double( (Double) x, (Double) y );
-
+    final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
+    final Double y = getDoubleValueFor( pointProperty.getId(), p );
+    if( x.isNaN()||y.isNaN() )
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) );
+    return new Point2D.Double( x, y );
   }
 
   /**
@@ -738,7 +734,7 @@ public class ProfilUtil
     startPoint = splitSegment( profile, segment1[0], segment1[1] );
     if( startPoint == null )
     {
-      System.out.println( Messages.ProfilUtil_3 );
+      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.3" ));
       startPoint = profile.getPoints()[0];
       index1 = 0;
     }
@@ -750,7 +746,7 @@ public class ProfilUtil
     endPoint = splitSegment( profile, segment2[0], segment2[1] );
     if( endPoint == null )
     {
-      System.out.println( Messages.ProfilUtil_4 );
+      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.4" ));
       endPoint = points.get( points.size() - 1 );
       index2 = points.size() - 1;
     }
@@ -761,17 +757,11 @@ public class ProfilUtil
 
     final IRecord[] toDelete_1 = points.subList( 0, index1 ).toArray( new IRecord[0] );
     final IRecord[] toDelete_2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
+
     for( final IRecord element : toDelete_1 )
-      // for( final IProfilPointMarker marker : provider.getPointMarkerFor( element ) )
-// {
-// profile.removePointMarker( marker );
-// }
       profile.removePoint( element );
+
     for( final IRecord element : toDelete_2 )
-      // for( final IProfilPointMarker marker : profile.getPointMarkerFor( element ) )
-// {
-// profile.removePointMarker( marker );
-// }
       profile.removePoint( element );
   }
 

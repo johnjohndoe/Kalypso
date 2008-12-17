@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -64,7 +65,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    */
   public EditPointResolution( final int index, final IComponent property, final double value )
   {
-    super( "Ändern der Eigenschaft " + property.getName() + " auf einen gültigen Wert", null, null );
+    super( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_index = index;
     m_propertyId = property.getId();
     m_value = value;
@@ -72,9 +73,9 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
   }
   public EditPointResolution()
   {
-    super( "Ändern ungültiger Werte", null, null );
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.2"), null, null ); //$NON-NLS-1$
     m_index = -1;
-    m_propertyId = "";
+    m_propertyId = ""; //$NON-NLS-1$
     m_value = Double.NaN;
   }
   /**
@@ -103,7 +104,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-     return super.getSerializedParameter()+m_index+";"+m_propertyId+";"+m_value;
+     return super.getSerializedParameter()+m_index+";"+m_propertyId+";"+m_value; //$NON-NLS-1$ //$NON-NLS-2$
   }
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)

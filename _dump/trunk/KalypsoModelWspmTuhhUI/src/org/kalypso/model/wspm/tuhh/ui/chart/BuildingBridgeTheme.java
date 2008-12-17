@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.panel.BridgePanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -76,7 +77,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
 
   public BuildingBridgeTheme(final IProfil profil,final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(profil, IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", chartLayers, cm );
+    super(profil, IWspmTuhhConstants.LAYER_BRUECKE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.0"), chartLayers, cm ); //$NON-NLS-1$
   }
 
   /**
@@ -96,7 +97,7 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   public void removeYourself( )
   {
     final IProfil profil = getProfil();
-    final ProfilOperation operation = new ProfilOperation( "Brücke entfernen", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.BuildingBridgeTheme.1"), getProfil(), true ); //$NON-NLS-1$
     operation.addChange( new ProfileObjectSet( profil, new IProfileObject[]{} ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
     operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );

@@ -79,8 +79,7 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }
         else
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + Messages.AddPercentValueOperator_0 + point.toString()
-              + Messages.AddPercentValueOperator_1 ) );
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(),Messages.getFormatString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0" ,property, point)));
       }
     }
     return changes.toArray( new IProfilChange[changes.size()] );

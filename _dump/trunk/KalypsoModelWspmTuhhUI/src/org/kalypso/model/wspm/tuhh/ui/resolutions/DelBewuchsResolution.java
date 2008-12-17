@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -60,13 +61,13 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 
   public DelBewuchsResolution( )
   {
-    super( "Bewuchsparameter im Fluﬂschlauch entfernen", null, null );
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.0"), null, null ); //$NON-NLS-1$
 
   }
 
   public DelBewuchsResolution( final int leftIndex, final int rightIndex )
   {
-    super( "Bewuchsparameter entfernen", null, null );
+    super( Messages.getString("org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution.1"), null, null ); //$NON-NLS-1$
     m_leftIndex = leftIndex;
     m_rightIndex = rightIndex;
     m_initialized = true;
@@ -134,6 +135,6 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
   @Override
   public String getSerializedParameter( )
   {
-    return super.getSerializedParameter() + ";" + m_leftIndex + ";" + m_rightIndex;
+    return super.getSerializedParameter() + ";" + m_leftIndex + ";" + m_rightIndex; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

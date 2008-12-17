@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -107,7 +108,7 @@ public class CreateProfileMapAction extends ActionDelegate implements IObjectAct
 
     if( selectedProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, "Karte erzeugen", "Es wurden keine Profile-Container in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction.0"), Messages.getString("org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
