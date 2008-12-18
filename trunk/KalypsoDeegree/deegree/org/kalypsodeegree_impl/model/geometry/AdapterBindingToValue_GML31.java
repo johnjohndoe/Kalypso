@@ -48,8 +48,10 @@ import javax.xml.bind.Unmarshaller;
 import ogc31.www.opengis.net.gml.AbstractGeometryType;
 import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
 import ogc31.www.opengis.net.gml.AbstractRingType;
+import ogc31.www.opengis.net.gml.AbstractSurfacePatchType;
 import ogc31.www.opengis.net.gml.CoordType;
 import ogc31.www.opengis.net.gml.CoordinatesType;
+import ogc31.www.opengis.net.gml.DirectPositionListType;
 import ogc31.www.opengis.net.gml.DirectPositionType;
 import ogc31.www.opengis.net.gml.EnvelopeType;
 import ogc31.www.opengis.net.gml.LineStringPropertyType;
@@ -61,10 +63,14 @@ import ogc31.www.opengis.net.gml.MultiPolygonType;
 import ogc31.www.opengis.net.gml.PointArrayPropertyType;
 import ogc31.www.opengis.net.gml.PointPropertyType;
 import ogc31.www.opengis.net.gml.PointType;
+import ogc31.www.opengis.net.gml.PolygonPatchType;
 import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
+import ogc31.www.opengis.net.gml.SurfacePatchArrayPropertyType;
+import ogc31.www.opengis.net.gml.SurfaceType;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -82,7 +88,7 @@ import org.w3c.dom.Node;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
- *
+ * 
  * @author doemming
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
@@ -229,16 +235,57 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     final JAXBElement< ? extends AbstractRingType> ring = ringType.getRing();
     final AbstractRingType abstractLinearRing = ring.getValue();
-    final GM_Position[] exteriorRing = createGM_Positions( abstractLinearRing );
+
     final List<JAXBElement<AbstractRingPropertyType>> interior = type.getInterior();
-    final Iterator<JAXBElement<AbstractRingPropertyType>> iterator = interior.iterator();
-    final List<GM_Position[]> interiorList = new ArrayList<GM_Position[]>();
-    while( iterator.hasNext() )
+
+    return createSurface( abstractLinearRing, interior, co );
+  }
+
+  private GM_Surface<GM_SurfacePatch> createGM_Surface( final SurfaceType type, final String cs ) throws GM_Exception
+  {
+    final String co = getCS_CoordinateSystem( cs, type );
+
+    final SurfacePatchArrayPropertyType surfacePatchArrayPropertyType = type.getPatches().getValue();
+    final List<JAXBElement< ? extends AbstractSurfacePatchType>> patches = surfacePatchArrayPropertyType.getSurfacePatch();
+    if( patches.size() > 1 )
+      throw new NotImplementedException();
+
+    for( final JAXBElement< ? extends AbstractSurfacePatchType> patch : patches )
     {
-      final AbstractRingPropertyType abstractRingPropertyType = iterator.next().getValue();
+      final AbstractSurfacePatchType patchType = patch.getValue();
+
+      if( patchType instanceof PolygonPatchType )
+      {
+        final PolygonPatchType polygonType = (PolygonPatchType) patchType;
+
+        final JAXBElement< ? extends AbstractRingType> ring = polygonType.getExterior().getValue().getRing();
+        final AbstractRingType abstractLinearRing = ring.getValue();
+
+        final List<JAXBElement<AbstractRingPropertyType>> interior = polygonType.getInterior();
+
+        return createSurface( abstractLinearRing, interior, co );
+      }
+      else
+        throw new NotImplementedException();
+    }
+
+    throw new NotImplementedException();
+// return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
+  }
+
+  private GM_Surface<GM_SurfacePatch> createSurface( final AbstractRingType abstractLinearRing, final List<JAXBElement<AbstractRingPropertyType>> interior, final String co ) throws GM_Exception
+  {
+    final GM_Position[] exteriorRing = createGM_Positions( abstractLinearRing );
+
+    final List<GM_Position[]> interiorList = new ArrayList<GM_Position[]>();
+
+    for( final JAXBElement<AbstractRingPropertyType> element : interior )
+    {
+      final AbstractRingPropertyType abstractRingPropertyType = element.getValue();
       final GM_Position[] positions = createGM_Positions( abstractRingPropertyType.getRing().getValue() );
       interiorList.add( positions );
     }
+
     final GM_Position[][] interiorRings = interiorList.toArray( new GM_Position[interiorList.size()][] );
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
   }
@@ -254,7 +301,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
       final List<JAXBElement< ? >> posList = linearRingType.getPosOrPointPropertyOrPointRep();
       if( posList != null )
+      {
+        final DirectPositionListType directPositionListType = linearRingType.getPosList();
+        if( posList.size() == 0 && directPositionListType != null )
+          return createGM_Positions( directPositionListType );
+
         return createGM_Positions( posList );
+      }
 
       throw new UnsupportedOperationException( "LinearRing has neither coordinates nor points" );
     }
@@ -332,7 +385,6 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_Position( crds );
   }
 
-
   private GM_Position[] createGM_Positions( final List<JAXBElement< ? >> posList )
   {
     final List<GM_Position> result = new ArrayList<GM_Position>();
@@ -342,6 +394,33 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       result.add( pos );
     }
     return result.toArray( new GM_Position[result.size()] );
+  }
+
+  private GM_Position[] createGM_Positions( final DirectPositionListType positionListType )
+  {
+    final int dimension = positionListType.getSrsDimension().intValue();
+    if( dimension != 2 && dimension != 3 )
+      throw new IllegalStateException();
+
+    final List<GM_Position> results = new ArrayList<GM_Position>();
+    final List<Double> values = positionListType.getValue();
+
+    for( int i = 0; i < values.size(); i += dimension )
+    {
+      final double x = values.get( i );
+      final double y = values.get( i + 1 );
+
+      if( dimension == 3 )
+      {
+        final double z = values.get( i + 2 );
+        results.add( GeometryFactory.createGM_Position( x, y, z ) );
+      }
+      else
+        results.add( GeometryFactory.createGM_Position( x, y ) );
+
+    }
+
+    return results.toArray( new GM_Position[] {} );
   }
 
   private GM_Position createGM_PositionForPosOrPointPropertyOrPointRep( final Object pointOrPos )
@@ -393,17 +472,17 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   {
     if( bindingGeometry == null )
       return null;
-    if( bindingGeometry instanceof JAXBElement )
+    else if( bindingGeometry instanceof JAXBElement )
     {
       return wrapFromBinding( ((JAXBElement) bindingGeometry).getValue(), geometryClass );
     }
-    if( bindingGeometry instanceof AbstractGeometryType )
+    else if( bindingGeometry instanceof AbstractGeometryType )
     {
       final AbstractGeometryType bindingTypeObject = (AbstractGeometryType) bindingGeometry;
       final String cs = getCS_CoordinateSystem( null, bindingTypeObject );
       if( bindingTypeObject instanceof PointType )
         return createGM_Point( (PointType) bindingTypeObject, cs );
-      if( bindingTypeObject instanceof PolygonType )
+      else if( bindingTypeObject instanceof PolygonType )
       {
         final GM_Surface surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
@@ -413,16 +492,22 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
         }
         return surface;
       }
-      if( bindingTypeObject instanceof LineStringType )
+      else if( bindingTypeObject instanceof SurfaceType )
+      {
+        final GM_Surface surface = createGM_Surface( (SurfaceType) bindingTypeObject, cs );
+
+        return surface;
+      }
+      else if( bindingTypeObject instanceof LineStringType )
         return createGM_LineString( (LineStringType) bindingTypeObject, cs );
-      if( bindingTypeObject instanceof MultiPolygonType )
+      else if( bindingTypeObject instanceof MultiPolygonType )
         return createGM_MultiSurface( (MultiPolygonType) bindingTypeObject, cs );
-      if( bindingTypeObject instanceof MultiLineStringType )
+      else if( bindingTypeObject instanceof MultiLineStringType )
         return createGM_MultiLineString( (MultiLineStringType) bindingTypeObject, cs );
-      if( bindingTypeObject instanceof MultiPointType )
+      else if( bindingTypeObject instanceof MultiPointType )
         return createGM_MultiPoint( (MultiPointType) bindingTypeObject, cs );
     }
-    if( bindingGeometry instanceof EnvelopeType )
+    else if( bindingGeometry instanceof EnvelopeType )
     {
       return createGM_Envelope( (EnvelopeType) bindingGeometry );
     }
