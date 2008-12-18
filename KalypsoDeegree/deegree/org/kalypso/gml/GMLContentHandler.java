@@ -79,7 +79,7 @@ import org.xml.sax.XMLReader;
  * hierarchy from it.<br>
  * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
  * property-values to their corresponding {@link IMarshallingTypeHandler}s.
- *
+ * 
  * @author Andreas von Doemming
  */
 public class GMLContentHandler extends DelegateContentHandler implements UnmarshallResultEater
@@ -284,6 +284,8 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   private void startFeature( final Attributes atts, final QName qname ) throws SAXException
   {
     /* Root feature or new sub-feature. */
+    // TODO: tries to load schema for every feature; leads to http-request every time for external schemas....
+    // TODO: local cache for this content heandler?
     final GMLSchema schema = findSchema( qname.getNamespaceURI() );
     final IFeatureType featureType = schema.getFeatureType( qname );
     if( featureType == null )

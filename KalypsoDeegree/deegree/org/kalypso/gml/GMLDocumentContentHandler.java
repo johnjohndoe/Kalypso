@@ -46,14 +46,12 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -114,8 +112,10 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     {
       // first element may have schema-location
       m_schemaLocationString = getSchemaLocation( atts );
-      
-      //SK
+
+      // SK
+      // TODO: schemaLocation string should be used for every schema loaded from this context; not only for namespaces
+      // defined at the root level
       initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
       /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
@@ -138,7 +138,8 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
   {
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
-    final GMLSchema gmlSchema = loadGMLSchema( uri, schemaLocationString, locationHint, context );
+    final GMLSchema gmlSchema = loadGMLSchema( uri, null, schemaLocationString, locationHint, context );
+    final String version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
 
     // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
     // the main schema.
@@ -158,17 +159,8 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
         // HM: are there any other possible namespaces we do NOT want to load?
         if( !xmlnsUri.equals( NS.XSD ) )
         {
-          try
-          {
-            // make sure that all dependent schemas are loaded
-            gmlSchema.getGMLSchemaForNamespaceURI( xmlnsUri );
-          }
-          catch( final GMLSchemaException e )
-          {
-            // Just log it, this is probably not a critical error
-            final IStatus status = StatusUtilities.statusFromThrowable( e );
-            KalypsoDeegreePlugin.getDefault().getLog().log( status );
-          }
+          // make sure that all dependent schemas are loaded
+          loadGMLSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
         }
       }
     }
@@ -176,7 +168,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     return gmlSchema;
   }
 
-  private static GMLSchema loadGMLSchema( final String uri, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
+  private static GMLSchema loadGMLSchema( final String uri, final String gmlVersion, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
   {
     final MultiException schemaNotFoundExceptions = new MultiException();
 
@@ -198,7 +190,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
         final URL schemaLocation = namespaces.get( uri );
 
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        schema = schemaCatalog.getSchema( uri, null, schemaLocation );
+        schema = schemaCatalog.getSchema( uri, gmlVersion, schemaLocation );
       }
     }
     catch( final Exception e )
