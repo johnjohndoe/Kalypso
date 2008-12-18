@@ -222,7 +222,11 @@ public class Intervall
     switch( mode )
     {
     case IntervallFilter.MODE_SUM:
-      return (double)other.getDurationInMillis() / (double)getDurationInMillis();
+      /* If target interval length is 0; factor is 0 (the empty sum) */
+      final long durationInMillis = getDurationInMillis();
+      if( durationInMillis == 0 )
+        return 0d;
+      return (double)other.getDurationInMillis() / (double)durationInMillis;
     case IntervallFilter.MODE_INTENSITY:
     default:
       return 1d;
