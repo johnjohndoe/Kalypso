@@ -57,17 +57,17 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_groundClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_GroundLink" );
+  private final static QName m_groundClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_GroundLink" ); //$NON-NLS-1$
 
-  private final static QName m_vegetationClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_VegetationLink" );
+  private final static QName m_vegetationClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_VegetationLink" ); //$NON-NLS-1$
 
-  private final static QName m_eddyViscosityClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_EddyViscosityLink" );
+  private final static QName m_eddyViscosityClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_EddyViscosityLink" ); //$NON-NLS-1$
 
-  private final static QName m_groundTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "groundTypeName" );
+  private final static QName m_groundTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "groundTypeName" ); //$NON-NLS-1$
 
-  private final static QName m_vegetationTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "vegetationTypeName" );
+  private final static QName m_vegetationTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "vegetationTypeName" ); //$NON-NLS-1$
 
-  private final static QName m_eddyViscosityTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyViscosityTypeName" );
+  private final static QName m_eddyViscosityTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyViscosityTypeName" ); //$NON-NLS-1$
 
   // private final static QName m_colorStyle = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
 
@@ -98,7 +98,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     {
       member = (Feature) feature.getProperty( m_groundClsMember );
       if( member == null )
-        return "";
+        return ""; //$NON-NLS-1$
       else
         return getValue( member.getProperty( Feature.QN_NAME ) );
     }
@@ -106,7 +106,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     {
       member = (Feature) feature.getProperty( m_vegetationClsMember );
       if( member == null )
-        return "";
+        return ""; //$NON-NLS-1$
       else
         return getValue( member.getProperty( Feature.QN_NAME ) );
     }
@@ -114,7 +114,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
     {
       member = (Feature) feature.getProperty( m_eddyViscosityClsMember );
       if( member == null )
-        return "";
+        return ""; //$NON-NLS-1$
       else
         return getValue( member.getProperty( Feature.QN_NAME ) );
     }
@@ -187,7 +187,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
   private Object getValue( final Object object )
   {
     if( object == null )
-      return "";
+      return ""; //$NON-NLS-1$
     if( object instanceof List )
       return ((List<Object>) object).get( 0 );
     else

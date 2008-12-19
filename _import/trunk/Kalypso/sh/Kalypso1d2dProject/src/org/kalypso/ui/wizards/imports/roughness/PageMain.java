@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
@@ -120,7 +120,7 @@ public class PageMain extends WizardPage implements Listener
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.roughness.PageMain.15") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );

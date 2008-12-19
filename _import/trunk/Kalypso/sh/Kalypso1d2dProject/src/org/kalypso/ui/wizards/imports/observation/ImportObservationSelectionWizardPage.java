@@ -85,8 +85,9 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FCVArrayDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ui.wizards.imports.Messages;
+
 
 /**
  * @author doemming
@@ -236,7 +237,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         {
           m_textFileSource.setText( m_sourceFile.getPath() );
           // TODO: use IResource-Api to create suhc pathes! (i.e. m_project.getFile() and such! )
-          final IFile targetFile = m_targetFolder.getFile( m_sourceFile.getName() + ".zml" );
+          final IFile targetFile = m_targetFolder.getFile( m_sourceFile.getName() + ".zml" ); //$NON-NLS-1$
           // TODO: use IFile instead of file, we are inside of Eclipse!
           m_targetFile = targetFile.getLocation().toFile();
           validate();
@@ -302,12 +303,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
     /* time zone selection */
     final Label timezoneLabel = new Label( group, SWT.NONE );
-    timezoneLabel.setText( "Zeitzone:" );
+    timezoneLabel.setText( Messages.getString("org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.0") ); //$NON-NLS-1$
 
     final Set<String> timeZones = new TreeSet<String>();
     final String[] tz = TimeZone.getAvailableIDs();
     for( final String z : tz )
-      if( z.contains( "Europe/" ) || z.contains( "GMT" ) )
+      if( z.contains( "Europe/" ) || z.contains( "GMT" ) ) //$NON-NLS-1$ //$NON-NLS-2$
         timeZones.add( z );
 
     final FacadeComboViewer ComboTimeZones = new FacadeComboViewer( new FCVArrayDelegate( timeZones.toArray( new String[] {} ) ) );
@@ -342,7 +343,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
       // As TimeZone.getAvailableIDs() does NOT offer GMT+1, only Etc/GMT+1, users will probably select Etc/GMT+1 which
       // is wrong
-      if( TimeZoneID.startsWith( "Etc/" ) )
+      if( TimeZoneID.startsWith( "Etc/" ) ) //$NON-NLS-1$
         TimeZoneID = TimeZoneID.substring( 4 );
 
       m_timezone = TimeZone.getTimeZone( TimeZoneID );

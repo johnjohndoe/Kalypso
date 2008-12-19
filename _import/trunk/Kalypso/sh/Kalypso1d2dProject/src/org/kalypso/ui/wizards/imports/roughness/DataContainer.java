@@ -22,9 +22,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class DataContainer
 {
-  private String m_inputFile = ""; // absolute path
+  private String m_inputFile = ""; // absolute path //$NON-NLS-1$
 
-  private String m_shapeProperty = "";
+  private String m_shapeProperty = ""; //$NON-NLS-1$
 
   // private boolean m_isLayerEditable;
 
@@ -173,7 +173,7 @@ public class DataContainer
    */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
-    return new URL( "file:" + m_AbsolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() );
+    return new URL( "file:" + m_AbsolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public final void setRoughnessDatabaseLocation( String dbLocation, final IRoughnessClsCollection roughnessClsCollection ) throws Exception
@@ -207,7 +207,7 @@ public class DataContainer
   {
     try
     {
-      m_userSelectionFile = m_AbsolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile;
+      m_userSelectionFile = m_AbsolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
       File file = new File( m_userSelectionFile );
       if( file.exists() && file.isFile() && file.length() > 0 )
       {

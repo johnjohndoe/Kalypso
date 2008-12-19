@@ -74,6 +74,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -83,7 +84,6 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
-import org.kalypso.ui.wizards.imports.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -139,11 +139,11 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         return;
 
       /* If available, check, if there is a section from this wizard. */
-      IDialogSettings section = settings.getSection( "IMPORT_WMS_WIZARD" );
+      IDialogSettings section = settings.getSection( "IMPORT_WMS_WIZARD" ); //$NON-NLS-1$
       if( section == null )
       {
         /* There is none available, add a new one. */
-        section = settings.addNewSection( "IMPORT_WMS_WIZARD" );
+        section = settings.addNewSection( "IMPORT_WMS_WIZARD" ); //$NON-NLS-1$
       }
 
       /* Finally set it. */
@@ -165,10 +165,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
     initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) );
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) ); //$NON-NLS-1$
 
     // read service catalog file
-    final InputStream is = getClass().getResourceAsStream( "wms.catalog" );
+    final InputStream is = getClass().getResourceAsStream( "wms.catalog" ); //$NON-NLS-1$
     try
     {
       readCatalog( is );
@@ -191,7 +191,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     m_PageMain = new ImportBaseMapWizardMainPage();
     m_PageImportImg = new ImportBaseMapImportImgPage();
     m_PageImportShp = new ImportBaseMapImportShpPage();
-    m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", "Web Map Service einbinden", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    m_PageImportWMS = new ImportWmsWizardPage( "WmsImportPage", Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.5"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     m_PageImportImg.init( initialSelection );
     m_PageImportShp.init( initialSelection );
     addPage( m_PageMain );
@@ -255,7 +255,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.6") ); //$NON-NLS-1$
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
@@ -277,7 +277,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   private boolean performFinishIMG( final MapView mapView, final GisTemplateMapModell mapModell )
   {
-    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
+    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !dstFilePath.exists() )
       try
@@ -293,19 +293,19 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     File srcFileGeoreference = null;
     IFile dstFileGeoreference = null;
     final String extension = m_PageImportImg.getSourceLocation().getFileExtension().toLowerCase();
-    if( extension.equalsIgnoreCase( "tif" ) )
+    if( extension.equalsIgnoreCase( "tif" ) ) //$NON-NLS-1$
     {
-      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() );
+      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).toOSString() ); //$NON-NLS-1$
+      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "tfw" ).lastSegment() ); //$NON-NLS-1$
     }
-    else if( extension.equalsIgnoreCase( "jpg" ) )
+    else if( extension.equalsIgnoreCase( "jpg" ) ) //$NON-NLS-1$
     {
-      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() );
-      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() );
+      srcFileGeoreference = new File( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).toOSString() ); //$NON-NLS-1$
+      dstFileGeoreference = dstFilePath.getFile( m_PageImportImg.getSourceLocation().removeFileExtension().addFileExtension( "jgw" ).lastSegment() ); //$NON-NLS-1$
     }
     else
     {
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + extension );
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0" ) + ": " + extension ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     try
     {
@@ -336,7 +336,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         }
       } );
       final String layerName = m_PageImportImg.getSourceLocation().removeFileExtension().lastSegment();
-      final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportImg.getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
+      final String imgHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportImg.getSourceLocation().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, extension, null, imgHref );
       mapView.postCommand( command, null );
     }
@@ -360,7 +360,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   private boolean performFinishSHP( final MapView mapView, final GisTemplateMapModell mapModell )
   {
-    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" );
+    final IFolder dstFilePath = m_scenarioFolder.getProject().getFolder( "imports" + File.separator + "basemap" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !dstFilePath.exists() )
       try
@@ -378,16 +378,16 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     File srcFileDBase = null;
     IFile dstFileDBase = null;
     final String extension = m_PageImportShp.getSourceLocation().getFileExtension();
-    if( extension.equalsIgnoreCase( "shp" ) )
+    if( extension.equalsIgnoreCase( "shp" ) ) //$NON-NLS-1$
     {
-      srcFileIndex = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() );
-      dstFileIndex = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() );
-      srcFileDBase = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() );
-      dstFileDBase = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() );
+      srcFileIndex = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).toOSString() ); //$NON-NLS-1$
+      dstFileIndex = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "shx" ).lastSegment() ); //$NON-NLS-1$
+      srcFileDBase = new File( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).toOSString() ); //$NON-NLS-1$
+      dstFileDBase = dstFilePath.getFile( m_PageImportShp.getSourceLocation().removeFileExtension().addFileExtension( "dbf" ).lastSegment() ); //$NON-NLS-1$
     }
     else
     {
-      throw new UnsupportedOperationException( "Unsuported file type: " + extension );
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.26") + extension ); //$NON-NLS-1$
     }
     try
     {
@@ -421,14 +421,14 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       };
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-      ErrorDialog.openError( getShell(), "", "", status );
+      ErrorDialog.openError( getShell(), "", "", status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !status.isOK() )
         return false;
 
       final String layerName = m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment();
-      final String shpHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$
-      final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "shape", "featureMember", shpHref );
+      final String shpHref = "project:" + File.separator + "imports" + File.separator + "basemap" + File.separator + m_PageImportShp.getSourceLocation().removeFileExtension().lastSegment() + "#" + coordinateSystem; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "shape", "featureMember", shpHref ); //$NON-NLS-1$ //$NON-NLS-2$
       mapView.postCommand( command, null );
     }
     catch( final Exception e )
@@ -447,10 +447,10 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
     {
       if( m_PageImportWMS.isMultiLayer() )
       {
-        final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
-        final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
-        final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
-        final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
+        final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() ); //$NON-NLS-1$
+        final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" ); //$NON-NLS-1$
+        final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" ); //$NON-NLS-1$
+        final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" ); //$NON-NLS-1$
 
         final Layer[] layerArray = m_PageImportWMS.getLayersList();
         for( int i = 0; i < layerArray.length; i++ )
@@ -462,13 +462,13 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           if( styles2.length > 0 )
             styleName = styles2[0].getName();
           else
-            styleName = "default";
+            styleName = "default"; //$NON-NLS-1$
           layers.append( layerName );
           styles.append( styleName );
           if( i < layerArray.length - 1 )
           {
-            layers.append( "," );
-            styles.append( "," );
+            layers.append( "," ); //$NON-NLS-1$
+            styles.append( "," ); //$NON-NLS-1$
           }
         }
 
@@ -476,12 +476,12 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         if( providerID != null )
           provider.append( providerID );
 
-        final String layerName = "Multi" + source;
-        source.append( "#" ).append( layers.toString() );
-        source.append( "#" ).append( styles.toString() );
-        source.append( "#" ).append( provider.toString() );
+        final String layerName = "Multi" + source; //$NON-NLS-1$
+        source.append( "#" ).append( layers.toString() ); //$NON-NLS-1$
+        source.append( "#" ).append( styles.toString() ); //$NON-NLS-1$
+        source.append( "#" ).append( provider.toString() ); //$NON-NLS-1$
 
-        final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() );
+        final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() ); //$NON-NLS-1$
         mapView.postCommand( command, null );
       }
       else
@@ -489,7 +489,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
         final Layer[] layerArray = m_PageImportWMS.getLayersList();
         for( final Layer layer : layerArray )
         {
-          final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+          final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() ); //$NON-NLS-1$
 
           final String layerName = layer.getName();
           final String styleName;
@@ -497,18 +497,18 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           if( styles2.length > 0 )
             styleName = styles2[0].getName();
           else
-            styleName = "default";
+            styleName = "default"; //$NON-NLS-1$
 
           String providerID = m_PageImportWMS.getProviderID();
           if( providerID == null )
-            providerID = "";
+            providerID = ""; //$NON-NLS-1$
 
           final String layerTitle = layer.getTitle();
-          source.append( "#" ).append( IKalypsoImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
-          source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
-          source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID );
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
+          source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
-          final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
+          final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() ); //$NON-NLS-1$
           mapView.postCommand( command, null );
         }
       }

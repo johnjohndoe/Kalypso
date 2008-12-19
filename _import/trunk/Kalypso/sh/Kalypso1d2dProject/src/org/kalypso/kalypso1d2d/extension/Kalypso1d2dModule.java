@@ -18,6 +18,7 @@ import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
@@ -25,9 +26,9 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
-  protected static final Image IMG = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_no.gif" ) );
+  protected static final Image IMG = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_no.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_HOVER = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_hover.gif" ) );
+  protected static final Image IMG_HOVER = new Image( null, Kalypso1d2dModule.class.getResourceAsStream( "icons/1d_2d_hover.gif" ) ); //$NON-NLS-1$
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 
@@ -49,13 +50,13 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getLabel( )
       {
-        return "Kalypso1D2D";
+        return "Kalypso1D2D"; //$NON-NLS-1$
       }
 
       @Override
       public String getTooltip( )
       {
-        return "Kalypso1D2D öffnen";
+        return Messages.getString("org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule.3"); //$NON-NLS-1$
       }
 
       @Override
@@ -105,7 +106,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getHeader( )
       {
-        return "Kalypso1D2D";
+        return "Kalypso1D2D"; //$NON-NLS-1$
       }
 
       @Override
@@ -116,11 +117,11 @@ public class Kalypso1d2dModule implements IKalypsoModule
           try
           {
             /* info page of plugin */
-            final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" );
+            final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" ); //$NON-NLS-1$
             try
             {
               final IPath stateLocation = Kalypso1d2dProjectPlugin.getDefault().getStateLocation();
-              final File targetDir = new File( stateLocation.toFile(), "infoPage" );
+              final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
               // final boolean mkdir = dir.mkdir();
               ZipUtilities.unzip( zipStream, targetDir );
 
@@ -140,7 +141,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
         final IPath stateLocation = Kalypso1d2dProjectPlugin.getDefault().getStateLocation();
         final URL baseUrl = stateLocation.toFile().toURI().toURL();
 
-        final URL url = new URL( baseUrl, "infoPage/index.html" );
+        final URL url = new URL( baseUrl, "infoPage/index.html" ); //$NON-NLS-1$
         return url;
       }
 
@@ -159,7 +160,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getRemoteCommitType( )
       {
-        return "Kalypso1d2dModel";
+        return "Kalypso1d2dModel"; //$NON-NLS-1$
       }
 
       @Override

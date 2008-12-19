@@ -46,8 +46,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizards.imports.Messages;
+
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -63,7 +64,7 @@ public class ImportBaseMapWizardMainPage extends WizardPage
 
   public ImportBaseMapWizardMainPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.description" ) ); //$NON-NLS-1$
   }

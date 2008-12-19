@@ -17,9 +17,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-
+import org.kalypso.kalypso1d2d.i18n.Messages;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -43,15 +42,15 @@ public class PageMain extends WizardPage implements Listener
    */
   public PageMain( DataContainer data )
   {
-    this( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.0" ), data );
+    this( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.0" ), data ); //$NON-NLS-1$
   }
 
   protected PageMain( final String name, DataContainer data )
   {
     super( name );
-    setTitle( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.1" ) );
-    setDescription( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.2" ) );
-    msg_StatusLine = new Status( IStatus.OK, "not_used", 0, "", null );
+    setTitle( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.2" ) ); //$NON-NLS-1$
+    msg_StatusLine = new Status( IStatus.OK, Messages.getString("org.kalypso.wizards.import1d2d.PageMain.3"), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_data = data;
   }
 
@@ -69,7 +68,7 @@ public class PageMain extends WizardPage implements Listener
     composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
 
     // Input shape file
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.5" ) );
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.5" ) ); //$NON-NLS-1$
     txt_InputFile = new Text( composite, SWT.BORDER );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -77,7 +76,7 @@ public class PageMain extends WizardPage implements Listener
     // gd.horizontalSpan = ncol - 1;
     txt_InputFile.setLayoutData( gd );
     btn_inputFileBrowse = new Button( composite, SWT.PUSH );
-    btn_inputFileBrowse.setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.6" ) );
+    btn_inputFileBrowse.setText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.6" ) ); //$NON-NLS-1$
     gd = new GridData( GridData.END );
     // gd.horizontalSpan = ncol;
     btn_inputFileBrowse.setLayoutData( gd );
@@ -98,7 +97,7 @@ public class PageMain extends WizardPage implements Listener
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.wizards.import1d2d.PageMain.7") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -132,11 +131,11 @@ public class PageMain extends WizardPage implements Listener
   public void handleEvent( Event event )
   {
     // Initialize a variable with the no error status
-    Status status = new Status( IStatus.OK, "not_used", 0, "", null );
+    Status status = new Status( IStatus.OK, Messages.getString("org.kalypso.wizards.import1d2d.PageMain.3"), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     msg_StatusLine = status;
     if( event.widget == btn_inputFileBrowse )
     {
-      txt_InputFile.setText( getFilenameFromDialog( null, new String[] { "*.2d" }, null ) );
+      txt_InputFile.setText( getFilenameFromDialog( null, new String[] { "*.2d" }, null ) ); //$NON-NLS-1$
     }
     // else if( event.widget == txt_InputFile )
     // {
@@ -199,7 +198,7 @@ public class PageMain extends WizardPage implements Listener
     String fileName = dialog.getFileName();
     String filterPath = dialog.getFilterPath();
     String filePath = null;
-    if( fileName != null && fileName != "" && filterPath != null )
+    if( fileName != null && fileName != "" && filterPath != null ) //$NON-NLS-1$
     {
       filePath = filterPath + File.separator + fileName; //$NON-NLS-1$
     }

@@ -116,7 +116,7 @@ public class StyleUtils
       return;
     if( m_CustomPropertyColorMap == null )
       m_CustomPropertyColorMap = new HashMap<String, Color>();
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + m_InputGML ), null ); //$NON-NLS-1$
     final String ns = workspace.getGMLSchema().getTargetNamespace();
     boolean b_geometryPropertyExists = (m_GeometryProperty != null && m_GeometryProperty.trim().length() > 0);
     final IFeatureType rootFeatureType = workspace.getRootFeature().getFeatureType();
@@ -139,7 +139,7 @@ public class StyleUtils
                 m_GeometryProperty = feature.getFeatureType().getDefaultGeometryProperty().getQName().getLocalPart();
                 b_geometryPropertyExists = true;
               }
-              String styledOne = "";
+              String styledOne = ""; //$NON-NLS-1$
               if( m_CreateFilter )
                 styledOne = feature.getProperty( new QName( ns, m_FilterProperty ) ).toString();
               if( !m_CustomPropertyColorMap.containsKey( styledOne ) )
@@ -176,11 +176,11 @@ public class StyleUtils
   public void createStyle( final String resultSLDFileName ) throws Exception
   {
     if( resultSLDFileName == null || resultSLDFileName.trim().length() == 0 )
-      throw new Exception( "Result file name cannot be null or empty string." );
+      throw new Exception( "Result file name cannot be null or empty string." ); //$NON-NLS-1$
     prepareData();
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
-    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     Fill fill = null;
     final Iterator iterator = m_CustomPropertyColorMap.entrySet().iterator();
@@ -218,7 +218,7 @@ public class StyleUtils
       // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
       try
       {
-        factory.setAttribute( "indent-number", new Integer( 4 ) );
+        factory.setAttribute( "indent-number", new Integer( 4 ) ); //$NON-NLS-1$
       }
       catch( final IllegalArgumentException e )
       {
@@ -264,7 +264,7 @@ public class StyleUtils
    */
   public static void createCustomStyle( final String inputGMLFile, final String resultSLDFile, final String styleLayerName, final String geometryProperty, final String filterProperty, final HashMap<String, Color> knownPropertyColorSet ) throws Exception
   {
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + inputGMLFile ), null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( "file:" + inputGMLFile ), null ); //$NON-NLS-1$
     final String ns = workspace.getGMLSchema().getTargetNamespace();
     String geometryPropertyName = geometryProperty;
     boolean b_geometryPropertyExists = (geometryPropertyName != null && geometryPropertyName.trim().length() > 0);
@@ -291,7 +291,7 @@ public class StyleUtils
                 geometryPropertyName = feature.getFeatureType().getDefaultGeometryProperty().getQName().getLocalPart();
                 b_geometryPropertyExists = true;
               }
-              String styledOne = "";
+              String styledOne = ""; //$NON-NLS-1$
               if( b_filterPropertyExists )
                 styledOne = feature.getProperty( new QName( ns, filterProperty ) ).toString();
               if( !filterPropertyColorMap.containsKey( styledOne ) )
@@ -350,7 +350,7 @@ public class StyleUtils
   {
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
-    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" );
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
     Fill fill = null;
     final Iterator iterator = filterPropertyColorMap.entrySet().iterator();
@@ -389,7 +389,7 @@ public class StyleUtils
       // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
       try
       {
-        factory.setAttribute( "indent-number", new Integer( 4 ) );
+        factory.setAttribute( "indent-number", new Integer( 4 ) ); //$NON-NLS-1$
       }
       catch( final IllegalArgumentException e )
       {

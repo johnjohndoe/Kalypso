@@ -57,6 +57,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
@@ -65,7 +66,7 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  */
 public class ImportWspmRestartPage extends WizardPage
 {
-  protected static final IPath PATH_LS_FILE = Path.fromPortableString( "_aktuell/Daten/Längsschnitt.gml" );
+  protected static final IPath PATH_LS_FILE = Path.fromPortableString( "_aktuell/Daten/Längsschnitt.gml" ); //$NON-NLS-1$
 
   private IFile m_lengthSection;
 
@@ -73,8 +74,8 @@ public class ImportWspmRestartPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Externe Restart Ergebnisse importieren" );
-    setDescription( "Wählen Sie das 1D-stationäre Ergebnis aus, welches aus einem WSPM-Projekt importiert werden soll." );
+    setTitle( Messages.getString("org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartPage.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -100,17 +101,17 @@ public class ImportWspmRestartPage extends WizardPage
             if( project.getNature( ModelNature.ID ) == null )
               return false;
 
-            final IFolder folder = project.getFolder( "Ergebnisse" );
+            final IFolder folder = project.getFolder( "Ergebnisse" ); //$NON-NLS-1$
             return folder.exists();
           }
 
           if( element instanceof IFolder )
           {
             final IFolder folder = (IFolder) element;
-            if( folder.getName().equals( "Ergebnisse" ) && parentElement instanceof IProject )
+            if( folder.getName().equals( "Ergebnisse" ) && parentElement instanceof IProject ) //$NON-NLS-1$
               return true;
 
-            if( parentElement instanceof IFolder && ((IFolder) parentElement).getName().equals( "Ergebnisse" ) )
+            if( parentElement instanceof IFolder && ((IFolder) parentElement).getName().equals( "Ergebnisse" ) ) //$NON-NLS-1$
             {
               final IFile file = folder.getFile( PATH_LS_FILE );
               return file.exists();

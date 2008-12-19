@@ -56,7 +56,7 @@ public class ImportWspmRestartWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_importWspmRestartPage = new ImportWspmRestartPage( "importWspmPage" );
+    m_importWspmRestartPage = new ImportWspmRestartPage( "importWspmPage" ); //$NON-NLS-1$
     addPage( m_importWspmRestartPage );
   }
 

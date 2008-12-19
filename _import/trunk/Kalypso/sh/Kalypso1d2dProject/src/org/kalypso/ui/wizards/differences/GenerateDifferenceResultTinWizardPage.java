@@ -71,6 +71,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -91,11 +92,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
 public class GenerateDifferenceResultTinWizardPage extends WizardPage implements IWizardPage
 {
 
-  private static final String RIVER_NAME_FIELD = "NAME";
+  private static final String RIVER_NAME_FIELD = "NAME"; //$NON-NLS-1$
 
-  private static final String FROM_STATION_FIELD = "RIVER_A";
+  private static final String FROM_STATION_FIELD = "RIVER_A"; //$NON-NLS-1$
 
-  private static final String TO_STATION_FIELD = "RIVER_B";
+  private static final String TO_STATION_FIELD = "RIVER_B"; //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_riverLineTheme;
 
@@ -129,7 +130,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     m_mapPanel = mapPanel;
     m_stationWidth = 100;
 
-    setDescription( "Wählen Sie auf dieser Seite die Gewässerachse aus." );
+    setDescription( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.3") ); //$NON-NLS-1$
 
     m_lineThemes = KalypsoFeatureThemeHelper.getLineThemes( m_mapPanel );
   }
@@ -159,11 +160,11 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     final Group riverLineGroup = new Group( composite, SWT.NONE );
     riverLineGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     riverLineGroup.setLayout( new GridLayout( 2, false ) );
-    riverLineGroup.setText( "Gewässerachse" );
+    riverLineGroup.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.4") ); //$NON-NLS-1$
 
     final Label riverLineText = new Label( riverLineGroup, SWT.NONE );
     riverLineText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineText.setText( "Bitte Thema der Gewässerachse auswählen" );
+    riverLineText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.5") ); //$NON-NLS-1$
 
     final ComboViewer comboRiverLine = new ComboViewer( riverLineGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLine = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -197,11 +198,11 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     final Group propertyGroup = new Group( composite, SWT.NONE );
     propertyGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     propertyGroup.setLayout( new GridLayout( 2, false ) );
-    propertyGroup.setText( "Parameter" );
+    propertyGroup.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.6") ); //$NON-NLS-1$
 
     final Label riverLineNameFieldText = new Label( propertyGroup, SWT.NONE );
     riverLineNameFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineNameFieldText.setText( "Spalte der Gewässer-ID auswählen" );
+    riverLineNameFieldText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.7") ); //$NON-NLS-1$
 
     m_comboRiverLineNameField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLineNameField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -239,7 +240,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     final Label riverLineNameText = new Label( propertyGroup, SWT.NONE );
     riverLineNameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    riverLineNameText.setText( "Gewässer auswählen" );
+    riverLineNameText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.8") ); //$NON-NLS-1$
 
     m_comboRiverLineName = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboRiverLineName = new GridData( SWT.FILL, SWT.END, true, false );
@@ -249,7 +250,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     final Label stationFromFieldText = new Label( propertyGroup, SWT.NONE );
     stationFromFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationFromFieldText.setText( "Spalte der Anfangsstation" );
+    stationFromFieldText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.9") ); //$NON-NLS-1$
 
     m_comboStationFromField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboStationFromField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -271,7 +272,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     final Label stationToFieldText = new Label( propertyGroup, SWT.NONE );
     stationToFieldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationToFieldText.setText( "Spalte der Endstation" );
+    stationToFieldText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.10") ); //$NON-NLS-1$
 
     m_comboStationToField = new ComboViewer( propertyGroup, SWT.NONE | SWT.READ_ONLY );
     final GridData gridDatacomboStationToField = new GridData( SWT.FILL, SWT.END, true, false );
@@ -293,7 +294,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     final Label stationSpinnerText = new Label( propertyGroup, SWT.NONE );
     stationSpinnerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    stationSpinnerText.setText( "Stützpunktweite des Längsschnitts [m]" );
+    stationSpinnerText.setText( Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.11") ); //$NON-NLS-1$
 
     final Spinner stationSpinner = new Spinner( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDatastationSpinner = new GridData( SWT.FILL, SWT.END, true, false );
@@ -321,7 +322,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
       m_comboStationFromField.getControl().setEnabled( false );
       m_comboStationToField.getControl().setEnabled( false );
 
-      final String msg = "Kein Linienthema in Karte vorhanden.";
+      final String msg = Messages.getString("org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.12"); //$NON-NLS-1$
       comboRiverLine.setInput( new String[] { msg } );
       comboRiverLine.setSelection( new StructuredSelection( msg ) );
       m_riverLineTheme = null;
@@ -433,7 +434,7 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
     for( final Object o : m_riverFeatures )
     {
       final Feature riverFeature = (Feature) o;
-      propertyType = riverFeature.getFeatureType().getProperty( new QName( "namespace", m_riverNameField ) );
+      propertyType = riverFeature.getFeatureType().getProperty( new QName( "namespace", m_riverNameField ) ); //$NON-NLS-1$
 
       if( propertyType instanceof IValuePropertyType )
       {

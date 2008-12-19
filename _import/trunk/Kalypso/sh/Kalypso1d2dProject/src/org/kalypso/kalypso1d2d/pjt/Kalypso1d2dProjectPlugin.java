@@ -22,7 +22,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject";
+  public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject"; //$NON-NLS-1$
 
   // The shared instance
   private static Kalypso1d2dProjectPlugin plugin;

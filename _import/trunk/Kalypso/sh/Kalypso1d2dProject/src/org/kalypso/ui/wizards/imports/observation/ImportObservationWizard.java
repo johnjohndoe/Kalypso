@@ -72,6 +72,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -89,7 +90,6 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
@@ -165,7 +165,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     /* add new project repository */
     final String location = m_timeseriesFolder.getLocation().toOSString();
-    final String configuration = location + "#*.zml";
+    final String configuration = location + "#*.zml"; //$NON-NLS-1$
 
     /* Remove all repositories which do not fit to this scenario */
     final IRepository[] repositories = repositoryContainer.getRepositories();
@@ -186,13 +186,13 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     /* First, make sure that the folder exists */
     new File( location ).mkdirs();
 
-    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*.zml" }, false, true, false );
+    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*.zml" }, false, true, false ); //$NON-NLS-1$
 
-    final ZmlObservationRepository repository = new ZmlObservationRepository( this.getClass().getName(), configuration, location, "Time Series", false, filter );
+    final ZmlObservationRepository repository = new ZmlObservationRepository( this.getClass().getName(), configuration, location, "Time Series", false, filter ); //$NON-NLS-1$
 
     /* set datarange to 0 -> show all observation this item inherits */
-    repository.setProperty( DateRangeInputControl.USE_RANGE, "0" );
-    repository.setProperty( DateRangeInputControl.NUMBER_OF_DAYS, "0" );
+    repository.setProperty( DateRangeInputControl.USE_RANGE, "0" ); //$NON-NLS-1$
+    repository.setProperty( DateRangeInputControl.NUMBER_OF_DAYS, "0" ); //$NON-NLS-1$
 
     repositoryContainer.addRepository( repository );
 
@@ -244,8 +244,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       if( srcObservation == null )
       {
         final MessageBox messageBox = new MessageBox( getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-        messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ) );
-        messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ) );
+        messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3" ) ); //$NON-NLS-1$
+        messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2" ) ); //$NON-NLS-1$
         if( messageBox.open() == SWT.NO )
           return true;
         else
@@ -365,8 +365,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" );
-      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" );
+      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ); //$NON-NLS-1$
+      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ); //$NON-NLS-1$
       ErrorDialog.openError( getShell(), title, message, status );
       return false;
     }

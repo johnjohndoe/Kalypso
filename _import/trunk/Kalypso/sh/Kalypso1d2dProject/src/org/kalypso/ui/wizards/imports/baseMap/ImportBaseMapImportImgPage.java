@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -49,9 +49,9 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
   public ImportBaseMapImportImgPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.description" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.description" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -72,7 +72,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.4" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.4" ) ); //$NON-NLS-1$
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -108,7 +108,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -139,8 +139,8 @@ public class ImportBaseMapImportImgPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "tif" ) );
-    fileExtensions.add( new String( "jpg" ) );
+    fileExtensions.add( new String( "tif" ) ); //$NON-NLS-1$
+    fileExtensions.add( new String( "jpg" ) ); //$NON-NLS-1$
     // fileExtensions.add( new String( "gml" ) );
 
     // Find the first plugin.xml file.
@@ -194,21 +194,21 @@ public class ImportBaseMapImportImgPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6" ) ); //$NON-NLS-1$
       return;
     }
-    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile() )
+    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(),
-          sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment() } ) );
+      setErrorMessage( Messages.getFormatString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
+          sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment() } ) ); //$NON-NLS-1$
       return;
     }
-    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile() )
+    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile() ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(),
-          sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment() } ) );
+      setErrorMessage( Messages.getFormatString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(), //$NON-NLS-1$
+          sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment() } ) ); //$NON-NLS-1$
       return;
     }
     setMessage( null );
@@ -242,7 +242,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
   private IPath browse( IPath path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.tif; *.jpg" } );
+    dialog.setFilterExtensions( new String[] { "*.tif; *.jpg" } ); //$NON-NLS-1$
     // dialog.setFilterExtensions( (String[]) fileExtensions.toArray() );
     if( path != null )
     {

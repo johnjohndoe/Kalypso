@@ -13,7 +13,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.kalypso1d2d.i18n.Messages;
+
 
 public class PageSecond extends WizardPage
 {
@@ -25,7 +26,7 @@ public class PageSecond extends WizardPage
 
   protected PageSecond( final DataContainer data ) throws Exception
   {
-    super( "Select Files and Relate" );
+    super( Messages.getString("org.kalypso.ui.wizards.imports.roughness.PageSecond.0") ); //$NON-NLS-1$
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Title" ) );//$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageSecond.Description" ) );//$NON-NLS-1$
     m_data = data;
@@ -84,7 +85,7 @@ public class PageSecond extends WizardPage
         m_comboRoughnessIDs[nextEntryNr].setItems( names );
         m_comboRoughnessIDs[nextEntryNr].select( getSelectionIndex( names, map.get( key ) ) );
 
-        m_comboRoughnessIDs[nextEntryNr].setToolTipText( "Bitte wählen Sie eine Rauheitsklasse aus der Datenbank aus, die der importierten Klasse zugewiesen wird." );
+        m_comboRoughnessIDs[nextEntryNr].setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.roughness.PageSecond.1") ); //$NON-NLS-1$
       }
     }
     composite.layout();
@@ -139,7 +140,7 @@ public class PageSecond extends WizardPage
       for( int i = 0; i < m_shpNamesList.size(); i++ )
       {
         final String text = m_comboRoughnessIDs[i].getText();
-        if( text != null && text.trim() != "" )
+        if( text != null && text.trim() != "" ) //$NON-NLS-1$
           userSelectionMap.put( m_shpNamesList.get( i ), text );
       }
     }

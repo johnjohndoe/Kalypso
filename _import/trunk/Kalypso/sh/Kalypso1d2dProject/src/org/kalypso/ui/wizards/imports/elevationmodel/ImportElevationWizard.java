@@ -67,13 +67,13 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -135,7 +135,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) ); //$NON-NLS-1$
     mPage = new ElevationMainPage();
     addPage( mPage );
     mPage.init( initialSelection );
@@ -149,8 +149,8 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       final IPath sourcePath = mPage.getSourceLocation();// .toOSString();
       final String setFileName = mPage.getNameForFile();
       final String setFileDescription = mPage.getDescriptionForFileArea();
-      final String defaultText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" );
-      final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" );
+      final String defaultText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ); //$NON-NLS-1$
+      final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" ); //$NON-NLS-1$
       final String selectedCoordinateSystem = mPage.getCoordinateSystem();
 
       getContainer().run( true, true, new IRunnableWithProgress()
@@ -185,7 +185,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
             copy( srcFileTif, dstFileTif, monitor );
             modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
-            String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File( URLDecoder.decode( dstFileTif.toString(), "UTF-8" ) ).toURI() ).toString();
+            String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File( URLDecoder.decode( dstFileTif.toString(), "UTF-8" ) ).toURI() ).toString(); //$NON-NLS-1$
             if( nativeTEMRelPath == null )
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
@@ -197,7 +197,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             // name from there
 
             final String name = dstFileTif.getName();
-            if( setFileName.compareTo( "" ) != 0 )
+            if( setFileName.compareTo( "" ) != 0 ) //$NON-NLS-1$
             {
               tem.setName( setFileName );
             }
@@ -214,7 +214,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
               tem.setDescription( replaceText );
             }
 
-            if( selectedCoordinateSystem.compareTo( "" ) != 0 )
+            if( selectedCoordinateSystem.compareTo( "" ) != 0 ) //$NON-NLS-1$
             {
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
@@ -261,12 +261,12 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
     // }
     final Random generator = new Random( 126545 );
     final int key = generator.nextInt();
-    System.out.println( "key :" + key );
+    System.out.println( "key :" + key ); //$NON-NLS-1$
 
-    if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() )
+    if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() ) //$NON-NLS-1$ //$NON-NLS-2$
       getNewFileName( folder, srcFileTif );
 
-    return getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif );
+    return getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static String getExtension( final File f )
@@ -310,7 +310,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
         }
         else
         {
-          throw new IOException( "Could not create file:" + dst );
+          throw new IOException( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.11") + dst ); //$NON-NLS-1$
         }
       }
       else
@@ -322,7 +322,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       final byte[] buf = new byte[1024];
       int len;
       final int lens = ((int) src.length() / 1024 + 1);
-      monitor2.beginTask( "Copying..", lens );
+      monitor2.beginTask( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.0"), lens ); //$NON-NLS-1$
       while( (len = in.read( buf )) > 0 )
       {
         monitor2.worked( 1 );
@@ -395,7 +395,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   {
     try
     {
-      return new File( URLDecoder.decode( file.toString(), "UTF-8" ) );
+      return new File( URLDecoder.decode( file.toString(), "UTF-8" ) ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {

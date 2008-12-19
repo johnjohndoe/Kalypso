@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.calccase.CalcJobHandler;
@@ -104,7 +105,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   // TODO does that really belong here? Move somewhere else... Use ModelNature stuff instead, refaktor!
   public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "Kalypso1D2DProjectNature.10" ), 5 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.10" ), 5 ); //$NON-NLS-1$
 
     try
     {
@@ -141,7 +142,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "Kalypso1D2DProjectNature.11" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.11" ) ) ); //$NON-NLS-1$
     }
   }
 

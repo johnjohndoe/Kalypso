@@ -24,10 +24,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -49,9 +49,9 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
   public ImportBaseMapImportShpPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ), "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.description" ) );
+    super( "", "", ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    setTitle( "" ); //$NON-NLS-1$
+    setDescription( "" ); //$NON-NLS-1$
   }
 
   /**
@@ -72,7 +72,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.4" ) );
+    label_1.setText( "" ); //$NON-NLS-1$
 
     sourceFileField = new Text( container, SWT.BORDER );
     sourceFileField.addModifyListener( new ModifyListener()
@@ -108,7 +108,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    m_crsPanel.setToolTipText( Messages.getString("ImportBaseMapImportShpPage.5") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -139,7 +139,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    fileExtensions.add( new String( "shp" ) );
+    fileExtensions.add( new String( "shp" ) ); //$NON-NLS-1$
 
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -192,15 +192,14 @@ public class ImportBaseMapImportShpPage extends WizardPage
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.6" ) );
+      setErrorMessage( "" ); //$NON-NLS-1$
       return;
     }
-    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile()
-        && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() )
+    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "shp" ) && !sourceLoc.removeFileExtension().addFileExtension( "dbf" ).toFile().isFile() //$NON-NLS-1$ //$NON-NLS-2$
+        && !sourceLoc.removeFileExtension().addFileExtension( "shx" ).toFile().isFile() ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.5", new Object[] { sourceLoc.lastSegment(),
-          sourceLoc.removeFileExtension().addFileExtension( "dbf/shx" ).lastSegment() } ) );
+      setErrorMessage( "" ); //$NON-NLS-1$
       return;
     }
     setMessage( null );
@@ -234,7 +233,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
   private IPath browse( IPath path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.shp" } );
+    dialog.setFilterExtensions( new String[] { "*.shp" } ); //$NON-NLS-1$
     // dialog.setFilterExtensions( (String[]) fileExtensions.toArray() );
     if( path != null )
     {

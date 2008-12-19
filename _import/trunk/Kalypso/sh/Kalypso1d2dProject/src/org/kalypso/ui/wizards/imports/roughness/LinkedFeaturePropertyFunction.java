@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_clsMember = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" );
+  private final static QName m_clsMember = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)

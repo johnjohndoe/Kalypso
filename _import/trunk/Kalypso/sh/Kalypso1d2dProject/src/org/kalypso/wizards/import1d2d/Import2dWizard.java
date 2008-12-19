@@ -17,7 +17,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -98,7 +98,7 @@ public class Import2dWizard extends Wizard implements INewWizard
       try
       {
         /* post empty command(s) in order to make pool dirty. */
-        m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( org.kalypso.wizards.import1d2d.Messages.getString( "ImportWizard.1" ), false ) ); //$NON-NLS-1$
+        m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand(Messages.getString( "org.kalypso.kalypso1d2d.wizards.import1d2d.Import2dWizard.1" ), false ) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {

@@ -10,10 +10,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ui.wizards.imports.Messages;
+
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *

@@ -11,6 +11,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
@@ -19,7 +20,6 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -156,10 +156,10 @@ public class Transformer implements ICoreRunnableWithProgress
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
         }
         else
-          throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
+          throw new ClassCastException( Messages.getString("org.kalypso.ui.wizards.imports.roughness.Transformer.2") + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
       }
       else
-        throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
+        throw new ClassCastException( Messages.getString("org.kalypso.ui.wizards.imports.roughness.Transformer.2") + gm_Whatever.getClass().getName() ); //$NON-NLS-1$
     }
 
     m_isDataPrepared = true;
@@ -188,8 +188,8 @@ public class Transformer implements ICoreRunnableWithProgress
       if( linkedFeature != null )
       {
         final StringBuffer xlinkBuffer = new StringBuffer( 50 );
-        xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize();
-        final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" );
+        xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize(); //$NON-NLS-1$ //$NON-NLS-2$
+        final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }

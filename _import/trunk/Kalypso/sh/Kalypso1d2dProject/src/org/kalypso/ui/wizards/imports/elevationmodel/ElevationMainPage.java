@@ -23,9 +23,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -49,9 +49,9 @@ public class ElevationMainPage extends WizardPage
 
   public ElevationMainPage( )
   {
-    super( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) );
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
+    super( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.0" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -72,7 +72,7 @@ public class ElevationMainPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.2" ) );
+    label_1.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.2" ) ); //$NON-NLS-1$
     m_filename = new Text( container, SWT.BORDER );
     m_filename.addModifyListener( new ModifyListener()
     {
@@ -92,7 +92,7 @@ public class ElevationMainPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) );
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) ); //$NON-NLS-1$
 
     /* Coordinate system combo */
     final Composite crsContainer = new Composite( container, SWT.NULL );
@@ -107,7 +107,7 @@ public class ElevationMainPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.elevationmodel.ElevationMainPage.5") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -124,7 +124,7 @@ public class ElevationMainPage extends WizardPage
 
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_3.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
+    label_3.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) ); //$NON-NLS-1$
     m_tileTitle = new Text( container, SWT.BORDER );
     m_tileTitle.addModifyListener( new ModifyListener()
     {
@@ -140,13 +140,13 @@ public class ElevationMainPage extends WizardPage
 
     final Label label_4 = new Label( container, SWT.NONE );
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
-    label_4.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
+    label_4.setText( "" ); //$NON-NLS-1$
     m_tileDescription = new Text( container, SWT.BORDER | SWT.MULTI );
     final GridData gridData_4 = new GridData( GridData.FILL_HORIZONTAL );
     gridData_4.horizontalSpan = 2;
     gridData_4.heightHint = 100;
     m_tileDescription.setLayoutData( gridData_4 );
-    m_tileDescription.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) );
+    m_tileDescription.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) ); //$NON-NLS-1$
 
     initContents();
   }
@@ -163,9 +163,9 @@ public class ElevationMainPage extends WizardPage
     if( !(selection instanceof IStructuredSelection) )
       return;
 
-    m_fileExtensions.add( "hmo" );
-    m_fileExtensions.add( "asc" );
-    m_fileExtensions.add( "asg" );
+    m_fileExtensions.add( "hmo" ); //$NON-NLS-1$
+    m_fileExtensions.add( "asc" ); //$NON-NLS-1$
+    m_fileExtensions.add( "asg" ); //$NON-NLS-1$
     // Find the first plugin.xml file.
     final Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
@@ -217,13 +217,13 @@ public class ElevationMainPage extends WizardPage
     if( sourceLoc == null || !(m_fileExtensions.contains( sourceLoc.getFileExtension() )) )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) ); //$NON-NLS-1$
       return;
     }
     if( m_tileTitle.getText().trim().length() == 0 )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) ); //$NON-NLS-1$
       return;
     }
     setPageComplete( true );
@@ -296,7 +296,7 @@ public class ElevationMainPage extends WizardPage
   {
     final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
     // TODO: what about m_fileExtensions ???
-    dialog.setFilterExtensions( new String[] { "*.hmo; *.asc; *.asg" } );
+    dialog.setFilterExtensions( new String[] { "*.hmo; *.asc; *.asg" } ); //$NON-NLS-1$
     if( path != null )
     {
       if( path.segmentCount() > 1 )

@@ -19,10 +19,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -89,10 +89,10 @@ public class ImportWizard extends Wizard implements INewWizard
     m_szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_project = m_szenarioFolder.getProject();
     m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
-    m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" );
+    m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" ); //$NON-NLS-1$
     try
     {
-      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml", szenarioDataProvider.getModel( IRoughnessClsCollection.class ) );
+      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml", szenarioDataProvider.getModel( IRoughnessClsCollection.class ) ); //$NON-NLS-1$
     }
     catch( Exception e )
     {
@@ -148,7 +148,7 @@ public class ImportWizard extends Wizard implements INewWizard
       m_pageMain.saveDataToModel();
       m_pageSecond.saveDataToModel();
       status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
-      ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
+      ErrorDialog.openError( getShell(), getWindowTitle(), "", status ); //$NON-NLS-1$
       m_data.getRoughnessShapeStaticRelationMap().clear();
       m_data.getRoughnessStaticCollectionMap().clear();
       m_data.saveUserSelection();

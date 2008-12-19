@@ -26,8 +26,7 @@ Require-Bundle: org.junit4,
  de.openali.odysseus.chart.ui,
  org.kalypso.project.database;bundle-version="1.0.0"
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.ui.wizards.imports,
- org.kalypso.ui.wizards.imports.baseMap,
+Export-Package: org.kalypso.ui.wizards.imports.baseMap,
  org.kalypso.ui.wizards.imports.elevationmodel,
  org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,
