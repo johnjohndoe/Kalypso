@@ -12,12 +12,18 @@
     <observation linktype="zml" ns1:href="%href2%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c4" name="Wasserstand - Vorhersage [%axisunit%]" width="50"/>
     </observation>
-    <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="Niederschlag" editable="true" id="c5" name="Niederschlag [%axisunit%]" width="50"/>
-    </observation>
+        <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
+                <column axis="Niederschlag" editable="true" id="c5" name="Niederschlag [%axisunit%]" width="50"/>
+        </observation>
+        <observation linktype="zml" ns1:href="%href5%" xmlns:ns1="http://www.w3.org/1999/xlink">
+                <column axis="Niederschlag" editable="true" id="c5" name="Niederschlag (%metadata-Label%) [%axisunit%]" width="50"/>
+        </observation>
+        <observation linktype="zml" ns1:href="%href6%" xmlns:ns1="http://www.w3.org/1999/xlink">
+                <column axis="Niederschlag" editable="true" id="c5" name="Ombrometer (%metadata-Label%) [%axisunit%]" width="50"/>
+        </observation>
     <observation linktype="zml" ns1:href="%href4%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Schnee" editable="true" id="c5" name="Schnee [%axisunit%]" width="50"/>
     </observation>
-	<alphaSort>false</alphaSort>
+        	<alphaSort>false</alphaSort>
 </obstableview>
 

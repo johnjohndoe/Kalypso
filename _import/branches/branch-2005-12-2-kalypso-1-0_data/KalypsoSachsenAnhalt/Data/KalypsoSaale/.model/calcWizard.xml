@@ -1092,6 +1092,9 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Durchfluss#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Durchfluss_gerechnet#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=%axisname%#linkColumn=Niederschlag"/>
+	        <arg name="timeserie4" value="nameString=Niederschlag (%metadata-Label%)#linkColumn=NiederschlagInfo"/>
+	        <arg name="timeserie5" value="nameString=Ombrometer (%metadata-Label%)#linkColumn=ganglinie_reserve_1"/>
+	        
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
@@ -1112,12 +1115,16 @@
 			<arg name="height" value="600"/>
 			<arg name="imageFormat" value="png"/>
 			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Durchfluss"/>
-				<arg name="href2" value="Durchfluss_gerechnet"/>
-				<arg name="href3" value="Niederschlag"/>
-				<arg name="href4" value="Schnee"/>
-			</arg>
+			<arg name="title" value="Name"/>
+			<arg name="href1" value="Durchfluss"/>
+			<arg name="href2" value="Durchfluss_gerechnet"/>
+			<arg name="href3" value="Niederschlag"/>
+			 <arg name="href4" value="Schnee"/>
+			 <arg name="href5" value="NiederschlagInfo"/>
+			 <arg name="href6" value="ganglinie_reserve_1"/>
+			        
+			        
+		        </arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>
 				<arg name="category" value="Pegel;Abflussgrafik"/>
