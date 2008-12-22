@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Marshalls a {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface} into a sax content handler.
- * 
+ *
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceMarshaller
@@ -97,23 +97,13 @@ public class TriangulatedSurfaceMarshaller
   {
     try
     {
-      final ContentHandler contentHandler = m_reader.getContentHandler();
-
       final String crs = m_surface.getCoordinateSystem();
-      final Attributes atts;
-      if( crs != null )
-        atts = createCrsAttributes( crs );
-      else
-        atts = EMPTY_ATTRIBUTES;
-
-      contentHandler.startElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE, atts );
-      contentHandler.startElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES, EMPTY_ATTRIBUTES );
+      startSurface( crs );
 
       for( final GM_Triangle triangle : m_surface )
         marshalTriangle( triangle );
 
-      contentHandler.endElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES );
-      contentHandler.endElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE );
+      endSurface();
     }
     catch( final UnknownCRSException e )
     {
@@ -121,11 +111,33 @@ public class TriangulatedSurfaceMarshaller
     }
   }
 
-  private void marshalTriangle( final GM_Triangle triangle ) throws SAXException, UnknownCRSException
+  public void startSurface( final String crs ) throws UnknownCRSException, SAXException
   {
     final ContentHandler contentHandler = m_reader.getContentHandler();
 
-    final String crs = m_surface.getCoordinateSystem();
+    final Attributes atts;
+    if( crs != null )
+      atts = createCrsAttributes( crs );
+    else
+      atts = EMPTY_ATTRIBUTES;
+
+    contentHandler.startElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE, atts );
+    contentHandler.startElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES, EMPTY_ATTRIBUTES );
+  }
+
+  public void endSurface( ) throws SAXException
+  {
+    final ContentHandler contentHandler = m_reader.getContentHandler();
+    contentHandler.endElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES );
+    contentHandler.endElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE );
+  }
+
+
+  public void marshalTriangle( final GM_Triangle triangle ) throws SAXException, UnknownCRSException
+  {
+    final ContentHandler contentHandler = m_reader.getContentHandler();
+
+    final String crs = m_surface == null ? null : m_surface.getCoordinateSystem();
     final String crsTri = triangle.getCoordinateSystem();
 
     final AttributesImpl atts;
