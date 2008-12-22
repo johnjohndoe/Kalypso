@@ -15,11 +15,11 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/xtiff-jai/xtiff-jai.jar,
  .
 Bundle-Vendor: kalypso.sourceforge.net
-Require-Bundle: org.junit;resolution:=optional,
- org.kalypso.gmlschema;visibility:=reexport,
+Require-Bundle: org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
- org.kalypso.deegree2;visibility:=reexport
+ org.kalypso.deegree2;visibility:=reexport,
+ org.junit4;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: com.sun.media.jai.codec,
