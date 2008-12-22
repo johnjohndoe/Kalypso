@@ -15,7 +15,11 @@
    <launcherArgs>
       <programArgs>-nl
 de_DE</programArgs>
-      <vmArgs>-Xmx1024m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
+      <vmArgs>-Xmx1024m
+-XX:PermSize=64M
+-XX:MaxPermSize=128M
+-XX:MaxHeapFreeRatio=20
+-XX:MinHeapFreeRatio=10</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
@@ -181,6 +185,8 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ui.navigator.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.navigator.resources.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.ui.net"/>
+      <plugin id="org.eclipse.ui.net.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.nl_de" fragment="true"/>
