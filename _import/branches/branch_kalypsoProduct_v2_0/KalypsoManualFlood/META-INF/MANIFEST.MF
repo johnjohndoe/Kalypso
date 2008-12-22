@@ -11,5 +11,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help.base,
  org.eclipse.help.webapp
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.KalypsoManualFlood.help
 Bundle-Vendor: kalypso.sourceforge.net
