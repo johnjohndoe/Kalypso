@@ -40,88 +40,109 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import java.awt.Point;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
- * Helper class, handles painting of the map
- * 
+ * Paints a {@link org.kalypso.ogc.gml.mapmodel.IMapModell}.
+ * <p>
+ * The painter draws a buffered image which gets created in a background job.
+ * </p>
+ * In order to create the image, schedule this painter as a job. </p>
+ *
  * @author Gernot Belger
  */
-public class MapPanelPainter
+public class MapPanelPainter implements IPaintable
 {
-  private MapModellPainter m_normalPainter = null;
+  private final GeoTransform m_world2screen;
 
-  private MapModellPainter m_selectionPainter = null;
+  private final IMapModell m_modell;
 
-  private final IMapPanel m_mapPanel;
+  private final IMapLayer[] m_layers;
 
-  public MapPanelPainter( final IMapPanel mapPanel )
+  private final Color m_bgColor;
+
+  /**
+   * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
+   *
+   * @param bgColor
+   *          If set, the buffer image is filled with this color before any layer will be painted.
+   */
+  public MapPanelPainter( final IMapLayer[] layers, final IMapModell modell, final GeoTransform world2screen, final Color bgColor )
   {
-    m_mapPanel = mapPanel;
+    m_layers = layers;
+    m_modell = modell;
+    m_world2screen = world2screen;
+    m_bgColor = bgColor;
   }
 
-  public synchronized void dispose( )
+  public GeoTransform getWorld2screen( )
   {
-    if( m_normalPainter != null )
-      m_normalPainter.dispose();
-
-    if( m_selectionPainter != null )
-      m_selectionPainter.dispose();
+    return m_world2screen;
   }
 
-  public synchronized void invalidate( final boolean onlySelection )
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
   {
-    /* Determine painter depending on state of model. */
-    if( !onlySelection )
+    return "Painting map: " + m_modell.getLabel( m_modell );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable#getSize()
+   */
+  @Override
+  public Point getSize( )
+  {
+    return new Point( (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable#paint(java.awt.Graphics2D,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
+  {
+    /* Draw background */
+    final int screenWidth = (int) m_world2screen.getDestWidth();
+    final int screenHeight = (int) m_world2screen.getDestHeight();
+    // setClip, necessary, as some display element use the clip bounds to determine the screen-size
+    g.setClip( 0, 0, screenWidth, screenHeight );
+    if( m_bgColor != null )
     {
-      /* Cancel old job if still running. */
-      if( m_normalPainter != null )
-      {
-        m_normalPainter.dispose();
-        m_normalPainter = null;
-      }
-
-      m_normalPainter = new MapModellPainter( m_mapPanel, false );
-      // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
-      m_normalPainter.schedule( 250 );
+      g.setColor( m_bgColor );
+      g.fillRect( 0, 0, screenWidth, screenHeight );
     }
 
-    if( m_selectionPainter != null )
+    monitor.beginTask( "Painting themes", m_layers.length );
+
+    for( final IMapLayer layer : m_layers )
     {
-      m_selectionPainter.dispose();
-      m_selectionPainter = null;
+      monitor.subTask( layer.getLabel() );
+
+      // Force repaint after and before layer
+      final IMapPanel mapPanel = layer.getMapPanel();
+      mapPanel.repaintMap();
+
+      layer.paint( g, m_world2screen, new SubProgressMonitor( monitor, 1 ) );
+
+      mapPanel.repaintMap();
+
+      // Check for cancel
+      ProgressUtilities.worked( monitor, 0 );
     }
-
-    /* Selection always get repainted */
-    m_selectionPainter = new MapModellPainter( m_mapPanel, true );
-    // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
-    m_selectionPainter.schedule( 250 );
-  }
-
-  public synchronized void paint( final Graphics2D g )
-  {
-    if( m_normalPainter != null )
-      m_normalPainter.paint( g );
-
-    if( m_selectionPainter != null )
-      m_selectionPainter.paint( g );
-  }
-
-  public synchronized void cancel( )
-  {
-    if( m_normalPainter != null )
-      m_normalPainter.cancel();
-    if( m_selectionPainter != null )
-      m_selectionPainter.cancel();
-  }
-
-  public BufferedImage getNormalImage( )
-  {
-    if( m_normalPainter == null )
-      return null;
-
-    return m_normalPainter.getImage();
   }
 
 }

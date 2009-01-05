@@ -49,15 +49,10 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
@@ -68,32 +63,21 @@ import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.Debug;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class implements the a theme, which loads images from a given provider.
- * 
+ *
  * @author Doemming, Kuepferle
  * @author Holger Albert
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
   /**
-   * This rule lets only one job run at a time.
-   */
-  private static ISchedulingRule m_jobMutexRule = new MutexRule();
-
-  /**
-   * This variable stores the buffered image.
-   */
-  private Image m_buffer;
-
-  /**
    * This variable stores the legend, if any.
    */
-  private org.eclipse.swt.graphics.Image m_legend;
+  private org.eclipse.swt.graphics.Image m_legend = null;
 
   /**
    * This variable stores the max envelope of layer on WMS (local SRS).
@@ -104,66 +88,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * This variable stores the image provider.
    */
   protected IKalypsoImageProvider m_provider;
-
-  /**
-   * This variable stores the loader for loading the images.
-   */
-  protected KalypsoImageLoader m_loader;
-
-  /**
-   * True, if the imageloader has finished.
-   */
-  protected boolean m_isFinished;
-
-  /**
-   * This variable stores a listener, which will be notified about job events.
-   */
-  private final JobChangeAdapter m_adapter = new JobChangeAdapter()
-  {
-    /**
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void aboutToRun( final IJobChangeEvent event )
-    {
-      /* Set a status for the user. */
-      setStatus( StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.0") ) ); //$NON-NLS-1$
-    }
-
-    /**
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void done( final IJobChangeEvent event )
-    {
-      /* Get the result. */
-      final IStatus result = event.getResult();
-
-      /* Set a status for the user. */
-      setStatus( result );
-
-      /* If ok, set the image. On error, set the image to null. */
-      if( !result.matches( IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL ) )
-      {
-        /* Debug-Information. */
-        Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.1") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.2") + m_extent + " ... \n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        /* Set the newly loaded image. */
-        setImage( m_loader.getBuffer() );
-      }
-      else
-      {
-        /* Reset the image. */
-        setImage( null );
-
-        /* Deactivate the theme. */
-        setVisible( false );
-      }
-
-      /* Finished loading. */
-      m_isFinished = true;
-    }
-  };
 
   /**
    * This is the stored extent from the last time, a loader was started (call to
@@ -178,16 +102,16 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * The constructor.
-   * 
+   *
    * @param linktype
-   *            The link type.
+   *          The link type.
    * @param themeName
-   *            The name of the theme.
+   *          The name of the theme.
    * @param imageProvider
-   *            The image provider, which should be used. If it has also the type {@link IKalypsoLegendProvider} also a
-   *            legend can be shown.
+   *          The image provider, which should be used. If it has also the type {@link IKalypsoLegendProvider} also a
+   *          legend can be shown.
    * @param mapModel
-   *            The map modell.
+   *          The map modell.
    */
   public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
@@ -195,11 +119,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_source = source;
     m_provider = imageProvider;
-
-    m_buffer = null;
-    m_legend = null;
-    m_loader = null;
-    m_isFinished = false;
   }
 
   /**
@@ -215,17 +134,25 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     /* The image can not be selected. */
     if( selected != null && selected )
       return;
 
-    if( m_buffer != null )
-      g.drawImage( m_buffer, 0, 0, null );
+    final int width = (int) p.getDestWidth();
+    final int height = (int) p.getDestHeight();
+    final GM_Envelope extent = p.getSourceRect();
+    final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
+    final IStatus status = loader.run( monitor );
+    if( !status.isOK() )
+      throw new CoreException( status );
+
+    final Image buffer = loader.getBuffer();
+    g.drawImage( buffer, 0, 0, null );
   }
 
   /**
@@ -234,13 +161,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public void dispose( )
   {
-    /* Dispose the buffered image. */
-    if( m_buffer != null )
-    {
-      m_buffer.flush();
-      m_buffer = null;
-    }
-
     /* Dispose the legend. */
     if( m_legend != null )
     {
@@ -257,89 +177,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public boolean isLoaded( )
   {
-    return m_isFinished;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  @Override
-  public void setExtent( final int width, final int height, final GM_Envelope extent )
-  {
-    /* If the theme is not visible, do not restart the loading. */
-    if( isVisible() == false )
-    {
-      /* Debug-Information. */
-      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.4") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.5") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      /* Set to finished, else this theme never 'isLoaded'. */
-      m_isFinished = true;
-      return;
-    }
-
-    /* Debug-Information. */
-    Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.6") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.7") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    /* If it is the same extent than the last time, do not load again. */
-    if( m_extent != null && m_extent.equals( extent ) )
-      return;
-
-    /* Debug-Information. */
-    Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.8") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.9") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    /* If there was a loader working, cancel it. */
-    if( m_loader != null )
-    {
-      /* Debug-Information. */
-      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.10") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.11") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      m_loader.removeJobChangeListener( m_adapter );
-      m_loader.dispose();
-      m_loader = null;
-    }
-
-    /* Reset the buffer. */
-    if( m_buffer != null )
-    {
-      /* Debug-Information. */
-      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.12") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.13") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      m_buffer.flush();
-      m_buffer = null;
-    }
-
-    /* Create a new loader. */
-    if( width > 0 && height > 0 && extent != null && extent.getWidth() > 0 && extent.getHeight() > 0 )
-    {
-      /* Debug-Information. */
-      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.14") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.15") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      /* Create a new loader. */
-      m_loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
-
-      /* Make sure, only one job is running at a time. */
-      m_loader.setRule( m_jobMutexRule );
-
-      /* The adapter makes sure, the loaded image is set. */
-      m_loader.addJobChangeListener( m_adapter );
-
-      /* Schedule it. */
-      m_loader.schedule( 250 );
-
-      /* Debug-Information. */
-      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.16") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.17") + extent + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.18") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-      /* Memorize the extent, so it can be compared the next time, this method is called. */
-      m_extent = extent;
-    }
-    else
-    {
-      /* Extent is null. */
-      m_extent = null;
-
-      /* Set to true, else this theme never 'isLoaded'. */
-      m_isFinished = true;
-    }
+    return true;
   }
 
   /**
@@ -374,7 +212,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    */
   public String getTooltip( final Object element )
   {
-    Assert.isTrue( element == this, Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.19") ); //$NON-NLS-1$
+    Assert.isTrue( element == this, Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.19" ) ); //$NON-NLS-1$
 
     if( getStatus().isOK() )
       return m_provider.getLabel();
@@ -383,35 +221,8 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   }
 
   /**
-   * This function sets the newly loaded image.
-   * 
-   * @param image
-   *            The newly loaded image.
-   */
-  protected synchronized void setImage( final Image image )
-  {
-    /* Reset buffer. */
-    if( m_buffer != null )
-      m_buffer.flush();
-
-    /* Set the new values. */
-    m_buffer = image;
-
-    /* If an image is missing, there can be no extent. */
-    if( image == null )
-    {
-      m_extent = null;
-      invalidate( null );
-      return;
-    }
-
-    /* Inform to paint new image. */
-    invalidate( getFullExtent() );
-  }
-
-  /**
    * This function returns the image provider of this theme.
-   * 
+   *
    * @return The image provider of this theme.
    */
   public IKalypsoImageProvider getImageProvider( )
@@ -421,7 +232,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function currently does nothing, because the info functionality of themes has to be refactored completely.
-   * 
+   *
    * @param pointOfInterest
    * @param format
    * @param getFeatureInfoResultProcessor
@@ -485,7 +296,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 // }
 
     // This thing is disabled !!!
-    getFeatureInfoResultProcessor.write( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.21") ); //$NON-NLS-1$
+    getFeatureInfoResultProcessor.write( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.21" ) ); //$NON-NLS-1$
   }
 
   public String getSource( )

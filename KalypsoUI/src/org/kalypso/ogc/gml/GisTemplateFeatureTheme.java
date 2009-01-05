@@ -109,12 +109,40 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden
  * Themas ändern können
  * </p>
- * 
- * @author Belger
+ *
+ * @author Gernot Belger
  */
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoUserStyleListener
 {
   protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
+
+  private final IKalypsoThemeListener m_themeListener = new IKalypsoThemeListener()
+  {
+
+    @Override
+    public void contextChanged( final IKalypsoTheme source )
+    {
+      handleContextChanged();
+    }
+
+    @Override
+    public void repaintRequested( final IKalypsoTheme source, final GM_Envelope invalidExtent )
+    {
+      handleRepaintRequested( invalidExtent );
+    }
+
+    @Override
+    public void statusChanged( final IKalypsoTheme source )
+    {
+      handleStatusChanged();
+    }
+
+    @Override
+    public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
+    {
+      handleVisibilityChanged( newVisibility );
+    }
+  };
 
   private JobExclusiveCommandTarget m_commandTarget;
 
@@ -219,13 +247,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_theme != null )
-      m_theme.paint( g, p, bbox, scale, selected, monitor );
+      m_theme.paint( g, p, selected, monitor );
   }
 
   /**
@@ -347,6 +375,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           }
 
           m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell(), getLegendIcon(), getContext(), shouldShowChildren() );
+          m_theme.addKalypsoThemeListener( m_themeListener );
           if( !m_theme.getStatus().isOK() )
             status = m_theme.getStatus();
 
@@ -395,9 +424,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     // point.
     // Also: Causes the map to hang during loading, so we don't do it, even if now the map always gets repaintet, even
     // if the theme extent does not cover the map. invalidate( getFullExtent() );
-    invalidate( null );
-
+    fireRepaintRequested( null );
     fireContextChanged();
+
     setStatus( status );
   }
 
@@ -467,7 +496,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     // schon mal mitteilen, dass sich das Thema geändert hat
     fireContextChanged();
-    invalidate( getFullExtent() );
+    fireRepaintRequested( getFullExtent() );
   }
 
   /**
@@ -848,5 +877,25 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
 
     return false;
+  }
+
+  protected void handleContextChanged( )
+  {
+    fireContextChanged();
+  }
+
+  protected void handleRepaintRequested( final GM_Envelope invalidExtent )
+  {
+    fireRepaintRequested( invalidExtent );
+  }
+
+  protected void handleStatusChanged( )
+  {
+    fireStatusChanged();
+  }
+
+  protected void handleVisibilityChanged( final boolean newVisibility )
+  {
+    fireVisibilityChanged( newVisibility );
   }
 }

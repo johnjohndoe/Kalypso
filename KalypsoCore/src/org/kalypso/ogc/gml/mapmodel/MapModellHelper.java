@@ -45,7 +45,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,29 +57,24 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
-import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Utility class for {@link IMapModell} associated functions.
- * 
+ *
  * @author Gernot Belger
  */
 public class MapModellHelper
 {
-  private static final int EARTH_RADIUS_M = 6378137;
-
   public MapModellHelper( )
   {
     throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.0") ); //$NON-NLS-1$
@@ -89,14 +83,14 @@ public class MapModellHelper
   /**
    * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
-   * 
+   *
    * @return <code>false</code> if any error happened, the map is not garantueed to be loaded in this case.
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
   public static boolean waitForAndErrorDialog( final Shell shell, final IMapPanel mapPanel, final String windowTitle, final String message )
   {
-    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel );
+    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel.getMapModell() );
     final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, windowTitle, message, waitErrorStatus );
     return waitErrorStatus.isOK();
@@ -106,7 +100,7 @@ public class MapModellHelper
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
    */
-  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapPanel mapPanel )
+  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapModell model )
   {
     final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
     {
@@ -123,7 +117,6 @@ public class MapModellHelper
 
           try
           {
-            final IMapModell model = mapPanel.getMapModell();
             if( isMapLoaded( model ) )
               return Status.OK_STATUS;
 
@@ -142,59 +135,6 @@ public class MapModellHelper
   }
 
   /**
-   * calculates the map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
-   * @return scale of the map
-   */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused")
-      final int mapHeight )
-  {
-    try
-    {
-      if( bbox == null )
-        return 0.0;
-
-      final GM_Envelope box = getWgs84BBox( model, bbox );
-      if( box == null )
-        return 0.0;
-
-      // As long as we do not know the real pixel size (dpi) of the current graphics context, we
-      // assume quadratic pixels of 0.28 mm size.
-
-      final double dLon = box.getMax().getX() - box.getMin().getX(); // Map-x-Distance in deegrees
-      // final double dLat = box.getMax().getY() - box.getMin().getY(); // Map-y-Distance in deegrees
-
-      final double mx = Math.toRadians( dLon ) * EARTH_RADIUS_M; // Map-x-Distance in Meters
-      // final double my = Math.toRadians( dLat ) * EARTH_RADIUS_M; // Map-y-Distance in Meters
-
-      final double scalex = mx / mapWidth / 0.00028;
-      // final double scaley = my / mapHeight / 0.00028;
-
-      return scalex;
-    }
-    catch( final Exception e )
-    {
-      Debug.debugException( e, Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.3") ); //$NON-NLS-1$
-    }
-
-    return 0.0;
-  }
-
-  private static GM_Envelope getWgs84BBox( final IMapModell model, final GM_Envelope bbox ) throws RemoteException, Exception
-  {
-    if( model == null )
-      return null;
-
-    final String crs = model.getCoordinatesSystem();
-    if( crs.equalsIgnoreCase( "EPSG:4326" ) ) //$NON-NLS-1$
-      return bbox;
-
-    // transform the bounding box of the request to EPSG:4326
-    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" ); //$NON-NLS-1$
-    return transformer.transformEnvelope( bbox, crs );
-  }
-
-  /**
    * Create an image of a map model and keep aspection ration of displayed map and its extend
    */
   public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height )
@@ -205,12 +145,9 @@ public class MapModellHelper
     final double ratio = (double) height / (double) width;
     final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( mapModell, bbox, ratio );
 
-    final GeoTransform transform = new WorldToScreenTransform();
-    transform.setSourceRect( boundingBox );
-
     final Rectangle bounds = new Rectangle( width, height );
 
-    return MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width, bounds.height, mapModell );
+    return MapModellHelper.createImageFromModell( boundingBox, bounds, bounds.width, bounds.height, mapModell );
   }
 
   /**
@@ -218,7 +155,7 @@ public class MapModellHelper
    * well, where the drawing is done every refresh of the map. So it does not matter, when some themes finish, if they
    * finish at last.
    */
-  public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
+  public static BufferedImage createImageFromModell( final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     final Graphics2D gr = (Graphics2D) image.getGraphics();
@@ -237,15 +174,13 @@ public class MapModellHelper
       final int w = bounds.width;
       final int h = bounds.height;
 
-      p.setDestRect( x, y, w + x, h + y, null );
+      final GeoTransform world2screen = new WorldToScreenTransform();
+      world2screen.setSourceRect( bbox );
+      world2screen.setDestRect( x, y, w + x, h + y, null );
 
-      final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
       {
-        model.paint( gr, p, bbox, scale, null, new NullProgressMonitor() );
-
-        final HighlightGraphics highlightGraphics = new HighlightGraphics( gr );
-        model.paint( highlightGraphics, p, bbox, scale, true, new NullProgressMonitor() );
+        model.paint( gr, world2screen, new NullProgressMonitor() );
       }
       catch( final Exception e )
       {
@@ -273,7 +208,7 @@ public class MapModellHelper
 
   /**
    * Calculates the common extent of all given themes.
-   * 
+   *
    * @param predicate
    *            If not <code>null</code>, only themes applying to the predicate are considered.
    * @return <code>null</code>, if the array of themes is empty or null.
@@ -306,11 +241,11 @@ public class MapModellHelper
   public static GM_Envelope adjustBoundingBox( final IMapModell model, GM_Envelope env, final double ratio )
   {
     if( env == null )
-      env = model.getFullExtentBoundingBox();
+      env = model == null ? null : model.getFullExtentBoundingBox();
+
     if( env == null )
       return null;
 
-    // TODO search for a better solution
     if( Double.isNaN( ratio ) )
       return env;
 

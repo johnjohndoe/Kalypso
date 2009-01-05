@@ -70,12 +70,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 {
   private GisTemplateMapModell m_innerMapModel;
 
-  protected int m_width = 0;
-
-  protected int m_height = 0;
-
-  protected GM_Envelope m_extent = null;
-
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
     /**
@@ -85,7 +79,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
     {
-      invalidate( bbox );
+      doFireRepaintRequested( bbox );
     }
 
     /**
@@ -109,12 +103,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
       // else map loading with wms themes that are not accessible cannot be used at the moment...
 
       if( isVisible() )
-        invalidate( null/* theme.getFullExtent() */);
+        doFireRepaintRequested( null/* theme.getFullExtent() */);
 
       handleThemeStatusChanged();
-
-      /* Extent setzen. */
-      theme.setExtent( m_width, m_height, m_extent );
     }
 
     /**
@@ -133,9 +124,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
-      invalidate( getFullExtent() );
-
-      // TODO: HACK, still looking for a better way to forward theme events to all modell listeners
+      doFireRepaintRequested( getFullExtent() );
       handleThemeStatusChanged();
     }
 
@@ -147,7 +136,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       if( lastVisibility )
-        invalidate( theme.getFullExtent() );
+        doFireRepaintRequested( theme.getFullExtent() );
 
       handleThemeStatusChanged();
     }
@@ -169,15 +158,21 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
-      invalidate( theme.getFullExtent() );
+      doFireRepaintRequested( theme.getFullExtent() );
     }
-
   };
 
   public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, linktype, mapModel, legendIcon, context, shouldShowChildren );
   }
+
+  protected void doFireRepaintRequested( final GM_Envelope bbox )
+  {
+    fireRepaintRequested( bbox );
+  }
+
+  /* delegate methods to IMapModell */
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int)
@@ -196,7 +191,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.accept( visitor, depth_infinite, theme );
   }
 
-  /* delegate methods to IMapModell */
 
   /**
    * @param theme
@@ -333,33 +327,23 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
-   */
-  public IKalypsoFeatureTheme getScrabLayer( )
-  {
-    return m_innerMapModel.getScrabLayer();
-  }
-
-  /**
-   * @param pos
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getTheme(int)
-   */
-  public IKalypsoTheme getTheme( final int pos )
-  {
-    return m_innerMapModel.getTheme( pos );
-  }
-
-  /**
    * Overwritten in order to have correct parent for tree strucutures.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public Object getThemeParent( final IKalypsoTheme theme )
   {
     // do not delegate to inner model, this would be wrong.
     return this;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getTheme(int)
+   */
+  @Override
+  public IKalypsoTheme getTheme( final int pos )
+  {
+    return m_innerMapModel.getTheme( pos );
   }
 
   /**
@@ -422,7 +406,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#moveUp(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public void moveUp( final IKalypsoTheme theme )
@@ -430,10 +413,24 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.moveUp( theme );
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
+  {
+    paint( g, p, null, monitor );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_innerMapModel != null )
-      m_innerMapModel.paint( g, p, bbox, scale, selected, monitor );
+      m_innerMapModel.paint( g, p, monitor );
   }
 
   /**
@@ -491,18 +488,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public IKalypsoTheme[] getChildThemes( )
   {
     return CascadingThemeHelper.getAllChildThemes( this );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  @Override
-  public void setExtent( final int width, final int height, final GM_Envelope extent )
-  {
-    /* If the extent is changed, it is memorized, so that the theme could set it to its added childs. */
-    m_width = width;
-    m_height = height;
-    m_extent = extent;
   }
 
   /**

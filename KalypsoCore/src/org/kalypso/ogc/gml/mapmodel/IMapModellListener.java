@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * A listener to {@link IMapModell} events.
@@ -95,14 +94,4 @@ public interface IMapModellListener
   public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility );
 
   public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme );
-
-  /**
-   * This event occurs, if the given bbox should be repainted by any map panels.
-   * 
-   * @param source
-   *            The map modell where the event occured.
-   * @param bbox
-   *            The envelope which should be invalidated. If <code>null</code>, the entire map is invalid.
-   */
-  public void repaintRequested( final IMapModell source, final GM_Envelope bbox );
 }

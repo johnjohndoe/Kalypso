@@ -60,7 +60,6 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -99,12 +98,12 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.KalypsoPictureTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     /** image creation removed from constructor, so not visible themes will not be loaded! */
     if( getImage() == null )
@@ -138,6 +137,6 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
       e.printStackTrace();
     }
 
-    super.paint( g, p, bbox, scale, selected, monitor );
+    super.paint( g, p, selected, monitor );
   }
 }

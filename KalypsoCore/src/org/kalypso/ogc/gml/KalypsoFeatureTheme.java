@@ -168,7 +168,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
-    invalidate( getFullExtent() );
+    fireRepaintRequested( getFullExtent() );
   }
 
   public CommandableWorkspace getWorkspace( )
@@ -194,11 +194,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     final Graphics graphics = wrapGrahicForSelection( g, selected );
 
@@ -224,6 +224,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
     };
 
+    final double scale = p.getScale();
+    final GM_Envelope bbox = p.getSourceRect();
     paint( scale, bbox, selected, monitor, paintDelegate );
 
     if( m_featureList != null && KalypsoCoreDebug.SPATIAL_INDEX_PAINT.isEnabled() )
@@ -231,7 +233,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   /**
-   * Determines, if a {@link HighlightGraphics} wil be used to draw the selection or not.
+   * Determines, if a {@link HighlightGraphics} will be used to draw the selection or not.
    */
   // TODO (future): replace highlightGraphics concept by highlight-style
   private Graphics wrapGrahicForSelection( final Graphics g, final Boolean selected )
@@ -369,7 +371,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     else
       // unknown event, set dirty
-      // TODO : if the eventhierarchy is implemented correctly the else-part can be removed
+      // TODO : if the event-hierarchy is implemented correctly the else-part can be removed
       setDirty();
   }
 
@@ -382,7 +384,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     // TODO: invalidation should made via the screen-rectangle of this feature
     // depending on the styled geometry
-    invalidate( feature.getEnvelope() );
+    fireRepaintRequested( feature.getEnvelope() );
   }
 
   /**
@@ -419,7 +421,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       {
         final Feature feature = displayElement.getFeature();
         final GM_Envelope envelope = feature.getEnvelope();
-        if( (envelope != null) && env.intersects( envelope ) )
+        if( envelope != null && env.intersects( envelope ) )
           features.add( feature );
       }
     };

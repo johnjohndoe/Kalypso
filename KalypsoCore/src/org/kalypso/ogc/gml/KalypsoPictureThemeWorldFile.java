@@ -78,11 +78,9 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 
     final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
 
-    final GridFileVerifier verifier = new GridFileVerifier();
-
-    if( verifier.verify( imageUrl ) )
+    if( GridFileVerifier.verify( imageUrl ) )
     {
-      final IGridMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );
+      final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( imageUrl, system );
 
       final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
       setImage( new TiledImage( image, true ) );

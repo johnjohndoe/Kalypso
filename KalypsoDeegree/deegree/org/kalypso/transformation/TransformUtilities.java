@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import javax.vecmath.Point3d;
 
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
-import org.deegree.crs.exceptions.TransformationException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -106,7 +105,7 @@ public class TransformUtilities
    *          The transformation.
    * @return The transformed point.
    */
-  public static GM_Point transform( final GM_Point geo, final CRSTransformation trans ) throws TransformationException
+  public static GM_Point transform( final GM_Point geo, final CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -142,7 +141,7 @@ public class TransformUtilities
    *          The transformation.
    * @return The transformed position.
    */
-  public static GM_Position transform( final GM_Position pos, final CRSTransformation trans ) throws TransformationException
+  public static GM_Position transform( final GM_Position pos, final CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -178,12 +177,12 @@ public class TransformUtilities
    *          The transformation.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( final GM_Position[] pos, final CRSTransformation trans ) throws TransformationException
+  public static GM_Position[] transform( final GM_Position[] pos, final CRSTransformation trans )
   {
     final ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 
-    for( int i = 0; i < pos.length; i++ )
-      newPos.add( transform( pos[i], trans ) );
+    for( final GM_Position po : pos )
+      newPos.add( transform( po, trans ) );
 
     return newPos.toArray( new GM_Position[] {} );
   }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -49,20 +49,17 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
  * the client or centering the map onto the point the user had mouse-clicked to.
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
+ * @author doemming
  */
 public class ZoomInByRectWidget extends AbstractWidget
 {
-
-  public ZoomInByRectWidget( String name, String tooltip )
+  public ZoomInByRectWidget( final String name, final String tooltip )
   {
     super( name, tooltip );
   }
 
-  /*
-   * @author doemming
-   */
   public ZoomInByRectWidget( )
   {
     super( "zoom in", "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -80,14 +77,12 @@ public class ZoomInByRectWidget extends AbstractWidget
   {
     if( m_startPoint == null )
       m_startPoint = p;
-    {
-      m_endPoint = p;
-    }
-    // TODO: check if this repaint is really necessary
-    IMapPanel panel = getMapPanel();
+
+    m_endPoint = p;
+
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
-
   }
 
   @Override
@@ -122,20 +117,26 @@ public class ZoomInByRectWidget extends AbstractWidget
 
   public void perform( )
   {
+    final IMapPanel panel = getMapPanel();
+    if( panel == null )
+      return;
+
     if( m_startPoint != null && m_endPoint != null )
     {
-      double x1 = m_startPoint.getX();
-      double y1 = m_startPoint.getY();
-      double x2 = m_endPoint.getX();
-      double y2 = m_endPoint.getY();
-      // performs zoomin by point
+      final double x1 = m_startPoint.getX();
+      final double y1 = m_startPoint.getY();
+      final double x2 = m_endPoint.getX();
+      final double y2 = m_endPoint.getY();
       m_startPoint = null;
       m_endPoint = null;
+
       if( Math.abs( x1 - x2 ) > MIN_PIXEL_ZOOM_BOX && Math.abs( y1 - y2 ) > MIN_PIXEL_ZOOM_BOX )
       {
-        ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), getBox( x1, y1, x2, y2 ) );
+        final ChangeExtentCommand command = new ChangeExtentCommand( panel, getBox( x1, y1, x2, y2 ) );
         postViewCommand( command, null );
       }
+      else
+        panel.repaintMap();
     }
   }
 

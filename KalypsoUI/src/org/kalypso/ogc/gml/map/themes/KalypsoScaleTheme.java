@@ -71,7 +71,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This theme is able to create a small image, displaying the scale of the map.
- * 
+ *
  * @author Holger Albert
  */
 public class KalypsoScaleTheme extends AbstractKalypsoTheme
@@ -92,14 +92,6 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     final List<Property> propertyList = mapLayerType.getProperty();
     for( final Property property : propertyList )
       setProperty( property.getName(), property.getValue() );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  @Override
-  public void setExtent( final int width, final int height, final GM_Envelope extent )
-  {
   }
 
   /**
@@ -130,10 +122,10 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected == true )
       return;
@@ -175,12 +167,13 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       values.add( subDistance * i );
 
     /* Draw the scale with the evaluated unit, width and values. */
+    final double scale = p.getScale();
     paintScale( g, offset_x, offset_y, determineUnit( values ), values, width, scale );
   }
 
   /**
    * This function will round the given distance to a specific value.
-   * 
+   *
    * @param distance
    *            The original distance.
    * @return The modified distance.
@@ -205,7 +198,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function will determine the unit, which would be the best to be used in the scale bar.
-   * 
+   *
    * @param values
    *            The current values.
    * @return The unit, that should be used.
@@ -230,7 +223,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function paints the scale.
-   * 
+   *
    * @param g
    *            The graphic context.
    * @param offset_x

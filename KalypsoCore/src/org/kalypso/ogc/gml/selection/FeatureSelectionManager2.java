@@ -70,7 +70,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
    */
   public void setSelection( final EasyFeatureWrapper[] selectedFeatures )
   {
-    final HashSet<EasyFeatureWrapper> newState = new HashSet<EasyFeatureWrapper>();
+    final Set<EasyFeatureWrapper> newState = new HashSet<EasyFeatureWrapper>();
     Collections.addAll( newState, selectedFeatures );
     if( newState.equals( m_map.keySet() ) )
       return;
