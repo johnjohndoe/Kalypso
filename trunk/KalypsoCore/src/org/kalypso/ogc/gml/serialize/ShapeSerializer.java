@@ -49,7 +49,7 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -131,13 +131,13 @@ public class ShapeSerializer
    * sondern nur die über ein vorher festgelegt Mapping.
    * 
    * @param features
-   *            Properties dieser Features werden geschrieben.
+   *          Properties dieser Features werden geschrieben.
    * @param mapping
-   *            keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
+   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
    * @param geoName
-   *            Der Name der Property mit der Geometry
+   *          Der Name der Property mit der Geometry
    * @param filenameBase
-   *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
+   *          Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
   public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, StandardShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
@@ -212,13 +212,13 @@ public class ShapeSerializer
    * sondern nur die über ein vorher festgelegt Mapping.
    * 
    * @param features
-   *            Properties dieser Features werden geschrieben.
+   *          Properties dieser Features werden geschrieben.
    * @param mapping
-   *            keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
+   *          keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
    * @param geoName
-   *            Der Name der Property mit der Geometry
+   *          Der Name der Property mit der Geometry
    * @param filenameBase
-   *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
+   *          Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
   public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
@@ -242,7 +242,7 @@ public class ShapeSerializer
       if( qname == ShapeSerializer.QNAME_GMLID )
       {
         /* If it is the pseudo gml-id qname, create a string-property */
-        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
+        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
         ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
       }
       else
@@ -317,7 +317,7 @@ public class ShapeSerializer
    * Creates to feature type for the root feature of a shape-file-based workspace.
    * 
    * @param childFeatureType
-   *            The feature type for the children (i.e. the shape-objects) of the root.
+   *          The feature type for the children (i.e. the shape-objects) of the root.
    * @return A newly created feature suitable for the root of a workspace. It has the following properties:
    *         <ul>
    *         <li>name : String [1] - some meaningful name</li>
@@ -328,14 +328,14 @@ public class ShapeSerializer
   public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
-    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) ); //$NON-NLS-1$
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
+    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT ); //$NON-NLS-1$
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH, 1, 1, false );
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final QName fcQName = new QName("http://www.opengis.net/gml", "_FeatureCollection");
+    final QName fcQName = new QName( "http://www.opengis.net/gml", "_FeatureCollection" );
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, childFeatureType.getGMLSchema(), fcQName );
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
