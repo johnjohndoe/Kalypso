@@ -46,7 +46,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.SWT;
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
@@ -55,8 +55,8 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * Default implementation of {@link IComponentUiHandlerProvider}.<br/> Creates columns for all components of the given
- * observation according to its types.
+ * Default implementation of {@link IComponentUiHandlerProvider}.<br/>
+ * Creates columns for all components of the given observation according to its types.
  * 
  * @author Gernot Belger
  */
@@ -101,22 +101,21 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
 
     final QName valueTypeName = component.getValueTypeName();
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) ) //$NON-NLS-1$
+    if( valueTypeName.equals( XmlTypes.XS_DATETIME ) ) //$NON-NLS-1$
       return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
+    if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )//$NON-NLS-1$
       return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) //$NON-NLS-1$
+    if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )//$NON-NLS-1$
       return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) ) //$NON-NLS-1$
+    if( valueTypeName.equals( XmlTypes.XS_INTEGER ) )//$NON-NLS-1$
       return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) ) //$NON-NLS-1$
+    if( valueTypeName.equals( XmlTypes.XS_STRING ) ) //$NON-NLS-1$
       return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }
-
 }
