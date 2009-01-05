@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -41,13 +42,17 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.SAXException;
 
 /**
  * An WebFeatureServiceClient. Implements the basic operations to access an OGC-WebFeatureService.
- *
+ * 
  * @author Gernot Belger
  */
 public class WFSClient
@@ -219,7 +224,7 @@ public class WFSClient
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   *
+   * 
    * @return All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
@@ -493,5 +498,26 @@ public class WFSClient
 
     formater.format( "</wfs:Query>%n" ); //$NON-NLS-1$
     formater.format( "</wfs:GetFeature>%n" ); //$NON-NLS-1$
+  }
+
+  public IFeatureType getFeatureType( final WFSFeatureType type ) throws CoreException
+  {
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+
+      final QualifiedName name = type.getName();
+      final QName qname = new QName( name.getNamespace().toString(), name.getLocalName() );
+      final URL schemaLocation = operationDescribeFeatureType( qname );
+
+      final GMLSchema schema = schemaCatalog.getSchema( qname.getNamespaceURI(), "3.1.1", schemaLocation );
+      final IFeatureType featureType = schema.getFeatureType( qname );
+
+      return featureType;
+    }
+    catch( final InvocationTargetException e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 }
