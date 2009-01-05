@@ -48,6 +48,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
@@ -60,7 +61,6 @@ import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiEnumerationHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiIntegerHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
@@ -122,22 +122,22 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
       return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, 100, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    if( ComponentUiHandlerFactory.Q_DATE_TIME.equals( valueTypeName ) )
+    if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
       return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( ComponentUiHandlerFactory.Q_STRING.equals( valueTypeName ) )
+    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
       return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( ComponentUiHandlerFactory.Q_INTEGER.equals( valueTypeName ) )
+    if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
+    if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
       return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
+    if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
       return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "##,####", "%.03f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( ComponentUiHandlerFactory.Q_BOOLEAN.equals( valueTypeName ) )
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     throw new UnsupportedOperationException();
