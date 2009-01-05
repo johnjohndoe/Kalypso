@@ -110,6 +110,11 @@ public class WFSClient
     m_httpClient = createHttpClient();
   }
 
+  public URL getUrl( )
+  {
+    return m_wfsURL;
+  }
+
   /**
    * Initialises the client. Must be called before any other method is called.
    */
