@@ -64,9 +64,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Theme that shows a calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
@@ -80,7 +80,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context, shouldShowChildren );
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
@@ -103,11 +103,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
       return;
@@ -157,7 +155,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   @Override
   public String getType( )
   {
-    return "GML_MERGE"; //$NON-NLS-1$
+    return "GML_MERGE";
   }
 
   public void setModelBoundaryConditions( final IFlowRelationshipModel bcs )

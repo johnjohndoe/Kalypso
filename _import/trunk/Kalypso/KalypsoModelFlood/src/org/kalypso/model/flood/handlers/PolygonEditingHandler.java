@@ -54,7 +54,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -99,9 +98,9 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
 
     final IKalypsoThemeVisitor kalypsoThemeVisitor = new IKalypsoThemeVisitor()
     {
-      public boolean visit( IKalypsoTheme theme )
+      public boolean visit( final IKalypsoTheme theme )
       {
-        if( theme instanceof IKalypsoFeatureTheme && !(theme instanceof ScrabLayerFeatureTheme) )
+        if( theme instanceof IKalypsoFeatureTheme )
         {
           final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
           final IFeatureType ftype = ft.getFeatureType();
