@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -186,7 +186,7 @@ public class DBaseFile
    */
   public DBaseFile( final String url, final FieldDescriptor[] fieldDesc )
   {
-    this(url, fieldDesc, null);
+    this( url, fieldDesc, null );
   }
 
   /**
@@ -338,14 +338,14 @@ public class DBaseFile
 
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
-    final IMarshallingTypeHandler longTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "long" ) );
-    final IMarshallingTypeHandler doubleTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler floatTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "float" ) );
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
+    final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
+    final IMarshallingTypeHandler longTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_LONG );
+    final IMarshallingTypeHandler doubleTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
+    final IMarshallingTypeHandler floatTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_FLOAT );
     // final IMarshallingTypeHandler booleanTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "boolean"
     // ) );
-    final IMarshallingTypeHandler dateTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) );
+    final IMarshallingTypeHandler dateTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_DATE );
 
     final IMarshallingTypeHandler byteArrayOutputStreamTH = registry.getTypeHandlerForClassName( ByteArrayOutputStream.class );
 
@@ -417,7 +417,7 @@ public class DBaseFile
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
     ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
 
-    final String geometryPropertyTypeString = "gml:"+ geoTH.getShortname();
+    final String geometryPropertyTypeString = "gml:" + geoTH.getShortname();
 
     try
     {
@@ -693,7 +693,7 @@ public class DBaseFile
    * returns a row of the dBase-file as Feature containing a place holder (field name = "GEOM") for a geometry.
    * 
    * @param allowNull
-   *            if true, everything wich cannot read or parsed gets 'null' instead of ""
+   *          if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
   public Feature getFRow( final Feature parent, final IRelationType parentRelation, final int rowNo, final boolean allowNull ) throws DBaseException
   {
@@ -1004,7 +1004,7 @@ class tsColumn
    * Constructs a tsColumn object.
    * 
    * @param s
-   *            the column name
+   *          the column name
    */
   tsColumn( final String s )
   {
