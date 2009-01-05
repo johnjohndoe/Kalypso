@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -56,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * TODO: getScale etc, hier rausschmeissen! die Umrechnung zwischen Bildschirm und Geokoordinaten ist Aufgabe des
  * MapPanel, die paint Mehtode hier sollte bereits mit Geokoordinaten arbeiten d.h. der Grafik-Kontext wird schon mit
  * umgerechneten Koordinaten übergeben
- * 
+ *
  * @author Gernot Belger
  */
 public interface IMapModell extends IWorkbenchAdapter
@@ -89,17 +88,17 @@ public interface IMapModell extends IWorkbenchAdapter
 
   /**
    * This function returns the name of the coordinate system used.
-   * 
+   *
    * @return The name of the coordinate system.
    */
   public String getCoordinatesSystem( );
 
   /**
-   * renders the map to the passed graphic context
+   * Directly paints all themes contained inside this model. <br>
+   * Blocks until all themes are painted. .
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
+  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException;
 
-  // TODO: remove position stuff
   public IKalypsoTheme getTheme( final int pos );
 
   public int getThemeSize( );
@@ -118,14 +117,11 @@ public interface IMapModell extends IWorkbenchAdapter
 
   public IProject getProject( );
 
-  // TODO: move to utility class
-  public IKalypsoFeatureTheme getScrabLayer( );
-
   public void accept( final IKalypsoThemeVisitor visitor, int depth );
 
   /**
    * Iterates through all themes of this modell, starting at the given theme.
-   * 
+   *
    * @see #accept(KalypsoThemeVisitor, int).
    */
   public void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
@@ -133,8 +129,6 @@ public interface IMapModell extends IWorkbenchAdapter
   public void setName( final I10nString name );
 
   public I10nString getName( );
-
-  public void invalidate( final GM_Envelope bbox );
 
   // HACK In order to have nice parents for outline tree even for cascading themes, we something like this...
   public Object getThemeParent( final IKalypsoTheme theme );
@@ -150,7 +144,7 @@ public interface IMapModell extends IWorkbenchAdapter
    * Check if this map modell is still beeing filled with themes.<br>
    * Implementors must ensure, that this flag becomes eventually <code>true</code> (even if there are errors while
    * loading).
-   * 
+   *
    * @return <code>false</code> if this map modell is under construction (for example if many theme are about to be
    *         added in the near future...)
    */

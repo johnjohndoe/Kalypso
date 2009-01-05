@@ -568,31 +568,6 @@ public class GisTemplateHelper
 
         return layer;
       }
-      else if( theme instanceof ScrabLayerFeatureTheme )
-      {
-        layer.setName( themeNameKey );
-        layer.setFeaturePath( "" ); //$NON-NLS-1$
-        layer.setVisible( theme.isVisible() );
-        layer.setId( "ID_" + count ); //$NON-NLS-1$
-        layer.setHref( "" ); //$NON-NLS-1$
-
-        layer.setLinktype( "scrab" ); //$NON-NLS-1$
-
-        final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-        final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
-
-        final String legendIcon = abstractKalypsoTheme.getLegendIcon();
-        if( legendIcon != null )
-          layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-        layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
-
-        layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
-
-        monitor.worked( 1000 );
-
-        return layer;
-      }
       else if( theme instanceof KalypsoScaleTheme )
       {
         layer.setName( themeNameKey );

@@ -106,7 +106,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   /**
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
-   * 
+   *
    * @throws CoreException
    *             if a theme in the {@link Gismapview} cannot be loaded.
    */
@@ -121,7 +121,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       setName( name );
 
       for( final IKalypsoTheme theme : getAllThemes() )
-        if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
+        if( !(theme instanceof KalypsoLegendTheme) )
           removeTheme( theme );
       final Layers layerListType = gisview.getLayers();
 
@@ -248,9 +248,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     if( "legend".equals( linktype ) ) //$NON-NLS-1$
       return new KalypsoLegendTheme( layerName, this, legendIcon, context, showChildren );
 
-    if( "scrab".equals( linktype ) ) //$NON-NLS-1$
-      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context, showChildren );
-
     if( "scale".equals( linktype ) ) //$NON-NLS-1$
       return new KalypsoScaleTheme( layerName, layerType, linktype, this, legendIcon, context, showChildren );
 
@@ -310,7 +307,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
         if( layer != null )
         {
-          if( m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
+          if( m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) )
             layersType.setActive( layer );
 
           if( theme instanceof AbstractKalypsoTheme )
@@ -405,6 +402,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return m_modell.getFullExtentBoundingBox();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getTheme(int)
+   */
+  @Override
   public IKalypsoTheme getTheme( final int pos )
   {
     return m_modell.getTheme( pos );
@@ -432,12 +433,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  @Override
+  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
   {
-    m_modell.paint( g, p, bbox, scale, selected, monitor );
+    m_modell.paint( g, p, monitor );
   }
 
   public void removeTheme( final IKalypsoTheme theme )
@@ -467,14 +468,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   public IProject getProject( )
   {
     return m_modell.getProject();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
-   */
-  public IKalypsoFeatureTheme getScrabLayer( )
-  {
-    return m_modell.getScrabLayer();
   }
 
   /**
@@ -559,14 +552,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   public void removeMapModelListener( final IMapModellListener l )
   {
     m_modell.removeMapModelListener( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#invalidate(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void invalidate( final GM_Envelope bbox )
-  {
-    m_modell.invalidate( bbox );
   }
 
   /**

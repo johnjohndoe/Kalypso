@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.wms.pages;
 
@@ -96,7 +96,7 @@ import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesLabelProvider;
 
 /**
  * This is a page for importing a WMS Layer.
- * 
+ *
  * @author Kuepferle, Doemming (original)
  * @author Holger Albert
  */
@@ -145,7 +145,7 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * The last successfull used services. The favorites, to call them another way.
    */
-  private List<String> m_lastServices;
+  private final List<String> m_lastServices;
 
   /**
    * The mappings from service (URL) to provider (provider id).
@@ -155,7 +155,7 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * Capabilites cache in this wizard.
    */
-  private Map<URL, WMSCapabilities> m_capabilites;
+  private final Map<URL, WMSCapabilities> m_capabilites;
 
   /**
    * This variable stores the last successfully used base URL.
@@ -195,22 +195,22 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * This variable stores all available providers, which are registered at the extension point.
    */
-  private Map<String, String> m_availableProviders;
+  private final Map<String, String> m_availableProviders;
 
   /**
    * The constructor.
-   * 
+   *
    * @param pageName
    *            The name of the page.
    */
-  public ImportWmsWizardPage( String pageName )
+  public ImportWmsWizardPage( final String pageName )
   {
     this( pageName, "Web Map Service", null );
   }
 
   /**
    * The constructor.
-   * 
+   *
    * @param pageName
    *            The name of the page.
    * @param title
@@ -218,7 +218,7 @@ public class ImportWmsWizardPage extends WizardPage
    * @param titleImage
    *            The image descriptor for the title of this wizard page, or null if none.
    */
-  public ImportWmsWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImportWmsWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -255,7 +255,7 @@ public class ImportWmsWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     /* Init the dialog settings. */
     initDialogSettings();
@@ -267,24 +267,24 @@ public class ImportWmsWizardPage extends WizardPage
     initExtensions();
 
     /* Create the main composite. */
-    Composite panel = new Composite( parent, SWT.NONE );
+    final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 1, false ) );
     panel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the section for the URL selection. */
-    Composite urlComposite = new Composite( panel, SWT.NONE );
+    final Composite urlComposite = new Composite( panel, SWT.NONE );
     urlComposite.setLayout( new GridLayout( 4, false ) );
     urlComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* The url label. */
-    Label urlLabel = new Label( urlComposite, SWT.NONE );
+    final Label urlLabel = new Label( urlComposite, SWT.NONE );
     urlLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
     urlLabel.setText( "URL:" );
     urlLabel.setToolTipText( "URL des Web Map Servers (WMS)" );
 
     /* The url text. */
     m_urlText = new Text( urlComposite, SWT.BORDER );
-    GridData urlTextData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData urlTextData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     urlTextData.widthHint = 300;
     urlTextData.minimumWidth = 300;
     m_urlText.setLayoutData( urlTextData );
@@ -292,7 +292,7 @@ public class ImportWmsWizardPage extends WizardPage
 
     /* The url combo. */
     m_urlCombo = new ComboViewer( urlComposite, SWT.READ_ONLY );
-    GridData urlComboData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
+    final GridData urlComboData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
     urlComboData.widthHint = 100;
     urlComboData.minimumWidth = 100;
     m_urlCombo.getCombo().setLayoutData( urlComboData );
@@ -308,11 +308,11 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         if( element instanceof Entry )
         {
-          Entry< ? , ? > entry = (Entry< ? , ? >) element;
+          final Entry< ? , ? > entry = (Entry< ? , ? >) element;
 
           return entry.getValue().toString();
         }
@@ -325,20 +325,20 @@ public class ImportWmsWizardPage extends WizardPage
     m_urlCombo.setInput( m_availableProviders.entrySet() );
 
     /* The favorites button. */
-    Button favoritesButton = new Button( urlComposite, SWT.NONE );
+    final Button favoritesButton = new Button( urlComposite, SWT.NONE );
     favoritesButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
     favoritesButton.setText( "Favoriten" );
     favoritesButton.setToolTipText( "In dem Unterdialog können Sie Ihre Favoriten verwalten." );
 
     /* Create the section for the layer selection. */
-    Group layerGroup = new Group( panel, SWT.NONE );
+    final Group layerGroup = new Group( panel, SWT.NONE );
     layerGroup.setLayout( new GridLayout( 3, false ) );
     layerGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     layerGroup.setText( "Verfügbare Themen des Web Map Servers" );
 
     /* The capabilities tree. */
     m_capabilitiesTree = new TreeViewer( layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    GridData capabilitiesData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData capabilitiesData = new GridData( SWT.FILL, SWT.FILL, true, true );
     capabilitiesData.widthHint = MIN_LIST_WITH;
     capabilitiesData.minimumWidth = MIN_LIST_WITH;
     m_capabilitiesTree.getControl().setLayoutData( capabilitiesData );
@@ -350,28 +350,28 @@ public class ImportWmsWizardPage extends WizardPage
     m_capabilitiesTree.setLabelProvider( new WMSCapabilitiesLabelProvider() );
 
     /* The layer button composite. */
-    Composite layerButtonComposite = new Composite( layerGroup, SWT.NONE );
+    final Composite layerButtonComposite = new Composite( layerGroup, SWT.NONE );
     layerButtonComposite.setLayout( new GridLayout( 1, false ) );
-    GridData layerButtonData = new GridData( SWT.CENTER, SWT.FILL, false, true );
+    final GridData layerButtonData = new GridData( SWT.CENTER, SWT.FILL, false, true );
     layerButtonData.widthHint = 37;
     layerButtonData.minimumWidth = 37;
     layerButtonComposite.setLayoutData( layerButtonData );
 
     /* The layer button for adding a layer. */
-    Button layerButtonAdd = new Button( layerButtonComposite, SWT.PUSH );
+    final Button layerButtonAdd = new Button( layerButtonComposite, SWT.PUSH );
     layerButtonAdd.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     layerButtonAdd.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     layerButtonAdd.setToolTipText( "Hinzufügen eines Themas zu der Kartenansicht." );
 
     /* The layer button for removing a layer. */
-    Button layerButtonRemove = new Button( layerButtonComposite, SWT.PUSH );
+    final Button layerButtonRemove = new Button( layerButtonComposite, SWT.PUSH );
     layerButtonRemove.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     layerButtonRemove.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     layerButtonRemove.setToolTipText( "Entfernen eines Themas aus der Kartenansicht." );
 
     /* The layer viewer. */
     m_layerViewer = new ListViewer( layerGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL );
-    GridData layerViewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData layerViewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
     layerViewerData.widthHint = MIN_LIST_WITH;
     layerViewerData.minimumWidth = MIN_LIST_WITH;
     m_layerViewer.getList().setLayoutData( layerViewerData );
@@ -387,7 +387,7 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
        */
-      public Object[] getElements( Object inputElement )
+      public Object[] getElements( final Object inputElement )
       {
         if( m_input instanceof List )
           return ((List< ? >) m_input).toArray();
@@ -407,7 +407,7 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
        *      java.lang.Object, java.lang.Object)
        */
-      public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+      public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_input = newInput;
       }
@@ -418,7 +418,7 @@ public class ImportWmsWizardPage extends WizardPage
 
     /* The multi layer button. */
     m_multiLayerButton = new Button( layerGroup, SWT.CHECK );
-    GridData multiData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
+    final GridData multiData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
     multiData.horizontalSpan = 3;
     m_multiLayerButton.setLayoutData( multiData );
     m_multiLayerButton.setText( "Themen zusammenfassen" );
@@ -434,10 +434,10 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        Text source = (Text) e.getSource();
+        final Text source = (Text) e.getSource();
 
         /* Update the UI. */
         updateAllFromURLText( source.getText() );
@@ -450,17 +450,17 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
        */
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
       }
 
       /**
        * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
        */
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         /* Get the source. */
-        Text source = (Text) e.getSource();
+        final Text source = (Text) e.getSource();
 
         /* Update the UI. */
         updateAllFromURLText( source.getText() );
@@ -473,12 +473,12 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         if( !m_urlText.getText().equals( m_lastService ) )
           return;
 
-        String providerID = getProviderID();
+        final String providerID = getProviderID();
         if( providerID == null )
           return;
 
@@ -492,7 +492,7 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         /* Open the favorites dialog. */
         handleFavoritesClicked();
@@ -505,10 +505,10 @@ public class ImportWmsWizardPage extends WizardPage
       /**
        * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
        */
-      public void doubleClick( DoubleClickEvent event )
+      public void doubleClick( final DoubleClickEvent event )
       {
         /* Get the current selection. */
-        IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
 
         /* Add the layer. */
         handleAddLayer( selection );
@@ -522,10 +522,10 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         /* Get the current selection. */
-        IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_capabilitiesTree.getSelection();
 
         /* Add the layer. */
         handleAddLayer( selection );
@@ -539,14 +539,14 @@ public class ImportWmsWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        IStructuredSelection selection = (IStructuredSelection) m_layerViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) m_layerViewer.getSelection();
         if( selection == null || selection.isEmpty() )
           return;
 
         /* Get all layers. */
-        List<Layer> input = getLayers();
+        final List<Layer> input = getLayers();
 
         /* Remove the selected. */
         input.removeAll( selection.toList() );
@@ -569,11 +569,11 @@ public class ImportWmsWizardPage extends WizardPage
       m_urlText.setText( m_lastService );
 
     /* The default for the url combo. */
-    String providerID = m_serviceProviderMappings.get( m_lastService );
+    final String providerID = m_serviceProviderMappings.get( m_lastService );
     if( providerID != null )
     {
-      Set<Entry<String, String>> entrySet = m_availableProviders.entrySet();
-      for( Entry<String, String> entry : entrySet )
+      final Set<Entry<String, String>> entrySet = m_availableProviders.entrySet();
+      for( final Entry<String, String> entry : entrySet )
       {
         if( entry.getKey().equals( providerID ) )
         {
@@ -593,17 +593,17 @@ public class ImportWmsWizardPage extends WizardPage
   private void initExtensions( )
   {
     /* Get the extension registry. */
-    IExtensionRegistry er = Platform.getExtensionRegistry();
+    final IExtensionRegistry er = Platform.getExtensionRegistry();
 
     /* The registry must exist. */
     if( er != null )
     {
-      IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
-      for( IConfigurationElement element : configurationElementsFor )
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
+      for( final IConfigurationElement element : configurationElementsFor )
       {
         /* Get some attributes. */
-        String id = element.getAttribute( "id" );
-        String name = element.getAttribute( "name" );
+        final String id = element.getAttribute( "id" );
+        final String name = element.getAttribute( "name" );
 
         /* Index with the id. */
         m_availableProviders.put( id, name );
@@ -618,11 +618,11 @@ public class ImportWmsWizardPage extends WizardPage
   private void initDialogSettings( )
   {
     /* Get the wizard. */
-    IWizard wizard = getWizard();
+    final IWizard wizard = getWizard();
     if( wizard != null )
     {
       /* Get its dialog settings. */
-      IDialogSettings dialogSettings = wizard.getDialogSettings();
+      final IDialogSettings dialogSettings = wizard.getDialogSettings();
 
       /* If they are not null, ... */
       if( dialogSettings != null )
@@ -635,7 +635,7 @@ public class ImportWmsWizardPage extends WizardPage
           m_dialogSettings = dialogSettings.addNewSection( IMPORT_WMS_WIZARD_PAGE );
 
         /* Get the service <--> provider mappings section. */
-        IDialogSettings subDialogSettings = m_dialogSettings.getSection( IMPORT_WMS_WIZARD_PAGE_SUB );
+        final IDialogSettings subDialogSettings = m_dialogSettings.getSection( IMPORT_WMS_WIZARD_PAGE_SUB );
 
         /* If the section is missing, create it. */
         if( subDialogSettings == null )
@@ -656,20 +656,20 @@ public class ImportWmsWizardPage extends WizardPage
     m_lastService = m_dialogSettings.get( LAST_USED_SERVICE );
 
     /* Get the favorite services. */
-    String[] favoriteServices = m_dialogSettings.getArray( LAST_USED_SERVICES );
+    final String[] favoriteServices = m_dialogSettings.getArray( LAST_USED_SERVICES );
     if( favoriteServices != null )
     {
-      for( int i = 0; i < favoriteServices.length; i++ )
-        m_lastServices.add( favoriteServices[i] );
+      for( final String favoriteService : favoriteServices )
+        m_lastServices.add( favoriteService );
     }
 
     /* Get the service <--> provider mappings. */
-    IDialogSettings subDialogSettings = m_dialogSettings.getSection( IMPORT_WMS_WIZARD_PAGE_SUB );
+    final IDialogSettings subDialogSettings = m_dialogSettings.getSection( IMPORT_WMS_WIZARD_PAGE_SUB );
 
     for( int i = 0; i < m_lastServices.size(); i++ )
     {
-      String service = m_lastServices.get( i );
-      String providerID = subDialogSettings.get( service );
+      final String service = m_lastServices.get( i );
+      final String providerID = subDialogSettings.get( service );
 
       if( providerID != null )
         m_serviceProviderMappings.put( service, providerID );
@@ -678,11 +678,11 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function updates the capabilities tree and the rest of the UI.
-   * 
+   *
    * @param urlText
    *            The typed URL.
    */
-  protected void updateAllFromURLText( String urlText )
+  protected void updateAllFromURLText( final String urlText )
   {
     /* If the the last tried text to load the capabilities, was the same, do nothing. */
     if( m_text != null && m_text.equals( urlText ) )
@@ -704,7 +704,7 @@ public class ImportWmsWizardPage extends WizardPage
     try
     {
       /* Validate the typed URL. */
-      URL baseURL = validateURLField( urlText );
+      final URL baseURL = validateURLField( urlText );
       if( baseURL != null )
       {
         /* Set the base URL. */
@@ -714,7 +714,7 @@ public class ImportWmsWizardPage extends WizardPage
         /* Update the variables for the dialog settings. */
 
         /* Need the base URL. */
-        String lastService = baseURL.toExternalForm();
+        final String lastService = baseURL.toExternalForm();
 
         /* Udpate the variable for the last used service. */
         m_lastService = lastService;
@@ -726,14 +726,14 @@ public class ImportWmsWizardPage extends WizardPage
         /* Update the variable for the service <--> provider mapping. */
 
         /* Get the selected provider id. */
-        String providerID = getProviderID();
+        final String providerID = getProviderID();
 
         /* Set it, if available. */
         if( providerID != null )
           m_serviceProviderMappings.put( lastService, providerID );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_baseURL = null;
 
@@ -743,7 +743,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function updates the error text, if the typed URL is not valid.
-   * 
+   *
    * @param url
    *            The typed URL.
    */
@@ -760,10 +760,11 @@ public class ImportWmsWizardPage extends WizardPage
       else
       {
         validURL = new URL( url );
+
         validURL.openConnection();
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       errorMsg = e.getLocalizedMessage();
       validURL = null;
@@ -779,30 +780,30 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function loads the capabilities of the given service. It caches the capabilities, if they are loaded once.
-   * 
+   *
    * @param service
    *            The URL to the service.
    */
-  private synchronized WMSCapabilities getCapabilites( URL service ) throws Exception
+  private synchronized WMSCapabilities getCapabilites( final URL service ) throws Exception
   {
     /* If there is one cached, take this. */
     if( m_capabilites.containsKey( service ) )
     {
-      WMSCapabilities capabilities = m_capabilites.get( service );
+      final WMSCapabilities capabilities = m_capabilites.get( service );
       if( capabilities != null )
         return capabilities;
     }
 
     /* Create the runnable, which loads the capabilities. */
-    CapabilitiesGetter runnable = new CapabilitiesGetter( service, getProviderID() );
+    final CapabilitiesGetter runnable = new CapabilitiesGetter( service, getProviderID() );
 
     /* Execute it. */
-    IStatus execute = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+    final IStatus execute = RunnableContextHelper.execute( getContainer(), false, false, runnable );
     if( !execute.isOK() )
       setErrorMessage( execute.getMessage() );
 
     /* Get the capabilities. */
-    WMSCapabilities capabilities = runnable.getCapabilities();
+    final WMSCapabilities capabilities = runnable.getCapabilities();
 
     /* Cache them. */
     if( capabilities != null )
@@ -813,19 +814,19 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected layers.
-   * 
+   *
    * @return The selected layers.
    */
   public Layer[] getLayersList( )
   {
-    List<Layer> list = getLayers();
+    final List<Layer> list = getLayers();
 
     return list.toArray( new Layer[list.size()] );
   }
 
   /**
    * For casting the input to List<Layer>.
-   * 
+   *
    * @return The layer list.
    */
   @SuppressWarnings("unchecked")
@@ -847,14 +848,14 @@ public class ImportWmsWizardPage extends WizardPage
       return;
 
     /* Create the favorites dialog. */
-    WMSFavoritesDialog dialog = new WMSFavoritesDialog( getShell(), m_lastService, m_lastServices );
+    final WMSFavoritesDialog dialog = new WMSFavoritesDialog( getShell(), m_lastService, m_lastServices );
 
     /* Open the favorites dialog. */
     if( dialog.open() != Window.OK )
       return;
 
     /* If here, the user has clicked ok. */
-    String selectedService = dialog.getSelectedService();
+    final String selectedService = dialog.getSelectedService();
 
     /* This URL is already set. */
     if( m_baseURL != null && m_baseURL.toExternalForm().equals( selectedService ) )
@@ -868,11 +869,11 @@ public class ImportWmsWizardPage extends WizardPage
       m_urlCombo.setSelection( new StructuredSelection() );
 
       /* Get the provider for this service. */
-      String selectedProvider = m_serviceProviderMappings.get( selectedService );
+      final String selectedProvider = m_serviceProviderMappings.get( selectedService );
       if( selectedProvider != null )
       {
-        Set<Entry<String, String>> entrySet = m_availableProviders.entrySet();
-        for( Entry<String, String> entry : entrySet )
+        final Set<Entry<String, String>> entrySet = m_availableProviders.entrySet();
+        for( final Entry<String, String> entry : entrySet )
         {
           if( entry.getKey().equals( selectedProvider ) )
           {
@@ -889,26 +890,26 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function adds the selection to the selected layers.
-   * 
+   *
    * @param selection
    *            The current selection.
    */
-  protected void handleAddLayer( IStructuredSelection selection )
+  protected void handleAddLayer( final IStructuredSelection selection )
   {
     if( selection == null || selection.isEmpty() )
       return;
 
-    List<Layer> input = getLayers();
+    final List<Layer> input = getLayers();
     List<Layer> selectableLayer = new ArrayList<Layer>();
 
-    for( Iterator< ? > iter = selection.iterator(); iter.hasNext(); )
+    for( final Iterator< ? > iter = selection.iterator(); iter.hasNext(); )
     {
-      Layer layer = (Layer) iter.next();
+      final Layer layer = (Layer) iter.next();
       selectableLayer = getSelectableLayer( selectableLayer, layer );
     }
 
     /* Only add layers that are not already in the selected layer viewer. */
-    for( Layer layer : selectableLayer )
+    for( final Layer layer : selectableLayer )
     {
       if( !input.contains( layer ) )
         input.add( layer );
@@ -925,10 +926,10 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns all selectable layers.
-   * 
+   *
    * @return All selectable layers.
    */
-  private List<Layer> getSelectableLayer( List<Layer> resultCollector, Layer layer )
+  private List<Layer> getSelectableLayer( final List<Layer> resultCollector, final Layer layer )
   {
     List<Layer> resultList;
     if( resultCollector == null )
@@ -936,11 +937,11 @@ public class ImportWmsWizardPage extends WizardPage
     else
       resultList = resultCollector;
 
-    Layer[] subLayers = layer.getLayer();
+    final Layer[] subLayers = layer.getLayer();
     if( subLayers.length > 0 )
     {
-      for( int i = 0; i < subLayers.length; i++ )
-        resultList = getSelectableLayer( resultList, subLayers[i] );
+      for( final Layer subLayer : subLayers )
+        resultList = getSelectableLayer( resultList, subLayer );
     }
     else
       resultList.add( layer );
@@ -950,7 +951,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected base URL.
-   * 
+   *
    * @return The selected base URL.
    */
   public URL getBaseURL( )
@@ -960,7 +961,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns true, if the checkbox for multi layer is selected.
-   * 
+   *
    * @return True, if multilayer is wanted.
    */
   public boolean isMultiLayer( )
@@ -970,7 +971,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected image provider id, or null, if not available.
-   * 
+   *
    * @return The selected image provider id or null, if not available.
    */
   public String getProviderID( )
@@ -978,23 +979,23 @@ public class ImportWmsWizardPage extends WizardPage
     if( m_availableProviders.size() == 0 )
       return null;
 
-    ISelection selection = m_urlCombo.getSelection();
+    final ISelection selection = m_urlCombo.getSelection();
     if( selection.isEmpty() )
       return null;
 
     if( !(selection instanceof IStructuredSelection) )
       return null;
 
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    Object firstElement = structuredSelection.getFirstElement();
+    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+    final Object firstElement = structuredSelection.getFirstElement();
     if( firstElement == null )
       return null;
 
     if( !(firstElement instanceof Entry) )
       return null;
 
-    Entry< ? , ? > entry = (Entry< ? , ? >) firstElement;
-    Object key = entry.getKey();
+    final Entry< ? , ? > entry = (Entry< ? , ? >) firstElement;
+    final Object key = entry.getKey();
     if( !(key instanceof String) )
       return null;
 
@@ -1015,10 +1016,10 @@ public class ImportWmsWizardPage extends WizardPage
       m_dialogSettings.put( LAST_USED_SERVICES, m_lastServices.toArray( new String[] {} ) );
 
       /* Update the dialog settings for the service <--> provider mapping. */
-      IDialogSettings subSettings = m_dialogSettings.addNewSection( IMPORT_WMS_WIZARD_PAGE_SUB );
+      final IDialogSettings subSettings = m_dialogSettings.addNewSection( IMPORT_WMS_WIZARD_PAGE_SUB );
 
       /* Iterate over all remaining favorites, and get the mapping out of the old sub dialog settings. */
-      for( String service : m_lastServices )
+      for( final String service : m_lastServices )
       {
         /* Update the new sub settings with the mapping out of the old sub settings. */
         subSettings.put( service, m_serviceProviderMappings.get( service ) );

@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class loads a theme with a provider.
- * 
+ *
  * @author Holger Albert
  */
 public class KalypsoImageLoader extends Job
@@ -85,7 +85,7 @@ public class KalypsoImageLoader extends Job
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *            The name of the job.
    * @param provider
@@ -113,7 +113,7 @@ public class KalypsoImageLoader extends Job
    * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  public IStatus run( final IProgressMonitor monitor )
   {
     /* Start the task. */
     monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0"), 1000 ); //$NON-NLS-1$
@@ -145,7 +145,7 @@ public class KalypsoImageLoader extends Job
 
   /**
    * This function returns the result of the loading process. This could be null, if loading has not finished yet.
-   * 
+   *
    * @return The result image or null.
    */
   public Image getBuffer( )
@@ -155,7 +155,7 @@ public class KalypsoImageLoader extends Job
 
   /**
    * This function returns the full extent, if available.
-   * 
+   *
    * @return The full extent.
    */
   public GM_Envelope getFullExtent( )

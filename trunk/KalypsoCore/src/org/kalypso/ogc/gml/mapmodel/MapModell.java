@@ -41,10 +41,8 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -58,11 +56,9 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
-import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.visitor.ThemeVisiblePredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -138,7 +134,7 @@ public class MapModell implements IMapModell
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public void activateTheme( final IKalypsoTheme theme )
@@ -172,9 +168,9 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   * 
-   * @return <code>true</code>, if the given theme is contained within this modell and was activated.
-   *         <code>false</code> otherwise.
+   *
+   * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
+   *         otherwise.
    */
   public void internalActivate( final IKalypsoTheme theme )
   {
@@ -223,9 +219,6 @@ public class MapModell implements IMapModell
     theme.addKalypsoThemeListener( m_themeListener );
 
     fireThemeAdded( theme );
-
-// if( m_activeTheme == null )
-// activateTheme( theme );
   }
 
   public void insertTheme( final IKalypsoTheme theme, final int position )
@@ -253,55 +246,21 @@ public class MapModell implements IMapModell
     return m_coordinatesSystem;
   }
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor ) throws CoreException
   {
-    final IKalypsoTheme[] themes = getVisibleThemes( selected );
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.ThemePainter.0" ), themes.length ); //$NON-NLS-1$
-
-    for( int i = themes.length - 1; i >= 0; i-- )
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.ThemePainter.0" ), m_themes.size() ); //$NON-NLS-1$
+    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+    for( int i = themes.length; i > 0; i-- )
     {
-      final IKalypsoTheme theme = themes[i];
-
-      final SubMonitor childProgress = progress.newChild( 1 );
-      theme.paint( g, p, bbox, scale, selected, childProgress );
-      childProgress.done();
+      final IKalypsoTheme theme = themes[i - 1];
+      progress.subTask( theme.getLabel() );
+      if( theme.isVisible() )
+        theme.paint( g, p, null, progress.newChild( 1 ) );
     }
-  }
-
-  /** If selected is true, return only feature themes, as these are the only one that can be selected. */
-  private IKalypsoTheme[] getVisibleThemes( final Boolean selected )
-  {
-    final List<IKalypsoTheme> visibleThemes = new ArrayList<IKalypsoTheme>();
-    final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
-    {
-      public boolean visit( final IKalypsoTheme theme )
-      {
-        if( theme instanceof IMapModell )
-        {
-          if( theme.isVisible() )
-          {
-            // do not add it to the themes, we paint them ourselfes (the cascading modells paint method would also paint
-            // all is children)
-            return true;
-          }
-
-          // do not descent
-          return false;
-        }
-
-        if( theme.isVisible() )
-        {
-          if( theme instanceof IKalypsoFeatureTheme || selected == null || !selected )
-            visibleThemes.add( theme );
-        }
-
-        // if it is not a map modell we do not recurse
-        return false;
-      }
-    };
-
-    accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-    return visibleThemes.toArray( new IKalypsoTheme[visibleThemes.size()] );
   }
 
   public IKalypsoTheme getTheme( final int pos )
@@ -372,18 +331,6 @@ public class MapModell implements IMapModell
   public IProject getProject( )
   {
     return m_project;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getScrabLayer()
-   */
-  public IKalypsoFeatureTheme getScrabLayer( )
-  {
-    final IKalypsoTheme[] allThemes = getAllThemes();
-    for( final IKalypsoTheme theme : allThemes )
-      if( theme instanceof ScrabLayerFeatureTheme )
-        return (IKalypsoFeatureTheme) theme;
-    return null;
   }
 
   /**
@@ -525,7 +472,7 @@ public class MapModell implements IMapModell
 
   protected void fireThemeActivated( final IKalypsoTheme previouslyActive, final IKalypsoTheme activeTheme )
   {
-    KalypsoCoreDebug.MAP_MODELL.printf( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModell.0"), previouslyActive, activeTheme ); //$NON-NLS-1$
+    KalypsoCoreDebug.MAP_MODELL.printf( Messages.getString( "org.kalypso.ogc.gml.mapmodel.MapModell.0" ), previouslyActive, activeTheme ); //$NON-NLS-1$
 
     acceptListenersRunnable( new IListenerRunnable()
     {
@@ -569,17 +516,6 @@ public class MapModell implements IMapModell
     } );
   }
 
-  protected void fireRepaintRequested( final GM_Envelope bbox )
-  {
-    acceptListenersRunnable( new IListenerRunnable()
-    {
-      public void visit( final IMapModellListener l )
-      {
-        l.repaintRequested( MapModell.this, bbox );
-      }
-    } );
-  }
-
   protected void fireContextChanged( final IKalypsoTheme theme )
   {
     acceptListenersRunnable( new IListenerRunnable()
@@ -589,14 +525,6 @@ public class MapModell implements IMapModell
         l.themeContextChanged( MapModell.this, theme );
       }
     } );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#invalidate(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void invalidate( final GM_Envelope bbox )
-  {
-    fireRepaintRequested( bbox );
   }
 
   /**
@@ -610,7 +538,7 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   public boolean isLoaded( )

@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
 
 /**
  * An WebFeatureServiceClient. Implements the basic operations to access an OGC-WebFeatureService.
- * 
+ *
  * @author Gernot Belger
  */
 public class WFSClient
@@ -107,7 +107,7 @@ public class WFSClient
   public WFSClient( final URL wfsURL )
   {
     m_wfsURL = wfsURL;
-    m_httpClient = createHttpClient();
+    m_httpClient = createHttpClient( wfsURL );
   }
 
   public URL getUrl( )
@@ -214,8 +214,8 @@ public class WFSClient
     return m_featureTypes.get( name );
   }
 
-  // TODO: configure with generel eclipse settings (proxy etc.)
-  private static HttpClient createHttpClient( )
+  // TODO: configure with general eclipse settings (proxy etc.)
+  private static HttpClient createHttpClient( final URL url )
   {
     final HttpClient httpClient = new HttpClient();
 
@@ -224,12 +224,16 @@ public class WFSClient
 
     httpClient.setParams( clientPars );
 
+    // TODO: would like to use that one, but deegree links against another version of HttpClient,
+    // so this will lead to an linkage-error
+// WebUtils.enableProxyUsage( httpClient, url );
+
     return httpClient;
   }
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   * 
+   *
    * @return All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
@@ -384,7 +388,7 @@ public class WFSClient
 
       /* Create getFeature URL */
       final WFSFeatureType featureType = getFeatureType( name );
-      final URL getUrl = findGetOperationURL( WFSClient.OPERATION_GET_FEATURE );
+      final URL getUrl = findPostOperationURL( WFSClient.OPERATION_GET_FEATURE );
       if( getUrl == null )
       {
         final String msg = String.format( "WFS does not support HTTP-GET for '%s'", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
@@ -419,6 +423,7 @@ public class WFSClient
       {
         // REMARK: with OGC-Services, it's always 200, even on error...
         System.out.println( "Status Code: " + statusCode );
+        throw new HttpException( "Connection error: " + statusCode );
       }
 
       inputStream = new BufferedInputStream( postMethod.getResponseBodyAsStream() );

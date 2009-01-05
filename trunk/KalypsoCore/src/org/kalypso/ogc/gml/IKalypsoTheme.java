@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Implements {@link org.eclipse.ui.model.IWorkbenchAdapter} in order to provider nice labels/images, ..... Does NOT
  * implement {@link org.eclipse.ui.model.IWorkbenchAdapter2}. Fonts, and so on are decided outside of the theme scope.
- * 
+ *
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
 public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStateProvider
@@ -84,7 +84,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
 
   public void dispose( );
 
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
+  public void paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * returns the name of the layer
@@ -119,7 +119,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
    * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was
    * successful or not. I.e. in case of a WMS it would return true, if the theme connected to the WMS and the connection
    * was finished. It does not matter if it could successfully retrieve the image or not.
-   * 
+   *
    * @return <code>true</code>, if the first loading try has finished
    */
   public boolean isLoaded( );
@@ -135,7 +135,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
    * <p>
    * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
    * </p>
-   * 
+   *
    * @param defaultValue
    *            If the property is not set, use this default value.
    * @throws IllegalArgumentException
@@ -150,17 +150,9 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter, ICheckStat
   public void setProperty( final String name, final String value );
 
   /**
-   * This function sets the boundingbox for the new extent.
-   * 
-   * @param extent
-   *            The new extent.
-   */
-  public void setExtent( int width, int height, GM_Envelope extent );
-
-  /**
    * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
    * null.
-   * 
+   *
    * @param font
    *            This font will be used for the self created text of the legend.
    * @return An legend graphic or null.

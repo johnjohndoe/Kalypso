@@ -186,11 +186,11 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      double, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final Boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
       return;
@@ -239,7 +239,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
     m_image = awtImage;
 
-    invalidate( null );
+    fireRepaintRequested( null );
   }
 
   /**

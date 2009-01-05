@@ -39,11 +39,10 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
+import org.kalypso.ogc.gml.KalypsoTableFeatureTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -52,7 +51,6 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
@@ -73,7 +71,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   protected LayerTableViewer m_viewer;
 
-  protected KalypsoFeatureTheme m_kft;
+  protected KalypsoTableFeatureTheme m_kft;
 
   private final JobExclusiveCommandTarget m_target;
 
@@ -141,26 +139,26 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
          */
         @Override
-        public void runWithEvent( Event event )
+        public void runWithEvent( final Event event )
         {
           if( checkMaxCount() == false )
           {
-            Shell shell = event.display.getActiveShell();
+            final Shell shell = event.display.getActiveShell();
             MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.2"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.3") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 
           /* Get the needed properties. */
-          Feature parentFeature = getFeature();
-          CommandableWorkspace workspace = m_kft.getWorkspace();
+          final Feature parentFeature = getFeature();
+          final CommandableWorkspace workspace = m_kft.getWorkspace();
 
-          AddFeatureCommand command = new AddFeatureCommand( workspace, parentRelation.getTargetFeatureType(), parentFeature, parentRelation, -1, null, null, 0 );
+          final AddFeatureCommand command = new AddFeatureCommand( workspace, parentRelation.getTargetFeatureType(), parentFeature, parentRelation, -1, null, null, 0 );
           fireFeatureChange( command );
         }
 
         /**
          * This function checks, if more features can be added.
-         * 
+         *
          * @return True, if so.
          */
         private boolean checkMaxCount( )
@@ -169,7 +167,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           int size = -1;
 
           /* Get the needed properties. */
-          Feature parentFeature = getFeature();
+          final Feature parentFeature = getFeature();
 
           maxOccurs = parentRelation.getMaxOccurs();
           if( parentFeature instanceof List )
@@ -195,28 +193,28 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
          */
         @Override
-        public void runWithEvent( Event event )
+        public void runWithEvent( final Event event )
         {
           if( canDelete() == false )
           {
-            Shell shell = event.display.getActiveShell();
+            final Shell shell = event.display.getActiveShell();
             MessageDialog.openInformation( shell, actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 
           /* Get the shell. */
-          Shell shell = event.display.getActiveShell();
+          final Shell shell = event.display.getActiveShell();
 
           /* Get the current selection. */
-          ISelection selection = m_viewer.getSelection();
+          final ISelection selection = m_viewer.getSelection();
           if( selection == null || !(selection instanceof IFeatureSelection) )
             return;
 
           /* Get all selected features. */
-          EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
+          final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
 
           /* Build the delete command. */
-          DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
+          final DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
           if( command != null )
           {
             /* Execute the command. */
@@ -229,19 +227,19 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
         /**
          * This function checks, if there are features, which can be deleted.
-         * 
+         *
          * @return True, if so.
          */
         public boolean canDelete( )
         {
-          ISelection selection = m_viewer.getSelection();
+          final ISelection selection = m_viewer.getSelection();
           if( selection == null )
             return false;
 
           if( !(selection instanceof IFeatureSelection) )
             return false;
 
-          int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
+          final int featureCount = FeatureSelectionHelper.getFeatureCount( (IFeatureSelection) selection );
           if( featureCount > 0 )
             return true;
 
@@ -320,7 +318,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       final CommandableWorkspace workspace = m_kft.getWorkspace();
       if( workspace != null )
         workspace.removeModellListener( this );
-      m_kft.getMapModell().dispose(); // we made the modell, so we dispose it
       m_kft.dispose();
       m_kft = null;
     }
@@ -334,11 +331,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       final CommandableWorkspace c_workspace = findCommandableWorkspace( workspace );
 
-      final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
-
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), new I10nString( ftpName ), m_selectionManager, pseudoModell, null, null, true );
-
-      pseudoModell.addTheme( m_kft );
+      m_kft = new KalypsoTableFeatureTheme( c_workspace, featurePath.toString(), new I10nString( ftpName ), m_selectionManager, null, true );
 
       c_workspace.addModellListener( this );
       m_viewer.setInput( m_kft );
@@ -367,7 +360,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
    */
   private CommandableWorkspace findCommandableWorkspace( final GMLWorkspace workspace )
   {
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo[] infos = pool.getInfos();
     for( final KeyInfo keyInfo : infos )
     {

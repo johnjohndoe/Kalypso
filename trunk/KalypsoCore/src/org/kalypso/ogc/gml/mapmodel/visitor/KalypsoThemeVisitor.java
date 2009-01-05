@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
  * implementation (which it is not)
  * <p>
  * This visitor collects all IKalypsoThemes with the property specified with a predicate
- * 
+ *
  * @author Thomas Jung
  */
 public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
@@ -61,17 +61,28 @@ public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
 
   private final IKalypsoThemePredicate m_predicate;
 
+  private final boolean m_recurseIntoFailedPredicate;
+
   public KalypsoThemeVisitor( final IKalypsoThemePredicate predicate )
   {
-    m_predicate = predicate;
+    this( predicate, true );
   }
 
-  public boolean visit( IKalypsoTheme theme )
+  public KalypsoThemeVisitor( final IKalypsoThemePredicate predicate, final boolean recurseIntoFailedPredicate )
+  {
+    m_predicate = predicate;
+    m_recurseIntoFailedPredicate = recurseIntoFailedPredicate;
+  }
+
+  public boolean visit( final IKalypsoTheme theme )
   {
     if( m_predicate.decide( theme ) )
+    {
       m_results.add( theme );
+      return true;
+    }
 
-    return true;
+    return m_recurseIntoFailedPredicate;
   }
 
   public IKalypsoTheme[] getFoundThemes( )

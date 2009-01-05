@@ -50,12 +50,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -65,6 +70,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
+import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
+import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -72,6 +81,9 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoCascadingThemeSelection;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
+import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
+import org.kalypso.ogc.gml.map.layer.NullMapLayer;
+import org.kalypso.ogc.gml.map.layer.SelectionMapLayer;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
@@ -79,7 +91,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeChangeExtentVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -89,7 +100,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -97,6 +107,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 {
+  /**
+   * Maximum delay by which repaints to the map are produced.
+   *
+   * @see java.awt.Component#repaint(long)
+   */
+  private static final long MAP_REPAINT_MILLIS = 250;
+
   private static interface IListenerRunnable
   {
     public void visit( final IMapPanelListener l );
@@ -121,21 +138,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
   };
 
-  protected int m_width = 0;
-
-  protected int m_height = 0;
-
-  private int xOffset = 0;
-
-  private int yOffset = 0;
-
   private IMapModell m_model = null;
 
   private final WidgetManager m_widgetManager;
 
-  private final GeoTransform m_projection = new WorldToScreenTransform();
-
-  protected GM_Envelope m_boundingBox = new GM_Envelope_Impl();
+  protected GM_Envelope m_boundingBox = null;
 
   private GM_Envelope m_wishBBox;
 
@@ -143,11 +150,14 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final List<IMapPanelPaintListener> m_paintListeners = new ArrayList<IMapPanelPaintListener>();
 
+  private final Map<IKalypsoTheme, IMapLayer> m_layers = new HashMap<IKalypsoTheme, IMapLayer>();
+
   private final ExtentHistory m_extentHistory = new ExtentHistory( 200 );
 
-  private Boolean m_shouldPaint = true;
-
   private String m_message = ""; //$NON-NLS-1$
+
+  // TODO: fetch from map-modell (aka from .gmt file)
+  private final Color m_backgroundColor = new Color( 255, 255, 255 );
 
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
@@ -169,12 +179,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       if( theme.isVisible() )
-      {
-        /* The theme can do something with it (e.g. the WMS theme will start reloading the map). */
-        theme.setExtent( m_width, m_height, m_boundingBox );
-
         invalidateMap();
-      }
     }
 
     /**
@@ -193,8 +198,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
-      if( lastVisibility )
-        invalidateMap();
+      handleThemeRemoved( theme, lastVisibility );
     }
 
     /**
@@ -207,9 +211,21 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       invalidateMap();
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      invalidateMap();
+    }
   };
 
-  private MapPanelPainter m_painter = new MapPanelPainter( this );
+  private BufferPaintJob m_bufferPaintJob = null;
+
+  /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
+  private final ISchedulingRule m_painterMutex = new MutexRule();
 
   private IStatus m_status = Status.OK_STATUS;
 
@@ -313,14 +329,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this map panel still referenced from?
+    // Anwer: From the map-commands!
     m_selectionListeners.clear();
     m_mapPanelListeners.clear();
     m_paintListeners.clear();
 
-    m_painter.dispose();
-
-    // Also release references, as the ref to the MapPanel is never released (do to ICommand stuff and so on)
-    m_painter = null;
+    if( m_bufferPaintJob != null )
+    {
+      m_bufferPaintJob.dispose();
+      m_bufferPaintJob = null;
+    }
   }
 
   protected void fireExtentChanged( final GM_Envelope oldExtent, final GM_Envelope newExtent )
@@ -390,7 +408,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             * 
+             *
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -402,7 +420,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
             public void run( )
             {
               // TODO: fire in SWT display thread!
-              // FIXE: for the moment: just commented out, it does not work
               l.selectionChanged( e );
             }
           };
@@ -413,7 +430,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
   }
 
-  public synchronized GM_Envelope getBoundingBox( )
+  public GM_Envelope getBoundingBox( )
   {
     return m_boundingBox;
   }
@@ -429,12 +446,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
+   *
    * @return scale of the map
    */
   public double getCurrentScale( )
   {
-    return MapModellHelper.calcScale( m_model, getBoundingBox(), getWidth(), getHeight() );
+    final GeoTransform projection = getProjection();
+    if( projection == null )
+      return Double.NaN;
+
+    return projection.getScale();
   }
 
   /**
@@ -448,11 +469,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   public String getMessage( )
   {
     return m_message;
-  }
-
-  public GeoTransform getProjection( )
-  {
-    return m_projection;
   }
 
   /**
@@ -485,8 +501,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   protected void globalSelectionChanged( )
   {
-    if( m_painter != null )
-      m_painter.invalidate( true );
+    invalidateMap();
 
     // TODO: should be fired in the SWT thread, because the global selection listeners
     // need this
@@ -494,37 +509,122 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   }
 
   /**
-   * Invalidates the whole map, all data is redrawn freshly.
+   * Invalidates the whole map, all data is redrawn freshly.<br>
+   * Should not be invoked from outside; normally every theme invalidates itself, if its data is changed; if not check,
+   * if all events are correctly sent.
    */
   public void invalidateMap( )
   {
-    xOffset = 0;
-    yOffset = 0;
-
-    synchronized( this )
+    if( m_model != null )
     {
-      m_shouldPaint = false;
-
-      if( m_model != null )
-      {
-        m_projection.setDestRect( 0, 0, getWidth(), getHeight(), getMapModell().getCoordinatesSystem() );
-
-        // We should instead get a status from the model itself
-        if( m_model.getThemeSize() == 0 )
-          setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
-        else
-          setStatus( Status.OK_STATUS );
-      }
-
-      if( m_painter != null )
-        m_painter.invalidate( false );
-
-      m_shouldPaint = true;
+      // We should instead get a status from the model itself
+      if( m_model.getThemeSize() == 0 )
+        setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
+      else
+        setStatus( Status.OK_STATUS );
     }
 
-    // we do not repaint here, as the painter trigger repaint events himself. Repainting here causes
-    // ugly side effects for pan
-    // repaint();
+    final IMapModell mapModell = getMapModell();
+    if( mapModell == null )
+      return;
+
+    final IMapLayer[] layers = getLayersForRendering();
+    final IPaintable modelPainter = new MapPanelPainter( layers, mapModell, getProjection(), m_backgroundColor );
+
+    final BufferPaintJob bufferPaintJob = new BufferPaintJob( modelPainter );
+    bufferPaintJob.setRule( m_painterMutex );
+    bufferPaintJob.setPriority( Job.SHORT );
+    bufferPaintJob.setUser( false );
+
+    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", bufferPaintJob, MAP_REPAINT_MILLIS )
+    {
+      @Override
+      protected void jobRunning( )
+      {
+        MapPanel.this.repaintMap();
+      }
+    };
+    repaintJob.setSystem( true );
+    repaintJob.schedule();
+
+    /* Cancel old job if still running. */
+    synchronized( this )
+    {
+      if( m_bufferPaintJob != null )
+      {
+        m_bufferPaintJob.dispose();
+        m_bufferPaintJob = null;
+      }
+
+      m_bufferPaintJob = bufferPaintJob;
+      // delay the Schedule, so if another invalidate comes within that time-span, no repaint happens at all
+      m_bufferPaintJob.schedule( 100 );
+    }
+
+    repaintMap();
+  }
+
+  /**
+   * Paints contents of the map ni the following order:
+   * <ul>
+   * <li>the buffered image containing the layers</li>
+   * <li>the status, if not OK</li>
+   * <li>all 'paint-listeners'</li>
+   * <li>the current widget</li>
+   * </ul>
+   *
+   * @see java.awt.Component#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    final int width = getWidth();
+    final int height = getHeight();
+    if( height == 0 || width == 0 )
+      return;
+
+    final BufferedImage buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D bufferGraphics = null;
+    try
+    {
+      bufferGraphics = buffer.createGraphics();
+      bufferGraphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+      bufferGraphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+
+      final BufferPaintJob bufferPaintJob = m_bufferPaintJob; // get copy (for thread safety)
+      final BufferedImage image = bufferPaintJob == null ? null : bufferPaintJob.getImage();
+      if( image != null )
+      {
+        final MapPanelPainter paintable = (MapPanelPainter) bufferPaintJob.getPaintable();
+        final GeoTransform world2screen = paintable.getWorld2screen();
+        final GM_Envelope imageBounds = world2screen.getSourceRect();
+        if( imageBounds.equals( m_boundingBox ) )
+          bufferGraphics.drawImage( image, 0, 0, null );
+        else
+        {
+          // If current buffer only shows part of the map, paint it into the right screen-rect
+          final GeoTransform currentProjection = getProjection();
+          MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
+        }
+      }
+
+      // TODO: at the moment, we paint the status just on top of the map, if we change this component to SWT, we should
+      // show the statusComposite in a title bar, if the status is non-OK (with details button for a stack trace)
+      paintStatus( bufferGraphics );
+
+      final IMapPanelPaintListener[] pls = m_paintListeners.toArray( new IMapPanelPaintListener[] {} );
+      for( final IMapPanelPaintListener pl : pls )
+        pl.paint( bufferGraphics );
+
+      paintWidget( bufferGraphics );
+    }
+    finally
+    {
+      if( bufferGraphics != null )
+        bufferGraphics.dispose();
+    }
+
+    g.drawImage( buffer, 0, 0, null );
   }
 
   /**
@@ -534,107 +634,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   public boolean isDoubleBuffered( )
   {
     return true;
-  }
-
-  /**
-   * <p>
-   * This method was synchronised in order to fix bugs caused by threading issues concerning the setBoundBox method.
-   * </p>
-   * <p>
-   * The bug was fixed by this, an so far no dead locks are encountered. see also {@link #getBoundingBox()}and
-   * {@link #setBoundingBox(GM_Envelope)}
-   * </p>
-   * <p>
-   * Make sure, that no call to one of the 'fire...' methods is made in the synchronised code.
-   * </p>
-   * 
-   * @see java.awt.Component#paint(java.awt.Graphics)
-   */
-  @Override
-  public void paint( final Graphics outerG )
-  {
-    if( !m_shouldPaint )
-      return;
-
-    final Graphics2D outerG2 = (Graphics2D) outerG;
-    outerG2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-    outerG2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
-
-    final int height = getHeight();
-    final int width = getWidth();
-
-    if( height == 0 || width == 0 )
-      return;
-
-    // update dimension
-    if( height != m_height || width != m_width )
-    {
-      m_height = height;
-      m_width = width;
-    }
-
-    final BufferedImage image = paintBuffer( height, width );
-
-    // If offset is set, fill the rest with the background color
-    if( xOffset != 0 || yOffset != 0 ) // to clear background ...
-    {
-      final int left = Math.max( 0, xOffset );
-      final int right = Math.min( width, xOffset + width );
-      final int top = Math.max( 0, yOffset );
-      final int bottom = Math.min( height, yOffset + height );
-
-      outerG2.setColor( getBackground() );
-      outerG2.fillRect( 0, 0, left, height ); // left
-      outerG2.fillRect( left, 0, right - left, top ); // top
-      outerG2.fillRect( left, bottom, right - left, height - bottom ); // bottom
-      outerG2.fillRect( right, 0, width - right, height ); // right
-    }
-
-    outerG2.drawImage( image, xOffset, yOffset, null );
-  }
-
-  private BufferedImage paintBuffer( final int height, final int width )
-  {
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-
-    Graphics2D g = null;
-
-    try
-    {
-      g = (Graphics2D) image.getGraphics();
-
-      /* Clear background */
-      g.setColor( Color.white );
-      g.fillRect( 0, 0, width, height );
-
-      g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-      g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
-
-      if( m_painter != null )
-        m_painter.paint( g );
-      // TODO: at the moment, we paint the status just on top of the map, if we change this component to SWT, we should
-      // show the statusComposite in a title bar, if the status is non-OK (with details button for a stack trace)
-      paintStatus( g );
-
-      /* avoid concurrent thread access - race condition! */
-      if( m_shouldPaint )
-      {
-        final IMapPanelPaintListener[] pls = m_paintListeners.toArray( new IMapPanelPaintListener[] {} );
-        for( final IMapPanelPaintListener pl : pls )
-        {
-          if( m_shouldPaint )
-            pl.paint( g );
-        }
-      }
-
-      paintWidget( g );
-      return image;
-    }
-    finally
-    {
-      if( g != null )
-        g.dispose();
-    }
   }
 
   /**
@@ -652,7 +651,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     final int width = getWidth();
     final int height = getHeight();
 
-    g.setColor( Color.white );
+    g.setColor( m_backgroundColor );
     g.fillRect( 0, 0, width, height );
     g.setColor( Color.black );
 
@@ -664,10 +663,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   private void paintWidget( final Graphics g )
   {
-    final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
-    // why not just use Color.red?
-    g.setColor( color );
-
+    // TODO: either reset the GC completely or do not set anything at all
+    g.setColor( Color.RED );
     m_widgetManager.paintWidget( g );
   }
 
@@ -691,7 +688,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -701,14 +698,17 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   }
 
   /**
-   * This function sets the bounding box to this map panel and all its themes.
-   * 
-   * @param wishBBox
-   *          The new extent, will be adapted so it fits into the current size of the panel.
-   * @param useHistory
-   *          If <code>true</code>, the last extend is put into the extend history.
+   * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
    */
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory )
+  {
+    setBoundingBox( wishBBox, true, true );
+  }
+
+  /**
+   * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
+   */
+  public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap )
   {
     /* The wished bounding box. */
     m_wishBBox = wishBBox;
@@ -726,46 +726,20 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     if( m_boundingBox != null )
     {
-      /* Debug-Information. */
-      if( KalypsoCoreDebug.MAP_PANEL.isEnabled() )
-      {
-        final StringBuffer dump = new StringBuffer();
-        dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-        dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-        dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-        dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-        dump.append( "\n" );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", m_boundingBox.getMin().getX() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", m_boundingBox.getMin().getY() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", m_boundingBox.getMax().getX() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", m_boundingBox.getMax().getY() );
 
-        System.out.println( dump.toString() );
-      }
-
-      /* Alter the source rect of the projection. */
-      m_projection.setSourceRect( m_boundingBox );
-
-      /* Instead invalidate the map yourself. */
-      m_shouldPaint = false;
-      invalidateMap();
-    }
-
-    /* Tell the themes, that the extent has changed. */
-    if( m_model != null )
-    {
-      final int height = getHeight();
-      final int width = getWidth();
-
-      /* Update dimension. */
-      if( (height != m_height) || (width != m_width) )
-      {
-        m_height = height;
-        m_width = width;
-      }
-
-      /* Change the extent for all themes. */
-      m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
+      if( invalidateMap )
+        invalidateMap();
+      else
+        repaintMap();
     }
 
     /* Tell everyone, that the extent has changed. */
-    fireExtentChanged( oldExtent, m_boundingBox );
+    if( invalidateMap )
+      fireExtentChanged( oldExtent, m_boundingBox );
   }
 
   /**
@@ -776,7 +750,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     final IMapModell oldModel = m_model;
 
     if( m_model != null )
+    {
       m_model.removeMapModelListener( m_modellListener );
+
+      for( final IMapLayer layer : m_layers.values() )
+        layer.dispose();
+    }
 
     m_model = modell;
 
@@ -785,7 +764,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     else
     {
       m_model.addMapModelListener( m_modellListener );
-      // Status will immediately set by the call to invalidateMao
+      invalidateMap();
     }
 
     invalidateMap();
@@ -801,14 +780,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_message = message;
 
     fireMessageChanged( message );
-  }
-
-  public void setOffset( final int dx, final int dy ) // used by pan method
-  {
-    xOffset = dx;
-    yOffset = dy;
-
-    repaintMap();
   }
 
   public void setSelection( final ISelection selection )
@@ -831,6 +802,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       return;
 
     final GeoTransform transform = getProjection();
+    if( transform == null )
+      return;
 
     final double gx = transform.getSourceX( mousex );
     final double gy = transform.getSourceY( mousey );
@@ -843,17 +816,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       mpl.onMouseMoveEvent( this, gmPoint, mousex, mousey );
   }
 
-  /**
-   * Causes any pending paint to be stopped, and nothing will be painted until the next call to invalidateMap (called if
-   * setBoundingBox is called).<br>
-   * Fixes the ugly pan flicker bug (map gets drawn on old position after pan has been released).
-   */
-  public void stopPaint( )
+  public GeoTransform getProjection( )
   {
-    m_shouldPaint = false;
+    final GM_Envelope boundingBox = m_boundingBox;
+    if( boundingBox == null )
+      return null;
 
-    if( m_painter != null )
-      m_painter.cancel();
+    final GeoTransform projection = new WorldToScreenTransform();
+    projection.setSourceRect( boundingBox );
+    final int width = getWidth();
+    final int height = getHeight();
+    projection.setDestRect( 0, 0, width, height, null );
+
+    return projection;
   }
 
   public ExtentHistory getExtentHistory( )
@@ -878,7 +853,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public void repaintMap( )
   {
-    super.repaint();
+    repaint( 50 );
   }
 
   /**
@@ -887,10 +862,86 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public BufferedImage getMapImage( )
   {
-    if( m_painter == null )
+    final BufferPaintJob bufferPaintJob = m_bufferPaintJob; // get copy for thread safety
+    if( bufferPaintJob == null )
       return null;
 
-    return m_painter.getNormalImage();
+    return bufferPaintJob.getImage();
   }
 
+  /**
+   * Create the list of layers in the order it should be rendered.
+   */
+  protected IMapLayer[] getLayersForRendering( )
+  {
+    final List<IMapLayer> result = new ArrayList<IMapLayer>( 20 );
+    final List<IKalypsoFeatureTheme> visibleFestureThemes = new ArrayList<IKalypsoFeatureTheme>( 10 );
+
+    final IKalypsoThemeVisitor createLayerVisitor = new IKalypsoThemeVisitor()
+    {
+      @Override
+      public boolean visit( final IKalypsoTheme theme )
+      {
+        if( theme.isVisible() )
+        {
+          final IMapLayer layer = getLayer( theme );
+          result.add( layer );
+
+          if( theme instanceof IKalypsoFeatureTheme )
+            visibleFestureThemes.add( (IKalypsoFeatureTheme) theme );
+
+          return true;
+        }
+
+        // No sense in descending into invisible cascading-themes
+        return false;
+      }
+    };
+
+    m_model.accept( createLayerVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    // Reverse list, last should be rendered first.
+    Collections.reverse( result );
+
+    final IKalypsoFeatureTheme[] selectionThemes = visibleFestureThemes.toArray( new IKalypsoFeatureTheme[visibleFestureThemes.size()] );
+    // TODO: care for disposal of SelectionMapLayer
+    result.add( new SelectionMapLayer( this, selectionThemes ) );
+
+    return result.toArray( new IMapLayer[result.size()] );
+  }
+
+  protected IMapLayer getLayer( final IKalypsoTheme theme )
+  {
+    final IMapLayer existingLayer = m_layers.get( theme );
+    if( existingLayer == null )
+    {
+      // TODO: move into factory method
+      final IMapLayer newLayer;
+      if( theme instanceof IKalypsoCascadingTheme )
+        newLayer = new NullMapLayer( this, theme );
+      else
+      {
+        // REMARK: uncomment to change to different rendering strategy. I like
+        // 'BufferedRescale' best...
+        // newLayer = new DirectMapLayer( this, theme );
+        // newLayer = new BufferedMapLayer( this, theme );
+        newLayer = new BufferedRescaleMapLayer( this, theme );
+      }
+
+      m_layers.put( theme, newLayer );
+      return newLayer;
+    }
+
+    return existingLayer;
+  }
+
+  protected void handleThemeRemoved( final IKalypsoTheme theme, final boolean lastVisibility )
+  {
+    final IMapLayer layer = m_layers.remove( theme );
+    if( layer != null )
+      layer.dispose();
+
+    if( lastVisibility )
+      invalidateMap();
+  }
 }

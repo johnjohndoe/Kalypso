@@ -79,7 +79,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  * A legend view that uses the {@link GisMapOutlineViewer}. Provides the same view on a {@link IMapModell} as a
  * {@link org.kalypso.ui.editor.mapeditor.GisMapOutlinePage}. Usable with all view or editors that extend
  * {@link AbstractMapPart}.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class GisMapOutlineView extends ViewPart implements IMapModellView
@@ -273,7 +273,10 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     if( m_panel != null )
     {
       m_panel.addMapPanelListener( m_mapPanelListener );
-      m_viewer.setMapModel( m_panel.getMapModell() );
+      final IMapModell mapModell = m_panel.getMapModell();
+      m_viewer.setMapModel( mapModell );
+      if( mapModell != null )
+        updatePartName( mapModell.getName().getValue() );
     }
     else
       m_viewer.setMapModel( null );
@@ -335,7 +338,11 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   protected void handleMapModelChanged( final IMapModell newModel )
   {
     if( m_viewer != null )
+    {
       m_viewer.setMapModel( newModel );
+      if( newModel != null )
+        updatePartName( newModel.getName().getValue() );
+    }
   }
 
   /**
@@ -373,6 +380,15 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 
   public void updatePartName( final String name )
   {
-    setPartName( name );
+    getSite().getShell().getDisplay().asyncExec( new Runnable()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void run( )
+      {
+        setPartName( name );
+      }
+    } );
+
   }
 }

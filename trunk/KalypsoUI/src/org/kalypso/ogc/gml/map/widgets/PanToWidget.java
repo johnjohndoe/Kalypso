@@ -44,17 +44,21 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanelUtilities;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Andreas von Dömming
  */
 public class PanToWidget extends AbstractWidget
 {
-  private Point m_endPoint = null;
+  private GeoTransform m_world2screen = null;
 
-  private Point m_startPoint = null;
+  private GM_Position m_startPoint = null;
+
+  private GM_Position m_endPoint = null;
 
   public PanToWidget( final String name, final String toolTip )
   {
@@ -69,34 +73,66 @@ public class PanToWidget extends AbstractWidget
   @Override
   public void dragged( final Point p )
   {
-    if( m_startPoint != null )
-    {
-      m_endPoint = p;
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
 
-      final int dx = (int) (m_endPoint.getX() - m_startPoint.getX());
-      final int dy = (int) (m_endPoint.getY() - m_startPoint.getY());
-      getMapPanel().setOffset( dx, dy );
+    if( m_world2screen != null && m_startPoint != null )
+    {
+      final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+      m_endPoint = m_world2screen.getSourcePoint( pixelPos );
+
+      final GM_Envelope panExtent = calcPanExtent();
+      mapPanel.setBoundingBox( panExtent, false, false );
     }
+  }
+
+  private GM_Envelope calcPanExtent( )
+  {
+    final double[] vector = new double[] { m_startPoint.getX() - m_endPoint.getX(), m_startPoint.getY() - m_endPoint.getY() };
+
+    final GM_Envelope startExtent = m_world2screen.getSourceRect();
+
+    final GM_Position panMin = GeometryFactory.createGM_Position( startExtent.getMin().getAsArray() );
+    final GM_Position panMax = GeometryFactory.createGM_Position( startExtent.getMax().getAsArray() );
+
+    panMin.translate( vector );
+    panMax.translate( vector );
+
+    return GeometryFactory.createGM_Envelope( panMin, panMax, startExtent.getCoordinateSystem() );
   }
 
   @Override
   public void finish( )
   {
-    getMapPanel().setOffset( 0, 0 );
   }
 
   @Override
   public void leftPressed( final Point p )
   {
-    m_startPoint = p;
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    m_world2screen = mapPanel.getProjection();
+    if( m_world2screen == null )
+      return;
+
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+    m_startPoint = m_world2screen.getSourcePoint( pixelPos );
+
     m_endPoint = null;
-    getMapPanel().setOffset( 0, 0 );
   }
 
   @Override
   public void leftReleased( final Point p )
   {
-    m_endPoint = p;
+    if( m_world2screen == null )
+      return;
+
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+    m_endPoint = m_world2screen.getSourcePoint( pixelPos );
+
     perform();
   }
 
@@ -104,25 +140,16 @@ public class PanToWidget extends AbstractWidget
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    if( m_startPoint != null && m_endPoint != null && !m_startPoint.equals( m_endPoint ) )
+    if( m_world2screen != null && m_startPoint != null && m_endPoint != null && !m_startPoint.equals( m_endPoint ) )
     {
-      // REMARK: immediately suppress painting, in order to fix the ugly flicker (map gets paint at old position), after
-      // pan has been released
-      mapPanel.stopPaint();
-
-      final double mx = mapPanel.getWidth() / 2d - (m_endPoint.getX() - m_startPoint.getX());
-      final double my = mapPanel.getHeight() / 2d - (m_endPoint.getY() - m_startPoint.getY());
-
-      final GM_Envelope panBox = MapPanelUtilities.calcPanToPixelBoundingBox( mapPanel, mx, my );
+      final GM_Envelope panExtent = calcPanExtent();
 
       m_startPoint = null;
+      m_world2screen = null;
       m_endPoint = null;
 
-      if( panBox != null )
-      {
-        final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, panBox );
-        postViewCommand( command, null );
-      }
+      final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, panExtent );
+      postViewCommand( command, null );
     }
   }
 }
