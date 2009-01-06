@@ -105,6 +105,9 @@ public class MapPanelPainter implements IPaintable
   @Override
   public Point getSize( )
   {
+    if( m_world2screen == null )
+      return new Point( 0, 0 );
+
     return new Point( (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
   }
 

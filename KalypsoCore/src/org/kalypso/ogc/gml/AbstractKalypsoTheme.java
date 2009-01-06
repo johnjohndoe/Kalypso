@@ -198,6 +198,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
   {
+    Assert.isNotNull( listener );
+
     m_listeners.add( listener );
   }
 
@@ -224,7 +226,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     {
       public void visit( final IKalypsoThemeListener l )
       {
-        // FIXME NPE
         if( l == null )
           return;
 
@@ -242,7 +243,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     {
       public void visit( final IKalypsoThemeListener l )
       {
-        // FIXME NPE
         if( l == null )
           return;
 
@@ -260,7 +260,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     {
       public void visit( final IKalypsoThemeListener l )
       {
-        // FIXME NPE
         if( l == null )
           return;
 
@@ -282,7 +281,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     {
       public void visit( final IKalypsoThemeListener l )
       {
-        // FIXME NPE
         if( l == null )
           return;
 
