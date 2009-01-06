@@ -130,15 +130,16 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( size != null && size.height > 0 )
       height = size.height;
 
-    final TreeObjectImage treeImage = new TreeObjectImage( width, height );
 
     /*
      * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have too
      * many RuleTreeObjects.
      */
 
+    TreeObjectImage treeImage = null;
     try
     {
+      treeImage = new TreeObjectImage( width, height );
       RulePainter.paint( m_rule, treeImage.getGC() );
 
       return treeImage.getImageDescriptor();
@@ -151,7 +152,8 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     }
     finally
     {
-      treeImage.dispose();
+      if( treeImage != null )
+        treeImage.dispose();
     }
   }
 
