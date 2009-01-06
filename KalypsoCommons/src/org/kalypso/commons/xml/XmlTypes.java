@@ -89,6 +89,10 @@ public final class XmlTypes
 
   public final static QName XS_TIME = new QName( NS.XSD_SCHEMA, "time" );//$NON-NLS-1$
 
+  /**
+   * @deprecated Use {@link javax.xml.bind.DatatypeConverter#printDate(java.util.Calendar)} instead.
+   */
+  @Deprecated
   public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";//$NON-NLS-1$
 
   /**
