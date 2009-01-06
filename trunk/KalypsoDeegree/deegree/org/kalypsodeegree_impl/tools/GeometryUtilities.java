@@ -86,15 +86,20 @@ public class GeometryUtilities
 
   public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
 
+  public static final QName QN_CURVE = new QName( NS.GML3, "_Curve" );
+
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
 
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
+
+  public static final QName QN_MULTI_CURVE = new QName( NS.GML3, "MultiCurve" );
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
 
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
+
 
   private GeometryUtilities( )
   {
