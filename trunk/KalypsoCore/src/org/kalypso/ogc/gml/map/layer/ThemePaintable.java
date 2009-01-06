@@ -57,6 +57,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 public class ThemePaintable implements IPaintable
 {
   private final GeoTransform m_world2screen;
+
   private final IKalypsoTheme m_theme;
 
   public ThemePaintable( final IKalypsoTheme theme, final GeoTransform world2screen )
@@ -90,6 +91,7 @@ public class ThemePaintable implements IPaintable
   @Override
   public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
   {
+    g.setClip( 0, 0, (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
     m_theme.paint( g, m_world2screen, null, monitor );
   }
 
