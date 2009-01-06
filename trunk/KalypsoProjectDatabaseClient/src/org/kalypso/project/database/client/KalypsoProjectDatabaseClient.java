@@ -21,6 +21,14 @@ public class KalypsoProjectDatabaseClient extends Plugin
 
   private static IProjectDatabase m_service = null;
 
+  /**
+   * Returns the database-service.<br>
+   * The first call to this method blocks until the service instance has been created. Can take some time when the
+   * remote connection is not available.<br>
+   * Use {@link #getServiceUnblocking()}, if this is not acceptable.
+   *
+   * @see #getServiceUnblocking()
+   */
   public static synchronized IProjectDatabase getService( ) throws WebServiceException
   {
     if( m_service == null )
@@ -44,6 +52,18 @@ public class KalypsoProjectDatabaseClient extends Plugin
       }
     }
 
+    return m_service;
+  }
+
+  /**
+   * Returns the database-service.<br>
+   * Does not block but returns the current available service. If the service is not yet available (see
+   * {@link #getService()}, <code>null</code> is returned.<br>
+   *
+   * @see #getService()
+   */
+  public static IProjectDatabase getServiceUnblocking( )
+  {
     return m_service;
   }
 
@@ -84,7 +104,7 @@ public class KalypsoProjectDatabaseClient extends Plugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static KalypsoProjectDatabaseClient getDefault( )

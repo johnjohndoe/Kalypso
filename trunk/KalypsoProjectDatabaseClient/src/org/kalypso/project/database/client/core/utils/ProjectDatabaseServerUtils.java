@@ -58,7 +58,10 @@ public class ProjectDatabaseServerUtils
   {
     try
     {
-      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+      final IProjectDatabase service = KalypsoProjectDatabaseClient.getServiceUnblocking();
+      if( service == null )
+        return false;
+
       service.ping();
 
       return true;

@@ -19,7 +19,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Data model of remote projects in the {@link org.kalypso.project.database.server.ProjectDatabase}
- * 
+ *
  * @author Dirk Kuch
  */
 public class RemoteWorkspaceModel
@@ -136,7 +136,7 @@ public class RemoteWorkspaceModel
   {
     try
     {
-      final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
+      final IProjectDatabase service = KalypsoProjectDatabaseClient.getServiceUnblocking();
       if( service == null )
       {
         m_beans = new KalypsoProjectBean[] {};
