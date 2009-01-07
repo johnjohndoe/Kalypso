@@ -43,15 +43,16 @@ package org.kalypso.model.product.ui;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.extension.IEnteringPageWizardDelegate;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
 import org.kalypso.afgui.extension.INewProjectWizard;
@@ -74,10 +75,9 @@ import org.kalypso.project.database.client.ui.project.wizard.imp.SpecialImportPr
  */
 public class ModuleEnteringPageComposite extends Composite
 {
-
   protected final IKalypsoModulePageHandler m_pageHandler;
 
-  private final IKalypsoModuleEnteringPageHandler m_enteringPage;
+  protected final IKalypsoModuleEnteringPageHandler m_enteringPage;
 
   private static final Color COLOR_BOX = new Color( null, 0x7f, 0xb2, 0x99 );
 
@@ -180,29 +180,70 @@ public class ModuleEnteringPageComposite extends Composite
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
     final String remoteCommitType = m_enteringPage.getRemoteCommitType();
-    final INewProjectWizard wizardProject = m_enteringPage.getProjectWizard();
-    final INewProjectWizard wizardDemoProject = m_enteringPage.getDemoProjectWizard();
-    final IWizard importWizard = m_enteringPage.getImportWizard();
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, wizardProject, remoteCommitType, CreateProjectComposite.IMG_ADD_PROJECT );
+    final IEnteringPageWizardDelegate projectDelegate = new IEnteringPageWizardDelegate()
+    {
+
+      @Override
+      public Image getImage( )
+      {
+        return CreateProjectComposite.IMG_ADD_PROJECT;
+      }
+
+      @Override
+      public String getRemoteCommitType( )
+      {
+        return m_enteringPage.getRemoteCommitType();
+      }
+
+      @Override
+      public INewProjectWizard getWizard( )
+      {
+        return m_enteringPage.getProjectWizard();
+      }
+    };
+
+    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, projectDelegate );
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, toolkit );
     projectImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    if( wizardDemoProject != null )
+    if( m_enteringPage.hasDemoProjectWizard() )
     {
-      final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, wizardDemoProject, remoteCommitType, CreateProjectComposite.IMG_EXTRACT_DEMO );
+      final IEnteringPageWizardDelegate demoDelegate = new IEnteringPageWizardDelegate()
+      {
+
+        @Override
+        public Image getImage( )
+        {
+          return CreateProjectComposite.IMG_EXTRACT_DEMO;
+        }
+
+        @Override
+        public String getRemoteCommitType( )
+        {
+          return m_enteringPage.getRemoteCommitType();
+        }
+
+        @Override
+        public INewProjectWizard getWizard( )
+        {
+          return m_enteringPage.getDemoProjectWizard();
+        }
+      };
+
+      final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, demoDelegate );
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else
       toolkit.createLabel( bodyProjects, "" ); // spacer
 
-    if( importWizard != null )
+    if( m_enteringPage.hasImportWizard() )
     {
       final String label = m_enteringPage.getImportWizardLabel();
 
-      final SpecialImportProjectComposite specialImport = new SpecialImportProjectComposite( bodyProjects, toolkit, importWizard, label );
+      final SpecialImportProjectComposite specialImport = new SpecialImportProjectComposite( bodyProjects, toolkit, m_enteringPage );
       specialImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
 
