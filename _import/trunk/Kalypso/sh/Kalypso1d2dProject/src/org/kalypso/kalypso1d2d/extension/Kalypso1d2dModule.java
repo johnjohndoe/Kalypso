@@ -56,7 +56,7 @@ public class Kalypso1d2dModule implements IKalypsoModule
       @Override
       public String getTooltip( )
       {
-        return Messages.getString("org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule.3"); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule.3" ); //$NON-NLS-1$
       }
 
       @Override
@@ -151,6 +151,15 @@ public class Kalypso1d2dModule implements IKalypsoModule
         return new Kalypso1D2DDemoProjectWizard();
       }
 
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasDemoProjectWizard()
+       */
+      @Override
+      public boolean hasDemoProjectWizard( )
+      {
+        return true;
+      }
+
       @Override
       public INewProjectWizard getProjectWizard( )
       {
@@ -167,6 +176,15 @@ public class Kalypso1d2dModule implements IKalypsoModule
       public IWizard getImportWizard( )
       {
         return null;
+      }
+
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasImportWizard()
+       */
+      @Override
+      public boolean hasImportWizard( )
+      {
+        return false;
       }
 
       @Override
