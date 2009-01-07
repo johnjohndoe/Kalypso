@@ -133,6 +133,15 @@ public class KalypsoModuleRRM implements IKalypsoModule
         return null;
       }
 
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasDemoProjectWizard()
+       */
+      @Override
+      public boolean hasDemoProjectWizard( )
+      {
+        return false;
+      }
+
       @Override
       public INewProjectWizard getProjectWizard( )
       {
@@ -143,6 +152,15 @@ public class KalypsoModuleRRM implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsRrmModel";
+      }
+
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasImportWizard()
+       */
+      @Override
+      public boolean hasImportWizard( )
+      {
+        return false;
       }
 
       @Override
