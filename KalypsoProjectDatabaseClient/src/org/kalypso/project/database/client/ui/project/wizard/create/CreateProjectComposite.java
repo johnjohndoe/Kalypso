@@ -56,6 +56,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.extension.IEnteringPageWizardDelegate;
 import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -79,21 +80,15 @@ public class CreateProjectComposite extends Composite
 
   private final String m_label;
 
-  private final Image m_img;
+  private final IEnteringPageWizardDelegate m_delegate;
 
-  protected final INewProjectWizard m_wizard;
-
-  protected final String m_remoteCommitType;
-
-  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final INewProjectWizard wizard, final String commitType, final Image img )
+  public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final IEnteringPageWizardDelegate delegate )
   {
     super( parent, SWT.NULL );
 
     m_label = label;
     m_toolkit = toolkit;
-    m_wizard = wizard;
-    m_remoteCommitType = commitType;
-    m_img = img;
+    m_delegate = delegate;
 
     final GridLayout layout = new GridLayout();
     layout.verticalSpacing = layout.marginWidth = 0;
@@ -112,7 +107,7 @@ public class CreateProjectComposite extends Composite
       return;
 
     final ImageHyperlink lnkCreateProject = m_toolkit.createImageHyperlink( this, SWT.NULL );
-    lnkCreateProject.setImage( m_img );
+    lnkCreateProject.setImage( m_delegate.getImage() );
     lnkCreateProject.setText( m_label );
 
     lnkCreateProject.addHyperlinkListener( new HyperlinkAdapter()
@@ -123,10 +118,12 @@ public class CreateProjectComposite extends Composite
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        m_wizard.init( PlatformUI.getWorkbench(), null );
-        m_wizard.setActivateScenarioOnPerformFinish( false );
+        final INewProjectWizard wizard = m_delegate.getWizard();
 
-        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), m_wizard );
+        wizard.init( PlatformUI.getWorkbench(), null );
+        wizard.setActivateScenarioOnPerformFinish( false );
+
+        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard );
         dialog.setRememberSize( true );
 
         dialog.addPageChangedListener( new IPageChangedListener()
@@ -141,7 +138,7 @@ public class CreateProjectComposite extends Composite
               final IUpdateable update = (IUpdateable) page;
               update.update();
             }
-            else if( m_wizard instanceof WizardCreateProject && page instanceof WizardNewProjectCreationPage )
+            else if( wizard instanceof WizardCreateProject && page instanceof WizardNewProjectCreationPage )
             {
               if( resetProjectName )
               {
@@ -159,7 +156,7 @@ public class CreateProjectComposite extends Composite
         {
           try
           {
-            final IProject project = m_wizard.getNewProject();
+            final IProject project = wizard.getNewProject();
             final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
             if( nature instanceof RemoteProjectNature )
             {
@@ -167,7 +164,7 @@ public class CreateProjectComposite extends Composite
               final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
               preferences.setVersion( -1 );
               preferences.setIsOnServer( Boolean.FALSE );
-              preferences.setProjectType( m_remoteCommitType );
+              preferences.setProjectType( m_delegate.getRemoteCommitType() );
             }
           }
           catch( final CoreException e1 )
