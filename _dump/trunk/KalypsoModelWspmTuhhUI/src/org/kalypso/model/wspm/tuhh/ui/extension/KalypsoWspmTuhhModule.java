@@ -27,8 +27,6 @@ import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
 
- 
-
   protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) );
 
   protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) );
@@ -151,6 +149,15 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
         return new DemoProjectWizard();
       }
 
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasDemoProjectWizard()
+       */
+      @Override
+      public boolean hasDemoProjectWizard( )
+      {
+        return true;
+      }
+
       @Override
       public INewProjectWizard getProjectWizard( )
       {
@@ -161,6 +168,15 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsoWspmModel"; //$NON-NLS-1$
+      }
+
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasImportWizard()
+       */
+      @Override
+      public boolean hasImportWizard( )
+      {
+        return true;
       }
 
       @Override
