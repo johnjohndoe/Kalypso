@@ -159,6 +159,15 @@ public class KalypsoRiskModule implements IKalypsoModule
         return null;
       }
 
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasDemoProjectWizard()
+       */
+      @Override
+      public boolean hasDemoProjectWizard( )
+      {
+        return false;
+      }
+
       @Override
       public INewProjectWizard getProjectWizard( )
       {
@@ -169,6 +178,15 @@ public class KalypsoRiskModule implements IKalypsoModule
       public String getRemoteCommitType( )
       {
         return "KalypsoRiskModel";
+      }
+
+      /**
+       * @see org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler#hasImportWizard()
+       */
+      @Override
+      public boolean hasImportWizard( )
+      {
+        return false;
       }
 
       @Override
