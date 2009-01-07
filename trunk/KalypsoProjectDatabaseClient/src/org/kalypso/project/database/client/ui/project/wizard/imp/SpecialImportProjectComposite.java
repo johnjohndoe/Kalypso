@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.imp;
 
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,6 +49,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 
 /**
@@ -63,17 +63,14 @@ public class SpecialImportProjectComposite extends Composite
 
   private final FormToolkit m_toolkit;
 
-  private final IWizard m_wizard;
+  protected final IKalypsoModuleEnteringPageHandler m_enteringPage;
 
-  private final String m_label;
-
-  public SpecialImportProjectComposite( final Composite parent, final FormToolkit toolkit, final IWizard wizard, final String label )
+  public SpecialImportProjectComposite( final Composite parent, final FormToolkit toolkit, final IKalypsoModuleEnteringPageHandler enteringPage )
   {
     super( parent, SWT.NULL );
 
     m_toolkit = toolkit;
-    m_wizard = wizard;
-    m_label = label;
+    m_enteringPage = enteringPage;
 
     final GridLayout layout = new GridLayout();
     layout.verticalSpacing = layout.marginWidth = 0;
@@ -93,7 +90,7 @@ public class SpecialImportProjectComposite extends Composite
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );
-    lnkImport.setText( m_label );
+    lnkImport.setText( m_enteringPage.getImportWizardLabel() );
 
     lnkImport.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -103,7 +100,7 @@ public class SpecialImportProjectComposite extends Composite
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), m_wizard );
+        final WizardDialog2 dialog = new WizardDialog2( PlatformUI.getWorkbench().getDisplay().getActiveShell(), m_enteringPage.getImportWizard() );
         dialog.setRememberSize( true );
 
         dialog.open();
