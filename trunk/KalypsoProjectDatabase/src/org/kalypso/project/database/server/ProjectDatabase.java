@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -79,6 +79,7 @@ public class ProjectDatabase implements IProjectDatabase
 
   public ProjectDatabase( )
   {
+    //FIXME configuration file -> system property!!!
 // final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
     final AnnotationConfiguration configure = new AnnotationConfiguration().configure();
 
