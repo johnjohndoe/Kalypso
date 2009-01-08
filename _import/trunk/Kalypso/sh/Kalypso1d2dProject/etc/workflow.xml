@@ -203,8 +203,8 @@
 		</Task>
 		<Task type="ASYNCHRONOUS" context="FenetMap"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
-			<Help>%Kalypso1D2D_Processing_CalcSet_help</Help>
-			<Name>%Kalypso1D2D_Processing_CalcSet</Name>
+			<Help>%Kalypso1D2D_Processing_StartCalculationWithProblemsView_help</Help>
+			<Name>%Kalypso1D2D_Processing_StartCalculationWithProblemsView</Name>
 		</Task>
 	</TaskGroup>
 
