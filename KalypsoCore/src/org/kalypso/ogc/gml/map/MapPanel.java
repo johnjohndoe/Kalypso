@@ -109,7 +109,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 {
   /**
    * Maximum delay by which repaints to the map are produced.
-   * 
+   *
    * @see java.awt.Component#repaint(long)
    */
   private static final long MAP_REPAINT_MILLIS = 250;
@@ -408,7 +408,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             * 
+             *
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -446,7 +446,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
+   *
    * @return scale of the map
    */
   public double getCurrentScale( )
@@ -572,7 +572,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * <li>all 'paint-listeners'</li>
    * <li>the current widget</li>
    * </ul>
-   * 
+   *
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
@@ -688,7 +688,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -915,17 +915,22 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     final IMapLayer existingLayer = m_layers.get( theme );
     if( existingLayer == null )
     {
-      // TODO: move into factory method
+      // TODO: move into factory method; there should be an extension-point...
       final IMapLayer newLayer;
       if( theme instanceof IKalypsoCascadingTheme )
         newLayer = new NullMapLayer( this, theme );
+      else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) )
+      {
+        // REMARK: uncomment to change to different rendering strategy
+        newLayer = new BufferedRescaleMapLayer( this, theme, false );
+      }
       else
       {
         // REMARK: uncomment to change to different rendering strategy. I like
         // 'BufferedRescale' best...
         // newLayer = new DirectMapLayer( this, theme );
         // newLayer = new BufferedMapLayer( this, theme );
-        newLayer = new BufferedRescaleMapLayer( this, theme );
+        newLayer = new BufferedRescaleMapLayer( this, theme, true );
       }
 
       m_layers.put( theme, newLayer );

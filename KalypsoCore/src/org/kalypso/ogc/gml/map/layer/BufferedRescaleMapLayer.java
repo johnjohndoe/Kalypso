@@ -54,22 +54,37 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- * 
+ *
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
 {
-  /** One static mutex-rule, so painting jobs for different themes run one after another. */
-  private static final ISchedulingRule MUTEX_RULE = new MutexRule();
+  /** A global mutex-rule, used when 'useGlobalMutex' is set to <code>true</code>. */
+  private final static ISchedulingRule MUTEX_RULE = new MutexRule();
 
   private BufferedTile m_runningTile = null;
 
   /** The last correctly finished tile. Will be painted as long es the runningTile is about to be painted. */
   private BufferedTile m_tile = null;
 
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme )
+  /** Rule that is set to all paint jobs of this layer. */
+  private ISchedulingRule m_rule;
+
+  /**
+   * @param useGlobalMutex
+   *          If <code>true</code>, use the static (global) mutex to start the buffer paint jobs,else a local (per
+   *          layer) mutex is used. REMARK: the global mutex is used for all themes except WMS themes, as parallel
+   *          access to GMLWorkspaces theme to be quite slow. WMS themes however should be allowed to run in parallel,
+   *          else they block everything else. Probably this should be made more transparetn, i.e. better designed...
+   */
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final boolean useGlobalMutex )
   {
     super( panel, theme );
+
+    if( useGlobalMutex )
+      m_rule = MUTEX_RULE;
+    else
+      m_rule = new MutexRule();
   }
 
   /**
@@ -162,9 +177,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, this, world2screen );
     runningTile.setUser( false );
-    // TODO: decide depending on theme-type, if mutex-shall be used;
-    // Or: one mutex per theme?
-// runningTile.setRule( MUTEX_RULE );
+    runningTile.setRule( m_rule );
     runningTile.schedule( 250 );
 
     m_runningTile = runningTile;
