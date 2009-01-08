@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.kalypso.deegree2;singleton:=true
 Bundle-Version: 2.1.0
 Bundle-Vendor: www.deegree.org
 Eclipse-LazyStart: true
-Require-Bundle: org.eclipse.core.runtime,
- javax.servlet;bundle-version="2.4.0"
+Require-Bundle: org.eclipse.core.runtime
 Bundle-ClassPath: lib/acme/acme.jar,
  lib/arcsde/jsde90_sdk.jar,
  lib/deegree2/deegree2_v2_2_rc6.jar,
@@ -310,3 +309,5 @@ Export-Package: com.vividsolutions.jts;version="1.8.0",
  org.j3d.util.device,
  org.j3d.util.frustum,
  org.j3d.util.interpolator
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"
