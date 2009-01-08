@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
  * typename ::= Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden <br>
  * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ segment ::= #fid# <id>| <property>|
  * <property>[ <typename>] featurePath ::= <emptypath>| <segment>/ <segment>]]>
- * 
+ *
  * @author belger
  */
 public class FeaturePath
@@ -117,7 +117,7 @@ public class FeaturePath
    * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList zurückgegeben, deren
    * Elemente alle vom angegebenen Typ sind
    * </p>
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeature( final GMLWorkspace workspace )
@@ -270,8 +270,8 @@ public class FeaturePath
         if( m_typename != null )
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
-          final IGMLSchema contexstSchema = workspace.getGMLSchema();
-          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contexstSchema, false, true );
+          final IGMLSchema contextSchema = workspace.getGMLSchema();
+          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, false, true );
           for( final IFeatureType type : associationFeatureTypes )
           {
             final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( type, workspace.getGMLSchema(), true, true );

@@ -72,7 +72,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * All the rest of parsing is delegated to the {@link GMLContentHandler} content handler.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class GMLDocumentContentHandler extends DelegateContentHandler
@@ -160,7 +160,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
         if( !xmlnsUri.equals( NS.XSD ) )
         {
           // make sure that all dependent schemas are loaded
-          loadGMLSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
+          final GMLSchema additionalSchema = loadGMLSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
+          if( gmlSchema != null )
+            gmlSchema.addAdditionalSchema( additionalSchema );
         }
       }
     }
