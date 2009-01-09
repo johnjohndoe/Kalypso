@@ -1,8 +1,10 @@
-SUBROUTINE RMA10SUB
+  !update degrees of freedom and check for convergence
+  !---------------------------------------------------
+subroutine RMA_Kalypso
 
 USE BLK10MOD, only: &
 &  niti, nita, maxn, nitn, itpas, iaccyc, icyc, ncyc, it, &
-&  ioutrst, ioutfreq, ioutrwd, nprtf, nprti, &
+&  ioutrwd, nprtf, nprti, irsav, &
 &  maxp, maxe, maxlt, ne, np, npm, nem, nmat, &
 &  ncrn, nops, imat, &
 &  ao, &
@@ -27,18 +29,14 @@ USE BLK10MOD, only: &
 !nita                   local copy of current maximum number of iterations in steady or unsteady run
 !maxn                   current iteration cycle
 !itpas                  ???
-!                       TODO: delete everything, connected to ioutrst
 !iaccyc:                time step to start the calculation from; counting through the list of time steps to reach the iaccyc-th step
-!                       TODO: delete everything, connected to ioutrst
 !icyc                   counter for really processed time steps
 !ncyc                   maximum number of time steps
 !it                     actual 'ID' of the time step
-!ioutrst                frequency to write out restart results (obsolete?)
-!                       TODO: Examine what is the difference between those two lines
-!ioutfreq               frequency to write out results
 !ioutrwd                frequency to rewind output file LOUT
 !nprtf                  frequency of time steps to write out full results
 !nprti                  frequency of iterations within nprtf to write out full results
+!irsav                  frequency to print results to output file after iteration
 !maxp:                  maximum number of points (surface points; includes midsides)
 !maxe:                  maximum number of elements
 !maxlt:                 maximum number of 1D/2D transition elements for 1D/2D line-2-element transitions
@@ -141,7 +139,7 @@ USE BLK10MOD, only: &
 !iyrr                   year
 !atim                   array to store processing times for 1D, 2D and so on; it is used for the time-output file
 !delt                   time step length [hours]
-!alpha                  factor for time derivative of variables; centering (default 1.8) for hydrodynamic values
+!alpha                  factor for time centering (default 1.6) for hydrodynamic values
 !altm                   = alpha/ delt
 !alphasn                factor for time centering for constituents (default 2.0)
 !sidff                  side inflow to an element
@@ -151,73 +149,74 @@ USE BLK10MOD, only: &
 !itransit               ??? - 3D purposes
 !dfct                   ??? - 3D purposes
 
-USE BLK11MOD, only: &
-&  dayofy, &
-&  icesw, &
-&  icethk, icethkol, &
-&  tmed
-!meaning of the variables
-!-----------------------
-!dayofy     day of the year
-!icesw      ice usage switch
-!           0 - no usage of ice cover
-!           1 - use Ashton formulation of temperature slope calculation
-!           2 - use RMA10 formulation of temperature slope calculation
-!icethk     ice thickness from current time step
-!icethkol   ice thickness from previous time step
-!tmed       medium temperature to examine status of freezing/melting
 
+USE BLK11MOD, only: dayofy, icethkol, icethk, icesw, tmed
 USE BLKDRMOD, only: idswt, akp, adt, adb, ado
 !meaning of the variables
-!-----------------------
-!           TODO: How does the dry node modification testing really work?
-!idswt      frequency of testing for dry node modification
-!           0 - eliminate testing
-!          1+ - frequency
-!akp        porosity for Marsh algorithm
-!adt        top elevation of the transition range in operative Marsh algorithm
-!adb        bottom elevation of the transition range in operative Marsh algorithm
-!ado        slot bed elevation in operative Marsh algorithm
-
-
-
-USE PARAKalyps, only: ivegetation, itefreq, c_wr
-!meaning of the variables
 !------------------------
-!ivegetation      calculate resistance with Darcy approach according to big vegetation elements
-!itefreq          frequency to write out results between iterations
-!c_wr             cWR value for each element
-
+!idswt      switch to control the drying wetting algorithm
+!           0 - don't deactivate any nodes
+!           X - X is the frequency of testing for wetting/ drying
+!akp
+!adt
+!adb
+!ado
 USE BLKSEDMOD, only: lss, nlay, thick, sst, nlayo, thicko, gbo, ssto, smval, bedorig
 USE BLKSANMOD, only: lbed, lsand, delbed, elevb, tthick
+USE PARAKalyps, only: ivegetation, c_wr, mcord
 
 implicit none
 
-integer (kind = 4) :: ndff, ndg, idryc, iprtf
+integer (kind = 4) :: idryc, iprtf, iprti, iprtMetai
 integer (kind = 4) :: i, j, k, l, m, n, kk, ll
 integer (kind = 4) :: n1, n2
-integer (kind = 4) :: temp_maxn, ndl
-real (kind = 8) :: ta, sallowperm, salhighperm
-real (kind = 8) :: d1, d2, dtfac, ame1
-integer (kind = 4) :: iswt
-real (kind = 8) :: thetcn
+integer (kind = 4) :: temp_maxn
+integer (kind = 4) :: ndl
+integer (kind = 4) :: teststat
 integer (kind = 4) :: ibin
-!cipk aug98 add character statement
-CHARACTER*48 FRST
-CHARACTER*6  INUM
-!nis,feb07,testing: Writing matrix
+real (kind = 8) :: vtm, htp, vh, h, hs
+real (kind = 8) :: ta
+real (kind = 8) :: d1, d2, ame1
+real (kind = 8) :: dtfac
+real (kind = 8) :: sallowperm, salhighperm
+real (kind = 8) :: thetcn
+character (len = 96) :: outputfilename, inputfilename
+!meaning of the variables
+!------------------------
+!idryc            is something like a count down variable to process drying/ wetting
+!iprtf            local variable to get time step frequency to write out results (only transient calculations)
+!iprti            local variable to get iteration frequency to write out results within steady or iprtf-controlled transient calculations
+!iprtMetai        local variables to get iteration frequency to write out results to the output file (not result model file)
+!i, j, k, l, m, n local counter variables
+!kk, ll           local counter variables; all connected to logic concerned about 3D applications
+!n1, n2           local copies of nodes
+!temp_maxn        local temporary storage for current iteration cycle
+!ndl              lowest degree of freedom; becomes only the value 1
+!teststat         i/o status variable
+!ibin             unit number of the control file; it will be set, if input.sub was called
+!vtm, htp, vh, h, hs    local copies for variables that are used for elevation transformation during operative MARSH algorithm
+!ta               time for processing time measuring purposes
+!d1, d2           dummy values for calling the transformation subroutine for the MARSH algorithm
+!ame1             dummy value for calling the transformation subroutine for the MARSH algorithm
+!dtfac            used as temporary variable to calculate the time derivative with the iproj-option 2
+!sallowperm       ???
+!salhighperm      ???
+!thetcn           local reciprocal value of alpha to calculate time derivatives of the variables
+!outputfilename   outputfilename character variable for 2D result files
+!inputfilename    inputfilename character variable for 2D result files (informational data) ???
+
+
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 !CHARACTER (LEN = 25) :: matrixname
 !CHARACTER (LEN = 30) :: matrixformat
-!-
-!NiS,jul06: Consistent data types for passing parameters
-REAL(KIND=8) :: VTM, HTP, VH, H, HS
-CHARACTER (LEN = 96) :: outputFileName, inputFileName
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 
-!nis,jan07: iostat variable for test writing purposes
-INTEGER :: teststat
-
-
-!called subroutines
+!called subroutines (not complete)
+!------------------
 !SECOND       : get the processor time to examine the calculation speed ???
 !INITL        : allocation and initialization of the global variables defined in the modules
 !INCSTRC      : reading and organizing in the control structure data from external file
@@ -228,7 +227,6 @@ INTEGER :: teststat
 !GENT         : reads in external network parts from another file.
 !cwr_init     : initializes the cwr-values during restart, if there are some values, that are already calculated and written
 !FLDIR        : calculates the flow direction of 1D-elements
-
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -244,47 +242,50 @@ INTEGER :: teststat
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
+      
+!get informations concerning time consumption
+!--------------------------------------------
+call second (ta)
 
-!gets somehow time of execution for benchmarking
-!TODO: What to do with the benchmarking time
-!TA is not used at all
-CALL SECOND(TA)
-
-!allocate and initalise all variables
-!------------------------------------
-CALL INITL
+!initialise all the global arrays and variables
+!----------------------------------------------
+call initl
 
 !initialisations of global variables
 !-----------------------------------
-!maxn needs to be initialized first for other initialisation purposes in input.sub and following
-MAXN = 1
-NDF  = 6
-ND1 = NSCR
-ICFL  = 6
+!TOASK: Why is maxn initialized at this point?
+!answer: Because for call of input.sub it becomes necessary, that the value is unequal zero
+!dummy value for maxn
+maxn = 1
+!number of active degrees of freedom
+ndf  = 6
+!copy scratch file unit number for solver purpose
+nd1 = nscr
+!console unit number definition
+!TOASK: Why is unit 6 the console?
+icfl  = 6
 
 !initialisations of local variables
 !----------------------------------
-NDFF  = 9
-IDRYC = 0
-NDG   = 5
+idryc = 0
 
-!factors concerning time derivatives
-!-----------------------------------
+!for time derivative of primary hydrodynamic variables
+!-----------------------------------------------------
 !alpha = 1.6
-ALPHA = 1.8
+alpha = 1.8
 !alpha = 2.0
 thetcn = 1./ alpha
 
-!get input data from control file
-!--------------------------------
+!input geometry etc
+!------------------
 call input (ibin)
 
-!Input control structure data
+!input control structure data, if input file for that is present
 !----------------------------
-if (incstr == 20) call incstrc
-!Input time series data
-!----------------------------
-if (intims == 22) call intimes
+IF (INCSTR == 20) CALL INCSTRC
+!input time series from a file, if input file for that is present
+!-----------------------------
+IF (INTIMS == 22) CALL INTIMES
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -295,32 +296,42 @@ if (intims == 22) call intimes
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
-!nis,nov08: REMOVE FOR RMA·KALYPSO
-!Remove writing to following units:
-!  irmafm, ibedotismsfm, ismsfm1, ismsfm2, iwavot
-
-!setup stress weighting; get external net
-!----------------------------------------
-if (icordin /= 0) call gent
-
-!get initial cWR values, if vegetation shall be considered
 !---------------------------------------------------------
+!formally place for writing headers to several ouput files
+!---------------------------------------------------------
+
+!get external network data, if file for that is present
+!-------------------------
+IF (ICORDIN /= 0) CALL GENT
+
+!initialise vegetation parameters, if algorithm should be used
+!--------------------------------
 if (ivegetation /= 0) then
   write(*,*)'going to cwr_init'
   call cwr_init
+else
+  do i = 1, maxe
+    c_wr (i) = 1.0
+  enddo
 endif
 
 !Establish flow directions for one dimensional elements
 !------------------------------------------------------
-CALL FLDIR
+call fldir
 
-!------------------------------------------------------------------------------
-!STEADY STATE CALCULATION   STEADY STATE CALCULATION   STEADY STATE CALCULATION
-!------------------------------------------------------------------------------!C-
 
-      !TEST FOR STEADY STATE; otherwise jump over steady calculation logic
-      IF (NITI == 0) GO TO 350
-      NITA = NITI
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                 STEADY STATE CALCULATION                        !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      
+!jump to transient calculation part, if there are no steady iterations on demand
+!----------------------------------
+if (niti == 0) go to 400
+!400 marks the end of the steady calculation
+
+!copy current number of steady iterations to be processed
+!--------------------------------------------------------
+nita = niti
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -331,10 +342,21 @@ CALL FLDIR
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!iterate steady case; maxn is the iteration counter initilised with zero
-!-----------------------------------------------------------------------
-maxn = 0
-SteadyIterationCycle: do
+!start calculation with zero iteration entry
+MAXN = 0
+
+!get prinout frequency for results; if not specified (iprtf = 0), then print after last iteration
+!---------------------------------
+iprti = abs (nprti)
+if (iprti == 0) iprti = nita
+!get prinout frequency for results to output file (not model result file)
+!---------------------------------
+iprtMetai = abs (irsav)
+if (iprtMetai == 0) iprtMetai = nita
+
+!Iterate steady state
+!--------------------
+steadyCycle: Do
   maxn = maxn + 1
 
 !----------------------------------------------------------------
@@ -346,110 +368,127 @@ SteadyIterationCycle: do
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-  !if there is any 1D/2D line-2-element transition, calculate velocity distribution
-  !--------------------------------------------------------------------------------
+
+  !drying/ wetting, if desired
+  !---------------
+  if (idswt /= 0) then
+    if (idryc == 0) then
+      !get potentially rewetted nodes
+      write(*,*) 'entering rewet'
+      call rewet
+      !dry wet and potentially rewetted nodes
+      write(*,*) 'entering dry'
+      call del
+      !after processing drying wetting, reset countdown for drying/wetting to the original frequency
+      idryc = idswt
+    endif
+  endif
+
+  !equation dropout
+  !----------------
+  if (idrpt /= 0) then
+    call drpout
+  !if inoperative, set all DOFs to be active
+  else
+    do j = 1, np
+      do k = 1, ndf
+        iactv (j, k) = 10
+      enddo
+    enddo
+  endif
+
+  !set up boundary line, based on active mesh parts
+  !--------------------
+  call bline (maxn)
+
+  !Calculate 1D/2D line-2-element transition distribution
+  !------------------------------------------------------
   if (MaxLT /= 0) call TransVelDistribution
 
-  !Process dry nodes
-  !-----------------
-    IF(IDSWT /= 0) THEN
-      IF(IDRYC == 0) THEN
-        WRITE(*,*) 'ENTERING REWET'
-        CALL REWET
-        WRITE(*,*) 'ENTERING DRY'
-        CALL DEL
-        IDRYC=IDSWT
-      ENDIF
-    ENDIF
+  !???
+  !---
+  ick = iteqs (maxn) + 4
 
-  !equation/ node dropout logic
-  !-----------------------------
-  IF (IDRPT == 0) THEN
-    !if no dropout is desired; then set all degrees of freedom at each node
-    !potentially active
-    DO J = 1, NP
-      DO K = 1, NDF
-        !set it active
-        IACTV (J, K) = 10
-      ENDDO
-    ENDDO
-  ELSE
-    !if dropout is desired go to the drpout logic
-    CALL DRPOUT
-  ENDIF
+  !set side inflows zero (sink/source)
+  !-----------------------------------
+  do n = 1, ne
+    sidff (n) = 0.
+  enddo
 
-  !set up boundary line of active element set
-  !------------------------------------------
-  WRITE (*,*) 'ENTERING BLINE'
-  CALL BLINE(MAXN)
+  !3D to 2D collapse; experimental
+  !-------------------------------
+  if (itransit == 1 .and. maxn < 4) call twodsw
 
+  !load the DOFs, i.e. set up the equations system
+  !-----------------------------------------------
+  call load
 
+  !Compute areas of continuity lines for stage flow input
+  !------------------------------------------------------
+  call agen
 
+  !Initialise Mellor Yamada turbulence formulation
+  !-----------------------------------------------
+  if (iteqv (maxn) /= 5 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
+      
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
+!nis,feb07,testing: Write whole matrix
+!write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+!teststat = 0
+!open (9919, matrixname, iostat = teststat)
+!if (teststat /= 0) STOP 'ERROR - while opening matrix file'
+!WRITE(9919,*) 'maxn', maxn
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 
+  !get some time informations
+  !--------------------------
+  call second (atim (2))
+  
+  !call the solver
+  !---------------
+  if (icpu == 0) then
+    !frontal solution scheme
+    !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.
+    call front (1)
+  else
+    !Pardiso solver from the Intel MKL library
+    !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
+    call front_pardiso (1)
+  endif
+  
 
+  !Write consumption informations to the time file, if desired
+  !-----------------------------------------------
+  if (itimfl > 0) then
+    call second (atim (3))
+    write (itimfl, 6100) maxn, atim (3) - atim (2), atim (3) - atim (1)
+  endif        
+ 6100 format('iteration',i5,'  time in front-horz',f12.2, ' total time to date for run =', f12.2)
 
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
+!close testfile
+!close (9919, status = 'keep')
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 
-      ICK=ITEQS(MAXN)+4
+  !set information, that advanced turbulence models can be used
+  !------------------------------------------------------------
+  if (maxn >= 2) iutub = 1
 
-!cipk nov99 add optional call for transitioning
+  !countdown for drying/wetting
+  !----------------------------
+  idryc = idryc - 1
 
-!CIPK JAN02 SET SIDFF TO ZERO
-      DO N=1,NE
-        SIDFF(N)=0.
-      ENDDO
-
-!cipk aug00 experimental
-      IF(ITRANSIT == 1  .and. maxn < 4) CALL TWODSW
-
-      WRITE (*,*) 'ENTERING LOAD.subroutine'
-      CALL LOAD
-
-!C-
-!C......  Compute areas of continuity lines for stage flow input
-!C-
-      CALL AGEN
-!c      DO 250 N=1,NE
-!c       DFCT(N)=1.
-!c  250 CONTINUE
-      IF (ITEQV (MAXN) /= 5  .AND.  IOPTZD > 0 .AND. IOPTZD < 3) CALL MELLII
-
-
-      !nis,feb07,testing: Write whole matrix
-      !write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
-      !teststat = 0
-      !open (9919, matrixname, iostat = teststat)
-      !if (teststat /= 0) STOP 'ERROR - while opening matrix file'
-      !WRITE(9919,*) 'maxn', maxn
-      !-
-
-
-!cipk aug07
-      call SECOND(ATIM(2))
-      IF(ICPU == 0) THEN
-        CALL FRONT(1)
-      ELSE
-        !stop 'option not stable, please use frontal scheme'
-        CALL FRONT_PARDISO(1)
-      ENDIF
-      IF(ITIMFL > 0) THEN
-        CALL SECOND(ATIM(3))
-        WRITE(ITIMFL,6100) MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
- 6100   FORMAT('ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2, ' TOTAL TIME TO DATE FOR RUN =', F12.2)
-      ENDIF        
-
-      !close testfile
-      !close (9919, status = 'keep')
-      !-
-
-!CIPK JAN97
-      IF(MAXN .GE. 2) THEN
-        IUTUB=1
-      ENDIF
-!CIPK JAN97 END CHANGES
-
-      IDRYC=IDRYC-1
-
-      CALL UPDATE
+  !update degrees of freedom and check for convergence
+  !---------------------------------------------------
+  call update
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -459,39 +498,25 @@ SteadyIterationCycle: do
 !
 !        call autoconverge(3.)
 !
-!        cycle SteadyIterationCycle
+!        GOTO 200
 !
 !      end if
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!C      CALL CHECK
-!C     REWIND IVS
-      IF(ITEQV(MAXN) /= 5  .AND.  ITEQV(MAXN) /= 2 .AND.  ITEQV(MAXN) < 8) CALL VRTVEL
-!CIPK AUG04 REVISE TEST
+  !calculate vertical velocity distribution    
+  !----------------------------------------
+  if (iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. iteqv (maxn) < 8) call vrtvel
 
-      IF(NPRTI == 0) THEN
-        IPRTF=NITA
-      ELSE
-        IPRTF=NPRTI
-      ENDIF
-!CIPK AUG04      IPRTF=IABS(NPRTF)
-
-      IF(MOD(MAXN,IPRTF) == 0  .OR.  MAXN == NITA .OR. NCONV == 1) THEN
-         CALL OUTPUT(2)
-
-      !testing
-      WRITE(*,*) 'vor check'
-      !testing-
-         CALL CHECK
-      !testing
-      WRITE(*,*) 'nach check'
-      !testing-
-!CIPK MAR00
-!CIPK DEC00      ELSE
-!CIPK DEC00
-        ENDIF
+  !print out result at freqency match, after last iteration (always) and convergence before reaching last iteration
+  !----------------
+  if (mod (maxn, iprtMetai) == 0 .or. maxn == nita .or. nconv == 1) then
+    !generate and write some output data
+    call output (2)
+    !check for continuity at CCLs
+    call check
+  endif
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -500,98 +525,64 @@ SteadyIterationCycle: do
 !        !if (beiauto/=0.) then
 !        !  if (temp_nan==1.0) then
 !        !    maxn = 0.
-!        !    cycle SteadyIterationCycle
+!        !    GOTO 200
 !        !  end if
 !        !end if
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!CIPK DEC00      ENDIF
-!CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
-      TETT=(DAYOFY-1)*24.+TET
+  !restore tett as hours in year
+  tett = (dayofy - 1) * 24. + tet
 
+  !if convergered exit the steady iteration cycle
+  !----------------------------------------------
+  if (nconv == 2) exit steadyCycle
 
-!nis,nov08: REMOVE FOR RMA·Kalypso
-!Remove writing to following units:
-!  NLL
-!-
+  krestf = 1
 
+  !write result after iteration cycle, if desired
+  !----------------------------------------------
+  if (nprti /= 0) then
+    if (mod (maxn, nprti) == 0 .and. ikalypsofm /= 0) then
+      !generate output file name
+      call generateoutputfilename ('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
+      !write the result
+      call write_kalypso (outputfilename, 'resu')
+    endif
+  endif
 
-!CIPK NOV97      IF(NCONV == 1) GO TO 350
-      IF(NCONV == 2) GO TO 350
-  300 CONTINUE
-      KRESTF=1
-!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE STEADY STATE ITERATION, IF NOT CONVERGED
-      IF (itefreq/=0) THEN
-        IF (mod(maxn,itefreq)==0) THEN
-          IF (IKALYPSOFM /= 0) THEN
-            WRITE(*,*)' Entering write_Kalypso, steady state, after Iteration = ',maxn
-           call generateOutputFileName('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-            CALL write_KALYPSO (outputFileName, 'resu')
-            WRITE(*,*)'back from write_kalypso'
-          END IF
-        ENDIF
-      ENDIF
-!-
-!NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
-!           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
-        IF (IVEGETATION /= 0) THEN
-          !testing
-          WRITE(*,*) 'vor get_element_cwr'
-          !testing-
-          CALL get_element_cwr
-          !testing
-          WRITE(*,*) 'nach get_element_cwr'
-          !testing-
-        END IF
+  !get vegetation parameter, if calculation with vegetation is desired
+  !-------------------------------------------------------------------
+  if (ivegetation /= 0) call get_element_cwr
 
-  !stop iteration, if maximum number of iterations is reached
-  !----------------------------------------------------------
-  IF(MAXN >= NITA) exit SteadyIterationCycle
+  !If not converged yet, but number of iteration exceeds, end steady calculation
+  !-----------------------------------------------------------------------------
+  if (maxn >= nita) exit steadycycle
+      
+!end of loop of steady calculation
+end do steadyCycle
 
-end do SteadyIterationCycle
-!C-
-!C......TEST ON MAXIMUM TIME
-!C-
-!cipk dec97  MOVE SKIP   350 IF(NCYC > 0) GO TO 400
-  350 CONTINUE
-      if(niti == 0) go to 400
-!*************************************************************************DJW 04/08/04
-!
-!     Checks Salinity Values against maximum and minimum permissible values and resets
-!     to keep within an appropriate range as appropriate
-!
-!*************************************************************************
-      SalLowPerm = 0.0001
-      SalHighPerm = 300
-      Do J = 1,NP
-        If (Vel(4,J)<SalLowPerm) Then
-          Vel(4,J) = SalLowPerm
-        End If
-        If (Vel(4,J)>SalHighPerm) Then
-          Vel(4,J) = SalHighPerm
-        End If
-      End Do
-!*************************************************************************END DJW 04/08/04
+!Checks Salinity Values against maximum and minimum permissible values and resets
+! to keep within an appropriate range as appropriate
+!-------------------------------------------------------------------------
+SalLowPerm = 0.0001
+SalHighPerm = 300
+Do J = 1,NP
+  If (Vel(4,J)<SalLowPerm) Then
+    Vel(4,J) = SalLowPerm
+  End If
+  If (Vel(4,J)>SalHighPerm) Then
+    Vel(4,J) = SalHighPerm
+  End If
+End Do
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!NiS,apr06: calculating the cwr-values for trees; adding temporary simulation of maxn==0
-!           Updating the cwr-values for trees after convergence
-        temp_maxn = maxn
-        maxn = 0.
-        IF (IVEGETATION /= 0) THEN
-          CALL get_element_cwr
-        END IF
-        maxn = temp_maxn
-!-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-      if(niti == 0) go to 400
-
-!nis,nov08: REMOVE FOR RMA·KALYPSO
-!remove vsing-array for output
-
+!calculating the cwr-values for trees; adding temporary storage of maxn = 0; Updating the cwr-values for trees after convergence
+!------------------------------------
+temp_maxn = maxn
+maxn = 0
+if (ivegetation /= 0) call get_element_cwr
+maxn = temp_maxn
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -605,7 +596,7 @@ end do SteadyIterationCycle
 !
 !            autoindex = 0.
 !
-!            cycle SteadyIterationCycle
+!            GOTO 200
 !
 !          end if
 !
@@ -615,40 +606,33 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!nis,nov08: REMOVE FOR RMA·KALYPSO
-!Remove writing to following units:
-!  irmafm
-!-
+!write result after finished steady calculation
+!----------------------------------------------
+if (ikalypsofm /= 0) then
+  !generate output file name
+  call generateoutputfilename('stat', niti, 0, 0, modellaus, modellein, modellrst, ct, nb, outputfilename, inputfilename)
+  !write results
+  call write_kalypso (outputfilename, 'resu')
+end if
 
 
-!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE STEADY STATE SOLUTION
-      IF (IKALYPSOFM /= 0) THEN
-        !NiS,may06: initializing MaxN shows subroutine write_Kalypso, that
-        !           the call is for solution printing
-        temp_maxn = maxn
-        MAXN = 0.
-        WRITE(*,*)' Entering write_Kalypso for STEADY STATE SOLUTION.'
-        call generateOutputFileName('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-        CALL write_KALYPSO (outputFileName, 'resu')
-        WRITE(*,*)'back from write_kalypso'
-        MAXN = temp_maxn
-      END IF
-!-
-!CIPK AUG02
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                END OF STEADY STATE BLOCK                 !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!nis,nov08: REMOVE FOR RMA·KALYPSO
-!Remove writing to following units:
-!  nopt, ismsfm, ismsfm1
-!-
+  400 continue
 
-!NiS,apr06,comment: End option, if just steady state is desired
-
-      IF(NCYC > 0) GO TO 400
-      CALL ZVRS(1)
+!Check, if transient calculation is desired
+!------------------------------------------
+if (ncyc <= 0) then
+  call zvrs (1)
+  return
+endif
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
+!IT'S TOTALLY WRONG HERE
 !      !EFa jul07, necessary for autoconverge
 !      do i=1,ncl
 !
@@ -663,17 +647,9 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-
-!CIPK JUL01      STOP
-      RETURN
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!NiS,apr06: END OF STEADY STATE BLOCK!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!C-
-!C......DYNAMIC SOLUTION DESIRED
-!C-
-!C 400 NCYC=TMAX*3600./DELT+0.5
-  400 CONTINUE
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                 TRANSIENT CALCULATION                           !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -688,285 +664,273 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-      IDRYC=0
-!CIPK JUN02
-      MAXN=0
+!initialise global variables
+!---------------------------
+!drying/wetting countdown
+idryc = 0
+!iteration counter
+maxn = 0
 
-!C-
-!C......LOOP ON NUMBER OF TIME STEPS
-!C-
-        IF(LBED > 0) THEN
-          CALL KINVIS
-          CALL SANDX
-        ENDIF
+!???
+!---
+if(lbed > 0) then
+  !kinematic viscosity ???
+  call kinvis
+  !sand exchange ???
+  call sandx
+endif
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!NiS,may06: For the case of Kalypso-2D format geometry input file, there might be a later time step than the first to strart from. If so,
-!           the boundary condition update is cycled till the correct boundary conditions of the step to start from is reached.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!NiS,mar06: Renaming the 800-dO-LOOP to Main_dynamic_Loop; to leave and cycle it easier.
-!      DO 800 N=1,NCYC
-      Main_dynamic_Loop: do n=1,ncyc
-!-
-!NiS,may06: calculation is only started with Kalypso-2D-geometry file, if the cycle iaccyc is reached; the user gives iaccyc in control file
-!           as timestep to start from
-        LaterTimestep: IF (IFILE == 60 .and. n < iaccyc) THEN
-          !NiS,may06: This part of the if-clause is for simulating the update of the boundary conditions. The purpose is to read through
-          !           time step date lines, that are not interesting, when starting from a later time step than the first. After reading through
-          !           that data, the next time step can be read, as long as firstly the wanted starting cycle exceeds the current cycle number.
-          ICYC = ICYC + 1
-          CALL INPUTD(IBIN)
-          WRITE(*,*) 'cycle main loop'
-          CYCLE Main_dynamic_Loop
-          !-
-        ELSE
-!CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL
-        IF(MOD(N,IOUTRWD) == 0) THEN
-           REWIND LOUT
-         ENDIF
-         write(*,*) 'starting cycle',n
-!CIPK JUN02
-        MAXN=1
-        IT=N
+!run through transient time steps
+!--------------------------------
+DynamicTimestepCycle: do n = 1, ncyc
 
-!cipk nov99 initialize DFCT
-        do j=1,ne
-          dfct(j)=0.0
-        enddo
+  !Jump over all time steps, until given initial step (desired by user) is reached
+  LaterTimestep: if (ifile == 60 .and. n < iaccyc) then
+    !increase current time step
+    icyc = icyc + 1
+    !read the input data lines to continue reading the control file
+    call inputd(ibin)
+    !get next time step
+    cycle DynamicTimestepCycle
 
-!CIPK SEP96 UPDATE AT START
-!CIPK REVISE TO SETUP HEL
-        DO J=1,NP
-          ! write(75,*) 'RMA10_778: NDF=',NDF
-          DO K=1,NDF
-!cipk dec00
-            V2OL(K,J)=VDOTO(K,J)
-            VOLD(K,J)=VEL(K,J)
-            VDOTO(K,J)=VDOT(K,J)
-            IESPC(K,J)=0
-          ENDDO
-          H2OL(J)=HDOT(J)
-          HOL(J)=HEL(J)
-          HDOT(J)=HDET(J)
-        ENDDO
-!NiS,may06,com: ICYC was initiated in INITL.subroutine
-        ICYC=ICYC+1
-!C-
-!C...... UPDATE OF BOUNDARY CONDITIONS
-!C-
-          CALL INPUTD(IBIN)
-          
+  !Process the following time steps
+  else
+    !Rewind output file, if rewinding is desired by the user
+    if (mod (n, ioutrwd) == 0) rewind lout
 
-        ENDIF LaterTimestep
-!-
+    !start calcualtion cycle
+    write(*,*) 'starting cycle',n
+
+    !reinitialise global variables
+    !-----------------------------
+    MAXN = 1
+    IT = N
+    do j = 1, ne
+      dfct (j) = 0.0
+    enddo
+
+    !Shift local degrees of freedom forward at storage to update for next current step
+    do j = 1, np
+      do k = 1, ndf
+        !penultimate time step
+        v2ol (k, j) = vdoto (k, j)
+        !last time step
+        vold (k, j) = vel (k, j)
+        vdoto (k, j) = vdot (k, j)
+        !???
+        iespc (k, j) = 0
+      enddo
+      !penultimate time step
+      h2ol (j) = hdot (j)
+      !last time step
+      hol (j) = hel (j)
+      hdot (j) = hdet (j)
+    enddo
+
+    ICYC=ICYC+1
+
+    !Read boundary conditions for current time step
+    call inputd (ibin)
+  endif LaterTimestep
 
 !CIPK AUG95 ADD A CALL TO UPDATE MET VALUES
 !cipk oct02 move heatex to use projections for heat budget
 !C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
 
-        IF((LSAND > 0  .OR.  LBED > 0)  .AND. IWVIN > 0) THEN
-          CALL GETWAVE
-        ENDIF
 
-        IF(IWVFC == 102) THEN
-          CALL GETSST
-        ELSEIF(IWVFC == 104) THEN
-          CALL GETDRSST
-        ENDIF
+  !get wave data, only required, if desired
+  !----------------------------
+  if ((lsand > 0 .or. lbed > 0) .and. iwvin > 0) call getwave
 
-        CALL SWANDT
+  !get surface stress data, if desired
+  !------------------------
+  if (iwvfc == 102) then
+    call getsst
+  elseif (iwvfc == 104) then
+    call getdrsst
+  endif
 
-!CIPK AUG95 USE ALPHA=1.8
-!nis,may08: Use 1.6 again
-!cipk dec99 test for delta = 0
-        if(delt > 0.) then
+  !get SWAN data, if desired
+  !-------------
+  call swandt
 
-          !TODO: This was already done in the inputd.subroutine. It shouldn't occur twice!
-    	  ALTM = ALPHA/ DELT
-!CIPK      ALTM=2.0/DELT
-!CIPK MAY02
-          ALPHASN=1.8
-          ALPHASN=2.0
+
+  !set up factors for time derivatives
+  !-----------------------------------
+  if (delt > 0.) then
+    altm = alpha/ delt
+    !following is for sediment transport
+    !alphasn = 1.8
+    alphasn = 2.0
+  else
+    altm = 0.
+  endif
+
+  !lowest degree of freedom???
+  NDL = 1
+  
+  !Initialise Mellor Yamada turbulence formulation
+  !-----------------------------------------------
+  if (iteqv (maxn) /= 5 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
+
+  !updating the time derivatives
+  !-----------------------------
+  forallnodes: do j = 1, np
+    !get transformed depth regarding MARSH-algorithm
+    vtm = vel (3, j)
+    call amf (hel (j), vtm, akp (j), adt (j), adb (j), d1, d2, 0)
+
+    !update for all degrees of freedom
+    !TODO: Is this necessary? Reasons for questions: 1. water stage/ depth is revised in next logic; 2. alpha is overwritten for sediment (alphasn) stuff and applied later again
+    ForAllDOFs: do k = ndl, ndf
+      if (iespc (k, j) == 0) then
+        !TODO: This can't work, because there will never be a time derivative value unequal zero
+        !project the variable used within this turn based on the current value and the time derivative
+        !don't calculate a time derivative
+        if (iproj == 0) then
+          vel (k, j) = vel (k, j) + delt * vdot (k, j)
+
+        !project the variable used within this turn use projection for the variable of current run by the old variable and the variable of the penultimate calculation step
+        !calculate the time derivative
+        elseif(iproj == 2) then
+          dtfac       = thetcn * vdot (k, j) + (1. - thetcn) * v2ol (k, j)
+          vel (k, j)  = vel (k, j) + delt * dtfac
+          vdot (k, j) = altm * (vel (k, j) - vold (k, j)) - vdoto (k, j) * (alpha - 1.)
+
+        !IPROJ == 1 (normal way)
+        !classical method without time projection, but just calculating the time derivative based on the Finite Difference Scheme
         else
-          altm=0.
+          vdot (k, j) = altm * (vel (k, j) - vold (k, j)) - vdoto (k, j) * (alpha - 1.)
         endif
+      endif
+    enddo ForAllDOFs
 
+    !update for water depths
+    if (ndl == 1) then
+      if (iespc (3, j) == 0) then
+        !project in time, if desired
+        if (iproj == 0) then
+          hel (j) = hel (j) + delt * hdet (j)
+          call amf (hel (j), htp, akp (j), adt (j), adb (j), d1, d2, 1)
+          vel (3, j) = htp
+        elseif (iproj == 2) then
+          dtfac = thetcn * hdet (j) + (1. - thetcn) * h2ol (j)
+          hel (j) = hel (j) + delt * dtfac
+          vh = vel(3,j)
+          call amf (hel (j), vh, akp (j), adt (j), adb (j), d1, d2, 1)
+        endif
+        !calculate the derivatives
+        if (delt > 0.) then
+          vdot (3, j) = altm * (vel (3, j) - vold (3, j)) - (alpha - 1.) * vdoto (3, j)
+        else
+          vdot (3, j) = 0.
+        endif
+      endif
+    endif
+  enddo forallnodes
 
-      !REMOVE FOR RMA·KALYPSO
-      !nis,nov08: Remove reading from file unit nipt
-      !nipt is obsolete
-      !-
-      NDL=1
+  !set up water surface elevations
+  !-------------------------------
+  do j = 1, npm
+    !calculate current water stage, depending on MARSH algorithm being operative or not
+    if (idnopt /= 0) then
+      hs = vel (3, j)
+      call amf (h, hs, akp (j), adt (j), adb (j), ame1, d2, 0)
+      wsll (j) = h + ado (j)
+    else
+      wsll (j) = vel (3, j) + ao (j)
+    endif
+    
+    !water surface update for 3D purposes
+    k = nref (j) + 1
+    if (k /= 1) then
+      l = nref (j) + ndep (j) - 1
+      if (l >= k) then
+        do m = k, l
+          wsll (m) = wsll (j)
+        enddo
+      endif
+    endif
+  enddo
 
+  !update water suface elevations for midside nodes
+  !------------------------------------------------
+  do k = 1, nem
+    !if active element
+    if (ncrn (k) > 0) then
+      !run through midside nodes
+      do l = 2, ncrn (k), 2
+        !if not a 1D junction element
+        if (imat (k) < 901 .or. imat (k) > 903) then
+          !get the current midside node from the sequence
+          j = nops (k, l)
 
-        IF (ITEQV(MAXN) /= 5  .AND.  IOPTZD > 0 .AND. IOPTZD < 3 ) CALL MELLII
+          !stop on wrongly defined elements; shouldn't happen
+          if (j <= 0) call ErrorMessageAndStop (1212, k, mcord (k, 1), mcord (k, 2))
 
+          !get the neigbouring forenode
+          n1 = nops (k, l - 1)
+          !get the neighbouring afternode
+          if (mod (l, ncrn (k)) == 0) then
+            n2 = 1
+          else
+            n2 = nops (k, l + 1)
+          endif
+          !Calculate midside's water surface elevation as average of neighbours
+          wsll (j) = 0.5 * (wsll (n1) + wsll (n2))
 
-        !nis,apr08,com: updating the time derivatives
+          !update for 3D elements, too
+          kk = nref (j) + 1
+          if (kk /= 1) then
+            ll = nref (j) + ndep (j) - 1
+            if (ll >= kk) then
+              do m = kk, ll
+                wsll (m) = wsll (j)
+              enddo
+            endif
+          endif
+        endif
+      enddo
+    endif
+  enddo
 
-        ForallNodes: DO J=1,NP
-!cipk mar98 add logic to update HEL
+  !set ice thickness value
+  do j = 1, npm
+    icethkol (j) = icethk (j)
+  enddo
 
-          !vel(3, j) : virtual depth (calculation depth) of node j
-          !vtm       : copy of virtual depth (calculation depth) of node j
-          !hel (j)   : transformed depth (depth over slot minimum of node j
-
-          !get the transformed depth
-          VTM=VEL(3,J)
-          CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
-
-          !NDL : Lowest degree of freedom to work on, is set if something is read from an external file (?); normally NDL = 1
-          !NDF : Highest degree of freedom to work on
-          !IESPC(k, j) : (???)
-          !VEl (k, j) : k-th degree of freedom of node j (velocities, virtual water depth, concentrations)
-          !thetcn:
-
-          !check for all degrees of freedom
-
-          !write(75,*) 'RMA10_899: NDF=',NDF, 'NDF=', NDL
-          ForAllDOFs: DO K = NDL, NDF
-!CIPK SEP96        VOLD(K,J)=VEL(K,J)
-!CIPK SEP96        VDOTO(K,J)=VDOT(K,J)
-            IF (IESPC (K, J) == 0) THEN
-!CIPK DEC00            VEL(K,J)=VEL(K,J)+DELT*VDOT(K,J)
-
-!cipk dec00 rewrite projection approach add switch
-
-
-              !calculate the current value of variable and the derivative basing on the approach to be used
-              !apply transformation of variable, but don't use update of time derivative
-              IF(IPROJ == 0) THEN
-                VEL (K, J) = VEL (K, J) + DELT * VDOT (K, J)
-
-              !use projection for the variable of current run by the old variable and the variable of the penultimate calculation step
-              ELSEIF(IPROJ == 2) THEN
-                dtfac         = thetcn * vdot (k, j) + (1. - thetcn) * v2ol (k, j)
-                vel (k, j)    = vel (k, j) + delt * dtfac
-                VDOT (K, J)   = ALTM * (VEL (K, J) - VOLD (K, J)) - VDOTO (K, J) * (ALPHA - 1.)
-
-              !classical method without time projection, but just calculating the time derivative based on the Finite Difference Scheme
-              !IPROJ == 1 (normally)
-              ELSE
-                VDOT (K, J) = ALTM * (VEL (K, J) - VOLD (K, J)) - VDOTO (K, J) * (ALPHA - 1.)
-              ENDIF
-
-            ENDIF
-          ENDDO ForAllDOFs
-
-
-          IF(NDL == 1) THEN
-            IF(IESPC(3,J) == 0) THEN
-
-!cipk dec00 add projection option
-
-              IF(IPROJ == 0) THEN
-                HEL(J)=HEL(J)+DELT*HDET(J)
-                CALL AMF(HEL(J),HTP,AKP(J),ADT(J),ADB(J),D1,D2,1)
-                VEL(3,J)=HTP
-              ELSEIF(IPROJ == 2) THEN
-                dtfac=thetcn*hdet(j)+(1.-thetcn)*h2ol(j)
-                hel(j)=hel(j)+ delt*dtfac
-!c               HEL(J)=HEL(J)*2-H2OL(J)
-!
-!cipk apr01 insert consistent argument
-
-                VH=VEL(3,J)
-                CALL AMF(HEL(J),VH,AKP(J),ADT(J),ADB(J),D1,D2,1)
-              ENDIF
-              IF(DELT > 0.) THEN
-              VDOT(3,J)=ALTM*(VEL(3,J)-VOLD(3,J))-(ALPHA-1.)*VDOTO(3,J)
-              ELSE
-                VDOT(3,J)=0.
-              ENDIF
-            ENDIF
-          ENDIF
-        ENDDO ForallNodes
-
-!cipk dec00 set water surface elevation
-
-        DO  J = 1, NPM
-          IF (IDNOPT/=0) THEN
-            HS = VEL(3,J)
-            ISWT = 0
-!cipk jan01  change AME to AME1
-            CALL AMF(H,HS,AKP(J),ADT(J),ADB(J),AME1,D2,ISWT)
-            WSLL(J) = H + ADO(J)
-          ELSE
-            WSLL(J) = VEL(3,J) + AO(J)
-          ENDIF
-          K=NREF(J)+1
-          IF(K /= 1) THEN
-            L=NREF(J)+NDEP(J)-1
-            IF(L .GE. K) THEN
-              DO M=K,L
-                WSLL(M)=WSLL(J)
-              ENDDO
-            ENDIF
-          ENDIF
-        ENDDO
-
-!CIPK APR01  NOW RESET FOR MID-SIDES
-        DO K=1,NEM
-          IF(NCRN(K) > 0) THEN
-
-            DO L=2,NCRN(K),2
-              IF(IMAT(K) < 901  .OR.  IMAT(K) > 903) THEN
-                J=NOPS(K,L)
-                !EFa Apr07, not for mid-sides of Flow1dFE-elements
-                if (j>0) then
-                N1=NOPS(K,L-1)
-                  IF(MOD(L,NCRN(K)) == 0) THEN
-                    N2=1
-                  ELSE
-                    N2=NOPS(K,L+1)
-                  ENDIF
-                  WSLL(J) = (WSLL(N1)+WSLL(N2))/2.
-                  KK=NREF(J)+1
-                  IF(KK /= 1) THEN
-                    LL=NREF(J)+NDEP(J)-1
-                    IF(LL .GE. KK) THEN
-                      DO M=KK,LL
-                        WSLL(M)=WSLL(J)
-                      ENDDO
-                    ENDIF
-                  ENDIF
-                endif
-              ENDIF
-            ENDDO
-          ENDIF
-        ENDDO
-
-!CIPK OCT02  SET ICETHKOL
-        DO J=1,NPM
-          ICETHKOL(J)=ICETHK(J)
-        ENDDO
-
-!CIPK JUN03
-
-        CALL GETSTRESS
-!C-
-!C       TET=TET+DELT/3600.
+  !get external stress data
+  !------------------------
+  call getstress
 
 !MD: Gesamter LSS>0 Block verschoben: 05.11.2008
 !MD  --> siehe unten im Iteration LOOP!!
 
-!C        DO NNN=1,NPM
-!C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
-!C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
-!C        ENDDO
-!
-!C----------------------------
-!C......ITERATION LOOP
-!C-----------------------------
-        !NiS,apr06: starting iteration sequence
-        !initialization:
-        !NITA = maximum number of iterations of timestep, local copy
-        !NITN = maximum number of iterations of timestep, global value
-        !ITPAS= ???
-        NITA=NITN
-        MAXN=0
-        ITPAS=0
+
+  !copy current number of iterations to be processed within transient time steps
+  !-----------------------------------------------------------------------------
+  nita = nitn
+
+  !reinitialise global variables
+  !-----------------------------
+  maxn = 0
+  itpas = 0
+  
+  !output of solution after each desired time step
+  !-----------------------------------------------
+  !get time step frequency to write out full results
+  iprtf = abs (nprtf)
+  !if frequency is not given, chose output for each step (iprtf = 1)
+  if (iprtf == 0) iprtf = 1
+
+  !get iteration frequency
+  iprti = abs (nprti)
+  !if frequency is not given, chose only to give out after last iteration
+  if (iprti == 0) iprti = nita
+  !get iteration frequency to write out 
+  iprtMetai = abs (irsav)
+  if (iprtMetai == 0) iprtMetai = nita
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -979,8 +943,10 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-        !MAXN = actual iteration number; first initialized, then incremented
-  465   MAXN=MAXN+1
+  !Iterate transient calculation
+  !-----------------------------
+  DynamicIterationCycle: Do
+    maxn = maxn + 1
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -993,162 +959,186 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!cipk oct02
-        IF(MAXN == 1) THEN
-          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
-!CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-          CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-          ITPAS=1
-        ELSEIF(ITEQV(MAXN) == 8) THEN
-          write(75,*) 'going to heatex-540',n,maxn,TET,itpas
-!CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-          CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-        ENDIF
-!C     DO 700 MAXN=1,NITN
-!C     REWIND IVS
+    !heat exchange, ???
+    !-------------
+    if (maxn == 1) then
+      write (75, *) 'going to heatex-535',n,maxn,tet,itpas
+      call heatex (nmat, delt, lout, iyrr, tet, itpas)
+      itpas = 1
+    elseif (iteqv (maxn) == 8) then
+      write (75, *) 'going to heatex-540', n, maxn, tet, itpas
+      call heatex (nmat, delt, lout, iyrr, tet, itpas)
+    endif
 
-!nis,jun07: Activating transition for dynamic loop
-      if (MaxLT /= 0) call TransVelDistribution
-!-
+    !Calculate 1D/2D line-2-element transition distribution
+    !------------------------------------------------------
+    if (MaxLT /= 0) call TransVelDistribution
 
-!C-
-!C......  Process dry nodes
-!C-
-        IF(IDSWT /= 0) THEN
-          IF(IDRYC == 0) THEN
-            WRITE(*,*) 'ENTERING REWET'
+    !drying/ wetting, if desired
+    !---------------
+    if (idswt /= 0) then
+      if (idryc == 0) then
+        !get potentially rewetted nodes
+        write(*,*) 'entering rewet'
+        call rewet
+        !dry wet and potentially rewetted nodes
+        write(*,*) 'entering dry'
+        call del
+        !after processing drying wetting, reset countdown for drying/wetting to the original frequency
+        idryc = idswt
+      endif
+    endif
 
-            CALL REWET
-            CALL DEL
-            IDRYC=IDSWT
-          ENDIF
-        ENDIF
+    !equation dropout
+    !----------------
+    if (idrpt /= 0) then
+      call drpout
+    !if inoperative, set all DOFs to be active
+    else
+      do j = 1, np
+        do k = 1, ndf
+          iactv (j, k) = 10
+        enddo
+      enddo
+    endif
 
-!cipk APR97  Add dropout
-!cipk mar01 rearrange dropout logic to allow for idrpt = 2
-!c          move logic into DRPOUT
+    !set up boundary line, based on active mesh parts
+    !--------------------
+    call bline (maxn)
 
-        IF(IDRPT == 0) THEN
+    !???
+    !---
+    ick = iteqs (maxn) + 4
 
-!c     set IACTV to be active for all
+    !3D to 2D collapse; experimental
+    !-------------------------------
+    if (itransit == 1 .and. maxn < 4) call twodsw
 
-          DO J=1,NP
-            DO K=1,NDF
-              IACTV(J,K)=10
-            ENDDO
-          ENDDO
-        ELSE
-          CALL DRPOUT
-        ENDIF
-!cipk mar01 end change
+    !update shears etc.
+    !------------------
+    if ((lsand > 0 .or. lbed > 0) .and. ick == 6) then
+      call kinvis
+      !call shear
+      write(*,*) 'going to sandx'
+      call sandx
+      call bedxcg
+    endif
 
-!cipkapr97 end changes
+    !MD: Gesamter LSS>0 Block in Iterationschleife verschoben: 05.11.2008
+    !MD -----------------------------------------------------------------
+    if (lss > 0) then
+      call setvel
+      call kinvis
+      !ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
+      !NiS,Nov06: Seems, that name of first shear-Subr is not correct. Change SHEAR1 to WSHEAR1
+      !call shear1
 
-        CALL BLINE(MAXN)
+      !MDMD:  Aufruf nur dann, wenn wirklich Wellen vorhanden!!
+      !MD Neu:   Abfrage ueber Kennungen
+      if (iwvin == 101 .or. iwvfc==102 .or. iwvfc==104) then
+        call wshear1
+        call wshear2
+      else
+        !MD: Reaktivierung von SubR SHEAR
+        !MD neu:   Sohlschub-Berechnung mit Kalypso (ks-werten/ Lambda!)
+        if (ikalypsofm /= 0) then
+          write(*,*) 'aufruf kalyp_shear'
+          call get_ffact
+          call kalyp_shear
+        else !MD: Wenn nicht Kalypso, dann KING-Ansatz
+          call shear
+        endif
+      end if
+      !call shear
+      !call wshear1
+      call depsn
+      call merosn (1)
+      call serosn (1)
+    endif
+    !MD ---------------------------------------------------------------
 
-        ICK=ITEQS(MAXN)+4
+    !CIPK OCT02
+    470   CONTINUE
 
-!cipk nov99 add optional call for transitioning
+    !load the DOFs, i.e. set up the equations system
+    !-----------------------------------------------
+    call load
 
-!cipk aug00 experimental
-        IF(ITRANSIT == 1  .and. maxn < 4) CALL TWODSW
+    !Compute areas of continuity lines for stage flow input
+    !------------------------------------------------------
+    call agen
 
-!CIPK MAY02 UPDATE SHEARS ETC
-        IF((LSAND > 0  .OR.  LBED > 0) .and. ick == 6) THEN
-          CALL KINVIS
-!c          CALL SHEAR
-          WRITE(*,*) 'GOING TO SANDX'
-          CALL SANDX
-          CALL BEDXCG
-        ENDIF
+    !Initialise Mellor Yamada turbulence formulation
+    !-----------------------------------------------
+    if (maxn >= 2 .and. iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. ioptzd > 0 .and. ioptzd < 3) call mellii
 
-!MD: Gesamter LSS>0 Block in Iterationschleife verschoben: 05.11.2008
-!MD -----------------------------------------------------------------
-        IF (LSS > 0) THEN
-          CALL SETVEL
-          CALL KINVIS
-!ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
-!NiS,Nov06: Seems, that name of first shear-Subr is not correct. Change SHEAR1 to WSHEAR1
-!          CALL SHEAR1
+    !set information, that advanced turbulence models can be used
+    !------------------------------------------------------------
+    if (iutub == 0) then
+      if (maxn > 2 .or. n > 1) iutub = 1
+    endif
 
-!MDMD:  Aufruf nur dann, wenn wirklich Wellen vorhanden!!
-!MD Neu:   Abfrage ueber Kennungen
-          IF (IWVIN == 101 .or. IWVFC==102 .or. IWVFC==104) THEN
-            CALL WSHEAR1
-            CALL WSHEAR2
-          Else
-            !MD: Reaktivierung von SubR SHEAR
-            !MD neu:   Sohlschub-Berechnung mit Kalypso (ks-werten/ Lambda!)
-            IF (IKALYPSOFM /= 0) THEN
-              WRITE(*,*) 'Aufruf KALYP_SHEAR'
-              CALL GET_FFACT
-              CALL KALYP_SHEAR
-            ELSE !MD: Wenn nicht Kalypso, dann KING-Ansatz
-              CALL SHEAR
-            ENDIF
-          END IF
-!c         CALL SHEAR
-!c         CALL WSHEAR1
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
+!nis,feb07,testing: Write whole matrix
+!if (maxn > -1) then
+!  write
+!+      (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
+!  teststat = 0
+!  open (9919, matrixname, iostat = teststat)
+!  if (teststat /= 0) STOP 'ERROR - while opening matrix file'
+!  WRITE(9919,*) 'maxn', maxn
+!endif
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 
-          CALL DEPSN
-          CALL MEROSN(1)
-          CALL SEROSN(1)
-        ENDIF
-!MD ---------------------------------------------------------------
+    !get some time informations
+    !--------------------------
+    call second (atim (2))
+  
+    !call the solver
+    !---------------
+    if (icpu == 0) then
+      !frontal solution scheme
+      !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.
+      call front (1)
+    else
+      !Pardiso solver from the Intel MKL library
+      !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
+      call front_pardiso (1)
+    endif
+  
 
-!CIPK OCT02
-  470   CONTINUE
+    !Write consumption informations to the time file, if desired
+    !-----------------------------------------------
+    if (itimfl > 0) then
+      call second (atim (3))
+      write (itimfl, 6101) n, maxn, atim (3) - atim (2), atim (3) - atim (1)
+    endif        
+   6101 format ('step', i5, ' iteration', i5, '  time in front-horz', f12.2, ' total time to date for run =', f12.2)
+   
+    !countdown for drying/wetting
+    !----------------------------
+    idryc = idryc - 1
 
-        CALL LOAD
-!C-
-!C......  Compute areas of continuity lines for stage flow input
-!C-
-        CALL AGEN
-!c      DO 470 J=1,NE
-!c      DFCT(J)=1.
-!c  470 CONTINUE
-!c     write(*,*) 'In main maxn,iteqv(maxn),ioptzd',maxn,iteqv(maxn)
-!c    +,    ioptzd
-        IF (MAXN .GE. 2 .AND. ITEQV(MAXN) /= 5 .AND. ITEQV(MAXN) /= 2  .AND.  IOPTZD > 0 .AND. IOPTZD < 3) CALL MELLII
-!CIPK JAN97
-        IF(IUTUB == 0) THEN
-          IF(MAXN > 2  .or. n > 1) IUTUB=1
-        ENDIF
-!CIPK JAN97 END CHANGES
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
+!close testfile
+!close (9919, status = 'keep')
+!-----------------------------------------------------------
+!reserve for testoutput of matrices
+!-----------------------------------------------------------
 
-        !nis,feb07,testing: Write whole matrix
-        !if (maxn > -1) then
-        !  write
-        !+      (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
-        !  teststat = 0
-        !  open (9919, matrixname, iostat = teststat)
-        !  if (teststat /= 0) STOP 'ERROR - while opening matrix file'
-        !  WRITE(9919,*) 'maxn', maxn
-        !endif
-        !-
+    !update degrees of freedom and check for convergence
+    !---------------------------------------------------
+    call update
 
-!cipk aug07
-        call SECOND(ATIM(2))
-        IF(ICPU == 0) THEN
-          CALL FRONT(1)
-        ELSE
-          !stop 'option not stable, please use frontal scheme'
-          CALL FRONT_PARDISO(1)
-        ENDIF
-        IF(ITIMFL > 0) THEN
-          CALL SECOND(ATIM(3))
-          WRITE(ITIMFL,6101) N,MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
- 6101     FORMAT('STEP',I5,' ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2, ' TOTAL TIME TO DATE FOR RUN =', F12.2)
-        ENDIF        
-        IDRYC=IDRYC-1
-        !close testfile
-        !close (9919, status = 'keep')
-        !-
-
-
-        CALL UPDATE
-        call FindMinMaxValues (MaxP)
-
+    !Find the maximum values at each node
+    !------------------------------------
+    call FindMinMaxValues (MaxP)
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -1156,55 +1146,41 @@ end do SteadyIterationCycle
 !      !EFa jul07, necessary for autoconverge
 !      if (exterr==1.0) then
 !        call autoconverge(8.)
-!        GOTO 465
+!        cycle DynamicIterationCycle ???
 !
 !      end if
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!C      CALL CHECK
-!C     REWIND IVS
-        IF(ITEQV(MAXN) /= 5  .AND.  ITEQV(MAXN) /= 2 .AND.  ITEQV(MAXN) < 8) CALL VRTVEL
+    !calculate vertical velocity distribution    
+    !----------------------------------------
+    if (iteqv (maxn) /= 5 .and. iteqv (maxn) /= 2 .and. iteqv (maxn) < 8) call vrtvel
 
-          IF(NPRTF > 0) THEN
-            IF(MOD(MAXN,NPRTF) == 0  .OR.  MAXN == NITA .OR. NCONV == 1) THEN
-              CALL OUTPUT(2)
-              CALL CHECK
-            ENDIF
+    !Write results, if 1. time step matches the frequency and 2. iteration matches the frequency or convergence
+    if (mod (icyc, iprtf) == 0 .and. (mod (maxn, iprtMetai) == 0 .or.  maxn == nita .or. nconv == 1 .or. nconv == 2)) then
+      call output(2)
+      call check
+    endif
 
-          ELSE
-            IPRTF=IABS(NPRTF)
+    !update time derivatives
+    !-----------------------
+    do j = 1, np
+      !transform depths
+      vtm = vel (3, j)
+      call amf (hel (j), vtm, akp (j), adt (j), adb (j), d1, d2, 0)
+      !run through the degrees of freedom and calculate the time derivatives
+      do  k = 1, ndf
+        vdot (k, j) = altm * (vel (k, j) - vold (k, j)) - (alpha - 1.) * vdoto (k, j)
+      enddo
+      !and for the water stage
+      hdet (j) = altm * (hel (j) - hol (j)) - (alpha - 1.) * hdot (j)
+    enddo
 
-            IF(MOD(N,IPRTF) == 0) THEN
-              IF(MAXN == NITA  .OR. NCONV == 2) THEN
-                CALL OUTPUT(2)
-                CALL CHECK
-              ENDIF
-            ENDIF
-          ENDIF
 
-
-!C-
-!C......UPDATE TIME DERIVATIVE
-!C-
-!CIPK NOV97
-        write(75,*) 'rma10-646'
-
-        DO  J=1,NP
-
-!CIPK MAR98
-          VTM=VEL(3,J)
-          CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
-
-          !write(75,*) 'RMA10_1250: NDF=',NDF
-          DO  K=1,NDF
-            VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-(ALPHA-1.)*VDOTO(K,J)
-          ENDDO
-          HDET(J)=ALTM*(HEL(J)-HOL(J))-(ALPHA-1.)*HDOT(J)
-        ENDDO
-
-  550   CONTINUE
+!--------------------------------------------------------------------
+!TODO: Following needs to be updated, but more knowledge is necessary
+!--------------------------------------------------------------------
 !CIPK OCT02  CHECK FOR NEGATIVE TEMPS
 
       IF(ICESW > 0  .AND. ITEQV(MAXN) == 8  .AND. ITPAS < 4)THEN
@@ -1222,92 +1198,75 @@ end do SteadyIterationCycle
 
   580   CONTINUE
         IF(ITEQV(MAXN) == 8  .AND.  ITPAS == 0) ITPAS=1 
-!C-
-!C......SAVE RESTART CONDITIONS ON FILE
-!C-
-!CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
-        TETT=(DAYOFY-1)*24.+TET
-        WRITE(75,*) 'TET,DAYOFY',TET,TETT,DAYOFY
-
-        !NiS,apr06,comment: If convergent result files for this timestep have to be written
-        IF(NCONV == 2) GO TO 750
-  700   CONTINUE
+!--------------------------------------------------------------------
+!TODO: Following needs to be updated, but more knowledge is necessary
+!--------------------------------------------------------------------
 
 
-!C      END OF ITERATION LOOP
+    !restore tett as hours in year
+    tett = (dayofy - 1) * 24. + tet
+    write (75, *) 'tet, dayofy', tet, tett, dayofy
 
-!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE DYNAMIC RUN ITERATION, IF NOT CONVERGED
-        IF (itefreq/=0) THEN
-          IF (MOD(maxn,itefreq)==0) THEN
-            IF (IKALYPSOFM /= 0) THEN
-            WRITE(*,*)' Entering write_Kalypso', ' dynamic at time step ', icyc+iaccyc-1, ' after Iteration = ',maxn
-            call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-            CALL write_KALYPSO (outputFileName, 'resu')
-            WRITE(*,*)'back from write_kalypso'
-            ENDIF
-          ENDIF
-        ENDIF
-!-
-!NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
-!           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
-        IF (IVEGETATION /= 0) THEN
-          CALL get_element_cwr
-        END IF
-!-
+    !If fully converged time step, get out of iteration cyle
+    IF(NCONV == 2) exit DynamicIterationCycle
 
-        !NiS,apr06,comment: Start next iteration, until maximum number of iterations is reached
-        IF (MAXN < NITA) GO TO 465
-        !NiS,apr06,comment: Writing results after the timestep
-  750   CONTINUE
-        write(75,*) 'rma10-668 at 750 continue'
-!CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
-        IF(LSAND > 0) THEN
-          write(75,*) 'rma10: going to bedsur'
-          CALL BEDSUR
+    !write result after iteration cycle, if desired
+    !----------------------------------------------
+    if (nprti /= 0) then
+      if (mod (icyc, iprtf) == 0 .and. mod (maxn, iprti) == 0) then
+        !generate file name
+        call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+        !write result after iteration
+        call write_kalypso (outputfilename, 'resu')
+      endif
+    endif
 
-        ELSEIF(LSS > 0) THEN
-!C-      IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
-!MD:    Erneuter Aufruf der Erosionsroutinen mit II = 2
-!MD       zur Berechnung der Sohlanderung infolge ersosion
-          CALL MEROSN(2)
-          CALL SEROSN(2)
-          CALL NEWBED(2)
-        ENDIF
+    !get vegetation parameter, if calculation with vegetation is desired
+    !-------------------------------------------------------------------
+    if (ivegetation /= 0) call get_element_cwr
 
-      !MD Aufruf der Sohlentwicklung nur einmal fuer sandige Sohle
-        IF(LBED>0 .and. LSAND.le.0) THEN
-        write(75,*) 'rma10-674 going to bedsur'
+    !If not converged yet, but number of iteration exceeds, end steady calculation
+    !-----------------------------------------------------------------------------
+    if (maxn >= nita) exit DynamicIterationCycle
+  enddo DynamicIterationCycle
 
-          !MD 11.08.2008: BEDLBED wurde deaktiviert, da Routine veraltet und fehlerhaft:
-          !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
-          !MD   BEDLBED wurde mit der aktuelleren Routine BEDSUR ersetzt
-          !MD CALL BEDLBED
-          CALL BEDSUR
-        ENDIF
+  !update bed information for sand case
+  !------------------------------------
+  if (lsand > 0) then
+     write(75,*) 'rma10: going to bedsur'
+     call bedsur
+  elseif(lss > 0) then
+    !C-      IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
+    !MD:    Erneuter Aufruf der Erosionsroutinen mit II = 2
+    !MD       zur Berechnung der Sohlanderung infolge ersosion
+    call merosn(2)
+    call serosn(2)
+    call newbed(2)
+  endif
+
+  !MD Aufruf der Sohlentwicklung nur einmal fuer sandige Sohle
+  !------------------------------------
+  if (lbed > 0 .and. lsand <= 0) then
+    write(75,*) 'rma10-674 going to bedsur'
+    !MD 11.08.2008: BEDLBED wurde deaktiviert, da Routine veraltet und fehlerhaft:
+    !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
+    !MD   BEDLBED wurde mit der aktuelleren Routine BEDSUR ersetzt
+    !MD CALL BEDLBED
+    call bedsur
+  endif
 
 
-!NiS,apr06: calculating the cwr-values for trees.
-!           This option is only activated, if VEGETA is entered in input file at proper place
-        temp_maxn = maxn
-        maxn=0
-        IF (IVEGETATION /= 0) THEN
-          CALL get_element_cwr
-        END IF
-        maxn=temp_maxn
-!-
+  !calculating the cwr-values for trees; adding temporary storage of maxn = 0; Updating the cwr-values for trees after convergence
+  !------------------------------------
+  temp_maxn = maxn
+  maxn = 0
+  if (ivegetation /= 0) call get_element_cwr
+  maxn = temp_maxn
 
-!CIPK SEP02   LOGIC FOR RESTART FILE MOVED DOWN
-!C-
-!C......SAVE RESTART CONDITIONS ON FILE
-!C-
-!CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
-        TETT=(DAYOFY-1)*24.+TET
-        WRITE(75,*) 'TET,DAYOFY',TET,TETT,DAYOFY
-
-!REMOVE FOR RMA·Kalypso
-!nis,nov08: Remove writing to restart output file with unit NLL
-!NLL is obsolete
-!-
+  !TODO: Isn't this doubled?
+  !-------------------------
+  tett = (dayofy - 1) * 24. + tet
+  write (75, *) 'tet, dayofy', tet, tett, dayofy
 
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
@@ -1317,6 +1276,7 @@ end do SteadyIterationCycle
 !          call autoconverge(9.)
 !          if (autoindex==2.) then
 !            autoindex = 0.
+             !465 is the now the initial point of the transient calculation, starting at 'DynamicIterationCycle'-do logic
 !            GOTO 465
 !          end if
 !        endif
@@ -1324,47 +1284,9 @@ end do SteadyIterationCycle
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!C-
-!C......SAVE ON RESULTS FILE
-!C-
-
-!NiS,apr06: Adding KALYPS-2D results file as option
-!CIPK MAR00
-
-!REMOVE FOR RMA·KALYPSO
-!nis,nov08: Remove writing to unit irmafm
-!irmafm is obsolete
-!nis,nov08: Remove writing to obsolete unit nopt
-!nopt is obsolete
-!nis,nov08: Remove writing to obsolete unit ibedot
-!ibedot is obsolete
-!nis,nov08: Remove writing to obsolete unit ismsfm
-!ismsfm is obsolete
-!nis,nov08: Remove writing to obsolete unit ismsfm1
-!ismsfm1 is obsolete
-!nis,nov08: Remove writing to obsolete unit ismsfm2
-!ismsfm2 is obsolete
-!nis,nov08: Remove writing to obsolete unit iwavot
-!iwavot is obsolete
-!-
-        IF(IKALYPSOFM > 0) THEN
-!-
-
-!Cipk mar03 add option that allows output at a set frequency
-
-          IF(MOD(N,IOUTFREQ) == 0) THEN
-
-!REMOVE FOR RMA·KALYPSO
-!nis,nov08: remove vsing-array for output
-!vsing is obsolete
-!-
-
-!REMOVE FOR RMA·KALYPSO
-!nis,nov08: Remove writing to unit irmafm
-!irmafm is obsolete
-!-
-
-!C       Output RMA results file contains
+!save results file
+!-----------------
+  if (ikalypsofm > 0 .and. mod (icyc, iprtf) == 0) then
  
 !c       1   time in hours (Julian)
 !c       2   number of nodes
@@ -1382,141 +1304,59 @@ end do SteadyIterationCycle
 !c      13   DFCT                stratification multiplier by element
 !c      14   VSING subscript(7)  water column potential by node
 
-!NiS,apr06: write Kalypso-2D format result/restart file at: THE END OF THE DYNAMIC RUN
-            IF (IKALYPSOFM /= 0) THEN
-              MAXN = 0.
-              WRITE(*,*)' Entering write_Kalypso', ' after dynamic time step ', icyc+iaccyc-1
-              call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-              CALL write_KALYPSO (outputFileName, 'resu')
-              WRITE (*,*)'back from write_kalypso'
-              !every timestep min and max result files are overwritten to have the last
-              call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-              call write_Kalypso (outputFileName, 'mini')
-              call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-              call write_Kalypso (outputFileName, 'maxi')
-            END IF
-!-
-!CIPK AUG02
-
-!REMOVE FOR RMA·KALYPSO
-!nis,nov08: Remove writing to unit ismsfm
-!ismsfm is obsolete
-!nis,nov08: Remove writing to unit ismsfm1
-!ismsfm1 is obsolete
-!nis,nov08: Remove writing to unit ismsfm2
-!ismsfm2 is obsolete
-!nis,nov08: Remove writing to unit nopt
-!nopt is obsolete
-!-
-
-!C     Output results file contains
-
-!c     1   time in hours (Julian)
-!c     2   number of nodes
-!c     3   obsolete counter of degrees of freedom (set to 5) NDF=6
-!c     3a  number of elements
-!c     4   year
-!c     5   VSING subscript(1)  x-vel by node
-!c     6   VSING subscript(2)  y-vel by node
-!c     7   VSING subscript(3)  depth by node
-!c     8   VSING subscript(4)  salinity by node
-!c     9   VSING subscript(5)  temperature by node
-!c    10   VSING subscript(6)  sus-sed by node
-!c    11   VVEL                w-vel by node
-!c    12   DFCT                stratification multiplier by element
-!c    13   VSING subscript(7)  water column potential by node
-
-!REMOVE FOR RMA·KALYPSO
-!nis,nov08: Remove writing to obsolete unit ibedot
-!ibedot is obsolete
-!nis,nov08: Remove writing to obsolete unit iwavot
-!iwavot is obsolete
-!-
+    MAXN = 0
+    !generate file name for result
+    call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+    !write result
+    call write_kalypso (outputfilename, 'resu')
+    !generate file name for minimum values 
+    call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+    !write minimum values file
+    call write_Kalypso (outputFileName, 'mini')
+    !generate file name for maximum values 
+    call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+    !write maximum values file
+    call write_Kalypso (outputFileName, 'maxi')
+  end if
 
 
-!C     Output bed results file contains
+enddo DynamicTimestepCycle
 
-!c     1   TETT                Time in hours (Julian)
-!c     2   NQL                 Number of constituents
-!c     3   NP                  Number of nodes
-!c     4   IYRR                Year
-!c     5   VSING subscript(1)  x-vel by node
-!c     6   VSING subscript(2)  y-vel by node
-!c     7   VVEL                z-velocity
-!c     8   VSING subscript(3)  depth by node
-!c     9   WSLL                water surface elevation by node
-!c    10   VSING subscript(6)  water column concentration by node 1
-!c    11   VSING subscript(7)  water column potential by node 2
-!c    12   VSING subscript(8)  Bed elevation by node 3
-!c    13   DELBED              Bed change by node 4
-!cipk aug05 correct to get BSHEAR OUTPUT
-!c    14   BSHEAR              Shear stress by node 5
 
-!CIPK AUG98
-!C  Save restart file every IOURST timesteps
-            IF (MOD(N,IOUTRST) == 0)  THEN
-              CLOSE (131)
-!CIPK SEP04
-!              WRITE(INUM,'(I4.4)') N
-              WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
-              FRST=trim(fnam) // 'RST'//INUM//'.RST'
-              OPEN(131,FILE=FRST,FORM='UNFORMATTED',STATUS='UNKNOWN')
-              IF(LSAND == 0   .AND.  LSS == 0) THEN
-                WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7) ,VVEL(J),J=1,NP) ,(hel(j),hdet(j),j=1,np)
+call zvrs (1)
+return
 
-              ELSEIF(LSAND > 0) THEN
-                WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7) ,VVEL(J),J=1,NP) ,(hel(j),hdet(j),j=1,np) ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-              ELSE
-                WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7) ,VVEL(J),J=1,NP) ,(hel(j),hdet(j),j=1,np) ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NP) ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J) ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NP)
-
-              ENDIF	    
-              IF(ICESW > 0) THEN
-                WRITE(131) (ICETHK(J) ,J=1,NPM)
-                ENDIF
-!CIPK SEP02 ADD RESTART DATA FOR BED
-            ENDIF 
-
-          ENDIF
-        ENDIF
-!NiS,may06: Renaming 800-DO-Loop to Main_dynamic_Loop
-!  800 CONTINUE
-
-      ENDDO Main_dynamic_Loop
-!-
-      CALL ZVRS(1)
-!CIPK JUL01      STOP
-      RETURN
-      END
+end subroutine RMA_Kalypso
 
 
 !**************************************************
-      subroutine FindMinMaxValues(Points)
-      USE blk10mod
-      USE parakalyps
+subroutine FindMinMaxValues(Points)
+USE blk10mod
+USE parakalyps
 
-      implicit none
+implicit none
 
-      INTEGER :: i
-      INTEGER, intent (IN) :: Points
+INTEGER :: i
+INTEGER, intent (IN) :: Points
 
-      do i = 1, Points
-        if (SQRT (vel(1,i)**2 + vel(2,i)**2) > SQRT (maxvel(1,i)**2 + maxvel(2,i)**2)) then
-          maxvel (1, i) = vel (1, i)
-          maxvel (2, i) = vel (2, i)
-        end if
-        if (SQRT (vel(1,i)**2 + vel(2,i)**2) < SQRT (minvel(1,i)**2 + minvel(2,i)**2)) then
-          minvel (1, i) = vel (1, i)
-          minvel (2, i) = vel (2, i)
-        end if
-        if (vel (3, i) > maxvel (3, i)) then
-          maxvel (3, i) = vel (3, i)
-          maxrausv (i) = rausv (3, i)
-        end if
-        if (vel (3, i) < minvel (3, i)) then
-          minvel (3, i) = vel (3, i)
-          minrausv (i) = rausv (3, i)
-        end if
-      end do
+do i = 1, Points
+  if (SQRT (vel(1,i)**2 + vel(2,i)**2) > SQRT (maxvel(1,i)**2 + maxvel(2,i)**2)) then
+    maxvel (1, i) = vel (1, i)
+    maxvel (2, i) = vel (2, i)
+  end if
+  if (SQRT (vel(1,i)**2 + vel(2,i)**2) < SQRT (minvel(1,i)**2 + minvel(2,i)**2)) then
+    minvel (1, i) = vel (1, i)
+    minvel (2, i) = vel (2, i)
+  end if
+  if (vel (3, i) > maxvel (3, i)) then
+    maxvel (3, i) = vel (3, i)
+    maxrausv (i) = rausv (3, i)
+  end if
+  if (vel (3, i) < minvel (3, i)) then
+    minvel (3, i) = vel (3, i)
+    minrausv (i) = rausv (3, i)
+  end if
+end do
 
-      end subroutine
+end subroutine
 

@@ -75,7 +75,6 @@ allocate (mslope (1:MaxE), meslope (1: MaxE))
 
 ! Main procedure to calculate the slope of the watersurface
 ! for all nodes.
-
 call GET_NODE_SLOPE(slope, eslope)
 
 ! Initialising of parameters
@@ -143,7 +142,7 @@ all_elements: do i = 1, ne
     NikuradseRoughness = cniku(i)
     CALL cole (lambda_s, mvxvy(i), mh(i), NikuradseRoughness , i)
 
-    if (mslope(i) < 0.000001) mslope(i) = 0.000001
+    if (mslope(i) > 0.000001) then
 
     ! Main subroutine to calculate the parameter C_WR for the
     ! element i
@@ -151,12 +150,15 @@ all_elements: do i = 1, ne
     !WP Now changing slope from water surface slope to
     !WP energy slope.  ( mslope(i) -> meslope(i) )
 
-    call get_cwr(meslope(i),   &
+      call get_cwr(meslope(i), &
                & mh(i),        &
                & abst(i),      &
                & durchbaum(i), &
                & lambda_s,     &
                & c_wr(i))
+     else
+       c_wr(i) = 0.0d0
+     endif
   end if
 
 end do all_elements
@@ -174,8 +176,8 @@ if (maxn.eq.0) then
   ELSE
     call GenerateOutputFileName ('inst', niti, icyc, maxn, 'cwr', modellein,modellrst, ct, nb, name_cwr, inputFileName)
   ENDIF
-elseif (itefreq /= 0) then
-  if (mod(maxn, itefreq) == 0) then
+elseif (nprti /= 0) then
+  if (mod(maxn, nprti) == 0) then
     IF (icyc .eq.0) THEN
       call GenerateOutputFileName ('stat', niti, 0, maxn, 'cwr',modellein, modellrst, ct, nb,name_cwr, inputFileName)
     ELSE
@@ -223,8 +225,8 @@ USE Blk10mod
 
 
 ! Calling variables
-REAL (kind=8), INTENT (OUT) :: slope (1: *)   ! Calculated slope of water surface
-REAL (kind=8), INTENT (OUT) :: eslope (1: *)  ! Calculated slope of energy curve/surface
+REAL (kind=8) :: slope (1:*)   ! Calculated slope of water surface
+REAL (kind=8) :: eslope (1:*)  ! Calculated slope of energy curve/surface
 
 ! Local variables
 INTEGER :: first_loc		! Neighbour nodes of the flow vector
@@ -233,6 +235,7 @@ INTEGER :: second_loc		! Neighbour nodes of the flow vector
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
 INTEGER                         :: elcnt
+integer (kind = 4) :: length, length2
 
 REAL(kind=8), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
 REAL(kind=8), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
@@ -554,11 +557,21 @@ numbertest: do i = 1, nodecnt
   !all other nodes, that have no slope yet and have a number of neighbours are counted
   if (.not. marker_slope(i) .and. nconnect(i) /= 0) then
 	    anz = anz + 1
+  else
+    continue
   end if
 !end do
 end do numbertest
 !-
 
+! 2a) Checking for enough energy slope at all
+if (anz == nodecnt) then
+  do i = 1, nodecnt
+    slope (i) = 0.0d0
+    eslope (i) = 0.0d0
+    return
+  enddo
+endif
 ! 2.) Filling
 ! -----------
 ! missing values of slope for nodes are filled
@@ -566,16 +579,10 @@ end do numbertest
 ! If there are large dry floodplains, it is not possible
 ! to interpolate the missing values in one loop.
 ! It has to be iterative!
-
 eliminate: do
 
   !nis,dec06: modelerror causes this temporary change
   if (anz == 0) exit eliminate
-  !if (anz == 1) exit eliminate
-  !-
-!nis,dec06,testing
-!WRITE(*,*) mnd, '3', anz
-!-
 
   all_nodes: do i = 1, nodecnt
 
@@ -1081,6 +1088,10 @@ iteration_cwr: do ! -------------------   Iteration bis Konvergenzkriterium für 
     		end if
 
     		Fr2 = (y_stern * (y_stern**2 -1)) / (2 * (y_stern - c_temp))
+    		if (fr2<0.0) then 
+    		  y_stern = 0.9999
+    		  exit iteration_y_stern
+    		endif
     		Fr2 = SQRT(Fr2)
 
     		if ( ABS(1-(Fr1/Fr2)) < 0.1) exit iteration_y_stern

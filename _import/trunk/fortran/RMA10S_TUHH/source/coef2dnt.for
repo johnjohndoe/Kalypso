@@ -1034,17 +1034,24 @@ CIPK SEP06 ADD QIN
           QIN=BETA3/H+(DUDX+DVDY)+(R*DHDX+S*DHDZ)/H
       ENDIF
 
+
+
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 291
+
+!-------------------------------------------------
+!.....Set up TERMS for the MOMENTUM EQUATIONS.....
+!-------------------------------------------------
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
         FSN = 0.0
-CIPK MAR01      IF( ICYC .LE. 0 ) GO TO 279
 	ELSE
         FRN=H*BETA1
         FSN=H*BETA2
 	ENDIF
+
+
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
 	IF(H+AZER .GT. ABED) THEN
 CIPK JAN02 ADD SIDFF 
@@ -1061,7 +1068,9 @@ C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
 C
 C.....MOMENTUM TERMS.....
 C
-  279 FRN = FRN + H*(AKX*R*DUDX + S*DUDY) + R*SIDFT - sidf(nn)*eina
+      !x-direction
+      FRN = FRN + H*(AKX*R*DUDX + S*DUDY) + R*SIDFT - sidf(nn)*eina
+      !y-direction
       FSN = FSN + H*(AKY*S*DVDY + R*DVDX) + S*SIDFT - sidf(nn)*einb
 C
 C.....VISCOUS TERMS.....
@@ -1097,27 +1106,56 @@ C-..... WIND TERMS
 C-
       FRN=FRN-SIGMAX
       FSN=FSN-SIGMAZ
-C
-C.....MOTION EQUATIONS.....
-C
-      DO 285 M = 1, NCN
-      IA = 1 + NDF*(M-1)
-      F(IA) = F(IA) - AMS*(XN(M)*FRN + DNX(M)*FRNX + DNY(M)*FRNZ)
-      IA = IA + 1
-      F(IA) = F(IA) - AMS*(XN(M)*FSN + DNX(M)*FSNX + DNY(M)*FSNZ)
-  285 CONTINUE
-C
-C.....CONTINUITY EQUATION.....
-C
-      FRN=H*(DUDX+DVDY)+R*DHDX+S*DHDZ-SIDFT
-      IF(ICYC.GT.0) FRN=FRN+BETA3
-      DO 290 M=1,NCNX
-      IA = 3 + 2*NDF*(M-1)
-      F(IA) = F(IA) - AMW*XM(M)*FRN
-  290 CONTINUE
-C-
-C......THE SALINITY EQUATION
-C-
+!
+!.....MOTION EQUATIONS.....
+!
+      !for all nodes (corners and midsides; quadratic approximation)
+      MomentumEquations: DO M = 1, NCN
+        !x-direction
+        IA = 1 + NDF*(M-1)
+        F(IA) = F(IA) - AMS*(XN(M)*FRN + DNX(M)*FRNX + DNY(M)*FRNZ)
+        !y-direction
+        IA = IA + 1
+        F(IA) = F(IA) - AMS*(XN(M)*FSN + DNX(M)*FSNX + DNY(M)*FSNZ)
+      enddo MomentumEquations
+
+!--------------------------------------------------
+!.....Set up TERMS for the CONTINUITY EQUATION.....
+!--------------------------------------------------
+      !
+      !       --                                            --
+      !       |   / du     dv \      dh       dh     dh      |
+      ! FRN = |h* |---- + ----| + u*---- + v*---- + ---- - qs|
+      !       |   \ dx     dy /      dx       dy     dt      |
+      !       --                                            --
+      !        ----------------   ------   ------   ----   ---
+      !              A              B         C       D     E
+
+      FRN = H * (DUDX + DVDY) + R * DHDX + S * DHDZ - SIDFT
+      !     -----------------   --------   --------   -----
+      !              A              B          C        E
+      !Term D is optional; i.e. only in unsteady cases
+      IF (ICYC > 0) FRN = FRN + BETA3
+!
+!.....CONTINUITY EQUATION.....
+!
+      ! 
+      ! --                       --
+      ! |  n                      |
+      ! | ---   T                 |
+      ! |  >  (M  * (M * A) * FRN)|
+      ! | ---   i     i           |
+      ! | i=1                     |
+      ! --                       -- 
+      ! 
+      !for all corner nodes (linear approximation)
+      ContinuityEquations: DO M=1,NCNX
+        IA = 3 + 2*NDF*(M-1)
+        F(IA) = F(IA) - AMW * XM (M) * FRN
+      enddo ContinuityEquations
+!--------------------------------------------------
+!.....Set up TERMS for the SALINITY EQUATION.....
+!--------------------------------------------------
   291 CONTINUE
 
 cipk jun02
@@ -1147,6 +1185,9 @@ c        DIFY=dify/5.
 CIPK AUG06 ADD QIN ABOVE
  
         IF( ICYC .GT. 0) FRN=FRN+AMU*DSALDT*H
+C-
+C......THE SALINITY EQUATION
+C-
         IA=0
         DO 295 M=1,NCN
           IA=IA+4
@@ -1157,6 +1198,10 @@ CIPK AUG06 ADD QIN ABOVE
       ENDIF
 cipk jun05
       IF(NR .GT. 90  .and.  nr  .lt. 100) GO TO 380
+
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt VELOCITY.....
+!--------------------------------------------------------------------------------------
 C
 C.....FORM THE X MOTION EQUATIONS.....
 C
@@ -1224,6 +1269,9 @@ C-
      +  + DNX(M)*FEEFN
   305 CONTINUE
   310 CONTINUE
+!-----------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt WATER DEPTH.....
+!-----------------------------------------------------------------------------------------
 C
 C.....FORM THE HEAD TERMS.....
 C
@@ -1262,6 +1310,9 @@ C-
      1  + DNY(M)*FEECN
   320 CONTINUE
   325 CONTINUE
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C-
 C......FORM THE SALINITY TERMS
 C-
@@ -1281,6 +1332,9 @@ C-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+DNX(M)*FEEAN+XN(M)*FEEBN
   329 CONTINUE
   330 CONTINUE
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt VELOCITY.....
+!--------------------------------------------------------------------------------------
 C
 C.....FORM THE Y MOTION EQUATIONS.....
 C
@@ -1355,6 +1409,9 @@ C-
      1  + DNY(M)*FEECN
   335 CONTINUE
   340 CONTINUE
+!-----------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt WATER DEPTH.....
+!-----------------------------------------------------------------------------------------
 C
 C.....HEAD TERMS.....
 C
@@ -1395,6 +1452,9 @@ C-
      1  + DNY(M)*FEECN
   350 CONTINUE
   355 CONTINUE
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C-
 C......FORM THE SALINITY TERMS
 C-
@@ -1413,6 +1473,9 @@ C-
       ESTIFM(IA,IB)=ESTIFM(IA,IB)+DNY(M)*FEEAN+XN(M)*FEEBN
   358 CONTINUE
   359 CONTINUE
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C
 C.....FORM THE CONTINUITY EQUATIONS.....
 C

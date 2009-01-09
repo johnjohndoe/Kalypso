@@ -262,7 +262,7 @@ CIPK MAR05
       write(*,*) 'read c1'
       IF(IGRV .EQ. 0) GRAV=32.2
       IF(IGRV .EQ. 1) GRAV=9.81
-
+      
 cipk jul01  Store info on metric geometry
       if(grav .lt. 10.) then
         imgeom=1
@@ -432,7 +432,7 @@ cipk sep04
  6994   FORMAT('UNABLE TO FIND LINE TYPE -C5- FOUND LINE TYPE ',A2)
         STOP 'LOOKING FOR C5'
       ENDIF 
-      READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
+      READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTF,IRSAV,NPRTI,IDSWT
       !check for maximum values
       if (NITI > 90) call ErrorMessageAndStop (1008, 0, 0.0d0, 0.0d0)
       if (ncyc > 0 .and. nitn > 90)
@@ -452,32 +452,39 @@ cipk sep04
         nitazero = nitn
       end if
       !-
-      IF (iaccyc > 1 .and. NITI /= 0) THEN
-        WRITE (*,*)' If you want to start a steady state calculation, ',
-     +    'no beginning time step > 1 should be entered.'
-        WRITE (*,*)' Execution terminated.!'
-        STOP
-      ENDIF
-!-
+      !nis,jan09: Use Error Message file
+      IF (iaccyc > 1 .and. NITI /= 0) 
+     + call ErrorMessageAndStop (1604, 0, 0.0d0, 0.0d0)
+
       READ(DLINEXTRA,5011) NBSFRQ
 CIPK AUG02 ADD NBSFRQ ABOVE 
       write(*,*) 'read c5'
 C
-      WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
+      WRITE(LOUT,6025)NITI,NITN,TSTART,NCYC,IPRT,NPRTF,IRSAV,NPRTI,IDSWT
      +,NBSFRQ,DSET,DSETD
+     
+!parameter meaning
+!nprti      frequency to print results to model output file at the end of time step
+!nprt       frequency to print results to model output file at the end of iteration
+!irsav      frequency to print results to output file at the end of iteration
+
+
+
+
 CIPK AUG02 ADD NBSFRQ ABOVE AND BELOW
       IF(NBSFRQ .EQ. 0) THEN
         NBSFRQ=1
       ENDIF
-      IF(NPRTI .EQ. 0) THEN
-        IF(NPRTF .EQ. 0) THEN
-          NPRTF=1
-        ELSE
-          NPRTF=-NPRTF
-        ENDIF
-      ELSE
-        NPRTF=NPRTI
-      ENDIF
+
+!      IF(NPRTI .EQ. 0) THEN
+!        IF(NPRTF .EQ. 0) THEN
+!          NPRTF=1
+!        ELSE
+!          NPRTF=-NPRTF
+!        ENDIF
+!      ELSE
+!        NPRTF=NPRTI
+!      ENDIF
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
@@ -488,19 +495,14 @@ cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
 CIPK AUG07  ADD ICPU
       ICPU = 0
-      itefreq = 0
       IF(ID(1:2) .EQ. 'C6') THEN
 cipk mar06 allow for output file rewind      
 CIPK AUG07  ADD ICPU
-        READ(DLIN,'(5I8)') IOUTFREQ,IOUTRST,IOUTRWD,ICPU, itefreq
+        READ(DLIN,'(16x,2I8)') IOUTRWD,ICPU
         call ginpt(lin,id,dlin)
-	    WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD,ICPU
+	    WRITE(LOUT,6024) IOUTRWD,ICPU
         IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
-        IF(IOUTFREQ .EQ. 0) IOUTFREQ=1
-        IF(IOUTRST .EQ. 0) IOUTRST=10
       ELSE
-        IOUTFREQ=1
-        IOUTRST=10
         IOUTRWD=NCYC+1
       ENDIF
       
@@ -1677,7 +1679,7 @@ C-
 C-
 C......FORM THREE DIMENSIONAL ELEMENTS FROM INPUT
 C-
-      CALL THREED!nis,comment
+      CALL THREED !nis,comment
 !In dependency of the switch NT, two general jobs are possible for file.subroutine
 !NT = 1: First call (called from RMA10.program); the general files are read and opened
 !NT = 2: Second call (called from input.subroutine); output file LOUT is opened

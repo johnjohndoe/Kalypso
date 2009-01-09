@@ -54,7 +54,8 @@ c     Initialisation of values
       MFWW=MFW
       !pardiso solver definitions; why are they seperated from them above, although they're showing the same?
       MFWSIZ    =2000
-      MR1SIZ   = 200000
+      !this displays the maximum number of equations and shouldn't therefore not too small.
+      MR1SIZ   = 300000
       NBUFFSIZ = 50000000
 
 

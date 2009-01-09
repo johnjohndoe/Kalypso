@@ -48,6 +48,12 @@ CIPK  LAST UPDATED SEP 7 1995
       SAVE
 
       REAL (KIND = 8) :: HS, HM, DUM1, hm1
+      !nis,jan09: for shoreline friction with Darcy Weisbach lambda
+      real (kind = 8) :: lambda_shore
+      real (kind = 8) :: lambdaKS_shore
+      real (kind = 8) :: lambdaP_shore
+      real (kind = 8) :: lambdaDunes_shore
+
 
 C
 
@@ -1114,7 +1120,7 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 !MD        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
 !MD      END IF
 
-      peclet=vecq*abs((xl(3)+xl(5)))/2/difx
+      if (difx /= 0.0) peclet=vecq*abs((xl(3)+xl(5)))/2/difx
 !	  
 !        IF(NN .EQ. 15  .AND.  I .EQ. 5) THEN
 !c        if(i .eq. 1  .and.  idebug .eq. 2) then
@@ -1231,54 +1237,82 @@ CIPK AUG06
       end if
       !-
 
-CIPK MAR01 CLEANUP LOGIC
-      IF(ICYC .LE. 0) THEN
-        FRN = 0.0
-        FSN = 0.0
-CIPK MAR01      IF( ICYC .LE. 0 ) GO TO 279
-      ELSE
-        FRN=H*BETA1
-        FSN=H*BETA2
+!-------------------------------------------------
+!.....Set up TERMS for the MOMENTUM EQUATIONS.....
+!-------------------------------------------------
+      !Initialize
+      FRN = 0.0
+      FSN = 0.0
+      !
+      !       --                                                                            
+      !       |      /   du        du        du     g                                    \
+      ! FRN = |rho * |h*---- + hu*---- + hv*---- + ---*u*|V| + u*qs - Omega*v*h - GammaWX|
+      !       |      \   dt        dx        dy    C*C                                   /
+      !       --                                                                            
+      !               ------   -------   -------   ---------   ----   ---------   -------
+      !                  A        B         C           D        E        F          G
+      !
+      !                                                                                  --
+      !                      da   du             da   du             da          h*h  da  |
+      !           - epsXX*h*----*---- - epsXY*h*----*---- + rho*g*h*---- + rho*g*---*---- |
+      !                      dx   dx             dy   dy             dx           2   dx  |
+      !                                                                                  --
+      !             -----------------   -----------------   ------------   --------------
+      !                      H                   I                J               K
+      !
+
+!
+!.....LOCAL ACCELARATION..... (only in time transient calculations)
+!
+      IF (ICYC > 0) THEN
+        FRN = H * BETA1
+        FSN = H * BETA2
+        !     ---------
+        !         A
       ENDIF
+
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
-      IF(H+AZER .GT. ABED) THEN
-CIPK JAN02 ADD SIDFF 
-CIPK JAN04 ADD SIDFQQ 
-	SIDFT=SIDFQ+SIDFF(NN)
-	SIDFQQ=SIDFQQ+SIDFF(NN)
+      IF (H + AZER > ABED) THEN
+	  SIDFT = SIDFQ + SIDFF (NN)
+	  SIDFQQ = SIDFQQ + SIDFF (NN)
       ELSE
-	SIDFT=SIDFF(NN)
-	SIDFQQ=SIDFF(NN)
+	  SIDFT = SIDFF (NN)
+	  SIDFQQ = SIDFF (NN)
       ENDIF
-
-C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
-
 C
-C.....MOMENTUM TERMS.....
+C.....CONVECTIVE TERMS.....
 C
-  279 FRN = FRN + H*(AKX*R*DRDX + S*DRDZ) + R*SIDFT - SIDFQ*eina
-      FSN = FSN + H*(AKY*S*DSDZ + R*DSDX) + S*SIDFT - SIDFQ*einb
+      FRN = FRN + H * (AKX * R * DRDX + S * DRDZ) + R*SIDFT - SIDFQ*eina
+      FSN = FSN + H * (AKY * S * DSDZ + R * DSDX) + S*SIDFT - SIDFQ*einb
+      !           -------------------------------   --------------------
+      !                          C + B                        E
 C
 C.....VISCOUS TERMS.....
 C
-      FRN=FRN+EPSX*DRDX*DHDX+EPSXZ*DRDZ*DHDZ
+      FRN = FRN + EPSX * DRDX * DHDX + EPSXZ * DRDZ * DHDZ
+      FSN = FSN + EPSZ * DSDZ * DHDZ + EPSZX * DSDX * DHDX
+      !           ------------------   -------------------
+      !                    H                    I
       FRNX=EPSX*H*DRDX
       FRNZ=EPSXZ*H*DRDZ
-      FSN=FSN+EPSZ*DSDZ*DHDZ+EPSZX*DSDX*DHDX
       FSNX=EPSZX*H*DSDX
       FSNZ=EPSZ*H*DSDZ
 C
 C.....SURFACE AND BOTTOM SLOPE (PRESSURE) TERMS.....
 C
-      FRN=FRN+GHC*DAODX
-      FSN=FSN+GHC*DAODZ
+      FRN = FRN + GHC * DAODX
+      FSN = FSN + GHC * DAODZ
+      !           -----------
+      !                J
       FRNX=FRNX-H*GHC/2.
       FSNZ=FSNZ-H*GHC/2.
 C
 C.....BOTTOM FRICTION TERMS.....
 C
-      FRN = FRN + FFACT*VECQ*R*UBF
-      FSN = FSN + FFACT*VECQ*S*VBF
+      FRN = FRN + FFACT * VECQ * R * UBF
+      FSN = FSN + FFACT * VECQ * S * VBF
+      !           ----------------------
+      !                      D
 
 CIPK MAR01   ADD DRAG TERM
 !MD: Wenn in CONTROL keine 'DRG' Zeile, dann = 0
@@ -1288,13 +1322,17 @@ CIPK MAR01   ADD DRAG TERM
 C
 C.....CORIOLIS TERMS.....
 C
-      FRN = FRN - OMEGA*S*H
-      FSN = FSN + OMEGA*R*H
+      FRN = FRN - OMEGA * S * H
+      FSN = FSN + OMEGA * R * H
+      !           -------------
+      !                  F
 C-
 C-..... WIND TERMS
 C-
-      FRN=FRN-SIGMAX
-      FSN=FSN-SIGMAZ
+      FRN = FRN - SIGMAX
+      FSN = FSN - SIGMAZ
+      !           ------
+      !              G
 C
 C.....MOTION EQUATIONS.....
 !MD   Allocating the residual vector F(IA) with IA=1 and IA=2
@@ -1305,21 +1343,47 @@ C.....MOTION EQUATIONS.....
         IA = IA + 1
         F(IA) = F(IA) - AMS*(XN(M)*FSN + DNX(M)*FSNX + DNY(M)*FSNZ)
   285 CONTINUE
-C
-C.....CONTINUITY EQUATION.....
-C
+!--------------------------------------------------
+!.....Set up TERMS for the CONTINUITY EQUATION.....
+!--------------------------------------------------
+      !
+      !       --                                            --
+      !       |   / du     dv \      dh       dh     dh      |
+      ! FRN = |h* |---- + ----| + u*---- + v*---- + ---- - qs|
+      !       |   \ dx     dy /      dx       dy     dt      |
+      !       --                                            --
+      !        ----------------   ------   ------   ----   ---
+      !              A              B         C       D     E
+!???
 !MD   Allocating the residual vector F(IA) with IA=3
 !MD   with F(IA=3)=H = water level
+!???
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
-      FRN=H*(DRDX+DSDZ)+R*DHDX+S*DHDZ-SIDFT
-      IF(ICYC.GT.0) FRN=FRN+BETA3
-      DO 290 M=1,NCNX
+      FRN = H * (DRDX + DSDZ) + R * DHDX + S * DHDZ - SIDFT
+      !     -----------------   --------   --------   -----
+      !              A              B          C        E
+      !Term D is optional; i.e. only in unsteady cases
+      IF (ICYC > 0) FRN = FRN + BETA3
+!
+!.....CONTINUITY EQUATION.....
+!
+      ! 
+      ! --                      --
+      ! |      n                 |
+      ! |     ---   T            |
+      ! | A *  >  (M  * M * FRN) |
+      ! |     ---   i    i       |
+      ! |     i=1                |
+      ! --                      -- 
+      ! 
+      !for all corner nodes (linear approximation)
+      ContinuityEquations: DO M=1,NCNX
         IA = 3 + 2*NDF*(M-1)
-        F(IA) = F(IA) - AMW*XM(M)*FRN
-  290 CONTINUE
-C-
-C......THE SALINITY EQUATION
-C-
+        F(IA) = F(IA) - AMW * XM (M) * FRN
+      enddo ContinuityEquations
+!--------------------------------------------------
+!.....Set up TERMS for the SALINITY EQUATION.....
+!--------------------------------------------------
   291 CONTINUE
 
 
@@ -1353,6 +1417,9 @@ CIPK SEP02 ADD EXTL FROM SLUMP SOURCE
 CIPK NOV97 ADJUST LINE ABOVE FOR SALINITY LOADING
 CIPK AUG95    ADD LINE ABOVE FOR RATE TERMS
         IF(ICYC .GT. 0) FRN=FRN+AMU*DSALDT*H
+C-
+C......THE SALINITY EQUATION
+C-
         IA=0
         DO 295 M=1,NCN
           IA=IA+4
@@ -1383,6 +1450,9 @@ CIPK AUG95    ADD LINE ABOVE FOR RATE TERMS
 
 cipk jun05
       IF(NR .GT. 90  .and.  nr  .lt. 100) GO TO 380
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt VELOCITY.....
+!--------------------------------------------------------------------------------------
 C
 C.....FORM THE X MOTION EQUATIONS.....
 C
@@ -1430,7 +1500,9 @@ C-
           ESTIFM(IA,IB+1) = ESTIFM(IA,IB+1) + XN(M)*FEEDN
   305   CONTINUE
   310 CONTINUE
-!.....................................................
+!-----------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt WATER DEPTH.....
+!-----------------------------------------------------------------------------------------
 
 C
 C.....FORM THE HEAD TERMS.....
@@ -1472,6 +1544,9 @@ C-
      1    + DNY(M)*FEECN
   320   CONTINUE
   325 CONTINUE
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C-
 C......FORM THE SALINITY TERMS
 C-
@@ -1506,9 +1581,10 @@ C  WIND TERMS
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DNX(M)*FEEAN+XN(M)*FEEBN
   329   CONTINUE
   330 CONTINUE
-
-
-!.....................................................
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt VELOCITY.....
+!--------------------------------------------------------------------------------------
+C
 C.....FORM THE Y MOTION EQUATIONS.....
 C
 C.....FLOW TERMS.....
@@ -1553,7 +1629,9 @@ C-
      1   + DNY(M)*FEECN
   335   CONTINUE
   340 CONTINUE
-!.....................................................
+!-----------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt WATER DEPTH.....
+!-----------------------------------------------------------------------------------------
 C
 C.....HEAD TERMS.....
 C
@@ -1593,7 +1671,9 @@ C-
      1    + DNY(M)*FEECN
   350   CONTINUE
   355 CONTINUE
-!.....................................................
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C-
 C......FORM THE SALINITY TERMS
 C-
@@ -1628,8 +1708,9 @@ C  WIND TERMS
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DNY(M)*FEEAN+XN(M)*FEEBN
   358   CONTINUE
   359 CONTINUE
-!.....................................................
-
+!--------------------------------------------------------------------------------------
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt SALINITY.....
+!--------------------------------------------------------------------------------------
 C
 C.....FORM THE CONTINUITY EQUATIONS.....
 C
@@ -1873,15 +1954,46 @@ CMAY93     +      XNAL(1,N)*VEL(2,N1)+XNAL(2,N)*VEL(2,N2)+XNAL(3,N)*VEL(2,N3)
      +     +XNAL(3,N)*VEL(2,N3)/VDST(N3)
             U= UU*CX+VV*SA
             V=-UU*SA+VV*CX
+
+!
+!.....Compute shore friction.....
+!
 CMAY93 ENDCHANGE
             VECQ=SQRT(U**2+V**2)
+            !Chezy
             IF(ORT(NR,11) .GT. 1.) THEN
               FFACT=1./ORT(NR,11)**2*H
-            ELSE
+            !Manning's N
+            ELSEif (ort(nr,11) > 0.0d0 .and. ort(nr,11) < 1.0d0 ) then
               FFACT=ORT(NR,11)**2*FCOEF*H**0.6667/GRAV
 cipk mar99 fix bug for bank friction (double count on GRAV)
+
+            !Darcy-Weisbach
+            elseif (ort(nr,11) < 0.0d0 .and. abs(vecq) > 0.001d0) then
+              lambda_shore = 0.0
+              lambdaKS_shore = 0.0d0
+              lambdaP_shore = 0.0d0
+              lambdaDunes_shore = 0.0d0
+              cwr_temp = 0.0d0
+              call darcy (lambda_shore, vecq, h,
+     +          abs(ort(nr, 11)),
+     +          0.0d0,
+     +          0.0d0,
+     +          nn, morph, gl_bedform, MaxE, cwr_temp, 2,
+                !store values for output
+     +          lambdaKS_shore,
+     +          lambdaP_shore,
+     +          lambdaDunes_shore, dset)
+
+              FFACT = lambda_shore/ 8.0d0/ grav * h
+            !no shoreline friction
+            else
+              FFACT = 0.0d0
+              continue
           
             ENDIF
+
+
             TEMP=(DNAL(2,N)*DL(1,M)+DNAL(3,N)*DL(2,M))*GRAV/2.*RHO
             HP=TEMP*HFACT(N)*H**2/2.
             HP1=TEMP   *H*HFACT(N)

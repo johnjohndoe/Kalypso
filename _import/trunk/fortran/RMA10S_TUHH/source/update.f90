@@ -343,9 +343,10 @@ UpdateDOFs: DO KK = 1, NDFM
           H1 = VEL (3, J)
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
 
-          !TODO
-          !nis,comment: efpor is updated for every node by usage of amf.subroutine
-          !EX = EX * EFPOR
+          !nis,jan09: After lots of test, it seems as the scaling with the effective porosity is the correct one;
+          !           It's not totally clear, because the equations are partly set up with the transformed depth
+          !           and partly with the real depth.
+          EX = EX * EFPOR
         ENDIF
 
         !calculate the changes to be applied on the water stage

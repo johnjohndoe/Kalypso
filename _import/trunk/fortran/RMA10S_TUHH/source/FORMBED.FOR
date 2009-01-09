@@ -34,6 +34,8 @@ crrr aug97 add character lines
 C-
 !NiS,jul06: Consistent data types for variable passing
       REAL(KIND=8) :: HTP
+      
+      integer (kind = 4) :: iprtf
 !-
 C-.....ASSIGN PROPER COEFS.....
 C-
@@ -317,10 +319,14 @@ C
 C... PRINT OUT LAYER PROPERTIES.
 C
 cipk apr97 add option
+      !nis,dec08: Introduce local copy, because nprtf shouldn't be changed here and zero-entry means one-entry
+      iprtf = nprtf
+      if (iprtf == 0) iprtf = 1
+
       !MD: Abfrage zur Ausgabe:
       !MD: Geaendert, da anschlieﬂend noch Berechnungen!!
-      !MD:   IF (MOD(IT,NPRTF).NE.0  .AND. TET.NE.0.) RETURN
-      IF (MOD(IT,NPRTF).NE.0  .AND. TET.NE.0.) THEN
+      !MD:   IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) RETURN
+      IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) THEN
 crrr aug97 revise print format and structure
         WRITE(LINE256,'(A)')
      &  '  Node  Bed Shear  Bed-elev  Sed Dep  Sed Dep  New Layer Thick

@@ -208,9 +208,9 @@ Version 1.0.2 (laufende Änderungen)
 
 --- Nico Schrage, 28.07.2008 (1.0.2alpha1)
 
------------------------------------------------------------------------------------------------------
-28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+28.07.2008 Branch 'update subroutines' was merged into the TRUNK. Merged revisions are 4957 to 5252.
+----------------------------------------------------------------------------------------------------
 
 Ziel-Version 1.1.0 (laufende Änderungen)
 -----------------------------------
@@ -554,3 +554,21 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 ***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR***MAJOR
 
 --- Nico Schrage, 07.11.2008 (RMAKalypso 1.1.0alpha7)
+
+081.) bugfix regarding kilometer in coef1dPoly
+082.) Enable shore line friction for Darcy-Weisbach; implemented in coef25.sub and coef25nt.sub. Is done analoguous to Chezy coefficient. (affects coef25nt.sub, coef25.sub)
+083.) Reactivate efpor in update, because after several tests it seems to be the correct way. Attention has to be payed to very steep perpendicular to 
+      the flow direction, because they cause convergence problems then. (affects update.sub)
+084.) Specifying used global variables from modules in particular, so developer knows, which variables are really used within subroutines, started for several subs, not finished at all.
+      Additionally updating subroutines from *.for to *.f90 partly. ...to be continued.
+085.) Error message for unsteady restart from nth step (n>1) with steady calculation activated before;logical mistake that is catched. (affects input.sub)
+086.) Get rid of some output frequency variables: Effects C5 and C6 lines (affects input.sub)
+087.) Increase default MR1 size for Pardiso from 200000 to 300000 (affects initl.sub
+088.) Boundary directio fix at 1D/2D transition (affects: LineTransitionCalc.sub)
+089.) Fix tree resistance to c_wr = 0.0, if energy slope is to small. (affects get_element_cwr.sub)
+090.) Bug fix for interpolation of elements in 1D, i.e. number of nodes for interpolated elements was not correct. (affects InterpolateProfs.sub)
+--- committed ---
+
+--- Nico Schrage, 09.01.2009 (released RMA·Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
+
+001.)

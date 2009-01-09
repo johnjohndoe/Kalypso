@@ -1471,6 +1471,7 @@ do i = 1, statElSz
         NewElt = NewElt + 1
         IntPolElts (i, j - 1) = NewElt
         imat (NewElt) = imat (i)
+        ncorn(NewElt) = 3
         if (j == 2) then
           nop (NewElt, 1) = nop (i, 3)
         else
@@ -1505,6 +1506,7 @@ do i = 1, statElSz
       !Generate the last element
       if (j == IntPolNo (i) ) then
         NewElt = NewElt + 1
+        ncorn(NewElt) = 3
 
         if (TransitionElement(i)) then
           findtransition: do TransLine = 1, MaxLT

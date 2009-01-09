@@ -86,6 +86,9 @@ c      INCLUDE 'RKEP.COM'
       REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
 
       REAL (kind = 8) :: TEMP,HP,HP1,DERR
+      
+      real (kind = 8) :: lambda_shore, lambdaKS_shore, lambdaDunes_shore
+      real (kind = 8) :: lambdaP_shore 
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
@@ -1773,15 +1776,44 @@ CMAY93     +      XNAL(1,N)*VEL(2,N1)+XNAL(2,N)*VEL(2,N2)+XNAL(3,N)*VEL(2,N3)
      +     +XNAL(3,N)*VEL(2,N3)/VDST(N3)
             U= UU*CX+VV*SA
             V=-UU*SA+VV*CX
+!
+!.....Compute shore friction.....
+!
 CMAY93 ENDCHANGE
             VECQ=SQRT(U**2+V**2)
-            IF(ORT(NR,11) .GT. 1.) THEN
-              FFACT=1./ORT(NR,11)**2*H
-            ELSE
-              FFACT=ORT(NR,11)**2*FCOEF*H**0.6667/GRAV
+            !Chezy
+            IF (ORT (NR, 11) > 1.) THEN
+              FFACT = 1./ ORT (NR, 11)**2 * H
+            !Manning's N
+            ELSEif (ort(nr,11) > 0.0d0 .and. ort(nr,11) < 1.0d0 ) then
+              FFACT = ORT (NR, 11)**2 * FCOEF * (H**2.0d0/3.0d0) / GRAV
 cipk mar99 fix bug for bank friction (double count on GRAV)
+            !Darcy-Weisbach
+            elseif (ort(nr,11) < 0.0d0 .and. abs(vecq) > 0.001d0) then
+              lambda_shore = 0.0
+              lambdaKS_shore = 0.0d0
+              lambdaP_shore = 0.0d0
+              lambdaDunes_shore = 0.0d0
+              cwr_temp = 0.0d0
+              call darcy (lambda_shore, vecq, h,
+     +          abs(ort(nr, 11)),
+     +          0.0d0,
+     +          0.0d0,
+     +          nn, morph, gl_bedform, MaxE, cwr_temp, 2,
+                !store values for output
+     +          lambdaKS_shore,
+     +          lambdaP_shore,
+     +          lambdaDunes_shore, dset)
+
+              FFACT = lambda_shore/ 8.0d0/ grav * h
+            !no shoreline friction
+            else
+              FFACT = 0.0d0
+              continue
           
             ENDIF
+            
+            
             TEMP=(DNAL(2,N)*DL(1,M)+DNAL(3,N)*DL(2,M))*GRAV/2.*RHO*XHT
             HP=TEMP*HFACT(N)*H**2/2.
             HP1=TEMP   *H*HFACT(N)

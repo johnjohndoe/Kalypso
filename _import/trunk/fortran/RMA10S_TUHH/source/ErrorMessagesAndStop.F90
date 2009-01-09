@@ -198,6 +198,10 @@ elseif (ErrorID == 1602) then
   WRITE (ErrorUnit, 1603) ObjectID
   WRITE (        *, 1603) ObjectID
 
+elseif (ErrorID == 1604) then
+  write (ErrorUnit, 1604)
+  write (        *, 1604)
+
 ELSEIF (ErrorID == 3501) then
   WRITE (ErrorUnit, 3501)
   WRITE (        *, 3501)
@@ -341,6 +345,8 @@ end if
             & 1x, 'EXECUTION TERMINATED!')
  1211 format (1x, 'ERROR - Transition line ', i5, ' has insufficient number of nodes (<= 1). '/ &
             & 1x, 'Change the definition of that line! - EXECUTION TERMINATED!' )
+ 1212 format (1x, 'ERROR - Bad defined element (no.', i5, '), because midside node is less or ', / &
+            & 1x, 'equal to zero. EXECUTION TERMINATED!')
  
 
 
@@ -380,6 +386,9 @@ end if
  1603 FORMAT (1x, "ERROR - Restart values for lambda can't be applied to element,", i5, ',' / &
             & 1x, 'because it is less or equal zero or it is higher than the' / &
             & 1x, 'maximum element number')
+ 1604 format (1x, 'You are about to restart from a later time step, but you ordered to start with steady', / &
+            & 1x, 'state calculation. Please change that in C5!', / &
+            & 1x, 'EXYECUTION TERMINATED!')
 
 !2000   Output Errors
 !3000   Mesh Errors

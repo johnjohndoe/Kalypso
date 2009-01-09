@@ -280,6 +280,7 @@ cipk sep96            ENDIF
                 NBC(N,KK)=0
  1971         CONTINUE
             ENDIF
+!nis,aug08: for continuity equation
             IF(abs(NSURF(N)) .EQ. N) NDS=3
           ENDIF
           DO 1976 I=1,NDS

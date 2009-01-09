@@ -374,8 +374,9 @@ DO k = 1, ncn
   if (icyc > 0) dvel_res_dt (k) = vdot (1, n) * COS (alfa (n)) + vdot (2, n) * SIN (alfa (n))
 
   !updating length, if kilometres are given
-  if (kmx(n1) /= -1.0 .and. kmx(n3) /= -1.0) then
+  if (kmx(n) /= -1.0 .and. kmx(nr) /= -1.0 .and. nr /= n) then
     !Scaling the element-length
+    !write(*,*) nn, k
     xl(3) = xl(k) / ABS (xl(k)) * ABS ((kmx(n3) - kmx(n1)) * 1000)
     !Questionable: What happens to curved elements? Might it be useful to introduce them for curved elements
     yl(3) = 0.0

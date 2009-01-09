@@ -30,6 +30,16 @@
 !
 !          --- Nico Schrage
 !
+!          REVISION 1.1.0
+!          January 09th, 2009
+!
+!          initial revision with the following capabilites
+!           - shore line friction support for Darcy-Weisbach in coef25 and coef25nt; not yet for coef2d*
+!           - Reactivation of the efpor scaling; problems occur, if elements are too steep perpendicular to the flow direction
+!           - bugfixes and code modernizations
+!           - Changes for input lines C5 and C6 regarding output frequencies
+!
+!          --- Nico Schrage
 !......... Main program unit for the 1D/2D coupled hydrodynamics model RMA·Kalypso
 
 PROGRAM RMAKalypso
@@ -47,7 +57,7 @@ PROGRAM RMAKalypso
   character (len = 10) :: builddate
       
   version = '1.1.0'
-  builddate = '2008/10/28'
+  builddate = '2009/01/09'
 
 !information during the execution:
   do i = 1, 8
@@ -70,7 +80,7 @@ PROGRAM RMAKalypso
   WRITE(*,*) '                        21073 Hamburg'
   WRITE(*,*) '                         Germany'
   write(*,*)
-  WRITE(*,*) '                    October, 28th 2008'
+  WRITE(*,*) '                    January, 09th 2009'
   write(*,*)
   write(*,*) '     *                  **********                  *'
   write(*,*) '     *                                              *'
@@ -89,15 +99,15 @@ PROGRAM RMAKalypso
 
   !nis,jun07: Moving file.sub to a point before calling initl.sub leads to an error because zvrs.sub, called from file.sub, uses some values that will be set there
   !setting those necessary values at first directly here
-  NBS = 5000000
+  nbs = 5000000
   !-
 
   !open the input files
-  CALL FILE (1, fnam0)
+  call file (1, fnam0)
   !read size of the model geometry
-  CALL GETGEO1
+  call getgeo1
   !start main execution of the simulation model
-  CALL RMA10SUB
+  call rma_kalypso
 
 !end execution of RMA·Kalypso
 END

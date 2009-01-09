@@ -337,7 +337,6 @@
 !maxn                   current iteration cycle
 !itpas                  ???
 !iaccyc: time step to start the calculation from; counting through the list of time steps to reach the iaccyc-th step
-!                       TODO: delete everything, connected to ioutrst
 !icyc                   counter for really processed time steps
 !ncyc                   maximum number of time steps
 !it                     actual 'ID' of the time step
@@ -345,14 +344,10 @@
 
       !file handling and outwriting frequencies
       !----------------------------------------
-      integer (kind = 4) :: ioutrst, ioutfreq, ioutrwd
+      integer (kind = 4) :: ioutrwd
       integer (kind = 4) :: nprti, nprtf
 !meaning of the variables
 !------------------------
-!ioutrst                frequency to write out restart results (obsolete?)
-!                       TODO: Examine what is the difference between those two lines
-!ioutfreq               frequency to write out results
-!                       TODO: Why do this; remove it
 !ioutrwd                frequency to rewind output file LOUT
 !nprtf                  frequency of time steps to write out full results
 !nprti                  frequency of iterations within nprtf to write out full results
@@ -396,7 +391,7 @@
       !meaning of the variables
       !------------------------
       !delt       time step length [hours]
-      !alpha      factor for time derivative of variables; centering (default 1.8) for hydrodynamic values
+      !alpha      factor for time centering (default 1.6) for hydrodynamic values
       !altm       = alpha/ delt
       !alphasn    factor for time centering for constituents (default 2.0)
       

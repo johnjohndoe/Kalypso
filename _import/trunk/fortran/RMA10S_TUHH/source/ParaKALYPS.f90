@@ -36,7 +36,6 @@ real (kind = 8), allocatable, dimension (:) :: correctionks, correctionaxay, cor
 !correctionaxay   correction scaling factor for the ax and ay values of an element; default must be 1.0d0
 !correctiondp     correction scaling factor for the dp values of an element; default must be 1.0d0
 
-
 !node informations
 !-----------------
 logical, allocatable, dimension (:)              :: intpolprof, ispolynomnode
@@ -110,14 +109,6 @@ integer (kind = 4) :: ivegetation
 !------------------------
 !ivegetation      calculate resistance with Darcy approach according to big vegetation elements
 
-!output control parameters
-!-------------------------
-integer (kind = 4) :: itefreq
-!meaning of the variables
-!------------------------
-!itefreq          frequency to write out results between iterations
-
-
 
 !using energy level for cstrc
 INTEGER   :: UseEnergyCSTRC
@@ -132,8 +123,6 @@ REAL(KIND=8), allocatable :: zeigma(:)
 REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
 
 
-
-!-
 
 
 !NiS,jul06: At the moment as a dummy argument, the bedform-array in a global version. It is passed to the subroutine

@@ -13,7 +13,13 @@ USE BLK10MOD, only: maxp, np, nfixsav, nfixsv1, nfix1, npm, nfixk, &
 &  alfa, vold, vdot, vdoto, nref, ndep, alfak, &
 &  ne, ncorn, njt, qd, icyc, wsll, adif, lout, &
 &  spec, nspl, nrbd, irbd, prcnt, altm, alpha 
+!meaning of the variables
+!------------------------
+!voutn      vector of outward normal direction [rad] (measured from global x-axis) of the three nodes along an arc of an element
+!
+
 USE BLKSUBMOD, only: nfctp, whgt, isubm
+use parakalyps
 implicit none
 SAVE
       
@@ -22,7 +28,8 @@ COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2), AX(3,3),DNAL(3,4),XN
 
       real (kind = 8) :: pi2, voidp
       real (kind = 8) :: h1, h3, h, vt
-      real (kind = 8) :: srt, dl
+real (kind = 8), dimension (1:3) :: srt
+real (kind = 8), dimension (1:2, 1:2) :: dl
       real (kind = 8) :: fmt
       real (kind = 8) :: temp1, temp2, dnal
       real (kind = 8) :: afact, hfact, xnal, wait, sload, ax
@@ -37,9 +44,21 @@ COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2), AX(3,3),DNAL(3,4),XN
       integer (kind = 4) :: n1, n2, n3
       integer (kind = 4) :: nfk, nftyp, nqb, nlft
       integer (kind = 4) :: ibc, iactvbc, nfd
-      
-      DIMENSION DL(2,2),FMT(2),SRT(3)
+      DIMENSION FMT(2)
       ALLOCATABLE IFORM(:),IOD(:),ION(:)
+!meaning of the variables
+!------------------------
+!srt        copy of voutn; vector of outward normal direction (measured from global x-axis) of the three nodes along an arc of an element
+!dl         dx and dy lengths of an arc:
+!             d(2,1) dx between corner nodes
+!             d(2,2) dy between corner nodes
+!           case 2D-element:
+!             d(1,1) dx between midside node and first node
+!             d(1,2) dy between midside node and second node
+!           case 1D-element:
+!             d(1,1) dx as half of the element dx-length from d(2,1)
+!             d(1,2) dy as half of the element dy-length from d(2,2)
+!
 
       DATA PI2/1.570796/,VOIDP/-1.E19/,ITIMEH/0/
 
@@ -91,7 +110,7 @@ enddo
 
 !Start examining ibn and partly nfixk
 !------------------------------------
-elements: do n=1,nem
+elements: do n = 1, nem
   !material type
   nm = imat (n)
   !cycle on deactive elements
@@ -101,7 +120,7 @@ elements: do n=1,nem
   if (mod (nm, 100) > 90) cycle elements
   !cycle 3D elements
   if (nm > 1000 .and. nm < 5000) cycle elements
-  if (nm > 900 .and. nm < 1000) ncn = ncrn (n)
+  ncn = ncrn (n)
   !prevent special treatment of 1D/2D element-2-element transition
   if (ncn == 5 .and. nm < 900) ncn = 3
   !for 1D elements and control structure elements
@@ -195,10 +214,12 @@ elements2: do n = 1, nem
       !Get direction of outward normal for 2-d plan elements
       if (ncn > 3) then
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 1)
+
       !Get direction for 1D elements and 1D/2D elt-2-elt transition elements
       else
         call outnrm (cord (n1, 1), cord (n1, 2), cord (n2, 1), cord (n2, 2), cord (n3, 1), cord (n3, 2), srt, 2)
       endif
+
       !store into global arrays
       voutn (n1) = srt (1)
       voutn (n2) = srt (2)
@@ -207,53 +228,63 @@ elements2: do n = 1, nem
       !
       nfk = nfixk (n2)/ 100
 
+      !
       if(nfk < 113  .and.  nfk /= 2) then
-
-        n1=nop(n,m-1)
-        n3=nop(n,1)
-        if(m .lt. ncn) n3=nop(n,m+1)
-        if(ncn .lt. 6) then
-          if(ibn(n1) .ge. 10) ibn(n1)=15
-          if(ibn(n3) .ge. 10) ibn(n3)=15
+        !get the nodes of the arc
+        n1 = nop (n, m - 1)
+        n3 = nop (n, 1)
+        if (m < ncn) n3 = nop (n, m + 1)
+        
+        !reset ibn-values for passive boundaries (implicit boundary conditions)
+        if (ncn < 6) then
+          if (ibn (n1) >= 10) ibn (n1) = 15
+          if (ibn (n3) >= 10) ibn (n3) = 15
         else
-          if(ibn(n1) .eq. 10) ibn(n1)=15
-          if(ibn(n3) .eq. 10) ibn(n3)=15
+          if (ibn (n1) == 10) ibn (n1) = 15
+          if (ibn (n3) == 10) ibn (n3) = 15
         endif
 
-        h1=vel(3,n1)
-        h3=vel(3,n3)
-        dl(2,2)=cord(n3,1)-cord(n1,1)
-        dl(2,1)=cord(n3,2)-cord(n1,2)
-        if(cord(n2,1) .gt. voidp  .and.  ncn .ne. 3) then
-          dl(1,2)=cord(n2,1)-cord(n1,1)
-          dl(1,1)=cord(n2,2)-cord(n1,2)
+        !get the water depths at the corners of the arc
+        h1 = vel (3, n1)
+        h3 = vel (3, n3)
+        !calculate the length of the arc between corner nodes
+        dl (2, 2) = cord (n3, 1) - cord (n1, 1)
+        dl (2, 1) = cord (n3, 2) - cord (n1, 2)
+
+        !for 2D elements calculate the distance between the midside node and the first node of the arc
+        if (cord (n2, 1) > voidp .and. ncn /= 3) then
+          dl (1, 2) = cord (n2, 1) - cord (n1, 1)
+          dl (1, 1) = cord (n2, 2) - cord (n1, 2)
+        !for 1D elements, just half the element length
         else
-          dl(1,2)=dl(2,2)/2.
-          dl(1,1)=dl(2,1)/2.
+          dl (1, 2) = dl (2, 2) / 2.
+          dl (1, 1) = dl (2, 1) / 2.
         endif
-        if(iform(n1) .eq. 1) then
+
+        if(iform(n1) == 1) then
           fmt(1)=-1.0
         else
           fmt(1)=1.0
         endif
-        if(iform(n3) .eq. 3) then
+        if(iform(n3) == 3) then
           fmt(2)=-1.0
         else
           fmt(2)=1.0
         endif
+
         iform(n1)=1
         iform(n3)=3
         forgaussnodes: do ng = 1, 4
-          temp1=(dnal(2,ng)*dl(1,1)+dnal(3,ng)*dl(2,1))/2.
-          temp2=(dnal(2,ng)*dl(1,2)+dnal(3,ng)*dl(2,2))/2.
-          h=(h1+afact(ng)*(h3-h1))*hfact(ng)
-          if(ncn .eq. 3) h=1.0
-          yslp(n1)=yslp(n1)+temp1*h*xnal(1,ng)*fmt(1)
-          yslp(n2)=yslp(n2)+temp1*h*xnal(2,ng)
-          yslp(n3)=yslp(n3)+temp1*h*xnal(3,ng)*fmt(2)
-          xslp(n1)=xslp(n1)+temp2*h*xnal(1,ng)*fmt(1)
-          xslp(n2)=xslp(n2)+temp2*h*xnal(2,ng)
-          xslp(n3)=xslp(n3)+temp2*h*xnal(3,ng)*fmt(2)
+          temp1 = (dnal (2, ng) * dl (1, 1) + dnal (3, ng) * dl (2, 1)) / 2.
+          temp2 = (dnal (2, ng) * dl (1, 2) + dnal (3, ng) * dl (2, 2)) / 2.
+          h = (h1 + afact (ng) * (h3 - h1)) * hfact (ng)
+          if (ncn == 3) h = 1.0
+          yslp (n1) = yslp (n1) + temp1 * h * xnal (1, ng) * fmt (1)
+          yslp (n2) = yslp (n2) + temp1 * h * xnal (2, ng)
+          yslp (n3) = yslp (n3) + temp1 * h * xnal (3, ng) * fmt (2)
+          xslp (n1) = xslp (n1) + temp2 * h * xnal (1, ng) * fmt (1)
+          xslp (n2) = xslp (n2) + temp2 * h * xnal (2, ng)
+          xslp (n3) = xslp (n3) + temp2 * h * xnal (3, ng) * fmt (2)
         enddo forgaussnodes
       endif
     endif

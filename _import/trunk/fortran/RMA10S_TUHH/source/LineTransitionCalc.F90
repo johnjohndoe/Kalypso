@@ -170,7 +170,7 @@ transitionloop: do i = 1, MaxLT
           !specific discharge
           spec(na, 1) = TransSpec (k)
           !direction
-          spec(na, 2) = alfa(na)
+          spec(na, 2) = alfa(na) - adif (na)
           !correct direction
           VelCrossA  = vel (1, TransNo) * DYtot - vel (2, TransNo) * DXtot
           SpecCrossA = spec (na, 1) * COS( alfa(na)) * DYtot - spec (na, 1) * SIN( alfa(na)) * DXtot
