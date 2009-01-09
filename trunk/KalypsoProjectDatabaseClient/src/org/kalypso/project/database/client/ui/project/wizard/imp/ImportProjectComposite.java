@@ -92,7 +92,7 @@ public class ImportProjectComposite extends Composite
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );
-    lnkImport.setText( "Eclipse Project importieren" );
+    lnkImport.setText( "Projekt importieren" );
 
     lnkImport.addHyperlinkListener( new HyperlinkAdapter()
     {
