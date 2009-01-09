@@ -103,16 +103,19 @@ import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
+ * AWT canvas that displays a {@link org.kalypso.ogc.gml.mapmodel.MapModell}.
+ *
  * @author Andreas von Dömming
+ * @author Gernot Belger
  */
 public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 {
-  /**
-   * Maximum delay by which repaints to the map are produced.
-   *
-   * @see java.awt.Component#repaint(long)
-   */
-  private static final long MAP_REPAINT_MILLIS = 250;
+// /**
+// * Maximum delay by which repaints to the map are produced.
+// *
+// * @see java.awt.Component#repaint(long)
+// */
+// private static final long MAP_REPAINT_MILLIS = 250;
 
   private static interface IListenerRunnable
   {

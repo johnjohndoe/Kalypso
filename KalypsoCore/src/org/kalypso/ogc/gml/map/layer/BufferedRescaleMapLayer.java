@@ -109,21 +109,25 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   @Override
   public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor )
   {
+    // Fetch current state here (avoid synchronised blocks)
+    final BufferedTile tile = m_tile;
+    final BufferedTile runningTile = m_runningTile;
+
     // If m_tile fits to world2screen, just paint it
-    if( !checkTile( m_tile, world2screen ) )
+    if( !checkTile( tile, world2screen ) )
     {
       // If m_running tile does not fit or already was finished, reschedule it
-      if( !checkTile( m_runningTile, world2screen ) || m_runningTile.getResult() != null )
+      if( !checkTile( runningTile, world2screen ) || runningTile.getResult() != null )
         rescheduleJob( world2screen );
       // else, we wait for it to finish; then m_tile will be good
     }
 
     // If we have a good tile, paint it
-    if( m_tile != null && m_tile.intersects( world2screen ) )
-      m_tile.paint( g, world2screen );
+    if( tile != null && tile.intersects( world2screen ) )
+      tile.paint( g, world2screen );
     // only we have no good tile, paint the running tile
-    else if( m_runningTile != null && m_runningTile.intersects( world2screen ) )
-      m_runningTile.paint( g, world2screen );
+    else if( runningTile != null && runningTile.intersects( world2screen ) )
+      runningTile.paint( g, world2screen );
   }
 
   /** Check if the tile fits to the given world2screen */
