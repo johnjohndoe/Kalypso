@@ -1,0 +1,158 @@
+,_de,_en
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.23,...generiere Differenzen...,
+org.kalypso.ui.wizards.imports.roughness.AddRoughnessPolygonsCmd.0,Rauheitpolygone hinzuf\u00FCgen,
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.0,,Zeitzone:
+org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.11,Could not create file:,
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.0,Bitte die Shape-Datei w\u00E4hle,Select line shape file
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.1,Bitte die Zeitreihendatei und das Datenformat ausw\u00E4hlen.,Please select a timeseries an the data type.
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.2,Zeitreihendaten ausw\u00E4hlen,Timeseries selection
+org.kalypso.ui.wizards.imports.roughness.PageSecond.Description,Zuordnung der Rauheitsattribute zu den definierten Rauheitsklassen.,Mapping of roughness
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.3,Bitte die Datei zum Import ausw\u00E4hlen.,Please select the file to be imported.
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.BrowseButton,Browse...,Browse...
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.description,Import von Hintergrunddaten in den Formaten TIF oder JPG,Select base map files
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.4,Datei\:,Shape file
+org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartPage.1,Externe Restart Ergebnisse importieren,
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.5,Quelle,Source
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.5,Bitte die Shape-Datei zum Import ausw\u00E4hlen.,Please select a SHP file
+org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartPage.2,W\u00E4hlen Sie das 1D-station\u00E4re Ergebnis au,
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.6,Datei\:,File\:
+ImportBaseMapImportShpPage.5,,Koordinatensystem der Shape-Datei
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.10,Format\:,Format\:
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.6,Fehler beim Lesen der Datei.,Error reading file
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.7,Durchsuchen...,Browse...
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.11,Optionen,Options
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.32,Differenzen erzeugt am xx.xx.xxxx xx.xx:xx Uhr (resultierend aus: Minuend: xxx Subtrahent:xxx),
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.12,Metadaten beibehalten,Keep meta data.
+org.kalypso.ui.wizards.imports.roughness.PageMain.10,possibly irregular shp fil,Hint\: dbf/shx files missin
+org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard.0,Import von Shape-Daten,Import line shape file
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.13,Werte hinzuf\u00FCgen statt \u00FCberschreiben,Add data instead of overwriting it.
+org.kalypso.ui.wizards.imports.roughness.PageMain.11,Layername,Layer name
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.description,Bitte selektieren Sie eine Option:,Please select import option
+org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.10,Berechnung des Modells wird durchgef\u00FChrt,calculation of model is in progress
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.14,Die Zeitreihen-Quelldatei wurde nicht ausgew\u00E4hlt.,No source selected.
+org.kalypso.kalypso1d2d.extension.Kalypso1d2dModule.3,,Kalypso1D2D \u00F6ffnen
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse,Durchsuchen...,Browse...
+org.kalypso.ui.wizards.imports.roughness.PageMain.12,Layer type,Layer type
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.34,Daten konnten keinem Zeitschritt zugeordnet werden..,
+org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.11,???Fehler beim Laden der Modell-Spezifikation,???Error during loading of model specification
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.0,Hintergrunddaten ausw\u00E4hlen,Select base map files
+org.kalypso.wizards.import1d2d.ImportWizard.Title,Import eines 2D-Netzes,Import 2D net
+org.kalypso.ui.wizards.imports.roughness.PageMain.13,Basic layer,Basic layer
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.35,Konnte Differenzen nicht erzeugen.,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.3,W\u00E4hlen Sie auf dieser Seite die Gew\u00E4sserachse aus.,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1,Koordinatensystem\:,Coordinate system\:
+org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.15,Eingabe-Zeitreihe ist passend.,Timeserie fits.
+org.kalypso.ui.wizards.imports.roughness.Transformer.0,Aktueller Vorgang\:,Current activity\:
+org.kalypso.ui.wizards.imports.roughness.PageMain.14,Correction layer,Correction layer
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.36,Differenzen erzeugt.,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.4,Gew\u00E4sserachse,
+org.kalypso.ui.wizards.imports.roughness.Transformer.1,Umwandeln der Shape-Datei in GML-Format,Converting shape data to gml...
+org.kalypso.ui.wizards.imports.roughness.PageMain.15,Koordinatensystem der Shape-Datei,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.37,Fehler bei Differenzenerzeugung,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.5,Bitte Thema der Gew\u00E4sserachse ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.elevationmodel.ElevationMainPage.5,,Koordinatensystem der Shape-Datei
+org.kalypso.ui.wizards.imports.roughness.Transformer.2,Erzeugen der Kartenvorlage,Type not supported:
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.6,Parameter,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.3,Bitte die Datei ausw\u00E4hle,Please select the file to be loaded as background map.
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.7,Spalte der Gew\u00E4sser-ID ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard.0,Copying..,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.4,Hintergrunddatei\:,Base map
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.8,Gew\u00E4sser ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.roughness.PageSecond.Title,Rauheiten zuordnen,Select Files
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.10,Bitte w\u00E4hlen Sie ein Ergebnis au,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.9,Spalte der Anfangsstation,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5,Koordinatensystem der Shape-Datei,Please select a TIFF/JPG file
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.11,Selektierte Ergebnisse haben unterschiedlichen Typ,
+org.kalypso.wizards.import1d2d.PageMain.0,Seite 1,Page1
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6,Datei nicht gefunden,Non-regular file path
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.12,Wollen Sie trotzdem fortfahren?,
+org.kalypso.wizards.import1d2d.PageMain.1,step 1,2d impor
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.0,Import von H\u00F6hendaten,Elevation File Import Wizard
+org.kalypso.ui.wizards.imports.observation.AxisWidget.0,Achse,Axe
+org.kalypso.wizards.import1d2d.PageMain.2,Bitte die 2D-Datei zum Import ausw\u00E4hlen.,Select import file
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.1,Import von H\u00F6henmodelldaten im ASCII-Grid und HMO Format.,Please select the elevation model file to be loaded.
+org.kalypso.ui.wizards.imports.roughness.PageMain.0,Page1,Page1
+org.kalypso.ui.wizards.imports.roughness.PageMain.Title,Import von Rauheitsdaten,Roughness import
+org.kalypso.ui.wizards.imports.observation.AxisWidget.1,Name,Name
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.13,Kein Ziel ausgew\u00E4hlt,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.2,Datei\:,File
+org.kalypso.ui.wizards.imports.roughness.PageMain.1,step 1,Import roughnesse
+org.kalypso.ui.wizards.imports.observation.AxisWidget.2,text2,text2
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.14,Bitte w\u00E4hlen Sie einen Zeitschritt au,
+org.kalypso.wizards.import1d2d.PageMain.3,,not_used
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.3,Bitte eine H\u00F6henmodelldatei im ASCII-Grid oder HMO Format ausw\u00E4hlen.,Please select an elevation file in ASCII or HMO format.
+org.kalypso.ui.wizards.imports.roughness.PageMain.2,Select import file.,Select import file.
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.0,Import von Zeitreihen,Import timeseries
+org.kalypso.ui.wizards.imports.observation.AxisWidget.3,Typ,Type
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.15,Falsches Ziel ausgew\u00E4hlt,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.4,H\u00F6hendaten ausw\u00E4hlen,Select elevation file
+org.kalypso.ui.wizards.imports.roughness.PageMain.3,Als neue GML-Datei speichern.,Export to new gml file
+org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.0,it is possible to edit the axis labels.,Axis Preview.\nDuring creation of a new timeserie
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.1,Import von Zeitreihendaten,Import from timeseries data
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.16,Bitte w\u00E4hlen Sie einen Zeitschritt au,
+org.kalypso.wizards.import1d2d.PageMain.5,Datei\:,File
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.5,Bitte ein Titel einspringen,Please enter tile title
+org.kalypso.ui.wizards.imports.roughness.PageSecond.0,,Select Files and Relate
+org.kalypso.ui.wizards.imports.roughness.PageMain.4,In vorhandenes Feature speichern.,Export to existing feature
+org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.1,Quelle,Source
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.2,Import Fehler,Import errors
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.10,Spalte der Endstation,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.17,Erzeuge Differenzen:,
+org.kalypso.wizards.import1d2d.PageMain.6,Durchsuchen...,Browse...
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.0,Hintergrunddaten ausw\u00E4hlen,Import base map
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.3,1D2D-Ergebnisse,
+org.kalypso.ui.wizards.imports.roughness.PageSecond.1,die der importierten Klasse zugewiesen wird.,Bitte w\u00E4hlen Sie eine Rauheitsklasse aus der Datenbank au
+org.kalypso.ui.wizards.imports.roughness.PageMain.5,File,File
+org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.2,Ziel,Destination
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.3,probably wrong format selected. Continue (slow execution)?,Too many error
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.11,St\u00FCtzpunktweite des L\u00E4ngsschnitts [m],
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.18,...lese Minuend...,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.0,Hintergrundkarte ausw\u00E4hlen,
+org.kalypso.wizards.import1d2d.PageMain.7,,Koordinatensystem der Shape-Datei
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.19,Differenzen konnte nicht erzeugt werden:  Minuend konnte nicht gelesen werden.,
+org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.3,Fehler beim Öffnen der Zieldatei.,An error occured while opening the destination file.
+org.kalypso.ui.wizards.imports.roughness.PageMain.6,Browse...,Browse...
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.4,Ergebnis-Minuend ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4,Schwerwiegender Import-Fehler,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizardPage.12,Kein Linienthema in Karte vorhanden.,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.7,Titel:,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.1,Koordinatensystem\:,
+org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.0,Import von Hintergrundkarten,Import base map
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.3,Import von Hintergrunddaten in den Formaten TIF oder JPG,Import base map in TIFF or JPG format
+org.kalypso.wizards.import1d2d.PageMain.8,Koordinatensystem\:,Coordinate system\:
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Title,Shape-Datei ausw\u00E4hlen,Select line shape file
+org.kalypso.ui.wizards.imports.observation.ImportObservationAxisMappingWizardPage.4,Übernahme der Achsen aus bestehender Ziel-Datei nicht möglich.,Import of the source file axis not possible
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.5,Ergebnis-Subtrahend ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.description,Import von Hintergrunddaten in den Formaten Esri(tm) SHP,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.26,Unsuported file type:,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.8,Beschreibung:,
+org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5,Ein Schwerwiegender Import-Fehler trat auf (evtl. falsches Datenformat). Der Import wird abgebrochen.,
+org.kalypso.ui.wizards.imports.baseMap.BaseMapWizard.1,Nicht unterst\u00FCtzter Datentyp,Not supported data type
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.4,Import von Hintergrunddaten in den Format Esri(tm) SHP,Import base map in Esri(tm) SHP format
+org.kalypso.wizards.import1d2d.PageMain.10,read access denied?,Hint\: irregular 2d fil
+org.kalypso.wizards.import1d2d.PageMain.9,Datei ist nicht lesbar.,Cannot read file
+org.kalypso.ui.wizards.imports.roughness.PageMain.7,Roughness parameter:,Roughness parameter\:
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.6,Ziel ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.3,Bitte die Datei ausw\u00E4hle,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.5,Web Map Service einbinden,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.9,,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizardMainPage.5,Web-Map-Service einbinden,Connect to Web Map Service
+org.kalypso.kalypso1d2d.wizards.import1d2d.Import2dWizard.0,,import profiles
+org.kalypso.ui.wizards.imports.roughness.PageMain.8,Koordinatensystem\:,Coordinate system\:
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.7,Kein Ergebnis-Minuend ausgew\u00E4hlt,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.4,Hintergrunddatei\:,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard.6,Kartenansicht nicht ge\u00F6ffnet. Es k\u00F6nnen keine Themen hinzugef\u00FCgt werden.,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.BrowseButton,Durchsuchen...,
+org.kalypso.ui.wizards.imports.lineShp.LineShpMainPage.Browse,Durchsuchen...,Browse...
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.20,...lese Subtrahent...,
+org.kalypso.kalypso1d2d.wizards.import1d2d.Import2dWizard.1,Profile importieren,
+org.kalypso.ui.wizards.imports.roughness.PageMain.9,Cannot read file,Cannot read file
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.8,Bitte w\u00E4hlen Sie ein Ergebnis au,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.5,Bitte eine Shape-Datei ausw\u00E4hlen,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.10,Keine Information:,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.21,Differenzen konnte nicht erzeugt werden:  Subtrahent konnte nicht gelesen werden.,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.9,Kein Ergebnis-Subtrahend ausgew\u00E4hlt,
+org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.6,Datei nicht gefunden,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.11,Geben sie einen Namen an:,
+org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard.22,Differenzen konnte nicht erzeugt werden:  Ziel hat falschen Typ.,
+org.kalypso.ui.wizards.imports.elevationModel.Elevation.12,Koordinatensystem:,
