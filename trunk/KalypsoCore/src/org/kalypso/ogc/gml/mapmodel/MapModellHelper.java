@@ -83,14 +83,14 @@ public class MapModellHelper
   /**
    * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
-   *
-   * @return <code>false</code> if any error happened, the map is not garantueed to be loaded in this case.
+   * 
+   * @return <code>false</code> if any error happened, the map is not guaranteed to be loaded in this case.
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
   public static boolean waitForAndErrorDialog( final Shell shell, final IMapPanel mapPanel, final String windowTitle, final String message )
   {
-    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel.getMapModell() );
+    final ICoreRunnableWithProgress operation = createWaitForMapOperation( mapPanel );
     final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( operation );
     ErrorDialog.openError( shell, windowTitle, message, waitErrorStatus );
     return waitErrorStatus.isOK();
@@ -100,7 +100,7 @@ public class MapModellHelper
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
    */
-  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapModell model )
+  public static ICoreRunnableWithProgress createWaitForMapOperation( final IMapPanel panel )
   {
     final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
     {
@@ -117,7 +117,7 @@ public class MapModellHelper
 
           try
           {
-            if( isMapLoaded( model ) )
+            if( isMapLoaded( panel.getMapModell() ) )
               return Status.OK_STATUS;
 
             Thread.sleep( 250 );
