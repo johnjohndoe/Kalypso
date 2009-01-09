@@ -62,7 +62,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -75,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * </ul>
  * This widget rely on the assumption that the map to edit has layer holding feature with the QName
  * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
- * 
+ *
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  * @author Thomas Jung
@@ -86,8 +85,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   public static final int SNAPPING_RADIUS = 20;
 
   private IKalypsoFeatureTheme m_nodeTheme;
-
-  private IMapModell m_mapModell;
 
   private IFEDiscretisationModel1d2d m_discModel;
 
@@ -124,9 +121,8 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     super.activate( commandPoster, mapPanel );
-    m_mapModell = mapPanel.getMapModell();
-    m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    m_discModel = UtilMap.findFEModelTheme( m_mapModell );
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
 
     reinit();

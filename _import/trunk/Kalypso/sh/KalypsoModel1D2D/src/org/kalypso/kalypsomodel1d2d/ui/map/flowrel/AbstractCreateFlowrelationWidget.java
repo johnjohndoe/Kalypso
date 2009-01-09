@@ -74,7 +74,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -138,15 +137,14 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     m_flowRelCollection = null;
 
     final IMapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel.getMapModell();
 
     mapPanel.setMessage( "Klicken Sie in die Karte um einen Parameter hinzuzufügen." );
 
-    m_flowTheme = UtilMap.findEditableTheme( mapModell, m_qnameToCreate );
+    m_flowTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
     if( m_flowTheme == null )
-      m_flowTheme = UtilMap.findEditableTheme( mapModell, IFlowRelationship.QNAME );
+      m_flowTheme = UtilMap.findEditableTheme( mapPanel, IFlowRelationship.QNAME );
 
-    m_discModel = UtilMap.findFEModelTheme( mapModell );
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
     if( m_flowTheme == null || m_discModel == null )
       return;
 
@@ -372,7 +370,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
   /**
    * Really create the new object.
-   * 
+   *
    * @return The new object, if null, nothing happens..
    */
   protected abstract IFlowRelationship createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );

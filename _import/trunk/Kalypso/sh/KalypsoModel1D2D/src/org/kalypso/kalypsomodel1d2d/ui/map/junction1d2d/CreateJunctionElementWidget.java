@@ -129,20 +129,20 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
       m_mapActiveTheme = (IKalypsoFeatureTheme) activeTheme;
     else
       return;
-    m_discretisationModel = UtilMap.findFEModelTheme( mapModell );
+    m_discretisationModel = UtilMap.findFEModelTheme( mapPanel );
     if( m_discretisationModel == null )
       return;
 
-    IKalypsoTheme[] themes = mapModell.getAllThemes();
-    for( IKalypsoTheme theme : themes )
+    final IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final QName qName = ft.getFeatureType().getQName();
         if( qName.equals( IFELine.QNAME ) )
         {
-          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
           m_selDelegateWidget.setThemes( fts );
         }

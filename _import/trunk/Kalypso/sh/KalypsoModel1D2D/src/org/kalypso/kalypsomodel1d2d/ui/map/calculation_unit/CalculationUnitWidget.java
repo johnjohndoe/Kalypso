@@ -82,10 +82,10 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- * 
+ *
  * @author Patrice Congo
  * @author Madanagopal
- * 
+ *
  */
 public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy
 {
@@ -142,7 +142,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
     final IMapModell mapModell = mapPanel.getMapModell();
-    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -157,7 +157,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
     // command manager since it is use in the dirty pool object framework
     // the commandable workspace of the target theme is taken
-    final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, IPolyElement.QNAME );
+    final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
     final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default";
@@ -166,7 +166,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     mapModell.insertTheme( m_calcUnitTheme, 0 );
     m_dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
 
-    final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
+    final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapPanel, IBoundaryCondition.QNAME );
     if( bcTheme == null )
     {
       throw new RuntimeException( Messages.getString( "CalculationUnitWidget.3" ) ); //$NON-NLS-1$
@@ -498,7 +498,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   /**
    * Sets a new strategy for this widget
-   * 
+   *
    * @param strategy
    *          the new strategy to set or null if the actual strategy is to be removed
    */

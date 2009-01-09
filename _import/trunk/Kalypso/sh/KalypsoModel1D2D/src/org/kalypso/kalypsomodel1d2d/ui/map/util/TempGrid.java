@@ -62,8 +62,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -92,7 +92,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
  * supposed to be in the same coordinate reference system so that no no reference system convertion is done
- * 
+ *
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -115,7 +115,7 @@ public class TempGrid
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that
    * system and no reference system conversion made in by the {@link TempGrid}
-   * 
+   *
    * @param targetCrs
    *          the target {@link CS_CoordinateSystem}
    * @throws IllegalArgumentException
@@ -129,7 +129,7 @@ public class TempGrid
 
   /**
    * Class this to display the {@link TempGrid} on the screen.
-   * 
+   *
    * @param g
    *          the display graphic context
    * @param projection
@@ -203,7 +203,7 @@ public class TempGrid
 
   /**
    * Reset this {@link TempGrid}. It is empty, i.e. contains no points after reset
-   * 
+   *
    * @param crs
    *          the target coordinate reference system for the grid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
@@ -218,7 +218,7 @@ public class TempGrid
 
   /**
    * config the with its side points.
-   * 
+   *
    * @param topSidePoints
    *          the collector containing the top side points
    * @param bottomSidePoints
@@ -289,7 +289,7 @@ public class TempGrid
   /**
    * To get an {@link ICommand} that can be use to hat the temp grid to the model
    */
-  public IStatus getAddToModelCommand( final IMapModell mapModell, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth )
+  public IStatus getAddToModelCommand( final IMapPanel panel, final IFEDiscretisationModel1d2d model, final CommandableWorkspace commandableWorkspace, final double searchRectWidth )
   {
     m_searchRectWidth = searchRectWidth;
 
@@ -299,7 +299,7 @@ public class TempGrid
       return StatusUtilities.createErrorStatus( "FE-Griderzeugung schlug fehl." );
 
     // we must have the node theme. First node theme gets it
-    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( panel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     if( nodeTheme != null && model != null && commandableWorkspace != null )
     {
       try

@@ -63,7 +63,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -118,13 +117,12 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
     m_hydrographCollection = null;
 
     final IMapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel.getMapModell();
 
     mapPanel.setMessage( "Klicken Sie in die Karte um einen Ganglinienpunkt hinzuzufügen." );
     if( m_hydroTheme == null )
-      m_hydroTheme = UtilMap.findEditableTheme( mapModell, m_qnameToCreate );
+      m_hydroTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
 
-    m_discModel = UtilMap.findFEModelTheme( mapModell );
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
     if( m_hydroTheme == null || m_discModel == null )
       return;
 
@@ -277,7 +275,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
   /**
    * Really create the new object.
-   * 
+   *
    * @return The new object, if null, nothing happens..
    */
   protected abstract IHydrograph createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement );

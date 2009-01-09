@@ -22,12 +22,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -36,7 +34,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Provides the mechanism to create automaticaly fem element within a grid
- * 
+ *
  * @author Patrice Congo
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
@@ -56,8 +54,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   private final IWidget m_delegateWidget = null;
 
   private PointSnapper m_pointSnapper;
-
-  private IMapModell m_mapModell;
 
   private IKalypsoFeatureTheme m_nodeTheme;
 
@@ -98,11 +94,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       isActivated = true;
     }
 
-    m_mapModell = mapPanel.getMapModell();
-    m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_gridPointCollector.setNodeTheme( m_nodeTheme );
 
-    m_discModel = UtilMap.findFEModelTheme( m_mapModell );
+    m_discModel = UtilMap.findFEModelTheme( mapPanel );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
 
   }
@@ -139,7 +134,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void moved( final Point p )
   {
-    Object newNode = checkNewNode( p );
+    final Object newNode = checkNewNode( p );
 
     if( newNode instanceof IFE1D2DNode )
       m_currentPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
@@ -219,7 +214,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void dragged( final Point p )
   {
-    Object newNode = checkNewNode( p );
+    final Object newNode = checkNewNode( p );
 
     if( newNode instanceof IFE1D2DNode )
       m_currentPoint = MapUtilities.retransform( getMapPanel(), ((IFE1D2DNode) newNode).getPoint() );
@@ -369,7 +364,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     super.keyReleased( e );
 
@@ -451,12 +446,11 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   public void convertToModell( )
   {
     final IMapPanel mapPanel = getMapPanel();
-    final IMapModell mapModel = getMapPanel().getMapModell();
-    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel );
-    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapPanel );
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
 
     final CommandableWorkspace workspace = theme.getWorkspace();
-    IStatus status = m_gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
+    final IStatus status = m_gridPointCollector.getAddToModelCommand( mapPanel, model1d2d, workspace );
     // TODO: handle status
     reinit();
   }

@@ -142,20 +142,20 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
       m_mapActiveTheme = (IKalypsoFeatureTheme) activeTheme;
     else
       return;
-    m_discretisationModel = UtilMap.findFEModelTheme( mapModell );
+    m_discretisationModel = UtilMap.findFEModelTheme( mapPanel );
     if( m_discretisationModel == null )
       return;
 
-    IKalypsoTheme[] themes = mapModell.getAllThemes();
-    for( IKalypsoTheme theme : themes )
+    final IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final QName qName = ft.getFeatureType().getQName();
         if( qName.equals( IFELine.QNAME ) )
         {
-          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
           m_selDelegateWidget.setThemes( fts );
         }
@@ -191,14 +191,14 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
       }
       final CommandableWorkspace workspace = eFeatures[0].getWorkspace();
       final Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
-      for( int i = 0; i < features.length; i++ )
+      for( final Feature feature : features )
       {
-        final Object object2d = features[i].getAdapter( IContinuityLine2D.class );
+        final Object object2d = feature.getAdapter( IContinuityLine2D.class );
 
         if( object2d != null )
           m_line2D = (IContinuityLine2D) object2d;
 
-        final Object object1d = features[i].getAdapter( IContinuityLine1D.class );
+        final Object object1d = feature.getAdapter( IContinuityLine1D.class );
 
         if( object1d != null )
           m_line1D = (IContinuityLine1D) object1d;

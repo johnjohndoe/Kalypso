@@ -73,7 +73,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -81,8 +80,8 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * @author Madanagopal
  * @author Thomas Jung (changes in order to use the common SelectFeatureWidget)
- * 
- * 
+ *
+ *
  */
 public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 {
@@ -254,15 +253,14 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
   private void reinit( )
   {
     final IMapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel.getMapModell();
 
     m_featureThemes = new IKalypsoFeatureTheme[m_themeElementQNames.length];
     for( int i = 0; i < m_themeElementQNames.length; i++ )
-      m_featureThemes[i] = UtilMap.findEditableTheme( mapModell, m_themeElementQNames[i] );
+      m_featureThemes[i] = UtilMap.findEditableTheme( mapPanel, m_themeElementQNames[i] );
 
     m_selDelegateWidget.setThemes( m_featureThemes );
 
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     selectionManager.clear();
     mapPanel.repaintMap();
   }

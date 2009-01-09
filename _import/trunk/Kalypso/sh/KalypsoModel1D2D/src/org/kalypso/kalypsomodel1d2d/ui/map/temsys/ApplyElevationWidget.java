@@ -78,10 +78,10 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * 
+ *
  * @author Patrice Congo
  * @author Madanagopal
- * 
+ *
  */
 public class ApplyElevationWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
@@ -122,22 +122,21 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     m_dataModel.setMapPanel( mapPanel );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-
     if( mapModell == null )
       return;
 
     m_dataModel.setMapModell( mapModell );
 
-    IKalypsoTheme[] themes = mapModell.getAllThemes();
-    for( IKalypsoTheme theme : themes )
+    final IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final QName qName = ft.getFeatureType().getQName();
         if( qName.equals( IFE1D2DNode.QNAME ) )
         {
-          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
           m_selDelegateWidget.setThemes( fts );
         }
@@ -145,7 +144,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     }
 
     // find and set Elevation model system
-    final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+    final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapPanel, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( terrainElevationTheme != null )
     {
       final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
@@ -154,7 +153,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       m_dataModel.setElevationModelSystem( system );
       m_dataModel.setElevationTheme( terrainElevationTheme );
     }
-    final IKalypsoFeatureTheme elevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+    final IKalypsoFeatureTheme elevationTheme = UtilMap.findEditableTheme( mapPanel, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     if( elevationTheme != null )
       m_dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, elevationTheme );
   }
@@ -233,7 +232,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       {
         ApplyElevationHelper.assignElevationToSelectedNodes( m_dataModel, nodeList );
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         // TODO Auto-generated catch block
         e1.printStackTrace();
@@ -338,7 +337,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   @Override
   public void paint( final Graphics g )
   {
-    Graphics2D g2 = (Graphics2D) g;
+    final Graphics2D g2 = (Graphics2D) g;
     super.paint( g2 );
 
     final List<IFE1D2DNode> selectedNodeList = m_dataModel.getSelectedNodeList();
@@ -370,7 +369,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     final Color color = new Color( 20, 20, 255 );
     g2.setColor( color );
 
-    for( IFE1D2DNode node : selectedNodeList )
+    for( final IFE1D2DNode node : selectedNodeList )
     {
       if( node == null )
         return;

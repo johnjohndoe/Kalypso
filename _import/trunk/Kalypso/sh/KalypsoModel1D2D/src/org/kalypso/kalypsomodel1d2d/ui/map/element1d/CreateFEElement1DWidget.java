@@ -24,7 +24,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -42,7 +41,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Widget for creating 1d2d element
- * 
+ *
  * @author Patrice Congo
  */
 public class CreateFEElement1DWidget extends AbstractWidget
@@ -85,8 +84,8 @@ public class CreateFEElement1DWidget extends AbstractWidget
     mapPanel.setMessage( "Klicken Sie in die Karte um 1D-Elemente hinzuzufügen." );
 
     final IMapModell mapModell = mapPanel.getMapModell();
-    m_theme = UtilMap.findEditableTheme( mapModell, IElement1D.QNAME );
-    m_model1d2d = UtilMap.findFEModelTheme( mapModell );
+    m_theme = UtilMap.findEditableTheme( mapPanel, IElement1D.QNAME );
+    m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
     m_lineBuilder = new LineGeometryBuilder( 0, mapModell.getCoordinatesSystem() );
   }
 
@@ -141,7 +140,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the xontext menu is opened, so the framework must know wether
    * this widget is editing something at the moment or not
-   * 
+   *
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override

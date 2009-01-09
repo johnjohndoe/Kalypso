@@ -30,7 +30,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
@@ -78,7 +77,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( getMapPanel().getMapModell() == null )
       return;
 
-    m_discModel = UtilMap.findFEModelTheme( getMapPanel().getMapModell() );
+    m_discModel = UtilMap.findFEModelTheme( getMapPanel() );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
     reinit();
   }
@@ -257,7 +256,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
       // TODO: check if there is already a boundary line
 
-      final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel().getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
 
       final CreateContinuityLineCommand command = new CreateContinuityLineCommand( m_discModel, m_nodeList, m_lineType );

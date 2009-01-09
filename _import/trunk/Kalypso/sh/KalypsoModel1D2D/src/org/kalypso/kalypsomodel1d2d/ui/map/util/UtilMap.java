@@ -63,9 +63,9 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
@@ -118,9 +118,9 @@ public class UtilMap
   /**
    * Get First Theme which is showing elements substitutable to the specified QName (i.e. substituting it).
    */
-  static public IKalypsoFeatureTheme findEditableTheme( final IMapModell mapModel, final QName editElementQName )
+  static public IKalypsoFeatureTheme findEditableTheme( final IMapPanel panel, final QName editElementQName )
   {
-    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( mapModel );
+    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( panel );
     for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
     {
       final IFeatureType featureType = theme.getFeatureType();
@@ -137,9 +137,9 @@ public class UtilMap
    * @throws RuntimeException
    *           if model cannot be found
    */
-  static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel ) throws RuntimeException
+  static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapPanel panel ) throws RuntimeException
   {
-    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( mapModel );
+    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( panel );
     for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
     {
       final FeatureList featureList = theme.getFeatureList();
@@ -154,7 +154,7 @@ public class UtilMap
     throw new RuntimeException( Messages.getString( "UtilMap.4" ) );
   }
 
-  private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
+  private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapPanel panel )
   {
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
 
@@ -162,7 +162,7 @@ public class UtilMap
     // PlatformUI.getWorkbench().getDisplay().syncExec( waitForFeaturesLoading( mapModel ) );
 
     // TODO: check if always works
-    final ICoreRunnableWithProgress operation = MapModellHelper.createWaitForMapOperation( mapModel );
+    final ICoreRunnableWithProgress operation = MapModellHelper.createWaitForMapOperation( panel );
     IStatus waitErrorStatus;
     try
     {
@@ -180,59 +180,12 @@ public class UtilMap
     }
 
     final KalypsoThemeVisitor kalypsoThemeVisitor = new KalypsoThemeVisitor( PREDICATE );
-    mapModel.accept( kalypsoThemeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    panel.getMapModell().accept( kalypsoThemeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
     final IKalypsoTheme[] foundThemes = kalypsoThemeVisitor.getFoundThemes();
     for( final IKalypsoTheme kalypsoTheme2 : foundThemes )
       result.add( (IKalypsoFeatureTheme) kalypsoTheme2 );
 
     return result;
-  }
-
-  /**
-   * Method waits for all <code>IKalypsoFeatureTheme</code> objects from <code>mapModel</code> to be fully loaded (not
-   * only themes to be assigned to the map, but also features to be loaded)
-   *
-   * @param mapModel
-   *          map model from which the themes should be loaded
-   * @deprecated Use {@link org.kalypso.ogc.gml.mapmodel.MapModellHelper} instead
-   */
-  @Deprecated
-  private static Runnable waitForFeaturesLoading( final IMapModell mapModel )
-  {
-    final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
-    final Runnable waitForFeatureLoadingOperation = new Runnable()
-    {
-      public void run( )
-      {
-        boolean loadingNotFinished = true;
-        while( loadingNotFinished )
-        {
-          try
-          {
-            loadingNotFinished = false;
-            Thread.sleep( 200 );
-            final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-            for( final IKalypsoTheme theme : allThemes )
-            {
-              if( theme instanceof IKalypsoFeatureTheme )
-              {
-                final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
-                if( !result.contains( ftheme ) )
-                  loadingNotFinished = true;
-                final IFeatureType featureType = ftheme.getFeatureType();
-                if( featureType != null )
-                  if( !result.contains( ftheme ) )
-                    result.add( ftheme );
-              }
-            }
-          }
-          catch( final InterruptedException e )
-          {
-          }
-        }
-      }
-    };
-    return waitForFeatureLoadingOperation;
   }
 
   public static void drawHandles( final Graphics g, final int[] x, final int[] y )

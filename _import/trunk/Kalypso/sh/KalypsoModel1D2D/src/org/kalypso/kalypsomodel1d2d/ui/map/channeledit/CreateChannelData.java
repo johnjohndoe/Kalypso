@@ -104,7 +104,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * State object for creating main channel widget and composite.
- * 
+ *
  * @author Thomas Jung
  */
 public class CreateChannelData
@@ -421,15 +421,14 @@ public class CreateChannelData
     importingGridPoints = convertToGMPoints( m_meshCoords );
 
     final IMapPanel mapPanel = m_widget.getPanel();
-    final IMapModell mapModel = mapPanel.getMapModell();
-    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModel );
-    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapModel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapPanel );
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final CommandableWorkspace workspace = theme.getWorkspace();
 
     final TempGrid tempGrid = new TempGrid();
     tempGrid.importMesh( importingGridPoints );
     final double searchDistance = 0.1;
-    final IStatus status = tempGrid.getAddToModelCommand( mapModel, model1d2d, workspace, searchDistance );
+    final IStatus status = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, searchDistance );
 
     // TODO: handle status!
 

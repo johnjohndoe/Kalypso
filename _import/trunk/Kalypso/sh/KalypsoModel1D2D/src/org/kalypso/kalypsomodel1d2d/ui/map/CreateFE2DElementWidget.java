@@ -23,7 +23,6 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -63,10 +62,9 @@ public class CreateFE2DElementWidget extends AbstractWidget
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
-    final IMapModell mapModell = mapPanel.getMapModell();
-    final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapModell );
+    final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapPanel );
     // we must have the node theme. First node theme gets it
-    m_nodeTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    m_nodeTheme = UtilMap.findEditableTheme( mapPanel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     m_pointSnapper = new PointSnapper( discModel, mapPanel );
 
     reinit();
@@ -239,7 +237,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   /**
    * TODO: change to right-clicked: BUT!: at the moment the context menu is opened, so the framework must know whether
    * this widget is editing something at the moment or not
-   * 
+   *
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
