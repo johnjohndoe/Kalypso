@@ -50,6 +50,7 @@ import java.util.Set;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -105,8 +106,8 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     final FeatureList featureList = profileTheme.getFeatureList();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
-    final Feature[] selectedProfiles = m_data.getSelectedProfiles();
-    final Set<Feature> selectedProfileSet = new HashSet<Feature>( Arrays.asList( selectedProfiles ) );
+    final IProfileFeature[] selectedProfiles = m_data.getSelectedProfiles();
+    final Set<IProfileFeature> selectedProfileSet = new HashSet<IProfileFeature>( Arrays.asList( selectedProfiles ) );
 
     final List list = featureList.query( envelope, null );
 
@@ -114,9 +115,9 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Object o = iter.next();
-      final Feature feature = FeatureHelper.getFeature( workspace, o );
-
-      final GM_Curve line = (GM_Curve) feature.getDefaultGeometryProperty();
+      
+      final IProfileFeature feature = (IProfileFeature) FeatureHelper.getFeature( workspace, o );
+      final GM_Curve line = feature.getLine();
       try
       {
         final LineString jtsLine = (LineString) JTSAdapter.export( line );
@@ -127,29 +128,33 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       {
         e.printStackTrace();
       }
+      catch( NullPointerException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     if( list.size() == 0 )
     {
       // empty selection: remove selection
-      m_data.changeSelectedProfiles( selectedProfiles, new Feature[0] );
+      m_data.changeSelectedProfiles( selectedProfiles, new IProfileFeature[0] );
     }
     else
     {
-      final List<Feature> featureToAdd = new ArrayList<Feature>();
-      final List<Feature> featureToRemove = new ArrayList<Feature>();
+      final List<IProfileFeature> featureToAdd = new ArrayList<IProfileFeature>();
+      final List<IProfileFeature> featureToRemove = new ArrayList<IProfileFeature>();
 
       for( int i = 0; i < list.size(); i++ )
       {
         final Object o = list.get( i );
-        final Feature feature = FeatureHelper.getFeature( workspace, o );
+        final IProfileFeature feature = (IProfileFeature)FeatureHelper.getFeature( workspace, o );
 
         if( selectedProfileSet.contains( feature ) )
           featureToRemove.add( feature );
         else
           featureToAdd.add( feature );
       }
-      m_data.changeSelectedProfiles( featureToRemove.toArray( new Feature[featureToRemove.size()] ), featureToAdd.toArray( new Feature[featureToAdd.size()] ) );
+      m_data.changeSelectedProfiles( featureToRemove.toArray( new IProfileFeature[featureToRemove.size()] ), featureToAdd.toArray( new IProfileFeature[featureToAdd.size()] ) );
     }
   }
 

@@ -90,8 +90,11 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.result.IStationResult;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -105,6 +108,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
@@ -112,7 +116,8 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class CreateMainChannelComposite extends Composite
 {
- // private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay() );
+  // private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay()
+  // );
 
   final CreateChannelData m_data;
 
@@ -931,7 +936,9 @@ public class CreateMainChannelComposite extends Composite
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       final ProfilChartView profilChartView = new ProfilChartView();
-      profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
+      final IProfilLayerProvider layerProvider = new ProfilOverlayLayerProvider();
+      profilChartView.setProfil( profil );
+      profilChartView.setLayerProvider( layerProvider );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
       manager.createControl( sectionClient );
@@ -941,10 +948,15 @@ public class CreateMainChannelComposite extends Composite
       label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11" ) + profil.getStation() ); //$NON-NLS-1$
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
-      final Control profilControl = profilChartView.createControl( sectionClient);
+      final Control profilControl = profilChartView.createControl( sectionClient );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
+
+      for( final String layerId : layerProvider.getRequiredLayer( profilChartView ) )
+      {
+        mngr.addLayer( layerProvider.createLayer( layerId, profilChartView ) );
+      }
 
       final IChartLayer overlayLayer = mngr.getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
 
@@ -968,14 +980,16 @@ public class CreateMainChannelComposite extends Composite
       final int last = mngr.getLayers().length - 1;
       if( zOrder < last )
         mngr.moveLayerToPosition( overlayLayer, last );
-
-      final ChartComposite chartComposite =  profilChartView.getChartComposite();
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ,new DragZoomOutHandler(chartComposite)) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN,new DragZoomInHandler(chartComposite)) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ,new DragPanHandler(chartComposite)) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT ,new DragEditHandler(chartComposite)) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ,new MaximizeHandler()) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE,new ExportHandler()) );
+      ChartUtilities.maximize(profilChartView.getChart().getChartModel() );
+      
+      
+      final ChartComposite chartComposite = profilChartView.getChartComposite();
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN, new DragPanHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
 
       final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
       {

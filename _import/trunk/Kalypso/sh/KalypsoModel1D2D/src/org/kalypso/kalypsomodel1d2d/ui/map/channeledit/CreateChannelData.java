@@ -135,7 +135,7 @@ public class CreateChannelData
 
   private IKalypsoFeatureTheme m_bankTheme2; // RIGHT = 2
 
-  private final Set<Feature> m_selectedProfiles = new HashSet<Feature>();
+  private final Set<IProfileFeature> m_selectedProfiles = new HashSet<IProfileFeature>();
 
   private int m_numbProfileIntersections = 6;
 
@@ -247,7 +247,7 @@ public class CreateChannelData
 
   /* --------------------- selection handling ---------------------------------- */
 
-  public void changeSelectedProfiles( final Feature[] profileFeaturesToRemove, final Feature[] profileFeaturesToAdd )
+  public void changeSelectedProfiles( final IProfileFeature[] profileFeaturesToRemove, final IProfileFeature[] profileFeaturesToAdd )
   {
     m_selectedProfiles.removeAll( Arrays.asList( profileFeaturesToRemove ) );
     m_selectedProfiles.addAll( Arrays.asList( profileFeaturesToAdd ) );
@@ -296,9 +296,9 @@ public class CreateChannelData
     job.schedule();
   }
 
-  public Feature[] getSelectedProfiles( )
+  public IProfileFeature[] getSelectedProfiles( )
   {
-    return m_selectedProfiles.toArray( new Feature[m_selectedProfiles.size()] );
+    return m_selectedProfiles.toArray( new IProfileFeature[m_selectedProfiles.size()] );
   }
 
   /**
