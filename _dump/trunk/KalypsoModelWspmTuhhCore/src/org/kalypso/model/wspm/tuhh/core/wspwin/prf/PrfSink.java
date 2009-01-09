@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.wspwin.core.prf.PrfWriter;
@@ -76,13 +77,13 @@ public class PrfSink implements IProfilSink
   {
 
     if( IWspmTuhhConstants.WEHR_TYP_BEIWERT.equals( profilKey ) )
-      return "BEIWERT";
+      return "BEIWERT"; //$NON-NLS-1$
     else if( IWspmTuhhConstants.WEHR_TYP_RUNDKRONIG.equals( profilKey ) )
-      return "RUNDKRONIG";
+      return "RUNDKRONIG"; //$NON-NLS-1$
     else if( IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals( profilKey ) )
-      return "SCHARFKANTIG";
+      return "SCHARFKANTIG"; //$NON-NLS-1$
     else if( IWspmTuhhConstants.WEHR_TYP_BREITKRONIG.equals( profilKey ) )
-      return "BREITKRONIG";
+      return "BREITKRONIG"; //$NON-NLS-1$
     else
       return profilKey.toString();
   }
@@ -105,7 +106,7 @@ public class PrfSink implements IProfilSink
   private void writeComment( final PrfWriter pw, final IProfil profil )
   {
     final String comment = profil.getComment();
-    final DataBlockHeader dbh = PrfWriter.createHeader( "KOM" );
+    final DataBlockHeader dbh = PrfWriter.createHeader( "KOM" ); //$NON-NLS-1$
     final TextDataBlock db = new TextDataBlock( dbh );
 
     final StringReader stringReader = new StringReader( comment );
@@ -114,22 +115,22 @@ public class PrfSink implements IProfilSink
     try
     {
       for( String line = lineNumberReader.readLine(); line != null; line = lineNumberReader.readLine() )
-        db.addLine( "CC " + line );
+        db.addLine( "CC " + line ); //$NON-NLS-1$
       if( db.getCoordCount() > 0 )
       {
-        db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString( db.getCoordCount() ) + " 17" );
+        db.setThirdLine( "0  0  0  0  0  0  0  " + Integer.toString( db.getCoordCount() ) + " 17" ); //$NON-NLS-1$ //$NON-NLS-2$
         pw.addDataBlock( db );
       }
     }
     catch( final IOException e )
     {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben des Kommentars", e ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.8" ), e ) ); //$NON-NLS-1$
     }
   }
 
   private void writePoints( final PrfWriter pw, final IProfil profil )
   {
-    final DataBlockHeader dbh = PrfWriter.createHeader( "GEL" );
+    final DataBlockHeader dbh = PrfWriter.createHeader( "GEL" ); //$NON-NLS-1$
     final CoordDataBlock db = new CoordDataBlock( dbh );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ), db );
     pw.addDataBlock( db );
@@ -152,24 +153,25 @@ public class PrfSink implements IProfilSink
     CoordDataBlock dbr = null;
     if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
     {
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" );
+      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), dbr );
     }
     else if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
     {
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KST" );
+      final DataBlockHeader dbhr = PrfWriter.createHeader( "KST" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), dbr );
     }
     else
     {
-      //TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = PrfWriter.createHeader( building.getRauheitTyp() );}
-      
-      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" );
+      // TODO: if (isDurchlass(buildings) {final DataBlockHeader dbhr = PrfWriter.createHeader( building.getRauheitTyp()
+      // );}
+
+      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" ); //$NON-NLS-1$
       dbr = new CoordDataBlock( dbhr );
       final int size = profil.getPoints().length;
-      dbr.setCoords( new double[size],  new double[size] );
+      dbr.setCoords( new double[size], new double[size] );
     }
 
     final IProfileObject[] buildings = profil.getProfileObjects();
@@ -210,8 +212,7 @@ public class PrfSink implements IProfilSink
         Xs[i] = 0;
         Ys[i] = 0;
 
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, prop.getName() + " an Position " + Integer.toString( i )
-            + " konnte nicht geschrieben werden.", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.13", prop.getName(), Integer.toString( i ) ), e ) ); //$NON-NLS-1$
       }
     }
     db.setCoords( Xs, Ys );
@@ -220,12 +221,12 @@ public class PrfSink implements IProfilSink
   private void writeHochRechts( final PrfWriter pw, final IProfil profil )
   {
 
-    final DataBlockHeader dbhh = PrfWriter.createHeader( "HOC" );
+    final DataBlockHeader dbhh = PrfWriter.createHeader( "HOC" ); //$NON-NLS-1$
     final CoordDataBlock dbh = new CoordDataBlock( dbhh );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ), dbh );
     pw.addDataBlock( dbh );
 
-    final DataBlockHeader dbhr = PrfWriter.createHeader( "REC" );
+    final DataBlockHeader dbhr = PrfWriter.createHeader( "REC" ); //$NON-NLS-1$
     final CoordDataBlock dbr = new CoordDataBlock( dbhr );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ), dbr );
     pw.addDataBlock( dbr );
@@ -233,10 +234,10 @@ public class PrfSink implements IProfilSink
 
   private void writeDevider( final PrfWriter pw, final IProfil profil )
   {
-    writeDeviderTyp( pw, "TRENNF", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ), profil );
-    writeDeviderTyp( pw, "BOR", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ), profil );
-    writeDeviderTyp( pw, "DUR", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ), profil );
-    writeDeviderTyp( pw, "TRENNL", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) ), profil );
+    writeDeviderTyp( pw, "TRENNF", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ), profil ); //$NON-NLS-1$
+    writeDeviderTyp( pw, "BOR", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ), profil ); //$NON-NLS-1$
+    writeDeviderTyp( pw, "DUR", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ), profil ); //$NON-NLS-1$
+    writeDeviderTyp( pw, "TRENNL", profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) ), profil ); //$NON-NLS-1$
   }
 
   private void writeDeviderTyp( final PrfWriter pw, final String key, final IProfilPointMarker[] deviders, final IProfil profil )
@@ -260,8 +261,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Die Positionen der " + devider.getId().toString()
-            + " konnten nicht geschrieben werden.", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.21", devider.getId().toString() ), e ) ); //$NON-NLS-1$
       }
     }
     dbw.setCoords( xs, ys );
@@ -296,34 +296,34 @@ public class PrfSink implements IProfilSink
     if( buildings.length > 0 )
       building = buildings[0];
 
-    final String buildingTyp = building == null ? "" : building.getId();
+    final String buildingTyp = building == null ? "" : building.getId(); //$NON-NLS-1$
     if( buildingTyp.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) )
     {
-      final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" );
+      final DataBlockHeader dbho = PrfWriter.createHeader( "OK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbo = new CoordDataBlock( dbho );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), dbo );
       pw.addDataBlock( dbo );
-      final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" );
+      final DataBlockHeader dbhu = PrfWriter.createHeader( "UK-B" ); //$NON-NLS-1$
       final CoordDataBlock dbu = new CoordDataBlock( dbhu );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), dbu );
       try
       {
-        final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) )
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) )
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+        final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) ) //$NON-NLS-1$
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ); //$NON-NLS-1$
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Br�ckenparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.30" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbu );
     }
 
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_WEHR ) == 0 )
     {
-      final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" );
+      final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" ); //$NON-NLS-1$
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
       writeCoords( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), dbw );
       try
@@ -331,23 +331,23 @@ public class PrfSink implements IProfilSink
         final Object wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
 
         final StringBuffer secLine = new StringBuffer( toDataBlockKey( wehrart ) );
-        secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) );
+        secLine.append( String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ) ); //$NON-NLS-1$
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ) );
         for( final IProfilPointMarker devider : deviders )
-          secLine.append( String.format( Locale.US, " %12.4f", devider.getValue() ) );
+          secLine.append( String.format( Locale.US, " %12.4f", devider.getValue() ) ); //$NON-NLS-1$
         dbw.setSecondLine( secLine.toString() );
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Wehrparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.34" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbw );
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_EI ) == 0 )
     {
-      final DataBlockHeader dbhe = PrfWriter.createHeader( "EI" );
+      final DataBlockHeader dbhe = PrfWriter.createHeader( "EI" ); //$NON-NLS-1$
       final TextDataBlock dbe = new TextDataBlock( dbhe );
-      dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" );
+      dbe.setThirdLine( "0  0  0  0  0  0  0  0  8" ); //$NON-NLS-1$
       try
       {
         dbe.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
@@ -356,15 +356,15 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.37" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbe );
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_MAUL ) == 0 )
     {
-      final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" );
+      final DataBlockHeader dbhm = PrfWriter.createHeader( "MAU" ); //$NON-NLS-1$
       final TextDataBlock dbm = new TextDataBlock( dbhm );
-      dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" );
+      dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" ); //$NON-NLS-1$
       try
       {
         dbm.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
@@ -373,15 +373,15 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.40" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbm );
     }
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_KREIS ) == 0 )
     {
-      final DataBlockHeader dbhk = PrfWriter.createHeader( "KRE" );
+      final DataBlockHeader dbhk = PrfWriter.createHeader( "KRE" ); //$NON-NLS-1$
       final TextDataBlock dbk = new TextDataBlock( dbhk );
-      dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" );
+      dbk.setThirdLine( "0  0  0  0  0  0  0  0  7" ); //$NON-NLS-1$
       try
       {
         dbk.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
@@ -389,16 +389,16 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.43" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbk );
     }
 
     else if( buildingTyp.compareTo( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) == 0 )
     {
-      final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" );
+      final DataBlockHeader dbht = PrfWriter.createHeader( "TRA" ); //$NON-NLS-1$
       final TextDataBlock dbt = new TextDataBlock( dbht );
-      dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" );
+      dbt.setThirdLine( "0  0  0  0  0  0  0  0  6" ); //$NON-NLS-1$
       try
       {
         dbt.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
@@ -407,7 +407,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink.46" ), e ) ); //$NON-NLS-1$
       }
       pw.addDataBlock( dbt );
     }
@@ -418,21 +418,21 @@ public class PrfSink implements IProfilSink
 
     try
     {
-      return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o );
+      return Double.valueOf( o.toString() ).isNaN() ? "       0.0000" : String.format( Locale.US, " %12.4f", o ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Exception e )
     {
-      return "       0.0000";
+      return "       0.0000"; //$NON-NLS-1$
     }
   }
 
   private void writeBewuchs( final PrfWriter pw, final IProfil profil )
   {
-    final DataBlockHeader dbhx = PrfWriter.createHeader( "AX" );
+    final DataBlockHeader dbhx = PrfWriter.createHeader( "AX" ); //$NON-NLS-1$
     final CoordDataBlock dbx = new CoordDataBlock( dbhx );
-    final DataBlockHeader dbhy = PrfWriter.createHeader( "AY" );
+    final DataBlockHeader dbhy = PrfWriter.createHeader( "AY" ); //$NON-NLS-1$
     final CoordDataBlock dby = new CoordDataBlock( dbhy );
-    final DataBlockHeader dbhp = PrfWriter.createHeader( "DP" );
+    final DataBlockHeader dbhp = PrfWriter.createHeader( "DP" ); //$NON-NLS-1$
     final CoordDataBlock dbp = new CoordDataBlock( dbhp );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), dbx );
     writeCoords( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), dby );
@@ -450,7 +450,7 @@ public class PrfSink implements IProfilSink
     Map<Integer, String[]> metaData;
     try
     {
-      metaData = (Map<Integer, String[]>) p.getProperty( "prfFileFormat_MetaData" );
+      metaData = (Map<Integer, String[]>) p.getProperty( "prfFileFormat_MetaData" ); //$NON-NLS-1$
       if( metaData == null )
         metaData = new HashMap<Integer, String[]>();
     }
@@ -460,84 +460,84 @@ public class PrfSink implements IProfilSink
     }
     final String[] line1 = metaData.get( 1 );
     if( line1 == null )
-      pw.addKeyValue( 1, new String[] { "", "" } );
+      pw.addKeyValue( 1, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 1, line1 );
     final String[] line2 = metaData.get( 2 );
     if( line2 == null )
-      pw.addKeyValue( 2, new String[] { "", "" } );
+      pw.addKeyValue( 2, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 2, line2 );
     final String[] line3 = metaData.get( 3 );
     if( line3 == null )
-      pw.addKeyValue( 3, new String[] { "STATUS", "" } );
+      pw.addKeyValue( 3, new String[] { "STATUS", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
       if( line3[0].length() == 0 )
-        line3[0] = "STATUS";
+        line3[0] = "STATUS"; //$NON-NLS-1$
       pw.addKeyValue( 3, line3 );
     }
     final String[] line4 = metaData.get( 4 );
     if( line4 == null )
-      pw.addKeyValue( 4, new String[] { "", "" } );
+      pw.addKeyValue( 4, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 4, line4 );
     final String[] line5 = metaData.get( 5 );
     if( line5 == null )
-      pw.addKeyValue( 5, new String[] { "VERZWEIGUNGSKENNUNG", "0" } );
+      pw.addKeyValue( 5, new String[] { "VERZWEIGUNGSKENNUNG", "0" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
       if( line5[0].length() == 0 )
-        line5[0] = "VERZWEIGUNGSKENNUNG";
+        line5[0] = "VERZWEIGUNGSKENNUNG"; //$NON-NLS-1$
       pw.addKeyValue( 5, line5 );
     }
     final String[] line6 = metaData.get( 6 );
     if( line6 == null )
-      pw.addKeyValue( 6, new String[] { "WASSERSPIEGEL", "" } );
+      pw.addKeyValue( 6, new String[] { "WASSERSPIEGEL", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
       if( line6[0].length() == 0 )
-        line6[0] = "WASSERSPIEGEL";
+        line6[0] = "WASSERSPIEGEL"; //$NON-NLS-1$
       pw.addKeyValue( 6, line6 );
     }
     final String[] line7 = metaData.get( 7 );
     if( line7 == null )
-      pw.addKeyValue( 7, new String[] { "MEHRFELDBRUECKE", "0" } );
+      pw.addKeyValue( 7, new String[] { "MEHRFELDBRUECKE", "0" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
       if( line7[0].length() == 0 )
-        line7[0] = "MEHRFELDBRUECKE";
+        line7[0] = "MEHRFELDBRUECKE"; //$NON-NLS-1$
       pw.addKeyValue( 7, line7 );
     }
     final String[] line8 = metaData.get( 8 );
     if( line8 == null )
-      pw.addKeyValue( 8, new String[] { "", "" } );
+      pw.addKeyValue( 8, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 8, line8 );
     final Double d = p.getStation();
     if( d.isNaN() )
-      pw.addKeyValue( 9, new String[] { "STATION KM 0.0000", "" } );
+      pw.addKeyValue( 9, new String[] { "STATION KM 0.0000", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
-      pw.addKeyValue( 9, new String[] { "STATION KM " + String.format( Locale.US, "%.4f", new Object[] { d } ), "" } );
+      pw.addKeyValue( 9, new String[] { "STATION KM " + String.format( Locale.US, "%.4f", new Object[] { d } ), "" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final String[] line10 = metaData.get( 10 );
     if( line10 == null )
-      pw.addKeyValue( 10, new String[] { "", "" } );
+      pw.addKeyValue( 10, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 10, line10 );
     final String[] line11 = metaData.get( 11 );
     if( line11 == null )
-      pw.addKeyValue( 11, new String[] { "", "" } );
+      pw.addKeyValue( 11, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 11, line11 );
     final String[] line12 = metaData.get( 12 );
     if( line12 == null )
-      pw.addKeyValue( 12, new String[] { "", "" } );
+      pw.addKeyValue( 12, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 12, line12 );
     final String[] line13 = metaData.get( 13 );
     if( line13 == null )
-      pw.addKeyValue( 13, new String[] { "", "" } );
+      pw.addKeyValue( 13, new String[] { "", "" } ); //$NON-NLS-1$ //$NON-NLS-2$
     else
       pw.addKeyValue( 13, line13 );
   }

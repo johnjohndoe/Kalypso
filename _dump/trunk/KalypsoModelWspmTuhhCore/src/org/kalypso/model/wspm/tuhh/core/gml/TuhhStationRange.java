@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 import java.math.BigDecimal;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -62,7 +63,7 @@ public class TuhhStationRange
 
     m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
 
-    Assert.isTrue( m_stationComparator.compare( m_from, m_to ) < 0, "Start-Station muss kleiner als die End-Station sein." );
+    Assert.isTrue( m_stationComparator.compare( m_from, m_to ) < 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange.0") ); //$NON-NLS-1$
   }
 
   /**

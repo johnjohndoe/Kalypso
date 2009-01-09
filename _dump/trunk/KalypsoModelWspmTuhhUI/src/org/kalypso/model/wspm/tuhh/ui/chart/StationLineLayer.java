@@ -120,7 +120,7 @@ public class StationLineLayer extends ComponentLayer
   {
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle_hover() );
-    pf.setPoints( new Point[] { new Point( clipping.x + clipping.width / 2, clipping.y + clipping.height ), new Point( clipping.x + clipping.width / 2, clipping.y ) } );
+    pf.setPoints( new Point[] { new Point( clipping.x, clipping.height ), new Point( clipping.x, clipping.y ) } );
     pf.paint( gc );
   }
 

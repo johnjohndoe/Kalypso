@@ -80,6 +80,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -103,9 +104,9 @@ public class WspWinExporter
 
   public static IStatus exportWspmProject( final Iterator<IResource> modelGml, final File wspwinDir, final SubProgressMonitor monitor )
   {
-    monitor.beginTask( "WspWin Projekt exportieren", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.0"), 1000 ); //$NON-NLS-1$
 
-    monitor.subTask( " - Initialisiere KALYPSO..." );
+    monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.1") ); //$NON-NLS-1$
 
     // modelGml holds all selected resources (very general)
     while( modelGml.hasNext() )
@@ -128,12 +129,12 @@ public class WspWinExporter
           final QName featureName = featureType.getQName();
 
           // process only WspmProject features
-          if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject" ) )
+          if( QNameUtilities.equals( featureName, IWspmConstants.NS_WSPMPROJ, "WspmProject")  ) //$NON-NLS-1$
           {
             // TODO: sicherstellen, dass es sich um ein TU-HH-Modell handelt?
 
             // load (initialize) WspmProject
-            monitor.subTask( " - Modell " + resource.getName() + " wird geladen..." );
+            monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.3") + resource.getName() + Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.4") ); //$NON-NLS-1$ //$NON-NLS-2$
             final Feature modelRootFeature = gmlWrkSpce.getRootFeature();
             final TuhhWspmProject wspmProject = new TuhhWspmProject( modelRootFeature );
 
@@ -144,12 +145,12 @@ public class WspWinExporter
             while( wspwinProjDir.exists() )
             {
               ii++;
-              wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii );
+              wspwinProjDir = new File( wspwinDir, wspmProject.getName() + "_" + ii ); //$NON-NLS-1$
             }
             wspwinProjDir.mkdirs();
 
             // write data into wspwinDir projectDir
-            monitor.subTask( " - Daten werden konvertiert..." );
+            monitor.subTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.6") ); //$NON-NLS-1$
 
             // CalculationTuhh
             final TuhhCalculation[] tuhhCalcs = wspmProject.getCalculations();
@@ -189,14 +190,14 @@ public class WspWinExporter
     dir.mkdirs();
 
     final File profDir = WspWinHelper.getProfDir( dir );
-    final File batFile = new File( dir, "kalypso-1D.ini" );
-    final File zustFile = new File( profDir, "zustand.001" );
-    final File qwtFile = new File( profDir, "qwert.001" );
-    final File psiFile = new File( profDir, "zustand.psi" );
+    final File batFile = new File( dir, "kalypso-1D.ini" ); //$NON-NLS-1$
+    final File zustFile = new File( profDir, "zustand.001" ); //$NON-NLS-1$
+    final File qwtFile = new File( profDir, "qwert.001" ); //$NON-NLS-1$
+    final File psiFile = new File( profDir, "zustand.psi" ); //$NON-NLS-1$
 
     final TuhhReach reach = calculation.getReach();
     if( reach == null )
-      throw new IllegalArgumentException( "Gewässerstrang nicht festgelegt." );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.11") ); //$NON-NLS-1$
 
     final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
 
@@ -207,7 +208,7 @@ public class WspWinExporter
       final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
       if( runOffEvent == null )
       {
-        throw new IllegalArgumentException( "Kein Abflussereignis angegeben. Abbruch der Berechnung." );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter.12") ); //$NON-NLS-1$
       }
       else
         write1DTuhhRunOff( runOffEvent, isDirectionUpstreams, qwtFile );
@@ -225,9 +226,9 @@ public class WspWinExporter
     {
       final IComponent comp = components[i];
       // TODO: get component via phenomenon
-      if( comp.getName().startsWith( "Abfluss" ) )
+      if( comp.getName().startsWith( "Abfluss" ) ) //$NON-NLS-1$
         abflussComp = i;
-      if( comp.getName().startsWith( "Station" ) )
+      if( comp.getName().startsWith( "Station" ) ) //$NON-NLS-1$
         stationComp = i;
     }
 
@@ -257,8 +258,8 @@ public class WspWinExporter
 
       pw = new PrintWriter( new BufferedWriter( new FileWriter( qwtFile ) ) );
 
-      pw.print( runOffEvent.getName().replaceAll( " ", "_" ) );
-      pw.print( " " );
+      pw.print( runOffEvent.getName().replaceAll( " ", "_" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      pw.print( " " ); //$NON-NLS-1$
       pw.println( result.size() );
 
       // write it sorted into the flle
@@ -268,7 +269,7 @@ public class WspWinExporter
         final BigDecimal runOff = entry.getValue();
 
         pw.print( Double.toString( station.doubleValue() ) );
-        pw.print( " " );
+        pw.print( " " ); //$NON-NLS-1$
         pw.print( Double.toString( runOff.doubleValue() ) );
         pw.println();
       }
@@ -290,96 +291,96 @@ public class WspWinExporter
 
       pw = new Formatter( batFile );
 
-      pw.format( "# %s%n", calculation.getName() );
-      pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) );
+      pw.format( "# %s%n", calculation.getName() ); //$NON-NLS-1$
+      pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParent() );
-      pw.format( "STRANGDATEI=%s%n", zustFile.getName() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParent() ); //$NON-NLS-1$
+      pw.format( "STRANGDATEI=%s%n", zustFile.getName() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte:%n" );
-      pw.format( "# WATERLEVEL%n" );
-      pw.format( "# BF_UNIFORM%n" );
-      pw.format( "# BF_NON_UNIFORM%n" );
-      pw.format( "# REIB_KONST%n" );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte:%n" ); //$NON-NLS-1$
+      pw.format( "# WATERLEVEL%n" ); //$NON-NLS-1$
+      pw.format( "# BF_UNIFORM%n" ); //$NON-NLS-1$
+      pw.format( "# BF_NON_UNIFORM%n" ); //$NON-NLS-1$
+      pw.format( "# REIB_KONST%n" ); //$NON-NLS-1$
 
-      pw.format( "BERECHNUNGSMODUS=%s%n", calcMode.name() );
+      pw.format( "BERECHNUNGSMODUS=%s%n", calcMode.name() ); //$NON-NLS-1$
 
       // TODO: passt das zum RK?
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte:%n" );
-      pw.format( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS%n" );
-      pw.format( "# DARCY_WEISBACH_MIT_FORMEINFLUSS%n" );
-      pw.format( "# MANNING_STRICKLER%n" );
-      pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte:%n" ); //$NON-NLS-1$
+      pw.format( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS%n" ); //$NON-NLS-1$
+      pw.format( "# DARCY_WEISBACH_MIT_FORMEINFLUSS%n" ); //$NON-NLS-1$
+      pw.format( "# MANNING_STRICKLER%n" ); //$NON-NLS-1$
+      pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) );
-      pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format("ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) ); //$NON-NLS-1$
+      pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte%n" );
-      pw.format( "# CRITICAL_WATER_DEPTH%n" );
-      pw.format( "# UNIFORM_BOTTOM_SLOPE%n" );
-      pw.format( "# WATERLEVEL%n" );
-      pw.format( "ART_RANDBEDINGUNG=%s%n", calculation.getStartKind().name() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
+      pw.format( "# CRITICAL_WATER_DEPTH%n" ); //$NON-NLS-1$
+      pw.format( "# UNIFORM_BOTTOM_SLOPE%n" ); //$NON-NLS-1$
+      pw.format( "# WATERLEVEL%n" ); //$NON-NLS-1$
+      pw.format( "ART_RANDBEDINGUNG=%s%n", calculation.getStartKind().name() ); //$NON-NLS-1$
       final Double startWaterlevel = calculation.getStartWaterlevel();
       if( startWaterlevel != null )
-        pw.format( "ANFANGSWASSERSPIEGEL=%s%n", Double.toString( startWaterlevel ) );
+        pw.format( "ANFANGSWASSERSPIEGEL=%s%n", Double.toString( startWaterlevel ) ); //$NON-NLS-1$
       final BigDecimal startSlope = calculation.getStartSlope();
       if( startSlope != null )
-        pw.format( "GEFAELLE=%s%n", startSlope );
+        pw.format( "GEFAELLE=%s%n", startSlope ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte%n" );
-      pw.format( "# NON%n" );
-      pw.format( "# DVWK%n" );
-      pw.format( "# BJOERNSEN%n" );
-      pw.format( "# DFG%n" );
-      pw.format( "VERZOEGERUNGSVERLUST=%s%n", calculation.getVerzoegerungsverlust().name() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
+      pw.format( "# NON%n" ); //$NON-NLS-1$
+      pw.format( "# DVWK%n" ); //$NON-NLS-1$
+      pw.format( "# BJOERNSEN%n" ); //$NON-NLS-1$
+      pw.format( "# DFG%n" ); //$NON-NLS-1$
+      pw.format( "VERZOEGERUNGSVERLUST=%s%n", calculation.getVerzoegerungsverlust().name() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte%n" );
-      pw.format( "# SIMPLE%n" );
-      pw.format( "# EXACT%n" );
-      pw.format( "ITERATIONSART=%s%n", calculation.getIterationType().name() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
+      pw.format( "# SIMPLE%n" ); //$NON-NLS-1$
+      pw.format( "# EXACT%n" ); //$NON-NLS-1$
+      pw.format( "ITERATIONSART=%s%n", calculation.getIterationType().name() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte%n" );
-      pw.format( "# TRAPEZ_FORMULA%n" );
-      pw.format( "# GEOMETRIC_FORMULA%n" );
-      pw.format( "REIBUNGSVERLUST=%s%n", calculation.getReibungsverlust().name() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
+      pw.format( "# TRAPEZ_FORMULA%n" ); //$NON-NLS-1$
+      pw.format( "# GEOMETRIC_FORMULA%n" ); //$NON-NLS-1$
+      pw.format( "REIBUNGSVERLUST=%s%n", calculation.getReibungsverlust().name() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "# mögliche Werte: true / false%n" );
-      pw.format( "MIT_BRUECKEN=%b%n", calculation.isCalcBridges() );
-      pw.format( "MIT_WEHREN=%b%n", calculation.isCalcBarrages() );
-      pw.format( "USE_EXTREM_ROUGH=%b%n", calculation.isUseExtremeRoughness() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "# mögliche Werte: true / false%n" ); //$NON-NLS-1$
+      pw.format( "MIT_BRUECKEN=%b%n", calculation.isCalcBridges() ); //$NON-NLS-1$
+      pw.format( "MIT_WEHREN=%b%n", calculation.isCalcBarrages() ); //$NON-NLS-1$
+      pw.format( "USE_EXTREM_ROUGH=%b%n", calculation.isUseExtremeRoughness() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "ABFLUSSEREIGNIS=%s%n", qwtFile.getName() );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "ABFLUSSEREIGNIS=%s%n", qwtFile.getName() ); //$NON-NLS-1$
 
-      pw.format( "%n" );
-      pw.format( "EINZELVERLUSTE=%s%n", "TODO" );
+      pw.format( "%n" ); //$NON-NLS-1$
+      pw.format( "EINZELVERLUSTE=%s%n", "TODO" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      pw.format( "%n" );
+      pw.format( "%n" ); //$NON-NLS-1$
       final Double minQ = calculation.getMinQ();
       if( minQ != null )
-        pw.format( "MIN_Q=%s%n", Double.toString( minQ ) );
+        pw.format( "MIN_Q=%s%n", Double.toString( minQ ) ); //$NON-NLS-1$
       final Double maxQ = calculation.getMaxQ();
       if( maxQ != null )
-        pw.format( "MAX_Q=%s%n", Double.toString( maxQ ) );
+        pw.format( "MAX_Q=%s%n", Double.toString( maxQ ) ); //$NON-NLS-1$
       final Double qstep = calculation.getQStep();
       if( qstep != null )
-        pw.format( "DELTA_Q=%s%n", Double.toString( qstep ) );
+        pw.format( "DELTA_Q=%s%n", Double.toString( qstep ) ); //$NON-NLS-1$
 
-      pw.format( "%n" );
+      pw.format( "%n" ); //$NON-NLS-1$
       // Einheit des Durchflusses wird standardmäßig festgelegt
-      pw.format( "# mögliche Werte%n" );
-      pw.format( "# QM_S%n" );
-      pw.format( "# L_S%n" );
-      pw.format( "DURCHFLUSS_EINHEIT=QM_S%n" );
+      pw.format( "# mögliche Werte%n" ); //$NON-NLS-1$
+      pw.format( "# QM_S%n" ); //$NON-NLS-1$
+      pw.format( "# L_S%n" ); //$NON-NLS-1$
+      pw.format( "DURCHFLUSS_EINHEIT=QM_S%n" ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( pw );
     }
@@ -422,10 +423,10 @@ public class WspWinExporter
 
         final IProfileFeature profileMember = segment.getProfileMember();
 
-        final String prfName = "Profil_" + fileCount++ + ".prf";
+        final String prfName = "Profil_" + fileCount++ + ".prf"; //$NON-NLS-1$ //$NON-NLS-2$
 
         zustWriter.print( prfName );
-        zustWriter.print( " " );
+        zustWriter.print( " " ); //$NON-NLS-1$
         // TODO mindestens 4, besser 5 Nachkommastellen?
         zustWriter.println( station );
 

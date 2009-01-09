@@ -67,9 +67,9 @@ public class ProfilDevider extends PointMarker
 
       if( value == null )
         return null;
-      else if( "low".equals( value.toString().toLowerCase() ) )
+      else if( "low".equals( value.toString().toLowerCase() ) ) //$NON-NLS-1$
         return false;
-      else if( "high".equals( value.toString().toLowerCase() ) )
+      else if( "high".equals( value.toString().toLowerCase() ) ) //$NON-NLS-1$
         return true;
 
       return null;
@@ -88,9 +88,9 @@ public class ProfilDevider extends PointMarker
         final Boolean flag = (Boolean) value;
 
         if( flag )
-          setValue( "high" );
+          setValue( "high" ); //$NON-NLS-1$
         else
-          setValue( "low" );
+          setValue( "low" ); //$NON-NLS-1$
 
         return;
       }

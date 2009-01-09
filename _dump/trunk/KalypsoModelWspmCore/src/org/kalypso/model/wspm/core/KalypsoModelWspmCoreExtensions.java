@@ -61,7 +61,7 @@ public class KalypsoModelWspmCoreExtensions
     if( stati.size() > 0 )
     {
       final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString("org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0"), null );
+      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString("org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0"), null ); //$NON-NLS-1$
       if( status != null )
       {
         // TODO: what to do whith this status?

@@ -121,7 +121,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
       return Boolean.TRUE;
 
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( propertyID ) )
-      return "low";
+      return "low"; //$NON-NLS-1$
 
     if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( propertyID ) )
       return Boolean.TRUE;
