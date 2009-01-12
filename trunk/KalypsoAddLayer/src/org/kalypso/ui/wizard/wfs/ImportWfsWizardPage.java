@@ -216,6 +216,8 @@ public class ImportWfsWizardPage extends WizardPage
 
   private StatusComposite m_statusComposite;
 
+  private ComboViewer m_viewerServers;
+
   public ImportWfsWizardPage( final String pageName )
   {
     this( pageName, null, null );
@@ -261,16 +263,16 @@ public class ImportWfsWizardPage extends WizardPage
     m_labelUrl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     // initialize availabel Servers
-    ArrayList<String> catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
+    List<String> catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
     if( catalog == null )
       catalog = new ArrayList<String>();
 
-    final ComboViewer comboViewer = new ComboViewer( fieldGroup, SWT.BORDER );
-    comboViewer.setContentProvider( new ArrayContentProvider() );
-    comboViewer.setLabelProvider( new LabelProvider() );
-    comboViewer.setInput( catalog );
+    m_viewerServers = new ComboViewer( fieldGroup, SWT.BORDER );
+    m_viewerServers.setContentProvider( new ArrayContentProvider() );
+    m_viewerServers.setLabelProvider( new LabelProvider() );
+    m_viewerServers.setInput( catalog );
 
-    final Combo combo = comboViewer.getCombo();
+    final Combo combo = m_viewerServers.getCombo();
 
     combo.setVisibleItemCount( 15 );
 
@@ -557,5 +559,13 @@ public class ImportWfsWizardPage extends WizardPage
   public String getUri( )
   {
     return m_uri;
+  }
+
+  public void updateServers( final List<String> myServers )
+  {
+    final ImportWfsSourceWizard wizard = (ImportWfsSourceWizard) getWizard();
+    wizard.setCatalog( myServers );
+
+    m_viewerServers.setInput( myServers );
   }
 }
