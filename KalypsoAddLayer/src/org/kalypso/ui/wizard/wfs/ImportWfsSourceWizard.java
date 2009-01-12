@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -79,7 +80,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
 
   private ICommandTarget m_outlineviewer;
 
-  private ArrayList<String> m_catalog;
+  private List<String> m_catalog;
 
   private ImportWfsFilterWizardPage m_filterWFSPage;
 
@@ -204,7 +205,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_outlineviewer = commandTarget;
   }
 
-  public ArrayList<String> getCatalog( )
+  public List<String> getCatalog( )
   {
     return m_catalog;
   }
@@ -241,5 +242,10 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     m_modell = modell;
+  }
+
+  public void setCatalog( final List<String> catalog )
+  {
+    m_catalog = catalog;
   }
 }
