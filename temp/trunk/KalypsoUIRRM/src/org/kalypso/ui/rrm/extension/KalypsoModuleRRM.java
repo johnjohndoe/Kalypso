@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
@@ -179,6 +180,12 @@ public class KalypsoModuleRRM implements IKalypsoModule
       public Integer getPriority( )
       {
         return 1;
+      }
+
+      @Override
+      public IKalypsoProjectOpenAction getProjectOpenAction( )
+      {
+        return new KalypsoRRMOpenAction();
       }
     };
   }
