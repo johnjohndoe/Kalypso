@@ -57,14 +57,14 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 public interface IProfilChartLayer extends IEditableChartLayer
 {
   /** key to store IChartLayer.getData() in ProfilViewdataObject */
-  final public static String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData";
+  final public static String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData"; //$NON-NLS-1$
 
   /** values to store */
   final public static Integer ALLOW_HORIZONTAL_EDITING = 1;
 
   final public static Integer ALLOW_VERTICAL_EDITING = 2;
 
-  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]";
+  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
 
   final public RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
 

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -122,7 +122,7 @@ public class PropertyEditActionDelegate extends ActionDelegate
 
     if( foundProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.PropertyEditActionDelegate_1, Messages.PropertyEditActionDelegate_2 );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     final IWizard propertyEditWizard = new PropertyEditWizard(ws, foundProfiles, selectedProfiles );

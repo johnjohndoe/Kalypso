@@ -82,7 +82,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final IParameterContainer pc = getParameterContainer();
     final boolean showPoints = Boolean.parseBoolean( pc.getParameterValue( "showPoints", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final int pixelsPerTick = Integer.parseInt( pc.getParameterValue( "pixelsPerTick", "5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new PolynomeChartLayer( getDataContainer(), pixelsPerTick, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), showPoints );
+    return new PolynomeChartLayer( getDataContainer(), pixelsPerTick, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

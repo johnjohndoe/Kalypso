@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
-import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author kimwerner
@@ -97,7 +96,7 @@ public class ValidatorChooserPage extends WizardPage
 
   public ValidatorChooserPage( )
   {
-    super( "operationChooserPage", Messages.OperationChooserPage_4, null ); //$NON-NLS-1$
+    super( "operationChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidatorChooserPage.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -171,8 +170,8 @@ public class ValidatorChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( Messages.OperationChooserPage_8 );
-    new Label( group, SWT.NONE ).setText( Messages.OperationChooserPage_9 );
+    group.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidatorChooserPage.1") ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidatorChooserPage.2") ); //$NON-NLS-1$
 
     if( m_rules == null )
     {

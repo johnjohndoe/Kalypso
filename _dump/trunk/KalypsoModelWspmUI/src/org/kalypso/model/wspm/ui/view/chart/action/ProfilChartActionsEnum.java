@@ -52,19 +52,18 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.ISources;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 public enum ProfilChartActionsEnum
 {
-  ZOOM_OUT(Messages.ProfilChartActionsEnum_0, Messages.ProfilChartActionsEnum_1, KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
-  ZOOM_IN(Messages.ProfilChartActionsEnum_2, Messages.ProfilChartActionsEnum_3, KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON),
-  PAN(Messages.ProfilChartActionsEnum_4, Messages.ProfilChartActionsEnum_5, KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON),
-  EDIT(Messages.ProfilChartActionsEnum_6, Messages.ProfilChartActionsEnum_7, KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_RADIO_BUTTON),
-  MAXIMIZE(Messages.ProfilChartActionsEnum_8, Messages.ProfilChartActionsEnum_9, KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
-  EXPORT_IMAGE(Messages.ProfilChartActionsEnum_10, Messages.ProfilChartActionsEnum_11, KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON);
+  ZOOM_OUT(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_1"), KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  ZOOM_IN(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_2"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_3"), KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  PAN(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_4"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_5"), KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  EDIT(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_6"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_7"), KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_RADIO_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  MAXIMIZE(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_8"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_9"), KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON), //$NON-NLS-1$ //$NON-NLS-2$
+  EXPORT_IMAGE(org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_10"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum_11"), KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final String m_label;
 

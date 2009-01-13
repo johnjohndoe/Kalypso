@@ -72,7 +72,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable;
 import org.kalypso.observation.result.IRecord;
@@ -145,8 +144,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   {
     super.create();
 
-    getShell().setText( Messages.DouglasPeuckerDialog_6 );
-    setTitle( Messages.DouglasPeuckerDialog_7 );
+    getShell().setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.0") ); //$NON-NLS-1$
+    setTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.1") ); //$NON-NLS-1$
 
     updateDialog();
   }
@@ -174,7 +173,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     }
 
     if( status != null )
-      ErrorDialog.openError( shell, shell.getText(), Messages.DouglasPeuckerDialog_8, status );
+      ErrorDialog.openError( shell, shell.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.2"), status ); //$NON-NLS-1$
 
     // save dialog settings
     final Point size = shell.getSize();
@@ -265,7 +264,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private Control createHelpArea( final FormToolkit toolkit, final Composite groupComposite )
   {
-    final Label label = toolkit.createLabel( groupComposite, Messages.DouglasPeuckerDialog_9, SWT.WRAP );
+    final Label label = toolkit.createLabel( groupComposite, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.3"), SWT.WRAP ); //$NON-NLS-1$
     return label;
   }
 
@@ -274,8 +273,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 
     section.setLayout( new GridLayout( 1, false ) );
-    section.setText( Messages.DouglasPeuckerDialog_10 );
-    section.setDescription( Messages.DouglasPeuckerDialog_11 );
+    section.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.4") ); //$NON-NLS-1$
+    section.setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.5") ); //$NON-NLS-1$
 
     final Composite sectionClient = toolkit.createComposite( section );
     sectionClient.setLayout( new GridLayout() );
@@ -326,14 +325,14 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 
     section.setLayout( new GridLayout( 2, false ) );
-    section.setText( Messages.DouglasPeuckerDialog_12 );
-    section.setDescription( Messages.DouglasPeuckerDialog_13 );
+    section.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.6") ); //$NON-NLS-1$
+    section.setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.7") ); //$NON-NLS-1$
 
     final Composite sectionClient = toolkit.createComposite( section );
     sectionClient.setLayout( new GridLayout( 2, false ) );
     section.setClient( sectionClient );
 
-    toolkit.createLabel( section, Messages.DouglasPeuckerDialog_14, SWT.NONE );
+    toolkit.createLabel( section, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.8"), SWT.NONE ); //$NON-NLS-1$
 
     final String lastDistanceStr = m_dialogSettings.get( SETTINGS_DISTANCE );
     m_distance = NumberUtils.parseQuietDouble( lastDistanceStr );
@@ -359,7 +358,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       }
     } );
 
-    toolkit.createLabel( sectionClient, Messages.DouglasPeuckerDialog_15, SWT.LEFT );
+    toolkit.createLabel( sectionClient, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.9"), SWT.LEFT ); //$NON-NLS-1$
 
     toolkit.paintBordersFor( sectionClient );
 
@@ -410,7 +409,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     if( Double.isNaN( m_distance ) )
     {
-      setErrorMessage( Messages.DouglasPeuckerDialog_16 );
+      setErrorMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.10") ); //$NON-NLS-1$
       return;
     }
 
@@ -441,7 +440,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   private IStatus performReduce( )
   {
     if( m_provider == null || Double.isNaN( m_distance ) )
-      return StatusUtilities.createWarningStatus( Messages.DouglasPeuckerDialog_17 );
+      return StatusUtilities.createWarningStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.11") ); //$NON-NLS-1$
 
     /* Get important values. */
     final double allowedDistance = m_distance;
@@ -450,10 +449,10 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     /* Get the profile changes. */
     IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
     if( removeChanges.length == 0 )
-      return StatusUtilities.createOkStatus( Messages.DouglasPeuckerDialog_18 );
+      return StatusUtilities.createOkStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12") ); //$NON-NLS-1$
 
     /* Create the profile operation. */
-    m_operation = new ProfilOperation( Messages.DouglasPeuckerDialog_19, m_profile, removeChanges, false );
+    m_operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13"), m_profile, removeChanges, false ); //$NON-NLS-1$
 
     /* Create the runnable. */
     final ProfilOperationRunnable operationRunnable = new ProfilOperationRunnable( m_operation );
@@ -464,7 +463,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       return operationStatus;
 
     /* Message for the user. */
-    final String message = Messages.DouglasPeuckerDialog_20 + removeChanges.length + Messages.DouglasPeuckerDialog_21 + points.length + Messages.DouglasPeuckerDialog_22;
+    final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14") + removeChanges.length + org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.15") + points.length + org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.16"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return StatusUtilities.createOkStatus( message );
   }

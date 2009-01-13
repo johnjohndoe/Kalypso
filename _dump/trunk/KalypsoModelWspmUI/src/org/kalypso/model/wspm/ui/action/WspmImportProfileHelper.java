@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -85,7 +84,7 @@ public class WspmImportProfileHelper
 
       public String getDescription( )
       {
-        return Messages.WspmImportProfileHelper_0;
+        return org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.WspmImportProfileHelper.0"); //$NON-NLS-1$
       }
 
       public boolean isUndoable( )

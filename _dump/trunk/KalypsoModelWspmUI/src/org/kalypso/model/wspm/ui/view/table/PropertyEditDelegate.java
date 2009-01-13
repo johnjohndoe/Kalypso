@@ -50,7 +50,6 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 
 /**
@@ -87,7 +86,7 @@ public class PropertyEditDelegate implements IViewActionDelegate
     if( profile == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, Messages.PropertyEditDelegate_0, Messages.PropertyEditDelegate_1 );
+      MessageDialog.openError( viewShell, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 

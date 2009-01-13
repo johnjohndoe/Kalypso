@@ -67,7 +67,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -142,13 +141,13 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     if( profiles.size() == 0 )
     {
-      MessageDialog.openInformation( shell, action.getText(), Messages.ImportProfilePrfAction_1 );
+      MessageDialog.openInformation( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.0") ); //$NON-NLS-1$
       return;
     }
 
     if( !prfReadStatus.isOK() )
     {
-      if( !MessageDialog.openConfirm( shell, action.getText(), Messages.ImportProfilePrfAction_2 ) )
+      if( !MessageDialog.openConfirm( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.1") ) ) //$NON-NLS-1$
         return;
     }
 
@@ -162,13 +161,13 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, m_action.getText(), Messages.ImportProfilePrfAction_3, status );
+      ErrorDialog.openError( shell, m_action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.2"), status ); //$NON-NLS-1$
     }
   }
 
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
-    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, Messages.ImportProfilePrfAction_4, null );
+    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.3"), null ); //$NON-NLS-1$
     // final Date today = new Date();
     // final String todayString = DF.format( today );
     for( final File file : files )
@@ -178,7 +177,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
         final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
-        profil.setName( Messages.ImportProfilePrfAction_7 );
+        profil.setName( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4") ); //$NON-NLS-1$
 
         // do not overwrite original comment from wspwin profile
         // TODO: put this information into metadata strings
@@ -200,7 +199,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     }
 
     if( prfReadStatus.getChildren().length > 0 )
-      ErrorDialog.openError( shell, action.getText(), Messages.ImportProfilePrfAction_10, prfReadStatus );
+      ErrorDialog.openError( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.5"), prfReadStatus ); //$NON-NLS-1$
     return prfReadStatus;
   }
 

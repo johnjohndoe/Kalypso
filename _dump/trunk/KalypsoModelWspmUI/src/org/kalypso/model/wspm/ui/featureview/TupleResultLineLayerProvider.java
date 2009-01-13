@@ -79,7 +79,7 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( final URL context )
   {
-    final TupleResultLineLayer icl = new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    final TupleResultLineLayer icl = new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     return icl;
   }
 

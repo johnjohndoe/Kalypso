@@ -55,7 +55,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.action.WspmImportProfileHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -91,8 +90,8 @@ public class ImportProfileWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.ImportProfileWizard_2, null ); //$NON-NLS-1$
-    m_ProfilePage.setDescription( Messages.ImportProfileWizard_3 );
+    m_ProfilePage = new ImportProfilePage( "chooseProfileData", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_ProfilePage.setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.1") ); //$NON-NLS-1$
 
     addPage( m_ProfilePage );
   }
@@ -109,12 +108,12 @@ public class ImportProfileWizard extends Wizard implements IWizard
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( Messages.ImportProfileWizard_5, 2 );
+        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.2"), 2 ); //$NON-NLS-1$
 
         try
         {
           /* Import Trippel Data */
-          monitor.subTask( Messages.ImportProfileWizard_6 );
+          monitor.subTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.3") ); //$NON-NLS-1$
 
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
@@ -128,7 +127,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
           monitor.worked( 1 );
 
           /* Convert Trippel Data */
-          monitor.subTask( Messages.ImportProfileWizard_7 );
+          monitor.subTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.4") ); //$NON-NLS-1$
 
           WspmImportProfileHelper.loadIntoGml( profiles, m_fate, m_workspace, crs );
 
@@ -140,7 +139,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
         }
         catch( final Exception e )
         {
-          return StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Profile" ); //$NON-NLS-1$
+          return StatusUtilities.statusFromThrowable( e, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.5") );  //$NON-NLS-1$
         }
 
         finally

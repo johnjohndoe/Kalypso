@@ -74,7 +74,7 @@ public class AddLayerHandler extends AbstractHandler
     // find chartview
 
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" );
+    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" ); //$NON-NLS-1$
     final Object chartPart = view == null ? null : view.getAdapter( IChartPart.class );
     final ProfilChartView chartView = (chartPart != null && chartPart instanceof ProfilChartView) ? (ProfilChartView) chartPart : null;
     final IProfil profil = chartView == null ? null : chartView.getProfil();
@@ -110,8 +110,8 @@ public class AddLayerHandler extends AbstractHandler
       }
     } );
     dialog.setInput( addables );
-    dialog.setMessage( "" );
-    dialog.setTitle( "" );
+    dialog.setMessage( "" ); //$NON-NLS-1$
+    dialog.setTitle( "" ); //$NON-NLS-1$
 
     dialog.open();
 

@@ -70,6 +70,7 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -84,9 +85,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CreateProfileDeviderPage extends WizardPage implements IUpdateable, IKalypsoThemeFilter
 {
-  private static final String SETTINGS_DEVIDER = "settings.devider.type";
+  private static final String SETTINGS_DEVIDER = "settings.devider.type"; //$NON-NLS-1$
 
-  private static final String SETTINGS_DELETE_EXISTING = "settings.delete.existing";
+  private static final String SETTINGS_DELETE_EXISTING = "settings.delete.existing"; //$NON-NLS-1$
 
   private final ThemeAndPropertyChooserGroup m_themeGroup;
 
@@ -100,11 +101,11 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
   public CreateProfileDeviderPage( final IKalypsoFeatureTheme profileTheme )
   {
-    super( "createProfileDeviderPage", "Fließzonen erzeugen", null );
+    super( "createProfileDeviderPage", Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_profileTheme = profileTheme;
 
-    setMessage( "Bitte wählen Sie aus, wie die Fließzonen erzeugt werden sollen." );
+    setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4") ); //$NON-NLS-1$
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
     {
@@ -120,7 +121,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       }
     };
 
-    m_geoPd = new PropertyDescriptor( "&Geometry", geoFilter, true );
+    m_geoPd = new PropertyDescriptor( "&Geometry", geoFilter, true ); //$NON-NLS-1$
 
     final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_geoPd };
     m_themeGroup = new ThemeAndPropertyChooserGroup( this, profileTheme.getMapModell(), this, pds );
@@ -138,12 +139,12 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     m_themeGroup.setDialogSettings( getDialogSettings() );
     final Group themeGroup = m_themeGroup.createControl( composite );
     themeGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    themeGroup.setText( "Linien oder Polygone" );
+    themeGroup.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.6") ); //$NON-NLS-1$
 
     /* Devider Group */
     final Group deviderGroup = createDeviderGroup( composite );
     deviderGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    deviderGroup.setText( "Art der Fließzonen-Begrenzung" );
+    deviderGroup.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.7") ); //$NON-NLS-1$
 
     /* Options */
     createOptions( composite );
@@ -154,8 +155,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
   private void createOptions( final Composite composite )
   {
     final Button deleteExistingCheckbox = new Button( composite, SWT.CHECK );
-    deleteExistingCheckbox.setText( "vorhandene Begrenzer löschen" );
-    deleteExistingCheckbox.setToolTipText( "falls aktiviert werden die vorhandenen Begrenzer des selektierten Typs aus den Profilen gelöscht" );
+    deleteExistingCheckbox.setText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.8") ); //$NON-NLS-1$
+    deleteExistingCheckbox.setToolTipText( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.9") ); //$NON-NLS-1$
     deleteExistingCheckbox.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -194,7 +195,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final Group group = new Group( composite, SWT.NONE );
     group.setLayout( new GridLayout( 2, false ) );
 
-    new Label( group, SWT.NONE ).setText( "&Art:" );
+    new Label( group, SWT.NONE ).setText( "&Art:" ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.setContentProvider( new ArrayContentProvider() );
@@ -296,11 +297,11 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-      setErrorMessage( "Es sind keine Polygon oder Linien-Themen in der Karte vorhanden. Zuweisung nicht möglich." );
+      setErrorMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.11") ); //$NON-NLS-1$
     else
     {
       setErrorMessage( null );
-      setMessage( "Bitte wählen Sie aus, wie die Rauheiten zugewiesen werden sollen." );
+      setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.12") ); //$NON-NLS-1$
     }
   }
 

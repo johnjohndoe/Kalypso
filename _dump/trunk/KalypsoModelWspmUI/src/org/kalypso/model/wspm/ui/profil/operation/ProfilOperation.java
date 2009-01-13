@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.Messages;
 
 public final class ProfilOperation extends AbstractOperation
 {
@@ -123,7 +122,7 @@ public final class ProfilOperation extends AbstractOperation
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")//$NON-NLS-1$
   final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
   {
-    monitor.beginTask( Messages.ProfilOperation_1, changes.size() );
+    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0"), changes.size() ); //$NON-NLS-1$
     final ProfilChangeHint hint = new ProfilChangeHint();
     final ArrayList<IProfilChange> doneChanges = new ArrayList<IProfilChange>();
     try
@@ -156,7 +155,7 @@ public final class ProfilOperation extends AbstractOperation
           {
             final IProfilChange change = e.getProfilChange();
             if( change == null || change.getInfo() == null )
-              MessageDialog.openWarning( d.getActiveShell(), Messages.ProfilOperation_2, e.getMessage() );
+              MessageDialog.openWarning( d.getActiveShell(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.1"), e.getMessage() ); //$NON-NLS-1$
             else
               MessageDialog.openWarning( d.getActiveShell(), e.getMessage(), change.getInfo() );
           }

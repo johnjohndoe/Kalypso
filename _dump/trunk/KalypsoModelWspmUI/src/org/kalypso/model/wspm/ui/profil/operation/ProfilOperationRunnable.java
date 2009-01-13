@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Gernot
@@ -81,7 +81,7 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     }
     catch( final ExecutionException e )
     {
-      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.ProfilOperationRunnable_0 + m_operation.getLabel() + Messages.ProfilOperationRunnable_1, e );
+      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.getFormatString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0",m_operation.getLabel()) , e ); //$NON-NLS-1$
     }
   }
 

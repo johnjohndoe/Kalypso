@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -468,6 +469,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public void removeYourself( )
   {
-    throw new UnsupportedOperationException( "Dieser layer kann nicht entfernt werden." );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0") ); //$NON-NLS-1$
   }
 }

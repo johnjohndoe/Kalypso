@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.StatusComposite;
@@ -113,7 +112,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
     if( m_chartTabs.length == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, Messages.ChartFeatureControl_2, null );
+      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0"), null ); //$NON-NLS-1$
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setStatus( warningStatus );
       return statusComposite;

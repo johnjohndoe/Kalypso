@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -64,7 +63,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IProfil profil = chartView.getProfil();
     if( profil == null )
     {
-      handleError( Messages.AddLayerActionDelegate_0 );
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_0") ); //$NON-NLS-1$
       return;
     }
 
@@ -95,8 +94,8 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
       }
     } );
     dialog.setInput( addables );
-    dialog.setMessage( Messages.AddLayerActionDelegate_1 );
-    dialog.setTitle( Messages.AddLayerActionDelegate_2 );
+    dialog.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_1") ); //$NON-NLS-1$
+    dialog.setTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate_2") ); //$NON-NLS-1$
 
     dialog.open();
 

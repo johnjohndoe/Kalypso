@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
@@ -84,7 +85,7 @@ public class CreateDeviderMapThemeAction implements IObjectActionDelegate
 
     if( foundProfiles == null || foundProfiles.foundProfiles.length == 0 )
     {
-      MessageDialog.openWarning( shell, "Flieﬂzonen erzeugen", "Es wurden keine Profile in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.0"), Messages.getString("org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 

@@ -71,7 +71,6 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.validation.ResourceValidatorMarkerCollector;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -112,12 +111,12 @@ public class ValidateProfilesWizard extends Wizard
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
-    setWindowTitle( Messages.ValidateProfilesWizard_0 );
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3, null ); //$NON-NLS-1$
+    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( Messages.PropertyEditWizard_4 );
+    m_profileChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -131,10 +130,10 @@ public class ValidateProfilesWizard extends Wizard
 
     final IValidatorRule[] rules = m_validatorRuleSet.getRules();
 
-    m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", Messages.ValidateProfilesWizard_1, null ); //$NON-NLS-1$
+    m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_validatorChooserPage.setLabelProvider( new LabelProvider() );
-    m_validatorChooserPage.setMessage( Messages.ValidateProfilesWizard_2 );
-    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", Messages.ValidateProfilesWizard_3, null ); //$NON-NLS-1$
+    m_validatorChooserPage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.4") ); //$NON-NLS-1$
+    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.5"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_quickFixChoosePage.setLabelProvider( new LabelProvider()
     {
 
@@ -147,7 +146,7 @@ public class ValidateProfilesWizard extends Wizard
         return ((IProfilMarkerResolution) element).getLabel();
       }
     } );
-    m_quickFixChoosePage.setMessage( Messages.ValidateProfilesWizard_4 );
+    m_quickFixChoosePage.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.6") ); //$NON-NLS-1$
 
     addPage( m_validatorChooserPage );
     addPage( m_quickFixChoosePage );
@@ -184,7 +183,7 @@ public class ValidateProfilesWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( Messages.ValidateProfilesWizard_5, size + size );
+        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.7"), size + size ); //$NON-NLS-1$
         for( int i = 0; i < size; i++ )
         {
           if( profilFeatures[i] instanceof Feature )

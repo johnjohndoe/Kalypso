@@ -49,6 +49,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerHandler extends AbstractHandler
@@ -59,7 +60,7 @@ public class RemoveLayerHandler extends AbstractHandler
   public Object execute( ExecutionEvent event )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendView" );
+    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendView" ); //$NON-NLS-1$
     final ChartEditorTreeOutlinePage legendView = view == null ? null : (ChartEditorTreeOutlinePage) view.getAdapter( ChartEditorTreeOutlinePage.class );
 
     if( legendView == null )
@@ -79,7 +80,7 @@ public class RemoveLayerHandler extends AbstractHandler
       }
       catch( final UnsupportedOperationException e )
       {
-        MessageDialog.openError( view.getViewSite().getShell(), "Fehler", e.getLocalizedMessage() );
+        MessageDialog.openError( view.getViewSite().getShell(), Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
     return null;

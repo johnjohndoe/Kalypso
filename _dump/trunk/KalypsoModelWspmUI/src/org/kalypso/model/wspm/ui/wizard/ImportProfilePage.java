@@ -68,7 +68,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -155,7 +154,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
     m_crsPanel = new CRSSelectionPanel( m_topComposite, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_crsPanel.setToolTipText( Messages.ImportProfilePage_3 );
+    m_crsPanel.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.0") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -171,12 +170,12 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     } );
 
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
-    seperatorLabel.setText( Messages.ImportProfilePage_4 );
+    seperatorLabel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.1") ); //$NON-NLS-1$
 
     m_separatorCombo = new Combo( m_group, SWT.READ_ONLY );
     final GridData sepData = new GridData( SWT.FILL, SWT.FILL, false, false );
 
-    m_separatorCombo.setToolTipText( Messages.ImportProfilePage_5 );
+    m_separatorCombo.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.2") ); //$NON-NLS-1$
     m_separatorCombo.setLayoutData( sepData );
     m_separatorCombo.addSelectionListener( this );
     m_separatorCombo.addKeyListener( this );

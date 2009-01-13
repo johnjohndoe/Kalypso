@@ -43,12 +43,10 @@ package org.kalypso.model.wspm.ui.view.legend;
 import java.util.logging.Logger;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.model.wspm.ui.Messages;
 
 public abstract class AbstractLegendViewActionDelegate implements IViewActionDelegate
 {
@@ -63,7 +61,7 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
 
   protected final void handleError( final String msg )
   {
-    Logger.getLogger( getClass().getName() ).info( Messages.AbstractLegendViewActionDelegate_0 + msg );
+    Logger.getLogger( getClass().getName() ).info( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AbstractLegendViewActionDelegate_0") + msg ); //$NON-NLS-1$
 
    // MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
   }

@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -105,7 +104,7 @@ public class RoughnessIntersector
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( Messages.RoughnessIntersector_1, m_profileFeatures.length );
+    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0"), m_profileFeatures.length ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -187,7 +186,7 @@ public class RoughnessIntersector
                 final IComponent component = provider.getPointProperty( componentId );
 
                 Object defaultValue = component.getDefaultValue();
-                if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
+                if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
                   defaultValue = 0.0;
 
                 profil.addPointProperty( component, defaultValue );

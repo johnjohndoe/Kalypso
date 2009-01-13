@@ -30,7 +30,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
@@ -79,7 +78,7 @@ public class CreateProfileMapAction extends ActionDelegate
 
     if( selectedFeatures.size() == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.CreateProfileMapAction_0, Messages.CreateProfileMapAction_1 );
+      MessageDialog.openWarning( shell, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -92,7 +91,7 @@ public class CreateProfileMapAction extends ActionDelegate
     if( mapTemplate == null )
       return;
 
-    final UIJob uijob = new UIJob( Messages.CreateProfileMapAction_2 )
+    final UIJob uijob = new UIJob( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.2") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -106,7 +105,7 @@ public class CreateProfileMapAction extends ActionDelegate
 
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
-          final IEditorInput input = new StorageEditorInput( new StringStorage( Messages.CreateProfileMapAction_3, mapTemplate, null ) );
+          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", mapTemplate, null ) ); //$NON-NLS-1$
 
           page.openEditor( input, editorDescription.getId(), true );
         }
@@ -137,7 +136,7 @@ public class CreateProfileMapAction extends ActionDelegate
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( shell, action.getText(), Messages.CreateProfileMapAction_5, status );
+      ErrorDialog.openError( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.4"), status ); //$NON-NLS-1$
       return null;
     }
     catch( final IOException e )

@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
@@ -52,7 +51,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IStructuredSelection selection = getSelection();
     if( selection == null || selection.isEmpty() )
     {
-      handleError( Messages.RemoveLayerActionDelegate_0 );
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.0") ); //$NON-NLS-1$
       return;
     }
 
@@ -64,7 +63,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     }
     catch( final UnsupportedOperationException e )
     {
-      handleError( Messages.RemoveLayerActionDelegate_1 );
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.1") ); //$NON-NLS-1$
       return;
     }
   }

@@ -83,7 +83,7 @@ public class SelectSingleProfileFeaturesMapFunction extends SelectFeaturesMapFun
     {
       if( wrappersToSelect.length > 1 )
       {
-        new UIJob( "selectWspmProfile" )
+        new UIJob( "selectWspmProfile" ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )

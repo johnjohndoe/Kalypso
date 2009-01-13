@@ -65,7 +65,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
@@ -138,7 +137,7 @@ public class ThemeAndPropertyChooserGroup
     group.setLayout( new GridLayout( 2, false ) );
 
     /* theme chooser */
-    new Label( group, SWT.NONE ).setText( Messages.ThemeAndPropertyChooserGroup_5 );
+    new Label( group, SWT.NONE ).setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.0") ); //$NON-NLS-1$
     final ComboViewer themeComboViewer = new ComboViewer( group, SWT.DROP_DOWN | SWT.READ_ONLY );
     themeComboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     themeComboViewer.setContentProvider( new ArrayContentProvider() );

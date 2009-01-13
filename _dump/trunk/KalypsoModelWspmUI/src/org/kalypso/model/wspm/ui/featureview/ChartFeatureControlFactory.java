@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
@@ -95,7 +95,7 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
 
     if( commandIds.length != commandStyles.length )
     {
-      final String msg = String.format( Messages.ChartFeatureControlFactory_9, commandIds, commandIds.length, cmdStyles, commandStyles.length );
+      final String msg = Messages.getFormatString("org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
       StatusUtilities.createStatus( IStatus.WARNING, msg, null );
     }
     else

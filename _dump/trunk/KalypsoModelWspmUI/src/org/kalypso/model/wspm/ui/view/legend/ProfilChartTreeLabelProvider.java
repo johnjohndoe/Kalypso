@@ -62,7 +62,7 @@ public class ProfilChartTreeLabelProvider extends ChartTreeLabelProvider
     if( element instanceof ILayerManager )
     {
       if( m_profilChartView == null )
-        return "Profil";
+        return "Profil"; //$NON-NLS-1$
       return m_profilChartView.getProfil().getName();
     }
     return super.getText( element );

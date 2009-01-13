@@ -66,7 +66,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.LayerView;
@@ -169,10 +169,12 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
   @Override
   public void dispose( )
   {
-    m_chart.removeProfilProviderListener( this );
+    if( m_chart != null )
+      m_chart.removeProfilProviderListener( this );
     m_chartProviderListener.dispose();
     getSite().setSelectionProvider( null );
-    m_chartlegend.dispose();
+    if( m_chartlegend != null )
+      m_chartlegend.dispose();
     m_toolkit.dispose();
     m_composite.dispose();
 
@@ -248,7 +250,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
     }
     catch( final PartInitException ex )
     {
-      ErrorDialog.openError( getSite().getShell(), Messages.LegendView_3, Messages.LegendView_4, ex.getStatus() );
+      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.1" ), ex.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
     }
   }
@@ -273,7 +275,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilProvid
     final ProfilChartView chartView = getProfilChartView();
     if( chartView == null )
     {
-      m_composite.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      m_composite.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
       if( m_chartlegend != null )
       {
         m_chartlegend.dispose();

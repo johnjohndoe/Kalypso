@@ -57,7 +57,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
@@ -77,7 +77,7 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
 
-  private final UIJob m_updateProfilJob = new UIJob( Messages.AbstractProfilViewPart2_4 )
+  private final UIJob m_updateProfilJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_0") ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( IProgressMonitor monitor )
@@ -171,7 +171,7 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
 
-    setPartNames( Messages.AbstractProfilViewPart2_0, Messages.AbstractProfilViewPart2_1 );
+    setPartNames(Messages.getString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1"),Messages.getString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_profile = newProfile;
 
@@ -233,7 +233,7 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
     if( m_control == null || m_control.isDisposed() )
       return;
 
-    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation(); //$NON-NLS-1$
+    final String partName = m_profile == null ? Messages.getString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_4") : Messages.getFormatString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final String tooltip = null;
 
     setPartNames( partName, tooltip );

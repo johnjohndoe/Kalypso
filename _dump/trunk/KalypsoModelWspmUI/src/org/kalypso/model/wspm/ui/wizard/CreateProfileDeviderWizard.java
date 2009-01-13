@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -108,7 +109,7 @@ public class CreateProfileDeviderWizard extends Wizard
   {
     m_foundProfiles = foundProfiles;
 
-    setWindowTitle( "Flie�zonen erzeugen" );
+    setWindowTitle( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -119,9 +120,9 @@ public class CreateProfileDeviderWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, "profileFeaturesChooserPage", "Profile ausw�hlen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 1, Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.1"), Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( "Bitte w�hlen Sie aus, in welchen Profilen Flie�zonen erzeugt werden sollen." );
+    m_profileChooserPage.setMessage( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.3") ); //$NON-NLS-1$
 
     m_deviderPage = new CreateProfileDeviderPage( m_foundProfiles.theme );
 
@@ -162,7 +163,7 @@ public class CreateProfileDeviderWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Flie�zonen erzeugen", 1 + choosen.length );
+        monitor.beginTask( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.4"), 1 + choosen.length ); //$NON-NLS-1$
 
         try
         {
@@ -188,7 +189,7 @@ public class CreateProfileDeviderWizard extends Wizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Erzeugen der Flie�zonen", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.5"), status ); //$NON-NLS-1$
 
     return status.isOK();
   }
@@ -196,7 +197,7 @@ public class CreateProfileDeviderWizard extends Wizard
   @SuppressWarnings("unchecked")
   protected static FeatureChange[] createDevider( final Object[] profileFeatures, final FeatureList lineFeatures, final IPropertyType lineGeomProperty, final IComponent deviderType, final IProgressMonitor monitor )
   {
-    monitor.beginTask( "erzeuge Begrenzer", profileFeatures.length );
+    monitor.beginTask( Messages.getString("org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.6"), profileFeatures.length ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 

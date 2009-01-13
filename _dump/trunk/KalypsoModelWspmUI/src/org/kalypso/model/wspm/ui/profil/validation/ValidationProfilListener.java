@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 
 /**
@@ -81,7 +80,7 @@ public class ValidationProfilListener implements IProfilListener
 
     m_featureID = featureID;
 
-    m_validateJob = new WorkspaceJob( Messages.ValidationProfilListener_0 )
+    m_validateJob = new WorkspaceJob( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener.0") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )

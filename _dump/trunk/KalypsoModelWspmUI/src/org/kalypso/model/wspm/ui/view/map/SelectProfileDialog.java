@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -84,8 +85,8 @@ public class SelectProfileDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Select Cross-Sectional Profile" );
-    setMessage( "Select a single Cross-Sectional Profile from the lower box." );
+    setTitle( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.0") ); //$NON-NLS-1$
+    setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.1") ); //$NON-NLS-1$
 
     return contents;
   }
@@ -106,7 +107,7 @@ public class SelectProfileDialog extends TitleAreaDialog
 
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    label.setText( "Cross-Sectional Profile" );
+    label.setText( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.2") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( composite, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -132,7 +133,7 @@ public class SelectProfileDialog extends TitleAreaDialog
           final Feature waterbody = crossSection.getParent();
 
           final String wn = FeatureUtils.getFeatureName( NS.GML3, waterbody );
-          final String s = String.format( "%s, Station: %f - Waterbody: %s", name, station, wn );
+          final String s = String.format( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3"), name, station, wn ); //$NON-NLS-1$
 
           return s;
         }

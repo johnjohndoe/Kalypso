@@ -46,7 +46,6 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
@@ -151,7 +150,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
         // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
         changes[0] = null;
       }
-      final ProfilOperation operation = new ProfilOperation( Messages.ProfilStartTarget_0, profile, changes, false );
+      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget.0"), profile, changes, false ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
 

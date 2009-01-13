@@ -48,7 +48,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Belger
@@ -71,8 +70,8 @@ public class ProfilLayerActionDelegate implements IObjectActionDelegate
     }
     catch( final PartInitException ex )
     {
-      ErrorDialog.openError( site.getShell(), Messages.ProfilLayerActionDelegate_1,
-          Messages.ProfilLayerActionDelegate_2, ex.getStatus() );
+      ErrorDialog.openError( site.getShell(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ProfilLayerActionDelegate.0"), //$NON-NLS-1$
+          org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ProfilLayerActionDelegate.1"), ex.getStatus() ); //$NON-NLS-1$
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
     }
   }

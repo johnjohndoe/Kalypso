@@ -101,14 +101,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       final String id = getId();
 
-      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", null );
-      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null );
+      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
+      m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
 
-      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null );
-      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null );
+      m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+      m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
 
-      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null );
-      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null );
+      m_LineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+      m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
     }
   }
 
@@ -372,7 +372,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
 
     if( point == null || (getTargetComponent() == null) || (getDomainComponent() == null) )
-      return "";
+      return ""; //$NON-NLS-1$
     try
     {
       final Point2D p = getPoint2D( point );

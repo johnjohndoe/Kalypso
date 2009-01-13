@@ -62,7 +62,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
 import org.kalypso.observation.result.IRecord;
 
@@ -116,12 +115,12 @@ public class FilePointsSource extends AbstractPointsSource
 
     final Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData() );
-    label.setText( Messages.FilePointsSource_2 );
+    label.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource.0") ); //$NON-NLS-1$
     m_fileName = new Text( panel, SWT.BORDER );
     m_fileName.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
 
     final Button button = new Button( panel, SWT.NONE );
-    button.setText( Messages.FilePointsSource_3 );
+    button.setText( "..." ); //$NON-NLS-1$
     button.setLayoutData( new GridData() );
 
     button.addSelectionListener( new SelectionAdapter()

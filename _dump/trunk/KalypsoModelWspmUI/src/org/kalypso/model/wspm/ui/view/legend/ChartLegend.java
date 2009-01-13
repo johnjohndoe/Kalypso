@@ -55,11 +55,11 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class ChartLegend extends LabelProvider implements DisposeListener, IChartCanvasListener, ICheckStateListener, ISelectionChangedListener, IPersistableElement
 {
 
-  private static final String MEM_SELCOUNT = "memento.chartLegend.selCount";
+  private static final String MEM_SELCOUNT = "memento.chartLegend.selCount"; //$NON-NLS-1$
 
-  private static final String MEM_SELITEM = "memento.chartLegend.selItem";
+  private static final String MEM_SELITEM = "memento.chartLegend.selItem"; //$NON-NLS-1$
 
-  private final String IMAGE_BACKGROUND = "legend_clipping_image";
+  private final String IMAGE_BACKGROUND = "legend_clipping_image"; //$NON-NLS-1$
 
   private final CheckboxTableViewer m_checklist;
 

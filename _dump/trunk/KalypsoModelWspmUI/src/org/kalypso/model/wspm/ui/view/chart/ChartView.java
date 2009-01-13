@@ -56,7 +56,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -107,7 +106,7 @@ public class ChartView extends AbstractProfilViewPart implements IChartPart, IPr
     }
     if( getProfil() == null )
     {
-      m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.chart.ChartView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
       m_chart.setProfil( null );
     }
     else

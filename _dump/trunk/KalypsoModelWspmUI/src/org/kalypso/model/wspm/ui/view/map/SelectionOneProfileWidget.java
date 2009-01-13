@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view.map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.SelectFeaturesMapFunction;
@@ -56,6 +55,6 @@ public class SelectionOneProfileWidget extends SelectionWidget
 {
   public SelectionOneProfileWidget( )
   {
-    super( Messages.SelectionOneProfileWidget_0, Messages.SelectionOneProfileWidget_1, new SelectSingleProfileFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( "org.kalypso.model.wspmprofile", "Profile" ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null );
+    super( "Selektions-Element", "Selektiert ein Querprofil.", new SelectSingleProfileFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget.1") ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 }

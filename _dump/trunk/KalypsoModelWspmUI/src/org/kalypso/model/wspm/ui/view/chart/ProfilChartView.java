@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.handler.ProfilClickHandler;
 
@@ -155,21 +155,21 @@ public class ProfilChartView implements IChartPart, IProfilListener
     AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     targetAxisRight.setPreferredAdjustment( aaRight );
 
-    domainAxis.setLabel( "[m]" );
+    domainAxis.setLabel( "[m]" ); //$NON-NLS-1$
 
-    targetAxisLeft.setLabel( "[m+NN]" );
-    targetAxisRight.setLabel( "[KS]" );
+    targetAxisLeft.setLabel( "[m+NN]" ); //$NON-NLS-1$
+    targetAxisRight.setLabel( "[KS]" ); //$NON-NLS-1$
 
     mr.addMapper( domainAxis );
     mr.addMapper( targetAxisLeft );
     mr.addMapper( targetAxisRight );
 
     AxisRendererConfig configDom = new AxisRendererConfig();
-    IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom );
+    IAxisRenderer aRendDom = new GenericAxisRenderer( "rendDom", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configDom ); //$NON-NLS-1$ //$NON-NLS-2$
 
     AxisRendererConfig configLR = new AxisRendererConfig();
     configLR.gap = AXIS_GAP;
-    IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR );
+    IAxisRenderer aRendLR = new GenericAxisRenderer( "rendLR", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), configLR ); //$NON-NLS-1$ //$NON-NLS-2$
 
     mr.setRenderer( ID_AXIS_DOMAIN, aRendDom );
     mr.setRenderer( ID_AXIS_LEFT, aRendLR );
@@ -392,7 +392,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
     {
       m_profile.addProfilListener( this );
-      m_chartComposite.getChartModel().setTitle( Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation() );
+      m_chartComposite.getChartModel().setTitle( Messages.getFormatString("org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_3", m_profile.getStation() )); //$NON-NLS-1$
       ((GridData) (m_chartComposite.getLayoutData())).exclude = false;
       updateLayer();
     }
@@ -454,7 +454,7 @@ public class ProfilChartView implements IChartPart, IProfilListener
       }
 
       // reactivate layer
-      final IChartLayer layer = lm.getLayerById( activeLayer == null ? "" : activeLayer.getId() );
+      final IChartLayer layer = lm.getLayerById( activeLayer == null ? "" : activeLayer.getId() ); //$NON-NLS-1$
       if( layer != null )
       {
         layer.setActive( true );

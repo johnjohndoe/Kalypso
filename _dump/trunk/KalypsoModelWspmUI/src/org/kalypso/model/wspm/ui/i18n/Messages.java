@@ -38,21 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart;
+package org.kalypso.model.wspm.ui.i18n;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author kimwerner
  */
-public class ComponentLayer extends AbstractProfilLayer
+public class Messages
 {
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.ui.i18n.messages"; //$NON-NLS-1$
 
- 
-  public ComponentLayer( final IProfil profil, final String targetRangeProperty )
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    super( profil, targetRangeProperty, null );
   }
- 
 
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+  }
+
+  public static String getFormatString( final String key, Object... args )
+  {
+    String formatStr = "";
+    try
+    {
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      return String.format( formatStr, args );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      return '!' + formatStr + '!';
+    }
+
+  }
 }

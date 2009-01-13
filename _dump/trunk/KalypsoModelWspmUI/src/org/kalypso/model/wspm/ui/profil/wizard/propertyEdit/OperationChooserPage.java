@@ -78,7 +78,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -119,7 +118,7 @@ public class OperationChooserPage extends WizardPage
   
   public OperationChooserPage( final IStructuredSelection selection )
   {
-    super( "operationChooserPage", Messages.OperationChooserPage_4, null ); //$NON-NLS-1$
+    super( "operationChooserPage", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_selectedpoints = selection;
   }
 
@@ -200,8 +199,8 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( Messages.OperationChooserPage_8 );
-    new Label( group, SWT.NONE ).setText( Messages.OperationChooserPage_9 );
+    group.setText( "" ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( "" ); //$NON-NLS-1$
 
     if( m_filters == null )
     {
@@ -220,9 +219,9 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 2, false ) );
-    group.setText( Messages.OperationChooserPage_10 );
+    group.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.0") ); //$NON-NLS-1$
     final Label lbl = new Label( group, SWT.NONE );
-    lbl.setText( Messages.OperationChooserPage_11 );
+    lbl.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.1") ); //$NON-NLS-1$
     final GridData labelData = new GridData();
     labelData.horizontalSpan = 2;
     lbl.setLayoutData( labelData );
@@ -246,7 +245,7 @@ public class OperationChooserPage extends WizardPage
     {
       m_calculators = new ArrayList<PropertyCalculator>();
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( Messages.OperationChooserPage_12 );
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.2") ); //$NON-NLS-1$
       for( final IConfigurationElement element : elements )
       {
         final String id = element.getAttribute( "id" ); //$NON-NLS-1$
@@ -320,7 +319,7 @@ public class OperationChooserPage extends WizardPage
     final Button button = new Button( group, SWT.CHECK );
     button.setText( filter.getName() );
     button.setToolTipText( filter.getDescription() );
-    if( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter".equals( filter.getId() ) )
+    if( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter".equals( filter.getId() ) ) //$NON-NLS-1$
       button.setEnabled( m_selectedpoints != null );
     button.setSelection( selected );
     button.addSelectionListener( new SelectionAdapter()
@@ -400,7 +399,7 @@ public class OperationChooserPage extends WizardPage
         selectedPoints.add( point );
       }
     }
-    if( m_selectedpoints != null && !m_selectedpoints.isEmpty() && filterSet.contains( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter" ) )
+    if( m_selectedpoints != null && !m_selectedpoints.isEmpty() && filterSet.contains( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter" ) ) //$NON-NLS-1$
       return calculator.calculate( m_value, propertyIds, addSelection( selectedPoints ) );
     return calculator.calculate( m_value, propertyIds, selectedPoints );
 

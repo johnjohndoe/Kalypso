@@ -67,7 +67,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -84,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FlipProfileAction extends ActionDelegate
 {
-  private static final String STR_DIALOG_TITLE = Messages.FlipProfileAction_0;
+  private static final String STR_DIALOG_TITLE = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.0"); //$NON-NLS-1$
 
   private IFeatureSelection m_selection;
 
@@ -120,11 +119,11 @@ public class FlipProfileAction extends ActionDelegate
       public IStatus execute( final IProgressMonitor monitor )
       {
         final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-        final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.FlipProfileAction_2, null );
+        final MultiStatus resultStatus = new MultiStatus( id, 1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.1"), null ); //$NON-NLS-1$
 
         final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
 
-        monitor.beginTask( Messages.FlipProfileAction_3, features.size() );
+        monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.2"), features.size() ); //$NON-NLS-1$
 
         for( int i = 0; i < features.size(); i++ )
         {
@@ -135,7 +134,7 @@ public class FlipProfileAction extends ActionDelegate
 
           monitor.worked( 1 );
           if( monitor.isCanceled() )
-            return new Status( IStatus.CANCEL, id, 1, Messages.FlipProfileAction_4, null );
+            return new Status( IStatus.CANCEL, id, 1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.3"), null ); //$NON-NLS-1$
 
           featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( profile, feature ) ) );
         }
@@ -150,17 +149,17 @@ public class FlipProfileAction extends ActionDelegate
           catch( Exception e )
           {
             e.printStackTrace();
-            return StatusUtilities.statusFromThrowable( e, Messages.FlipProfileAction_5 );
+            return StatusUtilities.statusFromThrowable( e, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.4") ); //$NON-NLS-1$
           }
         }
         else
-          return StatusUtilities.createErrorStatus( Messages.FlipProfileAction_6 );
+          return StatusUtilities.createErrorStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.5") ); //$NON-NLS-1$
 
         return resultStatus;
       }
     };
-    final IStatus status = ProgressUtilities.busyCursorWhile( op, Messages.FlipProfileAction_7 );
-    ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.FlipProfileAction_8, status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
+    final IStatus status = ProgressUtilities.busyCursorWhile( op, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.6") ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, STR_DIALOG_TITLE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.FlipProfileAction.7"), status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL ); //$NON-NLS-1$
   }
 
   /**

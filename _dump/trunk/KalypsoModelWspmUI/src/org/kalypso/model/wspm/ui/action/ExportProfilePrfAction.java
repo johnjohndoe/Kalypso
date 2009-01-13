@@ -71,12 +71,10 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -144,9 +142,9 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
         public IStatus execute( final IProgressMonitor monitor )
         {
           final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-          final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.ExportProfilePrfAction_3, null );
+          final MultiStatus resultStatus = new MultiStatus( id, 1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.0"), null ); //$NON-NLS-1$
 
-          monitor.beginTask( Messages.ExportProfilePrfAction_4, profiles.size() );
+          monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.1"), profiles.size() ); //$NON-NLS-1$
 
           for( final Map.Entry<IProfil, String> entry : profiles.entrySet() )
           {
@@ -168,18 +166,18 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
             monitor.worked( 1 );
             if( monitor.isCanceled() )
-              return new Status( IStatus.CANCEL, id, 1, Messages.ExportProfilePrfAction_5, null );
+              return new Status( IStatus.CANCEL, id, 1, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.2"), null ); //$NON-NLS-1$
           }
           return resultStatus;
         }
       };
-      final IStatus status = ProgressUtilities.busyCursorWhile( op, Messages.ExportProfilePrfAction_6 );
-      ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.ExportProfilePrfAction_7, status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
+      final IStatus status = ProgressUtilities.busyCursorWhile( op, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.3") ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, STR_DIALOG_TITLE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.4"), status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.ExportProfilePrfAction_8, status );
+      ErrorDialog.openError( shell, STR_DIALOG_TITLE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.5"), status ); //$NON-NLS-1$
     }
   }
 
@@ -239,7 +237,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     final DirectoryDialog dialog = new DirectoryDialog( shell );
     dialog.setText( STR_DIALOG_TITLE );
-    dialog.setMessage( Messages.ExportProfilePrfAction_10 );
+    dialog.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.6") ); //$NON-NLS-1$
     dialog.setFilterPath( initialFilterPath );
 
     final String result = dialog.open();

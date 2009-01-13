@@ -78,7 +78,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -125,20 +125,20 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private final static int MAX_OUTLINE_HEIGHT = 70;
 
-  protected final UIJob m_markerRefreshJob = new UIJob( Messages.TableView_0 )
+  protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.0") ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       final IRecord[] points = m_profile.getPoints();
       if( points.length > 0 )
-        m_view.update( points, new String[] { "" } );
+        m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
       updateProblemView();
       return Status.OK_STATUS;
     }
   };
 
-  protected final UIJob m_setActivePointJob = new UIJob( Messages.TableView_0 )
+  protected final UIJob m_setActivePointJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.1") ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( IProgressMonitor monitor )
@@ -307,7 +307,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( (m_profile == null) )
     {
-      m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
 
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;

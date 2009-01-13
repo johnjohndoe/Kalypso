@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view.table;
 
 import org.eclipse.core.resources.IMarker;
-import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Gernot Belger
@@ -50,7 +49,7 @@ public class MarkerUtils
 {
   private MarkerUtils( )
   {
-    throw new UnsupportedOperationException( Messages.MarkerUtils_0 );
+    throw new UnsupportedOperationException( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.MarkerUtils.0") ); //$NON-NLS-1$
   }
 
   /**

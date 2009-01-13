@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Gernot
@@ -65,7 +64,7 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
 
   public PointsTargetChooserPage( )
   {
-    super( "targetChooserPage", Messages.PointsTargetChooserPage_2, null ); //$NON-NLS-1$
+    super( "targetChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -89,7 +88,7 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
     }
 
     final Group panel = new Group( parent, SWT.NONE );
-    panel.setText( Messages.PointsTargetChooserPage_3 );
+    panel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.1") ); //$NON-NLS-1$
     panel.setLayout( new GridLayout() );
 
     for( final IPointsTarget target : m_targets )

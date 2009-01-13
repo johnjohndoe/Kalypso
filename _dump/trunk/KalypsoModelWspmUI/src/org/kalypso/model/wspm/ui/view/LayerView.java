@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -77,13 +77,13 @@ public class LayerView extends ViewPart
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createScrolledForm( parent );
     m_toolkit.decorateFormHeading( m_form.getForm() );
-    m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+    m_form.getForm().setMessage(Messages.getString("org.kalypso.model.wspm.ui.view.LayerView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
     final GridLayout bodyLayout = new GridLayout();
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     m_form.getForm().getBody().setLayout( bodyLayout );
-    m_form.getForm().setText( "" );
-    m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+    m_form.getForm().setText( "" ); //$NON-NLS-1$
+    m_form.getForm().setMessage(Messages.getString("org.kalypso.model.wspm.ui.view.LayerView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
   }
 
   /**
@@ -134,7 +134,7 @@ public class LayerView extends ViewPart
     }
     if( activeLayer != null )
     {
-      m_form.getForm().setMessage( "", 0 );
+      m_form.getForm().setMessage( "", 0 ); //$NON-NLS-1$
       m_form.getForm().setText( activeLayer.getTitle() );
       final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
 
@@ -146,8 +146,8 @@ public class LayerView extends ViewPart
     }
     else
     {
-      m_form.getForm().setText( "" );
-      m_form.getForm().setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
+      m_form.getForm().setText( "" ); //$NON-NLS-1$
+      m_form.getForm().setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.LayerView.0"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
     }
     m_form.getForm().layout();
   }

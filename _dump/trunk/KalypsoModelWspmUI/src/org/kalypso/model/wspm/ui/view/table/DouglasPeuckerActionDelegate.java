@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
@@ -90,11 +89,11 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     if( profile == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, Messages.DouglasPeuckerActionDelegate_0, Messages.DouglasPeuckerActionDelegate_1 );
+      MessageDialog.openError( viewShell, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( Messages.DouglasPeuckerActionDelegate_2, profile.getPoints() );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.DouglasPeuckerActionDelegate.2"), profile.getPoints() ); //$NON-NLS-1$
     final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection );
 
     final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, profile, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
