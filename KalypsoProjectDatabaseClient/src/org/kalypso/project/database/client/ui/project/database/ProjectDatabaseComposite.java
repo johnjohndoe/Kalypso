@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
@@ -85,6 +86,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private final boolean m_isExpert;
 
+  private final IKalypsoProjectOpenAction m_openAction;
+
   /**
    * @param parent
    *          composite
@@ -95,11 +98,12 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param isExpert
    *          show expert debug informations?
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final boolean isExpert )
+  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoProjectOpenAction openAction, final boolean isExpert )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
     m_filter = filter;
+    m_openAction = openAction;
     m_isExpert = isExpert;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
@@ -147,7 +151,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
       try
       {
-        final IProjectRowBuilder builder = getBuilder( project, m_isExpert );
+        final IProjectRowBuilder builder = getBuilder( project, m_openAction, m_isExpert );
         builder.render( m_body, m_toolkit );
       }
       catch( final CoreException e )
@@ -160,24 +164,24 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     this.layout();
   }
 
-  private IProjectRowBuilder getBuilder( final ProjectHandler handler, final boolean isExpert ) throws CoreException
+  private IProjectRowBuilder getBuilder( final ProjectHandler handler, final IKalypsoProjectOpenAction openAction, final boolean isExpert ) throws CoreException
   {
     if( handler.isLocalRemoteProject() )
     {
       if( handler.getRemotePreferences().isOnServer() )
       {
-        return new LocalServerProjectRowBuilder( handler, this, isExpert );
+        return new LocalServerProjectRowBuilder( handler, openAction, this, isExpert );
       }
 
-      return new LocalRemoteProjectRowBuilder( handler, this );
+      return new LocalRemoteProjectRowBuilder( handler, openAction, this );
     }
     else if( handler.isLocal() )
     {
-      return new LocalProjectRowBuilder( handler, this );
+      return new LocalProjectRowBuilder( handler, openAction, this );
     }
     else if( handler.isRemote() )
     {
-      return new RemoteProjectRowBuilder( handler, this, isExpert );
+      return new RemoteProjectRowBuilder( handler, openAction, this, isExpert );
     }
     else
       throw new IllegalStateException();

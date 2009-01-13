@@ -46,6 +46,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
 import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseUiLocker;
 
@@ -58,9 +59,9 @@ import org.kalypso.project.database.client.ui.project.database.IProjectDatabaseU
 public class LocalRemoteProjectRowBuilder extends AbstractProjectRowBuilder implements IProjectRowBuilder
 {
 
-  public LocalRemoteProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker )
+  public LocalRemoteProjectRowBuilder( final ProjectHandler handler, final IKalypsoProjectOpenAction openAction, final IProjectDatabaseUiLocker locker )
   {
-    super( handler, locker );
+    super( handler, openAction, locker );
   }
 
   /**

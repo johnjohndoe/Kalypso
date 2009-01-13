@@ -47,7 +47,6 @@ import java.util.Properties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -62,7 +61,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
@@ -90,9 +89,12 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
   private final IProjectDatabaseUiLocker m_locker;
 
-  public AbstractProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker )
+  private final IKalypsoProjectOpenAction m_openAction;
+
+  public AbstractProjectRowBuilder( final ProjectHandler handler, final IKalypsoProjectOpenAction openAction, final IProjectDatabaseUiLocker locker )
   {
     m_handler = handler;
+    m_openAction = openAction;
     m_locker = locker;
 
   }
@@ -115,10 +117,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
             final Properties properties = new Properties();
             properties.setProperty( "project", getHandler().getProject().getName() );
 
-            final ActivateWorkflowProjectIntroAction action = new ActivateWorkflowProjectIntroAction();
-            action.run( null, properties );
-
-            return Status.OK_STATUS;
+            return getOpenAction().open( properties );
           }
         }.schedule();
       }
@@ -139,6 +138,11 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected ProjectHandler getHandler( )
   {
     return m_handler;
+  }
+
+  protected IKalypsoProjectOpenAction getOpenAction( )
+  {
+    return m_openAction;
   }
 
   protected IProjectDatabaseUiLocker getLocker( )

@@ -47,6 +47,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.ProjectHandler;
@@ -64,9 +65,9 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
 
   private final boolean m_isExpert;
 
-  public LocalServerProjectRowBuilder( final ProjectHandler handler, final IProjectDatabaseUiLocker locker, final boolean isExpert )
+  public LocalServerProjectRowBuilder( final ProjectHandler handler, final IKalypsoProjectOpenAction openAction, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
-    super( handler, locker );
+    super( handler, openAction, locker );
     m_isExpert = isExpert;
   }
 
