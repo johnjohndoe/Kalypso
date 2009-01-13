@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.afgui.extension.IEnteringPageWizardDelegate;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
@@ -174,12 +175,11 @@ public class ModuleEnteringPageComposite extends Composite
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final IProjectDatabaseFilter handler = m_enteringPage.getDatabaseFilter();
+    final IKalypsoProjectOpenAction openAction = m_enteringPage.getProjectOpenAction();
 
-    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, toolkit, handler, KalypsoModelProductPlugin.getDefault().isExpert() );
+    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, toolkit, handler, openAction, KalypsoModelProductPlugin.getDefault().isExpert() );
     projects.setLayout( new GridLayout() );
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
-
-    final String remoteCommitType = m_enteringPage.getRemoteCommitType();
 
     final IEnteringPageWizardDelegate projectDelegate = new IEnteringPageWizardDelegate()
     {
@@ -241,8 +241,6 @@ public class ModuleEnteringPageComposite extends Composite
 
     if( m_enteringPage.hasImportWizard() )
     {
-      final String label = m_enteringPage.getImportWizardLabel();
-
       final SpecialImportProjectComposite specialImport = new SpecialImportProjectComposite( bodyProjects, toolkit, m_enteringPage );
       specialImport.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
