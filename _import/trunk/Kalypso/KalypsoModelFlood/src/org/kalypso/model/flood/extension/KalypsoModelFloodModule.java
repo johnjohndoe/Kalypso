@@ -12,9 +12,11 @@ import org.eclipse.swt.graphics.Image;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.afgui.extension.SzenarioProjectOpenAction;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
@@ -203,6 +205,12 @@ public class KalypsoModelFloodModule implements IKalypsoModule
       public Integer getPriority( )
       {
         return 4;
+      }
+
+      @Override
+      public IKalypsoProjectOpenAction getProjectOpenAction( )
+      {
+        return new SzenarioProjectOpenAction();
       }
     };
   }
