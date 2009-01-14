@@ -58,16 +58,19 @@ import javax.jws.WebService;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
+import org.kalypso.project.database.KalypsoProjectDatabaseExtensions;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBeanPrimaryKey;
+import org.kalypso.project.database.server.trigger.TriggerHelper;
 
 /**
  * @author kuch
@@ -238,6 +241,15 @@ public class ProjectDatabase implements IProjectDatabase
 
       tx.commit();
 
+      
+      
+      IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
+      if (confElementTrigger != null)
+      {
+        TriggerHelper.handleBean(bean, confElementTrigger);
+      }
+      
+      
       return bean;
     }
     catch( final Exception e )
