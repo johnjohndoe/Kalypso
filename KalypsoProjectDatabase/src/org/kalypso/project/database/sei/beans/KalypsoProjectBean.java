@@ -126,7 +126,9 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   {
     final String ticket = getEditLockTicket();
     if( ticket == null || "".equals( ticket.trim() ) )
+    {
       return false;
+    }
 
     return true;
   }
