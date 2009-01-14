@@ -233,7 +233,9 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     if( m_handler.getBean().getChanges() != null )
+    {
       changes.setText( m_handler.getBean().getChanges() );
+    }
 
     /* change listener */
     viewerVersions.addSelectionChangedListener( new ISelectionChangedListener()

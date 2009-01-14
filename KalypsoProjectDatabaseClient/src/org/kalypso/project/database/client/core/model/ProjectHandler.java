@@ -22,7 +22,9 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
   public boolean isLocal( )
   {
     if( m_local != null )
+    {
       return true;
+    }
 
     return false;
   }
@@ -30,7 +32,9 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
   public boolean isRemote( )
   {
     if( m_bean != null )
+    {
       return true;
+    }
 
     return false;
   }
@@ -62,7 +66,9 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
   public String getName( )
   {
     if( isRemote() )
+    {
       return m_bean.getName();
+    }
     else
     {
       try
@@ -83,9 +89,13 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
   public String getUnixName( )
   {
     if( isRemote() )
+    {
       return m_bean.getUnixName();
+    }
     else
+    {
       return getProject().getName();
+    }
   }
 
   /**
@@ -100,7 +110,9 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
   public boolean isLocalRemoteProject( )
   {
     if( m_bean != null && m_local != null )
+    {
       return true;
+    }
 
     // server offline? local project has "local"remote nature?
     if( isLocal() )
@@ -109,7 +121,9 @@ public class ProjectHandler implements Comparable<ProjectHandler>, IProjectHandl
       {
         final IProjectNature nature = getProject().getNature( RemoteProjectNature.NATURE_ID );
         if( nature == null )
+        {
           return false;
+        }
 
         return true;
       }

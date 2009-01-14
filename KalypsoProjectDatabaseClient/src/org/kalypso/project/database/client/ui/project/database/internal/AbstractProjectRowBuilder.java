@@ -245,7 +245,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell != null && !shell.isDisposed() )
+            {
               ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+            }
           }
         }
         finally
@@ -326,7 +328,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
               /* release */
               final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( getHandler() );
               if( !shell.isDisposed() )
+              {
                 ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", lockStatus );
+              }
             }
             finally
             {
@@ -388,10 +392,14 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
                   final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
                   if( shell == null )
+                  {
                     return;
+                  }
 
                   if( !shell.isDisposed() )
+                  {
                     ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
+                  }
                 }
                 finally
                 {
@@ -442,7 +450,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
+            {
               ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+            }
 
             // import head version of project from server
             try
@@ -549,7 +559,9 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( !shell.isDisposed() )
+            {
               ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", status );
+            }
           }
           finally
           {

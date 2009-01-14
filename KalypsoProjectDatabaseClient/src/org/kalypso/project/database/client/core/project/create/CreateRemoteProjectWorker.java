@@ -93,7 +93,9 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
+      {
         throw new CoreException( StatusUtilities.createErrorStatus( "Creating archive of project failed." ) );
+      }
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );

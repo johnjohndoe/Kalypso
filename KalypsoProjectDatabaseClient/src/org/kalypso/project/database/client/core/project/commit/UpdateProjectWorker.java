@@ -99,7 +99,9 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       monitor.worked( 1 );
 
       if( !status.isOK() )
+      {
         throw new CoreException( StatusUtilities.createErrorStatus( "Creating archive of project failed." ) );
+      }
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );

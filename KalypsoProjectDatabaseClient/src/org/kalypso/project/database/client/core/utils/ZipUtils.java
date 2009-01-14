@@ -81,7 +81,9 @@ public class ZipUtils
   public static void pack( final File archiveTarget, final File packDir ) throws ZipException, IOException
   {
     if( !packDir.isDirectory() )
+    {
       return;
+    }
 
     final BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( archiveTarget ) );
 
@@ -91,7 +93,9 @@ public class ZipUtils
     final File[] files = packDir.listFiles();
 
     for( final File file : files )
+    {
       ZipUtils.processFiles( packDir, file, out );
+    }
     out.close();
 
     bos.flush();
@@ -108,7 +112,9 @@ public class ZipUtils
 
       final File[] files = file.listFiles();
       for( final File f : files )
+      {
         ZipUtils.processFiles( packDir, f, out );
+      }
     }
     else
     {
@@ -138,15 +144,23 @@ public class ZipUtils
   public static void rmDir( final File dir )
   {
     if( !dir.isDirectory() )
+    {
       return;
+    }
 
     final File[] files = dir.listFiles();
 
     for( final File file : files )
+    {
       if( file.isDirectory() )
+      {
         ZipUtils.rmDir( file );
+      }
       else
+      {
         file.delete();
+      }
+    }
 
     dir.delete();
   }
@@ -156,7 +170,9 @@ public class ZipUtils
     final File file = new File( targetDir.getAbsolutePath() + "/" + target.getName() ); //$NON-NLS-1$
 
     if( target.isDirectory() )
+    {
       file.mkdirs();
+    }
     else
     {
       final InputStream is = zf.getInputStream( target );
@@ -170,8 +186,10 @@ public class ZipUtils
       final int EOF = -1;
 
       for( int c; (c = bis.read()) != EOF; )
+      {
         // $ANALYSIS-IGNORE
         bos.write( (byte) c );
+      }
 
       bos.close();
       fos.close();

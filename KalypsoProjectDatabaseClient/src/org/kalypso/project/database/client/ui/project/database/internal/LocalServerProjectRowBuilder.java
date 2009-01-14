@@ -91,13 +91,21 @@ public class LocalServerProjectRowBuilder extends AbstractProjectRowBuilder impl
       lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       if( preferences.isLocked() )
+      {
         lnk.setImage( IMG_LORE_LOCKED );
+      }
       else if( !ProjectDatabaseServerUtils.isServerOnline() )
+      {
         lnk.setImage( IMG_LORE_PROJECT_DISABLED );
+      }
       else if( getHandler().getBean().isProjectLockedForEditing() )
+      {
         lnk.setImage( IMG_LORE_OTHER_LOCK );
+      }
       else
+      {
         lnk.setImage( IMG_LORE_PROJECT );
+      }
 
       lnk.setToolTipText( String.format( "Öffne Projekt: %s", getHandler().getName() ) );
       lnk.setText( getHandler().getName() );

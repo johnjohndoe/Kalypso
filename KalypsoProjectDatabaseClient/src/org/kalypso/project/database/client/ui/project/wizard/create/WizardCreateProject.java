@@ -101,7 +101,9 @@ public class WizardCreateProject extends NewProjectWizard
     // bad hack
     final boolean finish = super.performFinish();
     if( !finish )
+    {
       return false;
+    }
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
     {

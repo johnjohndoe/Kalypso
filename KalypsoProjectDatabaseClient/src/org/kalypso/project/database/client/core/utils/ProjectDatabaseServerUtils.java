@@ -60,7 +60,9 @@ public class ProjectDatabaseServerUtils
     {
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getServiceUnblocking();
       if( service == null )
+      {
         return false;
+      }
 
       service.ping();
 
@@ -96,10 +98,12 @@ public class ProjectDatabaseServerUtils
         final Integer remoteVersion = bean.getProjectVersion();
 
         if( localVersion.intValue() < remoteVersion.intValue() )
+        {
           return true;
-        // happens while proejct update action
+          // happens while proejct update action
 // else if( localVersion.intValue() > remoteVersion.intValue() )
 // throw new IllegalStateException( "Should never happen: localVersion.intValue() > remoteVersion.intValue()" );
+        }
 
       }
       catch( final CoreException e )

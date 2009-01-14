@@ -88,7 +88,9 @@ public class WizardCommitProject extends Wizard implements IWorkbenchWizard
     ErrorDialog.openError( getShell(), "Fehler", "Aktualisieren des Projektes ist fehlgeschlagen.", commitStatus );
 
     if( !commitStatus.isOK() )
+    {
       return false;
+    }
 
     return true;
   }
