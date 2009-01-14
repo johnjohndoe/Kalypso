@@ -99,7 +99,9 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
     ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Projektexport fehlgeschlagen", "Fehler beim exportieren des Projektes.", result );
 
     if( result.getSeverity() != IStatus.OK )
+    {
       return false;
+    }
 
     return true;
   }

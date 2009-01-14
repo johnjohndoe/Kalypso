@@ -74,10 +74,14 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     final String ticket = service.acquireProjectEditLock( m_handler.getUnixName() );
     if( ticket == null || "".equals( ticket.trim() ) )
+    {
       StatusUtilities.createErrorStatus( String.format( "Acquiring project locked for project \"%s\" failed", m_handler.getName() ) );
+    }
 
     if( !m_handler.isLocalRemoteProject() )
+    {
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
+    }
 
     m_handler.getRemotePreferences().setEditTicket( ticket );
 

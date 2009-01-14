@@ -94,7 +94,9 @@ public class ProjectDataBaseController
       JOB.schedule( 100 );
     }
     else
+    {
       JOB.schedule( 100 );
+    }
 
   }
 

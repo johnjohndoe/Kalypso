@@ -64,7 +64,7 @@ public class LocalWorkspaceModel
     m_listener.clear();
   }
 
-  protected void update( )
+  protected final void update( )
   {
     m_projects = new HashSet<ILocalProject>();
 
@@ -77,7 +77,9 @@ public class LocalWorkspaceModel
     for( final IProject project : projects )
     {
       if( !project.isAccessible() || !project.isOpen() )
+      {
         continue;
+      }
 
       m_projects.add( new LocalProjectHandler( project, this ) );
     }

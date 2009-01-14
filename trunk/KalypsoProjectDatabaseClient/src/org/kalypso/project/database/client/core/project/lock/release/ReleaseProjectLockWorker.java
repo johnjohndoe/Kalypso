@@ -76,7 +76,9 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
   {
     /* project preferences */
     if( !m_handler.isLocalRemoteProject() )
+    {
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
+    }
 
     final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
     final String ticket = preferences.getEditTicket();

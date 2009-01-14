@@ -90,10 +90,12 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     update( model.getRemoteConnectionState() );
   }
 
-  protected void update( final IStatus connectionState )
+  protected final void update( final IStatus connectionState )
   {
     if( this.isDisposed() )
+    {
       return;
+    }
 
     if( m_body != null && !m_body.isDisposed() )
     {

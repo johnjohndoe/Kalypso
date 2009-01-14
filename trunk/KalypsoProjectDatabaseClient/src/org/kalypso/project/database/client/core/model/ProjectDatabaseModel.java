@@ -103,7 +103,9 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_local.dispose();
 
     if( m_remote != null )
+    {
       m_remote.dispose();
+    }
   }
 
   private void buildProjectList( )
@@ -177,7 +179,9 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public ProjectHandler[] getProjects( )
   {
     if( m_projects == null )
+    {
       buildProjectList();
+    }
 
     return m_projects.toArray( new ProjectHandler[] {} );
   }
@@ -218,7 +222,9 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public void addRemoteListener( final IRemoteProjectsListener listener )
   {
     if( m_remote != null )
+    {
       m_remote.addListener( listener );
+    }
   }
 
   public void removeListener( final IProjectDatabaseListener listener )
@@ -234,7 +240,9 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     for( final ProjectHandler handler : projects )
     {
       if( filter.select( handler ) )
+      {
         myProjects.add( handler );
+      }
     }
 
     return myProjects.toArray( new ProjectHandler[] {} );
@@ -243,13 +251,17 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public void setRemoteProjectsDirty( )
   {
     if( m_remote != null )
+    {
       m_remote.setDirty();
+    }
   }
 
   public IStatus getRemoteConnectionState( )
   {
     if( m_remote != null )
+    {
       return m_remote.getRemoteConnectionState();
+    }
 
     return StatusUtilities.createWarningStatus( "Laufzeiteinstellung verhindert Behandlung von Remote-Projekten" );
   }

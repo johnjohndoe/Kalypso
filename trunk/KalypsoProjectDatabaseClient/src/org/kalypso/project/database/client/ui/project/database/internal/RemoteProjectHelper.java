@@ -76,7 +76,9 @@ public class RemoteProjectHelper
       wizard = new WizardCreateProject( page, new String[] {} );
     }
     else
+    {
       wizard = new WizardCreateProject( templates, new String[] {} );
+    }
 
     wizard.init( PlatformUI.getWorkbench(), null );
     wizard.setActivateScenarioOnPerformFinish( false );

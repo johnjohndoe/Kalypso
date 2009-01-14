@@ -85,10 +85,12 @@ public class ImportProjectComposite extends Composite
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override
-  public void update( )
+  public final void update( )
   {
     if( this.isDisposed() )
+    {
       return;
+    }
 
     final ImageHyperlink lnkImport = m_toolkit.createImageHyperlink( this, SWT.NULL );
     lnkImport.setImage( IMG_IMPORT );

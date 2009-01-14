@@ -127,13 +127,17 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override
-  public synchronized void update( )
+  public final synchronized void update( )
   {
     if( m_updateLock )
+    {
       return;
+    }
 
     if( this.isDisposed() )
+    {
       return;
+    }
 
     if( m_body != null && !m_body.isDisposed() )
     {
@@ -184,7 +188,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
       return new RemoteProjectRowBuilder( handler, openAction, this, isExpert );
     }
     else
+    {
       throw new IllegalStateException();
+    }
   }
 
   /**
@@ -208,7 +214,9 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   private synchronized void updateUI( )
   {
     if( m_updateLock )
+    {
       return;
+    }
 
     if( m_updateJob == null )
     {

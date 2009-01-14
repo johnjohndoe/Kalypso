@@ -84,7 +84,9 @@ public class PageSelectExportDestination extends WizardPage
 
     final String result = dialog.open();
     if( result == null )
+    {
       return null;
+    }
 
     return new Path( result );
   }
@@ -94,7 +96,9 @@ public class PageSelectExportDestination extends WizardPage
     final IPath path = browse();
 
     if( path != null )
+    {
       return path.toString();
+    }
 
     return null;
   }
