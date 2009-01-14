@@ -40,16 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.common.interfaces;
 
+import org.apache.commons.vfs.FileObject;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Description see https://dev.bjoernsen.de/planerclient/wiki/Modelldatendienst/Trigger
  * 
- * 
  * @author Dirk Kuch
- *
  */
 public interface IProjectDatabaseTrigger
 {
-  void handleBean( KalypsoProjectBean bean );
+  /**
+   * @param bean
+   *          newly create bean
+   * @param destinationFolder
+   *          put global data of bean to this folder
+   */
+  void handleBean( KalypsoProjectBean bean, FileObject destinationFolder ) throws CoreException;
 }

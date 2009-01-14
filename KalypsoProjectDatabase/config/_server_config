@@ -4,4 +4,6 @@ org.kalypso.project.database.client.readable.path=http://dev.bjoernsen.de/webdav
 org.kalypso.project.database.server.writeable.path=webdav://dev.bjoernsen.de/webdav/plc_developer/projects/
 org.kalypso.project.database.server.readable.path=http://dev.bjoernsen.de/webdav/plc_developer/projects/
 
+org.kalypso.project.database.server.global.path=webdav://localhost/webdav/plc_developer/global/
+
 org.kalypso.project.database.server.wsdl=http://dev.bjoernsen.de:8080/projectdb?wsdl
