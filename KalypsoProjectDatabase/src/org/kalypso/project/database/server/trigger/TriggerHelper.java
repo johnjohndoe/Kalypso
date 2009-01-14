@@ -57,6 +57,7 @@ import org.osgi.framework.Bundle;
  */
 public class TriggerHelper
 {
+  public static final String COMMON_FOLDER = "common";
 
   public static void handleBean( KalypsoProjectBean bean, IConfigurationElement element ) throws Exception
   {
@@ -76,12 +77,18 @@ public class TriggerHelper
     if( !folderGlobal.exists() )
       folderGlobal.createFolder();
 
-    /* global project dir */
-    FileObject destinationFolder = folderGlobal.resolveFile( bean.getUnixName() );
-    if( !destinationFolder.exists() )
-      destinationFolder.createFolder();
+    /* global "global" dir */
+    FileObject destinationCommonFolder = folderGlobal.resolveFile( COMMON_FOLDER );
+    if( !destinationCommonFolder.exists() )
+      destinationCommonFolder.createFolder();
 
-    trigger.handleBean( bean, destinationFolder );
+    /* global project dir */
+    FileObject destinationProjectFolder = folderGlobal.resolveFile( bean.getUnixName() );
+    if( !destinationProjectFolder.exists() )
+      destinationProjectFolder.createFolder();
+
+    trigger.handleCommonData( bean, destinationCommonFolder );
+    trigger.handleProjectData( bean, destinationProjectFolder );
   }
 
 }
