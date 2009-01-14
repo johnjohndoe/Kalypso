@@ -41,32 +41,47 @@
 package org.kalypso.project.database.server.trigger;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseTrigger;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 import org.osgi.framework.Bundle;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class TriggerHelper
 {
 
   public static void handleBean( KalypsoProjectBean bean, IConfigurationElement element ) throws Exception
   {
+    /* resolve trigger extension class */
     final String pluginid = element.getContributor().getName();
     final Bundle bundle = Platform.getBundle( pluginid );
     final Class< ? extends IProjectDatabaseTrigger> triggerClass = bundle.loadClass( element.getAttribute( "class" ) );
     final Constructor< ? extends IProjectDatabaseTrigger> constructor = triggerClass.getConstructor();
 
-    IProjectDatabaseTrigger trigger = constructor.newInstance( );
-    
-    trigger.handleBean(bean);
+    IProjectDatabaseTrigger trigger = constructor.newInstance();
+
+    final FileSystemManager manager = VFSUtilities.getManager();
+
+    /* resolve global dir */
+    String urlGlobalPath = System.getProperty( IProjectDataBaseServerConstant.SERVER_GLOBAL_DATA_PATH );
+    FileObject folderGlobal = manager.resolveFile( urlGlobalPath );
+    if( !folderGlobal.exists() )
+      folderGlobal.createFolder();
+
+    /* global project dir */
+    FileObject destinationFolder = folderGlobal.resolveFile( bean.getUnixName() );
+    if( !destinationFolder.exists() )
+      destinationFolder.createFolder();
+
+    trigger.handleBean( bean, destinationFolder );
   }
 
 }

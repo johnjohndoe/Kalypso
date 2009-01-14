@@ -4,4 +4,7 @@ org.kalypso.project.database.client.readable.path=http://localhost/webdav/planer
 org.kalypso.project.database.server.writeable.path=webdav://localhost/webdav/planerclient/projects/
 org.kalypso.project.database.server.readable.path=http://localhost/webdav/planerclient/projects/
 
+org.kalypso.project.database.server.global.path=webdav://localhost/webdav/planerclient/global/
+
 org.kalypso.project.database.server.wsdl=http://localhost:8080/projectdb?wsdl
+
