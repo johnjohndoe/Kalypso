@@ -43,25 +43,23 @@ package org.kalypso.project.database;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 /**
  * @author Dirk Kuch
- *
  */
 public class KalypsoProjectDatabaseExtensions
 {
-  
-  private static  Map<String, IConfigurationElement> DATABASE_TRIGGERS = null;
+
+  private static Map<String, IConfigurationElement> DATABASE_TRIGGERS = null;
 
   private final static String DATABASE_TRIGGER_EXTENSION_POINT = "org.kalypso.project.database.projectDatabaseTrigger";
-  
+
   /**
-   * @param id remote database project id
-   * 
+   * @param id
+   *          remote database project id
    * @return IConfigurationElement of IProjectDatabaseTrigger for remote project type "id"
    */
   public synchronized static IConfigurationElement getProjectDatabaseTriggers( final String id )
@@ -84,5 +82,5 @@ public class KalypsoProjectDatabaseExtensions
 
     return DATABASE_TRIGGERS.get( id );
   }
-  
+
 }

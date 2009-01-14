@@ -135,7 +135,9 @@ public class RemoteProjectNature implements IProjectNature
 
       final IEclipsePreferences node = scope.getNode( PREFERENCES );
       if( listener != null )
+      {
         node.addPreferenceChangeListener( listener );
+      }
 
     }
 

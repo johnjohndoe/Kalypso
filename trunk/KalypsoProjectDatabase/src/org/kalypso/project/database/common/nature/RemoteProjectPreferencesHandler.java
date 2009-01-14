@@ -76,7 +76,9 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
   {
     final String ticket = getEditTicket();
     if( ticket == null || "".equals( ticket.trim() ) )
+    {
       return false;
+    }
 
     return true;
   }

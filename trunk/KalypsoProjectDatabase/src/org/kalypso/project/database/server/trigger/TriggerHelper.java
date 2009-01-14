@@ -59,7 +59,7 @@ public class TriggerHelper
 {
   public static final String COMMON_FOLDER = "common";
 
-  public static void handleBean( KalypsoProjectBean bean, IConfigurationElement element ) throws Exception
+  public static void handleBean( final KalypsoProjectBean bean, final IConfigurationElement element ) throws Exception
   {
     /* resolve trigger extension class */
     final String pluginid = element.getContributor().getName();
@@ -67,25 +67,31 @@ public class TriggerHelper
     final Class< ? extends IProjectDatabaseTrigger> triggerClass = bundle.loadClass( element.getAttribute( "class" ) );
     final Constructor< ? extends IProjectDatabaseTrigger> constructor = triggerClass.getConstructor();
 
-    IProjectDatabaseTrigger trigger = constructor.newInstance();
+    final IProjectDatabaseTrigger trigger = constructor.newInstance();
 
     final FileSystemManager manager = VFSUtilities.getManager();
 
     /* resolve global dir */
-    String urlGlobalPath = System.getProperty( IProjectDataBaseServerConstant.SERVER_GLOBAL_DATA_PATH );
-    FileObject folderGlobal = manager.resolveFile( urlGlobalPath );
+    final String urlGlobalPath = System.getProperty( IProjectDataBaseServerConstant.SERVER_GLOBAL_DATA_PATH );
+    final FileObject folderGlobal = manager.resolveFile( urlGlobalPath );
     if( !folderGlobal.exists() )
+    {
       folderGlobal.createFolder();
+    }
 
     /* global "global" dir */
-    FileObject destinationCommonFolder = folderGlobal.resolveFile( COMMON_FOLDER );
+    final FileObject destinationCommonFolder = folderGlobal.resolveFile( COMMON_FOLDER );
     if( !destinationCommonFolder.exists() )
+    {
       destinationCommonFolder.createFolder();
+    }
 
     /* global project dir */
-    FileObject destinationProjectFolder = folderGlobal.resolveFile( bean.getUnixName() );
+    final FileObject destinationProjectFolder = folderGlobal.resolveFile( bean.getUnixName() );
     if( !destinationProjectFolder.exists() )
+    {
       destinationProjectFolder.createFolder();
+    }
 
     trigger.handleCommonData( bean, destinationCommonFolder );
     trigger.handleProjectData( bean, destinationProjectFolder );

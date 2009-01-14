@@ -82,7 +82,7 @@ public class ProjectDatabase implements IProjectDatabase
 
   public ProjectDatabase( )
   {
-    //FIXME configuration file -> system property!!!
+    // FIXME configuration file -> system property!!!
 // final URL url = this.getClass().getResource( "conf/hibernate.cfg.xml" );
     final AnnotationConfiguration configure = new AnnotationConfiguration().configure();
 
@@ -121,7 +121,9 @@ public class ProjectDatabase implements IProjectDatabase
     for( final Object object : names )
     {
       if( !(object instanceof String) )
+      {
         continue;
+      }
 
       final String name = object.toString();
       projects.add( name );
@@ -141,7 +143,9 @@ public class ProjectDatabase implements IProjectDatabase
       for( final Object object : beans )
       {
         if( !(object instanceof KalypsoProjectBean) )
+        {
           continue;
+        }
 
         final KalypsoProjectBean b = (KalypsoProjectBean) object;
         myBeans.put( b.getProjectVersion(), b );
@@ -189,7 +193,9 @@ public class ProjectDatabase implements IProjectDatabase
     tx.commit();
 
     if( projects.size() <= 0 )
+    {
       return null;
+    }
 
     /* determine head */
     final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
@@ -217,7 +223,9 @@ public class ProjectDatabase implements IProjectDatabase
     try
     {
       if( !src.exists() )
+      {
         throw new FileNotFoundException( String.format( "Incoming file not exists: %s", incoming.toExternalForm() ) );
+      }
 
       /* destination of incoming file */
       final String urlDestination = ProjectModelUrlResolver.getUrlAsWebdav( new ProjectModelUrlResolver.IResolverInterface()
@@ -241,15 +249,12 @@ public class ProjectDatabase implements IProjectDatabase
 
       tx.commit();
 
-      
-      
-      IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
-      if (confElementTrigger != null)
+      final IConfigurationElement confElementTrigger = KalypsoProjectDatabaseExtensions.getProjectDatabaseTriggers( bean.getProjectType() );
+      if( confElementTrigger != null )
       {
-        TriggerHelper.handleBean(bean, confElementTrigger);
+        TriggerHelper.handleBean( bean, confElementTrigger );
       }
-      
-      
+
       return bean;
     }
     catch( final Exception e )
@@ -287,17 +292,23 @@ public class ProjectDatabase implements IProjectDatabase
     myTx.commit();
 
     if( updated == 0 )
+    {
       return null;
+    }
 
     final KalypsoProjectBean project = getProject( projectUnixName );
     if( !project.isProjectLockedForEditing() )
+    {
       throw new IllegalStateException( "Updating edit lock of projects failed." );
+    }
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
     {
       if( !child.isProjectLockedForEditing() )
+      {
         throw new IllegalStateException( "Updating edit lock of projects failed." );
+      }
     }
 
     return ticket;
@@ -319,13 +330,17 @@ public class ProjectDatabase implements IProjectDatabase
 
     final KalypsoProjectBean project = getProject( projectUnixName );
     if( project.isProjectLockedForEditing() )
+    {
       return false;
+    }
 
     final KalypsoProjectBean[] children = project.getChildren();
     for( final KalypsoProjectBean child : children )
     {
       if( child.isProjectLockedForEditing() )
+      {
         return false;
+      }
     }
 
     return true;
