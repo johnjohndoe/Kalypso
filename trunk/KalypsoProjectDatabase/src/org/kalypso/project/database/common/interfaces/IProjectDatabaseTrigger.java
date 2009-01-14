@@ -54,8 +54,18 @@ public interface IProjectDatabaseTrigger
   /**
    * @param bean
    *          newly create bean
-   * @param destinationFolder
-   *          put global data of bean to this folder
+   * @param projectDestinationFolder
+   *          global destination folder to share common informations for all instances of this project bean!
    */
-  void handleBean( KalypsoProjectBean bean, FileObject destinationFolder ) throws CoreException;
+  void handleProjectData( KalypsoProjectBean bean, FileObject projectDestinationFolder ) throws CoreException;
+
+  /**
+   * handle common informations for all projects!
+   * 
+   * @param bean
+   *          newly create bean
+   * @param globalCommonDestinationFolder
+   *          global destination folder to share informations for all project
+   */
+  public void handleCommonData( KalypsoProjectBean bean, FileObject destinationFolder ) throws CoreException;
 }
