@@ -44,7 +44,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -53,8 +52,8 @@ import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
 import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
-import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
+import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
+import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 
@@ -90,13 +89,13 @@ public class WelcomePageIndexComposite extends Composite
   {
     /* header */
     // icon / button
-    final HyperCanvas headerIcon = new HyperCanvas( this, SWT.NO_REDRAW_RESIZE );
+    final ImageCanvas2 headerCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     final GridData headerIconData = new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 );
     headerIconData.heightHint = headerIconData.minimumHeight = 110;
-    headerIcon.setLayoutData( headerIconData );
+    headerCanvas.setLayoutData( headerIconData );
 
     /* main canvas */
-    final HyperCanvas mainCanvas = new HyperCanvas( this, SWT.NO_REDRAW_RESIZE );
+    final ImageCanvas2 mainCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IKalypsoModule[] extensions = KalypsoAFGUIFrameworkPlugin.getKalypsoModules();
@@ -104,47 +103,23 @@ public class WelcomePageIndexComposite extends Composite
     {
       final IKalypsoModuleWelcomePageHandler handler = module.getWelcomePageHandler();
 
-      final IHyperCanvasSizeHandler iconSizeHandler = new IHyperCanvasSizeHandler()
+      final DefaultContentArea content = new DefaultContentArea()
       {
         public int y_offset = (IMG_OFFSET += 80) - 80;
 
         @Override
-        public int getX( )
+        public java.awt.Point getContentAreaAnchorPoint( )
         {
           final Point canvasSize = mainCanvas.getSize();
-
-          // fixed start position
-          final int x = canvasSize.x / 2 - canvasSize.x / 8;
-
-          return x;
-        }
-
-        @Override
-        public int getY( )
-        {
-          return y_offset;
+          return new java.awt.Point( canvasSize.x / 2 - canvasSize.x / 8, y_offset );
         }
       };
 
-      mainCanvas.addImage( handler.getIcon(), handler.getHoverIcon(), iconSizeHandler );
-      mainCanvas.addText( handler.getLabel(), MyFonts.WELCOME_PAGE_MODULE, MyColors.COLOR_WELCOME_PAGE_HEADING, new IHyperCanvasSizeHandler()
-      {
-        @Override
-        public int getX( )
-        {
-          return iconSizeHandler.getX() + 120;
-        }
+      content.setImage( handler.getIcon() );
+      content.setHoverImage( handler.getHoverIcon() );
 
-        @Override
-        public int getY( )
-        {
-          final Rectangle imgBounds = handler.getIcon().getBounds();
-
-          return iconSizeHandler.getY() + imgBounds.height / 2 - 7;
-        }
-      } );
-
-      mainCanvas.addMouseListener( new MouseAdapter()
+      content.setText( handler.getLabel(), MyFonts.WELCOME_PAGE_MODULE, MyColors.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
+      content.setMouseListener( new MouseAdapter()
       {
         /**
          * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -157,8 +132,9 @@ public class WelcomePageIndexComposite extends Composite
 
           m_pageHandler.update();
         }
-      }, handler.getIcon(), handler.getTooltip() );
+      }, handler.getTooltip() );
 
+      mainCanvas.addContentArea( content );
     }
 
     /* reset IMG_OFFSET */
