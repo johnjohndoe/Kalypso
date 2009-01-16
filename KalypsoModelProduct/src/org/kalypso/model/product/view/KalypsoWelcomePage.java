@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.product.view;
 
+import java.awt.Point;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,8 +57,8 @@ import org.eclipse.ui.part.IntroPart;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
-import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
+import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
+import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.ui.ModuleEnteringPageComposite;
 import org.kalypso.model.product.ui.WelcomePageIndexComposite;
@@ -105,12 +107,16 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
   public void update( )
   {
     if( m_contentArea.isDisposed() )
+    {
       return;
+    }
 
     if( m_contentClient != null )
     {
       if( !m_contentClient.isDisposed() )
+      {
         m_contentClient.dispose();
+      }
 
       m_contentClient = null;
     }
@@ -125,68 +131,28 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
     }
 
     /* footer */
-    final HyperCanvas footer = new HyperCanvas( m_contentClient, SWT.NO_REDRAW_RESIZE );
+    final ImageCanvas2 footer = new ImageCanvas2( m_contentClient, SWT.NO_REDRAW_RESIZE );
     final Rectangle footerBounds = IMG_FOOTER.getBounds();
 
     final GridData footerData = new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 );
     footerData.heightHint = footerData.minimumHeight = footerBounds.height;
     footer.setLayoutData( footerData );
 
-    footer.addImage( IMG_HELP, new IHyperCanvasSizeHandler()
+    final DefaultContentArea footerHelpContent = new DefaultContentArea()
     {
-      @Override
-      public int getX( )
-      {
-        return 5;
-      }
 
       @Override
-      public int getY( )
+      public Point getContentAreaAnchorPoint( )
       {
-        return footerBounds.height - IMG_HELP.getBounds().height - 10;
+        return new Point( 5, footerBounds.height - IMG_HELP.getBounds().height - 10 );
       }
-    } );
+    };
 
-    if( m_page != null )
-    {
-      footer.addImage( IMG_HOME, new IHyperCanvasSizeHandler()
-      {
-        @Override
-        public int getX( )
-        {
-          final Rectangle imgBounds = IMG_HELP.getBounds();
-
-          return imgBounds.width + 20;
-        }
-
-        @Override
-        public int getY( )
-        {
-          return footerBounds.height - IMG_HELP.getBounds().height - 10;
-        }
-      } );
-
-    }
-
-    footer.addImage( IMG_FOOTER, new IHyperCanvasSizeHandler()
-    {
-      @Override
-      public int getX( )
-      {
-        return footer.getBounds().width - footerBounds.width;
-      }
-
-      @Override
-      public int getY( )
-      {
-        return 0;
-      }
-    } );
-
-    footer.addMouseListener( new MouseAdapter()
+    footerHelpContent.setImage( IMG_HELP );
+    footerHelpContent.setMouseListener( new MouseAdapter()
     {
       /**
-       * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+       * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
        */
       @Override
       public void mouseUp( final MouseEvent e )
@@ -194,22 +160,53 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
         helpSystem.displayHelp();
       }
-    }, IMG_HELP, "Hilfe" );
+    }, "Hilfe" );
 
-    footer.addMouseListener( new MouseAdapter()
+    footer.addContentArea( footerHelpContent );
+
+    if( m_page != null )
     {
-      /**
-       * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-       */
-      @Override
-      public void mouseUp( final MouseEvent e )
-      {
-        setPage( null );
-        update();
-      }
-    }, IMG_HOME, "Zurück zur Startseite" );
 
-    footer.addMouseListener( new MouseAdapter()
+      final DefaultContentArea footerBackContent = new DefaultContentArea()
+      {
+
+        @Override
+        public Point getContentAreaAnchorPoint( )
+        {
+          final Rectangle imgBounds = IMG_HELP.getBounds();
+          return new Point( imgBounds.width + 20, footerBounds.height - IMG_HELP.getBounds().height - 10 );
+        }
+      };
+
+      footerBackContent.setImage( IMG_HOME );
+      footerBackContent.setMouseListener( new MouseAdapter()
+      {
+        /**
+         * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
+         */
+        @Override
+        public void mouseUp( final MouseEvent e )
+        {
+          setPage( null );
+          update();
+        }
+      }, "Zurück zur Startseite" );
+
+      footer.addContentArea( footerBackContent );
+    }
+
+    final DefaultContentArea footerLogo = new DefaultContentArea()
+    {
+
+      @Override
+      public Point getContentAreaAnchorPoint( )
+      {
+        return new Point( footer.getBounds().width - footerBounds.width, 0 );
+      }
+    };
+
+    footerLogo.setImage( IMG_FOOTER );
+    footerLogo.setMouseListener( new MouseAdapter()
     {
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -229,7 +226,9 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
         }
 
       }
-    }, IMG_FOOTER, "Weitere Informationen über Kalypso" );
+    }, "Weitere Informationen zu Kalypso" );
+
+    footer.addContentArea( footerLogo );
 
     m_contentClient.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_contentArea.layout();

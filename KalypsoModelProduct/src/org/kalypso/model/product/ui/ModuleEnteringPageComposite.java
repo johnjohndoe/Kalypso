@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.product.ui;
 
+import java.awt.Point;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
@@ -58,8 +59,8 @@ import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.INewProjectWizard;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
-import org.kalypso.contribs.eclipse.swt.canvas.HyperCanvas;
-import org.kalypso.contribs.eclipse.swt.canvas.IHyperCanvasSizeHandler;
+import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
+import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.utils.MyColors;
@@ -110,25 +111,22 @@ public class ModuleEnteringPageComposite extends Composite
 
     /* header */
     // icon / button
-    final HyperCanvas headerIcon = new HyperCanvas( this, SWT.NO_REDRAW_RESIZE );
+    final ImageCanvas2 headerCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     final GridData headerIconData = new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 );
     headerIconData.heightHint = headerIconData.minimumHeight = 110;
-    headerIcon.setLayoutData( headerIconData );
+    headerCanvas.setLayoutData( headerIconData );
 
-    headerIcon.addText( m_enteringPage.getHeader(), MyFonts.WELCOME_PAGE_HEADING, MyColors.COLOR_WELCOME_PAGE_HEADING, new IHyperCanvasSizeHandler()
+    final DefaultContentArea headerContent = new DefaultContentArea()
     {
       @Override
-      public int getX( )
+      public Point getContentAreaAnchorPoint( )
       {
-        return 5;
+        return new Point( 5, 40 );
       }
+    };
 
-      @Override
-      public int getY( )
-      {
-        return 80 / 2;
-      }
-    } );
+    headerContent.setText( m_enteringPage.getHeader(), MyFonts.WELCOME_PAGE_HEADING, MyColors.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
+    headerCanvas.addContentArea( headerContent );
 
     /* left pane */
     final Composite leftPane = toolkit.createComposite( this, SWT.NONE );
@@ -237,7 +235,9 @@ public class ModuleEnteringPageComposite extends Composite
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else
+    {
       toolkit.createLabel( bodyProjects, "" ); // spacer
+    }
 
     if( m_enteringPage.hasImportWizard() )
     {
