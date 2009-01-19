@@ -87,7 +87,7 @@ public class RemoteProjectHelper
     final WizardCreateProject wizard;
     if( templates.length == 1 )
     {
-      final ProjectTemplatePage page = new ProjectTemplatePage( new ProjectTemplate[] { templates[0] } );
+      final ProjectTemplatePage page = new ProjectTemplatePage( "Projekt-Download", "Wählen Sie eine Version des Projektes, welches Sie aus der Projektdatenbank herunterladen möchten.", new ProjectTemplate[] { templates[0] } );
       wizard = new WizardCreateProject( page, new String[] {} );
     }
     else
@@ -137,6 +137,8 @@ public class RemoteProjectHelper
           final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
           preferences.setVersion( bean.getProjectVersion() );
           preferences.setIsOnServer( Boolean.TRUE );
+          preferences.setModified( false );
+          preferences.setChangesCommited( true );
         }
       }
       catch( final CoreException e1 )
