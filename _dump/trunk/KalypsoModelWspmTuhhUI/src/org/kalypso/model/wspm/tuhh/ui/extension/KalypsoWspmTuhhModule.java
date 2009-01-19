@@ -24,6 +24,7 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
@@ -92,9 +93,10 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
           @Override
           public boolean select( final IProjectHandler handler )
           {
-            if( handler.isLocal() )
+            if( handler instanceof ILocalProject )
             {
-              final IProject project = handler.getProject();
+              final ILocalProject local = (ILocalProject) handler;
+              final IProject project = local.getProject();
               final IFile file = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
 
               return file.exists();
