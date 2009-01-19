@@ -19,6 +19,7 @@ import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.afgui.extension.SzenarioProjectOpenAction;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.project.KalypsoRiskProjectWizard;
 
@@ -85,13 +86,16 @@ public class KalypsoRiskModule implements IKalypsoModule
           @Override
           public boolean select( final IProjectHandler handler )
           {
-            if( handler.isLocal() )
+            if( handler instanceof ILocalProject )
             {
               try
               {
-                final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( handler.getProject() );
+                final ILocalProject local = (ILocalProject) handler;
+                final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( local.getProject() );
                 if( nature == null )
+                {
                   return false;
+                }
 
                 final IWorkflow workflow = nature.getCurrentWorklist();
                 final String uri = workflow.getURI();
