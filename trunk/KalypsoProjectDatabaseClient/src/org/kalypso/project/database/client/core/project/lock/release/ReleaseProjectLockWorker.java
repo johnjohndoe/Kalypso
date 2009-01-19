@@ -48,7 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -61,9 +62,9 @@ import org.kalypso.project.database.sei.IProjectDatabase;
 public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
 {
 
-  private final ProjectHandler m_handler;
+  private final ILocalProject m_handler;
 
-  public ReleaseProjectLockWorker( final ProjectHandler handler )
+  public ReleaseProjectLockWorker( final ILocalProject handler )
   {
     m_handler = handler;
   }
@@ -75,7 +76,7 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     /* project preferences */
-    if( !m_handler.isLocalRemoteProject() )
+    if( !(m_handler instanceof ITranscendenceProject) )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
     }
@@ -85,7 +86,7 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     Assert.isNotNull( ticket );
 
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
-    final Boolean released = service.releaseProjectEditLock( m_handler.getUnixName(), ticket );
+    final Boolean released = service.releaseProjectEditLock( m_handler.getUniqueName(), ticket );
     Assert.isTrue( released );
 
     /* reset edit ticket */

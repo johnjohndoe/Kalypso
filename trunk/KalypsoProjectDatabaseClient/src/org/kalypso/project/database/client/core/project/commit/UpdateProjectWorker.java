@@ -54,7 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
@@ -66,9 +66,9 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class UpdateProjectWorker implements ICoreRunnableWithProgress
 {
-  private final ProjectHandler m_handler;
+  private final ITranscendenceProject m_handler;
 
-  public UpdateProjectWorker( final ProjectHandler handler )
+  public UpdateProjectWorker( final ITranscendenceProject handler )
   {
     m_handler = handler;
   }

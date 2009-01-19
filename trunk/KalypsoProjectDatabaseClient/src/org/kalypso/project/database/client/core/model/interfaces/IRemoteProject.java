@@ -38,52 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.database.internal;
+package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
+import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
+public interface IRemoteProject extends IProjectHandler
 {
-
-  private final IKalypsoProjectOpenAction m_action;
-
-  private final IProjectDatabaseUiLocker m_locker;
-
-  public AbstractProjectRowBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
-  {
-    m_action = action;
-    m_locker = locker;
-  }
-
-  protected IKalypsoProjectOpenAction getOpenAction( )
-  {
-    return m_action;
-  }
-
-  protected IProjectDatabaseUiLocker getLocker( )
-  {
-    return m_locker;
-  }
-
-  protected void getSpacer( final Composite parent, final FormToolkit toolkit )
-  {
-    final ImageHyperlink lnk = toolkit.createImageHyperlink( parent, SWT.NONE );
-    lnk.setText( "" );
-    final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
-    data.minimumWidth = data.widthHint = 18;
-    lnk.setLayoutData( data );
-    lnk.setEnabled( false );
-    lnk.setUnderlined( false );
-  }
-
+  KalypsoProjectBean getBean( );
 }

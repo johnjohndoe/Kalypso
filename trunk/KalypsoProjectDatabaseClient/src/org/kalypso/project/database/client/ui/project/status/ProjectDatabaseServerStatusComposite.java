@@ -54,7 +54,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.util.swt.StatusDialog;
 
@@ -80,7 +80,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
 
-    final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     model.addRemoteListener( this );
 
     final GridLayout layout = new GridLayout();

@@ -8,6 +8,7 @@ import javax.xml.ws.WebServiceException;
 
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.server.ProjectDatabase;
 import org.osgi.framework.BundleContext;
@@ -112,7 +113,7 @@ public class KalypsoProjectDatabaseClient extends Plugin
     return plugin;
   }
 
-  public ProjectDatabaseModel getProjectDatabaseModel( )
+  public IProjectDatabaseModel getProjectDatabaseModel( )
   {
     /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
     if( PROJECT_DATABASE_MODEL == null )

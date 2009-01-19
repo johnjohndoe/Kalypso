@@ -48,13 +48,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
+import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
+import org.kalypso.afgui.extension.IProjectRowBuilder;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**
  * @author Dirk Kuch
  */
-public class LocalProjectHandler implements ILocalProject, IPreferenceChangeListener
+public class LocalProjectHandler extends AbstractProjectHandler implements ILocalProject, IPreferenceChangeListener
 {
   private final IProject m_project;
 
@@ -111,6 +119,44 @@ public class LocalProjectHandler implements ILocalProject, IPreferenceChangeList
   public IProject getProject( )
   {
     return m_project;
+  }
+
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getName()
+   */
+  @Override
+  public String getName( )
+  {
+    try
+    {
+      final IProjectDescription description = getProject().getDescription();
+
+      return description.getName();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      return getProject().getName();
+    }
+  }
+
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getUniqueName()
+   */
+  @Override
+  public String getUniqueName( )
+  {
+    return getProject().getName();
+  }
+
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getBuilder()
+   */
+  @Override
+  public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  {
+    return new LocalProjectRowBuilder( this, action, locker );
   }
 
 }

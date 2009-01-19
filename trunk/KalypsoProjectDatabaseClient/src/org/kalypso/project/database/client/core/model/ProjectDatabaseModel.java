@@ -40,26 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.eclipse.core.runtime.CoreException;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.KalypsoProjectDatabase;
-import org.kalypso.project.database.client.core.model.local.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.core.model.remote.RemoteProjectHandler;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
+import org.kalypso.project.database.client.core.model.transcendence.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -71,7 +71,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private RemoteWorkspaceModel m_remote = null;
 
-  private Set<ProjectHandler> m_projects = null;
+  private Set<IProjectHandler> m_projects = null;
 
   private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
 
@@ -81,7 +81,6 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
    */
   public ProjectDatabaseModel( )
   {
-
     init();
   }
 
@@ -110,80 +109,77 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private void buildProjectList( )
   {
-    m_projects = new TreeSet<ProjectHandler>();
-
-    final Map<String, ProjectHandler> projects = new HashMap<String, ProjectHandler>();
+    m_projects = new HashSet<IProjectHandler>();
 
     final ILocalProject[] local = m_local.getProjects();
+    IRemoteProject[] remote = new IRemoteProject[] {};
 
     if( m_remote != null )
     {
-      final KalypsoProjectBean[] remote = m_remote.getBeans();
+      final Set<IRemoteProject> handler = new HashSet<IRemoteProject>();
 
-      for( final KalypsoProjectBean bean : remote )
+      final KalypsoProjectBean[] beans = m_remote.getBeans();
+      for( final KalypsoProjectBean bean : beans )
       {
-        final ProjectHandler handler = new ProjectHandler();
-        handler.setBean( bean );
-        projects.put( bean.getUnixName(), handler );
+        handler.add( new RemoteProjectHandler( bean ) );
       }
+
+      remote = handler.toArray( new IRemoteProject[] {} );
     }
 
-    for( final ILocalProject project : local )
+    for( final ILocalProject handler : local )
     {
-      ProjectHandler handler = projects.get( project.getProject().getName() );
-      if( handler == null )
+      if( ArrayUtils.contains( remote, handler ) )
       {
-        handler = new ProjectHandler();
+        final int index = ArrayUtils.indexOf( remote, handler );
+
+        final IRemoteProject r = remote[index];
+        remote = (IRemoteProject[]) ArrayUtils.remove( remote, index );
+
+        m_projects.add( new TranscendenceProjectHandler( handler, r ) );
       }
-
-      handler.setProject( project );
-
-      projects.put( project.getProject().getName(), handler );
+      else
+      {
+        m_projects.add( handler );
+      }
     }
 
-    /* clean up */
-    final Collection<ProjectHandler> collection = projects.values();
-    for( final ProjectHandler handler : collection )
+    for( final IRemoteProject r : remote )
     {
-
-      // TODO FIXME this should never happen!
-      try
-      {
-        if( handler.isLocal() && handler.isLocalRemoteProject() )
-        {
-          /* reset false remote preferences */
-          final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
-
-          if( preferences.isOnServer() && !handler.isRemote() )
-          {
-            preferences.setIsOnServer( false );
-          }
-
-          if( !preferences.isOnServer() && handler.isRemote() )
-          {
-            preferences.setIsOnServer( true );
-          }
-
-        }
-      }
-      catch( final CoreException e )
-      {
-        KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-
+      m_projects.add( r );
     }
 
-    m_projects.addAll( collection );
+// /* clean up */
+// final Collection<AbstractProjectHandler> collection = projects.values();
+// for( final AbstractProjectHandler handler : collection )
+// {
+
+// if( handler.isLocal() && handler.isLocalRemoteProject() )
+// {
+// /* reset false remote preferences */
+// final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
+//
+// if( preferences.isOnServer() && !handler.isRemote() )
+// {
+// preferences.setIsOnServer( false );
+// }
+//
+// if( !preferences.isOnServer() && handler.isRemote() )
+// {
+// preferences.setIsOnServer( true );
+// }
+// }
+
   }
 
-  public ProjectHandler[] getProjects( )
+  public IProjectHandler[] getProjects( )
   {
     if( m_projects == null )
     {
       buildProjectList();
     }
 
-    return m_projects.toArray( new ProjectHandler[] {} );
+    return m_projects.toArray( new IProjectHandler[] {} );
   }
 
   /**
@@ -232,12 +228,12 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_listener.remove( listener );
   }
 
-  public ProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
+  public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
   {
-    final Set<ProjectHandler> myProjects = new TreeSet<ProjectHandler>();
+    final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
 
-    final ProjectHandler[] projects = getProjects();
-    for( final ProjectHandler handler : projects )
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler handler : projects )
     {
       if( filter.select( handler ) )
       {
@@ -245,7 +241,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       }
     }
 
-    return myProjects.toArray( new ProjectHandler[] {} );
+    return myProjects.toArray( new AbstractProjectHandler[] {} );
   }
 
   public void setRemoteProjectsDirty( )

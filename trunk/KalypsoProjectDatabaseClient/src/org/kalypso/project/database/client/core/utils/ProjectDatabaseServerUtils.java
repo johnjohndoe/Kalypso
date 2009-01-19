@@ -41,10 +41,11 @@
 package org.kalypso.project.database.client.core.utils;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -85,16 +86,18 @@ public class ProjectDatabaseServerUtils
     return false;
   }
 
-  public static boolean isUpdateAvailable( final ProjectHandler handler )
+  public static boolean isUpdateAvailable( final IProjectHandler handler )
   {
-    if( handler.isLocalRemoteProject() )
+    if( handler instanceof ITranscendenceProject )
     {
       try
       {
-        final IRemoteProjectPreferences preferences = handler.getRemotePreferences();
+        final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
+
+        final IRemoteProjectPreferences preferences = transcendence.getRemotePreferences();
         final Integer localVersion = preferences.getVersion();
 
-        final KalypsoProjectBean bean = handler.getBean();
+        final KalypsoProjectBean bean = transcendence.getBean();
         final Integer remoteVersion = bean.getProjectVersion();
 
         if( localVersion.intValue() < remoteVersion.intValue() )
