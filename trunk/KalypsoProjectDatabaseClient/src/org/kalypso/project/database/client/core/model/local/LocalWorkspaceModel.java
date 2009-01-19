@@ -61,6 +61,11 @@ public class LocalWorkspaceModel
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.removeResourceChangeListener( RESOURCE_LISTENER );
 
+    for( final ILocalProject local : m_projects )
+    {
+      local.dispose();
+    }
+
     m_projects.clear();
     m_listener.clear();
   }

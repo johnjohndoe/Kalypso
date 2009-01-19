@@ -46,6 +46,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -78,6 +79,10 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuilder
 {
   public static Image IMG_LORE_LOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock_disabled.gif" ) );
+
+  public static Image IMG_LORE_RELEASE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_release_lock.gif" ) );
+
+  public static Image IMG_LORE_COMMIT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
 
   public static Image IMG_LORE_COMMIT_AND_UNLOCK_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_commit_unlock_disabled.gif" ) );
 
@@ -148,7 +153,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
       RemoteProjectHelper.getRemoteInfoLink( m_transcendence, body, toolkit, getLocker() );
 
       // lock project
-      createLockHyperlink( body, toolkit );
+      getCommitHyperlink( body, toolkit );
 
       getSpacer( body, toolkit );
 
@@ -165,64 +170,43 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
   }
 
-  protected void createLockHyperlink( final Composite body, final FormToolkit toolkit ) throws CoreException
+  private void getCommitHyperlink( final Composite body, final FormToolkit toolkit ) throws CoreException
   {
     final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
 
     if( preferences.isLocked() )
     {
-      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", getLocalProject().getName() ) );
-
+      /* open project lock */
       if( ProjectDatabaseServerUtils.isServerOnline() )
       {
-        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK );
-
-        lnkLock.addHyperlinkListener( new HyperlinkAdapter()
-        {
-          /**
-           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-           */
-          @Override
-          public void linkActivated( final HyperlinkEvent e )
-          {
-            try
-            {
-              getLocker().acquireUiUpdateLock();
-
-              final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-
-              /* commit */
-              final WizardCommitProject wizard = new WizardCommitProject( m_transcendence );
-              final WizardDialog2 dialog = new WizardDialog2( null, wizard );
-              dialog.open();
-
-              /* release */
-              final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_transcendence );
-              if( !shell.isDisposed() )
-              {
-                ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", lockStatus );
-              }
-            }
-            finally
-            {
-              getLocker().releaseUiUpdateLock();
-            }
-          }
-        } );
+        getRelaseLockHyperlink( body, toolkit );
       }
       else
       {
+        final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
         lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK_DISABLED );
         lnkLock.setEnabled( false );
       }
-
+    }
+    else if( getLocalProject().isModified() && !preferences.getChangesCommited() )
+    {
+      /* commit project */
+      if( ProjectDatabaseServerUtils.isServerOnline() )
+      {
+        getCommitProjectHyperlink( body, toolkit );
+      }
+      else
+      {
+        final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
+        lnkLock.setImage( IMG_LORE_COMMIT_AND_UNLOCK_DISABLED );
+        lnkLock.setEnabled( false );
+      }
     }
     else
     {
-
       if( ProjectDatabaseServerUtils.isServerOnline() )
       {
+        /* require project lock */
         if( m_transcendence.getBean().isProjectLockedForEditing() )
         {
           if( ProjectDatabaseServerUtils.isUpdateAvailable( m_transcendence ) )
@@ -236,48 +220,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
         }
         else
         {
-          if( ProjectDatabaseServerUtils.isUpdateAvailable( m_transcendence ) )
-          {
-            getUpdateLink( body, toolkit );
-          }
-          else
-          {
-            final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
-            lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_transcendence.getName() ) );
-            lnkLock.setImage( IMG_LORE_LOCK );
-
-            lnkLock.addHyperlinkListener( new HyperlinkAdapter()
-            {
-              /**
-               * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-               */
-              @Override
-              public void linkActivated( final HyperlinkEvent e )
-              {
-                try
-                {
-                  getLocker().acquireUiUpdateLock();
-
-                  final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( m_transcendence );
-
-                  final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-                  if( shell == null )
-                  {
-                    return;
-                  }
-
-                  if( !shell.isDisposed() )
-                  {
-                    ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
-                  }
-                }
-                finally
-                {
-                  getLocker().releaseUiUpdateLock();
-                }
-              }
-            } );
-          }
+          getCreateLockHyperlink( body, toolkit );
         }
       }
       else
@@ -286,8 +229,155 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
         lnkLock.setImage( IMG_LORE_LOCK_DISABLED );
         lnkLock.setEnabled( false );
       }
-
     }
+  }
+
+  private void getCommitProjectHyperlink( final Composite body, final FormToolkit toolkit )
+  {
+    if( ProjectDatabaseServerUtils.isUpdateAvailable( m_transcendence ) )
+    {
+      getUpdateLink( body, toolkit );
+    }
+    else
+    {
+      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
+      lnkLock.setToolTipText( String.format( "Übertrage Projekt \"%s\" in Modelldaten-Basis und gebe Projekt vom Editieren frei.", getLocalProject().getName() ) );
+      lnkLock.setImage( IMG_LORE_COMMIT );
+
+      lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          try
+          {
+            getLocker().acquireUiUpdateLock();
+
+            final WizardCommitProject wizard = new WizardCommitProject( m_transcendence );
+            final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+            dialog.open();
+
+            try
+            {
+              final IRemoteProjectPreferences preferences = m_transcendence.getRemotePreferences();
+              preferences.setChangesCommited( true );
+
+            }
+            catch( final CoreException e1 )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+            }
+
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+            if( !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
+            {
+              ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", StatusUtilities.createErrorStatus( "" ) );
+            }
+          }
+          finally
+          {
+            getLocker().releaseUiUpdateLock();
+          }
+        }
+      } );
+    }
+
+  }
+
+  private void getCreateLockHyperlink( final Composite body, final FormToolkit toolkit )
+  {
+    if( ProjectDatabaseServerUtils.isUpdateAvailable( m_transcendence ) )
+    {
+      getUpdateLink( body, toolkit );
+    }
+    else
+    {
+      final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
+      lnkLock.setToolTipText( String.format( "Sperre Projekt \"%s\" zum Editieren.", m_transcendence.getName() ) );
+      lnkLock.setImage( IMG_LORE_LOCK );
+
+      lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          try
+          {
+            getLocker().acquireUiUpdateLock();
+
+            final IStatus lockStatus = ProjectDataBaseController.acquireProjectLock( m_transcendence );
+
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+            if( shell == null )
+            {
+              return;
+            }
+
+            if( !shell.isDisposed() )
+            {
+              ErrorDialog.openError( shell, "Fehler", "Sperren des Projektes zum Editieren ist fehlgeschlagen.", lockStatus );
+            }
+          }
+          finally
+          {
+            getLocker().releaseUiUpdateLock();
+          }
+        }
+      } );
+    }
+
+  }
+
+  private void getRelaseLockHyperlink( final Composite body, final FormToolkit toolkit )
+  {
+
+    final ImageHyperlink lnkLock = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkLock.setToolTipText( String.format( "Freigabe der Projektsperre für das Projekt \"%s\"", getLocalProject().getName() ) );
+
+    lnkLock.setImage( IMG_LORE_RELEASE_LOCK );
+
+    lnkLock.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        try
+        {
+          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          getLocker().acquireUiUpdateLock();
+
+          final IStatus lockStatus = ProjectDataBaseController.releaseProjectLock( m_transcendence );
+          if( !shell.isDisposed() )
+          {
+            ErrorDialog.openError( shell, "Fehler", "Freigeben des Projektes ist fehlgeschlagen.", lockStatus );
+          }
+
+          try
+          {
+            final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
+            preferences.setChangesCommited( false );
+          }
+          catch( final CoreException e1 )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+          }
+        }
+        finally
+        {
+          getLocker().releaseUiUpdateLock();
+        }
+      }
+    } );
+
   }
 
   protected void getUpdateLink( final Composite body, final FormToolkit toolkit )

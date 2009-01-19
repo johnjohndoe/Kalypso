@@ -53,4 +53,8 @@ public interface ILocalProject extends IProjectHandler
   IProject getProject( );
 
   public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
+
+  public boolean isModified( ) throws CoreException;
+
+  void dispose( );
 }

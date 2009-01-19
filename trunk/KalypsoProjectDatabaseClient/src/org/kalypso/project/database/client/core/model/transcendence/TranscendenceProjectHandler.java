@@ -58,7 +58,6 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class TranscendenceProjectHandler extends AbstractProjectHandler implements ITranscendenceProject
 {
-
   private final ILocalProject m_local;
 
   private final IRemoteProject m_remote;
@@ -121,5 +120,23 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     return new TranscendenceProjectRowBuilder( this, action, locker );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#isModified()
+   */
+  @Override
+  public boolean isModified( ) throws CoreException
+  {
+    return m_local.isModified();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_local.dispose();
   }
 }
