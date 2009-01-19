@@ -55,6 +55,10 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
 {
   private static final String PROJECT_LOCK_TICKET = "project.lock";
 
+  private static final String PROJECT_IS_MODIFIED = "project.is.modified";
+
+  private static final String PROJECT_CHANGES_COMMITED = "project.changes.commited";
+
   private static final String PROJECT_IS_ON_SERVER = "project.is.on.server";
 
   private static final String PROJECT_DOWNLOADED_VERSION = "project.downloaded.version";
@@ -179,4 +183,51 @@ public class RemoteProjectPreferencesHandler implements IRemoteProjectPreference
     flush();
   }
 
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#getChangesCommited()
+   */
+  @Override
+  public boolean getChangesCommited( )
+  {
+    final String value = m_node.get( PROJECT_CHANGES_COMMITED, Boolean.FALSE.toString() );
+
+    return Boolean.valueOf( value );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setChangesCommited(boolean)
+   */
+  @Override
+  public void setChangesCommited( final boolean commited )
+  {
+    m_node.put( PROJECT_CHANGES_COMMITED, Boolean.valueOf( commited ).toString() );
+    if( Boolean.TRUE.equals( commited ) )
+    {
+      setModified( false );
+    }
+
+    flush();
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#isModified()
+   */
+  @Override
+  public boolean isModified( )
+  {
+    final String value = m_node.get( PROJECT_IS_MODIFIED, Boolean.FALSE.toString() );
+
+    return Boolean.valueOf( value );
+  }
+
+  /**
+   * @see org.kalypso.project.database.common.nature.IRemoteProjectPreferences#setModified(boolean)
+   */
+  @Override
+  public void setModified( final boolean value )
+  {
+    m_node.put( PROJECT_IS_MODIFIED, Boolean.valueOf( value ).toString() );
+    flush();
+
+  }
 }

@@ -71,4 +71,16 @@ public interface IRemoteProjectPreferences
    * @return remote projectType of {@link org.kalypso.project.database.sei.beans.KalypsoProjectBean}
    */
   public String getProjectType( );
+
+  /**
+   * @return if null -> {@link org.eclipse.core.resources.IResource}.NULL_STAMP
+   */
+  public boolean isModified( );
+
+  public void setModified( boolean value );
+
+  public void setChangesCommited( boolean commited );
+
+  public boolean getChangesCommited( );
+
 }
