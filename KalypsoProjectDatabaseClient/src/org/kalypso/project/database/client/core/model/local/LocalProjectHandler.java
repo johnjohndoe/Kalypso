@@ -44,6 +44,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
@@ -70,10 +74,81 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
 
   private IRemoteProjectPreferences m_preferences = null;
 
+  private final IResourceChangeListener m_changeListener;
+
   public LocalProjectHandler( final IProject project, final LocalWorkspaceModel localWorkspaceModel )
   {
     m_project = project;
     m_model = localWorkspaceModel;
+
+    m_changeListener = new IResourceChangeListener()
+    {
+
+      @Override
+      public void resourceChanged( final IResourceChangeEvent event )
+      {
+        if( IResourceChangeEvent.POST_CHANGE != event.getType() )
+        {
+          return;
+        }
+
+        final IResourceDelta delta = event.getDelta();
+        final IResourceDelta[] children = delta.getAffectedChildren();
+        for( final IResourceDelta child : children )
+        {
+          final IResource resource = child.getResource();
+          if( !(resource instanceof IProject) )
+          {
+            continue;
+          }
+
+          if( !containsRelevantChanges( child ) )
+          {
+            continue;
+          }
+
+          final IProject p = (IProject) resource;
+          if( getProject().equals( p ) )
+          {
+            try
+            {
+              getRemotePreferences().setModified( true );
+              break;
+            }
+            catch( final CoreException e )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+            }
+          }
+        }
+      }
+
+      private boolean containsRelevantChanges( final IResourceDelta delta )
+      {
+        final IResourceDelta[] children = delta.getAffectedChildren();
+        for( final IResourceDelta child : children )
+        {
+          final IResource resource = child.getResource();
+          final String name = resource.getName();
+          if( !".settings".equalsIgnoreCase( name ) )
+          {
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+    m_project.getWorkspace().addResourceChangeListener( m_changeListener );
+
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_project.getWorkspace().removeResourceChangeListener( m_changeListener );
   }
 
   /**
@@ -96,6 +171,11 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
       }
 
       final RemoteProjectNature myNature = (RemoteProjectNature) nature;
+      if( myNature == null )
+      {
+        return null;
+      }
+
       m_preferences = myNature.getRemotePreferences( m_project, this );
 
     }
@@ -157,6 +237,15 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
     return new LocalProjectRowBuilder( this, action, locker );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#isModified()
+   */
+  @Override
+  public boolean isModified( ) throws CoreException
+  {
+    return getRemotePreferences().isModified();
   }
 
 }
