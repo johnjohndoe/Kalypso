@@ -40,26 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.extension;
 
-import org.eclipse.core.runtime.CoreException;
-
 /**
+ * Some model operations need a bunch of time. Is the UI update during this operations, the UI can display wrong states
+ * of the model
+ * 
  * @author Dirk Kuch
  */
-public interface IProjectHandler
+public interface IProjectDatabaseUiLocker
 {
-  boolean isLocal( );
+  public void acquireUiUpdateLock( );
 
-  boolean isRemote( );
+  public void releaseUiUpdateLock( );
 
-  /**
-   * @return "label" name of project
-   */
-  String getName( );
-
-  /**
-   * @return unique (bean unix name, iproject.name) of project
-   */
-  String getUniqueName( );
-
-  IProjectRowBuilder getBuilder( IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker ) throws CoreException;
 }

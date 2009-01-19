@@ -40,26 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.extension;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Dirk Kuch
  */
-public interface IProjectHandler
+public interface IProjectRowBuilder
 {
-  boolean isLocal( );
-
-  boolean isRemote( );
-
-  /**
-   * @return "label" name of project
-   */
-  String getName( );
-
-  /**
-   * @return unique (bean unix name, iproject.name) of project
-   */
-  String getUniqueName( );
-
-  IProjectRowBuilder getBuilder( IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker ) throws CoreException;
+  void render( Composite parent, FormToolkit toolkit );
 }
