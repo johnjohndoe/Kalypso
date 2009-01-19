@@ -22,6 +22,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
@@ -86,13 +87,16 @@ public class KalypsoModelFloodModule implements IKalypsoModule
           @Override
           public boolean select( final IProjectHandler handler )
           {
-            if( handler.isLocal() )
+            if( handler instanceof ILocalProject )
             {
               try
               {
-                final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( handler.getProject() );
+                final ILocalProject local = (ILocalProject) handler;
+                final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( local.getProject() );
                 if( nature == null )
+                {
                   return false;
+                }
 
                 final IWorkflow workflow = nature.getCurrentWorklist();
                 final String uri = workflow.getURI();
