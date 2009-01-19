@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
@@ -25,6 +24,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 
 public class Kalypso1d2dModule implements IKalypsoModule
 {
@@ -86,12 +86,12 @@ public class Kalypso1d2dModule implements IKalypsoModule
           @Override
           public boolean select( final IProjectHandler handler )
           {
-            if( handler.isLocal() )
+            if( handler instanceof ILocalProject )
             {
               try
               {
-                final IProject project = handler.getProject();
-                return Kalypso1D2DProjectNature.isOfThisNature( project );
+                final ILocalProject local = (ILocalProject) handler;
+                return Kalypso1D2DProjectNature.isOfThisNature( local.getProject() );
               }
               catch( final CoreException e )
               {
