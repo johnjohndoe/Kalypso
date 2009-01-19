@@ -54,15 +54,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
+import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
+import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.afgui.extension.IProjectRowBuilder;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
-import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.database.internal.LocalRemoteProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.database.internal.LocalServerProjectRowBuilder;
-import org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
@@ -76,7 +73,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
   private Composite m_body = null;
 
-  private final ProjectDatabaseModel m_model;
+  private final IProjectDatabaseModel m_model;
 
   private final IProjectDatabaseFilter m_filter;
 
@@ -149,13 +146,13 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final ProjectHandler[] projects = m_model.getProjects( m_filter );
-    for( final ProjectHandler project : projects )
+    final IProjectHandler[] projects = m_model.getProjects( m_filter );
+    for( final IProjectHandler project : projects )
     {
 
       try
       {
-        final IProjectRowBuilder builder = getBuilder( project, m_openAction, m_isExpert );
+        final IProjectRowBuilder builder = project.getBuilder( m_openAction, this );
         builder.render( m_body, m_toolkit );
       }
       catch( final CoreException e )
@@ -166,31 +163,6 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
     m_toolkit.adapt( this );
     this.layout();
-  }
-
-  private IProjectRowBuilder getBuilder( final ProjectHandler handler, final IKalypsoProjectOpenAction openAction, final boolean isExpert ) throws CoreException
-  {
-    if( handler.isLocalRemoteProject() )
-    {
-      if( handler.getRemotePreferences().isOnServer() )
-      {
-        return new LocalServerProjectRowBuilder( handler, openAction, this, isExpert );
-      }
-
-      return new LocalRemoteProjectRowBuilder( handler, openAction, this );
-    }
-    else if( handler.isLocal() )
-    {
-      return new LocalProjectRowBuilder( handler, openAction, this );
-    }
-    else if( handler.isRemote() )
-    {
-      return new RemoteProjectRowBuilder( handler, openAction, this, isExpert );
-    }
-    else
-    {
-      throw new IllegalStateException();
-    }
   }
 
   /**

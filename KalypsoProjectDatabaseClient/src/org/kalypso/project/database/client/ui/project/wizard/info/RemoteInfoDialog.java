@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.info;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -65,7 +66,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -78,9 +80,9 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
   private final boolean m_isExpert;
 
-  protected final ProjectHandler m_handler;
+  protected final IRemoteProject m_handler;
 
-  public RemoteInfoDialog( final ProjectHandler handler, final Shell parentShell, final boolean isExpert )
+  public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final boolean isExpert )
   {
     super( parentShell );
     m_handler = handler;
@@ -287,10 +289,11 @@ public class RemoteInfoDialog extends TitleAreaDialog
       {
         try
         {
-          final IProjectDescription project = m_handler.getProject().getDescription();
+          final IProject myProject = ((ITranscendenceProject) m_handler).getProject();
+          final IProjectDescription project = myProject.getDescription();
           project.setComment( description.getText() );
 
-          m_handler.getProject().setDescription( project, new NullProgressMonitor() );
+          myProject.setDescription( project, new NullProgressMonitor() );
         }
         catch( final CoreException e1 )
         {
@@ -301,7 +304,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
     try
     {
-      final IProjectDescription project = m_handler.getProject().getDescription();
+      final IProjectDescription project = ((ITranscendenceProject) m_handler).getProject().getDescription();
 
       name.setText( project.getName() );
       description.setText( project.getComment() );

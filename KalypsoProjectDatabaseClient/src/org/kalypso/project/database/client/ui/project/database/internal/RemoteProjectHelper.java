@@ -48,16 +48,27 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
+import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -67,6 +78,10 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteProjectHelper
 {
+  public static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
+
+  public static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+
   public static void importRemoteProject( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
     final WizardCreateProject wizard;
@@ -128,6 +143,44 @@ public class RemoteProjectHelper
       {
         KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
       }
+    }
+  }
+
+  protected static void getRemoteInfoLink( final IRemoteProject remote, final Composite body, final FormToolkit toolkit, final IProjectDatabaseUiLocker locker )
+  {
+    final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
+    lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", remote.getName() ) );
+
+    if( ProjectDatabaseServerUtils.isServerOnline() )
+    {
+      lnkInfo.setImage( IMG_REMOTE_INFO );
+
+      lnkInfo.addHyperlinkListener( new HyperlinkAdapter()
+      {
+        /**
+         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+         */
+        @Override
+        public void linkActivated( final HyperlinkEvent e )
+        {
+          try
+          {
+            locker.acquireUiUpdateLock();
+
+            final RemoteInfoDialog dialog = new RemoteInfoDialog( remote, lnkInfo.getShell(), true );
+            dialog.open();
+          }
+          finally
+          {
+            locker.releaseUiUpdateLock();
+          }
+        }
+      } );
+    }
+    else
+    {
+      lnkInfo.setImage( IMG_REMOTE_INFO_DISABLED );
+      lnkInfo.setEnabled( false );
     }
   }
 }

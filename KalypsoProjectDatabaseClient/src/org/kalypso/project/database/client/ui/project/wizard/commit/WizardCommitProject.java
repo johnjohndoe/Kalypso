@@ -47,7 +47,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations;
 
 /**
@@ -55,11 +55,11 @@ import org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCo
  */
 public class WizardCommitProject extends Wizard implements IWorkbenchWizard
 {
-  private final ProjectHandler m_handler;
+  private final ITranscendenceProject m_handler;
 
   private PageCommitInformations m_page;
 
-  public WizardCommitProject( final ProjectHandler handler )
+  public WizardCommitProject( final ITranscendenceProject handler )
   {
     m_handler = handler;
     setWindowTitle( "Projektaktualisierung" );

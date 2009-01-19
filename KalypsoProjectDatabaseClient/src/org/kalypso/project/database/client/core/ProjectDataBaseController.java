@@ -46,8 +46,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 import org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker;
 import org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker;
@@ -60,7 +61,7 @@ public class ProjectDataBaseController
 {
   protected static WorkspaceJob JOB = null;
 
-  public static IStatus createRemoteProject( final ProjectHandler handler )
+  public static IStatus createRemoteProject( final ILocalProject handler )
   {
     final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
@@ -82,7 +83,7 @@ public class ProjectDataBaseController
         @Override
         public IStatus runInWorkspace( final IProgressMonitor monitor )
         {
-          final ProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
+          final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
           model.setRemoteProjectsDirty();
 
           JOB = null;
@@ -100,7 +101,7 @@ public class ProjectDataBaseController
 
   }
 
-  public static IStatus updateProject( final ProjectHandler handler )
+  public static IStatus updateProject( final ITranscendenceProject handler )
   {
     final UpdateProjectWorker worker = new UpdateProjectWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
@@ -109,7 +110,7 @@ public class ProjectDataBaseController
     return status;
   }
 
-  public static IStatus releaseProjectLock( final ProjectHandler handler )
+  public static IStatus releaseProjectLock( final ILocalProject handler )
   {
     final ReleaseProjectLockWorker worker = new ReleaseProjectLockWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
@@ -118,7 +119,7 @@ public class ProjectDataBaseController
     return status;
   }
 
-  public static IStatus acquireProjectLock( final ProjectHandler handler )
+  public static IStatus acquireProjectLock( final ILocalProject handler )
   {
     final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );

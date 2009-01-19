@@ -38,52 +38,62 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.ui.project.database.internal;
+package org.kalypso.project.database.client.core.model.remote;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
 import org.kalypso.afgui.extension.IProjectRowBuilder;
+import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
+public class RemoteProjectHandler extends AbstractProjectHandler implements IRemoteProject
 {
+  private final KalypsoProjectBean m_bean;
 
-  private final IKalypsoProjectOpenAction m_action;
-
-  private final IProjectDatabaseUiLocker m_locker;
-
-  public AbstractProjectRowBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  public RemoteProjectHandler( final KalypsoProjectBean bean )
   {
-    m_action = action;
-    m_locker = locker;
+    m_bean = bean;
   }
 
-  protected IKalypsoProjectOpenAction getOpenAction( )
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getName()
+   */
+  @Override
+  public String getName( )
   {
-    return m_action;
+    return m_bean.getName();
   }
 
-  protected IProjectDatabaseUiLocker getLocker( )
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getUniqueName()
+   */
+  @Override
+  public String getUniqueName( )
   {
-    return m_locker;
+    return m_bean.getUnixName();
   }
 
-  protected void getSpacer( final Composite parent, final FormToolkit toolkit )
+  /**
+   * @see org.kalypso.project.database.client.core.model.IRemoteProjectHandler#getBean()
+   */
+  @Override
+  public KalypsoProjectBean getBean( )
   {
-    final ImageHyperlink lnk = toolkit.createImageHyperlink( parent, SWT.NONE );
-    lnk.setText( "" );
-    final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
-    data.minimumWidth = data.widthHint = 18;
-    lnk.setLayoutData( data );
-    lnk.setEnabled( false );
-    lnk.setUnderlined( false );
+    return m_bean;
+  }
+
+  /**
+   * @see org.kalypso.afgui.extension.IProjectHandler#getBuilder()
+   */
+  @Override
+  public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  {
+    return new RemoteProjectRowBuilder( this, action, locker );
   }
 
 }

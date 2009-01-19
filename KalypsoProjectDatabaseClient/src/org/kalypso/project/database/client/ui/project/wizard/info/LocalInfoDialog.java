@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.ProjectHandler;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 
 /**
  * @author kuch
@@ -65,9 +65,9 @@ import org.kalypso.project.database.client.core.model.ProjectHandler;
 public class LocalInfoDialog extends TitleAreaDialog
 {
 
-  protected final ProjectHandler m_handler;
+  protected final ILocalProject m_handler;
 
-  public LocalInfoDialog( final ProjectHandler handler, final Shell parentShell )
+  public LocalInfoDialog( final ILocalProject handler, final Shell parentShell )
   {
     super( parentShell );
     m_handler = handler;
