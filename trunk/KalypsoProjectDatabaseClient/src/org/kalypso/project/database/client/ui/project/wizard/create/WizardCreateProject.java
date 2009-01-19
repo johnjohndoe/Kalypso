@@ -75,7 +75,7 @@ public class WizardCreateProject extends NewProjectWizard
    */
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures )
   {
-    super( new ProjectTemplatePage( templates ), true );
+    super( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), true );
     m_natures = natures;
 
     setWindowTitle( "Neues Projekt erzeugen" );

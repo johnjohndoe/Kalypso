@@ -112,8 +112,15 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
           {
             try
             {
-              getRemotePreferences().setModified( true );
-              break;
+              try
+              {
+                getRemotePreferences().setModified( true );
+                break;
+              }
+              catch( final IllegalStateException e )
+              {
+              }
+
             }
             catch( final CoreException e )
             {
