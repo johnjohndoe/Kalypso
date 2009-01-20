@@ -102,6 +102,11 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Transient
   public KalypsoProjectBean[] getChildren( )
   {
+    if( m_children == null )
+    {
+      m_children = new KalypsoProjectBean[] {};
+    }
+
     return m_children;
   }
 
