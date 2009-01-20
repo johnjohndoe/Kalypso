@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.extension;
 
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author Dirk Kuch
@@ -60,6 +59,4 @@ public interface IProjectHandler
    * @return unique (bean unix name, iproject.name) of project
    */
   String getUniqueName( );
-
-  IProjectRowBuilder getBuilder( IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker ) throws CoreException;
 }
