@@ -38,26 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.core.model.interfaces;
+package org.kalypso.project.database.client.ui.project.database.internal;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
+import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
 import org.kalypso.afgui.extension.IProjectHandler;
-import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject extends IProjectHandler
+public class ProjectRowBuilderFabrication
 {
-  IProject getProject( );
+  public static IProjectRowBuilder getBuilder( final IProjectHandler handler, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
+  {
+    if( handler instanceof ITranscendenceProject )
+    {
+      return new TranscendenceProjectRowBuilder( (ITranscendenceProject) handler, action, locker );
+    }
+    else if( handler instanceof IRemoteProject )
+    {
+      return new RemoteProjectRowBuilder( (IRemoteProject) handler, action, locker );
+    }
+    else if( handler instanceof ILocalProject )
+    {
+      return new LocalProjectRowBuilder( (ILocalProject) handler, action, locker );
+    }
 
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;
-
-  public boolean isModified( ) throws CoreException;
-
-  void dispose( );
-
-  LocalWorkspaceModel getLocalWorkspaceModel( );
+    return null;
+  }
 }
