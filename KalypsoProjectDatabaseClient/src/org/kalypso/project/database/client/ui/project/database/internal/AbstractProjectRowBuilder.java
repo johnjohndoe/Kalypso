@@ -47,7 +47,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
 
 /**
  * @author kuch

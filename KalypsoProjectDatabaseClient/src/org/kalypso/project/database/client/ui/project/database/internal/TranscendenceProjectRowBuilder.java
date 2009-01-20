@@ -41,11 +41,15 @@
 package org.kalypso.project.database.client.ui.project.database.internal;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -66,7 +70,9 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
@@ -100,6 +106,8 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
 
   public static Image IMG_LORE_LOCK = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/lore_lock.gif" ) );
 
+  public static Image IMG_CHANGE_VERSION = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/transcendence_change_version.gif" ) );
+
   protected final ITranscendenceProject m_transcendence;
 
   public TranscendenceProjectRowBuilder( final ITranscendenceProject transcendence, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
@@ -121,7 +129,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
       final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
 
       final Composite body = toolkit.createComposite( parent );
-      body.setLayout( new GridLayout( 6, false ) );
+      body.setLayout( new GridLayout( 7, false ) );
       body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
@@ -155,6 +163,8 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
       // lock project
       getCommitHyperlink( body, toolkit );
 
+      getChangeVersion( body, toolkit );
+
       getSpacer( body, toolkit );
 
       // export
@@ -166,6 +176,91 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
     catch( final CoreException e1 )
     {
       KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+    }
+
+  }
+
+  private void getChangeVersion( final Composite body, final FormToolkit toolkit ) throws CoreException
+  {
+    final IRemoteProjectPreferences preferences = getLocalProject().getRemotePreferences();
+    if( preferences.isLocked() )
+    {
+      final ImageHyperlink lnkChangeVersion = toolkit.createImageHyperlink( body, SWT.NONE );
+      lnkChangeVersion.setImage( IMG_CHANGE_VERSION );
+      lnkChangeVersion.setToolTipText( "Ändere den Versionstand des Projektes" );
+
+      if( ProjectDatabaseServerUtils.isServerOnline() )
+      {
+        lnkChangeVersion.addHyperlinkListener( new HyperlinkAdapter()
+        {
+          /**
+           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+           */
+          @Override
+          public void linkActivated( final HyperlinkEvent e )
+          {
+            try
+            {
+              getLocker().acquireUiUpdateLock();
+
+              /* delete old bean */
+              if( MessageDialog.openConfirm( lnkChangeVersion.getShell(), "Ändere Versionsstand", String.format( "Zum ändern der Projektversion muß das bestehende Projekt \"%s\" gelöscht werden. Projekt \"%s\" wirklich löschen?", getLocalProject().getName(), getLocalProject().getName() ) ) )
+              {
+                final String editTicket = preferences.getEditTicket();
+                int version = preferences.getVersion();
+
+                final DeleteLocalProjectHandler delete = new DeleteLocalProjectHandler( getLocalProject().getProject() );
+                final IStatus status = ProgressUtilities.busyCursorWhile( delete );
+
+                final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+                if( shell != null && !shell.isDisposed() )
+                {
+                  ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
+                }
+
+                /* download bean */
+                final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+                final Set<ProjectTemplate> templates = new LinkedHashSet<ProjectTemplate>();
+
+                final KalypsoProjectBean bean = m_transcendence.getBean();
+                final ProjectTemplate head = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+                templates.add( head );
+                mapping.put( head, bean );
+
+                final KalypsoProjectBean[] children = bean.getChildren();
+                for( int i = children.length - 1; i >= 0; i-- )
+                {
+                  final KalypsoProjectBean child = children[i];
+                  final ProjectTemplate childTemplate = new ProjectTemplate( String.format( "%s - Version %d", child.getName(), child.getProjectVersion() ), child.getUnixName(), child.getDescription(), null, child.getUrl() );
+                  templates.add( childTemplate );
+                  mapping.put( childTemplate, child );
+                }
+
+                /* reset edit ticket and update version of project! */
+                final IProject project = RemoteProjectHelper.importRemoteProject( templates.toArray( new ProjectTemplate[] {} ), mapping );
+                final LocalWorkspaceModel model = getLocalProject().getLocalWorkspaceModel();
+                final ILocalProject local = model.getProject( project );
+                final IRemoteProjectPreferences p = local.getRemotePreferences();
+                p.setEditTicket( editTicket );
+                p.setVersion( ++version );
+              }
+            }
+            catch( final Exception e1 )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+            }
+            finally
+            {
+              getLocker().releaseUiUpdateLock();
+            }
+          }
+        } );
+      }
+
+    }
+    else
+    {
+      getSpacer( body, toolkit );
     }
 
   }

@@ -90,11 +90,11 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 
     if( isCommitableProject() )
     {
-      body.setLayout( new GridLayout( 6, false ) );
+      body.setLayout( new GridLayout( 7, false ) );
     }
     else
     {
-      body.setLayout( new GridLayout( 5, false ) );
+      body.setLayout( new GridLayout( 6, false ) );
     }
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -119,6 +119,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
     getExportLink( body, toolkit );
 
     // spacer
+    getSpacer( body, toolkit );
     getSpacer( body, toolkit );
 
     /* delete */

@@ -52,14 +52,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
@@ -238,21 +234,21 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   }
 
   /**
-   * @see org.kalypso.afgui.extension.IProjectHandler#getBuilder()
-   */
-  @Override
-  public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
-  {
-    return new LocalProjectRowBuilder( this, action, locker );
-  }
-
-  /**
    * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#isModified()
    */
   @Override
   public boolean isModified( ) throws CoreException
   {
     return getRemotePreferences().isModified();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#getLocalWorkspaceModel()
+   */
+  @Override
+  public LocalWorkspaceModel getLocalWorkspaceModel( )
+  {
+    return m_model;
   }
 
 }

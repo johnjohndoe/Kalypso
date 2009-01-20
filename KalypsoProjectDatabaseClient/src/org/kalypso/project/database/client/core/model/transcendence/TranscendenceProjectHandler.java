@@ -42,14 +42,11 @@ package org.kalypso.project.database.client.core.model.transcendence;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
 import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
-import org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder;
+import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -114,15 +111,6 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   }
 
   /**
-   * @see org.kalypso.afgui.extension.IProjectHandler#getBuilder()
-   */
-  @Override
-  public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
-  {
-    return new TranscendenceProjectRowBuilder( this, action, locker );
-  }
-
-  /**
    * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#isModified()
    */
   @Override
@@ -138,5 +126,14 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   public void dispose( )
   {
     m_local.dispose();
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalProject#getLocalWorkspaceModel()
+   */
+  @Override
+  public LocalWorkspaceModel getLocalWorkspaceModel( )
+  {
+    return m_local.getLocalWorkspaceModel();
   }
 }

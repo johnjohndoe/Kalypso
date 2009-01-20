@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.remote;
 
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
 import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
-import org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -85,15 +81,6 @@ public class RemoteProjectHandler extends AbstractProjectHandler implements IRem
   public KalypsoProjectBean getBean( )
   {
     return m_bean;
-  }
-
-  /**
-   * @see org.kalypso.afgui.extension.IProjectHandler#getBuilder()
-   */
-  @Override
-  public IProjectRowBuilder getBuilder( final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
-  {
-    return new RemoteProjectRowBuilder( this, action, locker );
   }
 
 }

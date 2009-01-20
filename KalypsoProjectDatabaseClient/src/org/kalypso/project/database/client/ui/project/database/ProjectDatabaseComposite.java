@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.database;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,10 +55,10 @@ import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
 import org.kalypso.afgui.extension.IProjectHandler;
-import org.kalypso.afgui.extension.IProjectRowBuilder;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.ui.project.database.internal.IProjectRowBuilder;
+import org.kalypso.project.database.client.ui.project.database.internal.ProjectRowBuilderFabrication;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
@@ -149,16 +148,8 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     final IProjectHandler[] projects = m_model.getProjects( m_filter );
     for( final IProjectHandler project : projects )
     {
-
-      try
-      {
-        final IProjectRowBuilder builder = project.getBuilder( m_openAction, this );
-        builder.render( m_body, m_toolkit );
-      }
-      catch( final CoreException e )
-      {
-        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final IProjectRowBuilder builder = ProjectRowBuilderFabrication.getBuilder( project, m_openAction, this );
+      builder.render( m_body, m_toolkit );
     }
 
     m_toolkit.adapt( this );
@@ -226,5 +217,4 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_updateLock = false;
     updateUI();
   }
-
 }

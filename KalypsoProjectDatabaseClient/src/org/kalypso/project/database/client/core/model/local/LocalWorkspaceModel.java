@@ -105,4 +105,17 @@ public class LocalWorkspaceModel
   {
     return m_projects.toArray( new ILocalProject[] {} );
   }
+
+  public ILocalProject getProject( final IProject project )
+  {
+    for( final ILocalProject local : m_projects )
+    {
+      if( project.equals( local.getProject() ) )
+      {
+        return local;
+      }
+    }
+
+    return null;
+  }
 }

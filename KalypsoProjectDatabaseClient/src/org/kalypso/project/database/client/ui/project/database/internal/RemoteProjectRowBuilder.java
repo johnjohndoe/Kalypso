@@ -90,7 +90,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
   public void render( final Composite parent, final FormToolkit toolkit )
   {
     final Composite body = toolkit.createComposite( parent );
-    body.setLayout( new GridLayout( 6, false ) );
+    body.setLayout( new GridLayout( 7, false ) );
     body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
@@ -118,6 +118,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
     /* import */
     getImportLink( body, toolkit );
 
+    getSpacer( body, toolkit );
     getSpacer( body, toolkit );
     getSpacer( body, toolkit );
     getSpacer( body, toolkit );

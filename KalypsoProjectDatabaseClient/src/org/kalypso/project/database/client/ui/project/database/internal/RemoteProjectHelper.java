@@ -82,7 +82,7 @@ public class RemoteProjectHelper
 
   public static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
 
-  public static void importRemoteProject( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
+  public static IProject importRemoteProject( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
     final WizardCreateProject wizard;
     if( templates.length == 1 )
@@ -140,12 +140,16 @@ public class RemoteProjectHelper
           preferences.setModified( false );
           preferences.setChangesCommited( true );
         }
+
+        return project;
       }
       catch( final CoreException e1 )
       {
         KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
       }
     }
+
+    return null;
   }
 
   protected static void getRemoteInfoLink( final IRemoteProject remote, final Composite body, final FormToolkit toolkit, final IProjectDatabaseUiLocker locker )
