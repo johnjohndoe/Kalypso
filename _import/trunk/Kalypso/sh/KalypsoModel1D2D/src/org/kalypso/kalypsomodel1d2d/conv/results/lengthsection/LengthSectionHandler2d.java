@@ -47,6 +47,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.observation.IObservation;
@@ -127,14 +128,14 @@ public class LengthSectionHandler2d
       if( propertyFrom instanceof Long )
         from = new BigDecimal( (Long) propertyFrom );
       else
-        throw new ClassCastException( "Fehler bei Stationswert. Falscher Datentyp gewählt." );
+        throw new ClassCastException( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d.0") ); //$NON-NLS-1$
 
       final Object propertyTo = feature.getProperty( toStationPropertyType );
 
       if( propertyTo instanceof Long )
         to = new BigDecimal( (Long) propertyTo );
       else
-        throw new ClassCastException( "Fehler bei Stationswert. Falscher Datentyp gewählt." );
+        throw new ClassCastException( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d.1") ); //$NON-NLS-1$
 
       GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
       GM_MultiCurve multiCurve = (GM_MultiCurve) defaultGeometryProperty;
@@ -222,7 +223,7 @@ public class LengthSectionHandler2d
       // station values are in meter and have to be divided by 1000 in order to fit the chart view axis, which unit
       // is km
       if( !iskmValue )
-        station = station.divide( new BigDecimal( "1000.0" ), 4, BigDecimal.ROUND_HALF_UP );
+        station = station.divide( new BigDecimal( "1000.0" ), 4, BigDecimal.ROUND_HALF_UP ); //$NON-NLS-1$
 
       // get the value from the TriangulatedSurface
       final Double v = surface.getValue( entry.getValue() );
@@ -242,7 +243,7 @@ public class LengthSectionHandler2d
 
         // REMARK: we have to add a dummy discharge values of 0.0 because the ChartView can not handle null
         // entries in obs.
-        record.setValue( dischargeIndex, new BigDecimal( "0.00" ) );
+        record.setValue( dischargeIndex, new BigDecimal( "0.00" ) ); //$NON-NLS-1$
 
         switch( documenttype )
         {

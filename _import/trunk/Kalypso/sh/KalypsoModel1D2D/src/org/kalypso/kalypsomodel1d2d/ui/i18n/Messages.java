@@ -38,26 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.geom;
+package org.kalypso.kalypsomodel1d2d.ui.i18n;
 
-import org.eclipse.osgi.util.NLS;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author schrage
  *
  */
-public class Messages extends NLS
+public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.geom.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.messages"; //$NON-NLS-1$
 
-  public static String ModelGeometryBuilder_1;
-  static
-  {
-// initialize resource bundle
-    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
-  }
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
   private Messages( )
   {
+  }
+
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }

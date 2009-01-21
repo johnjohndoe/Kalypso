@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -132,7 +133,7 @@ public class IterationInfo
     m_controlModel = controlModel;
 
     /* Create observation from template */
-    final URL obsTemplate = getClass().getResource( "resource/template/iterObs.gml" );
+    final URL obsTemplate = getClass().getResource( "resource/template/iterObs.gml" ); //$NON-NLS-1$
     try
     {
       m_workspace = GmlSerializer.createGMLWorkspace( obsTemplate, null );
@@ -179,17 +180,17 @@ public class IterationInfo
     catch( final FileNotFoundException e )
     {
       if( lnr == null )
-        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, "Iterations-Log konnte nicht geöffnet werden.", e );
+        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.1"), e ); //$NON-NLS-1$
 
-      final String msg = String.format( "Fehler in Zeile %d beim Lesen des Iterations-Log konnte nicht gelesen werden.", lnr.getLineNumber() );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.2"), lnr.getLineNumber() ); //$NON-NLS-1$
       StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
     }
     catch( final IOException e )
     {
       if( lnr == null )
-        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, "Iterations-Log konnte nicht gelesen werden.", e );
+        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.3"), e ); //$NON-NLS-1$
 
-      final String msg = String.format( "Fehler in Zeile %d beim Lesen des Iterations-Log konnte nicht gelesen werden.", lnr.getLineNumber() );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.4"), lnr.getLineNumber() ); //$NON-NLS-1$
       StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
     }
   }
@@ -206,7 +207,7 @@ public class IterationInfo
     if( line.length() > 0 && line.charAt( 0 ) == '#' )
       return;
 
-    final String[] strings = line.trim().split( "\\s+" );
+    final String[] strings = line.trim().split( "\\s+" ); //$NON-NLS-1$
     if( strings.length != 25 )
       return;
 
@@ -229,13 +230,13 @@ public class IterationInfo
 
       final Date stepDate = getDateForStep( stepNr );
       if( stepDate == null )
-        m_obs.setName( "Unbekannt" );
+        m_obs.setName( "Unbekannt" ); //$NON-NLS-1$
       else
       {
         // REMARK: convert to calendar with correct time zone, so formatting works correct
         final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
         calendar.setTime( stepDate );
-        m_obs.setName( String.format( "Aktueller Schritt: %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ) );
+        m_obs.setName( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.7"), calendar ) ); //$NON-NLS-1$
       }
     }
 
@@ -301,10 +302,10 @@ public class IterationInfo
 
     if( stepDate == null )
     {
-      obsName = "Unbekannt";
-      obsDesc = "";
+      obsName = "Unbekannt"; //$NON-NLS-1$
+      obsDesc = ""; //$NON-NLS-1$
       obsFile = null;
-      final String msg = String.format( "Anzahl berechneter Zeitschritte (%d) größer als Vorgabe", m_stepNr );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.10"), m_stepNr ); //$NON-NLS-1$
       status = StatusUtilities.createStatus( IStatus.ERROR, msg, null );
     }
     else
@@ -312,18 +313,18 @@ public class IterationInfo
       final String fileName;
       if( ISimulation1D2DConstants.STEADY_DATE.equals( stepDate ) )
       {
-        obsName = "Stationärer Schritt";
-        obsDesc = "RMAKalypso-Iterationsverlauf für stationären Schritt";
-        fileName = "Iteration_steady.gml";
+        obsName = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.11"); //$NON-NLS-1$
+        obsDesc = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.12"); //$NON-NLS-1$
+        fileName = "Iteration_steady.gml"; //$NON-NLS-1$
       }
       else
       {
         // REMARK: convert to calendar with correct time zone, so formatting works correct
         final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
         calendar.setTime( stepDate );
-        obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar );
-        obsDesc = String.format( "RMAKalypso-Iterationsverlauf für Zeitschritt %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar );
-        fileName = String.format( "Iteration_%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", calendar );
+        obsName = String.format( "%1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", calendar ); //$NON-NLS-1$
+        obsDesc = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.15"), calendar ); //$NON-NLS-1$
+        fileName = String.format( "Iteration_%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ.gml", calendar ); //$NON-NLS-1$
       }
 
       m_obs.setName( obsName );
@@ -337,13 +338,13 @@ public class IterationInfo
         /* Save the observation */
         final Feature obsFeature = m_workspace.getRootFeature();
         ObservationFeatureFactory.toFeature( m_obs, obsFeature );
-        GmlSerializer.serializeWorkspace( obsFile, m_workspace, "UTF-8" );
+        GmlSerializer.serializeWorkspace( obsFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
 
-        status = StatusUtilities.createStatus( IStatus.OK, "Iteration für " + obsName + " erfolgreich gespeichert.", null );
+        status = StatusUtilities.createStatus( IStatus.OK, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.18") + obsName + Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.19"), null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Throwable e )
       {
-        status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Speichern der Iteration für " + obsName, e );
+        status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20") + obsName, e ); //$NON-NLS-1$
       }
     }
 

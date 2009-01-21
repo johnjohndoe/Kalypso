@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -110,10 +111,10 @@ public class CalculationUnitLogComponent
 
   private void guiProblemViewer( final Composite parent, final FormToolkit toolkit )
   {
-    final Label noLogLabel = toolkit.createLabel( parent, "Kein Log vorhanden." );
+    final Label noLogLabel = toolkit.createLabel( parent, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.0") ); //$NON-NLS-1$
     final GridData noLogGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     noLogLabel.setLayoutData( noLogGridData );
-    noLogLabel.setToolTipText( "Vermutlich wurde noch keine Berechnung durchgeführt." );
+    noLogLabel.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.1") ); //$NON-NLS-1$
 
     final DefaultTableViewer logTableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER );
 
@@ -143,7 +144,7 @@ public class CalculationUnitLogComponent
         final IStatus status = (IStatus) sel.getFirstElement();
         if( status != null )
         {
-          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, "Details" );
+          final StatusDialog dialog = new StatusDialog( parent.getShell(), status, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitLogComponent.2") ); //$NON-NLS-1$
           dialog.open();
         }
       }
@@ -229,7 +230,7 @@ public class CalculationUnitLogComponent
         return null;
 
       final IFolder calcUnitFolder = scenarioFolder.getFolder( calcUnitMeta.getFullPath() );
-      final IResource logResource = calcUnitFolder.findMember( "simulation_log.gml" );
+      final IResource logResource = calcUnitFolder.findMember( "simulation_log.gml" ); //$NON-NLS-1$
       if( logResource == null )
         return null;
 

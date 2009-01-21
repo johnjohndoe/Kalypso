@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
@@ -107,13 +108,13 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
 
     m_styleSet = styleSet;
     m_okLineFigure = new PolylineFigure();
-    m_okLineFigure.setStyle( m_styleSet.getStyle( "okLine", ILineStyle.class ) );
+    m_okLineFigure.setStyle( m_styleSet.getStyle( "okLine", ILineStyle.class ) ); //$NON-NLS-1$
     m_okPointFigure = new PointFigure();
-    m_okPointFigure.setStyle( m_styleSet.getStyle( "okPoint", IPointStyle.class ) );
+    m_okPointFigure.setStyle( m_styleSet.getStyle( "okPoint", IPointStyle.class ) ); //$NON-NLS-1$
     m_crossLineFigure = new PolylineFigure();
-    m_crossLineFigure.setStyle( m_styleSet.getStyle( "crossLine", ILineStyle.class ) );
+    m_crossLineFigure.setStyle( m_styleSet.getStyle( "crossLine", ILineStyle.class ) ); //$NON-NLS-1$
     m_crossPointFigure = new PointFigure();
-    m_crossPointFigure.setStyle( m_styleSet.getStyle( "crossPoint", IPointStyle.class ) );
+    m_crossPointFigure.setStyle( m_styleSet.getStyle( "crossPoint", IPointStyle.class ) ); //$NON-NLS-1$
 
     updatePaintData();
   }
@@ -171,7 +172,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final Point pos = new Point( x, y );
 
       // Edit info
-      final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel );
+      final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
       final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, record, msg, pos );
       editInfos.put( shape, info );
@@ -185,7 +186,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
       final Point pos = new Point( x, y );
 
       // Edit info
-      final String msg = String.format( "Schnittpunkt" );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.5") ); //$NON-NLS-1$
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
       final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, null, msg, pos );
       editInfos.put( shape, info );
@@ -358,7 +359,7 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
    */
   public void saveData( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
   {
-    monitor.beginTask( "Speichere Parameter", 3 );
+    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayer.6"), 3 ); //$NON-NLS-1$
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_obsFeature );
     final TupleResult result = obs.getResult();

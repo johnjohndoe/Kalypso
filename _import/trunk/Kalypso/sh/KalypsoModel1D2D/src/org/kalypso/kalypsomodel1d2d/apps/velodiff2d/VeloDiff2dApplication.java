@@ -59,11 +59,11 @@ public class VeloDiff2dApplication implements IApplication
   {
     // parse arguments
     final Map arguments = context.getArguments();
-    String[] args = (String[]) arguments.get( "application.args" );
+    String[] args = (String[]) arguments.get( "application.args" ); //$NON-NLS-1$
 
     if( args.length < 5 )
     {
-      System.out.println( "wrong number of arguments: velodiff2d <result file 1> <result file 2> <template file> <output file> <velo> <project>" );
+      System.out.println( "wrong number of arguments: velodiff2d <result file 1> <result file 2> <template file> <output file> <velo> <project>" ); //$NON-NLS-1$
       return EXIT_OK;
     }
 
@@ -74,7 +74,7 @@ public class VeloDiff2dApplication implements IApplication
     veloDiff.main( args );
     // call veloDiff2DCode
     // TODO
-    System.out.println( "ferdisch!" );
+    System.out.println( "ferdisch!" ); //$NON-NLS-1$
 
     return EXIT_OK;
   }

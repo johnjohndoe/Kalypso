@@ -80,6 +80,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResultCollection;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
@@ -138,9 +139,9 @@ public class ProcessResultsJob extends Job
    */
   public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
-    super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0") + inputFile.getName() ); //$NON-NLS-1$
 
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "entering ProcessResultsJob\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.2") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_inputFile = inputFile;
     m_outputDir = outputDir;
@@ -171,26 +172,26 @@ public class ProcessResultsJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "running ProcessResultsJob\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.4") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String timeStepName;
     if( m_stepDate == ResultManager.STEADY_DATE )
-      timeStepName = "stationärer Rechenlauf";
+      timeStepName = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.5"); //$NON-NLS-1$
     else if( m_stepDate == ResultManager.MAXI_DATE )
-      timeStepName = "Maximalwerte";
+      timeStepName = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.6"); //$NON-NLS-1$
     else
-      timeStepName = String.format( "Zeitschritt - %1$te.%1$tm.%1$tY %1$tH:%1$tM %1$tZ", m_stepDate );
+      timeStepName = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.7"), m_stepDate ); //$NON-NLS-1$
 
-    monitor.beginTask( "Ergebnisse werden ausgewertet - " + timeStepName, 10 );
-    monitor.subTask( "Ergebnisse werden ausgewertet - " + timeStepName );
+    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.8") + timeStepName, 10 ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.9") + timeStepName ); //$NON-NLS-1$
 
     try
     {
       /* Zip .2d file to outputDir */
       final File[] files = new File[] { m_inputFile };
-      final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
+      final File outputZip2d = new File( m_outputDir, "original.2d.zip" ); //$NON-NLS-1$
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
-      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA·Kalypso Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.12"), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       ProgressUtilities.worked( monitor, 1 );
 
@@ -199,7 +200,7 @@ public class ProcessResultsJob extends Job
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Ergebnisdaten" );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.14") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -207,15 +208,15 @@ public class ProcessResultsJob extends Job
 
   public File read2DIntoGmlResults( ) throws Exception
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "read results into GML...\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.16") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Runtime runtime = Runtime.getRuntime();
     runtime.gc();
 
-    final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
+    final TimeLogger logger = new TimeLogger( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.17") ); //$NON-NLS-1$
 
-    final File gmlResultFile = new File( m_outputDir, "results.gml" );
-    final File gmlZipResultFile = new File( m_outputDir, "results.zip" );
+    final File gmlResultFile = new File( m_outputDir, "results.gml" ); //$NON-NLS-1$
+    final File gmlZipResultFile = new File( m_outputDir, "results.zip" ); //$NON-NLS-1$
 
     InputStream is = null;
     try
@@ -224,7 +225,7 @@ public class ProcessResultsJob extends Job
 
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURL(), null );
-      final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
+      final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
 
       final String componentID = IWspmDictionaryConstants.LS_COMPONENT_STATION;
       final LengthSectionHandler1d lsHandler = new LengthSectionHandler1d( componentID, lsObsUrl );
@@ -244,19 +245,19 @@ public class ProcessResultsJob extends Job
           /* create TIN-Dir for FEM terrain model */
           final String calcUnitPath = m_outputDir.getParent();
 
-          final File modelPath = new File( calcUnitPath, "model" );
+          final File modelPath = new File( calcUnitPath, "model" ); //$NON-NLS-1$
           if( !modelPath.exists() )
           {
             modelPath.mkdirs();
 
-            final File modelTinPath = new File( modelPath, "Tin" );
+            final File modelTinPath = new File( modelPath, "Tin" ); //$NON-NLS-1$
             modelTinPath.mkdirs();
 
-            final File tinResultFile = new File( modelTinPath, "tin.zip" );
-            final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+            final File tinResultFile = new File( modelTinPath, "tin.zip" ); //$NON-NLS-1$
+            final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null ); //$NON-NLS-1$
             final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
             final Feature triangleFeature = triangleWorkspace.getRootFeature();
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
 
             final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
 
@@ -266,46 +267,46 @@ public class ProcessResultsJob extends Job
         else
         {
           /* create TIN-Dir for results */
-          final File tinPath = new File( m_outputDir, "Tin" );
+          final File tinPath = new File( m_outputDir, "Tin" ); //$NON-NLS-1$
           tinPath.mkdirs();
 
           // final File tinResultFile = new File( tinPath, "tin.gml" );
-          final File tinZipResultFile = new File( tinPath, "tin.zip" );
-          final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinZipResultFile.toURL(), null );
+          final File tinZipResultFile = new File( tinPath, "tin.zip" ); //$NON-NLS-1$
+          final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinZipResultFile.toURL(), null ); //$NON-NLS-1$
           final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
           final Feature triangleFeature = triangleWorkspace.getRootFeature();
-          triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+          triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
 
           switch( parameter )
           {
             case DEPTH:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Fließtiefe" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.33") ); //$NON-NLS-1$ //$NON-NLS-2$
 
               break;
             case VELOCITY:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.37") ); //$NON-NLS-1$ //$NON-NLS-2$
 
             case VELOCITY_X:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeitskomponente X" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.41") ); //$NON-NLS-1$ //$NON-NLS-2$
               break;
 
             case VELOCITY_Y:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeitskomponente Y" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.45") ); //$NON-NLS-1$ //$NON-NLS-2$
 
               break;
             case WATERLEVEL:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.49") ); //$NON-NLS-1$ //$NON-NLS-2$
 
               break;
 
             case SHEARSTRESS:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Sohlschubspannung" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" ); //$NON-NLS-1$ //$NON-NLS-2$
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.53") ); //$NON-NLS-1$ //$NON-NLS-2$
 
               break;
 
@@ -323,24 +324,24 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Starte Auswertung (" + m_inputFile.getName() + ") : " );
+      logger.printCurrentInterim( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54") + m_inputFile.getName() + ") : " ); //$NON-NLS-1$ //$NON-NLS-2$
 
       conv.parse( is );
 
       is.close();
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Fertig mit Einlesen in : " );
+      logger.printCurrentInterim( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.56") ); //$NON-NLS-1$
 
       // finish MultiEater and engage serializer
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "finishing result eater..." );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.58") ); //$NON-NLS-1$ //$NON-NLS-2$
       multiEater.finished();
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", " done.\n" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.60") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Node-GML in Datei schreiben */
       // GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
       // TOOD: replace
-      GmlSerializer.serializeWorkspaceToZipFile( gmlZipResultFile, resultWorkspace, "results.gml" );
+      GmlSerializer.serializeWorkspaceToZipFile( gmlZipResultFile, resultWorkspace, "results.gml" ); //$NON-NLS-1$
       // ENDE TODO
 
       /* LengthSection in Datei schreiben */
@@ -349,24 +350,24 @@ public class ProcessResultsJob extends Job
 
       for( final ICalculationUnit1D calcUnit : calcUnits )
       {
-        final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getGmlID() + ".gml" );
+        final File lsObsFile = new File( m_outputDir, "lengthSection_" + calcUnit.getGmlID() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IObservation<TupleResult> lsObs = lsHandler.getObservation( calcUnit );
         final GMLWorkspace lsObsWorkspace = lsHandler.getWorkspace( calcUnit );
         if( lsObs.getResult().size() > 0 )
         {
           ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-          GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+          GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
 
           /* length section entry in result db */
           // TODO: use station range for min max...
-          ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Längsschnitt " + calcUnit.getName(), "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( lsObsFile.getName() ), Status.OK_STATUS, new BigDecimal( 0 ), new BigDecimal( 0 ) );
+          ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.65") + calcUnit.getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.66"), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( lsObsFile.getName() ), Status.OK_STATUS, new BigDecimal( 0 ), new BigDecimal( 0 ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
       }
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Fertig mit Ergebnisse schreiben in : " );
+      logger.printCurrentInterim( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.67") ); //$NON-NLS-1$
 
       BigDecimal min;
       BigDecimal max;
@@ -403,7 +404,7 @@ public class ProcessResultsJob extends Job
             {
               min = new BigDecimal( m_resultMinMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
               max = new BigDecimal( m_resultMinMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-              ResultMeta1d2dHelper.addDocument( calcUnitResult, "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.zip!/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
+              ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.68"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.69"), IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.zip!/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
 
             break;
@@ -412,14 +413,14 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.zip!/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.71"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.1"), IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.zip!/tin_DEPTH.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             break;
 
           case VELOCITY:
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.zip!/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.74"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.75"), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.zip!/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             break;
 
@@ -427,7 +428,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeitskomponente X", "TIN der tiefengemittelten Geschwindigkeitskomponenten in X-Richtung", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_X.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.77"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.78"), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_X.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             break;
 
@@ -435,7 +436,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeitskomponente Y", "TIN der tiefengemittelten Geschwindigkeitskomponenten in Y-Richtung", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_Y.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.80"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.81"), IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_Y.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             break;
 
@@ -443,7 +444,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.zip!/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.83"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.84"), IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.zip!/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             break;
 
@@ -451,7 +452,7 @@ public class ProcessResultsJob extends Job
 
             min = new BigDecimal( m_resultMinMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.zip!/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.86"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.87"), IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.zip!/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             break;
 
@@ -462,7 +463,7 @@ public class ProcessResultsJob extends Job
 
       min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.zip!/results.gml" ), Status.OK_STATUS, min, max );
+      ResultMeta1d2dHelper.addDocument( m_stepResultMeta, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.89"), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.90"), IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.zip!/results.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       /* HMO(s) */
       /*
@@ -484,7 +485,7 @@ public class ProcessResultsJob extends Job
       IOUtils.closeQuietly( is );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Fertig mit Schreiben in : " );
+      logger.printCurrentInterim( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.92") ); //$NON-NLS-1$
 
       runtime.gc();
     }
@@ -498,15 +499,15 @@ public class ProcessResultsJob extends Job
 
     if( ResultManager.STEADY_DATE.equals( stepDate ) )
     {
-      stepResultMeta.setName( "stationär" );
-      stepResultMeta.setDescription( "stationärer Rechenlauf" );
+      stepResultMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.93") ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.94") ); //$NON-NLS-1$
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.steady );
       stepResultMeta.setStepTime( null );
     }
     else if( ResultManager.MAXI_DATE.equals( stepDate ) )
     {
-      stepResultMeta.setName( "Maximalwerte" );
-      stepResultMeta.setDescription( "Maximalwerte des intationären Rechenlaufs" );
+      stepResultMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.95") ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.96") ); //$NON-NLS-1$
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.maximum );
       stepResultMeta.setStepTime( null );
     }
@@ -514,8 +515,8 @@ public class ProcessResultsJob extends Job
     {
       // TODO: check for right time zone
       final String dateString = dateFormatter.format( stepDate );
-      stepResultMeta.setName( String.format( "Zeitschritt (%s)", dateString ) );
-      stepResultMeta.setDescription( "instationärer Rechenlauf zum Zeitpunkt: " + dateString );
+      stepResultMeta.setName( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.97"), dateString ) ); //$NON-NLS-1$
+      stepResultMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.98") + dateString ); //$NON-NLS-1$
       stepResultMeta.setStepType( IStepResultMeta.STEPTYPE.unsteady );
       stepResultMeta.setStepTime( stepDate );
     }

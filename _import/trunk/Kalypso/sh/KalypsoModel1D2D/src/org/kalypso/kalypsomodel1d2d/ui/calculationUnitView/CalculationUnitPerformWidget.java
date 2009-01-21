@@ -59,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -94,7 +95,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
   public CalculationUnitPerformWidget( )
   {
-    this( Messages.getString( "CalculationUnitPerformWidget.0" ), Messages.getString( "CalculationUnitPerformWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitPerformWidget( final String name, final String toolTip )
@@ -155,8 +156,8 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
       // TODO: ulgy! This also causes a whole map repaint if selection in this widget changes
       // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
-      final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default";
-      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "CalculationUnitPerformWidget.2" ) ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+      final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default"; //$NON-NLS-1$
+      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.2" ) ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
       mapModell.insertTheme( calcUnitTheme, 0 );
 
       final CalculationUnitDataModel dataModel = m_dataModel;

@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.util.swtcalendar.SWTCalendarDialog;
 
 /**
@@ -84,19 +85,19 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
   protected Double m_uRelFactor;
 
-  private static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  private static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
-  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" );
+  private static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
 
-  private static final String DEFAULTSTEP = "60";
+  private static final String DEFAULTSTEP = "60"; //$NON-NLS-1$
 
   private Combo m_uRelFactorCombo;
 
   public TimeStepFillerWizardPage( )
   {
-    super( "Example" );
-    setTitle( "Zeitschrittdefinition" );
-    setDescription( "Dieser Dialog ermöglicht die Vordefinition der gewünschten Berechnunszeitschritte." );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.3") ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.4") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.5") ); //$NON-NLS-1$
     // TODO Auto-generated constructor stub
   }
 
@@ -124,7 +125,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label vonLbl = new Label( container, SWT.NONE );
     vonLbl.setLayoutData( gridBeginning );
-    vonLbl.setText( "Von:" );
+    vonLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.6") ); //$NON-NLS-1$
 
     m_dateTimeFrom = new Text( container, SWT.BORDER );
     m_dateTimeFrom.addModifyListener( new ModifyListener()
@@ -138,7 +139,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
-            setErrorMessage( "Startdatum nach Enddatum nicht möglich." );
+            setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.7") ); //$NON-NLS-1$
             setPageComplete( false );
           }
           else
@@ -162,7 +163,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     m_dateTimeFrom.setLayoutData( gridFillHorizontal );
 
     final Button dateFromBtn = new Button( container, SWT.NONE );
-    dateFromBtn.setText( "..." );
+    dateFromBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.8") ); //$NON-NLS-1$
     // dateFromBtn.setEnabled( false );
     dateFromBtn.addSelectionListener( new SelectionAdapter()
     {
@@ -184,7 +185,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label bisLbl = new Label( container, SWT.NONE );
     bisLbl.setLayoutData( gridBeginning );
-    bisLbl.setText( "Bis:" );
+    bisLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.9") ); //$NON-NLS-1$
 
     m_dateTimeTo = new Text( container, SWT.BORDER );
     m_dateTimeTo.addModifyListener( new ModifyListener()
@@ -198,7 +199,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
           if( getStartDate().after( getFinishDate() ) )
           {
             setMessage( null );
-            setErrorMessage( "Enddatum vor Startdatum nicht möglich." );
+            setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.10") ); //$NON-NLS-1$
             setPageComplete( false );
           }
           else
@@ -221,7 +222,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     m_dateTimeTo.setLayoutData( gridFillHorizontal );
 
     final Button dateToBtn = new Button( container, SWT.NONE );
-    dateToBtn.setText( "..." );
+    dateToBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.11") ); //$NON-NLS-1$
     dateToBtn.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -243,18 +244,18 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label timeStepLbl = new Label( container, SWT.NONE );
     timeStepLbl.setLayoutData( gridBeginning );
-    timeStepLbl.setText( "Zeitschritt [min]:" );
+    timeStepLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.12") ); //$NON-NLS-1$
 
     m_dateTimeStep = new Text( container, SWT.BORDER );
     m_dateTimeStep.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
-        final String numberPattern = "\\d+";
+        final String numberPattern = "\\d+"; //$NON-NLS-1$
         if( !m_dateTimeStep.getText().matches( numberPattern ) )
         {
           setMessage( null );
-          setErrorMessage( "Falsch Parameter" );
+          setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.14") ); //$NON-NLS-1$
           setPageComplete( false );
         }
         else
@@ -272,15 +273,15 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     final Label emptylabel_1 = new Label( container, SWT.NONE );
     emptylabel_1.setLayoutData( gridEnd );
-    emptylabel_1.setText( "" );
+    emptylabel_1.setText( "" ); //$NON-NLS-1$
 
     final Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
-    uRelFactorLabel.setText( "Relaxationsfaktor [-]:" );
+    uRelFactorLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.16") ); //$NON-NLS-1$
 
     m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
     // TODO: do not use Combo; use ComvoViewer instead!
-    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" };
+    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
     m_uRelFactorCombo.setItems( possibleURFValues );
     m_uRelFactorCombo.select( 9 );
     m_uRelFactor = 1.0;
@@ -289,11 +290,11 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     {
       public void modifyText( final ModifyEvent e )
       {
-        final String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0";
+        final String comboPattern = "0.1|0.2|0.3|0.4|0.5|0.6|0.7|0.8|0.9|1.0"; //$NON-NLS-1$
         if( !m_uRelFactorCombo.getText().matches( comboPattern ) )
         {
           setMessage( null );
-          setErrorMessage( "Falsch Relaxation Factor" );
+          setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizardPage.28") ); //$NON-NLS-1$
           setPageComplete( false );
         }
         else
@@ -307,7 +308,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     } );
     final Label emptylabel_2 = new Label( container, SWT.NONE );
     emptylabel_2.setLayoutData( gridEnd );
-    emptylabel_2.setText( "" );
+    emptylabel_2.setText( "" ); //$NON-NLS-1$
     container.layout();
   }
 

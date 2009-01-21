@@ -65,11 +65,11 @@ public class ChooseExeControlFactory implements IFeatureviewControlFactory
    */
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String dir = arguments.getProperty( "dir", null );
-    final String exePattern = arguments.getProperty( "exePattern", null );
+    final String dir = arguments.getProperty( "dir", null ); //$NON-NLS-1$
+    final String exePattern = arguments.getProperty( "exePattern", null ); //$NON-NLS-1$
 
-    Assert.isNotNull( dir, "'dir' parameter must be specified for ChooseExeControl" );
-    Assert.isNotNull( exePattern, "'exePattern' parameter must be specified for ChooseExeControl" );
+    Assert.isNotNull( dir, "'dir' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
+    Assert.isNotNull( exePattern, "'exePattern' parameter must be specified for ChooseExeControl" ); //$NON-NLS-1$
 
     final Location installLocation = Platform.getInstallLocation();
     final URL installUrl = installLocation.getURL();

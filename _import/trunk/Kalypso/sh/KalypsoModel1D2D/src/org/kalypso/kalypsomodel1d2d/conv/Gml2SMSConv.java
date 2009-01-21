@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -200,7 +201,7 @@ public class Gml2SMSConv implements INativeIDProvider
    */
   private void writeHeaderLine( final Formatter formatter )
   {
-    formatter.format( "MESH2D%n" );
+    formatter.format( "MESH2D%n" ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked")
@@ -268,7 +269,7 @@ public class Gml2SMSConv implements INativeIDProvider
      * point).
      */
 
-    formatter.format( "ND%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
+    formatter.format( "ND%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z ); //$NON-NLS-1$
   }
 
   /**
@@ -281,7 +282,7 @@ public class Gml2SMSConv implements INativeIDProvider
     final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     if( elementsInBBox.size() == 0 )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.2"), null ) ); //$NON-NLS-1$
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
@@ -365,7 +366,7 @@ public class Gml2SMSConv implements INativeIDProvider
     final int nodeID3 = getConversionID( nodes.get( 2 ) );
     final int nodeID4 = getConversionID( nodes.get( 3 ) );
 
-    formatter.format( "E4Q%10d%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, nodeID4, roughnessID );
+    formatter.format( "E4Q%10d%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, nodeID4, roughnessID ); //$NON-NLS-1$
 
   }
 
@@ -392,7 +393,7 @@ public class Gml2SMSConv implements INativeIDProvider
     final int nodeID2 = getConversionID( nodes.get( 1 ) );
     final int nodeID3 = getConversionID( nodes.get( 2 ) );
 
-    formatter.format( "E3T%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, roughnessID );
+    formatter.format( "E3T%10d%10d%10d%10d%10d%n", id, nodeID1, nodeID2, nodeID3, roughnessID ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked")
@@ -403,7 +404,7 @@ public class Gml2SMSConv implements INativeIDProvider
       return m_roughnessIDProvider.getOrAdd( roughnessClsID );
 
     // TODO: georefed, core exception!
-    final String msg = String.format( "Unbekannte Rauheitszone '%s' bei Element '%s'", roughnessClsID, element );
+    final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv.5"), roughnessClsID, element ); //$NON-NLS-1$
     // TODO: use default zone instead
     throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
   }

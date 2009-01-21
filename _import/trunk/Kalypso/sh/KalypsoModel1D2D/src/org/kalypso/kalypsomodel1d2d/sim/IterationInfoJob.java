@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 
 /**
  * Monitors the .itr file and updates the iteration info.<br>
@@ -66,7 +67,7 @@ public class IterationInfoJob extends Job
 
   public IterationInfoJob( final IterationInfo info, final IControlModel1D2D model, final IProgressMonitor monitor )
   {
-    super( "IterationInfoJob" );
+    super( "IterationInfoJob" ); //$NON-NLS-1$
 
     m_monitor = monitor;
     m_controlModel = model;
@@ -111,11 +112,11 @@ public class IterationInfoJob extends Job
     final int stepNr = m_iterationInfo.getStepNr();
     if( oldStepNr != stepNr )
     {
-      String msg = "";
+      String msg = ""; //$NON-NLS-1$
       if( stepNr == 0 )
-        msg = String.format( "RMA10s wird ausgeführt - stationärer Schritt" );
+        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2") ); //$NON-NLS-1$
       else
-        msg = String.format( "RMA10s wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
+        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3"), stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
 
       m_monitor.subTask( msg );
       m_monitor.worked( stepNr - oldStepNr );

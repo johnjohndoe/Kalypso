@@ -79,6 +79,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.util.swt.StatusComposite;
 
@@ -121,12 +122,12 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     m_caseDataProvider = caseDataProvider;
     m_parentWizard = parentWizard;
 
-    setTitle( "Ergebnisauswertung - " + resultManager.getControlModel().getCalculationUnit().getName() );
+    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0") + resultManager.getControlModel().getCalculationUnit().getName() ); //$NON-NLS-1$
 
     if( m_unitFolder.exists() )
-      setMessage( "Alte Ergebnisdaten liegen vor.\nWenn Sie fortfahren werden diese unwiderruflich gelöscht.", WARNING );
+      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.1"), WARNING ); //$NON-NLS-1$
     else
-      setMessage( "Drücken Sie 'Start', um die Ergebnisse auszuwerten." );
+      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -141,24 +142,24 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     final Group statusGroup = new Group( composite, SWT.NONE );
     statusGroup.setLayout( new GridLayout() );
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    statusGroup.setText( "Auswertungsergebnis" );
+    statusGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.3") ); //$NON-NLS-1$
 
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Ergebnisauswertung wurde noch nicht durchgeführt", null ) );
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.4"), null ) ); //$NON-NLS-1$
 
     /* Control flags */
     final Group tweakGroup = new Group( composite, SWT.NONE );
     tweakGroup.setLayout( new GridLayout() );
     tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    tweakGroup.setText( "Einstellungen" );
+    tweakGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.5") ); //$NON-NLS-1$
 
     final IControlModel1D2D controlModel = m_resultManager.getControlModel();
     m_deleteAllResults = !controlModel.getRestart();
 
     final Button deleteAllCheck = new Button( tweakGroup, SWT.CHECK );
-    deleteAllCheck.setText( "Alle vorhandenen Ergebnisse löschen" );
-    deleteAllCheck.setToolTipText( "Falls gesetzt, werden ALLE vorhandenen Ergebnisse gelöscht." );
+    deleteAllCheck.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.6") ); //$NON-NLS-1$
+    deleteAllCheck.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.7") ); //$NON-NLS-1$
     deleteAllCheck.setSelection( m_deleteAllResults );
     deleteAllCheck.addSelectionListener( new SelectionAdapter()
     {
@@ -180,7 +181,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     final Group resultChooserGroup = new Group( composite, SWT.NONE );
     resultChooserGroup.setLayout( new GridLayout() );
     resultChooserGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    resultChooserGroup.setText( "Zeitschrittauswertung" );
+    resultChooserGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.8") ); //$NON-NLS-1$
 
     final Composite resultChooserComp = new Composite( resultChooserGroup, SWT.BORDER );
     resultChooserComp.setLayout( new FillLayout( SWT.HORIZONTAL ) );
@@ -201,9 +202,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
         {
           final Date date = (Date) element;
           if( date.equals( MAXI_DATE ) )
-            return "Maximale Lösung";
+            return Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.9"); //$NON-NLS-1$
           else if( date.equals( STEADY_DATE ) )
-            return "Stationäre Lösung";
+            return Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.10"); //$NON-NLS-1$
         }
         return super.getText( element );
       }
@@ -364,7 +365,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
 
     final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
-    spinnerLabel.setText( "jeden x-ten Schritt auswerten" );
+    spinnerLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.11") ); //$NON-NLS-1$
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel.setLayoutData( gridData );
 
@@ -381,7 +382,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     updateTableSelection( resultProcessViewer, spinNumStepProcessing );
     updateSelection();
 
-    spinNumStepProcessing.setToolTipText( "Wählen Sie hier jeder wievielte Berechnungsschritt ausgewertet werden soll." );
+    spinNumStepProcessing.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.12") ); //$NON-NLS-1$
     spinNumStepProcessing.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -437,8 +438,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   public void runResultProcessing( )
   {
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Ergebnisauswertung läuft...", null ) );
-    setMessage( "Ergebnisauswertung läuft..." );
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13"), null ) ); //$NON-NLS-1$
+    setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.14") ); //$NON-NLS-1$
 
     final ProcessResultsBean bean = new ProcessResultsBean();
 
@@ -472,7 +473,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
       m_statusComp.setStatus( m_resultStatus );
 
-      setMessage( "Ergebnisauswertung beendet. Drücken Sie 'Beenden', um den Dialog zu schliesen." );
+      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.15") ); //$NON-NLS-1$
 
       m_isProcessing = false;
     }

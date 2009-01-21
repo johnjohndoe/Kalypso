@@ -57,6 +57,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Button;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -92,8 +93,8 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   {
     m_unitFolder = unitFolder;
     m_geoLog = geoLog;
-    m_calcPage = new RMA10CalculationPage( "calcPage", calculation );
-    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider, this  );
+    m_calcPage = new RMA10CalculationPage( "calcPage", calculation ); //$NON-NLS-1$
+    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider, this  ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
@@ -104,13 +105,13 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     if( event.getSelectedPage() == m_calcPage )
     {
       if( m_calcPage.getSimulationStatus() == null )
-        setFinishText( "Start" );
+        setFinishText( "Start" ); //$NON-NLS-1$
     }
     if( event.getSelectedPage() == m_resultPage )
     {
       if( m_resultPage.getResultStatus() == null )
       {
-        setFinishText( "Start" );
+        setFinishText( "Start" ); //$NON-NLS-1$
         manageFinishButton( !m_resultPage.isProcessing() );
       }
     }
@@ -324,7 +325,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     if( m_calcPage.getSimulationStatus() != null )
     {
       /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
-      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, "Ergebnisauswertung durch Benutzer abgebrochen.", null, null );
+      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4"), null, null ); //$NON-NLS-1$
     }
 
     /* Only save log on cancel if something happened, else, everything stays as before. */
@@ -353,12 +354,12 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
       final File simDir = m_unitFolder.getLocation().toFile();
       final File loggerFile = new File( simDir, SIMULATION_LOG_GML );
-      GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( loggerFile, workspace, "UTF-8" ); //$NON-NLS-1$
       m_unitFolder.refreshLocal( IFolder.DEPTH_ONE, new NullProgressMonitor() );
     }
     catch( final Throwable e )
     {
-      MessageDialog.openError( getShell(), getWindowTitle(), "Simulation-Log konnte nicht gespeichert werden: " + e.toString() );
+      MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.6") + e.toString() ); //$NON-NLS-1$
     }
   }
 

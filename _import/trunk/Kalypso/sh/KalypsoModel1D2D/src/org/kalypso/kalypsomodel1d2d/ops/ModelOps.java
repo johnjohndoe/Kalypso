@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -84,12 +85,12 @@ public class ModelOps
 
   public static final IPolyElement createElement2d( IFEDiscretisationModel1d2d model1d2d, List<IFE1D2DEdge> edges )
   {
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    Assert.throwIAEOnNullParam( edges, "edges" );
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( edges, "edges" ); //$NON-NLS-1$
     final int EDGE_NUM = edges.size();
     if( !(EDGE_NUM == 3 || EDGE_NUM == 4) )
     {
-      throw new IllegalArgumentException( "2D element must have 3 or 4 edges; given number of edges is " + EDGE_NUM );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.ModelOps.2") + EDGE_NUM ); //$NON-NLS-1$
     }
 
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
@@ -155,7 +156,7 @@ public class ModelOps
       }
       else
       {
-        throw new RuntimeException( "edge not in list:" + "\n\tedge=" + edge + "\n\tlist:" + edges );
+        throw new RuntimeException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.ModelOps.3") , edge, edges )); //$NON-NLS-1$
       }
     }
   }

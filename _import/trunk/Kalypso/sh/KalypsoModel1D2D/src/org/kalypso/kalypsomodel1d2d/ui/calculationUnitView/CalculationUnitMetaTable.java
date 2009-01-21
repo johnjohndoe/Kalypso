@@ -90,6 +90,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard;
@@ -232,7 +233,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final DefaultTableViewer tableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.NONE );
 
-    tableViewer.addColumn( "Name", "Name", null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$
+    tableViewer.addColumn( "Name", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0"), null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
@@ -258,7 +259,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         }
       } );
 
-      moveUpBtn.setToolTipText( "Move Up #" );
+      moveUpBtn.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.1") ); //$NON-NLS-1$
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
@@ -275,7 +276,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           tableViewer.refresh();
         }
       } );
-      moveDownBtn.setToolTipText( "Move Down #" );
+      moveDownBtn.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.2") ); //$NON-NLS-1$
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
@@ -292,7 +293,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           maximizeSelected();
         }
       } );
-      m_btnMaximizeCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_SHOW_AND_MAXIMIZE" ) ); //$NON-NLS-1$
+      m_btnMaximizeCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_SHOW_AND_MAXIMIZE" ) ); //$NON-NLS-1$
       m_btnMaximizeCalcUnit.setEnabled( false );
     }
 
@@ -308,7 +309,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         {
           try
           {
-            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString( "CalculationUnitMetaTable.15" ), Messages.getString( "CalculationUnitMetaTable.14" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.15" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.14" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               deleteSelected();
               tableViewer.refresh();
@@ -320,7 +321,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           }
         }
       } );
-      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) ); //$NON-NLS-1$
+      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) ); //$NON-NLS-1$
       m_btnDeleteCalcUnit.setEnabled( false );
     }
 
@@ -346,7 +347,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           }
         }
       } );
-      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
+      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_EDIT ) )
@@ -365,13 +366,13 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
           final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
           final CalculationUnitPropertyWizard calculationSubWizard = new CalculationUnitPropertyWizard( dataModel );
-          calculationSubWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "calculationSubWizard" ) );
+          calculationSubWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationSubWizard" ) ); //$NON-NLS-1$
           final WizardDialog2 wizardDialog = new WizardDialog2( shell, calculationSubWizard );
           wizardDialog.setRememberSize( true );
           wizardDialog.open();
         }
       } );
-      m_btnEditCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_EDIT" ) ); //$NON-NLS-1$
+      m_btnEditCalcUnit.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_EDIT" ) ); //$NON-NLS-1$
       m_btnEditCalcUnit.setEnabled( false );
     }
 
@@ -388,7 +389,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           handleRunPressed( event );
         }
       } );
-      m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) ); //$NON-NLS-1$
+      m_btnRunCalculation.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) ); //$NON-NLS-1$
       m_btnRunCalculation.setEnabled( false );
     }
 
@@ -422,13 +423,13 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           /* delete results */
           final IStatus status = ResultMeta1d2dHelper.removeResult( calcUnitResultMeta );
           if( status != Status.OK_STATUS )
-            return StatusUtilities.createErrorStatus( "Fehler beim Löschen der Ergebnisse des Teilmodells " + calcUnitToDel.getName() );
+            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4") + calcUnitToDel.getName() ); //$NON-NLS-1$
         }
       }
       catch( final CoreException e )
       {
         e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, "Fehler beim Löschen der Ergebnisse des Teilmodells " + calcUnitToDel.getName() );
+        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.5") + calcUnitToDel.getName() ); //$NON-NLS-1$
       }
 
       /* delete calc unit */
@@ -568,7 +569,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
       final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
 
-      final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) );
+      final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) ); //$NON-NLS-1$
 
       final Model1D2DSimulation runnable = new Model1D2DSimulation( shell, caseDataProvider, scenarioFolder, unitFolder, calculationUnit.getGmlID() );
       runnable.process();

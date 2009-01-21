@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -81,7 +82,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
   {
     m_button = new Button( parent, style );
 
-    m_button.setText( "Delete current model" );
+    m_button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControl.0") ); //$NON-NLS-1$
 
     m_button.addSelectionListener( new SelectionAdapter()
     {
@@ -91,7 +92,7 @@ public class ControlModelDeleteControl extends AbstractFeatureControl implements
       @Override
       public void widgetSelected( SelectionEvent e )
       {
-        if( MessageDialog.openConfirm( parent.getShell(), "Delete confirmation", "Do you really want to delete current model?" ) )
+        if( MessageDialog.openConfirm( parent.getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControl.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControl.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         {
           final Feature parentFeature = getFeature();
           final Object property = parentFeature.getProperty( getFeatureTypeProperty() );

@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.FormatterUtils;
@@ -288,14 +289,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
   {
     final int junctionElementID = getConversionID( junctionElement );
     final List<IFELine> continuityLines = junctionElement.getContinuityLines();
-    formatter.format( "JE%10s", junctionElementID );
+    formatter.format( "JE%10s", junctionElementID ); //$NON-NLS-1$
     for( final IFELine line : continuityLines )
     {
-      formatter.format( "%10d", getConversionID( line.getNodes().get( 0 ) ) );
+      formatter.format( "%10d", getConversionID( line.getNodes().get( 0 ) ) ); //$NON-NLS-1$
       FormatterUtils.checkIoException( formatter );
     }
 
-    formatter.format( "%nFE%10d%10d%n", junctionElementID, 902 );// 901: water level, 902 energy head
+    formatter.format( "%nFE%10d%10d%n", junctionElementID, 902 );// 901: water level, 902 energy head //$NON-NLS-1$
     FormatterUtils.checkIoException( formatter );
   }
 
@@ -342,14 +343,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( element1D_ID == -1 || node1D_ID == -1 )
     {
       final GM_Object location = transitionElement.getLocation();
-      final String message = "Fehler beim Schreiben einer 1D-2D Kopplung: kein 1D-Element gefunden.";
+      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.6"); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
       throw new CoreException( status );
     }
     if( line2D_ID == -1 )
     {
       final GM_Object location = transitionElement.getLocation();
-      final String message = "Fehler beim Schreiben einer 1D-2D Kopplung: keine 2D-Linie gefunden.";
+      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.7"); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
       throw new CoreException( status );
     }
@@ -393,7 +394,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         if( edge.getMiddleNode() == null )
         {
           /* create virtual node id */
-          final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
+          final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context //$NON-NLS-1$
           middleNodeID = m_nodesIDProvider.getOrAdd( gmlID );
 
           /* Write it: Station is not needed, because the element length is taken from real nodes. */
@@ -524,7 +525,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( Double.isNaN( z ) )
       {
         final GM_Point position = node.getPoint();
-        final String msg = "Modellknoten ohne Höhe.";
+        final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.9"); //$NON-NLS-1$
         final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
         throw new CoreException( status );
       }
@@ -545,7 +546,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), searchDistance, flowRelationTypes );
         if( relationship == null )
         {
-          final String msg = "Keine Knotenparameter für 1D-Knoten vorhanden";
+          final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.12"); //$NON-NLS-1$
           final GM_Object location = node.getPoint();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -579,51 +580,51 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
           {
-            final String msg = "Knotenparameter enthält kein Flächenpolynom.";
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.13"); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
-          writePolynomialRanges( formatter, "PRA", nodeID, min, polyArea );
+          writePolynomialRanges( formatter, "PRA", nodeID, min, polyArea ); //$NON-NLS-1$
           for( int j = 0; j < polyArea.length; j++ )
           {
-            writeSplittedPolynomials( formatter, "AP ", nodeID, j, polyArea[j], null );
+            writeSplittedPolynomials( formatter, "AP ", nodeID, j, polyArea[j], null ); //$NON-NLS-1$
           }
 
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
           if( polyRunoff == null )
           {
-            final String msg = "Knotenparameter enthält kein Abflusspolynom.";
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.16"); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
 
-          writePolynomialRanges( formatter, "PRQ", nodeID, min, polyRunoff );
+          writePolynomialRanges( formatter, "PRQ", nodeID, min, polyRunoff ); //$NON-NLS-1$
           for( int j = 0; j < polyRunoff.length; j++ )
           {
-            writeSplittedPolynomials( formatter, "QP ", nodeID, j, polyRunoff[j], slope );
+            writeSplittedPolynomials( formatter, "QP ", nodeID, j, polyRunoff[j], slope ); //$NON-NLS-1$
           }
 
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
           if( polyAlpha == null )
           {
-            final String msg = "Knotenparameter enthält kein Alphapolynom.";
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.19"); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
           }
 
-          writePolynomialRanges( formatter, "PRB", nodeID, min, polyAlpha );
+          writePolynomialRanges( formatter, "PRB", nodeID, min, polyAlpha ); //$NON-NLS-1$
           for( int j = 0; j < polyAlpha.length; j++ )
           {
-            writeSplittedPolynomials( formatter, "ALP", nodeID, j, polyAlpha[j], null );
+            writeSplittedPolynomials( formatter, "ALP", nodeID, j, polyAlpha[j], null ); //$NON-NLS-1$
           }
 
         }
         else
         {
-          final String msg = Messages.getString( "Gml2RMA10SConv.26" ) + relationship;
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" ) + relationship;//$NON-NLS-1$
           final GM_Object location = node.getLocation();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -687,10 +688,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writePolynomialRanges( final Formatter formatter, final String kind, final int nodeID, final double min, final IPolynomial1D[] poly ) throws IOException
   {
-    formatter.format( "%3s%9d%3d%20.7f", kind, nodeID, poly.length, min );
+    formatter.format( "%3s%9d%3d%20.7f", kind, nodeID, poly.length, min ); //$NON-NLS-1$
     for( final IPolynomial1D element : poly )
     {
-      formatter.format( "%20.7f", element.getRangeMax() );
+      formatter.format( "%20.7f", element.getRangeMax() ); //$NON-NLS-1$
       FormatterUtils.checkIoException( formatter );
     }
     formatter.format( "%n" ); //$NON-NLS-1$
@@ -708,7 +709,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     if( elementsInBBox.size() == 0 )
     {
-      final String msg = "Das Modell enthält keine Elemente. Berechnung nicht möglich.";
+      final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25"); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
       throw new CoreException( status );
     }
@@ -750,7 +751,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           // TODO: give hint what 1D-element is was?
-          final String msg = Messages.getString( "Gml2RMA10SConv.43" ) + element1D.getGmlID();
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" ) + element1D.getGmlID();//$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
           throw new CoreException( status );
         }
@@ -761,7 +762,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         if( calcUnit1D != null && building == null )
         {
           final int interpolationCount = calcUnit1D.getInterpolationCount();
-          formatter.format( "IP%10d%10d%n", id, interpolationCount );
+          formatter.format( "IP%10d%10d%n", id, interpolationCount ); //$NON-NLS-1$
         }
       }
       else if( element instanceof IPolyElement )
@@ -772,7 +773,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
 
         final int roughnessID = m_roughnessIDProvider == null ? 0 : getRoughnessID( element );
-        formatter.format( "FE%10d%10d%n", id, roughnessID );
+        formatter.format( "FE%10d%10d%n", id, roughnessID ); //$NON-NLS-1$
 
         // print roughness correction parameters only if there is any correction
         Double correctionKS = element.getRoughnessCorrectionKS();
@@ -785,7 +786,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         if( correctionDP == null || correctionDP.isNaN() )
           correctionDP = 1.0;
         if( correctionKS != 1.0 || correctionAxAy != 1.0 || correctionDP != 1.0 )
-          formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() );
+          formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() ); //$NON-NLS-1$
       }
     }
     FormatterUtils.checkIoException( formatter );
@@ -865,7 +866,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // data
       if( !isMidside )
       {
-        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", point, null );
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.30"), point, null ); //$NON-NLS-1$
       }
       return;
     }
@@ -979,7 +980,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // TODO: use default zone instead.
     // Right now it is set to '0' which means the element is deactivated for the simulation
-    final String msg = String.format( "Element '%s' hat keine Rauheitszone zugewiesen und wird für die Rechnung deaktiviert.", element.getGmlID() );
+    final String msg = String.format( org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31"), element.getGmlID() ); //$NON-NLS-1$
 
     final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
     final GM_Point point = node.getPoint();

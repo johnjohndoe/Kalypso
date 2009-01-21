@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -94,7 +95,7 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
   public Control createControl( final Composite parent, final int style )
   {
     final Button button = new Button( parent, style );
-    button.setText( "Auswahl" );
+    button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.0") ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -126,8 +127,8 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
 
     if( exeFiles == null || exeFiles.length == 0 )
     {
-      final String msg = String.format( "Es wurde keine passende .exe gefunden: %s/%s.\nBitte lesen Sie die Installationsanleitung für weitere Details.", m_exeDir.getAbsolutePath(), m_exePattern );
-      MessageDialog.openWarning( shell, "Auswahl", msg );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.1"), m_exeDir.getAbsolutePath(), m_exePattern ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.2"), msg ); //$NON-NLS-1$
       return;
     }
 
@@ -159,8 +160,8 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
     dialog.setMultipleSelection( false );
     dialog.setAllowDuplicates( false );
     dialog.setElements( exeFiles );
-    dialog.setMessage( "Bitte wählen Sie die gewünschte Version" );
-    dialog.setTitle( "Auswahl" );
+    dialog.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.3") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControl.4") ); //$NON-NLS-1$
     if( selectedFile != null )
       dialog.setInitialSelections( new File[] { selectedFile } );
     if( dialog.open() != Window.OK )

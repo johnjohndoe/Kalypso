@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
@@ -79,7 +80,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
   public Control createControl( final Composite parent, final int style )
   {
     final Button button = new Button( parent, SWT.PUSH );
-    button.setText( "Zeitschritte definieren" );
+    button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerFeatureControl.0") ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**

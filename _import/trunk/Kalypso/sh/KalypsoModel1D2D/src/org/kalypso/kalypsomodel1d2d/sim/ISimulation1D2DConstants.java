@@ -47,23 +47,23 @@ import java.util.Date;
  */
 public interface ISimulation1D2DConstants
 {
-  public static final String OUTPUT_ITR = "Output.itr";
+  public static final String OUTPUT_ITR = "Output.itr"; //$NON-NLS-1$
 
-  public static final String MODEL_2D = "model.2d";
+  public static final String MODEL_2D = "model.2d"; //$NON-NLS-1$
 
-  public static final String OUTPUT_DIR_NAME = "Ergebnisse";
+  public static final String OUTPUT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
 
-  public static final String RESOURCEBASE = "resource/";
+  public static final String RESOURCEBASE = "resource/"; //$NON-NLS-1$
 
 //  public static final String RMA10S_BASE = RESOURCEBASE + "rma10s/";
 
-  public static final String R10_File = "control.R10";
+  public static final String R10_File = "control.R10"; //$NON-NLS-1$
 
-  public static final String BUILDING_File = "bauwerke.txt";
+  public static final String BUILDING_File = "bauwerke.txt"; //$NON-NLS-1$
 
-  public static final String BC_WQ_File = "wqusw.txt";
+  public static final String BC_WQ_File = "wqusw.txt"; //$NON-NLS-1$
 
-  public static final String SIM_EXE_FILE_PREFIX = "rma-kalypso_";
+  public static final String SIM_EXE_FILE_PREFIX = "rma-kalypso_"; //$NON-NLS-1$
 
   /** The date representing the steady calculation step */
   public static final Date STEADY_DATE = new Date( 0 );
@@ -72,24 +72,24 @@ public interface ISimulation1D2DConstants
   public static final Date MAXI_DATE = new Date( 1 );
 
   // input
-  public static final String DISCRETISATIOMODEL_ID = "DiscretisationModel";
+  public static final String DISCRETISATIOMODEL_ID = "DiscretisationModel"; //$NON-NLS-1$
 
-  public static final String TERRAINMODEL_ID = "TerrainModel";
+  public static final String TERRAINMODEL_ID = "TerrainModel"; //$NON-NLS-1$
 
-  public static final String FLOWRELATIONSHIPMODEL_ID = "FlowRelationshipModel";
+  public static final String FLOWRELATIONSHIPMODEL_ID = "FlowRelationshipModel"; //$NON-NLS-1$
 
-  public static final String CONTROL_ID = "SimulationControlModel";
+  public static final String CONTROL_ID = "SimulationControlModel"; //$NON-NLS-1$
 
-  public static final String ROUGHNESS_ID = "Roughness";
+  public static final String ROUGHNESS_ID = "Roughness"; //$NON-NLS-1$
 
   // output
-  public static final String SIMULATIONRESULTMODEL_ID = "SimulationResultModel";
+  public static final String SIMULATIONRESULTMODEL_ID = "SimulationResultModel"; //$NON-NLS-1$
 
-  public static final String RESULT_DIR_NAME_ID = "RESULT_DIR_NAME";
+  public static final String RESULT_DIR_NAME_ID = "RESULT_DIR_NAME"; //$NON-NLS-1$
 
-  public static final String RESULT_2d_ZIP_ID = "RESULT_2d_ZIP";
+  public static final String RESULT_2d_ZIP_ID = "RESULT_2d_ZIP"; //$NON-NLS-1$
 
-  public static final String SIMULATION_LOG_GML = "simulation_log.gml";
+  public static final String SIMULATION_LOG_GML = "simulation_log.gml"; //$NON-NLS-1$
 
   // ////////////////
   // Status Codes //

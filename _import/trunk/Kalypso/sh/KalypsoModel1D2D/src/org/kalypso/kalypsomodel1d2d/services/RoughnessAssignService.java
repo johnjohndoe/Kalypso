@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -101,7 +102,7 @@ public class RoughnessAssignService extends Job
     try
     {
       final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
-      final SubMonitor progress = SubMonitor.convert( monitor, "Roughness asigning", elementsInWorkarea.size() );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.0"), elementsInWorkarea.size() ); //$NON-NLS-1$
 // ProgressUtilities.worked( progress, 0 );
       m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
@@ -122,7 +123,7 @@ public class RoughnessAssignService extends Job
     }
     finally
     {
-      monitor.subTask( "Waiting for the workspace to process changes" );
+      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessAssignService.1") ); //$NON-NLS-1$
       fireEvents();
       monitor.done();
     }

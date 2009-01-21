@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormText;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -66,9 +67,9 @@ public class ResultInfoViewer extends Viewer
   /*
    * fonts
    */
-  private final Font fTextHeader = new Font( Display.getDefault(), "Tahoma", 10, SWT.BOLD );
+  private final Font fTextHeader = new Font( Display.getDefault(), "Tahoma", 10, SWT.BOLD ); //$NON-NLS-1$
 
-  private final Font fTextNormal = new Font( Display.getDefault(), "Tahoma", 8, SWT.NONE );
+  private final Font fTextNormal = new Font( Display.getDefault(), "Tahoma", 8, SWT.NONE ); //$NON-NLS-1$
 
   private final Group m_panel;
 
@@ -123,9 +124,9 @@ public class ResultInfoViewer extends Viewer
     m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
     m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_panel.setText( "Information" );
-    m_textPanel.setFont( "header", fTextHeader );
-    m_textPanel.setFont( "text", fTextNormal );
+    m_panel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultInfoViewer.2") ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
     if( m_input instanceof Date )
     {
@@ -140,7 +141,7 @@ public class ResultInfoViewer extends Viewer
   public static String getInformationText( final Date resultDate )
   {
     if( resultDate == null )
-      return "kein Ergebnis selektiert";
+      return Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultInfoViewer.5"); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
@@ -149,11 +150,11 @@ public class ResultInfoViewer extends Viewer
 
     /* make string buffer */
 
-    buf.append( "<form>" );
-    buf.append( "<p>" );
-    buf.append( "<b>Zeitschritt:  " + dateFormat.format( resultDate ) + "</b>" );
-    buf.append( "</p>" );
-    buf.append( "</form>" );
+    buf.append( "<form>" ); //$NON-NLS-1$
+    buf.append( "<p>" ); //$NON-NLS-1$
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultInfoViewer.0") + dateFormat.format( resultDate ) + "</b>" ); //$NON-NLS-1$ //$NON-NLS-2$
+    buf.append( "</p>" ); //$NON-NLS-1$
+    buf.append( "</form>" ); //$NON-NLS-1$
 
     return buf.toString();
   }

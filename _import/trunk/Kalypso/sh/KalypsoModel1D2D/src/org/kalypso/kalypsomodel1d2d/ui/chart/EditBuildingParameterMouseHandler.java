@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -145,9 +146,9 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
       m_chartComposite.getPlot().setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
 
       if( info.m_data == null )
-        layer.setTooltip( info.m_text + "\n\nKlicken zum heranzoomen", point );
+        layer.setTooltip( info.m_text + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.0"), point ); //$NON-NLS-1$
       else
-        layer.setTooltip( info.m_text + "\n\nZiehen zum verschieben, Doppelklick zum Löschen", point );
+        layer.setTooltip( info.m_text + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.EditBuildingParameterMouseHandler.1"), point ); //$NON-NLS-1$
     }
   }
 

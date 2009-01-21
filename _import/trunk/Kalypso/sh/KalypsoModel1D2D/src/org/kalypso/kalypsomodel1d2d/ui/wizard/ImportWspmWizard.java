@@ -90,6 +90,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
@@ -171,20 +172,20 @@ public class ImportWspmWizard extends Wizard implements IWizard
     m_networkModel = networkModel;
     m_flowRelationCollection = flowRelationCollection;
 
-    setWindowTitle( Messages.getString( "ImportWspmWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
 
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     /* Choose wspm-reach */
-    m_wspmGmlPage.setDescription( Messages.getString( "ImportWspmWizard.3" ) ); //$NON-NLS-1$
+    m_wspmGmlPage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.3" ) ); //$NON-NLS-1$
     m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
     m_wspmGmlPage.setValidKind( true, false );
 
     /* Choose network collection */
     m_wspmGmlPage.setValidKind( true, false );
 
-    m_importPage = new ImportWspmWizardPage( "importPage" );
+    m_importPage = new ImportWspmWizardPage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -240,11 +241,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
       existingNetwork = null;
     else
     {
-      final String msg = String.format( "Es besteht bereits ein Profildatensatz mit gleichem Namen (%s). Wollen Sie den bestehenden Datensatz überschreiben (Ja), oder einen neuen anlegen (Nein)? Achtung: dies kann ggfls. zu Datenverlust führen, falls bestehende Profilparameter den überschriebenden Datensatz referenzieren.", foundNetwork.getName() );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.11"), foundNetwork.getName() ); //$NON-NLS-1$
       final MessageDialog messageDialog = new MessageDialog( getShell(), getWindowTitle(), null, msg, MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
           IDialogConstants.CANCEL_LABEL }, 1 );
       final int open = messageDialog.open();
-      System.out.println( "open: " + open );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.12") + open ); //$NON-NLS-1$
       if( (open == 2) || (open == -1) )
         return false;
 
@@ -259,29 +260,29 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( Messages.getString( "ImportWspmWizard.4" ), 3 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.4" ), 3 ); //$NON-NLS-1$
 
         try
         {
           /* Check if its the right calculation and if results are present */
           if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
-            return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.5" ) ); //$NON-NLS-1$
+            return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.5" ) ); //$NON-NLS-1$
 
           try
           {
             /* Import reach into profile collection */
-            monitor.subTask( Messages.getString( "ImportWspmWizard.6" ) ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.6" ) ); //$NON-NLS-1$
 
             final SortedMap<BigDecimal, IProfileFeature> profilesByStation = doImportNetwork( reach, segments, profNetworkColl, existingNetwork );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
-            monitor.subTask( Messages.getString( "ImportWspmWizard.7" ) ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.7" ) ); //$NON-NLS-1$
             final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, segments, discModel, discModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network parameters (flow relations) */
-            monitor.subTask( Messages.getString( "ImportWspmWizard.8" ) ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.8" ) ); //$NON-NLS-1$
             final IStatus status = doReadResults( calculation, segments, elementsByStation, flowRelModel, profilesByStation );
             monitor.worked( 1 );
 
@@ -289,7 +290,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
           catch( final Exception e )
           {
-            return StatusUtilities.statusFromThrowable( e, Messages.getString( "ImportWspmWizard.9" ) ); //$NON-NLS-1$
+            return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.9" ) ); //$NON-NLS-1$
           }
         }
         catch( final Throwable t )
@@ -310,7 +311,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportWspmWizard.10" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.10" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
@@ -379,7 +380,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
         if( node == null )
         {
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "No node for result at station " + station ) );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14") + station ) ); //$NON-NLS-1$
           flowRel = null;
         }
         else if( buildingObs != null )
@@ -389,7 +390,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
           if( (downStreamNode == null) || (upStreamNode == null) )
           {
-            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kann Bauwerke nicht ohne die anliegenden Profile importieren.", null ) );
+            throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.17"), null ) ); //$NON-NLS-1$
           }
           else
             flowRel = addBuilding( flowRelModel, node, qresult, downStreamNode, upStreamNode );
@@ -419,7 +420,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       fnfe.printStackTrace();
 
       /* Results are not available, just inform user */
-      return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.15" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.15" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -459,7 +460,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* relink profile to corresponding profile in profile network */
     final IProfileFeature wspmProfile = profilesByStation.get( station );
     if( wspmProfile != null )
-      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getId() );
+      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getId() ); //$NON-NLS-1$
 
     /* copy results into new flow relation */
 
@@ -536,7 +537,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IFE1D2DElement[] elements = node.getElements();
     if( elements.length != 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
 
     /* Find upstream and downstream neighbours */
     final IFE1D2DNode neighbour0 = DiscretisationModelUtils.findOtherNode( node, elements[0] );
@@ -644,11 +645,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
         addedFeatures.add( node.getFeature() );
 
         node.setName( "" ); //$NON-NLS-1$
-        final String desc = String.format( Messages.getString( "ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
+        final String desc = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
         node.setDescription( desc );
 
         if( point == null )
-          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
 
         node.setPoint( point );
       }
@@ -747,7 +748,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Set user friendly name and description */
     final URL reachContext = reach.getFeature().getWorkspace().getContext();
     final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
-    final String desc = String.format( Messages.getString( "ImportWspmWizard.21" ), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
+    final String desc = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.21" ), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
     network.setName( reach.getName() );
     network.setDescription( desc );
 

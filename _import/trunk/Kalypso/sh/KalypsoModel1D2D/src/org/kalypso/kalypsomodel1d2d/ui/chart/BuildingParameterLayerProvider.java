@@ -80,8 +80,8 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
 
     final IParameterContainer pc = getParameterContainer();
 
-    final String featureKey = pc.getParameterValue( "featureKey", null );
-    final String propertyNameStr = pc.getParameterValue( "propertyName", null );
+    final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
+    final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
     final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
@@ -99,9 +99,9 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
 
     final IAxis domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
 
-    final String domainComponentId = pc.getParameterValue( "domainComponentId", "" );
-    final String valueComponentId = pc.getParameterValue( "valueComponentId", "" );
-    final String classComponentId = pc.getParameterValue( "classComponentId", "" );
+    final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String classComponentId = pc.getParameterValue( "classComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IAxis valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
 

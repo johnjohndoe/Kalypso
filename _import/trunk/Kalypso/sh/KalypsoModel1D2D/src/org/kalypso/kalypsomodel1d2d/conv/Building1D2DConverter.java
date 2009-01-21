@@ -94,7 +94,7 @@ public class Building1D2DConverter
 
   public void writeBuildingFile( final Formatter formatter ) throws IOException
   {
-    formatter.format( "TI      %s%n", "Bauwerksdaten" );
+    formatter.format( "TI      %s%n", "Bauwerksdaten" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingEntry : m_buildingProvider.getBuildingData().entrySet() )
     {
@@ -106,7 +106,7 @@ public class Building1D2DConverter
       writeNewBuildingBlock( formatter, buildingID, buildingParameters );
     }
 
-    formatter.format( "ENDDATA" );
+    formatter.format( "ENDDATA" ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
   }
@@ -118,7 +118,7 @@ public class Building1D2DConverter
     final int qCount = buildingParameters.getDischargeCount();
     final int totalCount = values.size();
 
-    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount );
+    formatter.format( "DLI      %7d% 7d %7d%n", buildingID, qCount, totalCount ); //$NON-NLS-1$
 
     final int qComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_DISCHARGE );
     final int howComp = TupleResultUtilities.indexOfComponent( values, BuildingParameters.COMPONENT_WATERLEVEL_UPSTREAM );
@@ -130,10 +130,10 @@ public class Building1D2DConverter
       final BigDecimal huw = (BigDecimal) record.getValue( huwComp );
       final BigDecimal how = (BigDecimal) record.getValue( howComp );
 
-      formatter.format( "CST     %.3f %.5f %.5f%n", q, huw, how );
+      formatter.format( "CST     %.3f %.5f %.5f%n", q, huw, how ); //$NON-NLS-1$
     }
 
-    formatter.format( "ENDBLOC  %8d%n", buildingID );
+    formatter.format( "ENDBLOC  %8d%n", buildingID ); //$NON-NLS-1$
 
     FormatterUtils.checkIoException( formatter );
   }
@@ -144,10 +144,10 @@ public class Building1D2DConverter
     final BigDecimal[] upstreamWaterlevels = buildingParameters.getUpstreamWaterlevels();
     final BigDecimal[] downstreamWaterlevels = buildingParameters.getDownstreamWaterlevels();
 
-    formatter.format( "IDC     %8d%8d%8d%n", buildingID, upstreamWaterlevels.length, downstreamWaterlevels.length );
+    formatter.format( "IDC     %8d%8d%8d%n", buildingID, upstreamWaterlevels.length, downstreamWaterlevels.length ); //$NON-NLS-1$
 
-    formatBlock( formatter, "HRW", upstreamWaterlevels );
-    formatBlock( formatter, "HCL", downstreamWaterlevels );
+    formatBlock( formatter, "HRW", upstreamWaterlevels ); //$NON-NLS-1$
+    formatBlock( formatter, "HCL", downstreamWaterlevels ); //$NON-NLS-1$
 
     formatDischarges( formatter, upstreamWaterlevels, downstreamWaterlevels, buildingParameters );
   }
@@ -156,14 +156,14 @@ public class Building1D2DConverter
   {
     for( int i = 0; i < values.length; )
     {
-      formatter.format( "%3s     ", name );
+      formatter.format( "%3s     ", name ); //$NON-NLS-1$
 
       for( int j = 0; j < 9; j++, i++ )
       {
         if( i < values.length )
-          formatter.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.'
+          formatter.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.' //$NON-NLS-1$
       }
-      formatter.format( "%n" );
+      formatter.format( "%n" ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );
     }
@@ -180,7 +180,7 @@ public class Building1D2DConverter
         discharges[i] = buildingParameters.interpolateDischarge( upstreamWaterlevel, downstreamWaterlevel );
       }
 
-      formatBlock( formatter, "FLW", discharges );
+      formatBlock( formatter, "FLW", discharges ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );
     }

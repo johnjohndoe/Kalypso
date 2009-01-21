@@ -46,17 +46,17 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
  */
 public interface ICalculationUnitButtonIDs
 {
-  public final String BTN_MOVE_UP = "MOVE_UP";
+  public final String BTN_MOVE_UP = "MOVE_UP"; //$NON-NLS-1$
 
-  public final String BTN_MOVE_DOWN = "MOVE_DOWN";
+  public final String BTN_MOVE_DOWN = "MOVE_DOWN"; //$NON-NLS-1$
 
-  public final String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE";
+  public final String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE"; //$NON-NLS-1$
 
-  public final String BTN_REMOVE = "REMOVE";
+  public final String BTN_REMOVE = "REMOVE"; //$NON-NLS-1$
 
-  public final String BTN_ADD = "ADD";
+  public final String BTN_ADD = "ADD"; //$NON-NLS-1$
 
-  public final String BTN_EDIT = "EDIT";
+  public final String BTN_EDIT = "EDIT"; //$NON-NLS-1$
 
-  public final String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
+  public final String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE"; //$NON-NLS-1$
 }

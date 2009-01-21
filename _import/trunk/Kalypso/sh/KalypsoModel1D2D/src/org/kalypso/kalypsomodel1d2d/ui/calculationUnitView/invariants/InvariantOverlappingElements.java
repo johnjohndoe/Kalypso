@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -101,7 +102,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
           for( final IFeatureWrapper2 element : bufSubUnits )
           {
             if( toCompareCalcUnit.getElements().contains( element ) )
-              invariantErrorMessages.add( new ProblemDescriptor( null, "Overlapping Elements in " + toCompareCalcUnit.getName(), calcUnit, calcUnit1d2d ) );
+              invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements.0") + toCompareCalcUnit.getName(), calcUnit, calcUnit1d2d ) ); //$NON-NLS-1$
           }
           bufferList.add( thisCalcUnit );
         }

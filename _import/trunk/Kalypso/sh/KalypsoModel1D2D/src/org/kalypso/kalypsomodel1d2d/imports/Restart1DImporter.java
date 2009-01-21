@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -116,7 +117,7 @@ public class Restart1DImporter
 
   public void doImport( final IFile lengthSectionFile, final String lsComponentStation, final String lsComponentWaterlevel, final String lsComponentVelocity, final String lsComponentKennung, final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Karte wird gezeichnet", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.0"), 100 ); //$NON-NLS-1$
 
     try
     {
@@ -144,9 +145,9 @@ public class Restart1DImporter
       final SortedMap<BigDecimal, GM_Point> profilesByStation = indexProfiles( wspmCalculation.getReach() );
       createNodeResults( vectorDocument, nodeResults, lengthSectionObs, lsComponentStation, lsComponentWaterlevel, lsComponentVelocity, lsComponentKennung, profilesByStation );
 
-      final IFile resultFile = stepFolder.getFile( "results.gml" );
+      final IFile resultFile = stepFolder.getFile( "results.gml" ); //$NON-NLS-1$
       final File resultJavaFile = resultFile.getLocation().toFile();
-      GmlSerializer.serializeWorkspace( resultJavaFile, resultWorkspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( resultJavaFile, resultWorkspace, "UTF-8" ); //$NON-NLS-1$
       resultFile.refreshLocal( IFile.DEPTH_ONE, progress.newChild( 10 ) );
       ProgressUtilities.worked( progress, 0 );
 
@@ -157,7 +158,7 @@ public class Restart1DImporter
       e.printStackTrace();
 
       /* If anything happens, do not proceed */
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Ergebnis-GML konnte nicht geschrieben werden" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.3") ) ); //$NON-NLS-1$
     }
   }
 
@@ -184,7 +185,7 @@ public class Restart1DImporter
 
   private TuhhCalculation readWspmProject( final IProject project, final String calcName ) throws Exception
   {
-    final IFile file = project.getFile( "modell.gml" );
+    final IFile file = project.getFile( "modell.gml" ); //$NON-NLS-1$
     final URL modelURL = ResourceUtilities.createURL( file );
     final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( modelURL, null );
     final TuhhWspmProject tuhhWspmProject = new TuhhWspmProject( modelWorkspace.getRootFeature() );
@@ -196,7 +197,7 @@ public class Restart1DImporter
         return tuhhCalculation;
     }
 
-    throw new IllegalArgumentException( "Unbekannte Rechenvariante: " + calcName );
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.5") + calcName ); //$NON-NLS-1$
   }
 
   /**
@@ -207,8 +208,8 @@ public class Restart1DImporter
    */
   private ICalcUnitResultMeta createCalcUnitResult( final IScenarioResultMeta scenarioResultMeta, final String projectName )
   {
-    final String name = String.format( "1D-stationär: %s", projectName );
-    final String description = String.format( "Ergebnisimporte aus dem WSPM-Projekt '%s'", name );
+    final String name = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.6"), projectName ); //$NON-NLS-1$
+    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.7"), name ); //$NON-NLS-1$
 
     /* Search for calcUnitMeta with same name (Is this strong enough?) */
     for( final IResultMeta resultMeta : scenarioResultMeta.getChildren() )
@@ -222,7 +223,7 @@ public class Restart1DImporter
     }
 
     /* Else, create a new calcUnitMeta, using a random File name */
-    final String calcUnitID = "restart1dStationary" + System.currentTimeMillis();
+    final String calcUnitID = "restart1dStationary" + System.currentTimeMillis(); //$NON-NLS-1$
 
     final ICalcUnitResultMeta calcUnitResult = m_resultMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
     calcUnitResult.setCalcStartTime( null );
@@ -248,7 +249,7 @@ public class Restart1DImporter
       }
     }
 
-    final String description = String.format( "Rechenvariante '%s'", name );
+    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.9"), name ); //$NON-NLS-1$
 
     final IStepResultMeta stepResultMeta = calcUnitResult.getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
     stepResultMeta.setDescription( description );
@@ -263,7 +264,7 @@ public class Restart1DImporter
 
   private IDocumentResultMeta createDocument( final String projectName, final String calcName, final IStepResultMeta stepResultMeta )
   {
-    final String description = String.format( "WSPM-Ergebnis: %n%s - %s", projectName, calcName );
+    final String description = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.10"), projectName, calcName ); //$NON-NLS-1$
 
     for( final IResultMeta resultMeta : stepResultMeta.getChildren() )
     {
@@ -276,7 +277,7 @@ public class Restart1DImporter
     }
 
     // TODO: message box if this document was already existant?
-    return ResultMeta1d2dHelper.addDocument( stepResultMeta, "vektoren", description, DOCUMENTTYPE.nodes, Path.fromPortableString( "results.gml" ), Status.OK_STATUS, null, null );
+    return ResultMeta1d2dHelper.addDocument( stepResultMeta, "vektoren", description, DOCUMENTTYPE.nodes, Path.fromPortableString( "results.gml" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private IObservation<TupleResult> readLengthSection( final IFile lengthSectionFile ) throws Exception
@@ -303,7 +304,7 @@ public class Restart1DImporter
     for( final IRecord record : lsResult )
     {
       final String type = (String) record.getValue( typeComp );
-      if( !"i".equals( type ) )
+      if( !"i".equals( type ) ) //$NON-NLS-1$
         recordsByStation.put( (BigDecimal) record.getValue( stationComp ), record );
     }
 
@@ -340,16 +341,16 @@ public class Restart1DImporter
         midsideVector2d.scale( midVelocity );
 
         final GM_Point midPoint = GeometryUtilities.createGM_PositionAtCenter( prevPoint, currentPoint );
-        final BigDecimal midWaterlevel = prevWaterlevel.add( currentWaterlevel ).divide( new BigDecimal( "2" ), BigDecimal.ROUND_HALF_UP );
+        final BigDecimal midWaterlevel = prevWaterlevel.add( currentWaterlevel ).divide( new BigDecimal( "2" ), BigDecimal.ROUND_HALF_UP ); //$NON-NLS-1$
 
-        createNodeResult( nodeResults, "Station km " + prevStation + " - " + currentStation, "Virtueller Mitseitenknoten", midPoint, midWaterlevel, midsideVector2d, true );
+        createNodeResult( nodeResults, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.15") + prevStation + " - " + currentStation, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.17"), midPoint, midWaterlevel, midsideVector2d, true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
 
       /* Calculate the direction */
       final Vector2d vector2d = vectorFrom3Points( prevPoint, currentPoint, nextPoint );
       vector2d.scale( currentVelocity.doubleValue() );
 
-      createNodeResult( nodeResults, "Station km " + currentStation, "", currentPoint, currentWaterlevel, vector2d, false );
+      createNodeResult( nodeResults, Messages.getString("org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter.18") + currentStation, "", currentPoint, currentWaterlevel, vector2d, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
       min = min.min( currentVelocity );
       max = max.max( currentVelocity );

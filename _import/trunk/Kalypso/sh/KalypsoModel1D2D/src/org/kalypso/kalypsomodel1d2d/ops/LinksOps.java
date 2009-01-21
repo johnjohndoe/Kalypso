@@ -69,8 +69,8 @@ public class LinksOps
    */
   public static final void delRelationshipElementAndComplexElement( IFENetItem element, IFE1D2DComplexElement complexElement )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
-    Assert.throwIAEOnNullParam( complexElement, "complexElement" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( complexElement, "complexElement" ); //$NON-NLS-1$
 
     IFeatureWrapperCollection containers = null;
     if( element instanceof IFE1D2DElement )

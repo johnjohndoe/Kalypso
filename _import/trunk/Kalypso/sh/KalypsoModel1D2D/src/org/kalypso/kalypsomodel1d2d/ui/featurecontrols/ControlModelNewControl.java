@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -82,7 +83,7 @@ public class ControlModelNewControl extends AbstractFeatureControl implements IF
   {
     m_button = new Button( parent, style );
 
-    m_button.setText( "New model" );
+    m_button.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControl.0") ); //$NON-NLS-1$
 
     m_button.addSelectionListener( new SelectionAdapter()
     {

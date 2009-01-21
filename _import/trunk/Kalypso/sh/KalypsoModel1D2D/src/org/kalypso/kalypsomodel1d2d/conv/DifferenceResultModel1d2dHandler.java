@@ -53,6 +53,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -137,7 +138,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
-    m_formatter.format( "%s%n", line );
+    m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
   /**
@@ -146,7 +147,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
-    m_formatter.format( "%s%n", lineString );
+    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
   /**
@@ -155,7 +156,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
-    m_formatter.format( "%s%n", lineString );
+    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
   /**
@@ -164,7 +165,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleError( final String lineString, final EReadError errorHints )
   {
-    m_formatter.format( "%s%n", lineString );
+    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
   /**
@@ -173,7 +174,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
-    m_formatter.format( "%s%n", line );
+    m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
   /**
@@ -182,7 +183,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleJunction( final String line, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
-    m_formatter.format( "%s%n", line );
+    m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
   /**
@@ -191,7 +192,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
-    m_formatter.format( "%s%n", lineString );
+    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
 
     m_lastnodeID = id;
 
@@ -204,7 +205,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
-    m_formatter.format( "%s%n", line );
+    m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
   /**
@@ -265,7 +266,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
 
       default:
 
-        System.out.println( "chosen difference type not implemented." );
+        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler.8") ); //$NON-NLS-1$
         break;
     }
 
@@ -324,7 +325,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleTime( final String line, final Date time )
   {
-    m_formatter.format( "%s%n", line );
+    m_formatter.format( "%s%n", line ); //$NON-NLS-1$
   }
 
   /**
@@ -332,7 +333,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handlerUnIdentifyable( final String lineString )
   {
-    m_formatter.format( "%s%n", lineString );
+    m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
 
   /**

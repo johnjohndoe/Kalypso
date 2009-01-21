@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
@@ -84,7 +85,7 @@ public class RoughnessStyleUpdateService extends Job
 
   public RoughnessStyleUpdateService( final IFile file )
   {
-    super( "Aktualisere Rauheiten-SLD Dienst" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateService.0") ); //$NON-NLS-1$
     m_roughnessDBFile = file;
     m_sldFile = m_roughnessDBFile.getProject().getFile( ROUGHNESS_SLD_PATH );
   }
@@ -98,7 +99,7 @@ public class RoughnessStyleUpdateService extends Job
     try
     {
       final URL roughnessUrl = ResourceUtilities.createURL( m_roughnessDBFile );
-      final PoolableObjectType poolKey = new PoolableObjectType( "gml", roughnessUrl.toExternalForm(), roughnessUrl );
+      final PoolableObjectType poolKey = new PoolableObjectType( "gml", roughnessUrl.toExternalForm(), roughnessUrl ); //$NON-NLS-1$
 
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       GMLWorkspace roughnessWorkspace;

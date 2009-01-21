@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
@@ -306,7 +307,7 @@ public class NodeResultHelper
     final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
 
     if( y3Temp != 0.00 )
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", "error while interpolation node-data, y3Temp != 0 = ", y3Temp );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultHelper.1"), y3Temp ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return x3;
   }

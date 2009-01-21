@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 
@@ -61,7 +62,7 @@ public class EdgeOps
   {
     if( !TypeInfo.is1DEdge( elementEdge ) )
     {
-      throw new IllegalArgumentException( "Must be 1D node but is:" + "\n\tElementQName=" + elementEdge.getFeature().getFeatureType().getQName() + "\n\tValue=" + elementEdge );
+      throw new IllegalArgumentException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.EdgeOps.0") , elementEdge.getFeature().getFeatureType().getQName() ,elementEdge )); //$NON-NLS-1$
     }
     IFE1D2DNode node1 = elementEdge.getNode( 1 );
     if( node1.getContainers().size() == 1 )

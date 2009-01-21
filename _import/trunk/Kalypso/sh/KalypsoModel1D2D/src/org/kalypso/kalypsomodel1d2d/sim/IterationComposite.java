@@ -71,6 +71,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.sim.IterationInfo.IterationBean;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -90,7 +91,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class IterationComposite extends Composite
 {
-  private static final String STR_NO_RESULTS = "<Es liegen noch keine Ergebnisse vor>";
+  private static final String STR_NO_RESULTS = Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.0"); //$NON-NLS-1$
 
   private final DefaultTableViewer m_tableViewer;
 
@@ -110,7 +111,7 @@ public class IterationComposite extends Composite
     setLayout( new GridLayout( 2, false ) );
 
     final Label comboLabel = new Label( this, SWT.NONE );
-    comboLabel.setText( "Zeitschritt: " );
+    comboLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.1") ); //$NON-NLS-1$
 
     m_comboViewer = new ComboViewer( this, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
@@ -158,7 +159,7 @@ public class IterationComposite extends Composite
     table.setVisible( false );
     m_comboViewer.getControl().setEnabled( false );
 
-    final Job refreshJob = new UIJob( "Refresh Iteration-View" )
+    final Job refreshJob = new UIJob( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.2") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -232,7 +233,7 @@ public class IterationComposite extends Composite
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Iteration für diesen Zeitschritt konnte nicht geladen werden.", e );
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationComposite.3"), e ); //$NON-NLS-1$
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         setStatus( status );
       }

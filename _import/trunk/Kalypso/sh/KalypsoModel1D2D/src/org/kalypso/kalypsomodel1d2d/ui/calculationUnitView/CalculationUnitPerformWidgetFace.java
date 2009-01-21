@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent;
 
@@ -76,7 +77,7 @@ public class CalculationUnitPerformWidgetFace
 
     // Calculation Unit Section
     final Section selectCalcUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
-    selectCalcUnitSection.setText( Messages.getString( "CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
+    selectCalcUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.1" ) ); //$NON-NLS-1$
     final GridData selectCalcUnitGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
     selectCalcUnitSection.setLayoutData( selectCalcUnitGridData );
 
@@ -84,13 +85,13 @@ public class CalculationUnitPerformWidgetFace
 
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
-    calculationElementUnitSection.setText( Messages.getString( "CalculationUnitPerformWidgetFace.2" ) );
+    calculationElementUnitSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.2" ) ); //$NON-NLS-1$
     calculationElementUnitSection.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     calculationElementUnitSection.setExpanded( true );
 
     // Creates Section for "Calculation Settings Unit"
     final Section logSection = toolkit.createSection( body, Section.TITLE_BAR );
-    logSection.setText( "Log der letzten Berechnung" );
+    logSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidgetFace.5") ); //$NON-NLS-1$
 
     final GridData logGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     logSection.setLayoutData( logGridData );

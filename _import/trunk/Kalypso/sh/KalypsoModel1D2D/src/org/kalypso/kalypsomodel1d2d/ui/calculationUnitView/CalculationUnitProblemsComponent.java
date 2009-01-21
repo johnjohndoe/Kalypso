@@ -78,6 +78,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
@@ -207,7 +208,7 @@ public class CalculationUnitProblemsComponent
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Starts Validating", 10 );
+        monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.0"), 10 ); //$NON-NLS-1$
 
         if( currentSelection != null )
         {
@@ -246,7 +247,7 @@ public class CalculationUnitProblemsComponent
     };
 
     final IStatus status = RunnableContextHelper.execute( workbench.getProgressService(), true, true, runnable );
-    ErrorDialog.openError( shell, "Modellvalidierung", "Fehler beim Validieren des Modells", status );
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitProblemsComponent.2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public ICalculationUnit getCalculationUnit( )

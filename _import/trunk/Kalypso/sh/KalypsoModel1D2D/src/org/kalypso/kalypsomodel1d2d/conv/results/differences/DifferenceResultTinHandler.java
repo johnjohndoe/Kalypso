@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
@@ -81,12 +82,12 @@ public class DifferenceResultTinHandler
 
     try
     {
-      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null ); //$NON-NLS-1$
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "[-]" );
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Differenzen" );
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface ); //$NON-NLS-1$
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "[-]" ); //$NON-NLS-1$ //$NON-NLS-2$
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // Loop over master triangles
       final GM_TriangulatedSurface masterSurface = surfaces[0];
@@ -149,7 +150,7 @@ public class DifferenceResultTinHandler
 
       }
       if( monitor != null )
-        monitor.subTask( "...schreibe Ergebnis..." );
+        monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.6") ); //$NON-NLS-1$
 
       eater.finished();
 
@@ -158,7 +159,7 @@ public class DifferenceResultTinHandler
     catch( Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Konnte Differenzen nicht erzeugen." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.7") ); //$NON-NLS-1$
     }
   }
 

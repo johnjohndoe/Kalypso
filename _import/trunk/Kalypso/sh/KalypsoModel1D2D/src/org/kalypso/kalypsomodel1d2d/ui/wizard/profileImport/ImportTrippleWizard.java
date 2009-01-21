@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -97,7 +98,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
   {
 
     m_networkModel = networkModel;
-    setWindowTitle( Messages.getString( "ImportTrippelWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -108,8 +109,8 @@ public class ImportTrippleWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "ImportTrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_ProfilePage.setDescription( Messages.getString( "ImportTrippelWizard.3" ) ); //$NON-NLS-1$
+    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImportImport.TrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_ProfilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImportImport.TrippelWizard.3" ) ); //$NON-NLS-1$
 
     addPage( m_ProfilePage );
   }
@@ -129,12 +130,12 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( Messages.getString( "ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.13" ), 2 ); //$NON-NLS-1$
 
         try
         {
           /* Import Trippel Data */
-          monitor.subTask( Messages.getString( "ImportTrippelWizard.14" ) ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.14" ) ); //$NON-NLS-1$
 
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
@@ -145,7 +146,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
           monitor.worked( 1 );
 
           /* Convert Trippel Data */
-          monitor.subTask( Messages.getString( "ImportTrippelWizard.16" ) ); //$NON-NLS-1$
+          monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.16" ) ); //$NON-NLS-1$
 
           final IStatus status = doImportNetwork( profNetworkColl, terrainModelAdds, profiles );
 
@@ -155,7 +156,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
         }
         catch( final Exception e )
         {
-          return StatusUtilities.statusFromThrowable( e, Messages.getString( "ImportTrippelWizard.15" ) ); //$NON-NLS-1$
+          return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.15" ) ); //$NON-NLS-1$
         }
 
         finally
@@ -168,7 +169,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportTrippelWizard.17" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.17" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
@@ -187,7 +188,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */
-    final String desc = String.format( Messages.getString( "ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
+    final String desc = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
     final String crs = m_ProfilePage.getCoordinateSystem();
@@ -199,7 +200,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
 
     for( final IProfil profile : profiles )
     {
-      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
+      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
       profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       profileFeature.setSrsName( crs );

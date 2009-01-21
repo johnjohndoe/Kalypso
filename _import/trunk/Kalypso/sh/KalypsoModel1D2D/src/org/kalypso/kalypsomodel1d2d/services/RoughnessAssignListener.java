@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
@@ -91,7 +92,7 @@ public class RoughnessAssignListener implements ModellEventListener
 // if( m_job != null )
 // m_job.cancel();
 
-    m_job = new RoughnessAssignService( "Roughness assign service", m_terrainModel, m_discModel );
+    m_job = new RoughnessAssignService( Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener.0"), m_terrainModel, m_discModel ); //$NON-NLS-1$
 
     m_job.setWorkarea( envelope );
 

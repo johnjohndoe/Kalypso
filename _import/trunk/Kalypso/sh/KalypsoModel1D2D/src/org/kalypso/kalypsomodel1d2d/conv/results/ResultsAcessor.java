@@ -61,12 +61,12 @@ public class ResultsAcessor
 
   public ResultsAcessor( final IFolder scenarioFolder )
   {
-    m_resultFolder = scenarioFolder.getFolder( "results" );
+    m_resultFolder = scenarioFolder.getFolder( "results" ); //$NON-NLS-1$
   }
 
   public IFile getHydrographFile( )
   {
-    return m_resultFolder.getFile( "hydrographs.gml" );
+    return m_resultFolder.getFile( "hydrographs.gml" ); //$NON-NLS-1$
   }
 
   public IFolder getResultsFolder( )

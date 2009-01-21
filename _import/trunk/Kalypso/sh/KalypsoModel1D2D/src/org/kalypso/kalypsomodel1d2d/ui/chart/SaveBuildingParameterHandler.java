@@ -59,6 +59,7 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 /**
  * Saves the changes made on a building into the real flow relation.
@@ -92,7 +93,7 @@ public class SaveBuildingParameterHandler extends AbstractHandler implements IEl
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, "", "Parameter konnten nicht gespeichert werden", status );
+    ErrorDialog.openError( shell, "", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.chart.SaveBuildingParameterHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

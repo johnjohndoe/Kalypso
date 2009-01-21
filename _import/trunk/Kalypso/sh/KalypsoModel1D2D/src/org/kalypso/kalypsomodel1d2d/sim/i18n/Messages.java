@@ -38,18 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
+package org.kalypso.kalypsomodel1d2d.sim.i18n;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author schrage
+ * @author kimwerner
  *
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.sim.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

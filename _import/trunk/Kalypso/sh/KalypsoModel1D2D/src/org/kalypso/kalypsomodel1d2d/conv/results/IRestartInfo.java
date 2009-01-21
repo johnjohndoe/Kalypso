@@ -52,13 +52,13 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IRestartInfo extends IFeatureWrapper2
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "RestartInfo" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "RestartInfo" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "calculationUnitID" );
+  public static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "calculationUnitID" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_RESULT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "stepResultMetaID" );
+  public static final QName QNAME_PROP_STEP_RESULT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "stepResultMetaID" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_RESULT_FILE_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "filePath" );
+  public static final QName QNAME_PROP_RESULT_FILE_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "filePath" ); //$NON-NLS-1$
 
   public String getCalculationUnitID( );
 

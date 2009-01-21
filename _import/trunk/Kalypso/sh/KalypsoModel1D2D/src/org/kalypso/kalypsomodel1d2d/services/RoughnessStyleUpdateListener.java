@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class RoughnessStyleUpdateListener implements IResourceChangeListener
 {
-  public static final IPath ROUGHNESS_DATABASE_PATH = new Path( ".metadata/roughness.gml" );
+  public static final IPath ROUGHNESS_DATABASE_PATH = new Path( ".metadata/roughness.gml" ); //$NON-NLS-1$
 
   private RoughnessStyleUpdateService m_jobStyleUpdate;
 

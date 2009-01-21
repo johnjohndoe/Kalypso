@@ -53,6 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 
@@ -121,7 +122,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !foundEndBLine )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, "Add Boundary Line & BC on End Node " + calc.getName(), calc, calc ) );
+        invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.0") + calc.getName(), calc, calc ) ); //$NON-NLS-1$
       }
       foundEndBLine = false;
     }
@@ -133,7 +134,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   {
     final List<IFELine> continuityLine2Ds = calc.getContinuityLines();
     if( continuityLine2Ds.size() == 0 )
-      invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
+      invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.1") + calc.getName(), calc, calc ) ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unchecked")
@@ -163,7 +164,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line may not have Boundary condition or have not yet been assigned to " + calcUnit.getName(), calcUnit, line ) );
+        invariantErrorMessages.add( new ProblemDescriptor( null, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine.2") + calcUnit.getName(), calcUnit, line ) ); //$NON-NLS-1$
       }
     }
   }

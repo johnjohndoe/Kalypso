@@ -67,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.Util;
@@ -88,7 +89,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class Model1D2DSimulation implements ISimulation1D2DConstants
 {
-  private static final String STRING_DLG_TITLE_RMA10S = Messages.getString( "CalculationUnitPerformComponent.2" );
+  private static final String STRING_DLG_TITLE_RMA10S =  Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.0"); //$NON-NLS-1$
 
   private final ICaseDataProvider<IModel> m_caseDataProvider;
 
@@ -123,8 +124,8 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
     try
     {
-      tmpDir = SimulationUtilitites.createSimulationTmpDir( "rmakalypso" + m_calculationUnit );
-      outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit );
+      tmpDir = SimulationUtilitites.createSimulationTmpDir( "rmakalypso" + m_calculationUnit ); //$NON-NLS-1$
+      outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit ); //$NON-NLS-1$
 
       FileUtils.forceMkdir( outputDir );
 
@@ -132,7 +133,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     catch( final IOException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Temporäres Simulationsverzeichnis konnte nicht erstellt werden: " + tmpDir );
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.3") + tmpDir ); //$NON-NLS-1$
     }
     finally
     {
@@ -164,13 +165,13 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     catch( final InvocationTargetException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht initialisiert werden: " + e.getTargetException().toString() );
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.4") + e.getTargetException().toString() ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       // REMARK: this should only happen if the data cannot be retrieved from the caseDataProvider and so should never
       // happen...
-      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Fehler bei der Simulation", e.getStatus() );
+      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.5"), e.getStatus() ); //$NON-NLS-1$
     }
   }
 
@@ -191,7 +192,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     /* Set correct activeControlModel according to selected calcUnit */
     final IControlModel1D2D controlModel = saveControlModel( controlModelGroup );
     if( controlModel == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Could not find active control model for: " + m_calculationUnit ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.6") + m_calculationUnit ) ); //$NON-NLS-1$
 
     /* Initialize result meta */
     final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
@@ -211,17 +212,17 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
 
     // Add geo log to calcMeta as document
     final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
-    logMeta.setName( "Simulations-Log" );
-    logMeta.setDescription( "Die Log-Datei der letzten Simulation dieser Berechnungseinheit." );
+    logMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.7") ); //$NON-NLS-1$
+    logMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.8") ); //$NON-NLS-1$
     logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
     logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
 
     final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModel, roughnessModel, m_scenarioFolder );
-    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, discModel, scenarioResultMeta, geoLog );
+    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, discModel, scenarioResultMeta, geoLog ); //$NON-NLS-1$
 
     final RMA10CalculationWizard calcWizard = new RMA10CalculationWizard( calculation, resultManager, m_unitFolder, m_caseDataProvider, geoLog );
     calcWizard.setWindowTitle( STRING_DLG_TITLE_RMA10S );
-    calcWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) );
+    calcWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) ); //$NON-NLS-1$
     final WizardDialog2 calcDialog = new WizardDialog2( m_shell, calcWizard );
     calcDialog.setRememberSize( true );
     if( calcDialog.open() == Window.OK )
@@ -261,7 +262,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
           }
           catch( final Throwable e )
           {
-            throw new CoreException( StatusUtilities.createErrorStatus( "Could not set active control model for: " + m_calculationUnit ) );
+            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11") + m_calculationUnit ) ); //$NON-NLS-1$
           }
 
           // Saves ALL models, this is not really necessary but not really a problem, as only

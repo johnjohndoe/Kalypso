@@ -49,6 +49,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -134,7 +135,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     }
     catch( final GM_Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
 
@@ -234,7 +235,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
     final String name = m_tinResultFile.getPath();
 
-    final int extensionIndex = name.lastIndexOf( "." );
+    final int extensionIndex = name.lastIndexOf( "." ); //$NON-NLS-1$
 
     final String substring = name.substring( 0, extensionIndex );
     final String extension = name.substring( extensionIndex, name.length() );
@@ -244,27 +245,27 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     if( m_parameter != null )
       param = m_parameter.name();
     else
-      param = "";
+      param = ""; //$NON-NLS-1$
 
-    final String fileName = substring + "_" + param + extension;
+    final String fileName = substring + "_" + param + extension; //$NON-NLS-1$
 
     try
     {
       // TODO: zip Url + stream
       final File paramFile = new File( fileName );
-      if( extension.equals( ".zip" ) )
+      if( extension.equals( ".zip" ) ) //$NON-NLS-1$
       {
 
-        GmlSerializer.serializeWorkspaceToZipFile( paramFile, m_workspace, "tin_" + param + ".gml" );
+        GmlSerializer.serializeWorkspaceToZipFile( paramFile, m_workspace, "tin_" + param + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {
-        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" );
+        GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" ); //$NON-NLS-1$
       }
     }
     catch( final Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater ." );
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.10") ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
   }
@@ -281,7 +282,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     if( triangleFeature != null )
     {
       final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
-      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar );
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar ); //$NON-NLS-1$
     }
   }
 
@@ -308,7 +309,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     }
     catch( final GM_Exception e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.13") ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
 

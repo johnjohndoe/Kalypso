@@ -56,6 +56,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -111,8 +112,8 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     final GregorianCalendar calendarTo = new GregorianCalendar();
     calendarFrom.setTime( m_timeStepFillerWizardPage.getStartDate() );
     calendarTo.setTime( m_timeStepFillerWizardPage.getFinishDate() );
-    calendarFrom.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
-    calendarTo.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    calendarFrom.setTimeZone( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
+    calendarTo.setTimeZone( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
 
     int ordinalNumber = 1;
     while( !calendarFrom.after( calendarTo ) )
@@ -149,7 +150,7 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Berechnungszeitschritte definieren" );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard.2") ); //$NON-NLS-1$
 
     if( hasOldContent() )
     {

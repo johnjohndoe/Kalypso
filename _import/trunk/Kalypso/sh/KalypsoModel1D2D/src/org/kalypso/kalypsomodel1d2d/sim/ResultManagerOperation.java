@@ -66,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -104,19 +105,19 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
    */
   public IStatus execute( final IProgressMonitor monitor )
   {
-    m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, "Start der Ergebnisauswertung" );
+    m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.0") ); //$NON-NLS-1$
 
     final IStatus resultStatus = doExecute( monitor );
 
     // Adapt status
     if( resultStatus.isOK() )
-      return m_geoLog.formatLog( IStatus.OK, CODE_RUNNING, "Ergebnisauswertung erfolgreich beendet" );
+      return m_geoLog.formatLog( IStatus.OK, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.1") ); //$NON-NLS-1$
 
     if( resultStatus.matches( IStatus.CANCEL ) )
-      return m_geoLog.formatLog( IStatus.CANCEL, CODE_RUNNING, "Ergebnisauswertung durch den Benutzer abgebrochen." );
+      return m_geoLog.formatLog( IStatus.CANCEL, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.2") ); //$NON-NLS-1$
 
     /* Warning or Error */
-    m_geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, "Ergebnisauswertung mit Fehler beendet." );
+    m_geoLog.formatLog( IStatus.ERROR, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.3") ); //$NON-NLS-1$
     m_geoLog.log( resultStatus );
 
     return resultStatus;
@@ -136,7 +137,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       /* Process Results */
 
       // Step 1: Delete existing results and save result-DB (in case of problems while processing)
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Bestehende Ergebnisse werden gelöscht." );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.4") ); //$NON-NLS-1$
       final IStatus deleteStatus = deleteExistingResults( scenarioMeta, calculationUnit, m_processBean, progress.newChild( 5 ) );
       if( deleteStatus.matches( IStatus.CANCEL ) )
         return deleteStatus;
@@ -158,7 +159,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       // TODO: move this outside this method...?
 
       // Step 4: Move results into workspace and save result-DB
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Ergebnisse werden in Arbeitsbereich verschoben und Ergebnisdatenbank aktualisiert." );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.5") ); //$NON-NLS-1$
       return moveResults( outputDir, progress.newChild( 5 ) );
     }
     catch( final CoreException ce )
@@ -167,7 +168,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, "Unerwartetet Fehler bei der Ergebnisauswertung: " + t.toString(), t );
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.6") + t.toString(), t ); //$NON-NLS-1$
     }
   }
 
@@ -177,7 +178,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   private IStatus deleteExistingResults( final IScenarioResultMeta scenarioMeta, final ICalculationUnit calcUnit, final ProcessResultsBean processBean, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( "Bestehende Ergebnisse werden gelöscht..." );
+    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.7") ); //$NON-NLS-1$
 
     final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calcUnit.getGmlID() );
 
@@ -195,11 +196,11 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
     /* Save result DB */
     try
     {
-      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
     }
     catch( final InvocationTargetException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Speichern der Ergebnisdatenbank", e.getTargetException() ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.9"), e.getTargetException() ) ); //$NON-NLS-1$
     }
 
     m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 5 ) );
@@ -264,7 +265,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
   private IStatus moveResults( final File outputDir, final IProgressMonitor monitor )
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
-    progress.subTask( "Ergebnisdaten werden in Arbeitsbereich verschoben..." );
+    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.10") ); //$NON-NLS-1$
 
     try
     {
@@ -279,18 +280,18 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       /* Output dir should now be empty, so there is no sense in keeping it */
       outputDir.delete();
 
-      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) );
+      ((ICommandPoster) m_caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
       m_caseDataProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 10 ) );
 
       return Status.OK_STATUS;
     }
     catch( final IOException e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.12"), e ); //$NON-NLS-1$
     }
     catch( final InvocationTargetException e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Ergebnisdateien konnten nicht in den Arbeitsbereich verschoben werden", e.getTargetException() );
+      return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManagerOperation.13"), e.getTargetException() ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

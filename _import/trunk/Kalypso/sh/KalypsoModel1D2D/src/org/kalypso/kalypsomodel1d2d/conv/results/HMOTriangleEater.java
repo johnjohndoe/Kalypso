@@ -132,7 +132,7 @@ public class HMOTriangleEater implements ITriangleEater
 
         final int nodeID = m_nodes.get( node );
 
-        buf.write( "P:  " + nodeID + "  " + x + "  " + y + "  " + z + "\n" );
+        buf.write( "P:  " + nodeID + "  " + x + "  " + y + "  " + z + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
         // KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %f20.8 %f20.8 %f20.8%n", "HMOTriangleEater: P: ", nodeID,
         // x, y, z );
@@ -148,7 +148,7 @@ public class HMOTriangleEater implements ITriangleEater
         final int n1 = triangle[0];
         final int n2 = triangle[1];
         final int n3 = triangle[2];
-        buf.write( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 + "\n" );
+        buf.write( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
         // KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d%n", "HMOTriangleEater: D: ", triangleID, n1, n2,
         // n3 );
@@ -165,7 +165,7 @@ public class HMOTriangleEater implements ITriangleEater
   {
     final String name = m_output.getPath();
 
-    final int extensionIndex = name.lastIndexOf( "." );
+    final int extensionIndex = name.lastIndexOf( "." ); //$NON-NLS-1$
 
     final String substring = name.substring( 0, extensionIndex );
     final String extension = name.substring( extensionIndex, name.length() );
@@ -174,7 +174,7 @@ public class HMOTriangleEater implements ITriangleEater
     final String param = m_parameter.name();
     // FIXME: change to file name based on time, we have no timestep any more
     final int timestep = 0;
-    final String paramName = substring + "_" + param + "_" + timestep + extension;
+    final String paramName = substring + "_" + param + "_" + timestep + extension; //$NON-NLS-1$ //$NON-NLS-2$
     final File paramFile = new File( paramName );
 
     try
@@ -183,7 +183,7 @@ public class HMOTriangleEater implements ITriangleEater
     }
     catch( final IOException e )
     {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "HMOTriangleEater: error while finishing eater." );
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "HMOTriangleEater: error while finishing eater." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       e.printStackTrace();
     }

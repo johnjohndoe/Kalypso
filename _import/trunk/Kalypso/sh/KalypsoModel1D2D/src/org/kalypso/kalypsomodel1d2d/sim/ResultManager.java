@@ -73,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
@@ -88,7 +89,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class ResultManager implements ISimulation1D2DConstants
 {
-  private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
+  private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
@@ -126,7 +127,7 @@ public class ResultManager implements ISimulation1D2DConstants
     m_outputDir = outputDir;
 
     m_geoLog = geoLog;
-    m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" );
+    m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" ); //$NON-NLS-1$
 
     m_parameters.add( ResultType.TYPE.DEPTH );
     m_parameters.add( ResultType.TYPE.WATERLEVEL );
@@ -136,11 +137,11 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final IProgressMonitor monitor )
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse werden ausgewertet...", 1000 );
-    progress.subTask( "Ergebnisse werden ausgewertet..." );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.3"), 1000 ); //$NON-NLS-1$
+    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.4") ); //$NON-NLS-1$
 
     if( m_stepsToProcess == null )
-      return StatusUtilities.createOkStatus( "Keine Ergebnisse ausgewählt..." );
+      return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
 
     try
     {
@@ -159,24 +160,24 @@ public class ResultManager implements ISimulation1D2DConstants
         fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, m_discModel, calcUnitMeta, progress.newChild( 1 ) );
       }
 
-      final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null );
+      final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null ); //$NON-NLS-1$
       if( multiStatus.isOK() )
-        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, "Alle Ergebnisse wurden erfolgreich ausgewertet.", null );
+        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.7"), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.CANCEL ) )
-        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, "Abbruch duch den Benutzer.", null );
+        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.8"), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.WARNING ) )
-        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Warnmeldungen beim Auswerten der Ergebnisse.", null );
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.9"), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.ERROR ) )
-        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Fehler beim Auswerten Ergebnisse.", null );
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.10"), null ); //$NON-NLS-1$
 
-      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "Unbekanntes Problem bei der Ergebnisauswertung.", null );
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.11"), null ); //$NON-NLS-1$
     }
     catch( final OperationCanceledException e )
     {
-      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, "Abbruch durch den Benutzer", e );
+      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.12"), e ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -184,7 +185,7 @@ public class ResultManager implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, "Unbekannter Fehler", e );
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.13"), e ); //$NON-NLS-1$
     }
   }
 
@@ -203,17 +204,17 @@ public class ResultManager implements ISimulation1D2DConstants
       if( stepDate == null )
         return Status.OK_STATUS;
 
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Ergebnisauswertung - %s", resultFileName );
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.14"), resultFileName ); //$NON-NLS-1$
 
       // start a job for each unknown 2d file.
       final String outDirName;
 
       if( stepDate == STEADY_DATE )
-        outDirName = "steady";
+        outDirName = "steady"; //$NON-NLS-1$
       else if( stepDate == MAXI_DATE )
-        outDirName = "maxi";
+        outDirName = "maxi"; //$NON-NLS-1$
       else
-        outDirName = String.format( "timestep-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ", stepDate );
+        outDirName = String.format( "timestep-%1$te.%1$tm.%1$tY_%1$tH_%1$tM_%1$tZ", stepDate ); //$NON-NLS-1$
 
       final File resultOutputDir = new File( m_outputDir, outDirName );
       resultOutputDir.mkdirs();
@@ -234,13 +235,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private Date findStepDate( final IControlModel1D2D controlModel, final String resultFileName )
   {
-    if( resultFileName.startsWith( "steady" ) )
+    if( resultFileName.startsWith( "steady" ) ) //$NON-NLS-1$
       return STEADY_DATE;
 
-    if( resultFileName.startsWith( "maxi" ) )
+    if( resultFileName.startsWith( "maxi" ) ) //$NON-NLS-1$
       return MAXI_DATE;
 
-    if( resultFileName.startsWith( "mini" ) || resultFileName.startsWith( "model" ) )
+    if( resultFileName.startsWith( "mini" ) || resultFileName.startsWith( "model" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final int index = resultFileName.length();
@@ -329,17 +330,17 @@ public class ResultManager implements ISimulation1D2DConstants
 
     for( final File file : existing2dFiles )
     {
-      if( file.getName().equals( "steady.2d" ) )
+      if( file.getName().equals( "steady.2d" ) ) //$NON-NLS-1$
         m_dateFileMap.put( STEADY_DATE, file );
 
-      if( file.getName().equals( "maxi.2d" ) )
+      if( file.getName().equals( "maxi.2d" ) ) //$NON-NLS-1$
         m_dateFileMap.put( MAXI_DATE, file );
 
-      if( file.getName().equals( "steady.2d" ) || file.getName().equals( "maxi.2d" ) || file.getName().equals( "mini.2d" ) || file.getName().equals( "model.2d" ) )
+      if( file.getName().equals( "steady.2d" ) || file.getName().equals( "maxi.2d" ) || file.getName().equals( "mini.2d" ) || file.getName().equals( "model.2d" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         continue;
 
       final String resultFileName = file.getName();
-      final int index = resultFileName.indexOf( "." );
+      final int index = resultFileName.indexOf( "." ); //$NON-NLS-1$
       final CharSequence sequence = resultFileName.subSequence( 1, index );
       final String string = sequence.toString();
       final int step = Integer.parseInt( string );

@@ -91,7 +91,7 @@ public class WQboundaryConditions1D2DConverter
 
   public void writeWQbcFile( final Formatter format ) throws IOException
   {
-    format.format( "TIT     %s%n", "stage discharge data file" );
+    format.format( "TIT     %s%n", "stage discharge data file" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     FormatterUtils.checkIoException( format );
 
@@ -109,7 +109,7 @@ public class WQboundaryConditions1D2DConverter
 
       final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, wComponent );
       final Iterator<IRecord> tupleIterator = tupleResultIndex.getIterator();
-      format.format( "CTL%13d%n", bcParentID );
+      format.format( "CTL%13d%n", bcParentID ); //$NON-NLS-1$
 
       final int wIndex = obsResult.indexOfComponent( wComponent );
       final int qIndex = obsResult.indexOfComponent( qComponent );
@@ -118,12 +118,12 @@ public class WQboundaryConditions1D2DConverter
         final IRecord record = tupleIterator.next();
         final BigDecimal w = (BigDecimal) record.getValue( wIndex );
         final BigDecimal q = (BigDecimal) record.getValue( qIndex );
-        format.format( "STD%13.4f%8.3f%n", w, q );
+        format.format( "STD%13.4f%8.3f%n", w, q ); //$NON-NLS-1$
       }
 
       FormatterUtils.checkIoException( format );
     }
-    format.format( "ENDDATA" );
+    format.format( "ENDDATA" ); //$NON-NLS-1$
   }
 
 }

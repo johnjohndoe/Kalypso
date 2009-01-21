@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -97,10 +98,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 public class Control1D2DConverter
 {
   /** Directory name for RMA·Kalypso result files (Output...) files */
-  public static final String RESULT_DIR_NAME = "result";
+  public static final String RESULT_DIR_NAME = "result"; //$NON-NLS-1$
 
   /** Base filename name for RMA·Kalypso result files (Output...) files */
-  public static final String RESULT_FILE_BASE = "Output";
+  public static final String RESULT_FILE_BASE = "Output"; //$NON-NLS-1$
 
   private final List<IBoundaryCondition> m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
 
@@ -200,15 +201,15 @@ public class Control1D2DConverter
 
     // default value: 1500
     if( m_controlModel.getMFW() != 1500 )
-      formatter.format( "MFW     %8d%n", m_controlModel.getMFW() );
+      formatter.format( "MFW     %8d%n", m_controlModel.getMFW() ); //$NON-NLS-1$
 
     // default value: 10.000.000
     if( m_controlModel.getBUFFSIZ() != 20000000 )
-      formatter.format( "BUFFSIZL%16d%n", m_controlModel.getBUFFSIZ() );
+      formatter.format( "BUFFSIZL%16d%n", m_controlModel.getBUFFSIZ() ); //$NON-NLS-1$
 
     /* CONTROL DATA BLOCK */
     final String controlModelName = m_controlModel.getName();
-    final String projectName = controlModelName == null ? Messages.getString( "Control1D2DConverter.8" ) : controlModelName; //$NON-NLS-1$
+    final String projectName = controlModelName == null ? Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.8" ) : controlModelName; //$NON-NLS-1$
     formatter.format( "TI      %30s%n", projectName ); //$NON-NLS-1$
 
     // // C0
@@ -238,16 +239,16 @@ public class Control1D2DConverter
 
     // C6
     if( m_controlModel.getIcpu() != 0 )
-      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() );
+      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
     // C7
-    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 );
+    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
 
     // C6
     if( m_controlModel.getIcpu() != 0 )
-      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() );
+      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
 
     // C7
-    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 );
+    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
 
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
@@ -283,7 +284,7 @@ public class Control1D2DConverter
 
       if( ks == null )
       {
-        final String msg = Messages.getString( "Control1D2DConverter.7" ) + rClass.getName();//$NON-NLS-1$
+        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7" ) + rClass.getName();//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
@@ -301,7 +302,7 @@ public class Control1D2DConverter
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected ) throws IOException
   {
     if( eddy.length < 4 )
-      throw new IllegalArgumentException( Messages.getString( "Control1D2DConverter.17" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
     formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
     formatter.format( "ED4%21.5f%8.3f%8.3f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
@@ -338,7 +339,7 @@ public class Control1D2DConverter
         if( nodeID == 0 )
         {
           final GM_Point position = node.getPoint();
-          final String msg = "At least one node contained by boundary line is not included in this calculation unit.";
+          final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.11"); //$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
           throw new CoreException( status );
         }
@@ -382,14 +383,14 @@ public class Control1D2DConverter
     /* Steady state, just one block for the Starting Date. */
     final int niti = m_controlModel.getNITI();
 
-    final String msg = Messages.getString( "Control1D2DConverter.33" ); //$NON-NLS-1$
+    final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.33" ); //$NON-NLS-1$
 
     Double uRValSteady = m_controlModel.get_RelaxationsFactor();
     if( uRValSteady == null || uRValSteady.isNaN() || uRValSteady < 0.1 || uRValSteady > 1.0 )
     {
       if( m_controlModel.isSteadySelected() )
       {
-        final String errMsg = Messages.getString( "Control1D2DConverter.34" );//$NON-NLS-1$
+        final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.34" );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
       }
       else
@@ -406,7 +407,7 @@ public class Control1D2DConverter
       final Iterator<IRecord> iterator = index.getIterator();
       if( !iterator.hasNext() )
       {
-        final String errMsg = Messages.getString( "Control1D2DConverter.35" );//$NON-NLS-1$
+        final String errMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.35" );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
       }
 
@@ -436,14 +437,14 @@ public class Control1D2DConverter
           final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( indexTime )).toGregorianCalendar();
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
-          final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
+          final String unsteadyMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
           lastStepCal = stepCal;
         }
         if( m_controlModel.getIaccyc() > stepCount )
         {
-          final String errMsg = stepCount + " timesteps defined, but " + m_controlModel.getIaccyc() + " is selected as first restart step.";
+          final String errMsg = stepCount + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12") + m_controlModel.getIaccyc() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.13"); //$NON-NLS-1$ //$NON-NLS-2$
           throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
         }
       }
@@ -486,7 +487,7 @@ public class Control1D2DConverter
       // (this will happen on summertime to wintertime transition)
       if( timeStepInterval == 0 )
       {
-        formatter.format( "com Summertime/Wintertime transition; repeated step ignored%n" );
+        formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.14") ); //$NON-NLS-1$
         return;
       }
 
@@ -531,7 +532,7 @@ public class Control1D2DConverter
           break;
 
         default:
-          final String msg = Messages.getString( "Control1D2DConverter.43" ) + kind;//$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ) + kind;//$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
@@ -628,9 +629,9 @@ public class Control1D2DConverter
             // to big changes in Calculation core because, line reading must be much more flexible then. That's right
             // now not the case.
             if( stepValue > 9999.9 )
-              formatter.format( "QCFF%12d%8d%16.6e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+              formatter.format( "QCFF%12d%8d%16.6e%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
             else
-              formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
+              formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
@@ -639,15 +640,15 @@ public class Control1D2DConverter
             if( hasDirectionProperty == false || hasDirectionProperty == null )
               boundaryCondition.setHasDirection( true );
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
-            formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 );
+            formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
             m_WQboundaryConditionsIDProvider.put( ordinal, boundaryCondition );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
           {
-            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 20.000, 0.0 );
+            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 20.000, 0.0 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D )
-              && boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
+              && boundaryCondition.getParentElementID().startsWith( "Element1D" ) ) //$NON-NLS-1$
           {
             // 1D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
@@ -657,20 +658,20 @@ public class Control1D2DConverter
             if( hasDirectionProperty == null )
             {
               boundaryCondition.setHasDirection( false );
-              boundaryCondition.setDirection( new BigInteger( "0" ) );
+              boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
             }
             if( boundaryCondition.hasDirection() && boundaryCondition.getDirection() == null )
-              boundaryCondition.setDirection( new BigInteger( "0" ) );
+              boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
 
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
 
             if( boundaryCondition.hasDirection() )
-              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) );
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
             else
-              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 ); //$NON-NLS-1$
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )
-              && !boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
+              && !boundaryCondition.getParentElementID().startsWith( "Element1D" ) ) //$NON-NLS-1$
           {
             // 2D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
@@ -680,16 +681,16 @@ public class Control1D2DConverter
             if( hasDirectionProperty == null )
             {
               boundaryCondition.setHasDirection( false );
-              boundaryCondition.setDirection( new BigInteger( "0" ) );
+              boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
             }
             if( boundaryCondition.hasDirection() && boundaryCondition.getDirection() == null )
-              boundaryCondition.setDirection( new BigInteger( "0" ) );
+              boundaryCondition.setDirection( new BigInteger( "0" ) ); //$NON-NLS-1$
 
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
             if( boundaryCondition.hasDirection() )
-              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) );
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) ); //$NON-NLS-1$
             else
-              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 ); //$NON-NLS-1$
           }
         }
       }
@@ -702,7 +703,7 @@ public class Control1D2DConverter
   {
     if( uRVal < 0.0 || uRVal > 1.0 )
     {
-      final String msg = Messages.getString( "Control1D2DConverter.6" );//$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.6" );//$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 
@@ -710,7 +711,7 @@ public class Control1D2DConverter
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )
-        formatter.format( "%nBC%6s", " " ); //$NON-NLS-1$
+        formatter.format( "%nBC%6s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.31") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       formatter.format( "%5d010", buffVal ); //$NON-NLS-1$
     }
@@ -747,7 +748,7 @@ public class Control1D2DConverter
     final Iterator<IRecord> iterator = index.getIterator();
     if( !iterator.hasNext() )
     {
-      final String msg = Messages.getString( "Control1D2DConverter.52" );//$NON-NLS-1$
+      final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.52" );//$NON-NLS-1$
       throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
     }
 

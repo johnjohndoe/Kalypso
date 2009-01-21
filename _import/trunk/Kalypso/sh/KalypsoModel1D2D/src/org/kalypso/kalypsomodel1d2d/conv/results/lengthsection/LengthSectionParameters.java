@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class LengthSectionParameters
 {
-  private final static Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
+  private final static Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" ); //$NON-NLS-1$
 
   private final FeatureList m_riverFeatures;
 
@@ -183,8 +183,8 @@ public class LengthSectionParameters
     if( o instanceof String )
     {
       String minString = (String) o;
-      minString = minString.replace( "+", "." );
-      minString = minString.replace( ",", "." );
+      minString = minString.replace( "+", "." ); //$NON-NLS-1$ //$NON-NLS-2$
+      minString = minString.replace( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
       return checkDoubleTextValue( minString );
     }
     else if( o instanceof Double )
@@ -216,7 +216,7 @@ public class LengthSectionParameters
 
     if( m.matches() )
     {
-      tempText = tempText.replaceAll( ",", "." );
+      tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       BigDecimal db = new BigDecimal( tempText );
       if( db.doubleValue() > 0 )

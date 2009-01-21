@@ -52,7 +52,7 @@ public class KalypsoModel1D2DHelper
 {
   private KalypsoModel1D2DHelper( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate." );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate." ); //$NON-NLS-1$
   }
 
   /**
@@ -63,22 +63,22 @@ public class KalypsoModel1D2DHelper
    */
   public static IFolder getTimeeseriesFolder( final IFolder scenarioFolder )
   {
-    return scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
+    return scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static IFolder getStylesFolder( final IFolder scenarioFolder )
   {
-    return scenarioFolder.getFolder( "styles" );
+    return scenarioFolder.getFolder( "styles" ); //$NON-NLS-1$
   }
 
   public static IFolder getMapsFolder( final IFolder scenarioFolder )
   {
-    return scenarioFolder.getFolder( "maps" );
+    return scenarioFolder.getFolder( "maps" ); //$NON-NLS-1$
   }
 
   public static IFolder getResultsFolder( final IFolder scenarioFolder )
   {
-    return scenarioFolder.getFolder( "results" );
+    return scenarioFolder.getFolder( "results" ); //$NON-NLS-1$
   }
 
 }

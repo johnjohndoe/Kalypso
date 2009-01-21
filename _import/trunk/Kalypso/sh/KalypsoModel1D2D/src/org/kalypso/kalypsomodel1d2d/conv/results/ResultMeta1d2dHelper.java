@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -123,7 +124,7 @@ public class ResultMeta1d2dHelper
         catch( final CoreException e )
         {
           e.printStackTrace();
-          return StatusUtilities.statusFromThrowable( e, "Error while deleting obsolete result files." );
+          return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.0") ); //$NON-NLS-1$
         }
       }
     }
@@ -163,11 +164,11 @@ public class ResultMeta1d2dHelper
   public static IStatus removeResult( final IResultMeta resultMeta )
   {
     if( !removeResultMetaFile( resultMeta ).isOK() )
-      return StatusUtilities.createErrorStatus( "removeResult: could not delete files." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.1") ); //$NON-NLS-1$
 
     final IResultMeta parent = resultMeta.getParent();
     if( parent == null )
-      return StatusUtilities.createErrorStatus( "removeResult: result has no parent." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.2") ); //$NON-NLS-1$
 
     parent.getChildren().remove( resultMeta );
 
@@ -220,13 +221,13 @@ public class ResultMeta1d2dHelper
 
     final IFeatureWrapperCollection<IResultMeta> children = calcUnitMeta.getChildren();
 
-    monitor.beginTask( "Ergebnisdaten löschen", children.size() );
+    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.3"), children.size() ); //$NON-NLS-1$
 
     final Set<IStatus> stati = new HashSet<IStatus>();
 
     for( final IResultMeta child : children.toArray( new IResultMeta[children.size()] ) )
     {
-      monitor.subTask( "Lösche " + child.getName() );
+      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.4") + child.getName() ); //$NON-NLS-1$
 
       if( child instanceof IStepResultMeta )
       {
@@ -245,7 +246,7 @@ public class ResultMeta1d2dHelper
       ProgressUtilities.worked( monitor, 1 );
     }
 
-    return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, stati.toArray( new IStatus[stati.size()] ), "Vorhandene Ergebnisse löschen", null );
+    return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), -1, stati.toArray( new IStatus[stati.size()] ), Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.5"), null ); //$NON-NLS-1$
   }
 
   private static boolean checkDeleteResult( final Set<Date> toDelete, final IStepResultMeta stepMeta )
@@ -346,12 +347,12 @@ public class ResultMeta1d2dHelper
 
   public static String getNodeResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + ", " + stepResult.getName() + ", " + calcUnitMeta.getName();
+    return docResult.getName() + ", " + stepResult.getName() + ", " + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static String getIsolineResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + " (Isolinien), " + stepResult.getName() + ", " + calcUnitMeta.getName();
+    return docResult.getName() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.8") + stepResult.getName() + ", " + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -362,12 +363,12 @@ public class ResultMeta1d2dHelper
   @Deprecated
   private static String getIsolineResultLayerNameOld( IResultMeta docResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + " (Isolinien), " + calcUnitMeta.getName();
+    return docResult.getName() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.10") + calcUnitMeta.getName(); //$NON-NLS-1$
   }
 
   public static String getIsoareaResultLayerName( IResultMeta docResult, IResultMeta stepResult, IResultMeta calcUnitMeta )
   {
-    return docResult.getName() + " (Isoflächen), " + stepResult.getName() + ", " + calcUnitMeta.getName();
+    return docResult.getName() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper.11") + stepResult.getName() + ", " + calcUnitMeta.getName(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

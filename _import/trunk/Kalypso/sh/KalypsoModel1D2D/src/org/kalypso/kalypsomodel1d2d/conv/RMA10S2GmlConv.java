@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -75,21 +76,21 @@ public class RMA10S2GmlConv
 
   private final int m_monitorStep;
 
-  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
+  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
 
-  private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+  private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+  private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
+  private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" );
+  private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ELEMENT_LINE_PATTERN_2 = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" );
+  private static final Pattern ELEMENT_LINE_PATTERN_2 = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" );
+  private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" ); //$NON-NLS-1$
 
-  private static final Pattern ZU_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" );
+  private static final Pattern ZU_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" ); //$NON-NLS-1$
 
   public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
   {
@@ -128,7 +129,7 @@ public class RMA10S2GmlConv
     final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
     final Pattern lineJE = Pattern.compile( "JE.*" ); //$NON-NLS-1$
 
-    m_monitor.beginTask( Messages.getString( "RMA10S2GmlConv.0" ), 100 );
+    m_monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.0" ), 100 );//$NON-NLS-1$
     m_handler.start();
 
     int numberOfLinesProcessed = 0;
@@ -172,7 +173,7 @@ public class RMA10S2GmlConv
       else if( lineJE.matcher( line ).matches() )
         interpreteJunctionInformationLine( line );
       else if( VERBOSE_MODE )
-        System.out.println( Messages.getString( "RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
     }
 
     // signal parsing stop
@@ -224,7 +225,7 @@ public class RMA10S2GmlConv
         calendar.set( year, 0, 1 );
 
         final BigDecimal wholeHours = hours.setScale( 0, BigDecimal.ROUND_DOWN );
-        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) );
+        final BigDecimal wholeMinutes = hours.subtract( wholeHours ).multiply( new BigDecimal( "60" ) ); //$NON-NLS-1$
 
         calendar.add( Calendar.HOUR, wholeHours.intValue() );
         calendar.add( Calendar.MINUTE, wholeMinutes.intValue() );
@@ -251,9 +252,9 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeLine( final String line )
   {
-    final String[] nodeLineStrings = line.split( "[ ]+" );
+    final String[] nodeLineStrings = line.split( "[ ]+" ); //$NON-NLS-1$
 
-    if( nodeLineStrings[0].equals( "FP" ) )
+    if( nodeLineStrings[0].equals( "FP" ) ) //$NON-NLS-1$
     {
       try
       {

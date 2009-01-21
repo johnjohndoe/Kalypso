@@ -73,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
@@ -141,7 +142,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   public IStatus runCalculation( final IProgressMonitor monitor )
   {
-    m_log.formatLog( IStatus.INFO, CODE_RUNNING, "Start der Simulation" );
+    m_log.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.0") ); //$NON-NLS-1$
 
     final IStatus simulationStatus = doRunCalculation( monitor );
     m_simulationStatus = evaluateSimulationResult( simulationStatus );
@@ -181,10 +182,10 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     // - choose, which results to be deleted
 
     if( simulationStatus.isOK() )
-      return StatusUtilities.createStatus( IStatus.OK, CODE_RUNNING, "Simulation erfolgreich beendet", null );
+      return StatusUtilities.createStatus( IStatus.OK, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.1"), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.CANCEL ) )
-      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_RUNNING, "Simulation durch Benutzer abgebrochen.", null );
+      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_RUNNING, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2"), null ); //$NON-NLS-1$
 
     if( simulationStatus.matches( IStatus.ERROR ) )
       return simulationStatus;
@@ -201,11 +202,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
     try
     {
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe RMA·Kalypso-ASCII Dateien für FE-Simulation" );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.3") ); //$NON-NLS-1$
 
       /* Read restart data */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Restart-Daten werden gelesen" );
-      progress.subTask( "Schreibe ASCII-Daten: Restart-Daten werden gelesen..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.4") ); //$NON-NLS-1$
+      progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.5") ); //$NON-NLS-1$
 
       RestartNodes m_restartNodes;
 
@@ -217,8 +218,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       ProgressUtilities.worked( progress, 20 );
 
       /* .2d File */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Finite Elemente Netz" );
-      monitor.subTask( "Schreibe ASCII-Daten: Finite Elemente Netz..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.6") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.7") ); //$NON-NLS-1$
       final File modelFile = new File( m_tmpDir, MODEL_2D );
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
       final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true, m_log );
@@ -226,8 +227,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       ProgressUtilities.worked( progress, 20 );
 
       /* Control File */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Randbedingungen und Berechnungssteuerung" );
-      progress.subTask( "Schreibe ASCII-Daten: Randbedingungen und Berechnungssteuerung..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.8") ); //$NON-NLS-1$
+      progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.9") ); //$NON-NLS-1$
       final File r10file = new File( m_tmpDir, ISimulation1D2DConstants.R10_File );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
       final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider, m_log );
@@ -235,16 +236,16 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       ProgressUtilities.worked( progress, 20 );
 
       /* Building File */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe Bauwerke" );
-      progress.subTask( "Schreibe ASCII-Daten: Bauwerke..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.10") ); //$NON-NLS-1$
+      progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.11") ); //$NON-NLS-1$
       final File buildingFile = new File( m_tmpDir, ISimulation1D2DConstants.BUILDING_File );
       final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
       buildingConverter.writeBuildingFile( buildingFile );
       ProgressUtilities.worked( progress, 20 );
 
       /* W/Q BC File */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Schreibe W/Q-Randbedingungen" );
-      progress.subTask( "Schreibe ASCII-Daten: W/Q-Randbedingungen..." );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.12") ); //$NON-NLS-1$
+      progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.13") ); //$NON-NLS-1$
       final File bcWQFile = new File( m_tmpDir, ISimulation1D2DConstants.BC_WQ_File );
       final WQboundaryConditions1D2DConverter bc1D2DConverter = new WQboundaryConditions1D2DConverter( controlConverter.getBoundaryConditionsIDProvider() );
       bc1D2DConverter.writeWQbcFile( bcWQFile );
@@ -252,7 +253,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     }
     catch( final IOException e )
     {
-      final String msg = String.format( "Fehler beim Schreiben einer RMA·Kalypso-ASCII Datei: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.14"), e.getLocalizedMessage() ); //$NON-NLS-1$
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
     }
     finally
@@ -267,11 +268,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() );
-    progress.subTask( "RMA·Kalypso wird ausgeführt..." );
+    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.15") ); //$NON-NLS-1$
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
     final File resultDir = new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
-    final File itrDir = new File( m_tmpDir, "iterObs" );
+    final File itrDir = new File( m_tmpDir, "iterObs" ); //$NON-NLS-1$
     resultDir.mkdirs();
     itrDir.mkdirs();
 
@@ -284,8 +285,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final String commandString = exeFile.getAbsolutePath();
 
       // Run the Calculation
-      logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) );
-      errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) );
+      logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) ); //$NON-NLS-1$
+      errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) ); //$NON-NLS-1$
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
       final Runnable idleRunnable = new Runnable()
@@ -299,7 +300,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       /* Initialize Iteration Job */
       m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
 
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA·Kalypso wird ausgeführt: %s", commandString );
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.19"), commandString ); //$NON-NLS-1$
       ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
 
       // TODO: specific error message if exe was not found
@@ -315,13 +316,13 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       // Check for success
       final File errorFile = findErrorFile( m_tmpDir );
       if( errorFile == null )
-        return StatusUtilities.createOkStatus( "Simulation wurde erfolgreich beendet." );
+        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20") ); //$NON-NLS-1$
 
       /* ERROR: return contents of error file as error message */
       final String errorMessage = FileUtils.readFileToString( errorFile, Charset.defaultCharset().name() );
       final IStatus errorStatus = errorToStatus( errorMessage );
 
-      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, "Fehlermeldung vom Rechenkern (ERROR.DAT)", null );
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.21"), null ); //$NON-NLS-1$
     }
     catch( final CoreException ce )
     {
@@ -329,7 +330,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "Fehler beim Ausführen von RMA10SK", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.22"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -347,19 +348,19 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final String version = m_controlModel.getVersion();
     if( version == null || version.length() == 0 )
       // REMARK: maybe could instead use a default or the one with the biggest version number?
-      throw new CoreException( StatusUtilities.createErrorStatus( "RMA·Kalypso Version nicht gesetzt. Wählen Sie die Version in den Berechnungseinstellungen." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23") ) ); //$NON-NLS-1$
 
-    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe";
+    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
 
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     final Location installLocation = Platform.getInstallLocation();
     final File installDir = FileUtils.toFile( installLocation.getURL() );
-    final File exeDir = new File( installDir, "bin" );
+    final File exeDir = new File( installDir, "bin" ); //$NON-NLS-1$
     final File exeFile = new File( exeDir, exeName );
     if( exeFile.exists() )
       return exeFile;
 
-    final String exeMissingMsg = String.format( "Die Ausführbare Datei (%s) ist nicht vorhanden.\nRMA·Kalypso ist nicht Teil von Kalypso sondern muss gesondert angefordert werden. Weitere Informationen finden Sie unter http://kalypso.sourceforge.net.", exeFile.getAbsolutePath() );
+    final String exeMissingMsg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.26"), exeFile.getAbsolutePath() ); //$NON-NLS-1$
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
 
@@ -376,11 +377,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final int stepNr = m_iterationInfo.getStepNr();
     if( oldStepNr != stepNr )
     {
-      String msg = "";
+      String msg = ""; //$NON-NLS-1$
       if( stepNr == 0 )
-        msg = String.format( "RMA·Kalypso wird ausgeführt - stationärer Schritt" );
+        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.28") ); //$NON-NLS-1$
       else
-        msg = String.format( "RMA·Kalypso wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
+        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.29"), stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
       monitor.subTask( msg );
       monitor.worked( stepNr - oldStepNr );
     }
@@ -393,9 +394,9 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private static File findErrorFile( final File dir )
   {
-    final File errorDatFile = new File( dir, "ERROR.DAT" );
-    final File errorOutFile = new File( dir, "ERROR.OUT" );
-    final File errorErrFile = new File( dir, "exe.err" );
+    final File errorDatFile = new File( dir, "ERROR.DAT" ); //$NON-NLS-1$
+    final File errorOutFile = new File( dir, "ERROR.OUT" ); //$NON-NLS-1$
+    final File errorErrFile = new File( dir, "exe.err" ); //$NON-NLS-1$
 
     if( errorDatFile.exists() )
       return errorDatFile;
@@ -414,7 +415,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     // TODO: error or warning depends, if any steps where calculated; the RMA·Kalypso should determine if result processing
     // makes sense
 
-    final String[] lines = errorMessage.split( "\n" );
+    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
     if( lines.length != 7 )
       return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
 

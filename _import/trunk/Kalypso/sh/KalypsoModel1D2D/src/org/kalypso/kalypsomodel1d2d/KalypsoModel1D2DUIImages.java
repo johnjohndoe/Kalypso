@@ -49,30 +49,30 @@ public class KalypsoModel1D2DUIImages
 {
   public enum IMGKEY implements ImageKey
   {
-    OK("icons/elcl16/ok.gif"),
-    EDIT("icons/elcl16/edit.gif"),
-    SELECT("icons/elcl16/boxSel.gif"),
-    DELETE("icons/elcl16/remove.gif"),
-    CHANGE("icons/elcl16/change.gif"),
-    PLAY("icons/elcl16/nav_go.gif"),
-    GO("icons/elcl16/blue_arrow_right.gif"),
-    ADD("icons/elcl16/addrepo_rep.gif"),
-    RUN_SIM("icons/startCalculation.gif"),
-    ZOOM_WITH_RECT("icons/elcl16/zoomin.gif"),
-    PAN("icons/elcl16/pan.gif"),
-    HYDROGRAPH_ADD("icons/elcl16/hydrograph_create.gif"),
-    HYDROGRAPH_EDIT("icons/elcl16/hydrograph_edit.gif"),
-    HYDROGRAPH_SELECT("icons/elcl16/hydrograph_select.gif"),
-    HYDROGRAPH_REMOVE("icons/elcl16/hydrograph_delete.gif"),
-    HYDROGRAPH_JUMP_TO("icons/elcl16/nav_go.gif"),
-    HYDROGRAPH_EXPORT("icons/elcl16/hydrograph_export.gif"),
-    HYDROGRAPH_COLLECTION_ADD("icons/elcl16/add.gif"),
-    HYDROGRAPH_COLLECTION_REMOVE("icons/elcl16/remove.gif"),
-    HYDROGRAPH_COLLECTION_PROCESS("icons/elcl16/hydro_process.gif"),
-    ELEVATION_SHOW("icons/elcl16/23_show_elevationmodel.gif"),
-    ELEVATION_DELETE("icons/elcl16/25_cut_elevationmodel.gif"),
-    ELEVATION_MOVE_UP("icons/elcl16/list_up.gif"),
-    ELEVATION_MOVE_DOWN("icons/elcl16/list_down.gif");
+    OK("icons/elcl16/ok.gif"), //$NON-NLS-1$
+    EDIT("icons/elcl16/edit.gif"), //$NON-NLS-1$
+    SELECT("icons/elcl16/boxSel.gif"), //$NON-NLS-1$
+    DELETE("icons/elcl16/remove.gif"), //$NON-NLS-1$
+    CHANGE("icons/elcl16/change.gif"), //$NON-NLS-1$
+    PLAY("icons/elcl16/nav_go.gif"), //$NON-NLS-1$
+    GO("icons/elcl16/blue_arrow_right.gif"), //$NON-NLS-1$
+    ADD("icons/elcl16/addrepo_rep.gif"), //$NON-NLS-1$
+    RUN_SIM("icons/startCalculation.gif"), //$NON-NLS-1$
+    ZOOM_WITH_RECT("icons/elcl16/zoomin.gif"), //$NON-NLS-1$
+    PAN("icons/elcl16/pan.gif"), //$NON-NLS-1$
+    HYDROGRAPH_ADD("icons/elcl16/hydrograph_create.gif"), //$NON-NLS-1$
+    HYDROGRAPH_EDIT("icons/elcl16/hydrograph_edit.gif"), //$NON-NLS-1$
+    HYDROGRAPH_SELECT("icons/elcl16/hydrograph_select.gif"), //$NON-NLS-1$
+    HYDROGRAPH_REMOVE("icons/elcl16/hydrograph_delete.gif"), //$NON-NLS-1$
+    HYDROGRAPH_JUMP_TO("icons/elcl16/nav_go.gif"), //$NON-NLS-1$
+    HYDROGRAPH_EXPORT("icons/elcl16/hydrograph_export.gif"), //$NON-NLS-1$
+    HYDROGRAPH_COLLECTION_ADD("icons/elcl16/add.gif"), //$NON-NLS-1$
+    HYDROGRAPH_COLLECTION_REMOVE("icons/elcl16/remove.gif"), //$NON-NLS-1$
+    HYDROGRAPH_COLLECTION_PROCESS("icons/elcl16/hydro_process.gif"), //$NON-NLS-1$
+    ELEVATION_SHOW("icons/elcl16/23_show_elevationmodel.gif"), //$NON-NLS-1$
+    ELEVATION_DELETE("icons/elcl16/25_cut_elevationmodel.gif"), //$NON-NLS-1$
+    ELEVATION_MOVE_UP("icons/elcl16/list_up.gif"), //$NON-NLS-1$
+    ELEVATION_MOVE_DOWN("icons/elcl16/list_down.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
