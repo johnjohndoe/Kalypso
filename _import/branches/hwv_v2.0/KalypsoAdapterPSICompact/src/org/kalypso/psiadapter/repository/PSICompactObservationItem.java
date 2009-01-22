@@ -381,9 +381,8 @@ public class PSICompactObservationItem implements IObservation
     msg.append( m_objectInfo.getId() );
     msg.append( '\n' );
 
-    for( int i = 0; i < data.length; i++ )
+    for( final ArchiveData dataItem : data )
     {
-      final PSICompact.ArchiveData dataItem = data[i];
       msg.append( dataItem.getTimestamp() );
       msg.append( " - " );
       msg.append( dataItem.getValue() );
@@ -441,7 +440,7 @@ public class PSICompactObservationItem implements IObservation
     cal.add( overwriteCalendarField, overwriteAmountAfter );
     final Date end = cal.getTime();
 
-    /* Beware of endles loop */
+    /* Beware of endless loop */
     if( !begin.before( end ) )
       throw new SensorException( "Failed to determine date-interval for timeserie" );
 
@@ -524,7 +523,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void addListener( IObservationListener listener )
+  public void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
@@ -532,7 +531,7 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
