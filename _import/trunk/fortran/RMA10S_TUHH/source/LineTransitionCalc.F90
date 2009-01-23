@@ -69,6 +69,13 @@ dv = 0.001
 !for every line transition
 transitionloop: do i = 1, MaxLT
 
+  !definition of TransLines' subscripts
+  !------------------------------------
+  !1: 1D element that is transitioning
+  !2: Continuity line ID on 2D side
+  !3: 1D node that is adjacent to the 1D-2D transition
+  !4: type of the transition (1: 1D>2D; 2: 2D>1D; 3:h-exchange)
+  
   !if transition is empty, cycle loop.
   if (TransLines (i, 1) == 0) CYCLE transitionloop
 
@@ -170,7 +177,7 @@ transitionloop: do i = 1, MaxLT
           !specific discharge
           spec(na, 1) = TransSpec (k)
           !direction
-          spec(na, 2) = alfa(na) - adif (na)
+          spec(na, 2) = alfa(na)! - adif (na)
           !correct direction
           VelCrossA  = vel (1, TransNo) * DYtot - vel (2, TransNo) * DXtot
           SpecCrossA = spec (na, 1) * COS( alfa(na)) * DYtot - spec (na, 1) * SIN( alfa(na)) * DXtot

@@ -738,7 +738,7 @@ enddo elements2
 
             !Get nodal number
             N1 = Line(LiNo,nodeno)
-            !Calculate angular difference of first and last node
+            !Calculate angular difference of first and third node that has for shure the line's directio fix
             ADIF(N1) = ALFA(N1) - ALFA(N3)
 
             !Correct direction, so that the vectors points into quadrant 1 or 4

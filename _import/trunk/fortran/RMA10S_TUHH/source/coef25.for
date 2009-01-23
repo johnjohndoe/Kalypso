@@ -122,6 +122,11 @@ C-
       DATA FCOEF/14.47/,THRESH/1.0E-3/,PI/3.14159/
 C
 
+!---------------
+!Execution block
+!---------------
+
+      !define some constants due to unit system
       IF (GRAV .LT. 32.)  THEN
         FCOEF = GRAV
         CVF2=3.28
@@ -131,13 +136,15 @@ C
         CVF2=1.0
         CVFCT=1.0
       ENDIF
+      
+      !determine average density within element
       ROAVG=1.935
+      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 
 CIPK MAR03  REPLACE TH(NN) WITH THNN
-
+      !direction of element
       THNN=TH(NN)
 
-      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 C
 C-
 C-.....ASSIGN PROPER COEFS.....
@@ -147,6 +154,7 @@ CIPKNOV97 ADD TVOL
 CIPK APR 01 INITIALISATION MOVED FURTHER ON 
 C      TVOL(NN)=0.
 
+      !Find number of corner nodes of current element
       IF(ITEQV(MAXN) .EQ. 5) THEN
         DO 61 N=1,8
           NCON(N)=NOPS(NN,N)
@@ -158,6 +166,8 @@ C      TVOL(NN)=0.
           NCON(N)=NOP(NN,N)
    63   CONTINUE
       ENDIF
+
+
 c
 cipk sep96 move up thislogic
 c
@@ -189,7 +199,9 @@ CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
       ENDIF
 
 CIPK JUN05 MOVE LOOP
+      !get number of element equations (dependent variables)
       NEF=NCN*NDF
+      !initialize residual vector f and Jacobian matrix estifm
       DO  I=1,NEF
         F(I) = 0.0
         DO  J=1,NEF
@@ -204,9 +216,11 @@ cipk jun05
       if(iteqv(maxn) .eq. 9) inovel=3
 
 cipk oct98 update to f90
+      !get local copy of material type of current element
       IMMT=IMAT(NN)
 
 cipk nov99 revise to allow for collapsing 3-d to 2-d
+      !evaluate material type due to 3D applications
       if(immt .gt. 1000) immt=immt-1000
 
 CIPK JUN05
@@ -214,6 +228,7 @@ c
 c     Test for and determine whether conrol structure now operates as an
 c     ordinary element.  If one node is above transition then treat as
 c     a  normal element
+      !Check for submerged control structure element, if so treat it as normal element
       if(ntx .eq. 1) then
         if(imat(nn) .gt. 900) then
           if(inovel .gt. 0) return
@@ -221,17 +236,22 @@ c     a  normal element
         endif
       endif
 
+      !Find material type definition value (last two digits show type dedinition
       NR = MOD(IMMT,100)
 cipkjun05
+      !Leave material types with value .gt. 900 as they are > control structures
       if(immt .gt. 900) nr=immt
-      FFACT=0.
 
+      !initialize friction factor
+      FFACT=0.
 cipk nov98 adjust for top friction
+      !surface or bottom friction coefficient, if Chezy is used
       IF(ORT(NR,5) .GT. 1.  .or.  ort(nr,13) .gt. 1.) then
         FFACT = GRAV/(CHEZ(NN)+ort(nr,13))**2
       endif
 
 CIPK MAR0 setup switch that says salinity is active
+      !switch on/off salinity
       IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8
      +                       .OR.  ITEQV(MAXN) .EQ. 9) THEN
         ISLP=1
@@ -520,6 +540,10 @@ CIPK MAY04 RESET ELEMENT INFLOW
 	ENDIF
 	SIDFQQ=SIDF(NN)
 
+
+!--------------------------------
+!GAUSS LOOP GAUSS LOOP GAUSS LOOP
+!--------------------------------
 C-
 C-.....COMPUTE ELEMENT EQUATIONS.....
 C-
@@ -1698,8 +1722,14 @@ C       COMPUTE BOUNDARY FORCES
         transtype = TransLines (TransLine, 4)
       endif
 
+      !Following part of the source code settles the boundary hydrostatic forces,
+      !  either to active h-Boundary conditions or to shoreline boundaries, as well as
+      !  the shoreline friction values, if there was a fricition coefficient given.
       BoundaryForces: DO L=1,NCN,2
+        !midside node of the current arc
         N2=NCON(L+1)
+        
+        !Check the current arc for being a boundary arc
 CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         IF (IBN (N2) /= 1  .AND. IBN (N2) /= 10 .AND.
      +      IBN (N2) /= 11 .AND. IBN (N2) /= 21 .AND.
@@ -1717,19 +1747,23 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
      +      CYCLE BoundaryForces
 
         end if
-      !-
 
+        !The three nodes of the current boundary arc
         N1=NCON(L)
         NA=MOD(L+2,NCN)
         N3=NCON(NA)
+        !The equation numbers of the corner nodes of the current boundary arc
         NC1=(L-1)*NDF+3
         NC2=(NA-1)*NDF+3
+        !water depth of the current corner nodes 
         H1=VEL(3,N1)
         H3=VEL(3,N3)
+        !The length of the current arc
         DL(1,2)=(CORD(N2,1)-CORD(N1,1))*CX+(CORD(N2,2)-CORD(N1,2))*SA
         DL(1,1)=-(CORD(N2,1)-CORD(N1,1))*SA+(CORD(N2,2)-CORD(N1,2))*CX
         DL(2,2)=(CORD(N3,1)-CORD(N1,1))*CX+(CORD(N3,2)-CORD(N1,2))*SA
         DL(2,1)=-(CORD(N3,1)-CORD(N1,1))*SA+(CORD(N3,2)-CORD(N1,2))*CX
+        !Finding a direction factor (1.0 or -1.0)
         IF(DL(2,2) .LT. 0.) THEN
           FTF(1)=1.0
         ELSE
@@ -1742,44 +1776,51 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ENDIF
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
-
-        !nis,feb08: for transition
+        !Consider transition nodes (type 3) as active boundaries
         ELSEIF (TransitionMember (n2)) THEN
           IHD = 1
-        !-
-
+        !In all other cases they are passive boundaries, so that they will not get a
+        !  user/transition specified boundary condition force
         ELSE
           IHD=0
         ENDIF
+
+        !Run through momentum equations of a node and integrate the boundary forces
+        !  over the length of the arc using a linear interpolation integrated with GAUSS
         DO 600 M=1,2
+          !Run through the GAUSS nodes on a linear line (boundary arc)
           DO 580 N=1,4
+            !get the density at the GAUSS point
             RHO=DEN(N1)+AFACT(N)*(DEN(N3)-DEN(N1))
+            !get the water depth at the GAUSS point
             H=H1+AFACT(N)*(H3-H1)
-            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
-CIPK APR01 FIX BUG            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
+            !Calculate the bottom elevation, considering the Marsh slot if the option
+            !  is operative, otherwise the bottom elevation is ao.
             IF(IDNOPT .LT. 0) THEN
               AZER = AME((L+1)/2)+ADO(N1)  +
      +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
             ENDIF
+            !Calculate the sigma transformation factor
             XHT=ELEV-AZER
-CMAY93            U=
-CMAY93     +      XNAL(1,N)*VEL(1,N1)+XNAL(2,N)*VEL(1,N2)+XNAL(3,N)*VEL(1,N3)
-CMAY93            V=
-CMAY93     +      XNAL(1,N)*VEL(2,N1)+XNAL(2,N)*VEL(2,N2)+XNAL(3,N)*VEL(2,N3)
+
+            !Calculate the velocities using a distribution function if specified
+            !  purpose is the calculation of the shoreline friction
             UU=
      +      XNAL(1,N)*VEL(1,N1)/UDST(N1)+XNAL(2,N)*VEL(1,N2)/UDST(N2)
      +     +XNAL(3,N)*VEL(1,N3)/UDST(N3)
             VV=
      +      XNAL(1,N)*VEL(2,N1)/VDST(N1)+XNAL(2,N)*VEL(2,N2)/VDST(N2)
      +     +XNAL(3,N)*VEL(2,N3)/VDST(N3)
+            !Turn the velocities onto direction fixes
             U= UU*CX+VV*SA
             V=-UU*SA+VV*CX
 !
 !.....Compute shore friction.....
 !
 CMAY93 ENDCHANGE
+            !get total velocity
             VECQ=SQRT(U**2+V**2)
             !Chezy
             IF (ORT (NR, 11) > 1.) THEN
@@ -1809,16 +1850,39 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
             !no shoreline friction
             else
               FFACT = 0.0d0
-              continue
-          
+              !continue
             ENDIF
-            
-            
+!
+!... compute hydrostatic forces ...
+!            
+            !                                        1 
+            !temp = (w1 * b1 + w2 * b2) * rho * g * --- * XHT
+            !                                        2
+            !w1, w2 = weighting factors
+            !b1, b2 = arc segment widths
+            !
             TEMP=(DNAL(2,N)*DL(1,M)+DNAL(3,N)*DL(2,M))*GRAV/2.*RHO*XHT
+            !                                      1           2    1
+            !hp = (w1 * b1 + w2 * b2) * rho * g * --- * XHT * h  * --- * f1
+            !                                      2                2
+            !f1 = linear function for interpolation.
+            !
+            !TODO
+            !This is strange, because the factor 1/4 should be only 1/2. Only reason
+            !might be the extension of the unit width for the weighting functions with 
+            !fator 2.
             HP=TEMP*HFACT(N)*H**2/2.
+            !                                       1
+            !hp1 = (w1 * b1 + w2 * b2) * rho * g * --- * XHT * h * f1
+            !                                       2
             HP1=TEMP   *H*HFACT(N)
+            !                                        1
+            !DERR = (w1 * b1 + w2 * b2) * rho * g * --- * XHT * h * f1 * (a1 * (hsoll1 - hist1) + (1 - a1) * (hsoll2-hist2)
+            !                                        2
             DERR=SLOAD(M)*HP1*(AFACT(N)*(SPEC(N3,3)-VEL(3,N3))
      +          +(1.-AFACT(N))*(SPEC(N1,3)-VEL(3,N1)))
+
+            !get the friciton 
             IF(M .EQ. 2) THEN
               TFRIC=TEMP*FFACT*FTF(1)*HFACT(N)
               FFACT=TFRIC*U*VECQ
@@ -1841,32 +1905,51 @@ CMAY93              TFRIC=TEMP*FFACT*FTF(2)
                 FDV=0.
               ENDIF
             ENDIF
+            !Modify the estifm and f vectors/matrices
+            !  for the influence of all 3 nodes of the current boundary arc
             DO 575 K=1,3
+              !get the equaiton number              
               MA=MOD((L+K-2)*NDF+M,NEF)
               MA1=MA+3-2*M
+              !Modify the equation 
               F(MA)=F(MA)+HP*XNAL(K,N)*SLOAD(M)
+
+              !Modify the equations for passive boundaries
               IF(IHD .EQ. 0) THEN
-                F(MA1)=F(MA1)+XNAL(K,N)*FFACT
+                !Hydrostatic side pressure
                 ESTIFM(MA,NC1)=ESTIFM(MA,NC1)
      +                         -SLOAD(M)*(1.-AFACT(N))*XNAL(K,N)*HP1
+
                 ESTIFM(MA,NC2)=ESTIFM(MA,NC2)
      +                         -SLOAD(M)*AFACT(N)*XNAL(K,N)*HP1
+
+                !shoreline friction (FDU or FDV)
+                F(MA1)=F(MA1)+XNAL(K,N)*FFACT
+
                 ESTIFM(MA1,NC1)=ESTIFM(MA1,NC1)
      +                         -XNAL(K,N)*FFACT/H*(1.-AFACT(N))
+
                 ESTIFM(MA1,NC2)=ESTIFM(MA1,NC2)
      +                         -XNAL(K,N)*FFACT/H*AFACT(N)
+
                 ESTIFM(MA1,NC1-2)=ESTIFM(MA1,NC1-2)
      +                         -FDU*XNAL(K,N)*XNAL(1,N)
+
                 ESTIFM(MA1,NC1-1)=ESTIFM(MA1,NC1-1)
      +                         -FDV*XNAL(K,N)*XNAL(1,N)
+
                 ESTIFM(MA1,NC1+NDF-2)=ESTIFM(MA1,NC1+NDF-2)
      +                         -FDU*XNAL(K,N)*XNAL(2,N)
+
                 ESTIFM(MA1,NC1+NDF-1)=ESTIFM(MA1,NC1+NDF-1)
      +                         -FDV*XNAL(K,N)*XNAL(2,N)
+
                 ESTIFM(MA1,NC2-2)=ESTIFM(MA1,NC2-2)
      +                         -FDU*XNAL(K,N)*XNAL(3,N)
+
                 ESTIFM(MA1,NC2-1)=ESTIFM(MA1,NC2-1)
      +                         -FDV*XNAL(K,N)*XNAL(3,N)
+              !Modify the equaitons for active boundaries or transitions
               ELSE
                 F(MA)=F(MA)+DERR*XNAL(K,N)
               ENDIF
@@ -1880,7 +1963,7 @@ C- APPLY TRANSFORMATIONS TO STIFFNESS AND FORCE MATRICES FOR SLOPING B. C.
 C-
       DO 1000 N=1,NCN
         N1=NCON(N)
-        AFA=ALFA(N1)-THNN-ADIF(N1)
+        AFA=ALFA(N1)-THNN -ADIF(N1)
         IF(AFA) 820,1000,820
   820   CX=COS(AFA)
         SA=SIN(AFA)
@@ -2016,11 +2099,11 @@ C-
 
           !form specific discharge values like inner boundary condition
           F (IRW)           = spec(M, 1) - vx * hm
-          ESTIFM (IRW, IRW) = hm  ! - dspecdv(M)
+          ESTIFM (IRW, IRW) = hm   - dspecdv(M)
 
           !for corner nodes
           if (mod(n,2) /= 0) then
-            ESTIFM (IRW, IRH) = vx  ! - dspecdh(M)
+            ESTIFM (IRW, IRH) = vx   - dspecdh(M)
           !for midside nodes
           else
             ESTIFM (irw, IRH - ndf) = 0.5 * vx
@@ -2227,9 +2310,11 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
  1450 CONTINUE
 
 !write matrix into file
-!      if (TransitionElement (nn))
-!     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
-!      call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+      !if (nn == 4621 .or. nn == 4624)
+      !if (nn == 4410 .or. nn == 4412) then
+      !  write(*,*) 'Element: ', nn
+      !  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+      !endif
 !-
 
       RETURN
