@@ -34,7 +34,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_entwaesserungsStrangMember"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}entwaesserungsStrangMember">
@@ -46,7 +46,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_izkn_vers"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}izkn_vers">
@@ -58,7 +58,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_izkn"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}izkn">
@@ -70,7 +70,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_iknotNodeMember"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}iknotNodeMember">
@@ -82,7 +82,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_grundwasserabflussMember"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}grundwasserabflussMember">
@@ -94,7 +94,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_downStreamChannelMember"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}downStreamChannelMember">
@@ -106,7 +106,7 @@
               function="org.kalypso.convert.namodel.schema.functions.FeatureAssociationFunctionProperty"
               isList="false"
               qname="{virtual}link_branchingMember"
-              value="{http://www.opengis.net/gml}LineStringPropertyType">
+              value="{http://www.opengis.net/gml}LineString">
            <property
                  name="relation"
                  value="{http://www.tuhh.de/kalypsoNA}branchingMember">
