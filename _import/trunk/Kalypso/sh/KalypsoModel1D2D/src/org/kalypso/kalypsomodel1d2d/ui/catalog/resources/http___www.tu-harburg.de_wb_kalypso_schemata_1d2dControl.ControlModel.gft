@@ -50,7 +50,7 @@
 					</gft:text>
 					<gft:extensioncontrol style="SWT.NONE" property="c1d2d:Version" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
 						<gft:param name="dir" value="bin"/>
-						<gft:param name="exePattern" value="rma10sk_(.*).exe"/>
+						<gft:param name="exePattern" value="rma-kalypso_(.*).exe"/>
 					</gft:extensioncontrol>
 					<gft:validatorlabel property="c1d2d:Version" visible="true" style="SWT.NONE">
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
