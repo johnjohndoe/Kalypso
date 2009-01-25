@@ -607,7 +607,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
         {
           // If current buffer only shows part of the map, paint it into the right screen-rect
           final GeoTransform currentProjection = getProjection();
-          MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
+          if( currentProjection != null )
+            MapPanelUtilities.paintIntoExtent( bufferGraphics, currentProjection, image, imageBounds, m_backgroundColor );
         }
       }
 
@@ -725,14 +726,15 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     /* Adjust the new extent (using the wish bounding box). */
     final double ratio = MapPanelUtilities.getRatio( this );
-    m_boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
+    final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, ratio );
+    m_boundingBox = boundingBox;
 
-    if( m_boundingBox != null )
+    if( boundingBox != null )
     {
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", m_boundingBox.getMin().getX() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", m_boundingBox.getMin().getY() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", m_boundingBox.getMax().getX() );
-      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", m_boundingBox.getMax().getY() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinX: %d%n", boundingBox.getMin().getX() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MinY: %d%n", boundingBox.getMin().getY() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxX: %d%n", boundingBox.getMax().getX() );
+      KalypsoCoreDebug.MAP_PANEL.printf( "MaxY: %d%n", boundingBox.getMax().getY() );
 
       if( invalidateMap )
         invalidateMap();
@@ -742,7 +744,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     /* Tell everyone, that the extent has changed. */
     if( invalidateMap )
-      fireExtentChanged( oldExtent, m_boundingBox );
+      fireExtentChanged( oldExtent, boundingBox );
   }
 
   /**
