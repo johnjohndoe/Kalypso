@@ -14,5 +14,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.intro,
  org.kalypso.NACalcJob,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
- org.kalypso.afgui;bundle-version="0.0.0"
+ org.kalypso.afgui;bundle-version="0.0.0",
+ org.kalypso.project.database.client;bundle-version="1.0.0"
 Eclipse-LazyStart: true

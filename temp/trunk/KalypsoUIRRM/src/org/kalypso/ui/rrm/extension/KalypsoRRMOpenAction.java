@@ -72,7 +72,9 @@ public class KalypsoRRMOpenAction implements IKalypsoProjectOpenAction
 
     final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() || !project.isOpen() )
+    {
       return Status.CANCEL_STATUS;
+    }
 
     /* hide intro */
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -82,7 +84,9 @@ public class KalypsoRRMOpenAction implements IKalypsoProjectOpenAction
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage page = window.getActivePage();
     if( page == null )
+    {
       return Status.CANCEL_STATUS;
+    }
 
     /* close unused perspectives */
     final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
@@ -90,14 +94,20 @@ public class KalypsoRRMOpenAction implements IKalypsoProjectOpenAction
     {
       final String id = descriptor.getId();
       if( id.equals( ModelerPerspectiveFactory.ID ) )
+      {
         continue;
+      }
       else if( descriptor != null )
+      {
         page.closePerspective( descriptor, true, false );
+      }
     }
 
     final IPerspectiveDescriptor descriptor = page.getWorkbenchWindow().getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( ModelerPerspectiveFactory.ID );
     if( descriptor != null )
+    {
       page.setPerspective( descriptor );
+    }
 
     return Status.OK_STATUS;
   }

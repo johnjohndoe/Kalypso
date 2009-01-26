@@ -7,6 +7,8 @@ import java.net.URL;
 
 import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
@@ -19,6 +21,7 @@ import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 public class KalypsoModuleRRM implements IKalypsoModule
@@ -81,6 +84,15 @@ public class KalypsoModuleRRM implements IKalypsoModule
           @Override
           public boolean select( final IProjectHandler handler )
           {
+            if( handler instanceof ILocalProject )
+            {
+              final ILocalProject local = (ILocalProject) handler;
+              final IProject project = local.getProject();
+              final IFile file = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
+
+              return file.exists();
+            }
+
             return false;
           }
         };
