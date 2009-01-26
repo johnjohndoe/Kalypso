@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.extension;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
@@ -52,9 +53,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.intro.IIntroManager;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.model.wspm.ui.product.ProfileManagerPerspective;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
 
 /**
  * @author kuch
@@ -68,49 +72,58 @@ public class WspmOpenAction implements IKalypsoProjectOpenAction
   @Override
   public IStatus open( final Properties properties )
   {
+    /* Validate parameters */
+    final String projectName = properties.getProperty( "project", null ); //$NON-NLS-1$
+
+    final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
+    if( !project.exists() || !project.isOpen() )
+    {
+      return Status.CANCEL_STATUS;
+    }
+
+    /* hide intro */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IIntroManager introManager = workbench.getIntroManager();
+    introManager.closeIntro( introManager.getIntro() );
+
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+    {
+      return Status.CANCEL_STATUS;
+    }
+
+    /* close unused perspectives */
+    final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
+    for( final IPerspectiveDescriptor descriptor : perspectives )
+    {
+      final String id = descriptor.getId();
+      if( id.equals( WspmPerspectiveFactory.ID ) )
+      {
+        continue;
+      }
+      else if( descriptor != null )
+      {
+        page.closePerspective( descriptor, true, false );
+      }
+    }
+
+    final IPerspectiveDescriptor descriptor = page.getWorkbenchWindow().getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( WspmPerspectiveFactory.ID );
+    if( descriptor != null )
+    {
+      page.setPerspective( descriptor );
+    }
+
     try
     {
-      /* Validate parameters */
-      final String projectName = properties.getProperty( "project", null ); //$NON-NLS-1$
-
-      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-      if( !project.exists() || !project.isOpen() )
-        return Status.CANCEL_STATUS;
-
-      /* hide intro */
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IIntroManager introManager = workbench.getIntroManager();
-      introManager.closeIntro( introManager.getIntro() );
-
-      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      final IWorkbenchPage page = window.getActivePage();
-      if( page == null )
-        return Status.CANCEL_STATUS;
-
-      /* close unused perspectives */
-      final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
-      for( final IPerspectiveDescriptor descriptor : perspectives )
-      {
-        final String id = descriptor.getId();
-        if( id.equals( ProfileManagerPerspective.ID ) )
-          continue;
-        else if( descriptor != null )
-          page.closePerspective( descriptor, true, false );
-      }
-
-      final IPerspectiveDescriptor descriptor = page.getWorkbenchWindow().getWorkbench().getPerspectiveRegistry().findPerspectiveWithId( ProfileManagerPerspective.ID );
-      if( descriptor != null )
-        page.setPerspective( descriptor );
-
-      page.showView( "org.kalypso.featureview.views.FeatureView" );
+      final IFile iFile = project.getFile( "WSPM.gmv" );
+      IDE.openEditor( page, iFile );
     }
     catch( final PartInitException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
     return Status.OK_STATUS;
   }
-
 }
