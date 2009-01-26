@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IntroPart;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
@@ -90,18 +91,22 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
   {
     final FormToolkit toolkit = KalypsoModelProductPlugin.getFormToolkit();
 
-    final Composite body = toolkit.createComposite( parent, SWT.NONE );
+    final ScrolledForm form = toolkit.createScrolledForm( parent );
+    final Composite body = form.getBody();
     body.setBackgroundImage( IMG_BACKGROUND );
     body.setBackgroundMode( SWT.INHERIT_FORCE );
     body.setLayout( new GridLayout() );
-    body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    final GridData layoutData = new GridData( GridData.FILL, GridData.FILL, true, true );
+    layoutData.heightHint = 800;
+    body.setLayoutData( layoutData );
 
     m_contentArea = new Composite( body, SWT.NULL );
     m_contentArea.setLayout( new GridLayout() );
-    m_contentArea.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_contentArea.setLayoutData( layoutData );
 
     update();
 
+    form.reflow( false );
   }
 
   public void update( )
