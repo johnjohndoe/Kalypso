@@ -80,7 +80,7 @@ public class CreateProjectComposite extends Composite
 
   private final String m_label;
 
-  private final IEnteringPageWizardDelegate m_delegate;
+  protected final IEnteringPageWizardDelegate m_delegate;
 
   public CreateProjectComposite( final String label, final Composite parent, final FormToolkit toolkit, final IEnteringPageWizardDelegate delegate )
   {

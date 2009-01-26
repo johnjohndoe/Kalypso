@@ -44,15 +44,14 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -60,9 +59,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
-import org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
 
@@ -198,17 +195,9 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
         {
           getLocker().acquireUiUpdateLock();
 
-          if( MessageDialog.openConfirm( lnkDelete.getShell(), "Lösche Projekt", String.format( "Projekt \"%s\" wirklich löschen?", getLocalProject().getName() ) ) )
-          {
-            final DeleteLocalProjectHandler delete = new DeleteLocalProjectHandler( getLocalProject().getProject() );
-            final IStatus status = ProgressUtilities.busyCursorWhile( delete );
-
-            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-            if( shell != null && !shell.isDisposed() )
-            {
-              ErrorDialog.openError( shell, "Löschen fehlgeschlagen", "Fehler beim Löschen des Projektes", status );
-            }
-          }
+          final DeleteResourceAction action = new DeleteResourceAction( new SameShellProvider( lnkDelete.getShell() ) );
+          action.selectionChanged( new StructuredSelection( getLocalProject().getProject() ) );
+          action.run();
         }
         finally
         {
