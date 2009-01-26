@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
  * 
  * @author Dirk Kuch
  */
+@SuppressWarnings("restriction")
 public class ImportProjectComposite extends Composite
 {
   public static Image IMG_IMPORT = new Image( null, ImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) );
