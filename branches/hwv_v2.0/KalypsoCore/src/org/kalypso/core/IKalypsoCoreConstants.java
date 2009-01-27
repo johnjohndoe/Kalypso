@@ -51,4 +51,6 @@ public interface IKalypsoCoreConstants
   public static final String CONFIG_PROPERTY_CLIENT_INI_LOCATION = "kalypso.client-ini-locations";
     
   public static final String RESOURCE_LOCK_MARKER_TYPE = IKalypsoCoreConstants.PLUGIN_ID + ".resourcePoolLockMarker"; //$NON-NLS-1$
+
+  public static final String CONFIG_PROPERTY_TIMEZONE = "kalypso.timezone";//$NON-NLS-1$
 }

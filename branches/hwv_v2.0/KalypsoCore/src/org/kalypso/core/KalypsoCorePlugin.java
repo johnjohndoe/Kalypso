@@ -44,12 +44,16 @@ package org.kalypso.core;
 import java.io.File;
 import java.util.TimeZone;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.i18n.Messages;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
@@ -155,27 +159,42 @@ public class KalypsoCorePlugin extends Plugin
   }
 
   /**
-   * TODO! merge with KalypsoGisPlugin.getDisplayTimezone!<br>
-   * Returns the default timezone which shall be used to display date's in kalypso.
-   * <p>
-   * This is a bit special, we also could have used {@link TimeZone#setDefault(java.util.TimeZone)}. We do this in order
-   * not to disturb other plugins. But every Kalypso Plugins should use this time zone to display and parse date
-   * information.
+   * Gets the kalypso timezone (to be used to display any dates in the UI).<br>
+   * The timezone is set in the user-preferences. If the preference is not set, the value of the system property
+   * 'kalypso.timezone' will be used, or, if not set, the system timezone (see {@link TimeZone#getDefault()}). <br>
+   * The user preferences can explicitly be set to:
+   * <ul>
+   * <li>OS_TIMEZONE: {@link TimeZone#getDefault() is always used}</li>
+   * <li>CONFIG_TIMEZONE: timezone definition from config.ini (kalypso.timezone) is used (defaults to system timezone if
+   * not set)</li>
+   * </ul>
    */
-  public TimeZone getTimeZone()
+  public TimeZone getTimeZone( )
   {
-    // TODO: let the user edit the time-zone via user preferences
-    // REMARK: if the above todo is fixed, please also support setting timezone
-    // via system properties (aka config.ini file).
-    // In this case, the user preferences may overwrite the global settings.
+    final String timeZoneID = getPluginPreferences().getString( IKalypsoCorePreferences.DISPLAY_TIMEZONE );
+    if( IKalypsoCorePreferences.PREFS_OS_TIMEZONE.equals( timeZoneID ) )
+      return TimeZone.getDefault();
 
-    // get the time zone from a global place, i.e. the sstem properties
-    // System properties can easily set in the eclipse config.ini file
-    final String tzString = System.getProperty( "kalypso.timezone", "UTC" );
-    if( tzString != null && tzString.length() > 0 )
-      return TimeZone.getTimeZone( tzString );
+    final String timezone;
+    if( timeZoneID == null || timeZoneID.isEmpty() || IKalypsoCorePreferences.PREFS_CONFIG_TIMEZONE.equals( timeZoneID ) )
+      timezone = System.getProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, null );
+    else
+      timezone = timeZoneID;
 
-    return TimeZone.getDefault();
+    if( timezone == null || timezone.isEmpty() )
+      return TimeZone.getDefault();
+
+    try
+    {
+      return TimeZone.getTimeZone( timeZoneID );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.format( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
+      getLog().log( status );
+
+      return TimeZone.getDefault();
+    }
   }
 
   /**
@@ -201,8 +220,8 @@ public class KalypsoCorePlugin extends Plugin
    * defaults, and returned.
    * </p>
    * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility
-   * layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer
+   * and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
    * themselves.
    * </p>
    * 
