@@ -78,7 +78,6 @@ public class MapViewInputContextHandler extends AbstractHandler
     else
     {
       // there is a map view and a file
-
       final MapView mapView = (MapView) view;
       final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
 
@@ -97,7 +96,9 @@ public class MapViewInputContextHandler extends AbstractHandler
         {
           final IMapModell mapModell = mapPanel.getMapModell();
           if( mapModell == null )
+          {
             return Status.CANCEL_STATUS;
+          }
 
           mapModell.activateTheme( null );
           return Status.OK_STATUS;

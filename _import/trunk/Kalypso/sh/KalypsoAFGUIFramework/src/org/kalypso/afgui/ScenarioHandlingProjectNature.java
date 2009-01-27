@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -167,20 +170,35 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       final IFolder parentFolder = getProject().getFolder( parentPath );
       try
       {
-        final IResource[] members = parentFolder.members( false );
-        for( final IResource resource : members )
+        parentFolder.accept( new IResourceVisitor()
         {
+          @Override
+          public boolean visit( final IResource resource ) throws CoreException
+          {
+            if( parentFolder.equals( resource ) || newFolder.equals( resource ) )
+            {
+              // ignore scenario folder and .* resources
+            }
+            else if( m_filter.shouldBeCopied( resource ) )
+            {
+              final IPath parentFolderPath = parentFolder.getFullPath();
+              final IPath resourcePath = resource.getFullPath();
 
-          if( resource.getName().equals( newFolder.getName() ) )
-          {
-            // ignore scenario folder and .* resources
-            continue;
+              final IPath relativePath = resourcePath.removeFirstSegments( parentFolderPath.segments().length );
+
+              if( resource instanceof IFolder )
+              {
+                newFolder.getFolder( relativePath ).create( true, true, new NullProgressMonitor() );
+              }
+              else if( resource instanceof IFile )
+              {
+                resource.copy( newFolder.getFullPath().append( relativePath ), true, new NullProgressMonitor() );
+              }
+            }
+
+            return true;
           }
-          else if( m_filter.shouldBeCopied( resource ) )
-          {
-            resource.copy( newFolder.getFullPath().append( resource.getName() ), false, null );
-          }
-        }
+        } );
       }
       catch( final CoreException e )
       {
