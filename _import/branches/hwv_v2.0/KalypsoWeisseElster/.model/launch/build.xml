@@ -153,9 +153,9 @@
                   value="${requestN}&lt;filter&gt;&lt;intervallFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; mode=&quot;sum&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
         <!-- Q/W: interpolation-filter -->
         <property name="filterW"
-                  value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+                value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
         <property name="filterQ"
-                  value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+                value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
     	
         <!-- T: intensity/average-filter -->
         <!-- Temperatur wird als Tageswert benötigt,

@@ -164,7 +164,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="ignoreType2" value="W"/>
                 <arg name="ignoreLabel1" value="Wasserstand"/>
                 <arg name="ignoreLabel2" value="Abfluss"/>
-                <arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
+                <arg name="timeserie1" value="nameString=Niederschlag#linkColumn=Niederschlag_rechnung"/>
                 <arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
                 <arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
                 <arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
