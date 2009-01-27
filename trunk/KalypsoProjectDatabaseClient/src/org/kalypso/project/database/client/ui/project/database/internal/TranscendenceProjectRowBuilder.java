@@ -367,7 +367,7 @@ public class TranscendenceProjectRowBuilder extends AbstractLocalProjectRowBuild
             }
 
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-            if( !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
+            if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
             {
               ErrorDialog.openError( shell, "Fehler", "Übertragen des Projektes ist fehlgeschlagen.", StatusUtilities.createErrorStatus( "" ) );
             }
