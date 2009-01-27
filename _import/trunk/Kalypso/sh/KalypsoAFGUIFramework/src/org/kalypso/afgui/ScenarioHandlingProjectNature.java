@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.IDerivedScenarioCopyFilter;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.ScenarioManager;
@@ -62,7 +63,21 @@ import de.renew.workflow.connector.cases.ICase;
  */
 public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
 {
-  public static final String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature";
+  public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature";
+
+  IDerivedScenarioCopyFilter m_filter = new IDerivedScenarioCopyFilter()
+  {
+    @Override
+    public boolean shouldBeCopied( final IResource resource )
+    {
+      return true;
+    }
+  };
+
+  public void setDerivedScenarioCopyFilter( final IDerivedScenarioCopyFilter filter )
+  {
+    m_filter = filter;
+  }
 
   /**
    * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
@@ -99,9 +114,13 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   {
     final IScenario scenario = (IScenario) caze;
     if( scenario.getParentScenario() != null )
+    {
       return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );
+    }
     else
+    {
       return new Path( scenario.getName() );
+    }
   }
 
   /**
@@ -151,12 +170,13 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
         final IResource[] members = parentFolder.members( false );
         for( final IResource resource : members )
         {
+
           if( resource.getName().equals( newFolder.getName() ) )
           {
             // ignore scenario folder and .* resources
             continue;
           }
-          else
+          else if( m_filter.shouldBeCopied( resource ) )
           {
             resource.copy( newFolder.getFullPath().append( resource.getName() ), false, null );
           }
