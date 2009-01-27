@@ -64,227 +64,224 @@ import org.kalypso.simulation.core.SimulationException;
  * 
  * @author thuel2
  */
-public class ElbePolteCalcJob implements ISimulation
-{
+public class ElbePolteCalcJob implements ISimulation {
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
-      throws SimulationException
-  {
-    final File outputDir = new File( tmpdir, ISimulationConstants.OUTPUT_DIR_NAME );
-    outputDir.mkdirs();
+	/**
+	 * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+	 *      org.kalypso.services.calculation.job.ICalcDataProvider,
+	 *      org.kalypso.services.calculation.job.ICalcResultEater,
+	 *      org.kalypso.services.calculation.job.ICalcMonitor)
+	 */
+	public void run(final File tmpdir,
+			final ISimulationDataProvider inputProvider,
+			final ISimulationResultEater resultEater,
+			final ISimulationMonitor monitor) throws SimulationException {
+		final File outputDir = new File(tmpdir,
+				ISimulationConstants.OUTPUT_DIR_NAME);
+		outputDir.mkdirs();
 
-    final File logfile = new File( outputDir, "elbePolte.log" );
+		final File logfile = new File(outputDir, "elbePolte.log");
 
-    PrintWriter pw = null;
-    FileWriter fw = null;
-    final Map metaMap = new HashMap();
-    try
-    {
-      fw = new FileWriter( logfile );
-      pw = new PrintWriter( fw );
+		PrintWriter pw = null;
+		FileWriter fw = null;
+		final Map metaMap = new HashMap();
+		try {
+			fw = new FileWriter(logfile);
+			pw = new PrintWriter(fw);
 
-      pw.println( "Modell Berechnung wird gestartet (" + ElbePolteUtils.getAktuelleUhrzeit() + ")" );
-      pw.println();
+			pw.println("Modell Berechnung wird gestartet ("
+					+ ElbePolteUtils.getAktuelleUhrzeit() + ")");
+			pw.println();
 
-      if( monitor.isCanceled() )
-      {
-        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
-        pw.println( ElbePolteConst.CALC_CANCELLED );
-        return;
-      }
-      final Properties props = new Properties();
-      monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
-      pw.println( "Dateien für Rechenkern werden erzeugt" );
+			if (monitor.isCanceled()) {
+				monitor.setFinishInfo(IStatus.CANCEL,
+						ElbePolteConst.CALC_CANCELLED);
+				pw.println(ElbePolteConst.CALC_CANCELLED);
+				return;
+			}
+			final Properties props = new Properties();
+			monitor.setMessage("Dateien für Rechenkern werden erzeugt");
+			pw.println("Dateien für Rechenkern werden erzeugt");
 
-      final File nativedir = new File( tmpdir, ".native" );
-      final File nativeInDir = new File( nativedir, "in" );
-      final File nativeOutDir = new File( nativedir, "out" );
-      nativedir.mkdirs();
-      nativeInDir.mkdirs();
-      nativeOutDir.mkdirs();
+			final File nativedir = new File(tmpdir, ".native");
+			final File nativeInDir = new File(nativedir, "in");
+			final File nativeOutDir = new File(nativedir, "out");
+			nativedir.mkdirs();
+			nativeInDir.mkdirs();
+			nativeOutDir.mkdirs();
 
-      final File exeDir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeInDir,
-          metaMap );
+			final File exeDir = ElbePolteInputWorker.createNativeInput(tmpdir,
+					inputProvider, pw, props, nativeInDir, metaMap);
 
-      resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
+			resultEater.addResult("NATIVE_IN_DIR", nativeInDir);
 
-      monitor.setProgress( 33 );
-      if( monitor.isCanceled() )
-      {
-        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
-        pw.println( ElbePolteConst.CALC_CANCELLED );
-        return;
-      }
+			monitor.setProgress(33);
+			if (monitor.isCanceled()) {
+				monitor.setFinishInfo(IStatus.CANCEL,
+						ElbePolteConst.CALC_CANCELLED);
+				pw.println(ElbePolteConst.CALC_CANCELLED);
+				return;
+			}
 
-      monitor.setMessage( ElbePolteConst.CALC_CALL );
-      pw.println( ElbePolteConst.CALC_CALL );
-      startCalculation( exeDir, pw, monitor, nativeOutDir );
+			monitor.setMessage(ElbePolteConst.CALC_CALL);
+			pw.println(ElbePolteConst.CALC_CALL);
+			startCalculation(exeDir, pw, monitor, nativeOutDir);
 
-      resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
+			resultEater.addResult("NATIVE_OUT_DIR", nativeOutDir);
 
-      monitor.setProgress( 33 );
-      if( monitor.isCanceled() )
-      {
-        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
-        pw.println( ElbePolteConst.CALC_CANCELLED );
-        return;
-      }
+			monitor.setProgress(33);
+			if (monitor.isCanceled()) {
+				monitor.setFinishInfo(IStatus.CANCEL,
+						ElbePolteConst.CALC_CANCELLED);
+				pw.println(ElbePolteConst.CALC_CANCELLED);
+				return;
+			}
 
-      monitor.setMessage( "Ergebnisse werden zurückgelesen" );
-      pw.println( "Ergebnisse werden zurückgelesen" );
-      try
-      {
-        writeResultsToFolder( nativeOutDir, outputDir, props, metaMap );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        throw new SimulationException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
-      }
+			monitor.setMessage("Ergebnisse werden zurückgelesen");
+			pw.println("Ergebnisse werden zurückgelesen");
+			try {
+				writeResultsToFolder(nativeOutDir, outputDir, props, metaMap);
+			} catch (final Exception e) {
+				e.printStackTrace();
+				throw new SimulationException(
+						"Fehler beim Schreiben der Ergebnis-Zeitreihen", e);
+			}
 
-      monitor.setProgress( 34 );
-      if( monitor.isCanceled() )
-      {
-        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
-        pw.println( ElbePolteConst.CALC_CANCELLED );
-        return;
-      }
+			monitor.setProgress(34);
+			if (monitor.isCanceled()) {
+				monitor.setFinishInfo(IStatus.CANCEL,
+						ElbePolteConst.CALC_CANCELLED);
+				pw.println(ElbePolteConst.CALC_CANCELLED);
+				return;
+			}
 
-      monitor.setMessage( ElbePolteConst.CALC_FINISHED );
-      pw.println( ElbePolteConst.CALC_FINISHED );
+			monitor.setMessage(ElbePolteConst.CALC_FINISHED);
+			pw.println(ElbePolteConst.CALC_FINISHED);
 
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
+		} catch (final Exception e) {
+			e.printStackTrace();
 
-      throw new SimulationException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( pw );
-      IOUtils.closeQuietly( fw );
-      resultEater.addResult( "LOG", logfile );
-      resultEater.addResult( "ERGEBNISSE", new File( outputDir, ISimulationConstants.RESULT_DIR_NAME ) );
-      monitor.setFinishInfo( IStatus.INFO, ElbePolteConst.CALC_FINISHED );
-    }
-  }
+			throw new SimulationException("Fehler bei der Berechnung:\n"
+					+ e.getLocalizedMessage(), e);
+		} finally {
+			IOUtils.closeQuietly(pw);
+			IOUtils.closeQuietly(fw);
+			resultEater.addResult("LOG", logfile);
+			resultEater.addResult("ERGEBNISSE", new File(outputDir,
+					ISimulationConstants.RESULT_DIR_NAME));
+			monitor.setFinishInfo(IStatus.INFO, ElbePolteConst.CALC_FINISHED);
+		}
+	}
 
-  /**
-   * @param nativeOutDir
-   * @param outputDir
-   * @param props
-   * @throws IOException
-   */
+	/**
+	 * @param nativeOutDir
+	 * @param outputDir
+	 * @param props
+	 * @throws IOException
+	 */
 
-  private void writeResultsToFolder( File nativeOutDir, File outputDir, Properties props, Map metaMap )
-      throws Exception
-  {
+	private void writeResultsToFolder(final File nativeOutDir,
+			final File outputDir, final Properties props, final Map metaMap)
+			throws Exception {
 
-    final FileVisitorHwvs2Zml fleVisitorPegel = new FileVisitorHwvs2Zml( outputDir, props,
-        ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
-    FileUtilities.accept( nativeOutDir, fleVisitorPegel, true );
+		final FileVisitorHwvs2Zml fleVisitorPegel = new FileVisitorHwvs2Zml(
+				outputDir, props, ElbePolteConst.GML_ELBE_PEGEL_COLL,
+				"ganglinie_modellwerte", true, metaMap);
+		FileUtilities.accept(nativeOutDir, fleVisitorPegel, true);
 
-    final FileVisitorHwvs2Zml fleVisitorZwge = new FileVisitorHwvs2Zml( outputDir, props,
-        ElbePolteConst.GML_H_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
-    FileUtilities.accept( nativeOutDir, fleVisitorZwge, true );
+		final FileVisitorHwvs2Zml fleVisitorZwge = new FileVisitorHwvs2Zml(
+				outputDir, props, ElbePolteConst.GML_H_PEGEL_COLL,
+				"ganglinie_modellwerte", true, metaMap);
+		FileUtilities.accept(nativeOutDir, fleVisitorZwge, true);
 
-    if( fleVisitorPegel.hasException() )
-      throw new Exception( "Fehler beim Schreiben der Pegel-Zeitreihen ins ZML-Format: "
-          + fleVisitorPegel.getExceptions()[0].getLocalizedMessage(), fleVisitorPegel.getExceptions()[0] );
-    if( fleVisitorZwge.hasException() )
-      throw new Exception( "Fehler beim Schreiben der Zwischengebiets-Zeitreihen ins ZML-Format: "
-          + fleVisitorZwge.getExceptions()[0].getLocalizedMessage(), fleVisitorZwge.getExceptions()[0] );
-  }
+		if (fleVisitorPegel.hasException())
+			throw new Exception(
+					"Fehler beim Schreiben der Pegel-Zeitreihen ins ZML-Format: "
+							+ fleVisitorPegel.getExceptions()[0]
+									.getLocalizedMessage(), fleVisitorPegel
+							.getExceptions()[0]);
+		if (fleVisitorZwge.hasException())
+			throw new Exception(
+					"Fehler beim Schreiben der Zwischengebiets-Zeitreihen ins ZML-Format: "
+							+ fleVisitorZwge.getExceptions()[0]
+									.getLocalizedMessage(), fleVisitorZwge
+							.getExceptions()[0]);
+	}
 
-  /**
-   * @param exeDir
-   * @param pw
-   * @param monitor
-   * @param nativeOutDir
-   */
-  private void startCalculation( File exeDir, PrintWriter pw, ISimulationMonitor monitor, File nativeOutDir )
-      throws SimulationException
-  {
-    final String commandString = exeDir + File.separator + "HWObereElbe.exe";
+	/**
+	 * @param exeDir
+	 * @param pw
+	 * @param monitor
+	 * @param nativeOutDir
+	 */
+	private void startCalculation(final File exeDir, final PrintWriter pw,
+			final ISimulationMonitor monitor, final File nativeOutDir)
+			throws SimulationException {
+		final String commandString = exeDir + File.separator
+				+ "HWObereElbe.exe";
 
-    pw.println( commandString );
+		pw.println(commandString);
 
-    try
-    {
-      // timeout after 10 sec
-      ProcessHelper.startProcess( commandString, null, exeDir, monitor, 10000, null, null );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausführen der HWObereElbe.exe", e );
-    }
-    catch( final ProcessTimeoutException e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausführen der HWObereElbe.exe", e );
-    }
-    finally
-    {
-      // fehler.txt lesen und analysieren
-      File exeModellDir = new File( exeDir, "Modell" );
-      final File fleFehler = new File( exeModellDir, "Fehler.txt" );
-      try
-      {
-        final InputStreamReader isr = new InputStreamReader( new FileInputStream( fleFehler ) );
-        final BufferedReader reader = new BufferedReader( isr );
+		try {
+			// timeout after 10 sec
+			ProcessHelper.startProcess(commandString, null, exeDir, monitor,
+					10000, null, null, null);
+		} catch (final IOException e) {
+			e.printStackTrace();
+			throw new SimulationException(
+					"Fehler beim Ausführen der HWObereElbe.exe", e);
+		} catch (final ProcessTimeoutException e) {
+			e.printStackTrace();
+			throw new SimulationException(
+					"Fehler beim Ausführen der HWObereElbe.exe", e);
+		} finally {
+			// fehler.txt lesen und analysieren
+			final File exeModellDir = new File(exeDir, "Modell");
+			final File fleFehler = new File(exeModellDir, "Fehler.txt");
+			try {
+				final InputStreamReader isr = new InputStreamReader(
+						new FileInputStream(fleFehler));
+				final BufferedReader reader = new BufferedReader(isr);
 
-        pw.println( "Ausgaben des Rechenkerns" );
-        pw.println( "========================" );
-        pw.println( "=   Standard-Ausgabe   =" );
-        pw.println( "========================" );
-        final LineNumberReader lneNumRead = new LineNumberReader( reader );
-        String processOut = lneNumRead.readLine();
-        String processOut2 = "";
+				pw.println("Ausgaben des Rechenkerns");
+				pw.println("========================");
+				pw.println("=   Standard-Ausgabe   =");
+				pw.println("========================");
+				final LineNumberReader lneNumRead = new LineNumberReader(reader);
+				String processOut = lneNumRead.readLine();
+				String processOut2 = "";
 
-        while( processOut != null )
-        {
-          pw.println( processOut );
-          processOut2 = processOut;
-          processOut = lneNumRead.readLine();
-        }
-        pw.println( "========================" );
-        pw.println();
+				while (processOut != null) {
+					pw.println(processOut);
+					processOut2 = processOut;
+					processOut = lneNumRead.readLine();
+				}
+				pw.println("========================");
+				pw.println();
 
-        if( processOut2.startsWith( "Keine Fehler" ) )
-        {
-          pw.println( "Rechnung erfolgreich beendet." );
-          final File nativeOutModellDir = new File( nativeOutDir, "Modell" );
-          if( nativeOutDir.exists() && exeModellDir.exists() )
-          {
-            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeModellDir, nativeOutModellDir, true );
-            FileUtilities.accept( exeModellDir, copyVisitor, true );
-          }
-        }
-        else
-        {
-          pw.println( "Rechnung nicht erfolgreich beendet." );
-          throw new Exception( processOut2, new Exception() );
-        }
-      }
-      catch( Exception e )
-      {
-        throw new SimulationException( e.getLocalizedMessage(), e );
-      }
-    }
-  }
+				if (processOut2.startsWith("Keine Fehler")) {
+					pw.println("Rechnung erfolgreich beendet.");
+					final File nativeOutModellDir = new File(nativeOutDir,
+							"Modell");
+					if (nativeOutDir.exists() && exeModellDir.exists()) {
+						final FileCopyVisitor copyVisitor = new FileCopyVisitor(
+								exeModellDir, nativeOutModellDir, true);
+						FileUtilities.accept(exeModellDir, copyVisitor, true);
+					}
+				} else {
+					pw.println("Rechnung nicht erfolgreich beendet.");
+					throw new Exception(processOut2, new Exception());
+				}
+			} catch (final Exception e) {
+				throw new SimulationException(e.getLocalizedMessage(), e);
+			}
+		}
+	}
 
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
-  public URL getSpezifikation()
-  {
-    return getClass().getResource( ElbePolteConst.CALCJOB_SPEC );
-  }
+	/**
+	 * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
+	 */
+	public URL getSpezifikation() {
+		return getClass().getResource(ElbePolteConst.CALCJOB_SPEC);
+	}
 }

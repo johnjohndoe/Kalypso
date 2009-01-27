@@ -1,12 +1,12 @@
 package org.kalypso.lhwsachsenanhalt.saale;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindPropertyByNameVisitor;
 
 /**
  * <p>
- * Der Rechenservice für das Bode-Modell
+ * Der Rechenservice für das Saale-Modell
  * </p>
  * 
  * @author Thül
@@ -159,22 +159,17 @@ public class SaaleCalcJob implements ISimulation
 
   private void runCalculation( final File exeFile, final ISimulationMonitor monitor ) throws IOException, ProcessTimeoutException
   {
-    final StringWriter logStream = new StringWriter();
-    final StringWriter errStream = new StringWriter();
 
-    try
-    {
-      final String cmdLine = exeFile.getAbsolutePath();
-      ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, 5 * 60 * 1000, logStream, errStream );
+    final ByteArrayOutputStream logStream = new ByteArrayOutputStream();
+    final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+    // timeout after 5 min
+    final String cmdLine = exeFile.getAbsolutePath();
+    ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, 5 * 60 * 1000, logStream, errStream, null );
+    logStream.close();
+    errStream.close();
 
-      System.out.println( logStream.toString() );
-      System.out.println( errStream.toString() );
-    }
-    finally
-    {
-      logStream.close();
-      errStream.close();
-    }
+    System.out.println( logStream.toString() );
+    System.out.println( errStream.toString() );
   }
 
   private SaaleInputBean createInputFiles( final File tmpdir, final ISimulationDataProvider inputProvider ) throws SimulationException, Exception

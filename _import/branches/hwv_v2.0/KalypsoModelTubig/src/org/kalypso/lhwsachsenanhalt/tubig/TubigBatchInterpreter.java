@@ -31,6 +31,7 @@
 package org.kalypso.lhwsachsenanhalt.tubig;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,7 +42,6 @@ import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
@@ -72,7 +72,7 @@ public class TubigBatchInterpreter
     runBatch( fleExeDir, fleBatch, fleLog, fleErr, cancelable );
   }
 
-  public static void runBatch( final File fleExeDir, final File fleBatch, File fleLog, File fleErr, final ISimulationMonitor cancelable ) throws TubigBatchException
+  public static void runBatch( final File fleExeDir, final File fleBatch, final File fleLog, final File fleErr, final ISimulationMonitor cancelable ) throws TubigBatchException
   {
     final FileOutputStream strmLog;
     final FileOutputStream strmErr;
@@ -132,7 +132,6 @@ public class TubigBatchInterpreter
   {
     final LineNumberReader lneNumRdrBatch;
     final String sRegExPath = "\\Q%1\\E";
-    StringWriter swInStream;
 
     String sZeile;
     String sZeileUpper;
@@ -141,9 +140,10 @@ public class TubigBatchInterpreter
     File newDir;
 
     boolean bExeEnde = false;
-    int iTimeout = TubigConst.BAT_TIMEOUT;
+    final int iTimeout = TubigConst.BAT_TIMEOUT;
 
-    swInStream = new StringWriter();
+    ByteArrayOutputStream logStream = new ByteArrayOutputStream();
+
     lneNumRdrBatch = new LineNumberReader( rdrBatch );
 
     pwLog.println( TubigConst.MESS_BERECHNUNG_WIRD_GESTARTET );
@@ -234,7 +234,7 @@ public class TubigBatchInterpreter
                           // in diesen Zweig sollte das Modell gar nicht mehr kommen...
                           // hierfür Eintrag in CATALINA.POLICY notwendig
                           // BodeModell (eigentlich nur: bodesteu.exe ist eine 16 BIT-Applikation)
-                          //permission java.io.FilePermission "<<ALL FILES>>", "execute";
+                          // permission java.io.FilePermission "<<ALL FILES>>", "execute";
                           sCmd = TubigConst.START_IN_CMD + absolutePath + File.separator + sZeile;
                         }
                         else
@@ -242,7 +242,7 @@ public class TubigBatchInterpreter
                           // '%1' in sZeile durch absoluten Pfad ersetzen
                           // slashes durch doppelte ersetzen, weil replaceAll
                           // einfach alle auftretenden '\\' schluckt...
-                          String string = absolutePath.replaceAll( "\\\\", "\\\\\\\\" );
+                          final String string = absolutePath.replaceAll( "\\\\", "\\\\\\\\" );
                           sCmd = sZeile.replaceAll( sRegExPath, string );
                         }
                         pwLog.println( sCmd );
@@ -253,16 +253,18 @@ public class TubigBatchInterpreter
                           // TimeOut: wirft ProcessTimeoutException
                           // cancel: wird durch cancelable.isCanceled()weiterverarbeitet
                           // normal fertig: RückgabeWert = 0
-                          swInStream = new StringWriter();
-                          ProcessHelper.startProcess( sCmd, null, fleExeDir, cancelable, iTimeout, swInStream, pwErr );
+                          logStream = new ByteArrayOutputStream();
 
+                          ProcessHelper.startProcess( sCmd, null, fleExeDir, cancelable, iTimeout, logStream, null, null );
+                          logStream.close();
                           if( cancelable.isCanceled() )
                           {
                             pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
 
-                          // TODO Monika Ende-Token **ende** noch weiterverabeiten (BODESTEU liefert aber noch keine Ausgabe)
-                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr );
+                          // TODO Monika Ende-Token **ende** noch weiterverabeiten (BODESTEU liefert aber noch keine
+                          // Ausgabe)
+                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( logStream, pwLog, pwErr );
                         }
                       }
                     }
@@ -302,7 +304,7 @@ public class TubigBatchInterpreter
     }
   }
 
-  public static void main( String[] args ) throws IOException, TubigBatchException
+  public static void main( final String[] args ) throws IOException, TubigBatchException
   {
     // final File leseDatei = new File( System.getProperty( "java.io.tmpdir" ),
     // "RUN1.bat" );

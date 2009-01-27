@@ -29,8 +29,8 @@
  */
 package org.kalypso.lhwsachsenanhalt.tubig.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.StringTokenizer;
 
 import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
@@ -75,12 +75,12 @@ public class TubigCopyUtils
    * @return true if ENDE token fond in input, else false
    * @throws TubigBatchException
    */
-  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog, final PrintWriter pwErr ) throws TubigBatchException
+  public static boolean copyAndAnalyzeStreams( final ByteArrayOutputStream input, final PrintWriter pwLog, final PrintWriter pwErr ) throws TubigBatchException
   {
     boolean bExeEnde = false;
     String sMess = "";
     String sLastWrtr = "";
-    String delim = System.getProperty( "line.separator" );
+    final String delim = System.getProperty( "line.separator" );
     StringTokenizer strTok;
 
     strTok = new StringTokenizer( input.toString(), delim );
