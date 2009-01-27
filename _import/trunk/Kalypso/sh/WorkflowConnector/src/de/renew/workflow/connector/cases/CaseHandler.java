@@ -42,6 +42,8 @@ package de.renew.workflow.connector.cases;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 
 import de.renew.workflow.cases.Case;
@@ -119,6 +121,40 @@ public class CaseHandler implements ICase
   public Case getCase( )
   {
     return m_caze;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof ICase )
+    {
+      final ICase other = (ICase) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getCase(), other.getCase() );
+      builder.append( getProject(), other.getProject() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+
+    builder.append( getCase() );
+    builder.append( getProject() );
+
+    return builder.toHashCode();
   }
 
 }
