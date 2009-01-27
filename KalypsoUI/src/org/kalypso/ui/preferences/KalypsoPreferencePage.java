@@ -43,11 +43,13 @@ package org.kalypso.ui.preferences;
 import java.util.Arrays;
 import java.util.TimeZone;
 
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
+import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.i18n.Messages;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -86,8 +88,45 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
-    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String configTimezone = System.getProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, null );
+    final int idCount = configTimezone == null ? ids.length + 1 : ids.length + 2;
+
+    final String[][] items = new String[idCount][];
+    final String strSystTimezone = String.format( "-- Systemeinstellungen (%s) --", TimeZone.getDefault().getID() );
+    final String strConfigTimezone = String.format( "-- Aus 'config.ini' (%s) --", getConfigIniTimezoneID() );
+
+    int itemCount = 0;
+    items[itemCount++] = new String[] { strSystTimezone, IKalypsoCorePreferences.PREFS_OS_TIMEZONE };
+
+    if( configTimezone != null )
+      items[itemCount++] = new String[] { strConfigTimezone, IKalypsoCorePreferences.PREFS_CONFIG_TIMEZONE };
+    
+    for( final String id : ids )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( id );
+      final String label = String.format( "%s (%s)", id, timeZone.getDisplayName() );
+      items[itemCount++] = new String[] { label, id };
+    }
+
+    final ComboFieldEditor timeZoneFieldEditor = new ComboFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), items, getFieldEditorParent() );
+//    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.3" ), Messages.getString( "org.kalypso.ui.preferences.KalypsoPreferencePage.4" ), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
     addField( timeZoneFieldEditor );
+  }
+
+  private String getConfigIniTimezoneID( )
+  {
+    final String timezone = System.getProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, null );
+    if( timezone == null || timezone.isEmpty() )
+      return "- nicht gesetzt -";
+
+    try
+    {
+      return TimeZone.getTimeZone( timezone ).getID();
+    }
+    catch( final Exception e )
+    {
+      return String.format( "Unbekannt (%s)", timezone );
+    }
   }
 
   /**

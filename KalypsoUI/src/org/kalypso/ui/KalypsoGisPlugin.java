@@ -65,7 +65,6 @@ import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.repository.container.DefaultRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 
@@ -74,8 +73,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
-  private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
-
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
   /** Manages the list of repositories. */
@@ -221,25 +218,14 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return KalypsoGisPlugin.THE_PLUGIN;
   }
 
-
   /**
-   * @return the timeZone as defined in the KALYPSO preferences. If unknown, the JVM default timezone is returned.
+   * @return The timeZone as defined in the KALYPSO preferences. If unknown, the system default timezone is returned.
+   * @deprecated Use {@link KalypsoCorePlugin#getTimeZone()} instead.
    */
+  @Deprecated
   public TimeZone getDisplayTimeZone( )
   {
-    final String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
-
-    try
-    {
-      return TimeZone.getTimeZone( timeZoneID );
-    }
-    catch( final Exception e )
-    {
-      KalypsoGisPlugin.LOGGER.warning( e.getLocalizedMessage() );
-      KalypsoGisPlugin.LOGGER.warning( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.21" ) ); //$NON-NLS-1$
-
-      return TimeZone.getDefault();
-    }
+    return KalypsoCorePlugin.getDefault().getTimeZone();
   }
 
   /**

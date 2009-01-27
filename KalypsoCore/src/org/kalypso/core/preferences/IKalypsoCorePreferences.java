@@ -47,5 +47,9 @@ package org.kalypso.core.preferences;
  */
 public interface IKalypsoCorePreferences
 {
-  // Moved to deegree
+  static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone"; //$NON-NLS-1$
+
+  static final String PREFS_CONFIG_TIMEZONE = "CONFIG_TIMEZONE";//$NON-NLS-1$
+
+  static final String PREFS_OS_TIMEZONE = "OS_TIMEZONE";//$NON-NLS-1$
 }
