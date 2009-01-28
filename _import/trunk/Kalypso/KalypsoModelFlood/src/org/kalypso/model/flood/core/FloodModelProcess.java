@@ -57,7 +57,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.CountGeoGridWalker;
@@ -133,23 +133,31 @@ public class FloodModelProcess
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodVolumePolygon && floodPolygon.getEvents().contains( event ) )
+      {
         volumePolygons.add( (IFloodVolumePolygon) floodPolygon );
+      }
     }
 
     final SubMonitor progress = SubMonitor.convert( monitor, volumePolygons.size() );
     for( final IFloodVolumePolygon floodVolumePolygon : volumePolygons )
+    {
       processVolume( floodVolumePolygon, terrainModel, progress.newChild( 1 ) );
+    }
   }
 
   private void processVolume( final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainModel, final IProgressMonitor monitor ) throws Exception
   {
     final BigDecimal volumeValue = volumePolygon.getVolume();
     if( volumeValue == null )
+    {
       return;
+    }
 
     final double volume = volumeValue.doubleValue();
     if( Double.isNaN( volume ) )
+    {
       return;
+    }
 
     final GM_Object volumeGmObject = volumePolygon.getArea();
 
@@ -198,12 +206,18 @@ public class FloodModelProcess
     final double currentVolume = calcWsp( volumeGmObject, terrainModel, currentWsp );
 
     if( Math.abs( currentVolume - targetVolume ) < VOLUME_EPS )
+    {
       return currentWsp;
+    }
 
     if( currentVolume < targetVolume )
+    {
       return searchWsp( targetVolume, currentWsp, maxWsp, terrainModel, volumeGmObject );
+    }
     else
+    {
       return searchWsp( targetVolume, minWsp, currentWsp, terrainModel, volumeGmObject );
+    }
   }
 
   /**
@@ -240,9 +254,11 @@ public class FloodModelProcess
     /* check for existing result coverages */
     final ICoverageCollection resultCoverages = event.getResultCoverages();
     if( resultCoverages.size() != 0 )
+    {
       throw new IllegalStateException( "Event enthält noch Ergebnisse: " + event.getName() );
+    }
 
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
     final IFolder eventsFolder = scenarioFolder.getFolder( "events" );
     final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 
@@ -263,7 +279,9 @@ public class FloodModelProcess
       // get results folder
       final IFolder destFolder = eventFolder.getFolder( "results" );
       if( destFolder.exists() == false )
+      {
         destFolder.create( false, true, new SubProgressMonitor( monitor, 5 ) );
+      }
 
       // get file
       final IFile destFile = destFolder.getFile( uniqueFileName );

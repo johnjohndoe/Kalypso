@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
@@ -37,13 +37,17 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
+    {
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+    }
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
     if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+    {
       return null;
+    }
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
@@ -51,11 +55,13 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
       // get "Wasserspiegellagen" cascading theme
       final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
       if( wspTheme != null )
+      {
         mapModell.activateTheme( wspTheme );
+      }
     }
 
     final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Ergebnisse verwalten", "Ergebnisse verwalten" );
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
     coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );

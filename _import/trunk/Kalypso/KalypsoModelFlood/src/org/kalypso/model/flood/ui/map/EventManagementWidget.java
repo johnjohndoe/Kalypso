@@ -100,7 +100,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -385,9 +385,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final IRunoffEvent runoffEvent = getCurrentEvent();
         final IKalypsoTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
         if( runoffEventTheme == null )
+        {
           m_infoWidget.setThemes( null );
+        }
         else
+        {
           m_infoWidget.setThemes( new IKalypsoTheme[] { runoffEventTheme } );
+        }
 
         updateStylePanel( runoffEvent );
 
@@ -467,11 +471,15 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       final BigDecimal min = tin.getMin();
       if( min.compareTo( event_min ) == -1 )
+      {
         event_min = min;
+      }
 
       final BigDecimal max = tin.getMax();
       if( max.compareTo( event_max ) == 1 )
+      {
         event_max = max;
+      }
     }
 
     if( input != null )
@@ -554,24 +562,29 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   public static IFolder getEventsFolder( )
   {
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    return scenarioFolder.getFolder( "events" );
+    return KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
   }
 
   private IRunoffEvent getCurrentEvent( )
   {
     if( m_treeSelection == null || m_treeSelection.length == 0 )
+    {
       return null;
+    }
 
     final Feature feature = (Feature) m_treeSelection[0];
 
     final IRunoffEvent event = (IRunoffEvent) feature.getAdapter( IRunoffEvent.class );
     if( event != null )
+    {
       return event;
+    }
 
     final Feature parent = feature.getParent();
     if( parent == null )
+    {
       return null;
+    }
 
     return (IRunoffEvent) parent.getAdapter( IRunoffEvent.class );
   }
@@ -599,7 +612,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     viewer.addFilter( coverageFilter );
 
     if( m_model == null )
+    {
       viewer.setInput( StatusUtilities.createErrorStatus( "Flood-Modell nicht geladen." ) );
+    }
     else
     {
       viewer.setInput( m_model.getFeature().getWorkspace() );
@@ -611,7 +626,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
       final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
       if( events.size() > 0 )
+      {
         m_eventViewer.setSelection( new StructuredSelection( events.get( 0 ) ), true );
+      }
     }
   }
 
@@ -760,7 +777,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   protected void handleUpdateData( final Event event )
   {
     if( m_treeSelection == null )
+    {
       return;
+    }
 
     /* Collect selected tins: either directly selected or all children of selected events */
     final Collection<ITinReference> tinRefs = new HashSet<ITinReference>();
@@ -770,12 +789,16 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       {
         final ITinReference tinRef = (ITinReference) ((IAdaptable) o).getAdapter( ITinReference.class );
         if( tinRef != null )
+        {
           tinRefs.add( tinRef );
+        }
         else
         {
           final IRunoffEvent runoffEvent = (IRunoffEvent) ((IAdaptable) o).getAdapter( IRunoffEvent.class );
           if( runoffEvent != null )
+          {
             tinRefs.addAll( runoffEvent.getTins() );
+          }
         }
       }
     }
@@ -784,29 +807,39 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final ListSelectionDialog dialog = new ListSelectionDialog( shell, tinRefs, new ArrayContentProvider(), new GMLLabelProvider(), "Welche Wasserspiegel sollen aktualisiert werden?" );
     dialog.setInitialSelections( tinRefs.toArray() );
     if( dialog.open() != Window.OK )
+    {
       return;
+    }
 
     final Object[] result = dialog.getResult();
     final ITinReference[] tinsToUpdate = new ITinReference[result.length];
     for( int i = 0; i < tinsToUpdate.length; i++ )
+    {
       tinsToUpdate[i] = (ITinReference) result[i];
+    }
 
     final ICoreRunnableWithProgress operation = new UpdateTinsOperation( tinsToUpdate, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
+    {
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+    }
     ErrorDialog.openError( shell, "Daten aktualisieren", "Fehler beim Aktualisieren der Daten", resultStatus );
   }
 
   protected void handleJumpTo( )
   {
     if( m_treeSelection == null )
+    {
       return;
+    }
 
     final GM_Envelope envelope = envelopeForSelection();
     if( envelope == null )
+    {
       return;
+    }
 
     final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( envelope, 1.05 );
     getMapPanel().setBoundingBox( scaledBox );
@@ -816,10 +849,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   protected void handleMove( final Event event, final int step )
   {
     if( m_treeSelection == null )
+    {
       return;
+    }
 
     if( m_treeSelection.length != 1 )
+    {
       return;
+    }
 
     final Feature selectedFeature = (Feature) m_treeSelection[0];
 
@@ -829,7 +866,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( selectedFeature ) + step;
     if( newIndex < 0 || newIndex >= featureList.size() )
+    {
       return;
+    }
 
     final MoveFeatureCommand command = new MoveFeatureCommand( parentFeature, pt, selectedFeature, step );
 
@@ -853,7 +892,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       public String isValid( final String newText )
       {
         if( newText == null || newText.length() == 0 )
+        {
           return "Name darf nicht leer sein";
+        }
 
         return null;
       }
@@ -863,7 +904,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Shell shell = event.display.getActiveShell();
     final InputDialog dialog = new InputDialog( shell, "Ereignis hinzufügen", "Bitte geben Sie den Namen des neuen Ereignis ein:", "", inputValidator );
     if( dialog.open() != Window.OK )
+    {
       return;
+    }
 
     final String eventName = dialog.getValue();
     final IFloodModel model = m_model;
@@ -878,7 +921,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
+    {
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+    }
     ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
   }
 
@@ -922,7 +967,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private IRunoffEvent findFirstEvent( final Object[] treeSelection )
   {
     if( treeSelection == null )
+    {
       return null;
+    }
 
     for( final Object object : m_treeSelection )
     {
@@ -931,14 +978,18 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final IAdaptable a = (IAdaptable) object;
         final IRunoffEvent runoffEvent = (IRunoffEvent) a.getAdapter( IRunoffEvent.class );
         if( runoffEvent != null )
+        {
           return runoffEvent;
+        }
 
         final ITinReference tinRef = (ITinReference) a.getAdapter( ITinReference.class );
         if( tinRef != null )
         {
           final IRunoffEvent r2 = tinRef.getRunoffEvent();
           if( r2 != null )
+          {
             return r2;
+          }
         }
       }
     }
@@ -949,7 +1000,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   protected void handleRemove( final Event event )
   {
     if( m_treeSelection == null )
+    {
       return;
+    }
 
     final IMapModell mapModell = getMapPanel().getMapModell();
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
@@ -959,7 +1012,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
     if( !resultStatus.isOK() )
+    {
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+    }
     ErrorDialog.openError( shell, "Ereignis löschen", "Fehler beim Löschen des Ereignisses", resultStatus );
   }
 
@@ -998,14 +1053,18 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
           final Object adaptedObject = adaptToKnownObject( selectedObject );
 
           if( adaptedObject instanceof ITinReference )
+          {
             paintEnvelope( g, ((ITinReference) adaptedObject).getFeature().getEnvelope() );
+          }
           else if( adaptedObject instanceof IRunoffEvent )
           {
             final IFeatureWrapperCollection<ITinReference> tins = ((IRunoffEvent) adaptedObject).getTins();
             paintEnvelope( g, tins.getWrappedList().getBoundingBox() );
 
             for( final ITinReference tinReference : tins )
+            {
               paintEnvelope( g, tinReference.getFeature().getEnvelope() );
+            }
           }
 
           final GM_Envelope envelope = envelopeForSelected( selectedObject );
@@ -1020,7 +1079,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private void paintEnvelope( final Graphics g, final GM_Envelope envelope )
   {
     if( envelope == null )
+    {
       return;
+    }
 
     final GeoTransform projection = getMapPanel().getProjection();
 
@@ -1040,7 +1101,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private GM_Envelope envelopeForSelection( )
   {
     if( m_treeSelection == null )
+    {
       return null;
+    }
 
     GM_Envelope result = null;
 
@@ -1050,9 +1113,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       if( envelope != null )
       {
         if( result == null )
+        {
           result = envelope;
+        }
         else
+        {
           result = result.getMerged( envelope );
+        }
       }
     }
 
@@ -1064,10 +1131,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final Object adaptedObject = adaptToKnownObject( selectedObject );
 
     if( adaptedObject instanceof ITinReference )
+    {
       return ((ITinReference) adaptedObject).getFeature().getEnvelope();
+    }
 
     if( adaptedObject instanceof IRunoffEvent )
+    {
       return ((IRunoffEvent) adaptedObject).getTins().getWrappedList().getBoundingBox();
+    }
 
     return null;
   }
@@ -1075,13 +1146,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private Object adaptToKnownObject( final Object object )
   {
     if( !(object instanceof Feature) )
+    {
       return null;
+    }
 
     final Feature feature = (Feature) object;
 
     final Object event = feature.getAdapter( IRunoffEvent.class );
     if( event != null )
+    {
       return event;
+    }
 
     return feature.getAdapter( ITinReference.class );
   }
@@ -1131,7 +1206,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
               }
 
               if( name.contains( "Anpassungen" ) )
+              {
                 kalypsoTheme.setName( new I10nString( "Anpassungen (" + event.getName() + ")" ) );
+              }
 
             }
           }
