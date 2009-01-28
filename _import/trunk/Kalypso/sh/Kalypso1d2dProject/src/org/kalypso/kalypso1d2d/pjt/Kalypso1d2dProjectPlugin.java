@@ -1,13 +1,13 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
@@ -55,8 +55,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     m_szenarioController = new SzenarioController();
     dataProvider.addScenarioDataListener( m_szenarioController );
-    final IContainer scenarioFolder = dataProvider.getScenarioFolder();
-    m_szenarioController.scenarioChanged( scenarioFolder );
+    final IScenario scenario = dataProvider.getScenario();
+    m_szenarioController.scenarioChanged( scenario );
   }
 
   /**

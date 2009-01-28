@@ -66,7 +66,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioContentProvider;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -108,7 +107,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     m_workbenchContentProvider.dispose();
 
     for( final GMLWorkspace workspace : m_workspace )
+    {
       workspace.dispose();
+    }
   }
 
   /**
@@ -185,7 +186,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       if( wspDoc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
       {
         final IScenario scenario = findScenario( wspDoc );
-        final IFolder scenarioFolder = ScenarioHelper.getFolder( scenario );
+        final IFolder scenarioFolder = scenario.getFolder();
 
         final IPath fullPath = wspDoc.getFullPath();
 
@@ -214,7 +215,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   private IScenario findScenario( final IResultMeta meta )
   {
     if( m_resultParents.containsKey( meta ) )
+    {
       return m_resultParents.get( meta );
+    }
 
     return findScenario( meta.getParent() );
   }
@@ -237,7 +240,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
         {
           final IScenario scenario = (IScenario) parentElement;
 
-          final IFolder scenarioFolder = ScenarioHelper.getFolder( scenario );
+          final IFolder scenarioFolder = scenario.getFolder();
           final IFile resultsFile = scenarioFolder.getFile( Path.fromPortableString( "models/scenarioResultMeta.gml" ) );
           final URL resultUrl = ResourceUtilities.createURL( resultsFile );
 
@@ -251,7 +254,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
           /* Remember parent for getParent */
           for( final IResultMeta child : wspChildren )
+          {
             m_resultParents.put( child, scenario );
+          }
 
           children.addAll( wspChildren );
         }
@@ -283,10 +288,14 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       {
         final boolean filtered = filterResultMeta( child );
         if( !filtered )
+        {
           result.add( (IResultMeta) child );
+        }
       }
       else
+      {
         result.add( (IResultMeta) child );
+      }
     }
 
     return result.toArray( new IResultMeta[result.size()] );
@@ -303,7 +312,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     {
       final boolean filtered = filterResultMeta( child );
       if( !filtered )
+      {
         result.add( child );
+      }
     }
 
     return result;
@@ -322,7 +333,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     {
       final IDocumentResultMeta docMeta = (IDocumentResultMeta) resultMeta;
       if( docMeta.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
+      {
         return docMeta;
+      }
     }
 
     final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
@@ -330,7 +343,9 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     {
       final IResultMeta childsWspDoc = findFirstWspTinMetaChild( child );
       if( childsWspDoc != null )
+      {
         return childsWspDoc;
+      }
     }
 
     return null;
@@ -342,14 +357,18 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
   public Object getParent( final Object element )
   {
     if( element instanceof IProject )
+    {
       return null;
+    }
 
     if( element instanceof IScenario )
     {
       final IScenario s = (IScenario) element;
       final IScenario parentScenario = s.getParentScenario();
       if( parentScenario != null )
+      {
         return parentScenario;
+      }
 
       return s.getProject();
     }
@@ -359,10 +378,14 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       final IResultMeta result = (IResultMeta) element;
       final IResultMeta parentResult = result.getParent();
       if( parentResult != null )
+      {
         return parentResult;
+      }
 
       if( m_resultParents.containsKey( result ) )
+      {
         return m_resultParents.get( result );
+      }
     }
 
     throw new IllegalStateException( "Unknwon parent for element: " + element );
@@ -376,10 +399,14 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
     if( element instanceof IProject || element instanceof Scenario )
     {
       if( m_scenarioContentProvider.hasChildren( element ) )
+      {
         return true;
+      }
 
       if( element instanceof Scenario )
+      {
         return true;
+      }
     }
 
     return m_workbenchContentProvider.hasChildren( element );
