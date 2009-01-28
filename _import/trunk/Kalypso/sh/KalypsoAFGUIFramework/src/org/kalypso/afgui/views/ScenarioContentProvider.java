@@ -16,7 +16,6 @@ import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioList;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
@@ -68,6 +67,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         return new Object[0];
       }
       else
+      {
         try
         {
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
@@ -90,6 +90,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           // cannot happen, all cases checked?
           e.printStackTrace();
         }
+      }
     }
     else if( parentElement instanceof Scenario )
     {
@@ -150,7 +151,9 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       final Scenario workflowData = (Scenario) element;
       final ScenarioList derivedScenarios = workflowData.getDerivedScenarios();
       if( derivedScenarios != null )
+      {
         return !derivedScenarios.getScenarios().isEmpty();
+      }
     }
     return false;
   }
@@ -215,7 +218,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
             ViewerUtilities.refresh( viewer, project, true );
           }
         }
-        final IFolder folder = ScenarioHelper.getFolder( caze );
+        final IFolder folder = caze.getFolder();
         ViewerUtilities.refresh( viewer, folder.getParent(), true );
       }
     }
@@ -239,19 +242,27 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   public Object[] getElements( final Object element )
   {
     if( element instanceof IResource )
+    {
       return super.getElements( element );
+    }
 
     if( !(element instanceof IScenario) )
+    {
       return new Object[0];
+    }
 
     final IScenario scenario = (IScenario) element;
     final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
     if( derivedScenarios == null )
+    {
       return new Object[0];
+    }
 
     final List<IScenario> scenarios = derivedScenarios.getScenarios();
     if( scenarios == null || scenarios.size() == 0 )
+    {
       return new Object[0];
+    }
 
     return scenarios.toArray();
   }

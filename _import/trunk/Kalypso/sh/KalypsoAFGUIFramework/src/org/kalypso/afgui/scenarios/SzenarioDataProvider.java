@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -47,6 +48,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+import de.renew.workflow.connector.cases.ICase;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
@@ -147,7 +149,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       // REMARK: copy current listeners into array to avoid ConcurrentModificationException
       final IScenarioDataListener[] listeners = m_controller.toArray( new IScenarioDataListener[m_controller.size()] );
       for( final IScenarioDataListener listener : listeners )
+      {
         listener.modelLoaded( model, status );
+      }
     }
   }
 
@@ -160,7 +164,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
 
-  private IContainer m_scenarioFolder = null;
+  private IScenario m_scenario = null;
 
   private String m_dataSetScope;
 
@@ -185,28 +189,32 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   /**
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IContainer)
    */
-  public void setCurrent( final IContainer scenarioFolder )
+  public void setCurrent( final ICase scenario )
   {
     /* Nothing to do if scenario folder stays the same */
-    if( ObjectUtils.equals( m_scenarioFolder, scenarioFolder ) )
+    if( ObjectUtils.equals( m_scenario, scenario ) )
+    {
       return;
+    }
 
     /* Release current models && reset state */
     reset();
 
-    if( scenarioFolder != null )
+    if( scenario != null )
     {
-      final IProject project = scenarioFolder.getProject();
+      final IProject project = scenario.getProject();
       final ProjectScope projectScope = new ProjectScope( project );
       final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" );
       m_dataSetScope = afguiNode == null ? null : afguiNode.get( "dataSetScope", null );
     }
-    m_scenarioFolder = scenarioFolder;
 
-    fireScenarioDataFolderChanged( scenarioFolder );
+    m_scenario = (IScenario) scenario;
+    fireCazeChanged( m_scenario );
 
-    if( m_scenarioFolder == null || m_dataSetScope == null )
+    if( scenario == null || m_dataSetScope == null )
+    {
       return;
+    }
 
     final String dataSetScope = m_dataSetScope;
     final Job job = new Job( "Initalisiere Daten für das aktuelle Szenario." )
@@ -220,7 +228,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         try
         {
           // TODO: do not do this! If something is out of sync, thats a bug!
-          scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+          final IFolder cazeFolder = scenario.getFolder();
+          cazeFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
         catch( final Throwable th )
         {
@@ -240,7 +249,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
                 final String id = entry.getID();
                 final Class< ? extends IModel> wrapperClass = entry.getModelClass();
                 final String gmlLocation = entry.getModelPath();
-                resetKeyForProject( (IFolder) scenarioFolder, id, wrapperClass, gmlLocation );
+
+                /* @hack resolve "gloabal" gml file from parent scenario. */
+                final IFolder dataFolder = resolveFolder( (IScenario) scenario, gmlLocation );
+                if( dataFolder == null )
+                {
+                  resetKeyForProject( scenario.getFolder(), id, wrapperClass, gmlLocation );
+                }
+                else
+                {
+                  resetKeyForProject( dataFolder, id, wrapperClass, gmlLocation );
+                }
+
               }
               catch( final CoreException e )
               {
@@ -251,9 +271,28 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         }
         return StatusUtilities.createStatus( statusList, "Beim Initialisieren der Szenariodaten sind Probleme aufgetreten." );
       }
+
+      private IFolder resolveFolder( final IScenario scene, final String gmlLocation )
+      {
+
+        final IFolder folder = scene.getFolder();
+        final IFile file = folder.getFile( gmlLocation );
+        if( file.exists() )
+        {
+          return folder;
+        }
+
+        final IScenario parent = scene.getParentScenario();
+        if( parent != null )
+        {
+          return resolveFolder( parent, gmlLocation );
+        }
+
+        return null;
+      }
     };
 
-    job.setRule( scenarioFolder.getProject() );
+    job.setRule( scenario.getProject() );
     job.schedule();
   }
 
@@ -262,7 +301,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   private void reset( )
   {
-    m_scenarioFolder = null;
+    m_scenario = null;
     m_dataSetScope = null;
 
     KeyPoolListener[] keys;
@@ -283,11 +322,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
-  private void fireScenarioDataFolderChanged( final IContainer szenarioFolder )
+  private void fireCazeChanged( final IScenario scenario )
   {
     for( final IScenarioDataListener listener : m_controller )
     {
-      listener.scenarioChanged( szenarioFolder );
+      listener.scenarioChanged( scenario );
     }
   }
 
@@ -298,14 +337,20 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
     if( szenarioFolder == null )
+    {
       return null;
+    }
 
     if( szenarioFolder.getFile( new Path( modelFile ) ).exists() )
+    {
       return szenarioFolder;
+    }
 
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
+    {
       return findModelContext( (IFolder) parent, modelFile );
+    }
 
     return null;
   }
@@ -347,7 +392,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
     final IPoolableObjectType oldKey = oldListener == null ? null : oldListener.getKey();
     if( ObjectUtils.equals( oldKey, newKey ) )
+    {
       return;
+    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
@@ -370,9 +417,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private IPoolableObjectType keyForLocation( final IFolder szenarioFolder, final String gmlLocation )
   {
-    if( szenarioFolder == null )
-      return null;
-
     try
     {
       final URL szenarioURL = ResourceUtilities.createURL( szenarioFolder );
@@ -416,7 +460,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     final Feature rootFeature = workspace.getRootFeature();
     if( modelClass.isAssignableFrom( rootFeature.getClass() ) )
+    {
       return (T) rootFeature;
+    }
 
     return (T) rootFeature.getAdapter( modelClass );
   }
@@ -459,7 +505,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       for( final String modelClass : m_keyMap.keySet() )
       {
         if( isDirty( modelClass ) )
+        {
           return true;
+        }
       }
     }
     return false;
@@ -487,18 +535,24 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
 
     if( keyPoolListener == null )
+    {
       return false;
+    }
 
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
+    {
       // TODO throw (core/other) exception?
       return false;
+    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
     if( infoForKey == null )
+    {
       // TODO throw (core/other) exception?
       return false;
+    }
 
     return infoForKey.isDirty();
   }
@@ -531,7 +585,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       if( keyPoolListener == null )
+      {
         throw new IllegalArgumentException( "Unknown model: " + id );
+      }
 
       final IPoolableObjectType key = keyPoolListener.getKey();
       if( key != null )
@@ -564,7 +620,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       for( final String id : m_keyMap.keySet() )
+      {
         saveModel( id, progress.newChild( 100 ) );
+      }
     }
     finally
     {
@@ -590,7 +648,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( m_dataSetScope );
 
     if( locationMap == null || !locationMap.containsKey( id ) )
+    {
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
+    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
@@ -601,11 +661,15 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
 
     if( keyPoolListener == null )
+    {
       return null;
+    }
 
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
+    {
       return null;
+    }
 
     return (CommandableWorkspace) pool.getObject( key );
   }
@@ -615,6 +679,16 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public IContainer getScenarioFolder( )
   {
-    return m_scenarioFolder;
+    if( m_scenario != null )
+    {
+      return m_scenario.getFolder();
+    }
+
+    return null;
+  }
+
+  public IScenario getScenario( )
+  {
+    return m_scenario;
   }
 }

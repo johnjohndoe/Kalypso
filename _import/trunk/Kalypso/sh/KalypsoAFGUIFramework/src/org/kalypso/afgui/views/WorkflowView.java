@@ -34,7 +34,9 @@ public class WorkflowView extends ViewPart
   {
     final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
     if( !log )
+    {
       LOGGER.setUseParentHandlers( false );
+    }
   }
 
   private WorkflowControl m_workflowControl;
@@ -64,14 +66,17 @@ public class WorkflowView extends ViewPart
 
   protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
   {
-    final String scenarioPath = ScenarioHelper.getScenarioPath( scenario );
     final String projectName = newProject == null ? null : newProject.getProject().getName();
 
     final String contentDescription;
     if( scenario == null || newProject == null )
+    {
       contentDescription = "Kein Szenario aktiv.";
+    }
     else
-      contentDescription = "Aktives Szenario: " + projectName + scenarioPath;
+    {
+      contentDescription = "Aktives Szenario: " + projectName;
+    }
 
     final UIJob job = new UIJob( "Update Content Description" )
     {
@@ -126,6 +131,8 @@ public class WorkflowView extends ViewPart
   public void setFocus( )
   {
     if( m_workflowControl != null )
+    {
       m_workflowControl.setFocus();
+    }
   }
 }

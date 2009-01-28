@@ -123,13 +123,20 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
 
   final void doTask( final ITask task )
   {
+    if( m_treeViewer.getTree().isDisposed() )
+    {
+      return;
+    }
+
     final IStatus result = m_taskExecutor.execute( task );
     // TODO: error handling should be done by the task executor!; why isn't there a job?
     final Shell shell = m_treeViewer.getControl().getShell();
     final String title = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.2" );//$NON-NLS-1$
     final String message = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.3" ); //$NON-NLS-1$
     if( !result.isOK() )
+    {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( result );
+    }
     ErrorDialog.openError( shell, title, message + task.getName(), result, IStatus.WARNING | IStatus.ERROR );
   }
 
@@ -141,7 +148,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
       m_treeViewer.collapseAll();
       final ITask activeTask = m_taskExecutor.getActiveTask();
       if( workflow != null && activeTask != null )
+      {
         setCurrentTask( workflow, activeTask );
+      }
     }
   }
 
@@ -150,13 +159,20 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
    */
   public void worklistChanged( )
   {
+    if( m_treeViewer.getTree().isDisposed() )
+    {
+      return;
+    }
+
     m_treeViewer.refresh();
   }
 
   public void setFocus( )
   {
     if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed() )
+    {
       m_treeViewer.getControl().setFocus();
+    }
   }
 
   /**
@@ -167,7 +183,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   {
     final TreeViewer treeViewer = m_treeViewer;
     if( treeViewer == null || treeViewer.getControl() == null || treeViewer.getControl().isDisposed() )
+    {
       return;
+    }
 
     new UIJob( "" )
     {
@@ -178,7 +196,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
         {
           final IWorkflow workflow = (IWorkflow) treeViewer.getInput();
           if( workflow != null && task != null )
+          {
             setCurrentTask( workflow, task );
+          }
 
           treeViewer.refresh();
         }
@@ -197,6 +217,11 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
 
   protected void handleSelectionChanged( final SelectionChangedEvent event )
   {
+    if( m_treeViewer.getTree().isDisposed() )
+    {
+      return;
+    }
+
     final ITreeSelection selection = (ITreeSelection) event.getSelection();
     final Object first = selection.getFirstElement();
     if( first != null && m_lastSelectedElement != first )

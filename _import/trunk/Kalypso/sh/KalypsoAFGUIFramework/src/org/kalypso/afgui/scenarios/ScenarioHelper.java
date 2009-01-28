@@ -40,13 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -63,35 +57,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class ScenarioHelper
 {
-
-  public static IFolder getFolder( final IScenario scenario )
-  {
-    final String scenarioPath = getScenarioPath( scenario );
-    if( scenarioPath == null )
-      return null;
-
-    return scenario.getProject().getFolder( scenarioPath );
-  }
-
-  /**
-   * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
-   */
-  public static IFolder getScenarioFolder( )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( workbench == null )
-      return null;
-
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    if( handlerService == null )
-      return null;
-
-    final IEvaluationContext context = handlerService.getCurrentState();
-    if( context == null )
-      return null;
-
-    return (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-  }
 
   /**
    * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
@@ -112,35 +77,11 @@ public class ScenarioHelper
   {
     final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
+    {
       return scenario;
+    }
 
     return findRootScenario( parentScenario );
-  }
-
-  /**
-   * Returns the path to a given scenario.
-   */
-  public static String getScenarioPath( final IScenario scenario )
-  {
-    try
-    {
-      if( scenario == null )
-        return null;
-
-      final String scenarioUri = scenario.getURI();
-      final URI uri = new URI( scenarioUri );
-      return URLDecoder.decode( uri.getPath(), "UTF-8" );
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
   }
 
   public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
@@ -148,11 +89,15 @@ public class ScenarioHelper
     try
     {
       if( scenario == null || newProject == null )
+      {
         return null;
+      }
 
       final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
       if( workflowNature == null )
+      {
         return null;
+      }
 
       return workflowNature.getCurrentWorklist();
     }
