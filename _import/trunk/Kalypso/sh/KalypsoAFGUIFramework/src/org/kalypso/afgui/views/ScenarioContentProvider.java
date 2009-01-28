@@ -15,8 +15,6 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioList;
-import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -92,16 +90,25 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         }
       }
     }
-    else if( parentElement instanceof Scenario )
+    else if( parentElement instanceof IScenario )
     {
-      final Scenario scenario = (Scenario) parentElement;
-      final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
-      if( derivedScenarios != null )
-      {
-        final List<Scenario> list = derivedScenarios.getScenarios();
-        return list.toArray();
-      }
+      final IScenario scenario = (IScenario) parentElement;
+      final IScenarioList iList = scenario.getDerivedScenarios();
+      final List<IScenario> scenarios = iList.getScenarios();
+
+      return scenarios.toArray( new IScenario[] {} );
     }
+    // else if( parentElement instanceof Scenario )
+    // {
+    // final Scenario scenario = (Scenario) parentElement;
+    // final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    // if( derivedScenarios != null )
+    // {
+    // final List<Scenario> list = derivedScenarios.getScenarios();
+    // return list.toArray();
+    // }
+    // }
+
     return children;
   }
 
@@ -146,15 +153,13 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         }
       }
     }
-    else if( element instanceof Scenario )
+    else if( element instanceof IScenario )
     {
-      final Scenario workflowData = (Scenario) element;
-      final ScenarioList derivedScenarios = workflowData.getDerivedScenarios();
-      if( derivedScenarios != null )
-      {
-        return !derivedScenarios.getScenarios().isEmpty();
-      }
+      final IScenario scenario = (IScenario) element;
+
+      return !scenario.getDerivedScenarios().getScenarios().isEmpty();
     }
+
     return false;
   }
 

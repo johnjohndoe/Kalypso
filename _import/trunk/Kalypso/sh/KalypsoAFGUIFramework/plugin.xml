@@ -65,6 +65,9 @@
                <instanceof
                      value="org.kalypso.afgui.scenarios.Scenario">
                </instanceof>
+               <instanceof
+                     value="org.kalypso.afgui.scenarios.IScenario">
+               </instanceof>
             </or>
          </enablement>
       </navigatorContent>
@@ -80,6 +83,9 @@
                   </instanceof>
                   <instanceof
                         value="org.kalypso.afgui.scenarios.Scenario">
+                  </instanceof>
+                  <instanceof
+                        value="org.kalypso.afgui.scenarios.IScenario">
                   </instanceof>
                </or>
             </not>
@@ -265,7 +271,7 @@
             </count>
             <iterate>
                <instanceof
-                     value="org.kalypso.afgui.scenarios.Scenario">
+                     value="org.kalypso.afgui.scenarios.IScenario">
                </instanceof>
             </iterate>
          </and>
@@ -308,6 +314,16 @@
        point="org.eclipse.core.runtime.adapters">
     <factory
           adaptableType="de.renew.workflow.connector.cases.CaseHandlingProjectNature"
+          class="de.renew.workflow.connector.cases.CaseAdapterFactory">
+       <adapter
+             type="org.eclipse.ui.model.IWorkbenchAdapter">
+       </adapter>
+       <adapter
+             type="org.eclipse.ui.model.IWorkbenchAdapter2">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="de.renew.workflow.connector.cases.ICase"
           class="de.renew.workflow.connector.cases.CaseAdapterFactory">
        <adapter
              type="org.eclipse.ui.model.IWorkbenchAdapter">

@@ -75,7 +75,9 @@ public class ScenarioHandler extends CaseHandler implements IScenario
   {
     final Scenario parentScenario = m_scenario.getParentScenario();
     if( parentScenario == null )
+    {
       return null;
+    }
 
     return new ScenarioHandler( parentScenario, getProject() );
   }
