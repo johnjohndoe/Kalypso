@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 
 import de.renew.workflow.cases.Case;
@@ -64,8 +63,10 @@ public class CaseHandler implements ICase
     m_caze = caze;
     m_project = project;
 
-    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${casePath}" ), caze.getName() ); //$NON-NLS-1$ //$NON-NLS-2$
-    setURI( uri );
+    if( getURI() == null )
+    {
+      setURI( getName() );
+    }
   }
 
   /**
@@ -83,7 +84,6 @@ public class CaseHandler implements ICase
   @Override
   public String getURI( )
   {
-
     return m_caze.getURI();
   }
 
@@ -155,6 +155,15 @@ public class CaseHandler implements ICase
     builder.append( getProject() );
 
     return builder.toHashCode();
+  }
+
+  /**
+   * @see de.renew.workflow.connector.cases.ICase#getFolder()
+   */
+  @Override
+  public IFolder getFolder( )
+  {
+    return getProject().getFolder( getURI() );
   }
 
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -112,5 +111,5 @@ public interface ICaseDataProvider<T extends Object>
 
   public void reloadModel( );
 
-  public void setCurrent( final IContainer container );
+  public void setCurrent( final ICase scenario );
 }

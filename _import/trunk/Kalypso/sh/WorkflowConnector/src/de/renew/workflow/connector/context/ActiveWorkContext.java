@@ -1,7 +1,5 @@
 package de.renew.workflow.connector.context;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +56,9 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   protected void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
   {
     if( m_currentProjectNature == currentProject )
+    {
       return;
+    }
 
     if( currentProject == null )
     {
@@ -82,7 +82,9 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   public T getCurrentCase( )
   {
     if( m_caseManager == null )
+    {
       return null;
+    }
 
     return m_caseManager.getCurrentCase();
   }
@@ -103,46 +105,48 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
     // Convert to array to avoid concurrent modification exceptions
     final IActiveScenarioChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
     for( final IActiveScenarioChangeListener<T> l : listeners )
+    {
       l.activeScenarioChanged( newProject, caze );
+    }
   }
 
   public synchronized void setCurrentCase( final T caze ) throws CoreException
   {
     final T currentCase = m_caseManager == null ? null : m_caseManager.getCurrentCase();
     if( currentCase == null && caze == null )
+    {
       return;
+    }
 
     if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) && currentCase.getProject().equals( caze.getProject() ) )
+    {
       return;
+    }
 
     // Set current project to the cases project
-    try
+    if( caze == null )
     {
-      if( caze == null )
-        setCurrentProject( null );
+      setCurrentProject( null );
+    }
+    else
+    {
+      final IProject project = caze.getProject();
+      if( project.exists() )
+      {
+        // open a closed project, should we do this?
+        project.open( null );
+        setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
+      }
       else
       {
-        final URI uri = new URI( caze.getURI() );
-        final IProject project = caze.getProject();
-        if( project.exists() )
-        {
-          // open a closed project, should we do this?
-          project.open( null );
-          setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
-        }
-        else
-        {
-          throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
-        }
+        throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
       }
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
     }
 
     if( m_caseManager != null )
+    {
       m_caseManager.setCurrentCase( caze );
+    }
 
     fireActiveContextChanged( m_currentProjectNature, caze );
 

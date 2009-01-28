@@ -1,6 +1,5 @@
 package de.renew.workflow.connector.cases;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -14,12 +13,14 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IFolder)
    */
-  public void setCurrent( final IContainer caseDataFolder )
+  public void setCurrent( final ICase scenario )
   {
     try
     {
-      if( caseDataFolder != null )
-        caseDataFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+      if( scenario != null )
+      {
+        scenario.getFolder().refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+      }
     }
     catch( final Throwable th )
     {

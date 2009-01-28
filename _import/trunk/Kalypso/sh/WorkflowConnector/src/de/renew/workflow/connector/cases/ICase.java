@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 
 import de.renew.workflow.cases.Case;
@@ -71,6 +72,11 @@ public interface ICase
    * @return {@link IProject} of workflow {@link Case}
    */
   IProject getProject( );
+
+  /**
+   * @return working folder of this caze
+   */
+  IFolder getFolder( );
 
   /**
    * @return URI of workflow {@link Case}
