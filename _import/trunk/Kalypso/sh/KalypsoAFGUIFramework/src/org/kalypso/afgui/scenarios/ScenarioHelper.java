@@ -69,6 +69,16 @@ public class ScenarioHelper
     return (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
+  public static IScenario resolveRootScenario( final IScenario scenario )
+  {
+    if( scenario.getParentScenario() != null )
+    {
+      return resolveRootScenario( scenario.getParentScenario() );
+    }
+
+    return scenario;
+  }
+
   /**
    * Find the oldest parent (=root) of the given scenario.<br>
    * If the scenario has no parent, itself is returned.

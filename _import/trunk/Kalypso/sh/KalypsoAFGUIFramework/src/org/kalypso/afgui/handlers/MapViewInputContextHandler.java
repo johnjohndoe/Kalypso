@@ -11,6 +11,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,6 +21,9 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
@@ -35,16 +39,16 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class MapViewInputContextHandler extends AbstractHandler
 {
-  private final String m_mapViewInput;
+  private final String m_url;
 
   /**
    * Creates a new {@link MapViewInputContextHandler} that loads the given input file
    */
   public MapViewInputContextHandler( final Properties properties )
   {
-    m_mapViewInput = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
+    m_url = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
 
-    Assert.isNotNull( m_mapViewInput, "Parameter 'input' not set for mapViewInputContext" );
+    Assert.isNotNull( m_url, "Parameter 'input' not set for mapViewInputContext" );
   }
 
   /**
@@ -52,19 +56,45 @@ public class MapViewInputContextHandler extends AbstractHandler
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    if( folder == null )
-    {
-      throw new ExecutionException( "Kein Szenario aktiv oder Szenarioordner nicht gefunden." );
-    }
-    else if( m_mapViewInput == null )
-    {
-      throw new ExecutionException( "Keine Kartenvorlage angegeben." );
-    }
+    IFile iMap;
 
-    // find file in active scenario folder
-    final IFile file = folder.getFile( m_mapViewInput );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+    /* project absolute location */
+    if( m_url.startsWith( "project://" ) )
+    {
+      final String url = m_url.substring( 10 );
+      final IProject project = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getProject();
+
+      iMap = project.getFile( url );
+    }
+    /* base scenario relative location */
+    else if( m_url.startsWith( "base://" ) )
+    {
+      final String url = m_url.substring( 7 );
+      final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+      final IScenario root = ScenarioHelper.resolveRootScenario( caze );
+
+      final IFolder rootFolder = root.getFolder();
+      iMap = rootFolder.getFile( url );
+    }
+    /* current scenario relative location */
+    else
+    {
+
+      final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+      if( folder == null )
+      {
+        throw new ExecutionException( "Kein Szenario aktiv oder Szenarioordner nicht gefunden." );
+      }
+      else if( m_url == null )
+      {
+        throw new ExecutionException( "Keine Kartenvorlage angegeben." );
+      }
+
+      // find file in active scenario folder
+      iMap = folder.getFile( m_url );
+    }
 
     // find map view
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -83,9 +113,9 @@ public class MapViewInputContextHandler extends AbstractHandler
 
       // only load if the file is not currently shown
       final IFile currentFile = mapView.getFile();
-      if( !file.equals( currentFile ) )
+      if( !iMap.equals( currentFile ) )
       {
-        mapView.startLoadJob( file );
+        mapView.startLoadJob( iMap );
       }
 
       // make sure that no theme is active when initializing this context
