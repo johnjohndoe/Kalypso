@@ -52,11 +52,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -701,5 +709,68 @@ public class FileUtilities
     }
 
     return myName;
+  }
+
+  /**
+   * This function deletes files/directories from the list, which are older than 'days' days. <br />
+   * Be aware, that it <strong>deletes all directories recursively</strong>.<br />
+   * So if one directory contains files, you want to keep, do not add this directory, but only the child
+   * files/directories you realy want to delete.
+   * 
+   * @param files
+   *          The files/directories to check for deletion. All files/directories older than 'days' days will be deleted.
+   * @param days
+   *          The days, to keep the files and directories.
+   * @return A multi status, containing the result for each file, which was tried to delete.
+   */
+  public static MultiStatus deleteFiles( List<File> files, int days )
+  {
+    /* The date 'days' before now. */
+    Calendar before = Calendar.getInstance();
+    before.add( Calendar.DAY_OF_MONTH, -days );
+
+    /* Check the date of the files, each file older than 'days' will be deleted. */
+    List<File> filesToDelete = new ArrayList<File>();
+
+    for( int i = 0; i < files.size(); i++ )
+    {
+      /* Get the file. */
+      File file = files.get( i );
+
+      /* Using the last modified time should not hurt. */
+      long lastModified = file.lastModified();
+      if( lastModified < before.getTimeInMillis() )
+        filesToDelete.add( file );
+    }
+
+    /* List for success or error messages. */
+    MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, "Delete the temporary files, older than " + String.valueOf( days ) + " days.", null );
+
+    /* Delete these files. */
+    for( int i = 0; i < filesToDelete.size(); i++ )
+    {
+      /* Get the file/directory to delete. */
+      File fileToDelete = filesToDelete.get( i );
+
+      if( !fileToDelete.exists() )
+        continue;
+
+      try
+      {
+        /* Delete file or the directory and its contents. */
+        FileUtilities.deleteRecursive( fileToDelete );
+
+        /* Add the success message. */
+        stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) );
+      }
+      catch( Exception ex )
+      {
+        /* If one could no be deleted, it does not matter, the next run will get it. We will get them all :). */
+        IStatus status = StatusUtilities.statusFromThrowable( ex, fileToDelete.getName() + ": NOT DELETED" );
+        stati.add( status );
+      }
+    }
+
+    return stati;
   }
 }
