@@ -20,19 +20,6 @@
     </runtime>
  </extension>
 	<extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="de.renew.workflow.cases.Case"
-            class="de.renew.workflow.connector.cases.CaseAdapterFactory">
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter2">
-         </adapter>
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter">
-         </adapter>
-      </factory>
-   </extension>
-	<extension
          point="org.eclipse.ui.commands">
       <category
             description="Category for workflow tasks"
