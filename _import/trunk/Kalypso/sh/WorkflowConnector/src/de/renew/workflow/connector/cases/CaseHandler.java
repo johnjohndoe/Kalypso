@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * Wrapper interface for handling {@link Case} Objects
@@ -84,6 +89,15 @@ public class CaseHandler implements ICase
   @Override
   public String getURI( )
   {
+    try
+    {
+      return URLDecoder.decode( m_caze.getURI(), "UTF-8" );
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
     return m_caze.getURI();
   }
 
@@ -163,7 +177,8 @@ public class CaseHandler implements ICase
   @Override
   public IFolder getFolder( )
   {
-    return getProject().getFolder( getURI() );
+    final String uri = getURI();
+    return getProject().getFolder( uri );
   }
 
 }
