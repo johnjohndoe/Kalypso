@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -36,13 +37,17 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
+    {
+      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) );
+    } //$NON-NLS-1$
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) )
+    {
       return null;
+    }
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
@@ -63,7 +68,7 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
     coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );

@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
@@ -38,13 +38,17 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
+    {
       throw new ExecutionException( Messages.getString( "WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
+    }
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCoveragesWidgetHandler.1" ), Messages.getString( "WaterdepthCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCoveragesWidgetHandler.1" ), Messages.getString( "WaterdepthCoveragesWidgetHandler.2" ) ) )
+    {
       return null;
+    }
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
@@ -52,11 +56,13 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
       // get "Wasserspiegellagen" cascading theme
       final AbstractCascadingLayerTheme hqTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "HQi" ); //$NON-NLS-1$
       if( hqTheme != null )
+      {
         mapModell.activateTheme( hqTheme );
+      }
     }
 
     final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
+    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
     widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );

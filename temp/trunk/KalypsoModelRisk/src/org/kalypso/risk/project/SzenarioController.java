@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.project;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -61,9 +61,9 @@ import org.kalypso.risk.model.services.LanduseStyleUpdateListener;
  */
 public class SzenarioController implements IScenarioDataListener
 {
-  private LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
+  private final LanduseStyleUpdateListener m_landuseStyleUpdateListener = new LanduseStyleUpdateListener();
 
-  private IContainer m_scenarioDataPath = null;
+  private IScenario m_scenario = null;
 
   public SzenarioController( )
   {
@@ -71,25 +71,29 @@ public class SzenarioController implements IScenarioDataListener
 
   public synchronized void modelLoaded( final IModel model, final IStatus status )
   {
-    if( m_scenarioDataPath == null )
+    if( m_scenario == null )
+    {
       return;
+    }
     if( model instanceof IRasterizationControlModel )
     {
       final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
-      final IFile file = m_scenarioDataPath.getFile( path );
+      final IFile file = m_scenario.getFolder().getFile( path );
       m_landuseStyleUpdateListener.startStyleUpdateJob( file );
     }
 
     // maybe get status info from status-model
   }
 
-  public synchronized void scenarioChanged( final IContainer scenarioDataPath )
+  public synchronized void scenarioChanged( final IScenario scenario )
   {
     // unregister any listeners
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( m_landuseStyleUpdateListener );
-    m_scenarioDataPath = scenarioDataPath;
-    if( scenarioDataPath != null )
+    m_scenario = scenario;
+    if( scenario != null )
+    {
       ResourcesPlugin.getWorkspace().addResourceChangeListener( m_landuseStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
+    }
 
     // maybe save status into dstatus model
   }
