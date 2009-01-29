@@ -358,7 +358,7 @@ CIPK OCT01
           !calculation of real average waterlevel
           tmpwl = 0
           do zzz = 1,lmt(j)
-            tmpwl = tmpwl + ao(line(j,zzz))+vel(3,line(j,zzz))
+            tmpwl = tmpwl + ado(line(j,zzz))+vel(3,line(j,zzz))
           end do
           tmpwl = tmpwl/lmt(j)
 
@@ -722,7 +722,8 @@ C-
               SPEC(NA,2)=QMAG*SIN(BEETA)
           enddo
 
-          !set usable boundary conditions only for unsteady, steady update is done somewhere else
+          !set usable boundary conditions only for unsteady,
+          !  steady update is done somewhere else
           if (icyc > 0) then
             DO k = 1, lmt (j)
               na = line (j, k)
