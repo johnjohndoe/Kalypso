@@ -47,6 +47,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
@@ -175,10 +177,16 @@ public class CaseHandler implements ICase
    * @see de.renew.workflow.connector.cases.ICase#getFolder()
    */
   @Override
-  public IFolder getFolder( )
+  public IFolder getFolder( ) throws CoreException
   {
     final String uri = getURI();
-    return getProject().getFolder( uri );
+    final IFolder folder = getProject().getFolder( uri );
+    if( !folder.exists() )
+    {
+      folder.create( true, true, new NullProgressMonitor() );
+    }
+
+    return folder;
   }
 
 }

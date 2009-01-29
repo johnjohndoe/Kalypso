@@ -42,6 +42,7 @@ package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 import de.renew.workflow.cases.Case;
 
@@ -76,7 +77,7 @@ public interface ICase
   /**
    * @return working folder of this caze
    */
-  IFolder getFolder( );
+  IFolder getFolder( ) throws CoreException;
 
   /**
    * @return URI of workflow {@link Case}
