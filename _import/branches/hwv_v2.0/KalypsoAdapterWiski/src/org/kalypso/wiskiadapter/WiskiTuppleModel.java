@@ -10,13 +10,14 @@ import org.kalypso.commons.conversion.units.IValueConverter;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * WiskiTuppleModel
  * 
  * @author schlienger
  */
-public class WiskiTuppleModel extends AbstractTuppleModel
+public class WiskiTuppleModel extends AbstractTuppleModel implements IWiskiConstants
 {
   private final List m_data;
 
@@ -42,7 +43,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
 
     m_vc = conv;
 
-    m_data = filter777( data );
+    m_data = filter777( data, axes[1].getType() );
     m_timeConverter = timeConverter;
     m_values = new Double[m_data.size()];
     m_kalypsoStati = new Integer[m_data.size()];
@@ -52,19 +53,22 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   }
 
   /**
-   * Filters the -777 Values from the given list of data values
+   * Filters the -777 Values from the given list of data values.<br>
+   * <ul>
+   * <li>Missing entries from start or end of the list are removed</li>
+   * <li>For rain or snow (N, ?): Missing entries in the middle (holes) are set to 0.0 and staus set to warned.</li>
+   * <li>Other datatypes: Missing entries in the middle (holes) are linearly interpolated by the surrounding valid
+   * values; status is set to warned.</li>
+   * </ul>
    */
-  private static List filter777( final LinkedList data )
+  private static List filter777( final LinkedList data, final String axisType )
   {
-    final LinkedList filteredData = new LinkedList();
-    for( final Iterator dataIter = data.iterator(); dataIter.hasNext(); )
-    {
-      final HashMap map = (HashMap)dataIter.next();
+    final LinkedList filteredData = WiskiUtils.trimMissing( data );
 
-      final String status = (String)map.get( "QUALITY" );
-      if( !"M".equals( status ) )
-        filteredData.add( map );
-    }
+    if( axisType == TimeserieConstants.TYPE_RAINFALL )
+      WiskiUtils.fillMissing( filteredData, new Double( 0.0 ) );
+    else
+      WiskiUtils.interpolateMissing( filteredData );
 
     return filteredData;
   }
@@ -85,7 +89,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     switch( getPositionFor( axis ) )
     {
       case 0:
-	    return m_timeConverter.wiskiToKalypso( (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" ) );
+	    return m_timeConverter.wiskiToKalypso( (Date) ((HashMap) m_data.get( index )).get( WISKI_DATA_AXIS_TIMESTAMP ) );
       case 1:
         return getValue( index );
       case 2:
@@ -99,7 +103,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     if( m_values[index] == null )
     {
-      double value = ((Number) ((HashMap) m_data.get( index )).get( "tsc_value0" )).doubleValue();
+      double value = ((Number) ((HashMap) m_data.get( index )).get( WISKI_DATA_AXIS_VALUE )).doubleValue();
 
       if( m_vc != null )
         value = m_vc.convert( value );
@@ -114,7 +118,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     if( m_kalypsoStati[index] == null )
     {
-      final String status = (String) ((HashMap) m_data.get( index )).get( "QUALITY" );
+      final String status = (String) ((HashMap) m_data.get( index )).get( WISKI_DATA_AXIS_QUALITY );
       m_kalypsoStati[index] = WiskiUtils.wiskiStatus2Kalypso( status );
 
     }
@@ -131,7 +135,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     if( m_vc != null )
       v = m_vc.reverse( v );
 
-    ((HashMap) m_data.get( index )).put( "tsc_value0", new Double( v ) );
+    ((HashMap) m_data.get( index )).put( WISKI_DATA_AXIS_VALUE, new Double( v ) );
   }
 
   /**
@@ -165,7 +169,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
       {
         final HashMap map = (HashMap) it.next();
 
-        final Date wiskiDate = m_timeConverter.wiskiToKalypso( (Date)map.get( "timestamp" ) );
+        final Date wiskiDate = m_timeConverter.wiskiToKalypso( (Date) map.get( WISKI_DATA_AXIS_TIMESTAMP ) );
         if( date.equals( wiskiDate ) )
           return m_data.indexOf( map );
       }

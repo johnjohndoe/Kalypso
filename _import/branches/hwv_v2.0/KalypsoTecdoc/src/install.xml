@@ -164,6 +164,26 @@
 
               <entry><filename>//shalhvzwapp/KalypsoClient</filename></entry>
             </row>
+
+            <row>
+              <entry>Magdeburg</entry>
+
+              <entry>SMDHVZWAPP</entry>
+
+              <entry><filename>D:/Programme/Kalypso/tomcat5.0/webapps/webdav/prognose</filename></entry>
+
+              <entry><filename>//smdhvzwapp/kalypso-modelle</filename></entry>
+            </row>
+
+            <row>
+              <entry>Halle</entry>
+
+              <entry>SHALHVZWAPP</entry>
+
+              <entry><filename>D:/Programme/Kalypso/tomcat5.0/webapps/webdav/prognose</filename></entry>
+
+              <entry><filename>//shalhvzwapp/kalypso-modelle</filename></entry>
+            </row>
           </tbody>
         </tgroup>
       </table>

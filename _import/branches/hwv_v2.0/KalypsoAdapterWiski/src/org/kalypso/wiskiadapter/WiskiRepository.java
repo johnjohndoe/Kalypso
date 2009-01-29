@@ -3,13 +3,14 @@ package org.kalypso.wiskiadapter;
 import java.io.File;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ClassUtils;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -44,19 +45,21 @@ public class WiskiRepository extends AbstractRepository
 
   private final String m_password;
 
-  private boolean m_debugMode;
+  private final boolean m_debugMode;
 
-  private String m_debugDir;
+  private final String m_debugDir;
 
-  private boolean m_simulate;
+  private final boolean m_simulate;
 
   private Map<String, IRepositoryItem> m_children = null;
 
+  private final Collection<String> m_forbiddenCalls;
+
   /**
    * @param conf
-   *          the configuration should be build the followin way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
+   *          the configuration should be build the following way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
    */
-  public WiskiRepository( String name, String factory, String conf, boolean readOnly )
+  public WiskiRepository( final String name, final String factory, final String conf, final boolean readOnly )
   {
     super( name, factory, conf, readOnly );
 
@@ -72,6 +75,7 @@ public class WiskiRepository extends AbstractRepository
     m_debugMode = validator.isDebugMode();
     m_debugDir = validator.getDebugDir();
     m_simulate = validator.isSimulateMode();
+    m_forbiddenCalls = validator.getForbiddenCalls();
 
     try
     {
@@ -268,9 +272,9 @@ public class WiskiRepository extends AbstractRepository
       final List<?> list = call.getResultList();
 
       m_children = new LinkedHashMap<String, IRepositoryItem>( list.size() );
-      for( final Iterator<?> it = list.iterator(); it.hasNext(); )
+      for( final Object name2 : list )
       {
-        final Map<?,?> map = (Map<?,?>) it.next();
+        final Map<?,?> map = (Map<?,?>) name2;
         final String name = (String) map.get( "supergroup_name" );
         m_children.put( name, new SuperGroupItem( this, name ) );
       }
@@ -292,6 +296,14 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
+      /* If this wiski-call is explicitely forbidden, just ignore it */
+      final String callName = ClassUtils.getShortClassName( call.getClass() );
+      if( m_forbiddenCalls.contains( callName ) )
+      {
+        System.out.println( "Ignoring forbidden wiski-call: " + callName );
+        return;
+      }
+
       if( m_wiski == null )
       {
         // If wiski not initialized, do it now

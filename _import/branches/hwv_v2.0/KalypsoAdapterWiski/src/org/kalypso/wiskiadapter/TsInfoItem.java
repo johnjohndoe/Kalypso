@@ -44,19 +44,19 @@ public class TsInfoItem implements IRepositoryItem
     m_rep = (WiskiRepository) m_group.getRepository();
   }
 
- // /**
- //  * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
- //  * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
- //  */
- // public TsInfoItem( final WiskiRepository rep, final Map<Object, Object> map )
- // {
- //   m_group = null;
+  // /**
+  // * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
+  // * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
+  // */
+  // public TsInfoItem( final WiskiRepository rep, final Map<Object, Object> map )
+  // {
+  // m_group = null;
 //
- //   m_map = new Properties();
- //   m_map.putAll( map );
- //
- //   m_rep = rep;
- // }
+  // m_map = new Properties();
+  // m_map.putAll( map );
+  //
+  // m_rep = rep;
+  // }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
@@ -119,6 +119,7 @@ public class TsInfoItem implements IRepositoryItem
     return m_rep;
   }
 
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
@@ -140,7 +141,7 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "tsinfo_unitname", "<?>" );
   }
 
-  String getWiskiParameterType()
+  String getWiskiParameterType( )
   {
     return m_map.getProperty( "parametertype_name", "<?>" );
   }
@@ -155,7 +156,7 @@ public class TsInfoItem implements IRepositoryItem
    * 5: half year <br>
    * 255: other
    */
-  int getWiskiTimeLevel()
+  int getWiskiTimeLevel( )
   {
     return Integer.valueOf( m_map.getProperty( "tsinfo_timelevel", "255" ) ).intValue();
   }
@@ -169,7 +170,7 @@ public class TsInfoItem implements IRepositoryItem
    * 4: max <br>
    * 255: other
    */
-  int getWiskiValueType()
+  int getWiskiValueType( )
   {
     return Integer.valueOf( m_map.getProperty( "tsinfo_valuetype", "255" ) ).intValue();
   }
@@ -178,7 +179,7 @@ public class TsInfoItem implements IRepositoryItem
    * @return tsinfo_begin_of als Date, dessen Time-Anteil den Beginn der Integrationszeit des Tageswertes Beschreibt
    *         (z.B. 07:30 oder ähnlich). Can be null.
    */
-  Date getWiskiBegin()
+  Date getWiskiBegin( )
   {
     final String strDate = m_map.getProperty( "tsinfo_begin_of" );
     if( strDate == null )
@@ -191,7 +192,7 @@ public class TsInfoItem implements IRepositoryItem
    * @return tsinfo_offset_of als Long, welcher beschreibt, ob die Quellwerte eines Tageswertes zum Datum x vom Tag x
    *         bis x+1 einfliessen (offset 0) oder z.B. vom Tag x-1 bis zum Tag x (offset -1). Can be null.
    */
-  Long getWiskiOffset()
+  Long getWiskiOffset( )
   {
     final String strOffset = m_map.getProperty( "tsinfo_offset_of", "-1" );
 
@@ -201,7 +202,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the internal id which is used within wiski. This id should not be used "outside of the program code"
    */
-  Long getWiskiId( )
+  public Long getWiskiId( )
   {
     return Long.valueOf( m_map.getProperty( "tsinfo_id", "-1" ) );
   }
@@ -209,7 +210,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the internal id of the parameter
    */
-  Long getWiskiParameterId( )
+  public Long getWiskiParameterId( )
   {
     return Long.valueOf( m_map.getProperty( "stationparameter_id", "-1" ) );
   }
@@ -221,31 +222,45 @@ public class TsInfoItem implements IRepositoryItem
 
   String getWiskiDescription( )
   {
-    final String noValue = "<kein Eintrag:";
-
     final StringBuffer bf = new StringBuffer();
-    bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) )
-        .append( " - " );
-    bf.append( m_map.getProperty( "station_name", noValue + "station_name>" ) );
-
+    bf.append( getWiskiParametertypeLongname() ).append( " - " );
+    bf.append( getWiskiStationparameterName() ).append( " - " );
+    bf.append( getWiskiStationName() );
     return bf.toString();
+  }
+
+  String getWiskiStationparameterLongname( )
+  {
+    return m_map.getProperty( "stationparameter_longname", "" );
+  }
+
+  String getWiskiStationparameterName( )
+  {
+    return m_map.getProperty( "stationparameter_name", "" );
+  }
+
+  String getWiskiParametertypeLongname( )
+  {
+    return m_map.getProperty( "parametertype_longname", "" );
   }
 
   /**
    * @return wiski internal station id
    */
-  String getWiskiStationId( )
+  public Long getWiskiStationId( )
   {
-    return m_map.getProperty( "station_id", "<?>" );
+    final String stationIdString = m_map.getProperty( "station_id", null );
+    if( stationIdString == null )
+      return null;
+
+    return Long.valueOf( stationIdString );
   }
 
-  public boolean isActive()
+  public boolean isActive( )
   {
-    return m_groupEntryList.isActive( getWiskiIdAsString() ); 
+    return m_groupEntryList.isActive( getWiskiIdAsString() );
   }
-  
+
   /**
    * Return the station number (in german: Messstellennummer) in the Wiski sense.
    * <p>
@@ -256,11 +271,11 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_no", "<?>" );
   }
 
-  String getStationParameterName()
+  String getStationParameterName( )
   {
-    return m_map.getProperty( "stationparameter_name", "" );
+    return getWiskiStationparameterName();
   }
-  
+
   /**
    * Return the name of the group/parameter. The group of a TsInfoItem is actually the Parameter in the Wiski sense.
    * <p>
@@ -286,13 +301,13 @@ public class TsInfoItem implements IRepositoryItem
     return m_group.getParent().getName();
   }
 
-  int getWiskiDistUnit()
+  int getWiskiDistUnit( )
   {
     final String strWiskiUnit = m_map.getProperty( "tsinfo_distunit" );
     if( strWiskiUnit == null )
       throw new IllegalStateException( "Wiski does not deliver which time-unit to use (Property: tsinfo_distunit)" );
 
-   return Integer.valueOf( strWiskiUnit ).intValue();
+    return Integer.valueOf( strWiskiUnit ).intValue();
   }
 
   int getWiskiDistValue( )
@@ -307,16 +322,23 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * Helper: finds a sibling timeserie (under same station) of the given parameter
    */
-  TsInfoItem findSibling( final String parameterName ) throws RepositoryException
+  TsInfoItem findSibling( final String parameterName ) 
   {
-    final SuperGroupItem supergroup = (SuperGroupItem) m_group.getParent();
-    final GroupItem group = supergroup.findGroup( parameterName );
+    try
+    {
+      final SuperGroupItem supergroup = (SuperGroupItem) m_group.getParent();
+      final GroupItem group = supergroup.findGroup( parameterName );
 
-    if( group == null )
-      throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName
-          + ", supergroup is: " + supergroup.getName() );
+      if( group == null )
+        throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName + ", supergroup is: " + supergroup.getName() );
 
-    return group.findTsInfo( "station_no", getWiskiStationNo() );
+      return group.findTsInfo( "station_no", getWiskiStationNo() );
+    }
+    catch( final RepositoryException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -330,7 +352,7 @@ public class TsInfoItem implements IRepositoryItem
   /**
    * @return the underlying map that holds the wiski properties
    */
-  protected Map getWiskiPropertyMap()
+  protected Map<Object, Object> getWiskiPropertyMap( )
   {
     return m_map;
   }

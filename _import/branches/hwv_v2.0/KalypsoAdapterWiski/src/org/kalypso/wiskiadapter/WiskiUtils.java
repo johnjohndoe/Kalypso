@@ -6,7 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -19,16 +21,8 @@ import de.kisters.wiski.webdataprovider.common.net.KiWWDataProviderInterface;
  * 
  * @author schlienger
  */
-public final class WiskiUtils
+public final class WiskiUtils implements IWiskiConstants
 {
-  /** name of the property that delivers the group names */
-  final static String PROP_SUPERGROUPNAMES = "SUPERGROUPNAMES";
-
-  /**
-   * name of the properties delivering the number of days in the past that can be used as default date-range
-   */
-  final static String PROP_NUMBER_OF_DAYS = "NUMBER_OF_DAYS";
-
   // TODO: do not make it static...
   // TODO: move properties tuff into extra, non-static, class
   private static Properties PROPS = null;
@@ -268,4 +262,93 @@ public final class WiskiUtils
         throw new IllegalStateException( "unsupported time level" );
     }
   }
+  
+
+  /**
+   * Sets all 'Missing' values to a given default value. Teh status is not changed.
+   */
+  public static void fillMissing( final LinkedList data, final Double fillValue )
+  {
+    for( final Iterator dataIter = data.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap) dataIter.next();
+      final String status = (String) map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        map.put( WISKI_DATA_AXIS_VALUE, fillValue );
+    }
+  }
+
+  /**
+   * (Linear-)interpolates missing values in wiski data. <br>
+   */
+  public static void interpolateMissing( final LinkedList data )
+  {
+    int lastValid = -1;
+    for( int i = 0; i < data.size(); i++ )
+    {
+      final HashMap iMap = (HashMap) data.get( i );
+      final String status = (String) iMap.get( WISKI_DATA_AXIS_QUALITY );
+      if( !WISKI_STATUS_MISSING.equals( status ) )
+      {
+        fillMissingHole( lastValid, i, data );
+        lastValid = i;
+      }
+    }
+  }
+
+  private static void fillMissingHole( final int from, final int to, final LinkedList filteredData )
+  {
+    if( from < 0 || to > filteredData.size() - 1 || to - from < 2 )
+      return;
+
+    final HashMap fromData = (HashMap) filteredData.get( from );
+    final HashMap toData = (HashMap) filteredData.get( to );
+
+    final double fromValue = ((Number) fromData.get( WISKI_DATA_AXIS_VALUE )).doubleValue();
+    final double toValue = ((Number) toData.get( WISKI_DATA_AXIS_VALUE )).doubleValue();
+
+    // Iterate over missing values (if we have no hole, this is the empty for-loop)
+    for( int i = from + 1; i < to; i++ )
+    {
+      // REMARK: we assume, that WISKI always delivers equidistant values; so we just do
+      // linear interpolation via the index.
+      final double interpolatedValue = fromValue + (i - from) * (toValue - fromValue) / (to - from);
+
+      final HashMap map = (HashMap) filteredData.get( i );
+      map.put( WISKI_DATA_AXIS_VALUE, new Double( interpolatedValue ) );
+    }
+  }
+
+  /**
+   * Removes all 'Missing' values from start and end of the given list.
+   */
+  public static LinkedList trimMissing( final LinkedList data )
+  {
+    final LinkedList trimmedData = new LinkedList( data );
+
+    /* Remove values missing from start of timeserie */
+    for( final Iterator dataIter = trimmedData.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap) dataIter.next();
+      final String status = (String) map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        dataIter.remove();
+      else
+        break; // stop at first real good value
+    }
+
+    /* Remove values missing from end of timeserie */
+    for( final ListIterator dataIter = trimmedData.listIterator( trimmedData.size() ); dataIter.hasPrevious(); )
+    {
+      final HashMap map = (HashMap) dataIter.previous();
+      final String status = (String) map.get( WISKI_DATA_AXIS_QUALITY );
+      if( WISKI_STATUS_MISSING.equals( status ) )
+        dataIter.remove();
+      else
+        break; // stop at first real good value
+    }
+
+    return trimmedData;
+  }
+  
 }

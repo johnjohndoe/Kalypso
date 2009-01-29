@@ -37,9 +37,9 @@ public class GetRatingTables implements IWiskiCall
 
   private final String m_wiskiObjectType;
 
-  private WQTable m_wqTable;
-
   private final Date m_wqTableValidity;
+
+  private LinkedList m_tables;
 
   /**
    * Constructor
@@ -60,18 +60,13 @@ public class GetRatingTables implements IWiskiCall
     m_wqTableValidity = wqTableValidity;
   }
 
-  public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
+  public void execute( final KiWWDataProviderRMIf wiski, final HashMap userData ) throws NoSuchObjectException, KiWWException,
       RemoteException
   {
     final HashMap tables = wiski.getRatingTables( userData, m_wiskiObjectType, new Long[]
     { m_id }, new Timestamp( m_validity.getTime() ) );
 
-    final LinkedList list = (LinkedList)tables.get( m_id );
-    if( list.size() > 0 )
-    {
-      final HashMap table = (HashMap)list.getFirst();
-      m_wqTable = convertTable( table, m_wqTableValidity );
-    }
+    m_tables = (LinkedList) tables.get( m_id );
   }
 
   /**
@@ -98,7 +93,7 @@ public class GetRatingTables implements IWiskiCall
 
     Number stetigFlow = null;
 
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < flow.length; i++ )
     {
@@ -136,6 +131,10 @@ public class GetRatingTables implements IWiskiCall
   /** Returns the fetched wqTable, or null if none was found. */
   public WQTable getTable()
   {
-    return m_wqTable;
+    if( m_tables.size() == 0 )
+      return null;
+
+    final HashMap table = (HashMap) m_tables.getFirst();
+    return convertTable( table, m_wqTableValidity );
   }
 }

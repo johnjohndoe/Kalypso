@@ -12,7 +12,8 @@ Bundle-ClassPath: lib/axis/axis.jar,
  lib/axis/saaj.jar,
  lib/axis/wsdl4j-1.5.1.jar,
  lib/activation.jar,
- lib/mail.jar
+ lib/mail.jar,
+ lib/commons-io-1.0.jar
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: .,

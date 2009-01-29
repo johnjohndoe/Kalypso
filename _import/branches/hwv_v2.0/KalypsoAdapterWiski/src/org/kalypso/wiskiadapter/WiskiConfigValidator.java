@@ -41,6 +41,9 @@
 
 package org.kalypso.wiskiadapter;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -58,6 +61,9 @@ import org.eclipse.jface.dialogs.IInputValidator;
  */
 public class WiskiConfigValidator implements IInputValidator
 {
+  /* System-Property: comma-separated list of class-names that are forbidden (ie. will be ignored). */
+  private final String SYSPROP_FORBIDDEN_CALLS = "org.kalypso.wiskiadapter.forbiddencalls";
+  
   /** expected number of items in the configuration string */
   private final static int CONF_NB_ITEMS = 5;
 
@@ -81,6 +87,8 @@ public class WiskiConfigValidator implements IInputValidator
   private boolean m_simulateMode;
 
   private Level m_logLevel;
+
+  private Collection<String> m_forbiddenCalls;
 
   /**
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
@@ -133,6 +141,10 @@ public class WiskiConfigValidator implements IInputValidator
     m_logonName = items[2];
     m_password = items[3];
     m_language = items[4];
+    
+    final String forbiddenCallsProp = System.getProperty( SYSPROP_FORBIDDEN_CALLS, "" );
+    final String[] forbiddenCalls = forbiddenCallsProp.split( "," );
+    m_forbiddenCalls = new HashSet<String>( Arrays.asList( forbiddenCalls ) );
   }
 
   public String getDomain()
@@ -178,5 +190,13 @@ public class WiskiConfigValidator implements IInputValidator
   public Level getLogLevel()
   {
     return m_logLevel;
+  }
+
+  /**
+   * A collection of forbidden wiski-calls (its class names, no package).
+   */
+  public Collection<String> getForbiddenCalls( )
+  {
+    return m_forbiddenCalls;
   }
 }

@@ -56,7 +56,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     return m_data;
   }
 
-  private Double getValue( int index )
+  private Double getValue( final int index )
   {
     if( m_values[index] == null )
     {
@@ -71,7 +71,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     return m_values[index];
   }
 
-  private Integer getKalypsoStatus( int index )
+  private Integer getKalypsoStatus( final int index )
   {
     if( m_kalypsoStati[index] == null )
       m_kalypsoStati[index] = PSICompactConfig.psiStatusToMask( m_data[index].getStatus() );
@@ -79,7 +79,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     return m_kalypsoStati[index];
   }
 
-  private void setValue( int index, Double value )
+  private void setValue( final int index, final Double value )
   {
     m_values[index] = value;
 
@@ -116,7 +116,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
@@ -134,7 +134,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
-  public void setElement( int index, Object element, IAxis axis ) throws SensorException
+  public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     switch( getPositionFor( axis ) )
     {
