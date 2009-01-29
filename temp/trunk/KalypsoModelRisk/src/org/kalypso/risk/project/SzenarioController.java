@@ -43,6 +43,7 @@ package org.kalypso.risk.project;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.afgui.scenarios.IScenario;
@@ -77,9 +78,16 @@ public class SzenarioController implements IScenarioDataListener
     }
     if( model instanceof IRasterizationControlModel )
     {
-      final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
-      final IFile file = m_scenario.getFolder().getFile( path );
-      m_landuseStyleUpdateListener.startStyleUpdateJob( file );
+      try
+      {
+        final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
+        final IFile file = m_scenario.getFolder().getFile( path );
+        m_landuseStyleUpdateListener.startStyleUpdateJob( file );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     // maybe get status info from status-model
