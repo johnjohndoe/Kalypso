@@ -126,10 +126,14 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if( selection == null )
+        {
           return;
+        }
         final Object firstElement = selection.getFirstElement();
         if( firstElement == null )
+        {
           return;
+        }
         else
         {
           if( firstElement instanceof IFeatureWrapper2 )
@@ -233,7 +237,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final DefaultTableViewer tableViewer = new DefaultTableViewer( parent, SWT.FULL_SELECTION | SWT.NONE );
 
-    tableViewer.addColumn( "Name", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0"), null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    tableViewer.addColumn( "Name", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.0" ), null, 100, 100, false, SWT.LEFT, false, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider( parent.getDisplay() ) );
@@ -259,7 +263,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         }
       } );
 
-      moveUpBtn.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.1") ); //$NON-NLS-1$
+      moveUpBtn.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.1" ) ); //$NON-NLS-1$
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
@@ -276,7 +280,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           tableViewer.refresh();
         }
       } );
-      moveDownBtn.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.2") ); //$NON-NLS-1$
+      moveDownBtn.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.2" ) ); //$NON-NLS-1$
     }
 
     if( m_buttonsList.contains( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
@@ -362,7 +366,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         public void widgetSelected( final SelectionEvent event )
         {
           if( m_dataModel.getSelectedCalculationUnit() == null )
+          {
             return;
+          }
 
           final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
           final CalculationUnitPropertyWizard calculationSubWizard = new CalculationUnitPropertyWizard( dataModel );
@@ -423,13 +429,15 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
           /* delete results */
           final IStatus status = ResultMeta1d2dHelper.removeResult( calcUnitResultMeta );
           if( status != Status.OK_STATUS )
-            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4") + calcUnitToDel.getName() ); //$NON-NLS-1$
+          {
+            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.4" ) + calcUnitToDel.getName() ); //$NON-NLS-1$
+          }
         }
       }
       catch( final CoreException e )
       {
         e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.5") + calcUnitToDel.getName() ); //$NON-NLS-1$
+        return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable.5" ) + calcUnitToDel.getName() ); //$NON-NLS-1$
       }
 
       /* delete calc unit */
@@ -456,8 +464,7 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     return Status.OK_STATUS;
   }
 
-  protected void moveSelection( @SuppressWarnings("unused")
-      final int delta )
+  protected void moveSelection( @SuppressWarnings("unused") final int delta )
   {
     throw new UnsupportedOperationException();
   }
@@ -476,7 +483,9 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
   {
     final Object inputData = getDataModel().getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     if( inputData != null )
+    {
       return (List<ICalculationUnit>) inputData;
+    }
 
     return new ArrayList<ICalculationUnit>();
   }
@@ -486,10 +495,14 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
     final KeyBasedDataModel dataModel = getDataModel();
     final ICalculationUnit calUnitToMax = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     if( calUnitToMax == null )
+    {
       return;
+    }
     final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
     if( boundingBox == null )
+    {
       return;
+    }
     final IMapPanel mapPanel = dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     mapPanel.setBoundingBox( boundingBox );
   }
@@ -546,13 +559,21 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
         tableViewer.refresh();
         final boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
         if( m_btnDeleteCalcUnit != null )
+        {
           m_btnDeleteCalcUnit.setEnabled( isEnabled );
+        }
         if( m_btnEditCalcUnit != null )
+        {
           m_btnEditCalcUnit.setEnabled( isEnabled );
+        }
         if( m_btnMaximizeCalcUnit != null )
+        {
           m_btnMaximizeCalcUnit.setEnabled( isEnabled );
+        }
         if( m_btnRunCalculation != null )
+        {
           m_btnRunCalculation.setEnabled( isEnabled );
+        }
       }
     };
     display.syncExec( runnable );
@@ -564,18 +585,25 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     if( calculationUnit != null )
     {
-      final Shell shell = event.display.getActiveShell();
+      try
+      {
+        final Shell shell = event.display.getActiveShell();
 
-      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
-      final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
+        final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
+        final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
 
-      final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) ); //$NON-NLS-1$
+        final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) ); //$NON-NLS-1$
 
-      final Model1D2DSimulation runnable = new Model1D2DSimulation( shell, caseDataProvider, scenarioFolder, unitFolder, calculationUnit.getGmlID() );
-      runnable.process();
+        final Model1D2DSimulation runnable = new Model1D2DSimulation( shell, caseDataProvider, scenarioFolder, unitFolder, calculationUnit.getGmlID() );
+        runnable.process();
 
-      // Force fire a data change event here, so the log get updated now
-      getDataModel().fireDataChanged( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
+        // Force fire a data change event here, so the log get updated now
+        getDataModel().fireDataChanged( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
   }
 
