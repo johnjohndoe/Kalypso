@@ -272,7 +272,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
         return StatusUtilities.createStatus( statusList, "Beim Initialisieren der Szenariodaten sind Probleme aufgetreten." );
       }
 
-      private IFolder resolveFolder( final IScenario scene, final String gmlLocation )
+      private IFolder resolveFolder( final IScenario scene, final String gmlLocation ) throws CoreException
       {
 
         final IFolder folder = scene.getFolder();
@@ -677,7 +677,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   /**
    * Returns the current scenario's base folder
    */
-  public IContainer getScenarioFolder( )
+  public IContainer getScenarioFolder( ) throws CoreException
   {
     if( m_scenario != null )
     {

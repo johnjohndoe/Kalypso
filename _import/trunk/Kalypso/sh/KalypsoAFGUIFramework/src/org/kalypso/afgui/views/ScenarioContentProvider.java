@@ -15,6 +15,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioList;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -223,8 +224,16 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
             ViewerUtilities.refresh( viewer, project, true );
           }
         }
-        final IFolder folder = caze.getFolder();
-        ViewerUtilities.refresh( viewer, folder.getParent(), true );
+
+        try
+        {
+          final IFolder folder = caze.getFolder();
+          ViewerUtilities.refresh( viewer, folder.getParent(), true );
+        }
+        catch( final CoreException e )
+        {
+          KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
       }
     }
   }

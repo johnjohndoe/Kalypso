@@ -214,4 +214,9 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   {
     return (ScenarioHandlingProjectNature) project.getNature( ID );
   }
+
+  public IDerivedScenarioCopyFilter getDerivedScenarioCopyFilter( )
+  {
+    return m_filter;
+  }
 }

@@ -45,4 +45,6 @@ public interface IScenarioManager extends ICaseManager<IScenario>
    *              exception.</li>
    */
   public void persist( final IProgressMonitor monitor ) throws CoreException;
+
+  public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException;
 }

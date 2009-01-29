@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -71,12 +72,19 @@ public class MapViewInputContextHandler extends AbstractHandler
     /* base scenario relative location */
     else if( m_url.startsWith( "base://" ) )
     {
-      final String url = m_url.substring( 7 );
-      final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
-      final IScenario root = ScenarioHelper.resolveRootScenario( caze );
+      try
+      {
+        final String url = m_url.substring( 7 );
+        final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+        final IScenario root = ScenarioHelper.resolveRootScenario( caze );
 
-      final IFolder rootFolder = root.getFolder();
-      iMap = rootFolder.getFile( url );
+        final IFolder rootFolder = root.getFolder();
+        iMap = rootFolder.getFile( url );
+      }
+      catch( final CoreException e )
+      {
+        throw new ExecutionException( "Konnte Szenario nicht auflösen." );
+      }
     }
     /* current scenario relative location */
     else

@@ -6,11 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -33,7 +41,9 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   static
   {
     if( !log )
+    {
       logger.setUseParentHandlers( false );
+    }
   }
 
   /**
@@ -83,7 +93,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
     }
     catch( final UnsupportedEncodingException e )
     {
-      e.printStackTrace();
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario.getScenario() );
@@ -102,6 +112,71 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
 
     fireCaseAdded( scenario );
     return scenario;
+  }
+
+  /**
+   * TODO handling of sub scenarios
+   */
+  public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException
+  {
+    final IScenario parentScenario = toClone.getParentScenario();
+    try
+    {
+      final IProjectNature nature = toClone.getProject().getNature( ScenarioHandlingProjectNature.ID );
+      final ScenarioHandlingProjectNature scenarioNature = (ScenarioHandlingProjectNature) nature;
+      final IDerivedScenarioCopyFilter filter = scenarioNature.getDerivedScenarioCopyFilter();
+      scenarioNature.setDerivedScenarioCopyFilter( new IDerivedScenarioCopyFilter()
+      {
+        @Override
+        public boolean shouldBeCopied( final IResource resource )
+        {
+          return false;
+        }
+      } );
+
+      final IScenario derived = deriveScenario( name, parentScenario );
+      /** problem - project nature copies project files -> take data from toClone and not from parent!!! */
+
+      final IFolder destinationFolder = derived.getFolder();
+
+      // TODO works with subscenarios - i don't believe?!?
+      final IFolder srcFolder = toClone.getFolder();
+      final IResource[] members = srcFolder.members( false );
+      for( final IResource resource : members )
+      {
+        if( resource.getName().equals( destinationFolder.getName() ) )
+        {
+          // ignore scenario folder and .* resources
+          continue;
+        }
+        else
+        {
+          resource.copy( destinationFolder.getFullPath().append( resource.getName() ), false, null );
+        }
+      }
+
+      persist( null );
+
+      new UIJob( "" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          scenarioNature.setDerivedScenarioCopyFilter( filter );
+
+          return Status.OK_STATUS;
+        }
+      }.schedule( 250 );
+
+      return derived;
+    }
+    catch( final Exception e )
+    {
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      throw new CoreException( StatusUtilities.createErrorStatus( "Cloning of scenario failed", e ) );
+    }
+
   }
 
   /**
