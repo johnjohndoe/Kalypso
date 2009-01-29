@@ -8,7 +8,7 @@ SUBROUTINE BLINE(NTR)
 
 USE BLK10MOD, only: maxp, np, nfixsav, nfixsv1, nfix1, npm, nfixk, &
 &  nfix, ibn, xslp, yslp, nem, imat, ncn, ncrn, &
-&  nops, igtp, maxlt, translines, lmt, line, &
+&  nops, igtp, maxlt, translines, lmt, line, lineelement, &
 &  netyp, nop, cord, voutn, vel, maxn, iteqv, &
 &  alfa, vold, vdot, vdoto, nref, ndep, alfak, &
 &  ne, ncorn, njt, qd, icyc, wsll, adif, lout, &
@@ -711,8 +711,8 @@ enddo elements2
               ENDIF
             ENDIF
           ENDIF
-!nis,nov06: Test for 1D-2D-line-transitions
-        ELSEIF (ncrn(n).eq.3) then
+        !nis,nov06: Test for 1D-2D-line-transitions
+        ELSEIF (ncrn(n) == 3) then
 
           !if there is no line transition cycle
           if (MaxLT == 0) CYCLE angulardiffs
@@ -720,39 +720,62 @@ enddo elements2
           !find the correct line transition number
           findtranselt: do j = 1, MaxLT
             !if the element n is part of any transition go on with the dirAdjustment-loop
-            if (TransLines(j,1) .eq. n) then
+            if (TransLines(j,1) == n) then
               TransNumber = J
               EXIT findtranselt
             ENDIF
             !if the last line still shows no consistency with the active element n, this is no transition element then and the main loop has to cycle
-            if (j.eq.MaxLT) CYCLE angulardiffs
+            if (j == MaxLT) CYCLE angulardiffs
           end do findtranselt
 
           !get local copy of line no.
-          LiNo = TransLines(TransNumber,2)
-          !Get number of node 3 (for explanation why node number 3 have a look at CHECK.subroutine)
-          N3 = Line(LiNo,3)
+          LiNo = TransLines (TransNumber, 2)
 
-          !calculate angular difference of first and last node
-          do nodeno = 1,LMT(Lino),(LMT(LiNo)-1)
+          !Reset angular difference vector, because elements might have become dry/wet
+          do nodeno = 1, lmt (lino)
+            n1 = line (lino, nodeno)
+            adif (n1) = 0.0
+          enddo
 
-            !Get nodal number
-            N1 = Line(LiNo,nodeno)
+          do i = 1, 2
+            !first wet node
+            if (i == 1) then 
+              !Find first wet node in 1D-2D-line-transition
+              SetFirstAdif: do nodeno = 1, lmt (lino)-2, 2
+                n1 = line (lino, nodeno)
+                !find dry/wet status of node:
+                if (imat (lineelement (lino,nodeno+1)) > 0) then
+                  !set direction reference node
+                  n2 = line (lino, nodeno + 2)
+                  exit SetFirstAdif
+                endif
+              enddo SetFirstAdif
+            !last wet node
+            else
+              !Find last wet node in 1D-2D-line-transition
+              SetLastAdif: do nodeno = lmt (lino), 3, -2
+                n1 = line (lino, nodeno)
+                !find dry/wet status of node:
+                if (imat (lineelement (lino,nodeno-1)) > 0)  exit SetLastAdif
+              enddo SetLastAdif
+            endif
+            !TODO: Support dry gaps in the 1D-2D-line-transition
+            !TODO: Check for the distance between the two wet border nodes: There must be at least
+            !      one node in between so minimum 2 elements within the line transition.
+            
+            !Fix adif for wet nodes
             !Calculate angular difference of first and third node that has for shure the line's directio fix
-            ADIF(N1) = ALFA(N1) - ALFA(N3)
-
+            ADIF(n1) = ALFA(n1) - ALFA(N2)
             !Correct direction, so that the vectors points into quadrant 1 or 4
-            IF(ADIF(N1) .GT. PI2) THEN
-              ALFA(N1)=ALFA(N1)-2.*PI2
-              ADIF(N1)=ALFA(N1)-ALFA(N3)
-            ELSEIF(ADIF(N1) .LT. -PI2) THEN
-              ALFA(N1)=ALFA(N1)+2.*PI2
-              ADIF(N1)=ALFA(N1)-ALFA(N3)
+            IF(ADIF(n1) .GT. PI2) THEN
+              ALFA(n1)=ALFA(n1)-2.*PI2
+              ADIF(n1)=ALFA(n1)-ALFA(N2)
+            ELSEIF(ADIF(n1) .LT. -PI2) THEN
+              ALFA(n1)=ALFA(n1)+2.*PI2
+              ADIF(n1)=ALFA(n1)-ALFA(N2)
             ENDIF
+          enddo
 
-          end do
-
-!c         WRITE(90,*) 'SETTING ADIF',N1,N2,N3,ADIF(N2),ADIF(N3)
         ENDIF
 !nis,nov06: new way of do loop
 !  800 CONTINUE
