@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results.gmlsource;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,15 +184,15 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       final IDocumentResultMeta wspDoc = (IDocumentResultMeta) element;
       if( wspDoc.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinWsp )
       {
-        final IScenario scenario = findScenario( wspDoc );
-        final IFolder scenarioFolder = scenario.getFolder();
-
-        final IPath fullPath = wspDoc.getFullPath();
-
-        final IFile file = scenarioFolder.getFile( fullPath );
-
         try
         {
+          final IScenario scenario = findScenario( wspDoc );
+          final IFolder scenarioFolder = scenario.getFolder();
+
+          final IPath fullPath = wspDoc.getFullPath();
+
+          final IFile file = scenarioFolder.getFile( fullPath );
+
           final String name = wspDoc.getName();
           final String description = wspDoc.getDescription();
           final URL location = ResourceUtilities.createURL( file );
@@ -202,7 +201,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
 
           return new GmlSource( name, description, location, path );
         }
-        catch( final MalformedURLException e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
