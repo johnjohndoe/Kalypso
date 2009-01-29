@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -94,6 +93,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
     }
     String wqTabelle = null;
     String wqWechmann = null;
+    String obsName = "-";
 
     if( file != null )
     {
@@ -101,6 +101,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       {
         final URL url = ResourceUtilities.createURL( file );
         final IObservation obs = ZmlFactory.parseXML( url, "" );
+        obsName = obs.getName();
         wqTabelle = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
         wqWechmann = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
         action.setEnabled( wqTabelle != null );
@@ -111,7 +112,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       }
     }
 
-    Shell shell = m_part.getSite().getShell();
+    final Shell shell = m_part.getSite().getShell();
 
     if( wqTabelle == null )
     {
@@ -129,12 +130,12 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       {
         final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqTabelle ) ) );
 
-        final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0" ), set );
+        final WQRelationDialog dlg = new WQRelationDialog( shell, obsName, set );
         dlg.open();
       }
       catch( final Exception e )
       {
-        // TODO message?
+        e.printStackTrace();
       }
     }
   }

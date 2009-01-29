@@ -61,7 +61,7 @@ public class WQRelationFactory
     // empty
   }
 
-  public static TableModel createTableModel( final WQTable table )
+  public static TableModel createTableModel( final String fromType, final String toType, final WQTable table )
   {
     // build spline
     final WQPair[] pairs = table.getPairs();
@@ -90,6 +90,6 @@ public class WQRelationFactory
       resQ.add( new Double( q ) );
     }
 
-    return new WQTableModel( new Double( sortedW[0] ), resQ.toArray( new Double[resQ.size()] ) );
+    return new WQTableModel( fromType, toType, new Double( sortedW[0] ), resQ.toArray( new Double[resQ.size()] ) );
   }
 }

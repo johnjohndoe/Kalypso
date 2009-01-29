@@ -148,7 +148,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
     final DiagView template = (DiagView)getView();
     if( template == null )
@@ -195,13 +195,13 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
         ExportableChart.DEFAULT_FORMAT ),
         conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
-            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1") ) }; //$NON-NLS-1$
+            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1" ), null ) }; //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(IPublishingConfiguration, ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
         "icons/util/img_props.gif" ); //$NON-NLS-1$

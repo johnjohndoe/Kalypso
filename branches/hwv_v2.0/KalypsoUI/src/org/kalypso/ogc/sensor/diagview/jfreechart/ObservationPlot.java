@@ -47,7 +47,6 @@ import java.awt.Image;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -55,7 +54,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,8 +84,8 @@ import org.jfree.ui.TextAnchor;
 import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
-import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
-import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -112,23 +110,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ObservationPlot extends XYPlot
 {
-  private static final ConfigurableCachableObjectFactory OF;
-
-  static
-  {
-    final Properties props = new Properties();
-    try
-    {
-      props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) ); //$NON-NLS-1$
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-
-    OF = new ConfigurableCachableObjectFactory( props, false, ChartFactory.class.getClassLoader() );
-  }
-
   /** maps the diagram axis (from the template) to the chart axis */
   private transient final Map<DiagramAxis, ValueAxis> m_diag2chartAxis = new HashMap<DiagramAxis, ValueAxis>();
 
@@ -168,10 +149,6 @@ public class ObservationPlot extends XYPlot
     final TimeZone timezone = viewzone == null ? KalypsoGisPlugin.getDefault().getDisplayTimeZone() : viewzone;
     setTimezone( timezone );
 
-    final DiagramAxis[] diagAxes = view.getDiagramAxes();
-    for( final DiagramAxis diagAxis : diagAxes )
-      addDiagramAxis( diagAxis, null );
-
     final ObsViewItem[] curves = view.getItems();
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
@@ -195,80 +172,53 @@ public class ObservationPlot extends XYPlot
     if( diagAxis == null )
       throw new IllegalArgumentException( "DiagramAxis is null" );
 
-    ValueAxis vAxis;
-
     try
     {
-      final String dataType = diagAxis.getDataType();
-      final TimeZone timezone = m_timezone;
-
-      if( "date".equals( dataType ) )
+      final String axisType = axis.getType();
+      final String axisClass = TimeserieUtils.getAxisClassFor( axisType );
+      if( axisClass == null )
       {
-        // HACK: instantiation is not possible via factroy, as the search for the constructor is buggy there...
-        vAxis = new DateAxis( diagAxis.toFullString(), timezone );
-        final DateAxis da = (DateAxis) vAxis;
+        final String msg = String.format( "No Axis-Class defined for type '%s'. Must be defined in timeseries.ini or /KalypsoCore/src/org/kalypso/ogc/sensor/timeseries/resource/config.properties", axisType );
+        throw new SensorException( msg );
+      }
+      
+      final String axisLabel = diagAxis.toFullString();
+      final ValueAxis vAxis = (ValueAxis) ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), new String[] { axisLabel } );
 
-        // REMARK: the next line is necessary, as the constructor with timezone does
-        // not initalize the timeline (freechart bug!)
-        da.setTimeline( new DefaultTimeline() );
-        // Create standard source with correct timezone
-        final TickUnitSource source = createStandardDateTickUnits( timezone );
-        da.setStandardTickUnits( source );
+      setTimezone( vAxis );
+      vAxis.setInverted( diagAxis.isInverted() );
+
+      if( diagAxis.getLowerMargin() != null )
+        vAxis.setLowerMargin( diagAxis.getLowerMargin().doubleValue() );
+
+      if( diagAxis.getUpperMaring() != null )
+        vAxis.setUpperMargin( diagAxis.getUpperMaring().doubleValue() );
+
+      final AxisLocation loc = getLocation( diagAxis );
+
+      if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
+      {
+        final int pos = getAdequateDomainPos();
+        setDomainAxis( pos, vAxis );
+        setDomainAxisLocation( pos, loc );
+
+        m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
       }
       else
-        vAxis = (ValueAxis) OF.getObjectInstance( dataType, ValueAxis.class, new Object[] { diagAxis.toFullString() } );
-
-      // HACK: damit immer zu mindest [0,1] als range gesetzt wird
-      // z.Zt. nur für Niederschlag.
-      if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis == null ? null : axis.getType() ) )
       {
-        final NumberAxis na = (NumberAxis) vAxis;
-        na.setAutoRangeMinimumSize( 1 );
+        final int pos = getAdequateRangePos();
+        setRangeAxis( pos, vAxis );
+        setRangeAxisLocation( pos, loc );
 
-        if( na instanceof NumberAxis2 )
-        {
-          final NumberAxis2 na2 = (NumberAxis2) na;
-          na2.setMin( new Double( 0 ) );
-          na2.setMax( new Double( 1 ) );
-        }
+        m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
       }
+
+      m_diag2chartAxis.put( diagAxis, vAxis );
     }
-    catch( final FactoryException e )
+    catch( final ClassUtilityException e )
     {
       throw new SensorException( e );
     }
-
-    // TODO: if date axis: set timezone
-    setTimezone( vAxis );
-
-    vAxis.setInverted( diagAxis.isInverted() );
-
-    if( diagAxis.getLowerMargin() != null )
-      vAxis.setLowerMargin( diagAxis.getLowerMargin().doubleValue() );
-
-    if( diagAxis.getUpperMaring() != null )
-      vAxis.setUpperMargin( diagAxis.getUpperMaring().doubleValue() );
-
-    final AxisLocation loc = getLocation( diagAxis );
-
-    if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
-    {
-      final int pos = getAdequateDomainPos();
-      setDomainAxis( pos, vAxis );
-      setDomainAxisLocation( pos, loc );
-
-      m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
-    }
-    else
-    {
-      final int pos = getAdequateRangePos();
-      setRangeAxis( pos, vAxis );
-      setRangeAxisLocation( pos, loc );
-
-      m_chartAxes2Pos.put( vAxis, new Integer( pos ) );
-    }
-
-    m_diag2chartAxis.put( diagAxis, vAxis );
   }
 
   /**
@@ -413,13 +363,6 @@ public class ObservationPlot extends XYPlot
 
       mapDatasetToDomainAxis( pos, m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ).intValue() );
       mapDatasetToRangeAxis( pos, m_chartAxes2Pos.get( m_diag2chartAxis.get( yDiagAxis ) ).intValue() );
-    }
-
-    // UGLY TRICK: if it's a rainfall axis, set the range of the diagram axis to [0 - 1]
-    if( yAxis.getType().equals( TimeserieConstants.TYPE_RAINFALL ) )
-    {
-      final ValueAxis nAxis = m_diag2chartAxis.get( yDiagAxis );
-      nAxis.setAutoRangeMinimumSize( 1 );
     }
 
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
@@ -904,15 +847,11 @@ public class ObservationPlot extends XYPlot
     if( axis instanceof DateAxis )
     {
       final DateAxis da = (DateAxis) axis;
-      final DateFormat df = da.getDateFormatOverride() == null ? null : da.getDateFormatOverride();
-      if( df != null )
-      {
-        df.setTimeZone( m_timezone );
-        da.setDateFormatOverride( df );
-      }
 
-      final TickUnitSource source = createStandardDateTickUnits( m_timezone );
-      da.setStandardTickUnits( source );
+      if( da instanceof org.kalypso.ogc.sensor.diagview.jfreechart.DateAxis )
+        ((org.kalypso.ogc.sensor.diagview.jfreechart.DateAxis) da).setTimezone( m_timezone );
+      else
+        throw new UnsupportedOperationException( "This should never happen, as we should always use kalypso's DateAxis. If there is a reason to use freechart's dateAxis, we must apply the timezone in the old way. The old code must then be invoked again." );
     }
   }
 }

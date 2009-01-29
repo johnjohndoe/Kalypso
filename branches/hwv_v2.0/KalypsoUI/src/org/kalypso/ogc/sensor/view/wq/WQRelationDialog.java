@@ -64,9 +64,13 @@ public class WQRelationDialog extends ResizableDialog
 
   private final String m_title;
 
-  public WQRelationDialog( final Shell parentShell, final String title, final WQTableSet wqs )
+  public WQRelationDialog( final Shell parentShell, final String obsName, final WQTableSet wqs )
   {
     super( parentShell, null );
+
+    final String fromType = wqs.getFromType();
+    final String toType = wqs.getToType();
+    final String title = fromType + toType + "-Beziehung für " + obsName;
 
     m_title = title;
     m_wqs = wqs;

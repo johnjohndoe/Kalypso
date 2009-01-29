@@ -73,13 +73,17 @@ public class ExportableObservationTable implements IExportableObject
 
   private final String m_preferredDocumentName;
 
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final String preferredDocumentName )
+  /**
+   * @param kennzifferIndex
+   *          If non- <code>null</code>, use only the observation-item with that index to generate the kennziffer.
+   */
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final String preferredDocumentName, final Integer kennzifferIndex )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
     m_preferredDocumentName = preferredDocumentName;
-    m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems() );
+    m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems(), kennzifferIndex );
   }
 
   /**
@@ -87,7 +91,7 @@ public class ExportableObservationTable implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ 
   }
 
   /**
@@ -106,7 +110,7 @@ public class ExportableObservationTable implements IExportableObject
       if( !currentScenarioName.equals( "" ) ) //$NON-NLS-1$
         writeTextLine( writer, currentScenarioName );
 
-      if( m_preferredDocumentName != null && m_preferredDocumentName.length() > 0  ) //$NON-NLS-1$
+      if( m_preferredDocumentName != null && m_preferredDocumentName.length() > 0 )
         writeTextLine( writer, m_preferredDocumentName );
 
       monitor.worked( 1 );
@@ -133,12 +137,13 @@ public class ExportableObservationTable implements IExportableObject
   }
 
   /**
-   * Writes one line with only the first item set tu a given text and fill the rest with ';' according to the Number of current columns. 
+   * Writes one line with only the first item set tu a given text and fill the rest with ';' according to the Number of
+   * current columns.
    */
   private void writeTextLine( final BufferedWriter writer, final String text ) throws IOException
   {
     writer.write( text );
-    int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
+    final int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
     for( int i = 0; i < columnCount; i++ )
       writer.write( ";" ); //$NON-NLS-1$
     writer.newLine();
