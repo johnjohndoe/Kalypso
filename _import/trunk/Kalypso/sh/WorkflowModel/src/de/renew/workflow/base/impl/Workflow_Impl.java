@@ -52,7 +52,7 @@ import de.renew.workflow.base.Workflow;
  */
 public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
 {
-  private final Task_Impl m_defaultTask;
+  private ITask m_defaultTask;
 
   /**
    * @param i10nproperties
@@ -80,4 +80,14 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
   {
     return m_defaultTask;
   }
+
+  /**
+   * @see de.renew.workflow.base.IWorkflow#setDefaultTask(de.renew.workflow.base.ITask)
+   */
+  @Override
+  public void setDefaultTask( final ITask task )
+  {
+    m_defaultTask = task;
+  }
+
 }

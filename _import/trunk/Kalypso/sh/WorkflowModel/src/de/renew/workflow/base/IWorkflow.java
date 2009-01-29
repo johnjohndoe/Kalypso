@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base;
 
-
 /**
  * Represents one workflow.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IWorkflow extends ITaskGroup
 {
   ITask getDefaultTask( );
+
+  void setDefaultTask( ITask task );
 }
