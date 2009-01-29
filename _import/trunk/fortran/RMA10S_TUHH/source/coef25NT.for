@@ -28,7 +28,6 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  MD    6 Nov 2008    5:23 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -44,26 +43,24 @@ CIPK  LAST UPDATED SEP 7 1995
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKECOM
+!NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
+!-
       SAVE
 
-      REAL (KIND = 8) :: HS, HM, DUM1, hm1
-      !nis,jan09: for shoreline friction with Darcy Weisbach lambda
-      real (kind = 8) :: lambda_shore
-      real (kind = 8) :: lambdaKS_shore
-      real (kind = 8) :: lambdaP_shore
-      real (kind = 8) :: lambdaDunes_shore
+!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
+!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
+!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
+!           also as real, kind=8.
+      REAL(KIND=8) :: HS, HM, DUM1
+!-
 
+!EFa aug07, stage-flow-boundaries
+      REAL(KIND=8) :: hm1
+!-
+      integer :: TransLine, transtype
 
 C
-
-!nis,jun07: Changes for matrix output
-      INTEGER :: dca
-      INTEGER :: nbct (1:32,1:2)
-      CHARACTER (LEN =  1) :: sort(1:32)
-      CHARACTER (LEN = 16) :: FMT1
-      CHARACTER (LEN = 34) :: FMT2
-!-
 
 cycw aug94 add double precision salt
       REAL*8 SALT
@@ -79,16 +76,22 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
 CIPK AUG05      INCLUDE 'BLKSST.COM'
 cipk jun05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
-c      INCLUDE 'RKEP.COM'
 
-      REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL*8 DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT,GHC,FRN,FRNX,FRNZ
-      REAL*8 TEMP,HP,HP1,DERR
+      REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
+
+      REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER
+      REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
+
+      REAL (kind = 8) :: TEMP,HP,HP1,DERR
+      
+      real (kind = 8) :: lambda_shore, lambdaKS_shore, lambdaDunes_shore
+      real (kind = 8) :: lambdaP_shore 
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
 cipk apr05
       common /epor/ efpor
+C-
 
 CIPK JUN03
 C	COMMON /STR/
@@ -115,9 +118,12 @@ CIPK sep02
 C-
       DATA FCOEF/14.47/,THRESH/1.0E-3/,PI/3.14159/
 C
-CIPK MAR05
-cWP      data  pi/3.14159/
 
+!---------------
+!Execution block
+!---------------
+
+      !define some constants due to unit system
       IF (GRAV .LT. 32.)  THEN
         FCOEF = GRAV
         CVF2=3.28
@@ -127,22 +133,24 @@ cWP      data  pi/3.14159/
         CVF2=1.0
         CVFCT=1.0
       ENDIF
+      
+      !determine average density within element
       ROAVG=1.935
+      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 
 CIPK MAR03  REPLACE TH(NN) WITH THNN
-
+      !direction of element
       THNN=TH(NN)
-	 
-      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
+      
 C
 C-
 C-.....ASSIGN PROPER COEFS.....
 C-
-cipk jan98      AREA(NN)=0.
 CIPKNOV97 ADD TVOL
 CIPK APR 01 INITIALISATION MOVED FURTHER ON 
 C      TVOL(NN)=0.
 
+      !Find number of corner nodes of current element
       IF(ITEQV(MAXN) .EQ. 5) THEN
         DO 61 N=1,8
           NCON(N)=NOPS(NN,N)
@@ -154,9 +162,7 @@ C      TVOL(NN)=0.
           NCON(N)=NOP(NN,N)
    63   CONTINUE
       ENDIF
-c
-cipk sep96 move up thislogic
-c
+
 CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
 !MD:  only for LSS > 0: Cohesive SEDIMENT
 !MD:  ......................................
@@ -187,7 +193,9 @@ CIPK AUG06 ADD LOGIC TO AVE DEPRAT ETC
 !MD:  END only for LSS > 0: Cohesive SEDIMENT
 
 CIPK JUN05 MOVE LOOP
+      !get number of element equations (dependent variables)
       NEF=NCN*NDF
+      !initialize residual vector f and Jacobian matrix estifm
       DO  I=1,NEF
         F(I) = 0.0
         DO  J=1,NEF
@@ -202,19 +210,22 @@ cipk jun05
       if(iteqv(maxn) .eq. 9) inovel=3
 
 cipk oct98 update to f90
+      !get local copy of material type of current element
       IMMT=IMAT(NN)
 
 cipk nov99 revise to allow for collapsing 3-d to 2-d
+      !evaluate material type due to 3D applications
       if(immt .gt. 1000) immt=immt-1000
 
 CIPK JUN05
 c   
 c     Test for and determine whether conrol structure now operates as an
 c     ordinary element.  If one node is above transition then treat as
-c     a  normal lement
+c     a  normal element
 
 !MD  only for NTX=1: Real calculation
 !MD  (NTX = 0: data Reading and preparing restart)
+      !Check for submerged control structure element, if so treat it as normal element
       if(ntx .eq. 1) then
         if(imat(nn) .gt. 900) then
           if(inovel .gt. 0) return
@@ -222,16 +233,22 @@ c     a  normal lement
         endif
       endif
 
+      !Find material type definition value (last two digits show type dedinition
       NR = MOD(IMMT,100)
 cipkjun05
+      !Leave material types with value .gt. 900 as they are > control structures
       if(immt .gt. 900) nr=immt
+
+      !initialize friction factor
       FFACT=0.
 cipk nov98 adjust for top friction
+      !surface or bottom friction coefficient, if Chezy is used
       IF(ORT(NR,5) .GT. 1.  .or.  ort(nr,13) .gt. 1.) then
         FFACT = GRAV/(CHEZ(NN)+ort(nr,13))**2
       endif
 
 CIPK MAR0 setup switch that says salinity is active
+      !switch on/off salinity
       IF(ITEQV(MAXN) .EQ. 2  .OR.  ITEQV(MAXN) .EQ. 8
      +                       .OR.  ITEQV(MAXN) .EQ. 9) THEN
         !MD: for Sediment and Salinity
@@ -355,13 +372,13 @@ CIPK JAN03 add momentum
       EINB=-EINX(NN)*SA+EINY(NN)*SA
       NCNX=NCN/2
       IF(NTX .EQ. 0) GO TO 72
-
-
 cipk nov97
-c     Initialize AME and DAME
 !MD  only for NTX=1: Real calculation
 !MD  (NTX = 0: data Reading and preparing restart)
 !................................................
+c
+c     Initialize AME and DAME
+c
       IF (IDNOPT.LT.0) THEN
          DO M = 1, NCNX
            MC = 2 * M - 1
@@ -422,8 +439,8 @@ CIPK JAN97      ELSEIF(IEDSW .EQ. 4) THEN
           DIFX = ABS(ORT(NR,8)*(XLMAX-XLMIN))/CVF2
           DIFY = DIFX*ABS(ORT(NR,9))
         ENDIF
-      ELSE !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
-
+      !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
+      ELSE
         IF(IDIFSW .EQ. 9  .OR.  IDIFSW .LT. 3) THEN
           DIFX = EEXXYY(5,NN)
           DIFY = EEXXYY(6,NN)
@@ -439,8 +456,6 @@ cipk mar03 end changes
 !MD  END only for NTX=1: Real calculation
 !MD  (NTX = 0: data Reading and preparing restart)
 !................................................
-
-
 
    72 CONTINUE
       NGP=7
@@ -494,6 +509,8 @@ cipk jan98
       AREA(NN)=0.
 CIPK APR01
 	TVOL(NN)=0.
+
+
 cipk nov99 revise for collapsing from 3-d
 CIPK XXXX      IF(IMMT .LT. 100 ) THEN
 cIPKMAR05  MAKE THEM ALL 16
@@ -535,6 +552,10 @@ CIPK MAY04 RESET ELEMENT INFLOW
       ENDIF
       SIDFQQ=SIDF(NN)
 
+
+!--------------------------------
+!GAUSS LOOP GAUSS LOOP GAUSS LOOP
+!--------------------------------
 C-
 C-.....COMPUTE ELEMENT EQUATIONS.....
 C-
@@ -568,6 +589,7 @@ CIPK NOV97  135 CONTINUE
       AMW = WAITX(I) * DETJ
       AREA(NN)=AREA(NN)+AMW
       IF(AMW.LE. 0.) WRITE(LOUT,9802) NN,I
+
  9802 FORMAT(' AMW IS ZERO OR NEGATIVE FOR ELEMENT',I5,'GAUSS NO',I5)
 cipk nov97      IF(NTX .EQ. 0) GO TO 500
 C-
@@ -608,14 +630,17 @@ cipk nov97
 
 C-
 C...... Set momentum correction factors
+C-
       AKX=0.
       AKY=0.
 C-
 C...... Set bottom friction coefficient
+C-
       UBF=0.
       VBF=0.
 C-
 C.....COMPUTE R, S, H AND THEIR DERIVATIVES.....
+C-
       R = 0.0
       S = 0.0
       DRDX = 0.0
@@ -630,12 +655,12 @@ C.....COMPUTE R, S, H AND THEIR DERIVATIVES.....
       DSALDY=0.0
 CIPK SEP02 ADD WAVE DATA INTERPOLATION
       TP=0.0
-	HSV=0.0
+      HSV=0.0
       WDIR=0.0
 C-
 C......ESTABLISH VELOCITIES
 C-
-      DO 250 M=1,NCN
+      EstabVelos: DO M=1,NCN
         MR=NCON(M)
         VXX(M)=VEL(1,MR)/UDST(MR)
         VY(M)=VEL(2,MR)/VDST(MR)
@@ -659,14 +684,14 @@ C-
           UBFC(M)=1.0
           VBFC(M)=1.0
         ENDIF
-  250 CONTINUE
+      enddo EstabVelos
 
       DO 270 M=1,NCN
         MR=NCON(M)
 CIPK SEP02 INTERPOLATE WAVE DATA
         TP=TP+XN(M)*PEAKPRD(MR)
-	HSV=HSV+XN(M)*WAVEHT(MR)
-	WDIR=WDIR+XN(M)*WAVEDR(MR)
+        HSV=HSV+XN(M)*WAVEHT(MR)
+        WDIR=WDIR+XN(M)*WAVEDR(MR)
 
         AKX=AKX+(UUDST(MR)*CX+VVDST(MR)*SA)*XN(M)
         AKY=AKY+(-UUDST(MR)*SA+VVDST(MR)*CX)*XN(M)
@@ -717,7 +742,6 @@ CIPK NOV97 MODERNIZE LOOP AND ADD LOGIC FOR MARSH FRICTION
 cipk sep02 add ice parameters
       GSICE=0.
       GSQLW=0.
-
 CIPK JUN02
       GAIN=0.
       WSELL=0.
@@ -730,22 +754,23 @@ CIPK SEP02
         MC = 2*M - 1
         MR=NCON(MC)
         H = H + XM(M)*VEL(3,MR)
-
 cipk jun02
 !MD    GAN oder GAN0 ist die Erosionsrate [kg/m³/s]
 !MD    Berechnung in BEDSUR (bzw. BEDLBED)
-	GAIN=GAIN+XM(M)*GAN(MR)
-	WSELL=WSELL+WSLL(MR)*XM(M)
+        GAIN=GAIN+XM(M)*GAN(MR)
+        WSELL=WSELL+WSLL(MR)*XM(M)
 
-CIPK SEP02 CIPK DEC05
+CIPK SEP02
+CIPK DEC05
 !MD   ONLY for sediment
 !MD   EXTLD kommt aus SLUMP = Boeschungsbruch
-        IF(ICK .EQ. 6) THEN
-          EXTL=EXTL+XM(M)*EXTLD(MR)
-        ENDIF
+        !nis,jun07: ICK is not assigned, whenn ntx == 0 (beginning of program), therefore jump
+        if (ntx /= 0) then
+          IF(ICK .EQ. 6) THEN
+            EXTL=EXTL+XM(M)*EXTLD(MR)
+          ENDIF
+        endif
 
-cipk jan00 correct location for azer
-C        AZER=AZER+XM(M)*AO(MR)
         BETA3=BETA3+XM(M)*VDOT(3,MR)
         DHDX = DHDX + DMX(M)*VEL(3,MR)
         DHDZ = DHDZ + DMY(M)*VEL(3,MR)
@@ -756,6 +781,7 @@ CIPK JAN00 ADD AZER HERE
           AZER=AZER+XM(M)*AO(MR)
 cipk mar01 add abed
           Abed=Abed+XM(M)*AO(MR)
+
           DAODX = DAODX + DMX(M)*AO(MR)
           DAODZ = DAODZ + DMY(M)*AO(MR)
         ELSE
@@ -763,7 +789,8 @@ cipk mar01 add abed
 CIPK JAN00 ADD AZER HERE
           AZER  = AZER  + XM(M)*(AME(M)+ADO(MR))
 cipk mar01 add abed
-          Abed  = Abed+XM(M)*AO(MR)
+          Abed = Abed+XM(M)*AO(MR)
+
           DAODX = DAODX + DMX(M)*(AME(M)+ADO(MR))
           DAODZ = DAODZ + DMY(M)*(AME(M)+ADO(MR))
         ENDIF
@@ -785,38 +812,33 @@ CIPK SEP02 GET GAUSS POINT ICE VALUES
         GSICE=GSICE+XM(M)*THKI(MC)
         GSQLW=GSQLW+XM(M)*QWLI(MC)
       ENDDO
-
-cipk this is temporary addition for sand transport test
-c      if(h .gt. 0.5) h=0.5
-c      r=r/5.
-c      s=s/5.
-
-
-CIPK NOV97  275 CONTINUE
-
 CIPK DEC05
-!nis,sep08: Revert to original implementation;
-!TODO @MD: Is there anything to change?
-!answer MD: Not here!
 !MD   EXTLDEL = FLUX/AREA; Wert kommt aus LOAD
 !--------------------------------------------
-        EXTL=EXTL+EXTLDEL(NN)
+      EXTL=EXTL+EXTLDEL(NN)
 
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
       IF(H+AZER .LT. ABED) THEN
-	SIGMAX=0.
-	SIGMAZ=0.
+        SIGMAX=0.
+        SIGMAZ=0.
       ENDIF
 
 cipk jun05      RHO=1.0
       ROAVG=RHO
+
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
 
 CIPK MAR05      XHT=ELEV-AZER
       AMU=AMW
       AMT=AMW*RHO
 CIPK  MAR05     AMS=AMU*RHO
       AMS=AMW*RHO
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
 cipk nov97
       TVOL(NN)=TVOL(NN)+AMW
       if(ntx .eq. 0) go to 500
@@ -902,27 +924,22 @@ CIPK AUG06 ADD AVERAGE TEST
         ENDIF
 
         GRATE=0.0
-	srcsnk=0.0
+        srcsnk=0.
         HS=H
         IF(LSAND .GT. 0) THEN
-	  CALL MKSAND(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
+          CALL MKSAND(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
         ENDIF
 
         IF(LSS .GT. 0) THEN
-	  CALL MKSSED(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
-	ENDIF
+          CALL MKSSED(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
+        ENDIF
 
         DRDS=DRODSD(SALT,IGF)
       ENDIF
-
-C      IF(NN .EQ. 1407) THEN
-C	  AZZZ=0.
-C	ENDIF
-
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       IF(WSELL-ABED .LT. ZSTDEP) THEN
-	SIGMAX=0.
-	SIGMAZ=0.
+        SIGMAX=0.
+        SIGMAZ=0.
       ENDIF
       IF(WSELL .LT. ABED) THEN
 CIPK AUG06
@@ -931,8 +948,8 @@ CIPK AUG06
           srcsnk=0.
         ENDIF
 cipk aug02  make wind stress zero over dry areas
-  	sigmax=0.
-	sigmaz=0.
+        sigmax=0.
+        sigmaz=0.
       ENDIF
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
@@ -940,33 +957,33 @@ c
       do ned=1,9
         IF(IMMT .EQ. iedrop(ned)) THEN
           grate=0.
-    	  srcsnk=0.
-	ENDIF
+          srcsnk=0.
+        ENDIF
       enddo
 
       DO M=1,NCN
         MR=NCON(M)
-	if(WSLL(mr) -ao(mr) .lt. zstdep) then
-	  sigmax=0.
-	  sigmaz=0.
+        if(WSLL(mr) -ao(mr) .lt. zstdep) then
+          sigmax=0.
+          sigmaz=0.
 CIPK AUG06
           IF(LSS .EQ. 0) THEN
             grate=0.
             srcsnk=0.
           ENDIF
 cipk may03  reduce nodal rates to zero
-	  alpha1(mr)=0.
-	  alpha2(mr)=0.
-	endif
+          alpha1(mr)=0.
+          alpha2(mr)=0.
+        endif
 
         do ned=1,9
 cipk may03  reduce nodal rates to zero when IEDROP active
 
           IF(IMMT .EQ. iedrop(ned)) THEN
-  	    alpha1(mr)=0.
-	    alpha2(mr)=0.
-	  ENDIF
-	enddo
+            alpha1(mr)=0.
+            alpha2(mr)=0.
+          ENDIF
+        enddo
       enddo
 
       DRODX=DRDS*DSALDX
@@ -978,8 +995,8 @@ CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
         SIGMAX = SIGMAX/RHO
         SIGMAZ = SIGMAZ/RHO
       ELSE
-	SIGMAX=0.0
-	SIGMAZ=0.
+        SIGMAX=0.0
+        SIGMAZ=0.
       ENDIF
       GHC = GRAV*H
       VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
@@ -997,48 +1014,48 @@ cipk nov98 adjust for surface friction
      +   ORT(NR,5) /= -1.0)) THEN
   !-
 CIPK SEP02
-	EFMAN=0.
+	  EFMAN=0.
         IF(ORT(NR,5) .LT. 1.0  .AND.  ORT(NR,13) .LT. 1.0) then
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(NR) .GT. 0.) THEN
-	    IF(H+AZER .LT. ELMMIN(NR) ) THEN
+	      IF(H+AZER .LT. ELMMIN(NR) ) THEN 
               FFACT=(MANMIN(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMIN(NR)
-            ELSEIF(H+AZER .GT. ELMMAX(NR) ) THEN
+	        EFMAN=MANMIN(NR)
+          ELSEIF(H+AZER .GT. ELMMAX(NR) ) THEN 
               FFACT=(MANMAX(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMAX(NR)
-            ELSE
-	      FSCL=(H+AZER-ELMMIN(NR))/(ELMMAX(NR)-ELMMIN(NR))
+	        EFMAN=MANMAX(NR)
+          ELSE
+	        FSCL=(H+AZER-ELMMIN(NR))/(ELMMAX(NR)-ELMMIN(NR))
               FFACT=(MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR)))**2
-     +     	   *FCOEF/(H**0.333)
+     +     	       *FCOEF/(H**0.333)
 CIPK SEP02
-	      EFMAN=MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR))
-	    ENDIF
+	        EFMAN=MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR))
+          ENDIF
 CIPK SEP04  ADD MAH AND MAT OPTION
-          ELSEIF(HMAN(NR,2) .GT. 0  .OR. HMAN(NR,3) .GT. 0.) THEN
-	    TEMAN=0.
+        ELSEIF(HMAN(NR,2) .GT. 0  .OR. HMAN(NR,3) .GT. 0.) THEN
+	      TEMAN=0.
             IF(HMAN(NR,2) .GT. 0) THEN 
-	      TEMAN=HMAN(NR,3)*EXP(-H/HMAN(NR,2))
-	    ENDIF
-	    TEMAN=TEMAN+HMAN(NR,1)/H**HMAN(NR,4)
+	        TEMAN=HMAN(NR,3)*EXP(-H/HMAN(NR,2))
+	      ENDIF
+	      TEMAN=TEMAN+HMAN(NR,1)/H**HMAN(NR,4)
             FFACT=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(NR,1,2) .GT. 0.) THEN
-	    DO K=1,4
-	      IF(H .LT. MANTAB(NR,K,1)) THEN
-	        IF(K .EQ. 1) THEN
-	          TEMAN=MANTAB(NR,1,2)
-	        ELSE
-	          FACT=(H-MANTAB(NR,K-1,1))/
-     +                (MANTAB(NR,K,1)-MANTAB(NR,K-1,1))
-	          TEMAN=MANTAB(NR,K-1,2)
+	      DO K=1,4
+	        IF(H .LT. MANTAB(NR,K,1)) THEN
+	          IF(K .EQ. 1) THEN
+	            TEMAN=MANTAB(NR,1,2)
+	          ELSE
+	            FACT=(H-MANTAB(NR,K-1,1))/
+     +                  (MANTAB(NR,K,1)-MANTAB(NR,K-1,1))
+	            TEMAN=MANTAB(NR,K-1,2)
      +            +FACT*(MANTAB(NR,K,2)-MANTAB(NR,K-1,2))
+	          ENDIF
+	          GO TO 280
 	        ENDIF
-	        GO TO 280
-	      ENDIF
-	    ENDDO
-	    TEMAN=MANTAB(NR,4,2)
+	      ENDDO
+	      TEMAN=MANTAB(NR,4,2)
   280       CONTINUE
             FFACT=TEMAN**2*FCOEF/(H**0.333)
 cipk mar05
@@ -1071,48 +1088,48 @@ cipk mar05
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+
         call darcy(lambdaTot(nn), vecq, h,
-     +             cniku(nn)     * correctionKS(nn),
-     +             abst(nn)      * correctionAxAy(nn),
-     +             durchbaum(nn) * correctionDp(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn), 2,
+     +             cniku(nn)      * correctionKS(nn),
+     +             abst(nn)       * correctionAxAy(nn),
+     +             durchbaum(nn)  * correctionDp(nn),
+     +             nn, morph, gl_bedform, MaxE, c_wr(nn), 2,
                    !store values for output
      +             lambdaKS(nn),
      +             lambdaP(nn),
      +             lambdaDunes(nn), dset)
 
-
         !calculation of friction factor for roughness term in differential equation
         FFACT = lambdaTot(nn)/8.0
 
-        !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear
+        !TODO:
+        !Is here a derivative of friciton over h necessary?
         DFFDH = 0.
-      !-
+
       ENDIF
 
 
 CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
       IF(ISLP .EQ. 1  .AND. IDIFSW .EQ. 5) THEN
-        IF(NN .EQ. 225) THEN
-	  AAAA=0
-	ENDIF
+
         SHEARVEL=VECQ*SQRT(FFACT)
-	DIFX=SHEARVEL*H*ABS(ORT(NR,8))
-	DIFY=DIFX*ABS(ORT(NR,9))
+        DIFX=SHEARVEL*H*ABS(ORT(NR,8))
+        DIFY=DIFX*ABS(ORT(NR,9))
+        !MD: testoutput into output.out
         IF (NN.eq.1 .or. NN.eq.2) THEN
-          !MD: testoutput into output.out
           WRITE (75, *) 'Schergeschwindigkeit u_star(NN):', SHEARVEL
         END IF
+        !-
       ENDIF
 
       if(difx .lt. ort(nr,14)) then
         if(difx .gt. 0.) then
           dify=ort(nr,14)*dify/difx
         else
-	  dify=ort(nr,14)
-	endif
-	difx=ort(nr,14)
+          dify=ort(nr,14)
+        endif
+        difx=ort(nr,14)
       endif
 
 !MD: testoutput into output.out
@@ -1120,15 +1137,8 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 !MD        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
 !MD      END IF
 
-      if (difx /= 0.0) peclet=vecq*abs((xl(3)+xl(5)))/2/difx
-!	  
-!        IF(NN .EQ. 15  .AND.  I .EQ. 5) THEN
-!c        if(i .eq. 1  .and.  idebug .eq. 2) then
-!	    WRite(129,'(3i5,8g15.6)') nn,i,MAXN,shearvel,h,difx,dify,thnn
-!     +            ,peclet,h*difx*dsaldx,h*dify*dsaldy
-!	  ENDIF
-
 CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
+
 !................................................
       IF (TP .GT. 001.  .AND.  HSV .GT. 0.001) THEN
 
@@ -1143,90 +1153,102 @@ CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
           ABW=HSV/(2.*SINH(ARG))
           UBW  = 2.*PI/TP*ABW
         ENDIF
-	CORWDIR=WDIR-THNN
-	IF(S .EQ. 0.  .AND.  R .EQ. 0.) THEN
-	  CURRDIR=0.
-	ELSE
-	  CURRDIR=ATAN2(S,R)
-        ENDIF
-	IF(ABS(CURRDIR-CORWDIR) .LT. PI/4.) THEN
-	  GAM=1.1
-	ELSEIF(ABS(CURRDIR-CORWDIR) .GT. 1.75*PI) THEN
-	  IF(ABS(ABS(CURRDIR-CORWDIR)-2.*PI) .LT. PI/4.) THEN
-	    GAM=1.1
-	  ELSE
-	    GAM=0.75
-	  ENDIF
+        CORWDIR=WDIR-THNN
+        IF(S .EQ. 0.  .AND.  R .EQ. 0.) THEN
+          CURRDIR=0.
         ELSE
-	  GAM=0.75
-	ENDIF
-	if(vecq .gt. 0.00001) then
-	  IF(GAM*UBW/VECQ .GT. 2.30) THEN
-	    FENH=10.
-	  ELSE
-	    FENH=EXP(GAM*UBW/VECQ)
-	  ENDIF
+          CURRDIR=ATAN2(S,R)
+        ENDIF
+        IF(ABS(CURRDIR-CORWDIR) .LT. PI/4.) THEN
+          GAM=1.1
+        ELSEIF(ABS(CURRDIR-CORWDIR) .GT. 1.75*PI) THEN
+          IF(ABS(ABS(CURRDIR-CORWDIR)-2.*PI) .LT. PI/4.) THEN
+            GAM=1.1
+          ELSE
+            GAM=0.75
+          ENDIF
+        ELSE
+          GAM=0.75
+        ENDIF
+        if(vecq .gt. 0.00001) then
+          IF(GAM*UBW/VECQ .GT. 2.30) THEN
+            FENH=10.
+          ELSE
+            FENH=EXP(GAM*UBW/VECQ)
+          ENDIF
         else
-	  fenh=10.
-	endif
-	IF(FENH .GT. 10.) FENH=10.
+          fenh=10.
+        endif
+        IF(FENH .GT. 10.) FENH=10.
         IF(EFMAN .GT. 0.) THEN
-	  EFCHEZ=H**0.166667/EFMAN
+          EFCHEZ=H**0.166667/EFMAN
         ELSE
-	  EFCHEZ=CHEZ(NN)
+          EFCHEZ=CHEZ(NN)
         ENDIF
-	FCT=12.*H/10**(EFCHEZ/18.)
+        FCT=12.*H/10**(EFCHEZ/18.)
         FACTO=FENH*FCT
-	EFCHEZA=18.*LOG10(12.*H/FACTO)
+        EFCHEZA=18.*LOG10(12.*H/FACTO)
         FRICCR=EFCHEZ/EFCHEZA
         FFACT=FFACT*FRICCR
       ENDIF
 CIPK SEP02 END ADDITION
 
+
+!nis,com,may08:
+!Scale the friction factor, if it is in the Marsh-slot. The value reaches FMULT = 1,0, if the water depth directly correspondes with the
+!bottom border of the transition range (ADB)
+!It is linearily increased down to ADO, where it reaches the friction correction factor given by the user (range 5.0 to 20.0)
+!
+!
 CIPK NOV97
-cipk MAR05
-C      IF(H .LT. AKAPMG*BRANG) THEN
-CC	 frsc=ort(ntyp,7)**2-1.
-C        FRSC=ort(nr,12)**2-1.
-C        FMULT=FRSC*(AKAPMG*BRANG-H)/(AKAPMG*BRANG)+1.0
-C	 dfmdh=-frsc/(akapmg*brang)
-C      ELSE
-C        FMULT=1.0
-C        dfmdh=0.0
-C      ENDIF
-C      dffact=ffact*dfmdh+fmult*dffdh
-C      FFACT=FFACT*FMULT
+!nis,jan09: That's the OLD way; why not used anymore?
+!      IF(H .LT. AKAPMG*BRANG) THEN
+!        FRSC=ort(nr,12)**2-1.
+!        FMULT=FRSC*(AKAPMG*BRANG-H)/(AKAPMG*BRANG)+1.0
+!        dfmdh=-frsc/(akapmg*brang)
+!      ELSE
+!        FMULT=1.0
+!        dfmdh=0.0
+!      ENDIF
+!      dffact=ffact*dfmdh+fmult*dffdh
+!      FFACT=FFACT*FMULT
+
+
 cipk nov97 end changes
+!nis,jan09: That's the NEW way; what are the trigonometric functions for?
+
       if(h .lt. akapmg*brang) then
         frsc=ort(nr,12)**2-1.
         xcd=(akapmg*brang-h)/(brang*AKAPMG)*pi
         fmult=frsc/2.*(1.-cos(xcd))+1.0
         dfmdh=-frsc/2.*sin(xcd)*pi/(akapmg*brang)
-cipk	      endif
       else
         fmult=1.0
         dfmdh=0.0
       endif
       dffact=FFACT*dfmdh+fmult*dffdh
-c     FFACT=FFACT/sqrt(efporg)
       FFACT=FFACT*fmult
+
 CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
       IF( VECQ .GT. 1.0E-6 ) THEN
-	TFRIC = FFACT / VECQ
-	TDRAGX = GRAV*DRAGX(NR)/VECQ
-	TDRAGY = GRAV*DRAGY(NR)/VECQ
+        TFRIC = FFACT / VECQ
+        TDRAGX = GRAV*DRAGX(NR)/VECQ
+        TDRAGY = GRAV*DRAGY(NR)/VECQ
       ELSE
-	TFRIC = 0.0
-	TDRAGX = 0.0
-	TDRAGY = 0.0
+        TFRIC = 0.0
+        TDRAGX = 0.0
+        TDRAGY = 0.0
       ENDIF
 
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 291
-CIPK AUG06
+CIPK AUG06 ADD QIN 
+      QIN=0.
       IF(ICNSV .EQ. 1) THEN
         QIN=BETA3/H+(DRDX+DSDZ)+(R*DHDX+S*DHDZ)/H
+        !testoutput into output.out
         WRITE (75,*) 'QIN mit BETA3 =',QIN
+        !-
       ENDIF
 
       !EFa may07, new subroutine for turbulence modell
@@ -1240,9 +1262,6 @@ CIPK AUG06
 !-------------------------------------------------
 !.....Set up TERMS for the MOMENTUM EQUATIONS.....
 !-------------------------------------------------
-      !Initialize
-      FRN = 0.0
-      FSN = 0.0
       !
       !       --                                                                            
       !       |      /   du        du        du     g                                    \
@@ -1260,6 +1279,11 @@ CIPK AUG06
       !             -----------------   -----------------   ------------   --------------
       !                      H                   I                J               K
       !
+!
+!.....INITIALIZE.....
+!
+      FRN = 0.0
+      FSN = 0.0
 
 !
 !.....LOCAL ACCELARATION..... (only in time transient calculations)
@@ -1273,12 +1297,15 @@ CIPK AUG06
 
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
       IF (H + AZER > ABED) THEN
-	  SIDFT = SIDFQ + SIDFF (NN)
-	  SIDFQQ = SIDFQQ + SIDFF (NN)
+        SIDFT = SIDFQ + SIDFF (NN)
+        SIDFQQ = SIDFQQ + SIDFF (NN)
       ELSE
-	  SIDFT = SIDFF (NN)
-	  SIDFQQ = SIDFF (NN)
+        SIDFT = SIDFF (NN)
+        SIDFQQ = SIDFF (NN)
       ENDIF
+
+C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
+
 C
 C.....CONVECTIVE TERMS.....
 C
@@ -1289,6 +1316,11 @@ C
 C
 C.....VISCOUS TERMS.....
 C
+!------------------------------------------------
+!Difference regarding sigma-transformation
+!End of difference regarding sigma-transformation
+!------------------------------------------------
+
       FRN = FRN + EPSX * DRDX * DHDX + EPSXZ * DRDZ * DHDZ
       FSN = FSN + EPSZ * DSDZ * DHDZ + EPSZX * DSDX * DHDX
       !           ------------------   -------------------
@@ -1297,13 +1329,22 @@ C
       FRNZ=EPSXZ*H*DRDZ
       FSNX=EPSZX*H*DSDX
       FSNZ=EPSZ*H*DSDZ
+
 C
 C.....SURFACE AND BOTTOM SLOPE (PRESSURE) TERMS.....
 C
+
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
       FRN = FRN + GHC * DAODX
       FSN = FSN + GHC * DAODZ
       !           -----------
       !                J
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
+
       FRNX=FRNX-H*GHC/2.
       FSNZ=FSNZ-H*GHC/2.
 C
@@ -1335,14 +1376,15 @@ C-
       !              G
 C
 C.....MOTION EQUATIONS.....
+C
 !MD   Allocating the residual vector F(IA) with IA=1 and IA=2
 !MD   with F(IA=1)=VX and F(IA=2)=VY
-      DO 285 M = 1, NCN
+      MomentumEquations: Do M = 1, NCN
         IA = 1 + NDF*(M-1)
         F(IA) = F(IA) - AMS*(XN(M)*FRN + DNX(M)*FRNX + DNY(M)*FRNZ)
         IA = IA + 1
         F(IA) = F(IA) - AMS*(XN(M)*FSN + DNX(M)*FSNX + DNY(M)*FSNZ)
-  285 CONTINUE
+      enddo MomentumEquations
 !--------------------------------------------------
 !.....Set up TERMS for the CONTINUITY EQUATION.....
 !--------------------------------------------------
@@ -1354,10 +1396,6 @@ C.....MOTION EQUATIONS.....
       !       --                                            --
       !        ----------------   ------   ------   ----   ---
       !              A              B         C       D     E
-!???
-!MD   Allocating the residual vector F(IA) with IA=3
-!MD   with F(IA=3)=H = water level
-!???
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
       FRN = H * (DRDX + DSDZ) + R * DHDX + S * DHDZ - SIDFT
       !     -----------------   --------   --------   -----
@@ -1386,7 +1424,6 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
 !--------------------------------------------------
   291 CONTINUE
 
-
 cipk jun02
       IF(ICK .EQ. 7) THEN
 !MD:  ICK=7 is (till now 05.08.2008) never used
@@ -1401,7 +1438,13 @@ C     equilibrium method with linear functions
         IA=-4
         DO M=1,NCNX
           IA=IA+8
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
           F(IA)=F(IA)-(XM(M)*FRN+DMX(M)*FRNX+DMY(M)*FRNY)
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
         enddo
 
 !MD:  preparing equations and coeffiecents for water consituents
@@ -1412,7 +1455,7 @@ C     equilibrium method with linear functions
         FRN=AMU*H*(R*DSALDX+S*DSALDY)
      1   -AMU*(SIDFQQ*(SIDQ(NN,ICK-3)-SALT)+EXTL)
      +   -AMU*H*(SRCSNK+(GRATE-QIN)*SALT)
-CIPK AUG06  ADD QIN IN ABOVE     
+CIPK AUG06 ADD QIN ABOVE
 CIPK SEP02 ADD EXTL FROM SLUMP SOURCE
 CIPK NOV97 ADJUST LINE ABOVE FOR SALINITY LOADING
 CIPK AUG95    ADD LINE ABOVE FOR RATE TERMS
@@ -1425,15 +1468,20 @@ C-
           IA=IA+4
           !MD: every 4.th entry into residual vector F(IA)
 
-      IF(NSTRT(NCON(M),1) .EQ. 0) THEN
+          IF(NSTRT(NCON(M),1) .EQ. 0) THEN
 !MD with qudratic W-Functions (not linear)
-        F(IA)=F(IA)-(XO(M)*FRN+DOX(M)*FRNX+DOY(M)*FRNY)
-      ENDIF
-
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
+            F(IA)=F(IA)-(XO(M)*FRN+DOX(M)*FRNX+DOY(M)*FRNY)
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
+          ENDIF
   295   CONTINUE
       ENDIF
 
-!MD!MD Start testout
+!MD!MD Start testoutput to output.out
 !MD      IF (NN.eq.1 ) THEN
 !MD        WRITE (75,*) 'Parameter aus COEF25nt'
 !MD        WRITE (75,*) ' NN, SALT, DSALDX, DSALDY, DSALDT'
@@ -1461,15 +1509,15 @@ C
 C
 C.....INERTIAL COMPONENTS.....
 C
-C
-C  N*N 
+C  N*N DU
       T1=AMS*(AKX*H*DRDX+(TFRIC+TDRAGX*H)*UBF*(2.*(R*UBF)**2+(S*VBF)**2)
      +       +SIDFT)
-C  N*DNX
+
+C  N*DNX DU
       !EFa may07, added dhdx*epsx and dhdz*epsxz
       !T2=AMS*AKX*H*R
       T2=AMS*(AKX*H*R+epsx*dhdx)
-C  N*DNY
+C  N*DNY DU
 !     T3=AMS*H*S
       T3=AMS*(H*S+epsxz*dhdz)
 C  N*N ON V
@@ -1480,34 +1528,33 @@ C  DNY*DNY ON V
       T6=AMS*EPSXZ*H
       IB=1-NDF
       DO 310 N=1,NCN
-        IB=IB+NDF
-        FEEAN=XN(N)*T1+DNX(N)*T2+DNY(N)*T3
-        FEEDN=XN(N)*T4
-        FEEBN=T5*DNX(N)
-        FEECN=T6*DNY(N)
+      IB=IB+NDF
+      FEEAN=XN(N)*T1+DNX(N)*T2+DNY(N)*T3
+      FEEDN=XN(N)*T4
+      FEEBN=T5*DNX(N)
+      FEECN=T6*DNY(N)
 C-
 C-.....FORM THE TIME TERMS.....
 C-
-        IF(ICYC .EQ. 0 ) GO TO 304
-        FEEAN=FEEAN+AMS*XN(N)*H*ALTM
-
-  304   CONTINUE
-        IA=1-NDF
-        DO 305 M = 1, NCN
-          IA=IA+NDF
-          ESTIFM(IA,IB) = ESTIFM(IA,IB) + XN(M)*FEEAN + DNX(M)*FEEBN
-     1    + DNY(M)*FEECN
-          ESTIFM(IA,IB+1) = ESTIFM(IA,IB+1) + XN(M)*FEEDN
-  305   CONTINUE
+      IF (ICYC .EQ. 0 ) GO TO 304
+      FEEAN=FEEAN+AMS*XN(N)*H*ALTM
+  304 CONTINUE
+      IA=1-NDF
+      DO 305 M = 1, NCN
+        IA=IA+NDF
+        ESTIFM(IA,IB) = ESTIFM(IA,IB) + XN(M)*FEEAN + DNX(M)*FEEBN
+     1                + DNY(M)*FEECN
+        ESTIFM(IA,IB+1) = ESTIFM(IA,IB+1) + XN(M)*FEEDN
+  305 CONTINUE
   310 CONTINUE
 !-----------------------------------------------------------------------------------------
-!.....Set up the derivatives of the MOMENTUM EQUATIONS in X-DIRECTION wrt WATER DEPTH.....
+!.....Set up the derivatives of the MOMENTUM EQUATIONS in Y-DIRECTION wrt WATER DEPTH.....
 !-----------------------------------------------------------------------------------------
 
 C
 C.....FORM THE HEAD TERMS.....
 C
-C  N*M
+C  N*M DH
       T1=(AKX*R*DRDX+S*(DRDZ-OMEGA)+GRAV*DAODX+
      +   GRAV*VECQ*R*UBF*DRAGX(NR))*AMS
      +    + ams*dffact*vecq*r
@@ -1520,7 +1567,6 @@ C  NX*M
       IB=3-2*NDF
       DO 325 N=1,NCNX
         IB=IB+2*NDF
-CMAY93      FEEAN=XM(N)*T1+DMX(N)*T2+DMY(N)*T3
 CIPK NOV97      FEEAN=XM(N)*T1
         IF (IDNOPT.GE.0) THEN
           FEEAN=XM(N)*T1+DMX(N)*T2+DMY(N)*T3
@@ -1528,8 +1574,8 @@ CIPK NOV97      FEEAN=XM(N)*T1
           FEEAN=XM(N)*T1+DMX(N)*(T2+AMS*GRAV*H*DAME(N))+DMY(N)*T3
         ENDIF
 CIPK NOV97
-      FEEBN=XM(N)*T4
-      FEECN=XM(N)*T3
+        FEEBN=XM(N)*T4
+        FEECN=XM(N)*T3
 C-
 C-.....FORM THE TIME TERMS.....
 C-
@@ -1541,7 +1587,7 @@ C-
         DO 320 M = 1, NCN
           IA=IA+NDF
           ESTIFM(IA,IB) = ESTIFM(IA,IB) + XN(M)*FEEAN + DNX(M)*FEEBN
-     1    + DNY(M)*FEECN
+     1                  + DNY(M)*FEECN
   320   CONTINUE
   325 CONTINUE
 !--------------------------------------------------------------------------------------
@@ -1551,9 +1597,15 @@ C-
 C......FORM THE SALINITY TERMS
 C-
       TAA=AMU*H**2./2.*DRDS*GRAV
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
 !MDMD:TAA=TAA - AMU*DRDS*H*(GRAV*DAODX)
       TAB=AMU*DRDS*H*(R*DRDX+S*DRDZ+GRAV*DAODX)
 !MDMD:TAB=AMU*DRDS*H*(R*DRDX+S*DRDZ)
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
 
 !MDMD: Ergaenzen fehlender Terme: Schub + Coriolis
 !------------------------------
@@ -1589,16 +1641,23 @@ C.....FORM THE Y MOTION EQUATIONS.....
 C
 C.....FLOW TERMS.....
 C
-CIPK MAR01      T1=AMS*(AKY*H*DSDZ+TFRIC*VBF*(2.*(S*VBF)**2+(R*UBF)**2)+SIDF(NN))
+C N*N DV
+CIK MAR01      T1=AMS*(AKY*H*DSDZ+TFRIC*VBF*(2.*(S*VBF)**2+(R*UBF)**2)+SIDF(NN))
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
       T1=AMS*(AKY*H*DSDZ+(TFRIC+TDRAGY*H)*VBF*(2.*(S*VBF)**2+(R*UBF)**2)
      +       +SIDFT)
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
       !EFa may07, added dhdx * epszx and dhdz * epsz
       !T2=AMS*AKY*H*R
       !T3=AMS*H*S
       T2=AMS*(AKY*H*R+dhdx*epszx)
       T3=AMS*(H*S+dhdz*epsz)
       !-
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
 CIPK MAR01 ADD DRAG TERMS      T4=AMS*(H*(DSDX+OMEGA)+TFRIC*VBF*R*S*UBF*VBF)
       T4=AMS*(H*(DSDX+OMEGA)+(TFRIC+TDRAGY*H)*VBF*R*S*UBF*VBF)
       T5=AMS*EPSZX*H
@@ -1626,7 +1685,7 @@ C-
           IA=IA+NDF
           ESTIFM(IA,IB) = ESTIFM(IA,IB) + XN(M)*FEEDN
           ESTIFM(IA,IB+1) = ESTIFM(IA,IB+1) + XN(M)*FEEAN + DNX(M)*FEEBN
-     1   + DNY(M)*FEECN
+     1                    + DNY(M)*FEECN
   335   CONTINUE
   340 CONTINUE
 !-----------------------------------------------------------------------------------------
@@ -1635,6 +1694,8 @@ C-
 C
 C.....HEAD TERMS.....
 C
+C  N*M DH
+CIPK MAR01 ADD DRAG TERMS
       T1=AMS*(AKY*S*DSDZ+R*(OMEGA+DSDX)+GRAV*DAODZ +
      +    GRAV*VECQ*S*VBF*DRAGY(NR))
      +     + ams*dffact*vecq*s
@@ -1642,9 +1703,11 @@ C
       T2=AMS*EPSZX*DSDX
       T3=AMS*EPSZ*DSDZ
       T4=AMS*EPSZ*DSDZ-GHC*AMS
-      IB=3-2*NDF  !IB=-5
+      !IB=-5
+      IB=3-2*NDF
       DO 355 N=1,NCNX
-        IB=IB+2*NDF   !IB=3,11
+        !IB=3,11
+        IB=IB+2*NDF
 C-
 C-.....INERTIAL COMPONENTS.....
 C-
@@ -1664,11 +1727,13 @@ C-
         IF( ICYC .LE. 0 ) GO TO 347
         FEEAN=FEEAN+AMS*XM(N)*BETA2
   347   CONTINUE
-        IA=2-NDF   !IA=-2
+        !IA=-2
+        IA=2-NDF
         DO 350 M = 1, NCN
-          IA=IA+NDF !IA=2, 4
+          !IA=2, 4
+          IA=IA+NDF
           ESTIFM(IA,IB) = ESTIFM(IA,IB) + XN(M)*FEEAN + DNX(M)*FEEBN
-     1    + DNY(M)*FEECN
+     1                  + DNY(M)*FEECN
   350   CONTINUE
   355 CONTINUE
 !--------------------------------------------------------------------------------------
@@ -1677,10 +1742,16 @@ C-
 C-
 C......FORM THE SALINITY TERMS
 C-
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
       TAA=AMU*H**2/2.*DRDS*GRAV
 !MDMD:  TAA=TAA - AMU*DRDS*H*(GRAV*DAODZ)
       TAB=AMU*DRDS*H*(R*DSDX+S*DSDZ+GRAV*DAODZ)
 !MDMD:  TAB=AMU*DRDS*H*(R*DSDX+S*DSDZ)
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
 
 !MDMD: Ergaenzen fehlender Terme: Schub + Coriolis + Quelle
 !------------------------------
@@ -1695,16 +1766,20 @@ C  WIND TERMS
 !MDMD: Ergaenzen fehlender Terme: Schub + Coriolis + Quelle
 !------------------------------
       IF(ICYC .GT. 0) TAB=TAB+AMU*DRDS*H*BETA2
-      IB=4-NDF  !IB=0
+      !IB=0
+      IB=4-NDF
       DO 359 N=1,NCN
-        IB=IB+NDF !IB=4
+        !IB=4
+        IB=IB+NDF
         IF(NSTRT(NCON(N),1) .EQ. 0) THEN
           FEEAN=-XO(N)*TAA
           FEEBN=XO(N)*TAB
         ENDIF
-        IA=2-NDF   !IA=-2
+        !IA=-2
+        IA=2-NDF
         DO 358 M=1,NCN
-          IA=IA+NDF !IA=2
+          !IA=2
+          IA=IA+NDF
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+DNY(M)*FEEAN+XN(M)*FEEBN
   358   CONTINUE
   359 CONTINUE
@@ -1725,18 +1800,20 @@ C
       DO 365 M=1,NCNX
         IA=IA+2*NDF
 
-        !Ableitung dfc/dvx und dfc/dvy
-        IB=1-NDF !NB=-3
+        !derivative dfc/dvx und dfc/dvy
+        !NB=-3
+        IB=1-NDF
         EA=XM(M)*TA
         EB=XM(M)*TX
         EC=XM(M)*TZ
         DO 360 N = 1, NCN
-          IB=IB+NDF !IB=1
+          !IB=1
+          IB=IB+NDF
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+EA*DNX(N)+EB*XN(N)
           ESTIFM(IA,IB+1)=ESTIFM(IA,IB+1)+EA*DNY(N)+EC*XN(N)
   360   CONTINUE
 
-        !Ableitung dfc/dh
+        !derivative dfc/dh
         EA=XM(M)*TB
         EB=XM(M)*TC
         EC=XM(M)*TD
@@ -1754,8 +1831,10 @@ C-
 C......VELOCITY AND HEAD TERMS
 C-
   380 CONTINUE
-      T1=AMU*H*DSALDX     !MD:dfs/du
-      T2=AMU*H*DSALDY     !MD:dfs/dv
+      !MD:dfs/du
+      T1=AMU*H*DSALDX
+      !MD:dfs/dv
+      T2=AMU*H*DSALDY
       T3=AMU*DIFX*DSALDX
       T4=AMU*DIFY*DSALDY
       T5=AMU*(R*DSALDX+S*DSALDY)
@@ -1764,37 +1843,45 @@ C-
       T6=-AMU*(SRCSNK+(GRATE-QIN)*SALT)
 !MDMD
 
-      IF(ICYC .GT. 0)then
+      IF(ICYC .GT. 0) then
         T5=T5+AMU*DSALDT
       ENDIF
-      IA=4-NDF !IA=0
+      !IA=0
+      IA=4-NDF
       DO 400 M=1,NCN
-        IA=IA+NDF !IA=4
+        !IA=4
+        IA=IA+NDF
         IF(NSTRT(NCON(M),1) .EQ. 0) THEN
 !MDMD: new: Diffusion und Zeit in eigenen Werten
 cipk aug98
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
           FEEAN=XO(M)*T1
           FEEBN=XO(M)*T2
-CMAY93    FEECN=XO(M)*T3
-CMAY93    FEEDN=XO(M)*T4
           FEECN=DOX(M)*T3
           FEEDN=DOY(M)*T4
 !MDMD:    FEEEN=XO(M)*T5
           FEEEN=XO(M)*(T5+T6)
 !MDMD:    FEEEN=(XO(M)*T5 + DOX(M)*T3+DOY(M)*T4)
 !MDMD: new: Diffusion und Zeit in eigenen Werten
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
         ENDIF
-
-        IB=1-NDF  !IB=-3
+        !IB=-3
+        IB=1-NDF
         DO 385 N=1,NCN
-          IB=IB+NDF  !IB=1, 5, 7, ...
+          !IB=1, 5, 7, ...
+          IB=IB+NDF
           ESTIFM(IA,IB)=ESTIFM(IA,IB)+XN(N)*FEEAN
           ESTIFM(IA,IB+1)=ESTIFM(IA,IB+1)+XN(N)*FEEBN
   385   CONTINUE
-
-        IB=3-2*NDF !IB=-5
+        !IB=-5
+        IB=3-2*NDF
         DO 390 N=1,NCNX
-          IB=IB+2*NDF  !IB=3,11,..
+          !IB=3,11,..
+          IB=IB+2*NDF
 c         ESTIFM(IA,IB)=ESTIFM(IA,IB)+DMX(N)*FEECN+DMY(N)*FEEDN+XM(N)*FEEEN
 
 !MDMD: new: lineare Wichtung der Ableitung nach h
@@ -1821,25 +1908,26 @@ C     equilibrium method with linear functions
         IA=-4
         DO  M=1,NCNX
           IA=IA+8
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
           FEEAN=XM(M)*T1
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
           IB=-4
           DO N=1,NCNX
             IB=IB+8
             ESTIFM(IA,IB)=ESTIFM(IA,IB)+FEEAN*XM(N)
+	    ENDDO
 	  ENDDO
-	ENDDO
 
 !MD:  preparing equations and coeffiecents for water consituents
 !MD:   like salinity, sediment and temperatur
       ELSE
-
-CIPK AUG95 REPLACE LINE FOR RATE TERM
-cipk aug96 fix term for loadings
-cipk aug96      T1=0.
-cipk aug96      IF(ICYC .GT. 0) T1=AMU*ALTM*H
 CIPK NOV97 REWRITE FOR NEW UNITS OF SIDF      T1=-AMU*H*(SIDF(NN)+GRATE)
-C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  TEN WITH SIFFQQ MAY04
-CIPK ADD QIN    T1=0.
+C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
+CIPK MAY04 USE SIDFQQ
         T1=-AMU*((GRATE-QIN)*H - SIDFQQ)
 !MD:  hier keine Einbindung der unabh Quelle u Senke (SRCSNK)
 
@@ -1850,30 +1938,30 @@ CIPK ADD QIN    T1=0.
         T3=AMU*DIFY*H
         T5=AMU*R*H
         T6=AMU*S*H
-
         IA=0
         DO 420 M=1,NCN
           IA=IA+4
-
           IF(NSTRT(NCON(M),1) .EQ. 0) THEN
 cipk aug98
+!-----------------------------------------
+!Difference regarding sigma-transformation
+!-----------------------------------------
             FEEAN=XO(M)*T1
-cipk nov99  add brackets for div by xht in next two lines
             FEEBN=(DOX(M)*T2+XO(M)*T5)
             FEECN=(DOY(M)*T3+XO(M)*T6)
+!------------------------------------------------
+!End of difference regarding sigma-transformation
+!------------------------------------------------
           ENDIF
-
           IB=0
           DO 410 N=1,NCN
             IB=IB+4
-
             IF(NSTRT(NCON(N),1) .EQ. 0) THEN
 !MDMD: new: Korrektur nach S. A-7
 !MDMD         ESTIFM(IA,IB)=ESTIFM(IA,IB) +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
               ESTIFM(IA,IB)=ESTIFM(IA,IB)
-     +        +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
+     +                     +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
             ENDIF
-
   410     CONTINUE
   420   CONTINUE
       ENDIF
@@ -1886,27 +1974,62 @@ C-
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 660
 C       COMPUTE BOUNDARY FORCES
-      DO 650 L=1,NCN,2
-        N2=NCON(L+1)
-CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
-        IF(IBN(N2) .NE. 1  .AND.  IBN(N2) .NE. 10
-     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21
-      !nis,feb08: for transition
-     +    .AND. (IBN (n2) /= 2 .AND. (.NOT. TransitionMember (n2))))
-      !-
-     +    GO TO 650
 
+      !2D -> 1D (h-Q): TransLines (i, 4) = 1
+      !2D <- 1D (Q-h): TransLines (i, 4) = 2
+      !2D <> 1D (h-h): TransLines (i, 4) = 3
+
+      ! with i == no. of connected Transition Line
+      TransLine = TransLinePart (nn)
+
+      if (TransLine == 0) then
+        transtype = 0
+      else
+        transtype = TransLines (TransLine, 4)
+      endif
+
+      !Following part of the source code settles the boundary hydrostatic forces,
+      !  either to active h-Boundary conditions or to shoreline boundaries, as well as
+      !  the shoreline friction values, if there was a fricition coefficient given.
+      BoundaryForces: DO L=1,NCN,2
+        !midside node of the current arc
+        N2=NCON(L+1)
+        
+        !Check the current arc for being a boundary arc
+CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
+        IF (IBN (N2) /= 1  .AND. IBN (N2) /= 10 .AND.
+     +      IBN (N2) /= 11 .AND. IBN (N2) /= 21 .AND.
+            !nis,feb08: for transition, has to be checked further, se below
+     +      IBN (n2) /= 2)
+     +    CYCLE BoundaryForces
+
+        !Force only TransitionMember-nodes with transtype == 1 and transtype == 3 to be
+        if (IBN (N2) == 2) then
+          !all ibn == 2 - nodes are potentially transition nodes; consider only the TransitionMember - nodes
+          if (.not. TransitionMember (N2)) CYCLE BoundaryForces
+
+          !from the TransitionMember - nodes only types 1 and 3 are considerable
+          if ((.NOT. transtype == 1) .and. (.NOT. transtype == 3))
+     +      CYCLE BoundaryForces
+
+        end if
+
+        !The three nodes of the current boundary arc
         N1=NCON(L)
         NA=MOD(L+2,NCN)
         N3=NCON(NA)
+        !The equation numbers of the corner nodes of the current boundary arc
         NC1=(L-1)*NDF+3
         NC2=(NA-1)*NDF+3
+        !water depth of the current corner nodes 
         H1=VEL(3,N1)
         H3=VEL(3,N3)
+        !The length of the current arc
         DL(1,2)=(CORD(N2,1)-CORD(N1,1))*CX+(CORD(N2,2)-CORD(N1,2))*SA
         DL(1,1)=-(CORD(N2,1)-CORD(N1,1))*SA+(CORD(N2,2)-CORD(N1,2))*CX
         DL(2,2)=(CORD(N3,1)-CORD(N1,1))*CX+(CORD(N3,2)-CORD(N1,2))*SA
         DL(2,1)=-(CORD(N3,1)-CORD(N1,1))*SA+(CORD(N3,2)-CORD(N1,2))*CX
+        !Finding a direction factor (1.0 or -1.0)
         IF(DL(2,2) .LT. 0.) THEN
           FTF(1)=1.0
         ELSE
@@ -1919,55 +2042,57 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ENDIF
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
-        !nis,feb08: for transition
-        ELSEIF (TransitionMember (n2)) then
+        !Consider transition nodes (type 3) as active boundaries
+        ELSEIF (TransitionMember (n2)) THEN
           IHD = 1
-        !-
+        !In all other cases they are passive boundaries, so that they will not get a
+        !  user/transition specified boundary condition force
         ELSE
           IHD=0
         ENDIF
+
+        !Run through momentum equations of a node and integrate the boundary forces
+        !  over the length of the arc using a linear interpolation integrated with GAUSS
         DO 600 M=1,2
+          !Run through the GAUSS nodes on a linear line (boundary arc)
           DO 580 N=1,4
+            !get the density at the GAUSS point
             RHO=DEN(N1)+AFACT(N)*(DEN(N3)-DEN(N1))
-
-cipk jun05 testing            RHO=1.
-
+            !get the water depth at the GAUSS point
             H=H1+AFACT(N)*(H3-H1)
-            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
-CIPK APR01 FIX BUG            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
+            !Calculate the bottom elevation, considering the Marsh slot if the option
+            !  is operative, otherwise the bottom elevation is ao.
             IF(IDNOPT .LT. 0) THEN
-              AZER  = AME((L+1)/2)+ADO(N1)  + 
-     +		AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+              AZER = AME((L+1)/2)+ADO(N1)  +
+     +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
             ENDIF
-            XHT=ELEV-AZER
-CMAY93            U=
-CMAY93     +      XNAL(1,N)*VEL(1,N1)+XNAL(2,N)*VEL(1,N2)+XNAL(3,N)*VEL(1,N3)
-CMAY93            V=
-CMAY93     +      XNAL(1,N)*VEL(2,N1)+XNAL(2,N)*VEL(2,N2)+XNAL(3,N)*VEL(2,N3)
+
+            !Calculate the velocities using a distribution function if specified
+            !  purpose is the calculation of the shoreline friction
             UU=
      +      XNAL(1,N)*VEL(1,N1)/UDST(N1)+XNAL(2,N)*VEL(1,N2)/UDST(N2)
      +     +XNAL(3,N)*VEL(1,N3)/UDST(N3)
             VV=
      +      XNAL(1,N)*VEL(2,N1)/VDST(N1)+XNAL(2,N)*VEL(2,N2)/VDST(N2)
      +     +XNAL(3,N)*VEL(2,N3)/VDST(N3)
+            !Turn the velocities onto direction fixes
             U= UU*CX+VV*SA
             V=-UU*SA+VV*CX
-
 !
 !.....Compute shore friction.....
 !
 CMAY93 ENDCHANGE
+            !get total velocity
             VECQ=SQRT(U**2+V**2)
             !Chezy
-            IF(ORT(NR,11) .GT. 1.) THEN
-              FFACT=1./ORT(NR,11)**2*H
+            IF (ORT (NR, 11) > 1.) THEN
+              FFACT = 1./ ORT (NR, 11)**2 * H
             !Manning's N
             ELSEif (ort(nr,11) > 0.0d0 .and. ort(nr,11) < 1.0d0 ) then
-              FFACT=ORT(NR,11)**2*FCOEF*H**0.6667/GRAV
+              FFACT = ORT (NR, 11)**2 * FCOEF * H**(2.0d0/3.0d0) / GRAV
 cipk mar99 fix bug for bank friction (double count on GRAV)
-
             !Darcy-Weisbach
             elseif (ort(nr,11) < 0.0d0 .and. abs(vecq) > 0.001d0) then
               lambda_shore = 0.0
@@ -1989,16 +2114,47 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
             !no shoreline friction
             else
               FFACT = 0.0d0
-              continue
-          
             ENDIF
-
-
+!
+!... compute hydrostatic forces ...
+!            
+            !                                        1 
+            !temp = (w1 * b1 + w2 * b2) * rho * g * ---
+            !                                        2
+            !w1, w2 = weighting factors
+            !b1, b2 = arc segment widths
+            !
             TEMP=(DNAL(2,N)*DL(1,M)+DNAL(3,N)*DL(2,M))*GRAV/2.*RHO
+            !                                      1     2    1
+            !hp = (w1 * b1 + w2 * b2) * rho * g * --- * h  * --- * f1
+            !                                      2          2
+            !f1 = linear function for interpolation.
+            !
+            !TODO
+            !This is strange, because the factor 1/4 should be only 1/2. Only reason
+            !might be the extension of the unit width for the weighting functions with 
+            !fator 2.
             HP=TEMP*HFACT(N)*H**2/2.
+            !                                       1
+            !hp1 = (w1 * b1 + w2 * b2) * rho * g * --- * h * f1
+            !                                       2
             HP1=TEMP   *H*HFACT(N)
+            !                                        1
+            !DERR = (w1 * b1 + w2 * b2) * rho * g * --- * h * f1 * (a1 * (hsoll1 - hist1) + (1 - a1) * (hsoll2-hist2)
+            !                                        2
             DERR=SLOAD(M)*HP1*(AFACT(N)*(SPEC(N3,3)-VEL(3,N3))
      +          +(1.-AFACT(N))*(SPEC(N1,3)-VEL(3,N1)))
+
+            !testing
+            if (nn==4624) then
+              write(999,*) 'Knoten: ', n1, n2, n3
+              write(999,*) 'Gauss:  ', n
+              write(999,*) 'temp, hp, hp1, derr, ffact'
+              write(999,*) temp, hp, hp1, derr, ffact
+            endif
+            !testing-
+            
+            !get the friciton 
             IF(M .EQ. 2) THEN
               TFRIC=TEMP*FFACT*FTF(1)*HFACT(N)
               FFACT=TFRIC*U*VECQ
@@ -2010,7 +2166,6 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
                 FDV=0.
               ENDIF
             ELSE
-CMAY93              TFRIC=TEMP*FFACT*FTF(2)
               TFRIC=TEMP*FFACT*FTF(2)*HFACT(N)
               FFACT=TFRIC*V*VECQ
               IF(VECQ .GT. 0.001) THEN
@@ -2021,46 +2176,77 @@ CMAY93              TFRIC=TEMP*FFACT*FTF(2)
                 FDV=0.
               ENDIF
             ENDIF
+            !Modify the estifm and f vectors/matrices
+            !  for the influence of all 3 nodes of the current boundary arc
             DO 575 K=1,3
+              !get the equaiton number              
               MA=MOD((L+K-2)*NDF+M,NEF)
               MA1=MA+3-2*M
+              !Modify the equation 
               F(MA)=F(MA)+HP*XNAL(K,N)*SLOAD(M)
+              !testing
+              if (nn==4624) then
+                write(999,*) 'f (ma):', f(ma)
+              endif
+              !testing-
+
+              !Modify the equations for passive boundaries
               IF(IHD .EQ. 0) THEN
-                F(MA1)=F(MA1)+XNAL(K,N)*FFACT
+                !Hydrostatic side pressure
                 ESTIFM(MA,NC1)=ESTIFM(MA,NC1)
      +                         -SLOAD(M)*(1.-AFACT(N))*XNAL(K,N)*HP1
+
                 ESTIFM(MA,NC2)=ESTIFM(MA,NC2)
      +                         -SLOAD(M)*AFACT(N)*XNAL(K,N)*HP1
+
+                !shoreline friction (FDU or FDV)
+                F(MA1)=F(MA1)+XNAL(K,N)*FFACT
+
                 ESTIFM(MA1,NC1)=ESTIFM(MA1,NC1)
      +                         -XNAL(K,N)*FFACT/H*(1.-AFACT(N))
+
                 ESTIFM(MA1,NC2)=ESTIFM(MA1,NC2)
      +                         -XNAL(K,N)*FFACT/H*AFACT(N)
+
                 ESTIFM(MA1,NC1-2)=ESTIFM(MA1,NC1-2)
      +                         -FDU*XNAL(K,N)*XNAL(1,N)
+
                 ESTIFM(MA1,NC1-1)=ESTIFM(MA1,NC1-1)
      +                         -FDV*XNAL(K,N)*XNAL(1,N)
+
                 ESTIFM(MA1,NC1+NDF-2)=ESTIFM(MA1,NC1+NDF-2)
      +                         -FDU*XNAL(K,N)*XNAL(2,N)
+
                 ESTIFM(MA1,NC1+NDF-1)=ESTIFM(MA1,NC1+NDF-1)
      +                         -FDV*XNAL(K,N)*XNAL(2,N)
+
                 ESTIFM(MA1,NC2-2)=ESTIFM(MA1,NC2-2)
      +                         -FDU*XNAL(K,N)*XNAL(3,N)
+
                 ESTIFM(MA1,NC2-1)=ESTIFM(MA1,NC2-1)
      +                         -FDV*XNAL(K,N)*XNAL(3,N)
+              !Modify the equaitons for active boundaries or transitions
               ELSE
                 F(MA)=F(MA)+DERR*XNAL(K,N)
               ENDIF
+              
+              !testing
+              if (nn==4624) then
+                write(999,*) 'f (ma):', f(ma)
+              endif
+              !testing-
+                
   575       CONTINUE
   580     CONTINUE
   600   CONTINUE
-  650 CONTINUE
+      ENDDO BoundaryForces
   660 CONTINUE
 C-
 C- APPLY TRANSFORMATIONS TO STIFFNESS AND FORCE MATRICES FOR SLOPING B. C.
 C-
       DO 1000 N=1,NCN
         N1=NCON(N)
-        AFA=ALFA(N1)-THNN-ADIF(N1)
+        AFA=ALFA(N1)-THNN -ADIF(N1)
         IF(AFA) 820,1000,820
   820   CX=COS(AFA)
         SA=SIN(AFA)
@@ -2083,8 +2269,6 @@ C-
         F(IB+1)=-F(IB)*SA + F(IB+1)*CX
         F(IB)=TEMP
  1000 CONTINUE
-
-cipk jun05
 C
 C      test for control structure
 C
@@ -2103,7 +2287,7 @@ C
       ENDIF
 
 C
-cipk dec97 apply sclae factors for elevtaion bc's if necessary
+cipk dec97 apply scale factors for elevtaion bc's if necessary
 C-
 C...... Apply scale factors to velocities for special boundaries
 C-
@@ -2122,167 +2306,270 @@ cipk dec97 end changes
 C-
 C...... For 1D - 2D junctions adjust equation for direction
 C-
+      !run through corner nodes
       DO 1050 N=1,NCN,2
+        !get node number
         M=NCON(N)
+        !check for adif being not equal to zero
         IF(ADIF(M) .NE. 0.) THEN
           NEQ=NDF*NCN
           IA=NDF*(N-1)+1
+
           DO 1040 I=1,NEQ
+            !Project the equations onto the fixed direction
             ESTIFM(I,IA)=ESTIFM(I,IA)+ESTIFM(I,IA+1)*SIN(ADIF(M))
      1                   /COS(ADIF(M))
  1040     CONTINUE
+
         ENDIF
  1050 CONTINUE
-      IF(NR .GT. 90) GO TO 1310
+
+
+      IF(NR <= 90) then
 C-
 C......INSERT EXPERIMENTAL UPSTREAM BOUNDARY FLOWS
 C-
-      DO 1300 N=1,NCN
-      M=NCON(N)
+      throughnodes: do n=1,ncn
+        !current node number at position n in current element nn
+        M = NCON (N)
+
 C-
 C...... Test for and then retrieve stage flow constants
 C-
-      IF(ISTLIN(M) .NE. 0) THEN
-        J=ISTLIN(M)
-        AC1=STQ(J)
-        AC2=STQA(J)
-        E0=STQE(J)
-        CP=STQC(J)
-        ASC=ALN(J)
-      ELSE
-        AC2=0.
-      ENDIF
-
-      !nis,jul07: Write 1D-2D-line-Transition values to equation system
-      !if (TransitionMember(M)) then
-      !
-      !  !get momentum equation of 2D-node at transition
-      !  IRW = NDF * (N - 1) + 1
-      !  IRH = NDF * (N - 1) + 3
-      !
-      !  !calculate absolute velocity
-      !  VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
-      !
-      !  !reset Jacobian
-      !  do j = 1, nef
-      !    estifm(irw, j) = 0.0
-      !  enddo
-      !
-      !  !form specific discharge values like inner boundary condition
-      !  F (IRW)           = spec(M, 1) - vx * vel(3, M)
-      !  ESTIFM (IRW, IRW) = vel(3, M)  - dspecdv(M)
-      !  ESTIFM (IRW, IRH) = vx         - dspecdh(M)
-      !end if
-      !-
-
-      NFX=NFIX(M)/1000
-      IF(NFX .LT. 13) GO TO 1300
-      IRW=NDF*(N-1)+1
-      IF(NFX .EQ. 13) IRW=IRW+1
-      IRH=NDF*(N-1)+3
-      VX=VEL(1,M)*COS(ALFA(M))+VEL(2,M)*SIN(ALFA(M))
-      DO 1200 J=1,NEF
- 1200 ESTIFM(IRW,J)=0.
-
-      IF(MOD(N,2) .EQ. 0) GO TO 1250
-      !nis,com: AC2.eq.0, if there was no h-Q-relationship, but just a water level BC
-      IF(AC2 .EQ. 0.) THEN
-        ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
-        ESTIFM(IRW,IRH)=AREA(NN)*VX
-        F(IRW)=AREA(NN)*(SPEC(M,1)-VX*VEL(3,M))
-        !EFa aug07, stage-flow boundaries (table)
-        if (istab(m).gt.0.) then
-          af = vel(3,m) / asc
-          if (spec(m,1).lt.0.) then
-            adir = -1.
-          else
-            adir = 1.
-          end if
-
-          !calculate surface elevation
-          if (idnopt < 0) then
-            srfel = hel(m) + ado(m)
-          else
-            srfel = vel (3, m) + ao(m)
-          end if
-
-          call stfltab(m,srfel,dfdh,ff,1)
-          f(irw) = area(nn) * (af * adir * ff - vx * vel(3,m))
-          estifm(irw,irw) = area(nn) * vel(3,m)
-          estifm(irw,irh) = area(nn) * (vx - af * adir * dfdh)
-        end if
-        !-
-      ELSE
-        AF=VEL(3,M)/ASC
-CIPK NOV97    F(IRW)=AREA(NN)*(AF*(AC1+AC2*(VEL(3,M)+AO(M)-E0)**CP)-VX
-CIPK NOV97     1         *VEL(3,M))
-        IF (IDNOPT.GE.0) THEN
-          WSEL=VEL(3,M)+AO(M)
+        IF (ISTLIN (M) /= 0) THEN
+          !line number to apply h-Q-relationship as BC
+          J = ISTLIN (M)
+          !coefficients/ parameters of h-Q-relationship equation
+          AC1 = STQ (J)
+          AC2 = STQA (J)
+          E0  = STQE (J)
+          CP  = STQC (J)
+          !cross sectional area depending on actual water depth, generated in AGEN.sub
+          ASC = ALN (J)
         ELSE
-          HM = VEL(3,M)
-          CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
-          WSEL = HS+ADO(M)
+          !if there was no h-Q-relationship in form of a formula, then fix AC2 to 0.0, because this is used as a checker
+          AC2 = 0.
         ENDIF
-        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(WSEL-E0)**CP)-VX
-     1            *VEL(3,M))
-CIPK NOV97
-        ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
-CIPK NOV97        ESTIFM(IRW,IRH)=AREA(NN)*(VX-AF*AC2*CP*(VEL(3,M)+AO(M)-E0)**
-CIPK NOV97     1                  (CP-1.0))
-        ESTIFM(IRW,IRH)=AREA(NN)*(VX-AF*AC2*CP*(WSEL-E0)
-     1                     **(CP-1.0))
-CIPK NOV97
-      ENDIF
-      GO TO 1300
- 1250 N1=NCON(N-1)
-      N2=MOD(N+1,NCN)
-      N3=NCON(N2)
-      HM=(VEL(3,N1)+VEL(3,N3))/2.
-      IRI=(N2-1)*NDF+3
-      IF(AC2 .EQ. 0.) THEN
-        ESTIFM(IRW,IRW)=AREA(NN)*HM
-        ESTIFM(IRW,IRH-NDF)=AREA(NN)*VX/2.
-        ESTIFM(IRW,IRI)=AREA(NN)*VX/2.
-        F(IRW)=AREA(NN)*(SPEC(M,1)-VX*HM)
-        !EFa aug07, stage-flow boundaries (table)
-        if (istab(m).gt.0.) then
-          af = vel(3,m) / asc
-          if (spec(m,1).lt.0.) then
-            adir = -1.
+
+        !nis,jul07: Write 1D-2D-line-Transition values to equation system
+        if (TransitionMember (M) .and. transtype == 2) then
+
+          !for midside nodes
+          if (mod(n,2) == 0) then
+            !get neighbouring node
+            N1 = NCON (N - 1)
+            N2 = MOD (N + 1, NCN)
+            N3 = NCON (N2)
+            hm = 0.5 * (vel (3, n1) + vel (3, n3))
+            !get equation number for midside node's second neighbour derivative over water depth
+            IRI = (N2 - 1) * NDF + 3
+
+          !for corner nodes
           else
-            adir = 1.
+            hm = vel (3, m)
           end if
-          hm1 = (hel(n1) + hel(n3)) / 2.
-          srfel = hm1 + ao(m)
-          call stfltab(m,srfel,dfdh,ff,1)
-          f(irw) = area(nn) * (af * adir * ff - vx * hm)
-          estifm(irw,irw) = area(nn) * hm
-          estifm(irw,irh-ndf) = area(nn) / 2. * (vx - af * adir * dfdh)
-          estifm(irw,iri) = estifm(irw,irh-ndf)
+
+          !get momentum equation of 2D-node at transition
+          IRW = NDF * (N - 1) + 1
+          IRH = NDF * (N - 1) + 3
+
+          !calculate resulting velocity
+          VX  = VEL (1, M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+
+          !reset Jacobian line
+          do j = 1, nef
+            estifm(irw, j) = 0.0
+          enddo
+
+          !form specific discharge values like inner boundary condition
+          F (IRW)           = area(nn) * (spec(M, 1) - vx * hm)
+          ESTIFM (IRW, IRW) = area(nn) * (hm   ) !- dspecdv(M))
+
+          !for corner nodes
+          if (mod(n,2) /= 0) then
+            ESTIFM (IRW, IRH) = area(nn) * (vx   ) !- dspecdh(M))
+          !for midside nodes
+          else
+            ESTIFM (irw, IRH - ndf) = area (nn) * (0.5 * vx)
+            ESTIFM (irw, iri)       = ESTIFM (irw, IRH - ndf)
+          end if
         end if
-        !-
-      ELSE
-        AF=HM/ASC
-CIPK NOV97        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(HM+AO(M)-E0)**CP)-VX*HM)
-        IF (IDNOPT.GE.0) THEN
-          AOL=AO(M)
-        ELSE
-          CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
-          AOL = ADO(M) +HS
+
+        !check for boundary condition type
+        NFX = NFIX (M) / 1000
+
+        !nfx >= means flow boundary condition
+        IF (NFX >= 13) then
+
+          !get the local line number of the boundary condition equation
+          IRW = NDF * (N - 1) + 1
+          IF (NFX == 13) IRW = IRW + 1
+          IRH = NDF * (N - 1) + 3
+
+          !calculate the velocity
+          VX = VEL (1, M) * COS (ALFA (M)) + VEL (2, M) * SIN (ALFA (M))
+
+          !initialize the line of the matrix, where the boundary condition will be inserted
+          DO J = 1, NEF
+            ESTIFM (IRW, J) = 0.
+          enddo
+
+          !no midside node!
+          IF (MOD (N, 2) /= 0) then
+
+            !AC2 == 0 means, that there is no h-Q-relationship defined with a formula, but just a discharge boundary condition
+            IF (AC2 .EQ. 0.) THEN
+
+              !derivatives over velocity and waterdepth of specific discharge boundary condition
+              ESTIFM (IRW, IRW) = AREA (NN) * VEL (3, M)
+              ESTIFM (IRW, IRH) = AREA (NN) * VX
+              !residual equation for specific discharge boundary condition
+              F (IRW) = AREA (NN) * (SPEC (M, 1) - VX * VEL (3, M))
+
+              !istab(m) > 0 means h-Q-relationship in tabular data form
+              if (istab (m) > 0.) then
+
+                !get reciprocal of averaged cross sectional width
+                af = vel (3, m) / asc
+
+                !get direction factor of flow
+                if (spec (m, 1) < 0.) then
+                  adir = -1.
+                else
+                  adir = 1.
+                end if
+
+                !calculate surface elevation
+                if (idnopt < 0) then
+                  srfel = hel(m) + ado(m)
+                else
+                  srfel = vel (3, m) + ao(m)
+                end if
+
+                !calculate flow and derivative of flow over h from tabular data
+                call stfltab (m, srfel, dfdh, ff, 1)
+
+                !form residual equation
+                f(irw) = area(nn) * (af * adir * ff - vx * vel(3, m))
+                !form derivatives over v and h from residual equation
+                estifm (irw, irw) = area (nn) * vel(3, m)
+                estifm (irw, irh) = area (nn) * (vx - af * adir * dfdh)
+              end if
+
+            !Otherwise (AC2 /= 0), h-Q-relationship is present in formula form
+            ELSE
+
+              !get reciprocal of averaged cross sectional width
+              AF = VEL (3, M) / ASC
+              !Calculate the water stage without considering the marsh algorithm
+              IF (IDNOPT >= 0) THEN
+                WSEL = VEL (3, M) + AO (M)
+              !Calculate the water stage with Marsh option being active, if idnopt == -1 or idnopt == -2
+              ELSE
+                HM = VEL (3, M)
+                CALL AMF (HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
+                WSEL = HS + ADO (M)
+              ENDIF
+
+              !calculate residual equation
+              F (IRW) = AREA (NN) *
+     1          (AF * (AC1 + AC2 * (WSEL - E0)**CP) - VX * VEL (3, M))
+              !Calculate derivatives over v and h
+              ESTIFM (IRW, IRW) = AREA (NN) * VEL (3, M)
+              ESTIFM (IRW, IRH) = AREA (NN) *
+     1          (VX - AF * AC2 * CP * (WSEL - E0)**(CP - 1.0))
+
+            ENDIF
+          !for midside node (mod (n,2) == 0)
+          ELSE
+
+            !get neighbouring node
+            N1 = NCON (N - 1)
+            N2 = MOD (N + 1, NCN)
+            N3 = NCON (N2)
+            !get water depth at midside node, by linear averaging
+            HM = (VEL (3, N1) + VEL (3, N3)) / 2.
+            !get equation number for midside node flow boundary condition
+            IRI = (N2 - 1) * NDF + 3
+
+            !AC2 == 0. means flow boundary condition without h-Q-relationship in formula form
+            IF (AC2 == 0.) THEN
+
+              !set up derivatives over v at midside node and water depth at neighbouring nodes
+              ESTIFM (IRW, IRW) = AREA (NN) * HM
+              !first neighbouring water depth
+              ESTIFM (IRW, IRH - NDF) = AREA (NN) * VX / 2.
+              !second neighbouring water depth; the formula becomes the same!
+              ESTIFM (IRW, IRI) = ESTIFM (IRW, IRH - NDF)
+              !residual equation
+              F (IRW) = AREA (NN) * (SPEC (M, 1) - VX * HM)
+
+              !istab(m) > 0 means h-Q-relationship in tabular data form
+              if (istab (m) > 0.) then
+
+                !get reciprocal of averaged cross sectional width
+                af = vel(3,m) / asc
+
+                !get direction factor of flow
+                if (spec(m,1).lt.0.) then
+                  adir = -1.
+                else
+                  adir = 1.
+                end if
+
+                !get water stage at midside node
+                hm1 = (hel (n1) + hel (n3)) / 2.
+                srfel = hm1 + ao(m)
+
+                !calculate flow and derivative of flow over h from tabular data
+                call stfltab (m, srfel, dfdh, ff, 1)
+
+                !calculate residual equation
+                f(irw) = area(nn) * (af * adir * ff - vx * hm)
+                !set up derivatives over v at midside node and water depth at neighbouring nodes
+                estifm (irw, irw) = area(nn) * hm
+                !derivative over first neighbouring water depth
+                estifm (irw, irh - ndf) = area (nn) / 2. *
+     +            (vx - af * adir * dfdh)
+                !derivative over second neighbouring water depth; the formula becomes the same!
+                estifm (irw, iri) = estifm (irw, irh - ndf)
+
+              end if
+
+            !Otherwise (AC2 /= 0), h-Q-relationship is present in formula form
+            ELSE
+
+              !get reciprocal of averaged cross sectional width
+              AF = HM / ASC
+
+              !Calculate the water stage without considering the marsh algorithm
+              IF (IDNOPT.GE.0) THEN
+                AOL=AO(M)
+
+              !Calculate the water stage with Marsh option being active, if idnopt == -1 or idnopt == -2
+              ELSE
+                CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
+                AOL = ADO(M) +HS
+              ENDIF
+
+              !calculate residual equation
+              F (IRW) = AREA (NN) *
+     1          (AF * (AC1 + AC2 * (HM + AOL - E0)**CP) - VX * HM)
+              !Calculate derivatives over v and h
+              ESTIFM (IRW, IRW) = AREA (NN) * HM
+              !derivative over first neighbouring water depth
+              ESTIFM (IRW, IRH - NDF) = AREA (NN) / 2. *
+     1          (VX - AF * AC2 * CP * (HM + AOL - E0)**(CP - 1.0))
+              !derivative over second neighbouring water depth; the formula becomes the same!
+              ESTIFM (IRW, IRI) = ESTIFM (IRW, IRH - NDF)
+
+            ENDIF
+          ENDIF
         ENDIF
-        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(HM+AOL-E0)**CP)-VX*HM)
-CIPK NOV97
-        ESTIFM(IRW,IRW)=AREA(NN)*HM
-CIPK NOV97        ESTIFM(IRW,IRH-NDF)=AREA(NN)/2.*(VX-AF*AC2*CP*(HM+AO(M)-E0)**
-CIPK NOV97     1                    (CP-1.0))
-        ESTIFM(IRW,IRH-NDF)=AREA(NN)/2.*(VX-AF*AC2*CP*
-     1                         (HM+AOL-E0)**(CP-1.0))
-CIPK NOV97
-        ESTIFM(IRW,IRI)=ESTIFM(IRW,IRH-NDF)
+      ENDDO throughnodes
+
       ENDIF
- 1300 CONTINUE
- 1310 CONTINUE
- 
+
 CIPK JUN05
  1320 CONTINUE
 
@@ -2295,35 +2582,36 @@ CIPK JUN05
         ENDDO
       ENDIF
 
-      !nis,com: writing elt's Jacobian into global matrix
+      !Write local residual vector into global matrix
       DO 1450 I=1,NCN
+        !node number
         J=NCON(I)
+        !degree of freedom to start from
         IA=NDF*(I-1)
+        !through all nodal degrees of freedom
         DO 1400 K=1,NDF
+          !local equation number
           IA=IA+1
+          !global equation number
           JA=NBC(J,K)
+          !summing the residual vector
           IF(JA.GT.0) THEN
             R1(JA)=R1(JA)+F(IA)
-
-C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           ENDIF
  1400   CONTINUE
  1450 CONTINUE
 
 
 !write matrix into file as control output
-!      if (TransitionElement (nn))
-!      call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      !if (nn == 4621 .or. nn == 4410) then
+!      if (nn == 4624 .or. nn == 4411 .or. nn== 4412) then
+!        write(*,*) 'Element: ', nn
+!        call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      endif
 !-
 
-!      WRITE(196,*) 'ELEMENT',NN,' F'
-!      WRITE(196,1996) (F(I),I=1,32)
-!      WRITE(196,*) 'ESTIFM'
-!      WRITE(196,1996) (ESTIFM(I,I),I=1,32)
-! 1996 FORMAT(1P4E15.6)      
-
       RETURN
-      
+
 CIPK JUN05
  2000 CONTINUE
       IF(IMAT(NN) .EQ. 990) RETURN
