@@ -571,4 +571,11 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 
 --- Nico Schrage, 09.01.2009 (released RMA·Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
 
-001.)
+001.) Reduce exchange conditions at 1D2D junctions only to the proper values they as the transition type intends it.
+002.) Direction fix for boundary nodes in 1D2D line transition (affects BLINE.sub)
+003.) Comments and code updates (affects coef25nt.sub); Preperation of comparability of the coef2* subroutines to make them a unique subroutine controlling the different options
+004.) Update 1D2D-boundary exchange conditions and boundary conditions taken from the coef25.sub
+
+--- committed ---
+
+--- Nico Schrage, 29.01.2009 (RMAKalypso 1.1.1alpha1)
