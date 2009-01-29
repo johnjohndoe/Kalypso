@@ -516,16 +516,23 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
    */
   protected void updateStylePanel( final IRunoffEvent event )
   {
-    if( event == null )
+    try
     {
-      m_colorMapTableViewer.setInput( StatusUtilities.createInfoStatus( "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der ereignisliste, um die Darstellung zu editieren." ) );
-      return;
+      if( event == null )
+      {
+        m_colorMapTableViewer.setInput( StatusUtilities.createInfoStatus( "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der ereignisliste, um die Darstellung zu editieren." ) );
+        return;
+      }
+
+      m_styleFile = getSldFile( event );
+      final PolygonColorMap colorMap = findColorMap();
+
+      m_colorMapTableViewer.setInput( colorMap );
     }
-
-    m_styleFile = getSldFile( event );
-    final PolygonColorMap colorMap = findColorMap();
-
-    m_colorMapTableViewer.setInput( colorMap );
+    catch( final CoreException e )
+    {
+      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   private PolygonColorMap findColorMap( )
@@ -548,19 +555,19 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
   }
 
-  public static IFile getSldFile( final IRunoffEvent event )
+  public static IFile getSldFile( final IRunoffEvent event ) throws CoreException
   {
     final IFolder eventFolder = getEventFolder( event );
     return eventFolder.getFile( "wsp.sld" );
   }
 
-  public static IFolder getEventFolder( final IRunoffEvent event )
+  public static IFolder getEventFolder( final IRunoffEvent event ) throws CoreException
   {
     final IFolder eventsFolder = getEventsFolder();
     return eventsFolder.getFolder( event.getDataPath() );
   }
 
-  public static IFolder getEventsFolder( )
+  public static IFolder getEventsFolder( ) throws CoreException
   {
     return KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
   }
@@ -908,23 +915,30 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       return;
     }
 
-    final String eventName = dialog.getValue();
-    final IFloodModel model = m_model;
-    final IFolder eventsFolder = getEventsFolder();
-    final IMapModell mapModell = getMapPanel().getMapModell();
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
-    Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
-
-    final URL sldContent = getClass().getResource( "resources/wsp.sld" );
-
-    final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, sldContent );
-
-    final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
-    if( !resultStatus.isOK() )
+    try
     {
-      KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+      final String eventName = dialog.getValue();
+      final IFloodModel model = m_model;
+      final IFolder eventsFolder = getEventsFolder();
+      final IMapModell mapModell = getMapPanel().getMapModell();
+      final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+      Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
+
+      final URL sldContent = getClass().getResource( "resources/wsp.sld" );
+
+      final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, sldContent );
+
+      final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
+      if( !resultStatus.isOK() )
+      {
+        KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
+      }
+      ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
     }
-    ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
+    catch( final CoreException e )
+    {
+      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   protected void handleImportTin( final Event event )

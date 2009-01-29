@@ -6,12 +6,15 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -46,14 +49,21 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
       return null;
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Geländedaten verwalten", "Geländedaten verwalten" );
-    final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
-    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
+    try
+    {
+      final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Geländedaten verwalten", "Geländedaten verwalten" );
+      final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+      coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
-    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+      final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePart );
-    job.schedule();
+      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePart );
+      job.schedule();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
 
     return null;
   }
