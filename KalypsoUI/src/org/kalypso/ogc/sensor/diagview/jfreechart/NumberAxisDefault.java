@@ -47,19 +47,17 @@ import org.jfree.chart.plot.ValueAxisPlot;
 import org.jfree.data.Range;
 
 /**
+ * For backwards compability. Was originally overwritten for the type 'N'; but also used for all other datatypes.<br>
+ * As sson as every type has its own axis, this one should be removed.
+ * 
  * @author schlienger
  */
-public class NumberAxis2 extends NumberAxis
+public class NumberAxisDefault extends NumberAxis
 {
   private Double m_max = null;
   private Double m_min = null;
 
-  public NumberAxis2()
-  {
-    super();
-  }
-
-  public NumberAxis2( String label )
+  public NumberAxisDefault( final String label )
   {
     super( label );
   }
@@ -77,9 +75,10 @@ public class NumberAxis2 extends NumberAxis
   /**
    * Rescales the axis to ensure that all data is visible.
    */
+  @Override
   protected void autoAdjustRange()
   {
-    Plot plot = getPlot();
+    final Plot plot = getPlot();
     if( plot == null )
     {
       return; // no plot, no data
@@ -87,7 +86,7 @@ public class NumberAxis2 extends NumberAxis
 
     if( plot instanceof ValueAxisPlot )
     {
-      ValueAxisPlot vap = (ValueAxisPlot)plot;
+      final ValueAxisPlot vap = (ValueAxisPlot)plot;
 
       Range r = vap.getDataRange( this );
       if( r == null )
@@ -102,10 +101,10 @@ public class NumberAxis2 extends NumberAxis
         lower = Math.min( lower, 0.0 );
         upper = Math.max( upper, 0.0 );
       }
-      double range = upper - lower;
+      final double range = upper - lower;
 
       // if fixed auto range, then derive lower bound...
-      double fixedAutoRange = getFixedAutoRange();
+      final double fixedAutoRange = getFixedAutoRange();
       if( fixedAutoRange > 0.0 )
       {
         lower = upper - fixedAutoRange;
@@ -113,7 +112,7 @@ public class NumberAxis2 extends NumberAxis
       else
       {
         // ensure the autorange is at least <minRange> in size...
-        double minRange = getAutoRangeMinimumSize();
+        final double minRange = getAutoRangeMinimumSize();
         if( range < minRange )
         {
           //double expand = ( minRange - range ) / 2;

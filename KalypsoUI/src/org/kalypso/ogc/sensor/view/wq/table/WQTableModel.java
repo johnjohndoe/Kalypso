@@ -49,16 +49,20 @@ import javax.swing.table.TableModel;
  */
 public class WQTableModel extends AbstractTableModel implements TableModel
 {
-  private final static String[] COLUMN_NAMES = { "W", "Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
-
   private final Double m_startW;
 
   private final Double[] m_Q;
 
   private final int m_indexOffset;
 
-  public WQTableModel( final Double startW, final Double[] Q )
+  private final String m_fromType;
+
+  private final String m_toType;
+
+  public WQTableModel( final String fromType, final String toType, final Double startW, final Double[] Q )
   {
+    m_fromType = fromType;
+    m_toType = toType;
     m_startW = startW;
     m_Q = Q;
 
@@ -76,14 +80,14 @@ public class WQTableModel extends AbstractTableModel implements TableModel
    */
   public int getColumnCount( )
   {
-    return COLUMN_NAMES.length;
+    return 11;
   }
 
   /**
    * @see javax.swing.table.TableModel#getColumnClass(int)
    */
   @Override
-  public Class< ? > getColumnClass( int columnIndex )
+  public Class< ? > getColumnClass( final int columnIndex )
   {
     if( columnIndex == 0 )
       return Integer.class;
@@ -95,9 +99,12 @@ public class WQTableModel extends AbstractTableModel implements TableModel
    * @see javax.swing.table.TableModel#getColumnName(int)
    */
   @Override
-  public String getColumnName( int columnIndex )
+  public String getColumnName( final int columnIndex )
   {
-    return COLUMN_NAMES[columnIndex];
+    if( columnIndex == 0 )
+      return m_fromType;
+
+    return m_toType + columnIndex;
   }
 
   /**
@@ -111,7 +118,7 @@ public class WQTableModel extends AbstractTableModel implements TableModel
   /**
    * @see javax.swing.table.TableModel#getValueAt(int, int)
    */
-  public Object getValueAt( int rowIndex, int columnIndex )
+  public Object getValueAt( final int rowIndex, final int columnIndex )
   {
     if( columnIndex == 0 )
     {

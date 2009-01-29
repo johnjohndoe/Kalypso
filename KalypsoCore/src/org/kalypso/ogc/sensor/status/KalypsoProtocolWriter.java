@@ -42,9 +42,9 @@ package org.kalypso.ogc.sensor.status;
 
 import java.util.logging.Level;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -138,10 +138,10 @@ public class KalypsoProtocolWriter
           final String message = sb.toString();
 
           if( axis.isPersistable() && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_CHECK ) )
-            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Werte müssen geprüft werden" );
           else if( !axis.isPersistable()
               && KalypsoStatusUtils.checkMask( mergedStati[iAxes], KalypsoStati.BIT_DERIVATION_ERROR ) )
-            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
+            logger.log( Level.FINE, LoggerUtilities.CODE_SHOW_DETAILS, message + " Fehler beim Ableiten der Werte" );
         }
 
       }

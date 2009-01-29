@@ -601,4 +601,16 @@ public class TimeserieUtils
 
     throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22") + axisType + Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
+
+  /**
+   * Returns the class name for the given axis-type. The class must inherit from
+   * <code>org.jfree.chart.axis.ValueAxis</code>.
+   * 
+   * @return The class name for the given axis-type. The class must inherit from
+   *         <code>org.jfree.chart.axis.ValueAxis</code>.
+   */
+  public static String getAxisClassFor( final String type )
+  {
+    return getProperties().getProperty( "AXISJFREECHARTCLASS_" + type, null );
+  }
 }

@@ -71,7 +71,7 @@ public interface ITableViewRules
 
   public boolean isEmpty( );
 
-  public List getRules( );
+  public List<RenderingRule> getRules( );
 
   public void removeAllRules( );
   

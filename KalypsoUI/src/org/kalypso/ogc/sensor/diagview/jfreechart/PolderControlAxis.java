@@ -57,11 +57,6 @@ import org.jfree.data.Range;
  */
 public class PolderControlAxis extends NumberAxis
 {
-  public PolderControlAxis()
-  {
-    this( null );
-  }
-
   public PolderControlAxis( final String label )
   {
     super( label );
@@ -70,6 +65,7 @@ public class PolderControlAxis extends NumberAxis
     setStandardTickUnits( tickUnits );
   }
 
+  @Override
   protected void autoAdjustRange()
   {
     setRange( new Range( 0.0, 3 ), true, true );
@@ -89,7 +85,8 @@ public class PolderControlAxis extends NumberAxis
       /**
        * @see org.jfree.chart.axis.NumberTickUnit#valueToString(double)
        */
-      public String valueToString( double value )
+      @Override
+      public String valueToString( final double value )
       {
         if( value > 1.5 )
           return "";

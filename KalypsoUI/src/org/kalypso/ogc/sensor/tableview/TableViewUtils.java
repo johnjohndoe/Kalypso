@@ -47,9 +47,10 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -66,12 +67,15 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.template.obstableview.ObjectFactory;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.template.obstableview.TypeColumn;
@@ -205,11 +209,9 @@ public final class TableViewUtils
     if( !template.getTimezone().getID().equals( TimeZone.getDefault().getID() ) )
       xmlTemplate.setTimezone( template.getTimezone().getID() );
 
-    final List rules = template.getRules().getRules();
-    for( final Iterator itRules = rules.iterator(); itRules.hasNext(); )
+    final List<RenderingRule> rules = template.getRules().getRules();
+    for( final RenderingRule rule : rules )
     {
-      final RenderingRule rule = (RenderingRule) itRules.next();
-
       final TypeRenderingRule xmlRule = OTT_OF.createTypeRenderingRule();
       xmlRule.setMask( rule.getMask() );
       if( rule.getForegroundColor() != null )
@@ -228,12 +230,11 @@ public final class TableViewUtils
 
     int colCount = 0;
 
-    final Map map = ObsView.mapItems( template.getItems() );
+    final Map<IObservation, ArrayList<ObsViewItem>> map = ObsView.mapItems( template.getItems() );
 
-    for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
+    for( final Entry<IObservation, ArrayList<ObsViewItem>> entry : map.entrySet() )
     {
-      final Map.Entry entry = (Entry) itThemes.next();
-      final IObservation obs = (IObservation) entry.getKey();
+      final IObservation obs = entry.getKey();
       if( obs == null )
         continue;
 
@@ -246,10 +247,10 @@ public final class TableViewUtils
       // columns
       final List<TypeColumn> xmlColumns = xmlObs.getColumn();
 
-      final List columns = (List) entry.getValue();
-      for( final Iterator itCol = columns.iterator(); itCol.hasNext(); )
+      final List<ObsViewItem> columns = entry.getValue();
+      for( final ObsViewItem obsViewItem : columns )
       {
-        final TableViewColumn col = (TableViewColumn) itCol.next();
+        final TableViewColumn col = (TableViewColumn) obsViewItem;
 
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
@@ -329,15 +330,13 @@ public final class TableViewUtils
    * Return a map from IObservation to TableViewColumn. Each IObservation is mapped to a list of TableViewColumns which
    * are based on it.
    */
-  public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List tableViewColumns )
+  public static Map<IObservation, ArrayList<TableViewColumn>> buildObservationColumnsMap( final List<TableViewColumn> tableViewColumns )
   {
     final Map<IObservation, ArrayList<TableViewColumn>> map = new HashMap<IObservation, ArrayList<TableViewColumn>>();
 
-    for( final Iterator it = tableViewColumns.iterator(); it.hasNext(); )
+    for( final TableViewColumn col : tableViewColumns )
     {
-      final TableViewColumn col = (TableViewColumn) it.next();
       final IObservation obs = col.getObservation();
-
       if( !map.containsKey( obs ) )
         map.put( obs, new ArrayList<TableViewColumn>() );
 
@@ -350,47 +349,46 @@ public final class TableViewUtils
   /**
    * Save the dirty observations
    */
-  public static IStatus saveDirtyObservations( final List tableViewColumns, final IProgressMonitor monitor )
+  public static IStatus saveDirtyColumns( final TableViewColumn[] columns, final IProgressMonitor monitor )
   {
     final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
 
-    final Map map = buildObservationColumnsMap( tableViewColumns );
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.7" ), columns.length ); //$NON-NLS-1$
 
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.7"), map.size() ); //$NON-NLS-1$
-
-    for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    for( final TableViewColumn column : columns )
     {
-      final Map.Entry entry = (Entry) it.next();
-      final IObservation obs = (IObservation) entry.getKey();
-      final List cols = (List) entry.getValue();
-
-      boolean obsSaved = false;
-
-      for( final Iterator itCols = cols.iterator(); itCols.hasNext(); )
+      try
       {
-        final TableViewColumn col = (TableViewColumn) itCols.next();
-
-        if( col.isDirty() && !obsSaved )
-        {
-          try
-          {
-            KalypsoGisPlugin.getDefault().getPool().saveObject( obs, monitor );
-
-            obsSaved = true;
-          }
-          catch( final LoaderException e )
-          {
-            e.printStackTrace();
-            status.addMessage( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.8") + obs, e ); //$NON-NLS-1$
-          }
-        }
-
-        col.setDirty( false, null );
+        final IObservation obs = column.getObservation();
+        pool.saveObject( obs, monitor );
+      }
+      catch( final LoaderException e )
+      {
+        e.printStackTrace();
+        status.addMessage( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewUtils.8" ) + column, e );//$NON-NLS-1$
       }
 
       monitor.worked( 1 );
     }
 
     return status;
+  }
+  
+
+  /**
+   * Return all observations of dirty columns.
+   */
+  public static IObservation[] findDirtyObservations( final TableViewColumn[] columns )
+  {
+    final Set<IObservation> result = new HashSet<IObservation>();
+
+    for( final TableViewColumn column : columns )
+    {
+      if( column.isDirty() )
+        result.add( column.getObservation() );
+    }
+
+    return result.toArray( new IObservation[result.size()] );
   }
 }

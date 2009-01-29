@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
@@ -82,7 +83,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
 
     final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
 
-    final Map map = TableViewUtils.buildObservationColumnsMap( Arrays.asList( tableView.getItems() ) );
+    final ObsViewItem[] itemsAsObsView = tableView.getItems();
+    final TableViewColumn[] itemsAsTableViewColumns = Arrays.copyOf( itemsAsObsView, itemsAsObsView.length, TableViewColumn[].class );
+    final Map map = TableViewUtils.buildObservationColumnsMap( Arrays.asList( itemsAsTableViewColumns ) );
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
       final Map.Entry entry = (Entry) it.next();

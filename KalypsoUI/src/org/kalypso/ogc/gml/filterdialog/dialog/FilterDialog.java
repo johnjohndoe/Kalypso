@@ -81,11 +81,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
-import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
+import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
 import org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite;
 import org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory;
@@ -98,11 +98,8 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 import org.kalypsodeegree_impl.filterencoding.FeatureId;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * @author kuepferle
@@ -586,14 +583,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   Filter readFilterFragment( final InputStream reader )
   {
-    Filter filter = null;
     try
     {
-      final Document asDOM = XMLHelper.getAsDOM( reader, true );
-      final Element element = asDOM.getDocumentElement();
-
-      filter = AbstractFilter.buildFromDOM( element );
-
+      return FilterReader.readFilter( reader );
     }
     catch( final FilterConstructionException e )
     {
@@ -605,8 +597,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       e.printStackTrace();
       MessageDialog.openWarning( getShell(), Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.dialog" ), Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.errorload" ) + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    return filter;
+    return null;
   }
+
 
   public boolean isRestorable( )
   {

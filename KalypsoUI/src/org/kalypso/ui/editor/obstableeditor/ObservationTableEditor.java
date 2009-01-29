@@ -72,6 +72,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
 {
   protected final ObservationTable m_table;
+
   private Composite m_swingContainer;
 
   /**
@@ -81,17 +82,17 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
    * loadIntern are called is not guaranteed to be always the same.
    */
-  public ObservationTableEditor()
+  public ObservationTableEditor( )
   {
     super( new TableView() );
 
-    m_table = new ObservationTable( (TableView)getView() );
+    m_table = new ObservationTable( (TableView) getView() );
   }
 
   /**
    * @return Returns the table.
    */
-  public ObservationTable getTable()
+  public ObservationTable getTable( )
   {
     return m_table;
   }
@@ -116,7 +117,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     m_table.dispose();
 
@@ -126,6 +127,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   /**
    * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -140,9 +142,9 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override
-  protected void doSaveInternal( IProgressMonitor monitor, IFileEditorInput input ) throws CoreException
+  protected void doSaveInternal( final IProgressMonitor monitor, final IFileEditorInput input ) throws CoreException
   {
-    final TableView template = (TableView)getView();
+    final TableView template = (TableView) getView();
     if( template == null )
       return;
 
@@ -164,7 +166,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
     if( m_swingContainer != null )
       m_swingContainer.setFocus();
@@ -175,16 +177,15 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0"), getTitle() ); //$NON-NLS-1$
-    return new IExportableObject[]
-    { exportable };
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString( "org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0" ), getTitle(), null ); //$NON-NLS-1$
+    return new IExportableObject[] { exportable };
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     return new IWizardPage[0];
   }

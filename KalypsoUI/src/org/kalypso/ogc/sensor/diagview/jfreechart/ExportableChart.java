@@ -100,7 +100,11 @@ public class ExportableChart implements IExportableObject
     ImageEncoderFactory.setImageEncoder( "png", "org.jfree.chart.encoders.KeypointPNGEncoderAdapter" );
   }
 
-  public ExportableChart( final ObservationChart chart, final String format, final int width, final int height, final String identifierPrefix, final String category )
+  /**
+   * @param kennzifferIndex
+   *          If non- <code>null</code>, use only the observation-item with that index to generate the kennziffer.
+   */
+  public ExportableChart( final ObservationChart chart, final String format, final int width, final int height, final String identifierPrefix, final String category, final Integer kennzifferIndex )
   {
     m_chart = chart;
     m_format = format;
@@ -108,7 +112,7 @@ public class ExportableChart implements IExportableObject
     m_height = height;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
-    m_stationIDs = ExportUtilities.extractStationIDs( m_chart.getTemplate().getItems() );
+    m_stationIDs = ExportUtilities.extractStationIDs( m_chart.getTemplate().getItems(), kennzifferIndex );
   }
 
   /**

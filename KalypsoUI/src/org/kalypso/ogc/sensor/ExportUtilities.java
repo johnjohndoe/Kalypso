@@ -65,36 +65,38 @@ public class ExportUtilities
    * 
    * @param items
    *          The observation view items.
+   * @param index
+   *          If non-<code>null</code>, only the item with the given index is considered.
    * @return A ;-seperated list of station IDs.
    */
-  public static String extractStationIDs( ObsViewItem[] items )
+  public static String extractStationIDs( final ObsViewItem[] items, final Integer index )
   {
     /* Temporary memory. */
-    List<String> stations = new ArrayList<String>();
+    final List<String> stations = new ArrayList<String>();
 
     for( int i = 0; i < items.length; i++ )
     {
-      ObsViewItem item = items[i];
-      IObservation observation = item.getObservation();
-
-      if( item == null )
-        continue;
-
-      /* Get the metadata list. */
-      MetadataList md = observation.getMetadataList();
-
-      /* Get the station. */
-      String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
-
-      if( kennz != null && !stations.contains( kennz ) )
-        stations.add( kennz );
+      if( index == null || i == index.intValue() )
+      {
+        final ObsViewItem item = items[i];
+        final IObservation observation = item.getObservation();
+        if( item != null )
+        {
+          /* Get the metadata list. */
+          final MetadataList md = observation.getMetadataList();
+          /* Get the station. */
+          final String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
+          if( kennz != null && !stations.contains( kennz ) )
+            stations.add( kennz );
+        }
+      }
     }
 
     /* Memory for the result. */
     String stationIDs = "";
     for( int i = 0; i < stations.size(); i++ )
     {
-      String kennz = stations.get( i );
+      final String kennz = stations.get( i );
 
       /* Add it to the results. */
       if( i == 0 )
