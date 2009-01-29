@@ -56,8 +56,8 @@ PROGRAM RMAKalypso
   character (len = 12) :: version
   character (len = 10) :: builddate
       
-  version = '1.1.0'
-  builddate = '2009/01/09'
+  version = '1.1.1'
+  builddate = '2009/01/23'
 
 !information during the execution:
   do i = 1, 8
@@ -80,7 +80,7 @@ PROGRAM RMAKalypso
   WRITE(*,*) '                        21073 Hamburg'
   WRITE(*,*) '                         Germany'
   write(*,*)
-  WRITE(*,*) '                    January, 09th 2009'
+  WRITE(*,*) '                    January, 23th 2009'
   write(*,*)
   write(*,*) '     *                  **********                  *'
   write(*,*) '     *                                              *'
