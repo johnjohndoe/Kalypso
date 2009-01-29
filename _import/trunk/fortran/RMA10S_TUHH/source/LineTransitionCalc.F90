@@ -325,11 +325,13 @@ transitionloop: do i = 1, MaxLT
     waspi = ado (TransNo) + TDepV
   end if
 
-  do j = 1, lmt (TransLines (i, 2))
-    node = line (TransLines (i, 2), j)
-    spec (node, 3) = waspi - ao (node)
-  enddo
-  !-
+  !Reduce this assignment to the proper transition type
+  if (.not. (TransLines(i,4) == 2)) then
+    do j = 1, lmt (TransLines (i, 2))
+      node = line (TransLines (i, 2), j)
+      spec (node, 3) = waspi - ao (node)
+    enddo
+  endif
 
   q2D(i) = 0.0
   dh = 0.01
