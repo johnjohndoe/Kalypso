@@ -88,7 +88,7 @@
 		
 		================================================================== -->
 	<xs:element name="ControlModel" type="c1d2d:ControlModelType"
-		substitutionGroup="gml:_Feature">
+		substitutionGroup="simBase:_Model">
 		<xs:annotation>
 		<!-- 
 			<xs:documentation xml:lang="de">
@@ -117,7 +117,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractControlModelType">
+			<xs:extension base="simBase:AbstractModelType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:calculationUnit" />
 					<xs:element name="Version">

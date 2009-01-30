@@ -23,7 +23,7 @@
 	<!-- =================================================================
 	Static model
 	==================================================================-->
-	<xs:element name="StaticModel1D2D" substitutionGroup="simBase:StaticModel" type="wb1d2d:StaticModelType1D2D">
+	<xs:element name="StaticModel1D2D" substitutionGroup="simBase:_Model" type="wb1d2d:StaticModelType1D2D">
 		<xs:annotation>
 			<xs:documentation>
 				Static model element for combined 1D 2D unsteady simualtion  
@@ -61,11 +61,10 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractStaticModelType">
+			<xs:extension base="simBase:AbstractModelType">
 				<xs:sequence>
 					<xs:element ref="simBase:terrainModel" />
 					<xs:element ref="simBase:feDiscretisationModel" />
-					<xs:element ref="simBase:flowResistanceModel" />
 					<xs:element ref="simBase:flowRelationshipModel" />
 				</xs:sequence>
 			</xs:extension>

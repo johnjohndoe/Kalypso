@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts.SIM_BASE_P_DICRRETISATION_MODEL;
 import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts.SIM_BASE_P_FLOW_RELATIONSHIP_MODEL;
-import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts.SIM_BASE_P_FLOW_RESISTANCE_MODEL;
 import static org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts.SIM_BASE_P_TERRAIN_MODEL;
 
 import javax.xml.namespace.QName;
@@ -51,7 +50,6 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -92,14 +90,6 @@ public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
   public IFlowRelationshipModel getFlowRelationshipModel( )
   {
     return getSubModel( SIM_BASE_P_FLOW_RELATIONSHIP_MODEL, IFlowRelationshipModel.class );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D#getFlowResistanceModel()
-   */
-  public IFlowResistanceModel getFlowResistanceModel( )
-  {
-    return getSubModel( SIM_BASE_P_FLOW_RESISTANCE_MODEL, IFlowResistanceModel.class );
   }
 
   /**

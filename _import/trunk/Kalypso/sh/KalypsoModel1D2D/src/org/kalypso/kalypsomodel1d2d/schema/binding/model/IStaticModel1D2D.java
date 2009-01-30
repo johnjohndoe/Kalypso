@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.flowresistance.IFlowResistanceModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IStaticModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 
@@ -50,35 +49,29 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
  * Interface for classes representing a wb1d2d:StaticModel1D2D
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public interface IStaticModel1D2D extends IStaticModel
 {
   /**
    * To get the discretisation sunb-model of this static model
+   * 
    * @return the discretisation of this static model
    */
-  public IFEDiscretisationModel1d2d getDiscretisationModel();
-  
+  public IFEDiscretisationModel1d2d getDiscretisationModel( );
+
   /**
    * To get the flow relationship sub-model of this static model
    * 
    * @return the flow relationship sub-model of this static model
    */
-  public IFlowRelationshipModel getFlowRelationshipModel();
-  
-  /**
-   *To get the flow resistance sub-model of this static model
-   *
-   *@return the flow resistance sub-model of this static model 
-   */
-  public IFlowResistanceModel getFlowResistanceModel();
-  
+  public IFlowRelationshipModel getFlowRelationshipModel( );
+
   /**
    * To get the terrain sub-model of this static model
    * 
-   * @return the terrain model of this static model 
+   * @return the terrain model of this static model
    */
-  public ITerrainModel getTerrainModel();
-  
+  public ITerrainModel getTerrainModel( );
+
 }
