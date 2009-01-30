@@ -2145,15 +2145,6 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
             DERR=SLOAD(M)*HP1*(AFACT(N)*(SPEC(N3,3)-VEL(3,N3))
      +          +(1.-AFACT(N))*(SPEC(N1,3)-VEL(3,N1)))
 
-            !testing
-            if (nn==4624) then
-              write(999,*) 'Knoten: ', n1, n2, n3
-              write(999,*) 'Gauss:  ', n
-              write(999,*) 'temp, hp, hp1, derr, ffact'
-              write(999,*) temp, hp, hp1, derr, ffact
-            endif
-            !testing-
-            
             !get the friciton 
             IF(M .EQ. 2) THEN
               TFRIC=TEMP*FFACT*FTF(1)*HFACT(N)
@@ -2184,11 +2175,6 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
               MA1=MA+3-2*M
               !Modify the equation 
               F(MA)=F(MA)+HP*XNAL(K,N)*SLOAD(M)
-              !testing
-              if (nn==4624) then
-                write(999,*) 'f (ma):', f(ma)
-              endif
-              !testing-
 
               !Modify the equations for passive boundaries
               IF(IHD .EQ. 0) THEN
@@ -2229,13 +2215,6 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
               ELSE
                 F(MA)=F(MA)+DERR*XNAL(K,N)
               ENDIF
-              
-              !testing
-              if (nn==4624) then
-                write(999,*) 'f (ma):', f(ma)
-              endif
-              !testing-
-                
   575       CONTINUE
   580     CONTINUE
   600   CONTINUE
