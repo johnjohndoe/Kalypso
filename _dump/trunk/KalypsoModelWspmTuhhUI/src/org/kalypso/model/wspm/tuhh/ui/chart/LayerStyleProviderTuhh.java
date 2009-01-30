@@ -75,16 +75,16 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
   {
     IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
 
-    final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_LINE", LineStyle.class );
+    final ILineStyle lsT = getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_LINE", LineStyle.class ); //$NON-NLS-1$
     lsT.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
 
     final ILineStyle lsD = lsT.copy();
     lsD.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-    addStyle( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", lsD );
+    addStyle( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", lsD ); //$NON-NLS-1$
 
     final ILineStyle lsB = lsT.copy();
     lsB.setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
-    addStyle( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", lsB );
+    addStyle( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", lsB ); //$NON-NLS-1$
   }
 
   private void createWeirSytles( )
@@ -92,39 +92,39 @@ public class LayerStyleProviderTuhh extends AbstractLayerStyleProvider
     IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
     final RGB col = markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
 
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class );
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.MARKER_TYP_WEHR + "_LINE", LineStyle.class ); //$NON-NLS-1$
     ls.setColor( col );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR + "_LINE", ls.copy() ); //$NON-NLS-1$
   }
 
   private void createCrossSectionSytles( )
   {
-    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE", LineStyle.class );
+    final ILineStyle ls = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE + "_LINE", LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
   }
 
   private void createVegetationStyle( )
   {
-    getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", LineStyle.class ).setColor( new RGB( 0, 255, 0 ) );
+    getStyleFor( IWspmTuhhConstants.LAYER_BEWUCHS + "_LINE", LineStyle.class ).setColor( new RGB( 0, 255, 0 ) ); //$NON-NLS-1$
   }
 
   private void createBridgeSytles( )
   {
-    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE", LineStyle.class );
+    final ILineStyle lsO = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE + "_LINE", LineStyle.class ); //$NON-NLS-1$
     lsO.setColor( new RGB( 0, 128, 0 ) );
 
     final ILineStyle lsU = lsO.copy();
     lsU.setColor( new RGB( 0, 128, 179 ) );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE + "_LINE", lsU ); //$NON-NLS-1$
   }
 
   private void createRoughnessSytles( )
   {
-    final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class );
+    final IPointStyle psKS = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS + "_POINT", PointStyle.class ); //$NON-NLS-1$
     psKS.getStroke().setColor( new RGB( 0, 0, 0 ) );
     psKS.setInlineColor( new RGB( 0, 0, 0 ) );
     psKS.setAlpha( 50 );
-    addStyle( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + "_POINT", psKS.copy() );
+    addStyle( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST + "_POINT", psKS.copy() ); //$NON-NLS-1$
   }
 
 }

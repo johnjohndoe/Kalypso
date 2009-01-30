@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IComponent;
@@ -206,7 +207,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
     final Point2D p = getPoint2D( point );
     try
     {
-      return String.format( "%-12s %10.4f [m]%n%-12s", new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } );
+      return String.format( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0"), new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
     }
     catch( RuntimeException e )
     {

@@ -49,8 +49,8 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
  */
 public enum KalypsoModelWspmTuhhUIImages implements ImageKey
 {
-  NEWPROJECT_PROJECT_PAGE_WIZBAN("icons/wizban/kalypso32.gif"),
-  WSP_TIN("icons/obj16/wspTin.gif");
+  NEWPROJECT_PROJECT_PAGE_WIZBAN("icons/wizban/kalypso32.gif"), //$NON-NLS-1$
+  WSP_TIN("icons/obj16/wspTin.gif"); //$NON-NLS-1$
 
   private final String m_imagePath;
 

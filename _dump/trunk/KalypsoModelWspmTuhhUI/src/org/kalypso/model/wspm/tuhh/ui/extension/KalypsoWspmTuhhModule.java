@@ -29,9 +29,9 @@ import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
 
-  protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) );
+  protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) ); //$NON-NLS-1$
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
 

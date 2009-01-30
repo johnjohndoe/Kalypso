@@ -112,6 +112,6 @@ public class KalypsoModelWspmTuhhUIPlugin extends AbstractUIPlugin
    */
   public static ImageDescriptor getImageDescriptor( String path )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm.tuhh.ui", path );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm.tuhh.ui", path ); //$NON-NLS-1$
   }
 }

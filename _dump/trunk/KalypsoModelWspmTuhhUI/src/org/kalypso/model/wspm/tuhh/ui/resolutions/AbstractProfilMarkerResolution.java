@@ -127,7 +127,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
       final URL markerURL = ResourceUtilities.createURL( markerFile );
 
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-      final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL );
+      final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL ); //$NON-NLS-1$
       return (CommandableWorkspace) pool.getObject( key );
 
 // final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
@@ -198,7 +198,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
 
   protected final String[] getParameter( final String parameterStream )
   {
-    StringTokenizer st = new StringTokenizer( parameterStream, ";" );
+    StringTokenizer st = new StringTokenizer( parameterStream, ";" ); //$NON-NLS-1$
     final int size = st.countTokens();
     final String[] params = new String[size];
     for( int i = 0; i < size; i++ )

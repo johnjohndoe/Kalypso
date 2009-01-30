@@ -116,7 +116,7 @@ public class WspmOpenAction implements IKalypsoProjectOpenAction
 
     try
     {
-      final IFile iFile = project.getFile( "WSPM.gmv" );
+      final IFile iFile = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
       IDE.openEditor( page, iFile );
     }
     catch( final PartInitException e )
