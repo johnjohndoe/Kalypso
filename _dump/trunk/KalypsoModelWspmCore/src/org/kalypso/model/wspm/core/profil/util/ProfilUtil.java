@@ -92,7 +92,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) );
+        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -127,7 +127,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) );
+        Debug.print( point, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", iProp, pointProperty.getName() ) ); //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -423,7 +423,7 @@ public class ProfilUtil
 
     final int i = points.indexOf( point );
     if( i == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) );
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( i - 1 );
   }
@@ -463,7 +463,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil_1", point ) );
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil_1", point ) ); //$NON-NLS-1$
 
     return points.get( pos + 1 );
   }
@@ -504,7 +504,7 @@ public class ProfilUtil
     final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
     final Double y = getDoubleValueFor( pointProperty.getId(), p );
     if( x.isNaN()||y.isNaN() )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) );
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
     return new Point2D.Double( x, y );
   }
 
@@ -734,7 +734,7 @@ public class ProfilUtil
     startPoint = splitSegment( profile, segment1[0], segment1[1] );
     if( startPoint == null )
     {
-      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.3" ));
+      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.3" )); //$NON-NLS-1$
       startPoint = profile.getPoints()[0];
       index1 = 0;
     }
@@ -746,7 +746,7 @@ public class ProfilUtil
     endPoint = splitSegment( profile, segment2[0], segment2[1] );
     if( endPoint == null )
     {
-      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.4" ));
+      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.4" )); //$NON-NLS-1$
       endPoint = points.get( points.size() - 1 );
       index2 = points.size() - 1;
     }

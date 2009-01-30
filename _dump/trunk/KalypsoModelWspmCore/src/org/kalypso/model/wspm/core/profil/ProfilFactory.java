@@ -54,14 +54,14 @@ public class ProfilFactory
   public static IProfil createProfil( final String type )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
-    Assert.isNotNull( provider, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0" , type ));
+    Assert.isNotNull( provider, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0" , type )); //$NON-NLS-1$
     return provider.createProfil();
   }
 
   public static IProfil createProfil( final String type, final IObservation<TupleResult> observation )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
-    Assert.isNotNull( provider, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0" , type ));
+    Assert.isNotNull( provider, Messages.getFormatString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0" , type )); //$NON-NLS-1$
     final IProfil profile = provider.createProfil( observation.getResult() );
 
     profile.setName( observation.getName() );
