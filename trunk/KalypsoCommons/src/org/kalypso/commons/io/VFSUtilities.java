@@ -61,6 +61,7 @@ import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 import org.kalypso.commons.Debug;
 import org.kalypso.commons.net.ProxyUtilities;
@@ -93,22 +94,24 @@ public class VFSUtilities
    */
   public static FileSystemManager getManager( ) throws FileSystemException
   {
-    DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
+    final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
 
-    String[] schemes = fsManager.getSchemes();
-    //
-    // boolean found = false;
-    // for( int i = 0; i < schemes.length; i++ )
-    // {
-    // if( schemes[i].equals( "webdav" ) )
-    // found = true;
-    // }
-    //
-    // if( found == false )
-    // {
-    // Debug.println( "Adding webdav file provider ..." );
-    // fsManager.addProvider( "webdav", new WebdavFileProvider() );
-    // }
+    final String[] schemes = fsManager.getSchemes();
+
+    boolean found = false;
+    for( int i = 0; i < schemes.length; i++ )
+    {
+      if( schemes[i].equals( "webdav" ) )
+      {
+        found = true;
+      }
+    }
+
+    if( found == false )
+    {
+      Debug.println( "Adding webdav file provider ..." );
+      fsManager.addProvider( "webdav", new WebdavFileProvider() );
+    }
 
     return fsManager;
   }
@@ -150,7 +153,7 @@ public class VFSUtilities
    * 
    * @see #copyFileTo(FileObject, FileObject, boolean)
    */
-  public static void copyFileTo( FileObject source, FileObject destination ) throws IOException
+  public static void copyFileTo( final FileObject source, final FileObject destination ) throws IOException
   {
     copyFileTo( source, destination, true );
   }
@@ -169,8 +172,14 @@ public class VFSUtilities
    * @param overwrite
    *          If set, always overwrite existing and newer files
    */
-  public static void copyFileTo( FileObject source, FileObject destination, final boolean overwrite ) throws IOException
+  public static void copyFileTo( final FileObject source, final FileObject destination, final boolean overwrite ) throws IOException
   {
+    if( source.equals( destination ) )
+    {
+      Debug.println( "Files '" + source.getName() + "' and '" + destination.getName() + "' are the same files. Ignoring!" );
+      return;
+    }
+
     /* Some variables for handling the errors. */
     boolean success = false;
     int cnt = 0;
@@ -185,9 +194,11 @@ public class VFSUtilities
         /* If the destination is only a directory, use the sources filename for the destination file. */
         FileObject destinationFile = destination;
         if( FileType.FOLDER.equals( destination.getType() ) )
+        {
           destinationFile = destination.resolveFile( source.getName().getBaseName() );
+        }
 
-        if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize())
+        if( overwrite || !destinationFile.exists() || destinationFile.getContent().getSize() != source.getContent().getSize() )
         {
           /* Copy file. */
           Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
@@ -219,7 +230,7 @@ public class VFSUtilities
         {
           Thread.sleep( 1000 );
         }
-        catch( InterruptedException e1 )
+        catch( final InterruptedException e1 )
         {
           /*
            * Runs in the next loop then and if no error occurs then, it is ok. If an error occurs again, it is an
@@ -257,14 +268,14 @@ public class VFSUtilities
       destination.createFolder();
     }
 
-    FileObject[] children = source.getChildren();
+    final FileObject[] children = source.getChildren();
     for( int i = 0; i < children.length; i++ )
     {
-      FileObject child = children[i];
+      final FileObject child = children[i];
       if( FileType.FILE.equals( child.getType() ) )
       {
         /* Need a destination file with the same name as the source file. */
-        FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
+        final FileObject destinationFile = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
         copyFileTo( child, destinationFile, overwrite );
@@ -272,14 +283,16 @@ public class VFSUtilities
       else if( FileType.FOLDER.equals( child.getType() ) )
       {
         /* Need the same name for destination directory, as the source directory has. */
-        FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
+        final FileObject destinationDir = destination.resolveFile( child.getName().getBaseName() );
 
         /* Copy ... */
         Debug.println( "Copy directory " + child.getName() + " to " + destinationDir.getName() + " ..." );
         copyDirectoryToDirectory( child, destinationDir, overwrite );
       }
       else
+      {
         Debug.println( "Could not determine the file type ..." );
+      }
     }
   }
 
@@ -301,7 +314,7 @@ public class VFSUtilities
    * @param destination
    *          The destination. It must be a file.
    */
-  public static void copyStringToFileObject( String value, FileObject destination ) throws IOException
+  public static void copyStringToFileObject( final String value, final FileObject destination ) throws IOException
   {
     if( FileType.FOLDER.equals( destination.getType() ) )
       throw new IllegalArgumentException( "Destination is a folder." );
@@ -336,16 +349,18 @@ public class VFSUtilities
    */
   public static FileObject createTempDirectory( final String prefix, final FileObject parentDir ) throws FileSystemException
   {
-    FileSystemManager fsManager = getManager();
+    final FileSystemManager fsManager = getManager();
 
     while( true )
     {
-      String dirParent = parentDir.getURL().toExternalForm();
-      String dirName = prefix + String.valueOf( System.currentTimeMillis() );
+      final String dirParent = parentDir.getURL().toExternalForm();
+      final String dirName = prefix + String.valueOf( System.currentTimeMillis() );
 
-      FileObject newDir = fsManager.resolveFile( dirParent + "/" + dirName );
+      final FileObject newDir = fsManager.resolveFile( dirParent + "/" + dirName );
       if( newDir.exists() )
+      {
         continue;
+      }
 
       Debug.println( "Creating folder " + newDir.getName().getPath() + " ..." );
       newDir.createFolder();
@@ -361,26 +376,26 @@ public class VFSUtilities
    *          relative files.
    * @return The file object.
    */
-  public static FileObject checkProxyFor( String absoluteFile ) throws FileSystemException, MalformedURLException
+  public static FileObject checkProxyFor( final String absoluteFile ) throws FileSystemException, MalformedURLException
   {
-    FileSystemManager fsManager = getManager();
+    final FileSystemManager fsManager = getManager();
 
-    Proxy proxy = ProxyUtilities.getProxy();
+    final Proxy proxy = ProxyUtilities.getProxy();
     Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
     if( proxy.useProxy() && !ProxyUtilities.isNonProxyHost( new URL( absoluteFile ) ) )
     {
-      String proxyHost = proxy.getProxyHost();
-      int proxyPort = proxy.getProxyPort();
+      final String proxyHost = proxy.getProxyHost();
+      final int proxyPort = proxy.getProxyPort();
       Debug.println( "Proxy host: " + proxyHost );
       Debug.println( "Proxy port: " + String.valueOf( proxyPort ) );
 
       /* Get the credentials. */
-      String user = proxy.getUser();
-      String password = proxy.getPassword();
+      final String user = proxy.getUser();
+      final String password = proxy.getPassword();
 
-      Pattern p = Pattern.compile( "(.+)://.+" );
-      Matcher m = p.matcher( absoluteFile );
+      final Pattern p = Pattern.compile( "(.+)://.+" );
+      final Matcher m = p.matcher( absoluteFile );
       if( m.find() == true )
       {
         Debug.println( "File: " + absoluteFile );
@@ -394,7 +409,7 @@ public class VFSUtilities
           /* If there are credentials given, set them. */
           if( user != null && password != null )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            final UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
             WebdavFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_WEBDAV_OPTIONS, authenticator );
           }
 
@@ -408,7 +423,7 @@ public class VFSUtilities
           /* If there are credentials given, set them. */
           if( user != null && password != null )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            final UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
             HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTP_OPTIONS, authenticator );
           }
 
@@ -422,7 +437,7 @@ public class VFSUtilities
           /* If there are credentials given, set them. */
           if( user != null && password != null )
           {
-            UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
+            final UserAuthenticator authenticator = new StaticUserAuthenticator( null, user, password );
             HttpFileSystemConfigBuilder.getInstance().setProxyAuthenticator( THE_HTTPS_OPTIONS, authenticator );
           }
 
@@ -442,7 +457,7 @@ public class VFSUtilities
    *          The file or directory to be deleted.
    * @return The number of deleted files. 0, if none has been deleted.
    */
-  public static int deleteFiles( FileObject toDel ) throws FileSystemException
+  public static int deleteFiles( final FileObject toDel ) throws FileSystemException
   {
     if( FileType.FOLDER.equals( toDel.getType() ) )
     {
@@ -458,12 +473,14 @@ public class VFSUtilities
         return 1;
 
       Debug.println( "Could not delete " + toDel.getName() + "!" );
+
       return 0;
     }
     else
     {
       /* The type of the file could not be determined, or it is an imaginary one. */
       Debug.println( "Could not delete " + toDel.getName() + "!" );
+
       return 0;
     }
   }
