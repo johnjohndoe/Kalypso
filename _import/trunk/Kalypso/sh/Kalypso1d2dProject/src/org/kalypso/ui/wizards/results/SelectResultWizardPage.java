@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * Wizard page for displaying the result database in a checkbox-treeview Components are a {@link CheckboxTreeViewer} and
@@ -92,7 +93,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     m_factory = factory;
     m_filter = filter;
 
-    setDescription( "Wählen Sie auf dieser Seite die Ergebnisse aus." );
+    setDescription( Messages.getString("org.kalypso.ui.wizards.results.SelectResultWizardPage.0") ); //$NON-NLS-1$
   }
 
   public void setResultMeta( final IResultMeta resultRoot )

@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -88,13 +89,13 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Längsschnitt erzeugen", "Fehler beim Öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell orgMapModell = mapPanel.getMapModell();
 
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
+      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler.2") ); //$NON-NLS-1$
 
     try
     {

@@ -61,6 +61,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
@@ -111,7 +112,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
     {
       final Set<Entry<IPath, Date>> entrySet = m_resultMap.entrySet();
 
-      final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse für Ganglinien auslesen", entrySet.size() );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.0"), entrySet.size() ); //$NON-NLS-1$
 
       final Map<GM_Point, IObservation<TupleResult>> obsMap = new HashMap<GM_Point, IObservation<TupleResult>>();
 
@@ -141,7 +142,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
       {
         final Date date = entry.getValue();
         count++;
-        progress.subTask( "Zeitschritt (" + count + "/" + resultSize + ") - lese Ergebnisdatei..." );
+        progress.subTask( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.1") + count + "/" + resultSize + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.3") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         /* get the observation */
 
@@ -179,7 +180,7 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
             final GM_Point point = (GM_Point) location;
 
             // TODO: check for right time zone
-            progress.subTask( "Zeitschritt (" + count + "/" + resultSize + "), " + date.toString() + " - weise Ergebnis zu (" + hyd + "/" + m_hydrographs.size() + "..." );
+            progress.subTask( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.4") + count + "/" + resultSize + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.6") + date.toString() + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.7") + hyd + "/" + m_hydrographs.size() + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.9") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
             addResult( obsMap, calendar, nodeList, point );
           }
         }
@@ -239,19 +240,19 @@ public final class HydrographProcessResultOperation implements ICoreRunnableWith
         newRecord.setValue( waterlevelComp, new BigDecimal( waterlevel ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       }
       else
-        System.out.println( "waterlevel is not a number!" );
+        System.out.println( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.10") ); //$NON-NLS-1$
       if( !Double.isNaN( depth ) )
       {
         newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       }
       else
-        System.out.println( "depth is not a number!" );
+        System.out.println( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.11") ); //$NON-NLS-1$
       if( !Double.isNaN( depth ) )
       {
         newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       }
       else
-        System.out.println( "depth is not a number!" );
+        System.out.println( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographProcessResultOperation.12") ); //$NON-NLS-1$
       // newRecord.setValue( depthComp, new BigDecimal( depth ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       newRecord.setValue( velocityComp, new BigDecimal( absoluteVelocity ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
       if( discharge != null )

@@ -60,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -92,7 +93,7 @@ public class ResultManager1d2dWizardPage extends SelectResultWizardPage
     getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Button deleteButton = new Button( panel, SWT.PUSH );
-    deleteButton.setToolTipText( "Löscht die selektierten Ergebnisse" );
+    deleteButton.setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizardPage.0") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
 

@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -113,7 +114,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Button importButton = new Button( panel, SWT.PUSH );
-    importButton.setText( "Import..." );
+    importButton.setText( Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.0") ); //$NON-NLS-1$
     importButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -155,9 +156,9 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
   {
     // Open Import Wizard
     final ImportWspmRestartWizard importWizard = new ImportWspmRestartWizard();
-    importWizard.setWindowTitle( "Restart Import" );
+    importWizard.setWindowTitle( Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.1") ); //$NON-NLS-1$
 
-    PluginUtilities.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), "restartImportWspmWizard" );
+    PluginUtilities.getDialogSettings( Kalypso1d2dProjectPlugin.getDefault(), Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.2") ); //$NON-NLS-1$
     importWizard.setDialogSettings( getDialogSettings() );
     importWizard.setNeedsProgressMonitor( true );
     final WizardDialog2 wizardDialog = new WizardDialog2( getContainer().getShell(), importWizard );
@@ -173,14 +174,14 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
       {
         try
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, "Importiere externe Ergebnisse", 100 );
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.3"), 100 ); //$NON-NLS-1$
 
           final IFile lengthSectionFile = importWizard.getLengthSection();
           final Restart1DImporter restart1DImporter = new Restart1DImporter( (IScenarioResultMeta) RestartSelectWizardPage1.this.getResultRoot(), scenarioFolder );
           restart1DImporter.doImport( lengthSectionFile, IWspmDictionaryConstants.LS_COMPONENT_STATION, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY, IWspmDictionaryConstants.LS_COMPONENT_TYPE, progress.newChild( 80 ) );
 
           final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) modelProvider;
-          szenarioDataProvider.postCommand( IScenarioResultMeta.class, new EmptyCommand( "empty", false ) );
+          szenarioDataProvider.postCommand( IScenarioResultMeta.class, new EmptyCommand( "empty", false ) ); //$NON-NLS-1$
           modelProvider.saveModel( IScenarioResultMeta.class, progress.newChild( 20 ) );
 
           ViewerUtilities.refresh( treeViewer, true );
@@ -195,6 +196,6 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     };
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
-    ErrorDialog.openError( getShell(), getTitle(), "Ergebnisimport fehlgeschlagen", result );
+    ErrorDialog.openError( getShell(), getTitle(), Messages.getString("org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage1.5"), result ); //$NON-NLS-1$
   }
 }

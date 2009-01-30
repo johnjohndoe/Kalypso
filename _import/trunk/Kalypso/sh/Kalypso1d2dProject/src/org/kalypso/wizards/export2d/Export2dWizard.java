@@ -53,6 +53,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class Export2dWizard extends Wizard implements INewWizard
@@ -81,7 +82,7 @@ public class Export2dWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     super.addPages();
-    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm" }, new String[] { "BCE2D-Format (*.2d)", "SMS-Mesh-Format (*.2dm)" } );
+    m_page1 = new Export2dFileSelectWizardPage( "fileselect", new String[] { "*.2d", "*.2dm" }, new String[] { Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.3"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.4") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     addPage( m_page1 );
   }
 
@@ -91,7 +92,7 @@ public class Export2dWizard extends Wizard implements INewWizard
   @Override
   public void createPageControls( final Composite pageContainer )
   {
-    setWindowTitle( "Als Datei exportieren" );
+    setWindowTitle( Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.5") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -111,7 +112,7 @@ public class Export2dWizard extends Wizard implements INewWizard
     final ICoreRunnableWithProgress operation = new Export2dMeshRunnable( exportFile, selectedExtension, exportRoughness, exportMiddleNodes );
 
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    ErrorDialog.openError( getShell(), "FE-Netz exportieren", "Datei kann nicht erzeugt werden", result );
+    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.6"), Messages.getString("org.kalypso.wizards.export2d.Export2dWizard.7"), result ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return result.isOK();
   }

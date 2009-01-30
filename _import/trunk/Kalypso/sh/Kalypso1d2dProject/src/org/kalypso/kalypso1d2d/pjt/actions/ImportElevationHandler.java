@@ -63,7 +63,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
-
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
@@ -85,8 +85,8 @@ public class ImportElevationHandler extends AbstractHandler
       /* Always open the manage dtm widget */
       final SelectWidgetHandler handler = new SelectWidgetHandler();
       final Map<String, String> newParameterMap = new HashMap<String, String>();
-      newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
-      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
+      newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" ); //$NON-NLS-1$
+      newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" ); //$NON-NLS-1$
       handler.setInitializationData( null, null, newParameterMap );
       final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
       handler.execute( exc );
@@ -117,7 +117,7 @@ public class ImportElevationHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString( "ImportElevationHandler.4" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler.4" ) ); //$NON-NLS-1$
     }
 
     return Status.CANCEL_STATUS;

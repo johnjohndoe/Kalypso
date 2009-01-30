@@ -60,7 +60,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
@@ -77,7 +77,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-    if( !MessageDialog.openConfirm( shell, Messages.getString("StartCalculationHandler.0"), Messages.getString("StartCalculationHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.11") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return Status.CANCEL_STATUS;
 
     final IProject project = scenarioFolder.getProject();
@@ -86,7 +86,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
       final IFolder folder = scenarioFolder.getFolder( "results" );  //$NON-NLS-1$
       if( folder.exists() )
       {
-        if( !MessageDialog.openConfirm( shell, Messages.getString("StartCalculationHandler.3"), Messages.getString("StartCalculationHandler.4") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.3"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.4") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           return Status.CANCEL_STATUS;
       }
 
@@ -96,7 +96,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
       {
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
-          monitor.beginTask( Messages.getString("StartCalculationHandler.5"), 11 ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.5"), 11 ); //$NON-NLS-1$
 
           if( folder.exists() )
             folder.delete( false, new SubProgressMonitor( monitor, 1 ) );
@@ -108,12 +108,12 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
         }
       };
       final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-      ErrorDialog.openError( shell, Messages.getString("StartCalculationHandler.6"), Messages.getString("StartCalculationHandler.7"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.6"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.7"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      throw new ExecutionException( Messages.getString("StartCalculationHandler.8"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler.8"), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
-
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -94,7 +94,7 @@ public class ImportProfileHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString( "ImportProfileHandler.0" ), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.0" ), e ); //$NON-NLS-1$
     }
 
     /* Import Reach into Terrain-Model */
@@ -112,7 +112,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.1" ), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -145,7 +145,7 @@ public class ImportProfileHandler extends AbstractHandler
       }
     }
     else
-      throw new ExecutionException( Messages.getString( "ImportProfileHandler.3" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler.3" ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

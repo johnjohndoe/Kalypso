@@ -77,6 +77,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
@@ -95,9 +96,9 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
  */
 public class ConfigureLengthSectionWizard extends Wizard
 {
-  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults";
+  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
-  private final static String PAGE_GENERATE_LENGTH_SECTION_NAME = "generateLengthSection";
+  private final static String PAGE_GENERATE_LENGTH_SECTION_NAME = "generateLengthSection"; //$NON-NLS-1$
 
   private final IScenarioResultMeta m_resultModel;
 
@@ -114,7 +115,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
     m_mapPanel = mapPanel;
-    setWindowTitle( "1D2D-Ergebnisse" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.2") ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -125,12 +126,12 @@ public class ConfigureLengthSectionWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, "Längsschnitteinstellungen", null, m_mapPanel );
+    m_lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.3"), null, m_mapPanel ); //$NON-NLS-1$
     // select time step page
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnis für Längsschnitt auswählen", null, resultFilter, comparator, null );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.4"), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -151,7 +152,7 @@ public class ConfigureLengthSectionWizard extends Wizard
 
     if( results.length == 0 )
     {
-      MessageDialog.openInformation( getShell(), "Kein Ergebnis ausgewählt", "Bitte wählen Sie einen Zeitschritt aus, für den der Längsschnitt generiert werden soll." );
+      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.5"), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.6") ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
@@ -161,20 +162,20 @@ public class ConfigureLengthSectionWizard extends Wizard
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Erzeuge Längsschnitt: ", 12 );
+        monitor.beginTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.7"), 12 ); //$NON-NLS-1$
 
         try
         {
-          monitor.subTask( "...erzeuge Stationseinträge..." );
+          monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.8") ); //$NON-NLS-1$
           BigDecimal[] stationList = lengthSectionParameters.getStationList();
 
           if( stationList == null )
-            return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Keine Stationseinträge vorhanden (evtl. falsche Gewässerlinie oder falsches Gewässer ausgewählt)" );
+            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.9") ); //$NON-NLS-1$
 
           monitor.worked( 3 );
 
           // get the Observation Template from the resources
-          final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
+          final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
           final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
           final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
@@ -200,22 +201,22 @@ public class ConfigureLengthSectionWizard extends Wizard
 
                 if( documentType == DOCUMENTTYPE.tinWsp )
                 {
-                  monitor.subTask( "...lese Wasserspiegel aus..." );
+                  monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.11") ); //$NON-NLS-1$
                   surface = getSurface( docResult );
                   if( surface != null )
                     LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
                   else
-                    return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Wasserspiegellagen konnten nicht geladen werden." );
+                    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.12") ); //$NON-NLS-1$
                   monitor.worked( 4 );
                 }
                 else if( documentType == DOCUMENTTYPE.tinVelo )
                 {
-                  monitor.subTask( "...lese Geschwindigkeiten aus..." );
+                  monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.13") ); //$NON-NLS-1$
                   surface = getSurface( docResult );
                   if( surface != null )
                     LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
                   else
-                    return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Modelldaten konnten nicht geladen werden." );
+                    return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.14") ); //$NON-NLS-1$
                   monitor.worked( 4 );
                 }
               }
@@ -238,14 +239,14 @@ public class ConfigureLengthSectionWizard extends Wizard
 
                   if( documentType == DOCUMENTTYPE.tinTerrain )
                   {
-                    monitor.subTask( "...lese Sohllagen aus..." );
+                    monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.15") ); //$NON-NLS-1$
                     surface = getSurface( docResult );
                     if( surface != null )
                     {
                       LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
                     }
                     else
-                      return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Modelldaten konnten nicht geladen werden." );
+                      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.16") ); //$NON-NLS-1$
                   }
                 }
               }
@@ -256,13 +257,13 @@ public class ConfigureLengthSectionWizard extends Wizard
             /* write the observation gml */
             if( lsObs.getResult().size() > 0 )
             {
-              monitor.subTask( "...exportiere Längsschnittdaten..." );
+              monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.17") ); //$NON-NLS-1$
               ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
 
               IPath docPath = resultMeta.getFullPath();
               IFolder folder = m_scenarioFolder.getFolder( docPath );
 
-              IFile lsFile = folder.getFile( "lengthSection.gml" );
+              IFile lsFile = folder.getFile( "lengthSection.gml" ); //$NON-NLS-1$
 
               /* delete the existing length section file */
               if( lsFile.exists() )
@@ -270,7 +271,7 @@ public class ConfigureLengthSectionWizard extends Wizard
 
               File lsObsFile = lsFile.getLocation().toFile();
 
-              GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+              GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
 
               // if there is already a length section document, delete it
               for( IResultMeta child : children )
@@ -287,11 +288,11 @@ public class ConfigureLengthSectionWizard extends Wizard
               }
               BigDecimal min = new BigDecimal( 0 );
               BigDecimal max = new BigDecimal( 0 );
-              ResultMeta1d2dHelper.addDocument( stepResult, "Längsschnitt", "2d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+              ResultMeta1d2dHelper.addDocument( stepResult, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.20"), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.21"), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
             else
             {
-              return StatusUtilities.createWarningStatus( "Längsschnitt enthält keine Daten. Eventuell haben Sie einen falschen Gewässernamen oder eine falsche Gewässerlinie ausgewählt." );
+              return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.23") ); //$NON-NLS-1$
             }
             monitor.worked( 1 );
           }
@@ -299,7 +300,7 @@ public class ConfigureLengthSectionWizard extends Wizard
         catch( Exception e )
         {
           e.printStackTrace();
-          return StatusUtilities.statusFromThrowable( e, "Konnte Längsschnitt nicht erzeugen." );
+          return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.24") ); //$NON-NLS-1$
         }
         catch( final Throwable t )
         {
@@ -309,7 +310,7 @@ public class ConfigureLengthSectionWizard extends Wizard
         {
           monitor.done();
         }
-        return StatusUtilities.createOkStatus( "Längsschnitt erzeugt." );
+        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.25") ); //$NON-NLS-1$
 
       }
     };
@@ -317,7 +318,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler bei Längsschnitterzeugung", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.26"), status ); //$NON-NLS-1$
 
     if( status.matches( IStatus.ERROR ) || status.matches( IStatus.WARNING ) )
       return false;

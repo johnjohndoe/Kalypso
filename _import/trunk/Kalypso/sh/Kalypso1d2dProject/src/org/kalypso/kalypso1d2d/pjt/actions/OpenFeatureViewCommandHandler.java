@@ -30,6 +30,7 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * Opens the feature view on a given template
@@ -53,28 +54,28 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     try
     {
       if( m_resource == null )
-        throw new ExecutionException( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.2" ) ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.4" ) ); //$NON-NLS-1$
 
       final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
       if( activeWorkbenchWindow == null )
-        throw new ExecutionException( "No active workbench window available" );
+        throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.0") ); //$NON-NLS-1$
 
       final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_resource );
       if( folder == null )
-        throw new ExecutionException( "Folder not found: " + m_resource );
+        throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.1") + m_resource ); //$NON-NLS-1$
 
       final IFile file = folder.getFile( m_resource );
       if( !file.exists() )
-        throw new ExecutionException( "File does not exist: " + file.getFullPath() );
+        throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.2") + file.getFullPath() ); //$NON-NLS-1$
 
       if( activeWorkbenchWindow != null )
       {
         final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
         final FeatureTemplateView featureView = (FeatureTemplateView) workbenchPage.showView( FeatureTemplateView.ID );
 
-        final UIJob job = new UIJob( "Loading " + file.getName() )
+        final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.3") + file.getName() ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( IProgressMonitor monitor )
@@ -100,7 +101,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.3" ) + m_resource, e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.5" ) + m_resource, e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

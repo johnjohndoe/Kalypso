@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
@@ -138,7 +139,7 @@ public class HydrographUtils
     if( resultMeta != null )
       calcUnitResult.removeChild( resultMeta );
 
-    ResultMeta1d2dHelper.addDocument( calcUnitResult, "Ganglinien", "Ganglinien des Teilmodells " + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null );
+    ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.1") + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.2") ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return newHydrograph;
   }
@@ -201,12 +202,12 @@ public class HydrographUtils
   public static Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
   {
     /* get a path */
-    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
+    final IPath docPath = calcUnitResult.getFullPath().append( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.3") ); //$NON-NLS-1$
     final IFolder calcUnitFolder = scenarioFolder.getFolder( docPath );
     if( !calcUnitFolder.exists() )
       FolderUtilities.mkdirs( calcUnitFolder );
 
-    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
+    final IFile gmlResultFile = calcUnitFolder.getFile( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.4") ); //$NON-NLS-1$
     final URL url = ResourceUtilities.createURL( gmlResultFile );
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
@@ -265,23 +266,23 @@ public class HydrographUtils
   {
     { // Hydrograph
       final StyledLayerType hydroLayer = new StyledLayerType();
-      String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml";
+      String path = "../" + calcResult.getFullPath().toPortableString() + "/hydrograph/hydrograph.gml"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      hydroLayer.setName( "Ganglinienpunkte (" + hydroCollection.getName() + ")" );
-      hydroLayer.setFeaturePath( "hydrographMember" );
-      hydroLayer.setLinktype( "gml" );
-      hydroLayer.setType( "simple" );
+      hydroLayer.setName( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.7") + hydroCollection.getName() + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.8") ); //$NON-NLS-1$ //$NON-NLS-2$
+      hydroLayer.setFeaturePath( "hydrographMember" ); //$NON-NLS-1$
+      hydroLayer.setLinktype( "gml" ); //$NON-NLS-1$
+      hydroLayer.setType( "simple" ); //$NON-NLS-1$
       hydroLayer.setVisible( true );
-      hydroLayer.setActuate( "onRequest" );
+      hydroLayer.setActuate( "onRequest" ); //$NON-NLS-1$
       hydroLayer.setHref( path );
       hydroLayer.setVisible( true );
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "true" );
+      layerPropertyDeletable.setValue( "true" ); //$NON-NLS-1$
 
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + ") %.2f" );
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.HydrographThemeInfo?format=Ganglinienpunkt (" + hydroCollection.getName() + Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.15") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final List<Property> layerPropertyList = hydroLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );
@@ -289,11 +290,11 @@ public class HydrographUtils
 
       final List<Style> styleList = hydroLayer.getStyle();
       final Style style = new Style();
-      style.setLinktype( "sld" );
-      style.setStyle( "hydrographUserStyle" );
-      style.setActuate( "onRequest" );
+      style.setLinktype( "sld" ); //$NON-NLS-1$
+      style.setStyle( "hydrographUserStyle" ); //$NON-NLS-1$
+      style.setActuate( "onRequest" ); //$NON-NLS-1$
       style.setHref( styleLocationForHydrograph() );
-      style.setType( "simple" );
+      style.setType( "simple" ); //$NON-NLS-1$
       styleList.add( style );
 
       modell.addLayer( hydroLayer );
@@ -302,6 +303,6 @@ public class HydrographUtils
 
   private static String styleLocationForHydrograph( )
   {
-    return "../styles/hydrograph/hydrograph.sld";
+    return "../styles/hydrograph/hydrograph.sld"; //$NON-NLS-1$
   }
 }

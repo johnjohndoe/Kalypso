@@ -74,6 +74,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * @author Dejan Antanaskovic
@@ -109,7 +110,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString( "RestartSelectWizard.5" ), Messages.getString( "RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.5" ), Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -119,16 +120,16 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, resultFilter, comparator, null, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.8" ), null, resultFilter, comparator, null, m_scenarioFolder, m_modelProvider ); //$NON-NLS-1$ //$NON-NLS-2$
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
 
     addPage( m_restartSelectWizardPage1 );
 
-    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString( "RestartSelectWizard.10" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.10" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_restartSelectWizardPage2 );
 
     configureRestartSelectPage();
@@ -136,8 +137,8 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private void configureRestartSelectPage( )
   {
-    m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
-    m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
+    m_restartSelectWizardPage1.setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.3" ) ); //$NON-NLS-1$
+    m_restartSelectWizardPage1.setDescription( Messages.getString( "org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizard.4" ) ); //$NON-NLS-1$
 
     final List<IResultMeta> checkedElements = new ArrayList<IResultMeta>();
 

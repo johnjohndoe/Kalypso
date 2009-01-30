@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -82,7 +83,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
   public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "FE-Netz exportieren", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("org.kalypso.wizards.export2d.Export2dMeshRunnable.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
@@ -91,7 +92,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
     // TODO: check which format has been chosen.
 
-    if( m_selectedExtension == "*.2d" )
+    if( m_selectedExtension == "*.2d" ) //$NON-NLS-1$
     {
       final Gml2RMA10SConv converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ) );
 
@@ -105,7 +106,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
         throw new InvocationTargetException( e );
       }
     }
-    else if( m_selectedExtension == "*.2dm" )
+    else if( m_selectedExtension == "*.2dm" ) //$NON-NLS-1$
     {
       final Gml2SMSConv converter = new Gml2SMSConv( discretisationModel, roughnessModel );
 

@@ -57,6 +57,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -70,7 +71,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults";
+  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
   private IKalypsoLayerModell m_modell;
 
@@ -84,7 +85,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
 
   public ResultManager1d2dWizard( )
   {
-    setWindowTitle( "1D2D-Ergebnisse" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -96,7 +97,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
-    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnisse verwalten", null, resultFilter, resultComparator, null );
+    m_selectResultWizardPage = new ResultManager1d2dWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.2"), null, resultFilter, resultComparator, null ); //$NON-NLS-1$
     m_selectResultWizardPage.setResultMeta( m_resultModel );
     m_selectResultWizardPage.setCommandTarget( m_commandTarget );
     m_selectResultWizardPage.setMapModel( m_modell );
@@ -139,7 +140,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.3"), Messages.getString("org.kalypso.ui.wizards.results.ResultManager1d2dWizard.4"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -151,7 +152,7 @@ public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImpor
   {
     try
     {
-      final EmptyCommand command = new EmptyCommand( "You are dirty now, pool!", false );
+      final EmptyCommand command = new EmptyCommand( "You are dirty now, pool!", false ); //$NON-NLS-1$
       final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IScenarioResultMeta.class );
       commandableWorkspace.postCommand( command );
       m_modelProvider.saveModel( IScenarioResultMeta.class, null );

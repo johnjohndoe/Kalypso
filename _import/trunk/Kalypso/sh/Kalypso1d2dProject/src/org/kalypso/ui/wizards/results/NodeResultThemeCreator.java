@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -91,10 +92,10 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     buttonComp.setLayout( new GridLayout( 4, false ) );
 
     final Label nodeLabel = new Label( buttonComp, SWT.FLAT );
-    nodeLabel.setText( "Darstellung der Vektoren" );
+    nodeLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.NodeResultThemeCreator.0") ); //$NON-NLS-1$
 
     /* create control with selection buttons, style combo-boxes, edit button and delete button */
-    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Node", m_minValue, m_maxValue, m_resultLayerCommandData[0] );
+    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Node", m_minValue, m_maxValue, m_resultLayerCommandData[0] ); //$NON-NLS-1$
 
     return buttonComp;
   }
@@ -108,15 +109,15 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     final String resFolder = resultsFolder.getFullPath().toPortableString();
 
-    final String featurePath = "nodeResultMember";
-    final String source = "../" + m_documentResult.getFullPath().toPortableString();
-    final String style = "Vector Style";
+    final String featurePath = "nodeResultMember"; //$NON-NLS-1$
+    final String source = "../" + m_documentResult.getFullPath().toPortableString(); //$NON-NLS-1$
+    final String style = "Vector Style"; //$NON-NLS-1$
     final String themeName = ResultMeta1d2dHelper.getNodeResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
     String styleLocation = null;
-    final String type = "Node";
-    final String styleLinkType = "sld";
-    final String styleType = "simple";
-    final String resultType = "gml";
+    final String type = "Node"; //$NON-NLS-1$
+    final String styleLinkType = "sld"; //$NON-NLS-1$
+    final String styleType = "simple"; //$NON-NLS-1$
+    final String resultType = "gml"; //$NON-NLS-1$
 
     // check, if there is a style already chosen, if not create one from default template
     if( m_nodeStyleComp == null )
@@ -141,8 +142,8 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
     final IFolder sldFolder = stylesFolder.getFolder( type );
 
-    final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
-    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
+    final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final IFile styleFile = sldFolder.getFile( sldFileName );
 

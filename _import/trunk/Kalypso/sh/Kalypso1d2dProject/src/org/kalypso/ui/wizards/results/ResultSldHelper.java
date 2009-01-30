@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -128,23 +129,23 @@ public class ResultSldHelper
     /* Read sld from template */
 
     // better, get the sld from resource folder
-    final URL resource = ResultSldHelper.class.getResource( "resources/myDefault" + type + ".sld" );
+    final URL resource = ResultSldHelper.class.getResource( "resources/myDefault" + type + ".sld" ); //$NON-NLS-1$ //$NON-NLS-2$
     try
     {
       final StyledLayerDescriptor sld = SLDFactory.createSLD( resource );
 
-      if( type == "Line" || type == "Polygon" )
+      if( type == "Line" || type == "Polygon" ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         processTinStyle( type, minValue, maxValue, sld );
         /* Write SLD back to file */
         if( sld != null )
         {
           final String sldXML = sld.exportAsXML();
-          final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-          styleFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
+          final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML; //$NON-NLS-1$
+          styleFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() ); //$NON-NLS-1$
         }
       }
-      else if( type == "Node" )
+      else if( type == "Node" ) //$NON-NLS-1$
       {
         String sldXMLwithHeader = processVectorStyle( maxValue, resource );
         styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
@@ -153,7 +154,7 @@ public class ResultSldHelper
     catch( Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Ergebnisvisualisierung: Standard-Style konnte nicht erzeugt werden." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.results.ResultSldHelper.0") ); //$NON-NLS-1$
     }
     return Status.OK_STATUS;
 
@@ -161,11 +162,11 @@ public class ResultSldHelper
 
   private static void processTinStyle( final String type, final BigDecimal minValue, final BigDecimal maxValue, final StyledLayerDescriptor sld )
   {
-    final String layerName = "tin" + type + "Style";
-    final String featureTypeStyleName = "tinFeatureTypeStyle";
-    final String ruleName = "tinRule";
+    final String layerName = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String featureTypeStyleName = "tinFeatureTypeStyle"; //$NON-NLS-1$
+    final String ruleName = "tinRule"; //$NON-NLS-1$
 
-    final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" );
+    final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" ); //$NON-NLS-1$
     if( namedLayer == null )
       return;
 
@@ -210,8 +211,8 @@ public class ResultSldHelper
     final PolygonColorMap newColorMap = new PolygonColorMap_Impl();
 
     // retrieve stuff from template-entries
-    final PolygonColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
-    final PolygonColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
+    final PolygonColorMapEntry fromEntry = templateColorMap.findEntry( "from", null ); //$NON-NLS-1$
+    final PolygonColorMapEntry toEntry = templateColorMap.findEntry( "to", null ); //$NON-NLS-1$
 
     // Fill
     final Color fromPolygonColor = fromEntry.getFill().getFill( null );
@@ -260,7 +261,7 @@ public class ResultSldHelper
 
       final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
 
-      final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );
+      final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass ); //$NON-NLS-1$
       final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
       final ParameterValueType to = StyleFactory.createParameterValueType( toValue );
 
@@ -280,9 +281,9 @@ public class ResultSldHelper
     final LineColorMap newColorMap = new LineColorMap_Impl();
 
     // retrieve stuff from template-entries
-    final LineColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
-    final LineColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
-    final LineColorMapEntry fatEntry = templateColorMap.findEntry( "fat", null );
+    final LineColorMapEntry fromEntry = templateColorMap.findEntry( "from", null ); //$NON-NLS-1$
+    final LineColorMapEntry toEntry = templateColorMap.findEntry( "to", null ); //$NON-NLS-1$
+    final LineColorMapEntry fatEntry = templateColorMap.findEntry( "fat", null ); //$NON-NLS-1$
 
     final Color fromColor = fromEntry.getStroke().getStroke( null );
     final Color toColor = toEntry.getStroke().getStroke( null );
@@ -322,7 +323,7 @@ public class ResultSldHelper
 
       final Stroke stroke = StyleFactory.createStroke( lineColor, strokeWidth, opacity );
 
-      final ParameterValueType label = StyleFactory.createParameterValueType( "Isolinie " + currentClass );
+      final ParameterValueType label = StyleFactory.createParameterValueType( "Isolinie " + currentClass ); //$NON-NLS-1$
       final ParameterValueType quantity = StyleFactory.createParameterValueType( currentValue );
 
       final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
@@ -338,7 +339,7 @@ public class ResultSldHelper
     try
     {
       is = new BufferedInputStream( url.openStream() );
-      String fileString = IOUtils.toString( is, "UTF-8" );
+      String fileString = IOUtils.toString( is, "UTF-8" ); //$NON-NLS-1$
       is.close();
 
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
@@ -351,7 +352,7 @@ public class ResultSldHelper
 
       final String factor = factorValue.toString();
 
-      return fileString.replaceAll( "VECTORFACTOR", factor );
+      return fileString.replaceAll( "VECTORFACTOR", factor ); //$NON-NLS-1$
 
     }
     catch( IOException e )

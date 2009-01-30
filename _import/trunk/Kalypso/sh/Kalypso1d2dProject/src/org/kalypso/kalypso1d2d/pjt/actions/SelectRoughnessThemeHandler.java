@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -39,7 +40,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.0") ); //$NON-NLS-1$
 
     final IMapPanel mapPanel = mapView.getMapPanel();
     IMapModell orgMapModell = mapPanel.getMapModell();
@@ -61,7 +62,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     }
 
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
+      throw new ExecutionException( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.1") ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
@@ -77,7 +78,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
 
     /* Check if this theme is already present, if true, just activate it */
 
-    final CompositeCommand compositeCommand = new CompositeCommand( "Activate Theme" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.2") ); //$NON-NLS-1$
     compositeCommand.addCommand( new EnableThemeCommand( choosenTheme, true ) );
     compositeCommand.addCommand( new ActivateThemeCommand( mapModell, choosenTheme ) );
     final ICommand command = compositeCommand;
@@ -89,8 +90,8 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
   private IKalypsoTheme showNetworksDialog( final Shell shell, final IKalypsoTheme[] roughnessThemes )
   {
     final ListDialog dialog = new ListDialog( shell );
-    dialog.setTitle( "Rauheiten bearbeiten" );
-    dialog.setMessage( "Wählen Sie das Thema aus, welches Sie in der Karte bearbeiten möchten:" );
+    dialog.setTitle( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.3") ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.SelectRoughnessThemeHandler.4") ); //$NON-NLS-1$
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {

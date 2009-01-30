@@ -59,6 +59,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -100,9 +101,9 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
 
         final String gmlResultPath = selectLengthSectionWizard.getSelectedLGmlResultPath();
         if( gmlResultPath == null )
-          return StatusUtilities.createErrorStatus( "Längsschnitt-Ergebnisdatei konnte nicht geladen werden." );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.0") ); //$NON-NLS-1$
 
-        final UIJob job = new UIJob( "Lade Längsschnitt " )
+        final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler.1") ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( IProgressMonitor monitor )
@@ -111,19 +112,19 @@ public class ShowResultLengthSectionViewHandler extends AbstractHandler
             {
               // load template
               // load template from resource:
-              final URL url = getClass().getResource( "resources/lengthsection.gft" );
+              final URL url = getClass().getResource( "resources/lengthsection.gft" ); //$NON-NLS-1$
 
               Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( url, new NullProgressMonitor() );
 
               URL urlContext = ResourceUtilities.createURL( scenarioFolder );
 
               // root feature
-              String featurePath = "";
+              String featurePath = ""; //$NON-NLS-1$
 
               // path to gml, relative to context
               String href = gmlResultPath;
 
-              final String linkType = "gml";
+              final String linkType = "gml"; //$NON-NLS-1$
 
               // set template to view in ui thread, sepcify href, featurePath and linkType
               featureView.setTemplate( template, urlContext, featurePath, href, linkType );

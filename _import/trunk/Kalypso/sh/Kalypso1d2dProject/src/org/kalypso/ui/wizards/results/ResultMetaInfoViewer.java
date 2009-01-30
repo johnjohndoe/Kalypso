@@ -60,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -71,9 +72,9 @@ public class ResultMetaInfoViewer extends Viewer
   /*
    * fonts
    */
-  private final Font fTextHeader = new Font( Display.getDefault(), "Tahoma", 10, SWT.BOLD );
+  private final Font fTextHeader = new Font( Display.getDefault(), "Tahoma", 10, SWT.BOLD ); //$NON-NLS-1$
 
-  private final Font fTextNormal = new Font( Display.getDefault(), "Tahoma", 8, SWT.NONE );
+  private final Font fTextNormal = new Font( Display.getDefault(), "Tahoma", 8, SWT.NONE ); //$NON-NLS-1$
 
   private final Group m_panel;
 
@@ -133,9 +134,9 @@ public class ResultMetaInfoViewer extends Viewer
     m_textPanel = new FormText( m_panel, SWT.WRAP | SWT.READ_ONLY );
     m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_panel.setText( "Information" );
-    m_textPanel.setFont( "header", fTextHeader );
-    m_textPanel.setFont( "text", fTextNormal );
+    m_panel.setText( Messages.getString("org.kalypso.ui.wizards.results.ResultMetaInfoViewer.0") ); //$NON-NLS-1$
+    m_textPanel.setFont( "header", fTextHeader ); //$NON-NLS-1$
+    m_textPanel.setFont( "text", fTextNormal ); //$NON-NLS-1$
 
     if( m_input instanceof IResultMeta )
     {
@@ -159,7 +160,7 @@ public class ResultMetaInfoViewer extends Viewer
   public static String getInformationText( final IResultMeta result )
   {
     if( result == null )
-      return "kein Ergebnis selektiert";
+      return Messages.getString("org.kalypso.ui.wizards.results.ResultMetaInfoViewer.5"); //$NON-NLS-1$
 
     final StringBuffer buf = new StringBuffer();
 
@@ -206,8 +207,8 @@ public class ResultMetaInfoViewer extends Viewer
 
       final Date calcStartTime = calcUnitResult.getCalcStartTime();
       final Date calcEndTime = calcUnitResult.getCalcEndTime();
-      calcStart = calcStartTime == null ? "-" : dateFormat.format( calcStartTime );
-      calcEnd = calcEndTime == null ? "-" : dateFormat.format( calcEndTime );
+      calcStart = calcStartTime == null ? "-" : dateFormat.format( calcStartTime ); //$NON-NLS-1$
+      calcEnd = calcEndTime == null ? "-" : dateFormat.format( calcEndTime ); //$NON-NLS-1$
     }
 
     final IStepResultMeta stepResult = getStepResultMeta( result );
@@ -217,7 +218,7 @@ public class ResultMetaInfoViewer extends Viewer
       stepDescription = stepResult.getDescription();
       stepType = stepResult.getStepType().toString();
       final Date stepResultTime = stepResult.getStepTime();
-      stepTime = stepResultTime == null ? "-" : dateFormat.format( stepResultTime );
+      stepTime = stepResultTime == null ? "-" : dateFormat.format( stepResultTime ); //$NON-NLS-1$
     }
 
     IDocumentResultMeta docResult = null;
@@ -242,7 +243,7 @@ public class ResultMetaInfoViewer extends Viewer
 
     /* make string buffer */
 
-    buf.append( "<form>" );
+    buf.append( "<form>" ); //$NON-NLS-1$
 
     // Scenario
     /*
@@ -254,58 +255,58 @@ public class ResultMetaInfoViewer extends Viewer
     // CalcUnit
     if( calcUnitResult != null )
     {
-      buf.append( "<p>" );
-      buf.append( "<b>Teilmodell " + calcUnitName + "</b>" );
-      buf.append( "</p>" );
+      buf.append( "<p>" ); //$NON-NLS-1$
+      buf.append( "<b>Teilmodell " + calcUnitName + "</b>" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buf.append( "</p>" ); //$NON-NLS-1$
       //
       // buf.append( "<p>" );
       // buf.append( calcUnitDescription );
       // buf.append( "</p>" );
 
-      buf.append( "<p>" );
-      buf.append( "<b>Datum der Berechnung:</b>" );
-      buf.append( "</p>" );
+      buf.append( "<p>" ); //$NON-NLS-1$
+      buf.append( "<b>Datum der Berechnung:</b>" ); //$NON-NLS-1$
+      buf.append( "</p>" ); //$NON-NLS-1$
 
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Beginn:\">" + calcStart + "</li>" );
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Ende:\">" + calcEnd + "</li>" );
-      buf.append( "<br/>\n\n" );
+      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Beginn:\">" + calcStart + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Ende:\">" + calcEnd + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
+      buf.append( "<br/>\n\n" ); //$NON-NLS-1$
     }
 
     // Step
     if( stepResult != null )
     {
-      buf.append( "<p>" );
-      buf.append( "<b>Zeitschrittart:</b>" );
-      buf.append( "</p>" );
+      buf.append( "<p>" ); //$NON-NLS-1$
+      buf.append( "<b>Zeitschrittart:</b>" ); //$NON-NLS-1$
+      buf.append( "</p>" ); //$NON-NLS-1$
 
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" );
+      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" );
+      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      buf.append( "<br/>" );
+      buf.append( "<br/>" ); //$NON-NLS-1$
     }
 
     // Document
     if( docResult != null )
     {
-      buf.append( "<p>" );
-      buf.append( "<b>Datentyp: </b>" );
-      buf.append( "</p>" );
+      buf.append( "<p>" ); //$NON-NLS-1$
+      buf.append( "<b>Datentyp: </b>" ); //$NON-NLS-1$
+      buf.append( "</p>" ); //$NON-NLS-1$
 
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + docType + "\"></li>" );
+      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + docType + "\"></li>" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( docMax != null )
       {
-        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"maximaler Wert:\">" + docMax + "</li>" );
+        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"maximaler Wert:\">" + docMax + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if( docMin != null )
       {
-        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" );
+        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"minimaler Wert:\">" + docMin + "</li>" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
     }
 
-    buf.append( "</form>" );
+    buf.append( "</form>" ); //$NON-NLS-1$
 
     return buf.toString();
   }

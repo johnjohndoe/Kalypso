@@ -71,6 +71,7 @@ import org.kalypso.ui.editor.sldEditor.IFillModifyListener;
 import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
 import org.kalypso.ui.editor.sldEditor.SldHelper;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -88,7 +89,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public class VectorEditorComposite extends Composite
 {
-  private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
+  private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" ); //$NON-NLS-1$
 
   private final String m_globalMin;
 
@@ -183,17 +184,17 @@ public class VectorEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     graphicGroup.setLayoutData( gridDataProperty );
     graphicGroup.setLayout( new GridLayout( 2, true ) );
-    graphicGroup.setText( "Pfeildarstellung" );
+    graphicGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.1") ); //$NON-NLS-1$
 
     Group strokeColorMapGroup = new Group( graphicGroup, SWT.NONE );
     strokeColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     strokeColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    strokeColorMapGroup.setText( "Pfeillinie" );
+    strokeColorMapGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.2") ); //$NON-NLS-1$
 
     Group fillColorMapGroup = new Group( graphicGroup, SWT.NONE );
     fillColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     fillColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fillColorMapGroup.setText( "Pfeilfüllung" );
+    fillColorMapGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.3") ); //$NON-NLS-1$
 
     final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( strokeColorMapGroup, SWT.NONE, m_stroke, false );
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
@@ -222,7 +223,7 @@ public class VectorEditorComposite extends Composite
     // combo text
     final Label comboTextLabel = new Label( comp, SWT.NONE );
     comboTextLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    comboTextLabel.setText( "Bezugssystem:" );
+    comboTextLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.4") ); //$NON-NLS-1$
 
     final ComboViewer uomTypeCombo = new ComboViewer( comp, SWT.READ_ONLY );
     GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
@@ -231,8 +232,8 @@ public class VectorEditorComposite extends Composite
     uomTypeCombo.setContentProvider( new ArrayContentProvider() );
 
     String[] types = new String[2];
-    types[0] = "Meter";
-    types[1] = "Pixel";
+    types[0] = "Meter"; //$NON-NLS-1$
+    types[1] = "Pixel"; //$NON-NLS-1$
 
     uomTypeCombo.setInput( types );
     if( m_uom == UOM.pixel )
@@ -268,11 +269,11 @@ public class VectorEditorComposite extends Composite
         // TODO: get the GraphicFill from a GraphicFill editor.
         // right now, there is just possible a plain fill .
 
-        if( string == "Meter" )
+        if( string == "Meter" ) //$NON-NLS-1$
         {
           m_symb.setUom( UOM.meter );
         }
-        else if( string == "Pixel" )
+        else if( string == "Pixel" ) //$NON-NLS-1$
         {
           m_symb.setUom( UOM.pixel );
         }
@@ -290,7 +291,7 @@ public class VectorEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 2, true ) );
-    propertyGroup.setText( "Wertebereich" );
+    propertyGroup.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.9") ); //$NON-NLS-1$
 
     final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
     GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -306,7 +307,7 @@ public class VectorEditorComposite extends Composite
     final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.UP, false, false );
     gridDataGlobalMax.heightHint = 15;
     globalMaxLabel.setLayoutData( gridDataGlobalMax );
-    globalMaxLabel.setText( "maximaler Wert: " );
+    globalMaxLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.10") ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
     GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -319,7 +320,7 @@ public class VectorEditorComposite extends Composite
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
     globalMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
-    globalMinLabel.setText( "minimaler Wert: " );
+    globalMinLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.11") ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
     GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -332,7 +333,7 @@ public class VectorEditorComposite extends Composite
     /* scale value to display */
     final Label displayScaleLabel = new Label( displayComposite, SWT.NONE );
     displayScaleLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    displayScaleLabel.setText( "Vektormaßstab: " );
+    displayScaleLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.VectorEditorComposite.12") ); //$NON-NLS-1$
 
     final Text scaleValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
@@ -403,7 +404,7 @@ public class VectorEditorComposite extends Composite
         else
         {
           scaleValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." );
+          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
           m_firstExpression.setValue( tempText );
           contentChanged();
         }

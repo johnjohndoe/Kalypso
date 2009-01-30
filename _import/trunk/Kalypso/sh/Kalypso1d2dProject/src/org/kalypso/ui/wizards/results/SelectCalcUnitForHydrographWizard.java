@@ -71,6 +71,7 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.NonCalcUnitResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -86,7 +87,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalypsoDataImportWizard
 {
 
-  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults";
+  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
   private IScenarioResultMeta m_resultModel;
 
@@ -98,7 +99,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
 
   public SelectCalcUnitForHydrographWizard( )
   {
-    setWindowTitle( "1D2D-Ergebnisse" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -109,7 +110,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   {
     final NonCalcUnitResultViewerFilter resultFilter = new NonCalcUnitResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Teilmodelle für Ganglinienerstellung auswählen", null, resultFilter, comparator, null );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.2"), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -159,7 +160,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
         catch( Exception e )
         {
           e.printStackTrace();
-          StatusUtilities.statusFromThrowable( e, "Fehler bei Ganglinienerzeugung" );
+          StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.3") ); //$NON-NLS-1$
           return false;
         }
       }
@@ -171,10 +172,10 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
   private void saveModel( final ICalcUnitResultMeta calcUnitResult, IFeatureWrapper2 hydrograph ) throws GmlSerializeException, CoreException, IOException
   {
     // get a path
-    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" );
+    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
     final IFolder calcUnitFolder = m_scenarioFolder.getFolder( docPath );
 
-    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" );
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml" ); //$NON-NLS-1$
 
     final Feature feature = hydrograph.getFeature();
     OutputStreamWriter writer = null;
@@ -234,7 +235,7 @@ public class SelectCalcUnitForHydrographWizard extends Wizard implements IKalyps
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.6"), Messages.getString("org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard.7"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

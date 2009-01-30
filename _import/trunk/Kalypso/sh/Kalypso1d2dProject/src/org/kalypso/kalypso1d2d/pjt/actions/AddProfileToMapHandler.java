@@ -75,6 +75,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -93,11 +94,11 @@ public class AddProfileToMapHandler extends AbstractHandler
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
 
     final IMapModell orgMapModell = mapView.getMapPanel().getMapModell();
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.1" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.1" ) ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
@@ -109,7 +110,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.2" ), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ), e ); //$NON-NLS-1$
     }
 
     final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
@@ -139,7 +140,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       else
       {
         final IKalypsoTheme themeToActivate = foundThemes[0];
-        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "AddProfileToMapHandler.9" ) ); //$NON-NLS-1$
+        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.9" ) ); //$NON-NLS-1$
         compositeCommand.addCommand( new EnableThemeCommand( themeToActivate, true ) );
         compositeCommand.addCommand( new ActivateThemeCommand( mapModell, themeToActivate ) );
         command = compositeCommand;
@@ -154,13 +155,13 @@ public class AddProfileToMapHandler extends AbstractHandler
   {
     if( riverProfileNetworkCollection.size() == 0 )
     {
-      MessageDialog.openInformation( shell, Messages.getString( "AddProfileToMapHandler.5" ), "Keine Profildaten vorhanden." ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.5" ), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.22") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 
     final ListDialog dialog = new ListDialog( shell );
-    dialog.setTitle( Messages.getString( "AddProfileToMapHandler.5" ) ); //$NON-NLS-1$
-    dialog.setMessage( Messages.getString( "AddProfileToMapHandler.6" ) ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.5" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.6" ) ); //$NON-NLS-1$
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {

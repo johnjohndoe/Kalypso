@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
@@ -75,8 +76,8 @@ public class CreateHydrographWidget extends AbstractCreateHydrographWidget
     HydrographUtils.setHydrographComponents( newFeature );
 
     final IHydrograph hydrograph = (IHydrograph) newFeature.getAdapter( IHydrograph.class );
-    hydrograph.setName( "Ganglinienpunkt" );
-    hydrograph.setDescription( "Ganglinienpunkt für Teilmodell" );
+    hydrograph.setName( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.0") ); //$NON-NLS-1$
+    hydrograph.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.CreateHydrographWidget.1") ); //$NON-NLS-1$
 
     return hydrograph;
   }

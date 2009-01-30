@@ -77,6 +77,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.ResultMetaInfoViewer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -240,7 +241,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
           final IScenario scenario = (IScenario) parentElement;
 
           final IFolder scenarioFolder = scenario.getFolder();
-          final IFile resultsFile = scenarioFolder.getFile( Path.fromPortableString( "models/scenarioResultMeta.gml" ) );
+          final IFile resultsFile = scenarioFolder.getFile( Path.fromPortableString( "models/scenarioResultMeta.gml" ) ); //$NON-NLS-1$
           final URL resultUrl = ResourceUtilities.createURL( resultsFile );
 
           final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( resultUrl, null );
@@ -387,7 +388,7 @@ public class WspTinProvider implements IGmlSourceProvider, ITreeContentProvider
       }
     }
 
-    throw new IllegalStateException( "Unknwon parent for element: " + element );
+    throw new IllegalStateException( Messages.getString("org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.1") + element ); //$NON-NLS-1$
   }
 
   /**

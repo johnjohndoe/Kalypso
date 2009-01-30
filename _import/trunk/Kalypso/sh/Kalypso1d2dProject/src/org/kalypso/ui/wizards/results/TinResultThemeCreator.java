@@ -58,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -65,9 +66,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class TinResultThemeCreator extends AbstractThemeCreator
 {
-  private static final String LABEL_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() );
+  private static final String LABEL_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_PARAMETER.getLocalPart() ); //$NON-NLS-1$
 
-  private static final String TIN_INFO_ID = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo";
+  private static final String TIN_INFO_ID = "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo"; //$NON-NLS-1$
 
   private final ResultAddLayerCommandData[] m_resultLayerCommandData = new ResultAddLayerCommandData[2];
 
@@ -87,13 +88,13 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private final BigDecimal m_maxValue;
 
-  private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() );
+  private static final String UNIT_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}", Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getNamespaceURI(), Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_UNIT.getLocalPart() ); //$NON-NLS-1$
 
   // private static final String DATE_PROPERTY_FORMAT = String.format( "${property:%s#%s;-}",
   // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getNamespaceURI(),
   // Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_DATE.getLocalPart() );
 
-  private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", TIN_INFO_ID, Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_TIN, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT );
+  private final String THEME_INFO_ID = String.format( "%s?geometry=%s&format=%s: %s %s", TIN_INFO_ID, Kalypso1D2DSchemaConstants.TIN_RESULT_PROP_TIN, LABEL_PROPERTY_FORMAT, "%.2f", UNIT_PROPERTY_FORMAT ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public TinResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
@@ -116,22 +117,22 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
     // selection button
     final Button lineButton = new Button( buttonComp, SWT.CHECK );
-    lineButton.setText( "Darstellung als Isolinien" );
-    lineButton.setToolTipText( "Bei Auswahl wird das Ergebnis mittels Isolinien in der Karte dargestellt." );
+    lineButton.setText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.5") ); //$NON-NLS-1$
+    lineButton.setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.6") ); //$NON-NLS-1$
     lineButton.setSelection( m_lineButtonChecked );
     m_resultLayerCommandData[0].setSelected( m_lineButtonChecked );
 
-    m_lineStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Line", m_minValue, m_maxValue, m_resultLayerCommandData[0] );
+    m_lineStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.7"), m_minValue, m_maxValue, m_resultLayerCommandData[0] ); //$NON-NLS-1$
     m_lineStyleComp.setEnabled( m_lineButtonChecked );
 
     // selection button
     final Button polyButton = new Button( buttonComp, SWT.CHECK );
-    polyButton.setText( "Darstellung als Isoflächen" );
-    polyButton.setToolTipText( "Bei Auswahl wird das Ergebnis mittels Isoflächen in der Karte dargestellt." );
+    polyButton.setText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.8") ); //$NON-NLS-1$
+    polyButton.setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.TinResultThemeCreator.9") ); //$NON-NLS-1$
     polyButton.setSelection( m_polyButtonChecked );
     m_resultLayerCommandData[1].setSelected( m_lineButtonChecked );
 
-    m_polyStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Polygon", m_minValue, m_maxValue, m_resultLayerCommandData[1] );
+    m_polyStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Polygon", m_minValue, m_maxValue, m_resultLayerCommandData[1] ); //$NON-NLS-1$
     m_polyStyleComp.setEnabled( m_polyButtonChecked );
 
     // call necessary in order to initialize the commands
@@ -183,24 +184,24 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     final String resFolder = resultsFolder.getFullPath().toPortableString();
     // FIXME: PLATFORM DEPENDECY! Always use IPath/IResource-API to manipuate pathes
-    final String source = "../" + m_documentResult.getFullPath().toPortableString();
+    final String source = "../" + m_documentResult.getFullPath().toPortableString(); //$NON-NLS-1$
 
     String style = null;
     String themeName = null;
     String styleLocation = null;
 
-    final String resultType = "gml";
-    final String styleLinkType = "sld";
-    final String styleType = "simple";
-    final String featurePath = "";
+    final String resultType = "gml"; //$NON-NLS-1$
+    final String styleLinkType = "sld"; //$NON-NLS-1$
+    final String styleType = "simple"; //$NON-NLS-1$
+    final String featurePath = ""; //$NON-NLS-1$
 
     String type = null;
 
     /* Iso-Areas */
     if( m_polyButtonChecked == true )
     {
-      type = "Polygon";
-      style = "tin" + type + "Style";
+      type = "Polygon"; //$NON-NLS-1$
+      style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
       themeName = ResultMeta1d2dHelper.getIsoareaResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       // check, if there is a style already chosen, if not create one from default tamplate
@@ -225,8 +226,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     /* Iso-Lines */
     if( m_lineButtonChecked == true )
     {
-      type = "Line";
-      style = "tin" + type + "Style";
+      type = "Line"; //$NON-NLS-1$
+      style = "tin" + type + "Style"; //$NON-NLS-1$ //$NON-NLS-2$
       themeName = ResultMeta1d2dHelper.getIsolineResultLayerName( m_documentResult, timeStepMeta, calcUnitMeta );
 
       if( m_lineStyleComp == null )
@@ -257,8 +258,8 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
     final IFolder sldFolder = stylesFolder.getFolder( type );
 
-    final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
-    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
+    final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final IFile styleFile = sldFolder.getFile( sldFileName );
 

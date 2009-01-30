@@ -120,7 +120,7 @@ public class ResultAddLayerCommandData
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
-    m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName();
+    m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
   }
 

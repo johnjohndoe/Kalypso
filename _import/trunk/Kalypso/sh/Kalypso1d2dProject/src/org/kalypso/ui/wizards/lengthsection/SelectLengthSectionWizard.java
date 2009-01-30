@@ -53,6 +53,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
@@ -63,7 +64,7 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
  */
 public class SelectLengthSectionWizard extends Wizard
 {
-  private final static String PAGE_SELECT_RESULTS_NAME = "selectLengthSection";
+  private final static String PAGE_SELECT_RESULTS_NAME = "selectLengthSection"; //$NON-NLS-1$
 
   private final IScenarioResultMeta m_resultModel;
 
@@ -72,7 +73,7 @@ public class SelectLengthSectionWizard extends Wizard
   public SelectLengthSectionWizard( final IScenarioResultMeta resultModel )
   {
     m_resultModel = resultModel;
-    setWindowTitle( "1D2D-Ergebnisse" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -84,7 +85,7 @@ public class SelectLengthSectionWizard extends Wizard
     final LengthSectionViewerFilter resultFilter = new LengthSectionViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
 
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Längsschnitt anzeigen", null, resultFilter, comparator, null );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.2"), null, resultFilter, comparator, null ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -101,7 +102,7 @@ public class SelectLengthSectionWizard extends Wizard
     final IResultMeta[] results = page.getSelectedResults();
     if( results.length == 0 )
     {
-      MessageDialog.openInformation( getShell(), "Längsschnitt anzeigen", "Bitte wählen Sie einen Längsschnitt aus." );
+      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.3"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.4") ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
 
@@ -109,7 +110,7 @@ public class SelectLengthSectionWizard extends Wizard
     {
       if( !(result instanceof IDocumentResultMeta) )
       {
-        MessageDialog.openInformation( getShell(), "Sie haben ein falsches Element selektiert", "In Ihrer Selektion befindet sich ein Datensatz, der kein Länggschnitt ist. Bitte wählen Sie nur Längsschnittdaten aus." );
+        MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.5"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.6") ); //$NON-NLS-1$ //$NON-NLS-2$
         return false;
       }
     }
@@ -121,7 +122,7 @@ public class SelectLengthSectionWizard extends Wizard
       public IStatus execute( final IProgressMonitor monitor )
       {
         IResultMeta result = null;
-        monitor.beginTask( "Längsschnittanzeige...", 2 );
+        monitor.beginTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.7"), 2 ); //$NON-NLS-1$
 
         // get the first length section element
         for( final IResultMeta resultMeta : results )
@@ -140,21 +141,21 @@ public class SelectLengthSectionWizard extends Wizard
         monitor.worked( 1 );
         if( result == null )
         {
-          MessageDialog.openError( getShell(), "Längsschnitt anzeigen fehlgeschlagen", "Bitte wählen Sie einen Längsschnitt aus." );
-          return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht angezeigt werden. " );
+          MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.8"), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.10") ); //$NON-NLS-1$
         }
 
         final IPath fullPath = result.getFullPath();
         m_selectedLGmlResultPath = fullPath.toPortableString();
 
-        return StatusUtilities.createOkStatus( "Längsschnitt dargestellt." );
+        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.11") ); //$NON-NLS-1$
       }
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler bei Längsschnittanzeige", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizards.lengthsection.SelectLengthSectionWizard.12"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }

@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 
 public class Export2dFileSelectWizardPage extends WizardPage
@@ -73,10 +74,10 @@ public class Export2dFileSelectWizardPage extends WizardPage
 
   public Export2dFileSelectWizardPage( final String pageName, final String[] fileNameExtensions, final String[] fileTypes )
   {
-    super( pageName, "", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+    super( pageName, "", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$
 
-    setTitle( "FE-Netz exportieren" );
-    setDescription( "Bitte wählen Sie eine Datei aus, in welche Sie das FE-Netz exportieren möchten." );
+    setTitle( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.2") ); //$NON-NLS-1$
 
     m_filenameExtensions = fileNameExtensions;
     m_fileTypes = fileTypes;
@@ -96,7 +97,7 @@ public class Export2dFileSelectWizardPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( "Ziel-Dateiname:" );
+    label_1.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.3") ); //$NON-NLS-1$
 
     m_destinationFileField = new Text( container, SWT.BORDER );
     m_destinationFileField.addModifyListener( new ModifyListener()
@@ -117,22 +118,22 @@ public class Export2dFileSelectWizardPage extends WizardPage
         browseForFile();
       }
     } );
-    button.setText( "Durchsuchen" );
+    button.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.4") ); //$NON-NLS-1$
     final Label label_2 = new Label( container, SWT.NONE );
     label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_2.setText( " " );
+    label_2.setText( " " ); //$NON-NLS-1$
     m_btnExportMiddleNodes = new Button( container, SWT.CHECK );
-    m_btnExportMiddleNodes.setText( "Mittseitknoten berücksichtigen" );
+    m_btnExportMiddleNodes.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.6") ); //$NON-NLS-1$
     m_btnExportMiddleNodes.setSelection( false );
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_3.setText( " " );
+    label_3.setText( " " ); //$NON-NLS-1$
 
     final Label label_4 = new Label( container, SWT.NONE );
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    label_4.setText( " " );
+    label_4.setText( " " ); //$NON-NLS-1$
     m_btnExportRoughness = new Button( container, SWT.CHECK );
-    m_btnExportRoughness.setText( "Rauheiten berücksichtigen" );
+    m_btnExportRoughness.setText( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.9") ); //$NON-NLS-1$
     m_btnExportRoughness.setSelection( false );
 
     GridData gd = new GridData();
@@ -161,7 +162,7 @@ public class Export2dFileSelectWizardPage extends WizardPage
     if( !regularExtension )
     {
       setMessage( null );
-      setErrorMessage( "Ungültige Dateiendung" );
+      setErrorMessage( Messages.getString("org.kalypso.wizards.export2d.Export2dFileSelectWizardPage.10") ); //$NON-NLS-1$
       m_selectedExtension = null;
       return;
     }
@@ -180,12 +181,12 @@ public class Export2dFileSelectWizardPage extends WizardPage
     final FileDialog dialog = new FileDialog( getShell(), SWT.SAVE );
     dialog.setFilterExtensions( m_filenameExtensions );
     dialog.setFilterNames( m_fileTypes );
-    if( path != "" )
+    if( path != "" ) //$NON-NLS-1$
       dialog.setFileName( path );
     final String fileName = dialog.open();
 
     if( fileName == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final String[] filterExtensions = dialog.getFilterExtensions();
     boolean regularExtension = false;

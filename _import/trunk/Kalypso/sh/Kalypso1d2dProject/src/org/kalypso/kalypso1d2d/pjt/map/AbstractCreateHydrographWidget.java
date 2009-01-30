@@ -53,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
@@ -118,7 +119,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( "Klicken Sie in die Karte um einen Ganglinienpunkt hinzuzufügen." );
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.0") ); //$NON-NLS-1$
     if( m_hydroTheme == null )
       m_hydroTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
 
@@ -252,7 +253,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Ganglinienpunktes", status );
+              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.AbstractCreateHydrographWidget.1"), status ); //$NON-NLS-1$
             }
           } );
         }

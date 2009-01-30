@@ -71,7 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
@@ -79,7 +79,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class ResultProcessHydrographsHandler extends AbstractHandler
 {
-  private static final String DIALOG_TITEL = Messages.getString( "ResultProcessHydrographsHandler.0" ); //$NON-NLS-1$
+  private static final String DIALOG_TITEL = Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler.0" ); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -95,8 +95,8 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     /* Ask user if and how to proceed */
     final IPreferenceStore prefStore = null;
     final String prefKey = null;
-    final String message = Messages.getString( "ResultProcessHydrographsHandler.1" ); //$NON-NLS-1$
-    final String toggleMessage = Messages.getString( "ResultProcessHydrographsHandler.2" ); //$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler.1" ); //$NON-NLS-1$
+    final String toggleMessage = Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler.2" ); //$NON-NLS-1$
     final MessageDialogWithToggle msgDialog = MessageDialogWithToggle.openOkCancelConfirm( shell, DIALOG_TITEL, message, toggleMessage, true, prefStore, prefKey );
     if( msgDialog.getReturnCode() == Window.CANCEL )
       return Status.CANCEL_STATUS;
@@ -145,7 +145,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    ErrorDialog.openError( shell, DIALOG_TITEL, Messages.getString( "ResultProcessHydrographsHandler.5" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, DIALOG_TITEL, Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler.5" ), status ); //$NON-NLS-1$
     return status;
   }
 

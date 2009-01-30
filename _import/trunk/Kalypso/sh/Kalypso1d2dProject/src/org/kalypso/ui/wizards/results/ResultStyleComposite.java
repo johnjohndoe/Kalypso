@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.editor.EditStyleDialog;
 import org.kalypso.ui.wizards.results.editor.IEditStyleDialogModifyListener;
 
@@ -115,7 +116,7 @@ public class ResultStyleComposite
   private void createRemoveButtonControl( final Composite parent )
   {
     m_removeStyleButton = new Button( parent, SWT.FLAT );
-    final String tooltipRemove = "Klicken Sie hier, um den selektierten Style zu löschen.";
+    final String tooltipRemove = Messages.getString("org.kalypso.ui.wizards.results.ResultStyleComposite.0"); //$NON-NLS-1$
     m_removeStyleButton.setToolTipText( tooltipRemove );
     final Image removeImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_REMOVE ).createImage();
     m_removeStyleButton.setImage( removeImage );
@@ -146,7 +147,7 @@ public class ResultStyleComposite
   private void createEditButtonControl( final Composite parent )
   {
     m_editStyleButton = new Button( parent, SWT.FLAT );
-    final String tooltipEdit = "Klicken Sie hier, um den selektierten Style zu ändern oder einen neuen Style zu erstellen.";
+    final String tooltipEdit = Messages.getString("org.kalypso.ui.wizards.results.ResultStyleComposite.1"); //$NON-NLS-1$
     m_editStyleButton.setToolTipText( tooltipEdit );
 
     final Image editImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_EDIT ).createImage();
@@ -179,7 +180,7 @@ public class ResultStyleComposite
   {
     m_combStyleTemplates = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_combStyleTemplates.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_combStyleTemplates.getControl().setToolTipText( "Wählen Sie den gewünschten Style aus" );
+    m_combStyleTemplates.getControl().setToolTipText( Messages.getString("org.kalypso.ui.wizards.results.ResultStyleComposite.2") ); //$NON-NLS-1$
     m_combStyleTemplates.setContentProvider( new ArrayContentProvider() );
 
     refreshCombo();
@@ -258,7 +259,7 @@ public class ResultStyleComposite
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( scenarioFolder );
     IFolder folder = stylesFolder.getFolder( path );
 
-    return ResourceUtilities.getChildrenWithExtensionQuiet( folder, IResource.DEPTH_ONE, "sld" );
+    return ResourceUtilities.getChildrenWithExtensionQuiet( folder, IResource.DEPTH_ONE, "sld" ); //$NON-NLS-1$
   }
 
   public void setEnabled( boolean status )

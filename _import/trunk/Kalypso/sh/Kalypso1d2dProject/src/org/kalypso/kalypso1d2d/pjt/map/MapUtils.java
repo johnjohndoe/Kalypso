@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -104,11 +105,11 @@ public class MapUtils
     gismapview.setExtent( m_ExtentType );
     final Layers layers = gismapview.getLayers();
     final StyledLayerType element = new StyledLayerType();
-    element.setId( "layer_1" );
-    element.setLinktype( "gml" );
-    element.setType( "simple" );
+    element.setId( "layer_1" ); //$NON-NLS-1$
+    element.setLinktype( "gml" ); //$NON-NLS-1$
+    element.setType( "simple" ); //$NON-NLS-1$
     element.setName( m_LayerName );
-    element.setActuate( "onRequest" );
+    element.setActuate( "onRequest" ); //$NON-NLS-1$
     element.setFeaturePath( m_FeaturePath );
     element.setHref( m_GmlFileRelativePath );
     element.setVisible( true );
@@ -127,7 +128,7 @@ public class MapUtils
     final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( element );
 
     layers.getLayer().add( 0, layerType );
-    GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" );
+    GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" ); //$NON-NLS-1$
     writer.close();
     if( createStyle )
       try
@@ -149,7 +150,7 @@ public class MapUtils
   @SuppressWarnings("deprecation")
   public static IStatus addThemes( final IKalypsoLayerModell modell, final ICommandTarget commandTarget, final IResultMeta[] results, final IThemeConstructionFactory factory, final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Themen hinzufügen", results.length );
+    monitor.beginTask( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.MapUtils.5"), results.length ); //$NON-NLS-1$
 
     for( final IResultMeta resultMeta : results )
     {

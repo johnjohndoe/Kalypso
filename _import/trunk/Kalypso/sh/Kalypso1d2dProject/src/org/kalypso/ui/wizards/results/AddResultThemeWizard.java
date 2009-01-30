@@ -62,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -75,7 +76,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWizard
 {
-  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults";
+  private final static String PAGE_SELECT_RESULTS_NAME = "selectResults"; //$NON-NLS-1$
 
   private IKalypsoLayerModell m_modell;
 
@@ -87,7 +88,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
   public AddResultThemeWizard( )
   {
-    setWindowTitle( "1D2D-Ergebnisse" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -100,7 +101,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     final Result1d2dMetaComparator resultComparator = new Result1d2dMetaComparator();
 
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, resultComparator, themeConstructionFactory );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.2"), null, resultFilter, resultComparator, themeConstructionFactory ); //$NON-NLS-1$
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
@@ -146,7 +147,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.3"), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.4"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -175,11 +176,11 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), "1D2D-Ergebnisse", "Fehler beim Hinzufügen der Ergebnisthemen", status );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.5"), Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return status.isOK();
     }
-    System.out.println( "No map modell available" );
+    System.out.println( Messages.getString("org.kalypso.ui.wizards.results.AddResultThemeWizard.7") ); //$NON-NLS-1$
     return false;
 
   }

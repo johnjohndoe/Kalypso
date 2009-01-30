@@ -57,7 +57,7 @@ public class AddTerrainelevationModelCmd implements ICommand
    */
   public String getDescription( )
   {
-    return "Terrain Elevation Model hinzufügen ";
+    return "Terrain Elevation Model hinzufügen "; //$NON-NLS-1$
   }
 
   /**

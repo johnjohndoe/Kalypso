@@ -79,6 +79,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
@@ -103,11 +104,11 @@ public class EditStyleDialog extends TitleAreaDialog
 {
   private final Set<IEditStyleDialogModifyListener> m_listeners = new HashSet<IEditStyleDialogModifyListener>();
 
-  private static final String SETTINGS_SECTION = "ResultStyleEditorDialogSettings";
+  private static final String SETTINGS_SECTION = "ResultStyleEditorDialogSettings"; //$NON-NLS-1$
 
-  private static final String SETTINGS_X = "posx";
+  private static final String SETTINGS_X = "posx"; //$NON-NLS-1$
 
-  private static final String SETTINGS_Y = "posy";
+  private static final String SETTINGS_Y = "posy"; //$NON-NLS-1$
 
   private IFile m_sldFile;
 
@@ -119,7 +120,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private final BigDecimal m_maxValue;
 
-  private final Pattern m_patternFileName = Pattern.compile( "[a-zA-Z0-9_]+" );
+  private final Pattern m_patternFileName = Pattern.compile( "[a-zA-Z0-9_]+" ); //$NON-NLS-1$
 
   private StyledLayerDescriptor m_sld;
 
@@ -175,7 +176,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
     // file name
     final Label fileNameLabel = new Label( commonComposite, SWT.NONE );
-    fileNameLabel.setText( "Style-Name: " );
+    fileNameLabel.setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.0") ); //$NON-NLS-1$
     fileNameLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     final Text fileNameText = new Text( commonComposite, SWT.BORDER | SWT.TRAIL );
@@ -243,7 +244,7 @@ public class EditStyleDialog extends TitleAreaDialog
       else
       {
         final Text errorText = new Text( commonComposite, SWT.NONE );
-        errorText.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche. Bitte anderen Style auswählen" );
+        errorText.setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.5") ); //$NON-NLS-1$
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
@@ -274,7 +275,7 @@ public class EditStyleDialog extends TitleAreaDialog
       else
       {
         final Text errorText = new Text( commonComposite, SWT.NONE );
-        errorText.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche. Bitte anderen Style auswählen" );
+        errorText.setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.6") ); //$NON-NLS-1$
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
@@ -294,12 +295,12 @@ public class EditStyleDialog extends TitleAreaDialog
       gridDataText1.widthHint = 400;
 
       errorText1.setLayoutData( gridDataText1 );
-      errorText1.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche." );
+      errorText1.setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.7") ); //$NON-NLS-1$
       errorText1.setBackground( commonComposite.getBackground() );
 
       final Text errorText2 = new Text( commonComposite, SWT.NONE );
       errorText2.setLayoutData( gridDataText1 );
-      errorText2.setText( "Bitte anderen Style auswählen." );
+      errorText2.setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.8") ); //$NON-NLS-1$
       errorText2.setBackground( commonComposite.getBackground() );
     }
   }
@@ -312,15 +313,15 @@ public class EditStyleDialog extends TitleAreaDialog
   {
     // write the style back to file
     final String sldXML = m_sld.exportAsXML();
-    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML; //$NON-NLS-1$
 
     try
     {
       if( m_sldFile.exists() )
-        m_sldFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
+        m_sldFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() ); //$NON-NLS-1$
       else
       {
-        m_sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
+        m_sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() ); //$NON-NLS-1$
       }
 
       if( m_newSldFileName != null && m_newSldFileName != m_fileName )
@@ -410,8 +411,8 @@ public class EditStyleDialog extends TitleAreaDialog
   {
     super.create();
 
-    getShell().setText( "Style Manager" );
-    setTitle( "Bearbeitung der Style-Vorlagen." );
+    getShell().setText( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.12") ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.13") ); //$NON-NLS-1$
   }
 
   /**
@@ -452,7 +453,7 @@ public class EditStyleDialog extends TitleAreaDialog
       m_newSldFileName = null;
       m_sldFile = null;
 
-      setErrorMessage( "Falscher Dateiname" );
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizards.results.editor.EditStyleDialog.14") ); //$NON-NLS-1$
       getButton( OK ).setEnabled( false );
     }
     else
@@ -461,7 +462,7 @@ public class EditStyleDialog extends TitleAreaDialog
       m_newSldFileName = tempText;
 
       // create a new sld file with the new name
-      m_sldFile = m_sldFolder.getFile( m_newSldFileName + ".sld" );
+      m_sldFile = m_sldFolder.getFile( m_newSldFileName + ".sld" ); //$NON-NLS-1$
 
       getButton( OK ).setEnabled( true );
       setErrorMessage( null );

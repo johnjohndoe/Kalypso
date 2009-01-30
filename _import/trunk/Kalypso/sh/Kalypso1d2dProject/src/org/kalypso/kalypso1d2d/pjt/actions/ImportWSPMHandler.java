@@ -66,7 +66,7 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -109,9 +109,9 @@ public class ImportWSPMHandler extends AbstractHandler
       try
       {
         /* post empty command(s) in order to make pool dirty. */
-        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.0" ), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.1" ), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.2" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.0" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.1" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.2" ), false ) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
@@ -134,7 +134,7 @@ public class ImportWSPMHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString( "ImportWSPMHandler.3" ), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler.3" ), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

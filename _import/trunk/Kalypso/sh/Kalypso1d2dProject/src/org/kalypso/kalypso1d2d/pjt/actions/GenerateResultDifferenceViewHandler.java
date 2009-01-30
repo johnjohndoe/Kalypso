@@ -53,6 +53,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -86,7 +87,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Differenzen erzeugen", "Fehler beim Öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     try
@@ -106,7 +107,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Differenzen konnten nicht erzeugt werden." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler.2") ); //$NON-NLS-1$
     }
 
     return Status.CANCEL_STATUS;

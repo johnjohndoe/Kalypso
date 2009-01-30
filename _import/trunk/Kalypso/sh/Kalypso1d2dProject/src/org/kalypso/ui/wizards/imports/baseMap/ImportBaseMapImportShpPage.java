@@ -108,7 +108,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString("ImportBaseMapImportShpPage.5") ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.5") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );

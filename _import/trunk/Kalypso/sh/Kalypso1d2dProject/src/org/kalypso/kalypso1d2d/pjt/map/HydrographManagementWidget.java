@@ -110,6 +110,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
@@ -180,7 +181,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     }
   };
 
-  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )
+  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" ) //$NON-NLS-1$ //$NON-NLS-2$
   {
   };
 
@@ -238,7 +239,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     }
   };
 
-  private final String m_featureTemplateGft = "resources/hydrograph.gft";
+  private final String m_featureTemplateGft = "resources/hydrograph.gft"; //$NON-NLS-1$
 
   private Button m_addHydrographCollectionButton;
 
@@ -248,7 +249,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
   public HydrographManagementWidget( )
   {
-    super( "Ganglinien erzeugen", "Hier können Sie für das jeweils ausgewählte Teilmodell einen Längsschnitt auf Basis der berechneten Ergebnisse erzeugen." );
+    super( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.3"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.4") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void refreshControl( )
@@ -311,7 +312,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     themeSelectionPanel.setLayout( themeGridLayout );
     final GridData themeGridLayoutData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     themeSelectionPanel.setLayoutData( themeGridLayoutData );
-    toolkit.createLabel( themeSelectionPanel, "Teilmodell: ", SWT.NONE );
+    toolkit.createLabel( themeSelectionPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.5"), SWT.NONE ); //$NON-NLS-1$
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
     final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     m_themeCombo.getControl().setLayoutData( comboGridData );
@@ -349,7 +350,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     hydrographInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( hydrographInfoGroup );
-    hydrographInfoGroup.setText( "Info" );
+    hydrographInfoGroup.setText( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.6") ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     featureviewFactory.addView( getClass().getResource( m_featureTemplateGft ) );
@@ -407,7 +408,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   private void createAddCalcUnitButtonControl( final Composite parent, final FormToolkit toolkit )
   {
     m_addHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
-    m_addHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um ein Teilmodell hinzuzufügen, für das Sie Ganglinien erstellen wollen." );
+    m_addHydrographCollectionButton.setToolTipText( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.7") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image addImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_ADD );
@@ -431,7 +432,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
 
         if( wizardDialog2.open() == Window.OK )
         {
-          MapModellHelper.waitForAndErrorDialog( shell, getMapPanel(), addCalcUnitWizard.getWindowTitle(), "Fehler beim hinzufügen des Themas" );
+          MapModellHelper.waitForAndErrorDialog( shell, getMapPanel(), addCalcUnitWizard.getWindowTitle(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.8") ); //$NON-NLS-1$
 
           refreshThemeCombo();
         }
@@ -443,7 +444,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   private void createRemoveCalcUnitButtonControl( final Composite parent, final FormToolkit toolkit )
   {
     m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
-    m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um das aktuelle Teilmodell inkl. Ganglinien zu entfernen." );
+    m_processHydrographCollectionButton.setToolTipText( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.9") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image removeImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_REMOVE );
@@ -470,7 +471,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   private void createProcessHydrographButtonControl( final Composite parent, final FormToolkit toolkit )
   {
     m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
-    m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um anhand der Berechnungsergebnisse des Teilmodells die Ganglinien zu erzeugen." );
+    m_processHydrographCollectionButton.setToolTipText( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.10") ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image processImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_PROCESS );
@@ -500,9 +501,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         if( m_theme == null )
-          return StatusUtilities.createInfoStatus( "Kein Ganglinienthema vorhanden." );
+          return StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.11") ); //$NON-NLS-1$
 
-        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
 
         try
         {
@@ -523,7 +524,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ganglinien erstellen", "Fehler.", status );
+    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.13"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.14"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 
@@ -532,7 +533,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final Shell shell = event.display.getActiveShell();
 
     if( m_hydrographs == null )
-      MessageDialog.openInformation( shell, "Daten für Ganglinien auslesen", "Kein Ganglinienthema vorhanden." );
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.15"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.16") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* get the current calc unit results */
     final Map<IPath, Date> results = m_hydrographs.getResults();
@@ -548,7 +549,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( processOperation );
     if( !resultStatus.isOK() )
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Daten für Ganglinien auslesen", "Fehler beim Auslesen", resultStatus );
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.17"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.18"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
     saveModell();
 
@@ -629,7 +630,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable );
+        m_theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
 
         try
         {
@@ -650,7 +651,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), "Ganglinien erstellen", "Fehler.", status );
+    ErrorDialog.openError( m_hydrographViewer.getControl().getShell(), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.20"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.21"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     m_selectedHydrograph = (IHydrograph) selection.getFirstElement();
@@ -682,7 +683,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
     final ImageDescriptor jumptoID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_JUMP_TO );
     final ImageDescriptor exportID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_EXPORT );
 
-    final Action addAction = new Action( "Add Coverage", addID )
+    final Action addAction = new Action( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.22"), addID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -693,9 +694,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographAdded( event );
       }
     };
-    addAction.setDescription( "Ganglinienort hinzufügen" );
+    addAction.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.23") ); //$NON-NLS-1$
 
-    final Action selectAction = new Action( "Select Hydrograph", selectID )
+    final Action selectAction = new Action( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.24"), selectID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -706,9 +707,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographSelected( event );
       }
     };
-    selectAction.setDescription( "Ganglinienort wählen" );
+    selectAction.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.25") ); //$NON-NLS-1$
 
-    final Action removeAction = new Action( "Remove Hydrograph", removeID )
+    final Action removeAction = new Action( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.26"), removeID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -719,13 +720,13 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographRemoved( event );
       }
     };
-    removeAction.setDescription( "Ganglinienort löschen" );
+    removeAction.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.27") ); //$NON-NLS-1$
 
     createButton( toolkit, parent, addAction );
     createButton( toolkit, parent, selectAction );
     createButton( toolkit, parent, removeAction );
 
-    final Action exportAction = new Action( "Export Hydrograph", exportID )
+    final Action exportAction = new Action( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.28"), exportID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -736,9 +737,9 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographExport( event );
       }
     };
-    exportAction.setDescription( "Ganglinie exportieren" );
+    exportAction.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.29") ); //$NON-NLS-1$
 
-    final Action jumpToAction = new Action( "Jump To Hydrograph", jumptoID )
+    final Action jumpToAction = new Action( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.30"), jumptoID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -749,7 +750,7 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
         handleHydrographJumpTo();
       }
     };
-    jumpToAction.setDescription( "Springe zu Ganglinienort" );
+    jumpToAction.setDescription( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.31") ); //$NON-NLS-1$
 
     createButton( toolkit, parent, exportAction );
     createButton( toolkit, parent, jumpToAction );
@@ -765,21 +766,21 @@ public class HydrographManagementWidget extends AbstractWidget implements IWidge
   protected void handleHydrographSelected( @SuppressWarnings("unused") final Event event )
   {
     // set widget
-    final EditHydrographWidget widget = new EditHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte selektieren", false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this );
+    final EditHydrographWidget widget = new EditHydrographWidget( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.32"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.33"), false, IHydrograph.QNAME_PROP_LOCATION, m_theme, this ); //$NON-NLS-1$ //$NON-NLS-2$
     setDelegate( widget );
   }
 
   protected void handleHydrographRemoved( @SuppressWarnings("unused") final Event event )
   {
     // set widget
-    final RemoveHydrographWidget widget = new RemoveHydrographWidget( "Ganglinienpunkte", "Ganglinienpunkte entfernen", false, IHydrograph.QNAME_PROP_LOCATION, m_theme );
+    final RemoveHydrographWidget widget = new RemoveHydrographWidget( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.34"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.35"), false, IHydrograph.QNAME_PROP_LOCATION, m_theme ); //$NON-NLS-1$ //$NON-NLS-2$
     setDelegate( widget );
   }
 
   protected void handleHydrographAdded( @SuppressWarnings("unused") final Event event )
   {
     // set widget
-    final CreateHydrographWidget widget = new CreateHydrographWidget( "Ganglinienpunkte", "Punkte für Ganglinien hinzufügen", IHydrograph.QNAME, m_theme );
+    final CreateHydrographWidget widget = new CreateHydrographWidget( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.36"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget.37"), IHydrograph.QNAME, m_theme ); //$NON-NLS-1$ //$NON-NLS-2$
     setDelegate( widget );
   }
 

@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.results.ResultManager1d2dWizard;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -76,12 +77,12 @@ public class ResultDataManagerHandler extends AbstractHandler
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     final JobExclusiveCommandTarget commandTarget = mapView.getCommandTarget();
     if( mapView == null )
-      throw new ExecutionException( Messages.getString( "AddProfileToMapHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler.2" ) ); //$NON-NLS-1$
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     // wait until map has loaded
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Ergebnisdaten verwalten", "Karte wird geladen..." ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.ResultDataManagerHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     // Open wizard on that map!
