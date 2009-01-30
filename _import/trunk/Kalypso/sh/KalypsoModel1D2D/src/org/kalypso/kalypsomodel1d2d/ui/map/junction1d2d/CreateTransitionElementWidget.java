@@ -60,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -93,9 +94,9 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
 
   public CreateTransitionElementWidget( )
   {
-    super( "Kopplung erzeugen", "Kopplung erzeugen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie zwei Randlinien in der Karte.\n    'Enter': Kopplungselement erzeugen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -117,7 +118,7 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie zwei Randlinien in der Karte.\n    'Enter': Kopplungselement erzeugen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

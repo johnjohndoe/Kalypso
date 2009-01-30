@@ -63,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -238,7 +239,7 @@ public class ElementGeometryEditor
       for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
-          return StatusUtilities.createErrorStatus( "1D Knoten können nicht verschoben werden" );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0") ); //$NON-NLS-1$
       }
 
       /* B) node position checks */
@@ -246,7 +247,7 @@ public class ElementGeometryEditor
       if( m_endNode != null )
       {
         if( m_startNode.equals( m_endNode ) )
-          return StatusUtilities.createErrorStatus( "Anfangs- und Endknoten identisch" );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.1") ); //$NON-NLS-1$
       }
 
       // B.2) New Node lies inside an element, that is not in the current elements list
@@ -258,12 +259,12 @@ public class ElementGeometryEditor
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( m_endPoint ) && !m_elementList.contains( elementForNewNode ) )
-            return StatusUtilities.createErrorStatus( "Position innerhalb eines bestehenden Elements" );
+            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2") ); //$NON-NLS-1$
         }
       }
       else
         // B.3) right now we don't allow that the new Node lies on an already existing node
-        return StatusUtilities.createErrorStatus( "Position liegt auf bereits vorhandenem Knoten" );
+        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.3") ); //$NON-NLS-1$
 
       /* C) edge checks */
       // C.1) one of the new edges crosses other edges
@@ -276,7 +277,7 @@ public class ElementGeometryEditor
         final GM_Position[] poses = ring.getPositions();
         // D.1) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( poses ) )
-          return StatusUtilities.createErrorStatus( "Ungültiges Polygon: selbstschneidend" );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4") ); //$NON-NLS-1$
 
         // D.2) new elements intersect other elements
         final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, null, crs );
@@ -291,7 +292,7 @@ public class ElementGeometryEditor
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+                return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5") ); //$NON-NLS-1$
             }
           }
         }
@@ -303,7 +304,7 @@ public class ElementGeometryEditor
           final GM_Point point = GeometryFactory.createGM_Point( positions[i], crs );
           final IFELine contiLine = discModel.findContinuityLine( point, SEARCH_DISTANCE );
           if( contiLine != null )
-            return StatusUtilities.createErrorStatus( "Zu verändernde Elemente enthalten eine Kontinuitätslinie" );
+            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6") ); //$NON-NLS-1$
         }
       }
       return Status.OK_STATUS;

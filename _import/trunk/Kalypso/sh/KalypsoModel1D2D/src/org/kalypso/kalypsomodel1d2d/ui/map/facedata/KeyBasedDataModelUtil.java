@@ -71,16 +71,16 @@ public class KeyBasedDataModelUtil
    */
   public static final void postCommand( final KeyBasedDataModel dataModel, final ICommand command, final String key )
   {
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
-    Assert.throwIAEOnNullParam( command, "command" );
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( command, "command" ); //$NON-NLS-1$
 
     if( key != ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL && key != ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE )
-      throw new RuntimeException( "Only commands to discretisation modell or operational modell are supported: " + key );
+      throw new RuntimeException( "Only commands to discretisation modell or operational modell are supported: " + key ); //$NON-NLS-1$
 
     final ICommandManager commandManager = dataModel.getData( ICommandManager.class, key );
     if( commandManager == null )
     {
-      throw new RuntimeException( "Could not found command target in the model:key=" + key );
+      throw new RuntimeException( "Could not found command target in the model:key=" + key ); //$NON-NLS-1$
     }
     try
     {
@@ -106,8 +106,8 @@ public class KeyBasedDataModelUtil
    */
   public static final void resetCurrentEntry( final KeyBasedDataModel dataModel, final String key )
   {
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
-    Assert.throwIAEOnNullParam( key, "key" );
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( key, "key" ); //$NON-NLS-1$
     dataModel.setData( key, dataModel.getData( key ) );
   }
 
@@ -124,18 +124,18 @@ public class KeyBasedDataModelUtil
    */
   public static void repaintMapPanel( final KeyBasedDataModel dataModel, final String key )
   {
-    Assert.throwIAEOnNullParam( key, "key" );
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
+    Assert.throwIAEOnNullParam( key, "key" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
     final Object mapPanelEntry = dataModel.getData( key );
     if( !(mapPanelEntry instanceof IMapPanel) )
     {
-      throw new IllegalArgumentException( "Key does not correspond to a IMapPanel:" + key );
+      throw new IllegalArgumentException( "Key does not correspond to a IMapPanel:" + key ); //$NON-NLS-1$
     }
 
     final Object displayEntry = dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
     if( !(displayEntry instanceof Display) )
     {
-      throw new IllegalArgumentException( "dataModel must contains a entry with key .KEY_SELECTED_DISPLAY " + "representing a Display : current entry=" + displayEntry );
+      throw new IllegalArgumentException( "dataModel must contains a entry with key .KEY_SELECTED_DISPLAY " + "representing a Display : current entry=" + displayEntry ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final Runnable repaintRunnable = new Runnable()
@@ -161,16 +161,16 @@ public class KeyBasedDataModelUtil
     final IMapPanel mapPanel = dataModel.getData( IMapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     if( mapPanel == null )
     {
-      throw new RuntimeException( "Could not found map panel" );
+      throw new RuntimeException( "Could not found map panel" ); //$NON-NLS-1$
     }
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
-      throw new RuntimeException( "Could not get map model" );
+      throw new RuntimeException( "Could not get map model" ); //$NON-NLS-1$
 
     final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapPanel, themeQName );
     if( bcTheme == null )
     {
-      throw new RuntimeException( "Could not find boundary condition theme" );
+      throw new RuntimeException( "Could not find boundary condition theme" ); //$NON-NLS-1$
     }
     return bcTheme.getWorkspace();
   }

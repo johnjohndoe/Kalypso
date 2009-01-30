@@ -85,7 +85,7 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
@@ -710,7 +710,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), "Anzahl der Uferlinienstützstellen ändern", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString("Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.0"), Messages.getString("Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
             return;
@@ -841,7 +841,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), "Anzahl der Profilstützstellen ändern", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString("Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2"), Messages.getString("Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
             return;

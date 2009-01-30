@@ -49,6 +49,7 @@ import java.awt.event.KeyEvent;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -71,9 +72,9 @@ public class DeleteBCWidget extends AbstractDelegateWidget
 
   public DeleteBCWidget( )
   {
-    super( "Randbedingung löschen", "Randbedingung löschen", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -91,7 +92,7 @@ public class DeleteBCWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

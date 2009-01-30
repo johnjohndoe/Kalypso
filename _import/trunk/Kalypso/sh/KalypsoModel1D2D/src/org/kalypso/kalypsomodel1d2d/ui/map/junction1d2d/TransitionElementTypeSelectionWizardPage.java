@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement.TRANSITION_TYPE;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author antanas
@@ -65,8 +66,8 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
   protected TransitionElementTypeSelectionWizardPage( final String pageName )
   {
     super( pageName );
-    setTitle( "Kopplung Typ" );
-    setDescription( "Geben Sie auf dieser Seite die Art der Kopplung ein." );
+    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.1") ); //$NON-NLS-1$
     m_radioBtnGroup = new Button[2];
   }
 
@@ -87,7 +88,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
     final Group radioGroup = new Group( container, SWT.NONE );
     radioGroup.setLayoutData( radioGroupGridData );
     radioGroup.setLayout( (new GridLayout( 1, false )) );
-    radioGroup.setText( " Kopplung " );
+    radioGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.2") ); //$NON-NLS-1$
     for( int i = 0; i < 2; i++ )
     {
       final GridData radioButtonGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
@@ -98,7 +99,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
       radio.setLayoutData( radioButtonGridData );
       m_radioBtnGroup[i] = radio;
     }
-    m_radioBtnGroup[0].setText( "1D nach 2D Übergang" );
+    m_radioBtnGroup[0].setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.3") ); //$NON-NLS-1$
     m_radioBtnGroup[0].addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( SelectionEvent e )
@@ -111,7 +112,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
         m_selectedType = TRANSITION_TYPE.TYPE1D2D;
       }
     } );
-    m_radioBtnGroup[1].setText( "2D nach 1D Übergang" );
+    m_radioBtnGroup[1].setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizardPage.4") ); //$NON-NLS-1$
     m_radioBtnGroup[1].addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( SelectionEvent e )

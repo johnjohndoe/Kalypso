@@ -79,6 +79,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -95,13 +96,13 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 {
-  protected static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  protected static final DateFormat DATETIMEFORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
-  protected static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" );
+  protected static final DateFormat DATEFORMAT = new SimpleDateFormat( "dd.MM.yyyy 00:00" ); //$NON-NLS-1$
 
-  private static final String DEFAULTSTEP = "1";
+  private static final String DEFAULTSTEP = "1"; //$NON-NLS-1$
 
-  private static final String DEFAULT_VALUE = "20.0";
+  private static final String DEFAULT_VALUE = "20.0"; //$NON-NLS-1$
 
   protected final Date[] m_dates = new Date[2];
 
@@ -121,7 +122,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 
   private int m_field = Calendar.HOUR;
 
-  private static final String MSG_PAGE = "Auf dieser Seite kann die gewünschte Zeitreihe definiert werden.";
+  private static final String MSG_PAGE = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.4"); //$NON-NLS-1$
 
   public TimeserieStepDescriptor( final String name, final String domainComponentUrn, final String valueComponentUrn )
   {
@@ -142,12 +143,12 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     final GridLayout gridLayout = new GridLayout( 3, false );
     container.setLayout( gridLayout );
 
-    createDateEntryLine( container, "Von:", 0, 0 );
-    createDateEntryLine( container, "Bis:", 1, 24 );
+    createDateEntryLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.5"), 0, 0 ); //$NON-NLS-1$
+    createDateEntryLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.6"), 1, 24 ); //$NON-NLS-1$
 
     final Label stepLabel = new Label( container, SWT.NONE );
     stepLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    stepLabel.setText( "Zeitschritt:" );
+    stepLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.7") ); //$NON-NLS-1$
 
     final Text dateTimeStep = new Text( container, SWT.BORDER );
     dateTimeStep.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -188,7 +189,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 
     final Label labelFromValue = new Label( container, SWT.NONE );
     labelFromValue.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    labelFromValue.setText( "Startwert:" );
+    labelFromValue.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.8") ); //$NON-NLS-1$
 
     final Text defaultFromValue = new Text( container, SWT.BORDER );
     defaultFromValue.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -203,11 +204,11 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 
     defaultFromValue.setText( DEFAULT_VALUE );
 
-    new Label( container, SWT.NONE ).setText( "" );
+    new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$
 
     final Label labelToValue = new Label( container, SWT.NONE );
     labelToValue.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    labelToValue.setText( "Zielwert:" );
+    labelToValue.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.10") ); //$NON-NLS-1$
 
     final Text defaultToValue = new Text( container, SWT.BORDER );
     defaultToValue.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -222,7 +223,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
 
     defaultToValue.setText( DEFAULT_VALUE );
 
-    new Label( container, SWT.NONE ).setText( "" );
+    new Label( container, SWT.NONE ).setText( "" ); //$NON-NLS-1$
 
     updatePageState( Status.OK_STATUS );
 
@@ -252,7 +253,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     dateText.setText( DATEFORMAT.format( cal.getTime() ) );
 
     final Button buttonDateTimeFrom = new Button( parent, SWT.NONE );
-    buttonDateTimeFrom.setText( "..." );
+    buttonDateTimeFrom.setText( "..." ); //$NON-NLS-1$
     buttonDateTimeFrom.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -286,18 +287,18 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
   private IStatus checkPageComplete( )
   {
     if( m_dates[0] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie ein Startdatum ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.13") ); //$NON-NLS-1$
     if( m_dates[1] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie ein Enddatum ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.14") ); //$NON-NLS-1$
     if( m_stepValue == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie eine Schrittweite ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.15") ); //$NON-NLS-1$
     if( m_fromValue == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie einen Startwert ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.16") ); //$NON-NLS-1$
     if( m_toValue == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie einen Zielwert ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.17") ); //$NON-NLS-1$
 
     if( !m_dates[0].before( m_dates[1] ) )
-      return StatusUtilities.createErrorStatus( "Startdatum muss vor Enddatum liegen." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.18") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -337,7 +338,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( "Zeitreihendefinition" );
+    m_page.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.19") ); //$NON-NLS-1$
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );
@@ -351,7 +352,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     final TupleResult result = obs.getResult();
 
     obs.setName( getName() );
-    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
+    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) ); //$NON-NLS-1$
 
     final IComponent[] components = result.getComponents();
     final IComponent domainComponent = components[0];
@@ -398,7 +399,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Zeitschritt: geben Sie einen Ganzzahlwert ein" );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.21") ); //$NON-NLS-1$
       m_stepValue = null;
     }
 
@@ -414,7 +415,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Startwert: geben Sie eine Dezimalzahl ein" );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.22") ); //$NON-NLS-1$
       m_fromValue = null;
     }
 
@@ -430,7 +431,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Zielwert: geben Sie eine Dezimalzahl ein" );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.23") ); //$NON-NLS-1$
       m_toValue = null;
     }
 
@@ -446,7 +447,7 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler in Datumswert. Geben Sie ein Datum wie folgt ein: " + DATEFORMAT.format( new Date() ) );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.TimeserieStepDescriptor.24") + DATEFORMAT.format( new Date() ) ); //$NON-NLS-1$
 
       m_dates[index] = null;
     }

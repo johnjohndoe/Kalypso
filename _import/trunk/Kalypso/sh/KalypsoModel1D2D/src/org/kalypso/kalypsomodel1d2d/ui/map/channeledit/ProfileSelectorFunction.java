@@ -50,6 +50,7 @@ import java.util.Set;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -92,7 +93,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
 
     if( m_data.getMeshStatus() == true )
     {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Profile selektieren", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return;
     }
 

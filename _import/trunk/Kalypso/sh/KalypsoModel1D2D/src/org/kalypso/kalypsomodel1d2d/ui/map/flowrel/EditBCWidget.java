@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -68,9 +69,9 @@ public class EditBCWidget extends AbstractDelegateWidget
 
   public EditBCWidget( )
   {
-    super( "Randbedingungen bearbeiten", "Randbedingungen bearbeiten", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingung in der Karte.\n" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -88,7 +89,7 @@ public class EditBCWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingung in der Karte.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -111,7 +112,7 @@ public class EditBCWidget extends AbstractDelegateWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {

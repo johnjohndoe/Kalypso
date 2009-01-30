@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -107,7 +108,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   public EditFEConceptGeometryWidget( )
   {
-    super( "FE Model Geometrie Editieren", "FE Model Geometrie Editieren" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -258,11 +259,11 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    String tooltipMsg = "";
+    String tooltipMsg = ""; //$NON-NLS-1$
     if( m_snappingActive == true )
-      tooltipMsg = "Editieren Sie FE-Elemente durch Klicken in die Karte.\n    'Esc':                                      abbrechen.\n    'Shift (gedrückt halten)':     Knotenfang ausschalten. \n                                                  <Knotenfang an> ";
+      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.3"); //$NON-NLS-1$
     else
-      tooltipMsg = "Editieren Sie FE-Elemente durch Klicken in die Karte.\n    'Esc':                                      abbrechen.\n    'Shift (gedrückt halten)':     Knotenfang ausschalten. \n                                                  <Knotenfang aus>";
+      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.4"); //$NON-NLS-1$
 
     m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );

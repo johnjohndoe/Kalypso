@@ -50,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.SegmentData;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -284,7 +285,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final IComponent RW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     
     if( (HW == null) || (RW == null) )
-      return "";
+      return ""; //$NON-NLS-1$
     try
     {
       
@@ -353,7 +354,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public String getTitle( )
   {
-    return "Zeichenfläche";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1"); //$NON-NLS-1$
   }
 
   private IProfil createNewProfile( final IRecord profilePoint, final double width, final double heigth, final GM_Point geoPoint )

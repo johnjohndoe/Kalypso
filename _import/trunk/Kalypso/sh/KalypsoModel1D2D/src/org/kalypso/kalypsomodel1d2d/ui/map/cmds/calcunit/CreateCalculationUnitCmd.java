@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 

@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -56,7 +57,7 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
 {
   public CreateWeirFlowrelationWidget( )
   {
-    super( "Wehr hinzufügen", "Wehr einem 1D-Element zuordnen", IWeirFlowRelation.QNAME );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget.1"), IWeirFlowRelation.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

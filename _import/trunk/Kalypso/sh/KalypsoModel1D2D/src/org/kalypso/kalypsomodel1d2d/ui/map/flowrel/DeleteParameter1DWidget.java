@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -72,10 +73,10 @@ public class DeleteParameter1DWidget extends AbstractDelegateWidget
 
   public DeleteParameter1DWidget( )
   {
-    super( "Parameter löschen", "einem FE-Knoten oder FE-Element zugeordneten Parameter löschen", new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME,
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -93,7 +94,7 @@ public class DeleteParameter1DWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Del': selektierte Parameter werden gelöscht.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

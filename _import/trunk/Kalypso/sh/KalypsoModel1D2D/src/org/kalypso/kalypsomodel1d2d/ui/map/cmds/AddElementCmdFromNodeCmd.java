@@ -50,6 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -77,14 +78,14 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
               IFEDiscretisationModel1d2d model,
               AddNodeCommand[] elementNodeCmds)
   {
-    Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
+    Assert.throwIAEOnNullParam( model, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.0") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elementNodeCmds, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.1") ); //$NON-NLS-1$
     for(IDiscrModel1d2dChangeCommand cmd:elementNodeCmds)
     {
       if(  cmd==null  )
       {
         throw new IllegalArgumentException(
-            "elementNodeCmds must only contains non null node cmds:"+
+            Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.2")+ //$NON-NLS-1$
             elementNodeCmds); 
       }
     }
@@ -100,7 +101,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Add FE element";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.3"); //$NON-NLS-1$
   }
 
   /**
@@ -144,7 +145,7 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
           }
       }
       addedElement=ModelOps.createElement2d( model, edges );
-      System.out.println( "Element added" );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCmdFromNodeCmd.4") ); //$NON-NLS-1$
     }
   }
 

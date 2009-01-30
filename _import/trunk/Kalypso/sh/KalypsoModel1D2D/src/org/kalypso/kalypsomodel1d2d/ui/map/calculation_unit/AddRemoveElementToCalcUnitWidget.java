@@ -75,6 +75,7 @@ import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Patrice Congo
@@ -136,9 +137,9 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
 
   public AddRemoveElementToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( "Elemente zu Teilmodell hinzufügen / löschen", "Elemente zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IPolyElement.QNAME, IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IPolyElement.QNAME, IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie FE-Elemente in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.4") ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
@@ -216,13 +217,13 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addElement = new JMenuItem();
-    addElement.setText( Messages.getString( "AddRemoveElementToCalcUnitWidget.2" ) ); //$NON-NLS-1$
-    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
+    addElement.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.5") );  //$NON-NLS-1$
+    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );  //$NON-NLS-1$
     addElement.addActionListener( makeAddElementActionListener() );
 
     final JMenuItem removeElement = new JMenuItem();
-    removeElement.setText( Messages.getString( "AddRemoveElementToCalcUnitWidget.6" ) ); //$NON-NLS-1$
-    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
+    removeElement.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.7") );  //$NON-NLS-1$
+    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );  //$NON-NLS-1$
     removeElement.addActionListener( makeRemoveElementActionListener() );
     // popupMenu.add( addNameDescription );
     popupMenu.add( addElement );
@@ -291,7 +292,7 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie FE-Elemente in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveElementToCalcUnitWidget.9") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

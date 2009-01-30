@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryCondition
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -129,9 +130,9 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( "Randbedingungen zu Teilmodell hinzufügen / löschen", "Randbedingungen zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie Randbedingungen in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.4") ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
@@ -149,13 +150,13 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
-    addBoundaryCondition.setText( Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.2" ) ); //$NON-NLS-1$
-    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
+    addBoundaryCondition.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.5") );  //$NON-NLS-1$
+    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );  //$NON-NLS-1$
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
     final JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.4" ) ); //$NON-NLS-1$
-    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
+    removeBoundaryCondition.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.7") );  //$NON-NLS-1$
+    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );  //$NON-NLS-1$
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
     popupMenu.add( addBoundaryCondition );
@@ -324,7 +325,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends AbstractDelegate
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie Randbedingungen in der Karte.\n    '<Einfügen>':  zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveBoundaryConditionToCalcUnitWidget.9") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

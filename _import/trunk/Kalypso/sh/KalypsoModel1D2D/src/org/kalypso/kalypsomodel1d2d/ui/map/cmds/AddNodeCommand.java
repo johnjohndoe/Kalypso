@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -134,7 +135,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Adding Node";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.0"); //$NON-NLS-1$
   }
 
   /**
@@ -155,7 +156,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     if( addedNode == null )
     {
       addedNode = discretisationModel.createNode( m_nodePoint, -1, notCreated );
-      System.out.println( "Adding node from command:" + addedNode + " " + notCreated[0] );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.1") + addedNode + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.2") + notCreated[0] ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -226,7 +227,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     StringBuffer buf = new StringBuffer();
-    buf.append( "AddNodeCommand[" );
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand.3") ); //$NON-NLS-1$
     buf.append( m_nodePoint );
     buf.append( ']' );
     return buf.toString();

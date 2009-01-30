@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -85,7 +86,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public String getDescription( )
   {
-    return "Höhenmodell löschen: " + m_elevationModel.getName();
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.DeleteNativeTerrainElevationWrapper.0") + m_elevationModel.getName(); //$NON-NLS-1$
   }
 
   /**

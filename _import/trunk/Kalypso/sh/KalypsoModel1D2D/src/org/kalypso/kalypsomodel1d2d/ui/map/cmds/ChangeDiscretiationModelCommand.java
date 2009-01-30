@@ -47,6 +47,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -63,7 +64,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public class ChangeDiscretiationModelCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION = "Change Discretisation model";
+  public static final String DEFAULT_DESCRIPTION = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.0"); //$NON-NLS-1$
 
   private final String m_description;
 
@@ -84,8 +85,8 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   public ChangeDiscretiationModelCommand( final GMLWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final String description )
   {
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    Assert.throwIAEOnNullParam( description, "description" );
+    Assert.throwIAEOnNullParam( model1d2d, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.1") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( description, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.2") ); //$NON-NLS-1$
     m_description = description;
     m_model1d2d = model1d2d;
     m_commandableWorkspace = commandableWorkspace;
@@ -229,7 +230,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
 
   public void addCommand( final IDiscrModel1d2dChangeCommand command )
   {
-    Assert.throwIAEOnNullParam( command, "command" );
+    Assert.throwIAEOnNullParam( command, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand.3") ); //$NON-NLS-1$
     if( m_commands instanceof AddNodeCommand )
     {
       m_nodeCommands.add( command );

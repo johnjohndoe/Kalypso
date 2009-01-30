@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author antanas
@@ -54,7 +55,7 @@ public class TransitionElementTypeSelectionWizard extends Wizard implements IWiz
 
   public TransitionElementTypeSelectionWizard( )
   {
-    setWindowTitle( "Kopplung definieren" );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.TransitionElementTypeSelectionWizard.0") ); //$NON-NLS-1$
   }
   
   /**
@@ -63,7 +64,7 @@ public class TransitionElementTypeSelectionWizard extends Wizard implements IWiz
   @Override
   public void addPages( )
   {
-    m_page = new TransitionElementTypeSelectionWizardPage( "page" );
+    m_page = new TransitionElementTypeSelectionWizardPage( "page" ); //$NON-NLS-1$
     addPage( m_page );
   }
 

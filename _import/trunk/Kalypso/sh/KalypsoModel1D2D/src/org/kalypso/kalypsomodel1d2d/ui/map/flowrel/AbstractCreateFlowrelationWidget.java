@@ -66,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -138,7 +139,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
 
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( "Klicken Sie in die Karte um einen Parameter hinzuzufügen." );
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.0") ); //$NON-NLS-1$
 
     m_flowTheme = UtilMap.findEditableTheme( mapPanel, m_qnameToCreate );
     if( m_flowTheme == null )
@@ -337,13 +338,13 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+              ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget.1"), status ); //$NON-NLS-1$
             }
           } );
         }
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {

@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -65,7 +66,7 @@ public class DeleteCmdFactory
    */
   public static final IDiscrModel1d2dChangeCommand createDeleteCmd( final Feature feature, final IFEDiscretisationModel1d2d model1d2d )
   {
-    Assert.throwIAEOnNullParam( feature, "feature" );
+    Assert.throwIAEOnNullParam( feature, "feature" ); //$NON-NLS-1$
     if( TypeInfo.isPolyElementFeature( feature ) )
     {
       return new DeletePolyElementCmd( model1d2d, feature );
@@ -82,15 +83,15 @@ public class DeleteCmdFactory
 
   public static final void createDeleteCmd( final IFEDiscretisationModel1d2d model1d2d, final EasyFeatureWrapper[] selected, final ChangeDiscretiationModelCommand modelChangeCmd )
   {
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    Assert.throwIAEOnNullParam( selected, "selected" );
-    Assert.throwIAEOnNullParam( modelChangeCmd, "modelChangeCmd" );
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( selected, "selected" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( modelChangeCmd, "modelChangeCmd" ); //$NON-NLS-1$
 
     for( final EasyFeatureWrapper easyFeatureWrapper : selected )
     {
       if( easyFeatureWrapper == null )
       {
-        throw new IllegalArgumentException( "All easy features in selected must be non null" );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.4") ); //$NON-NLS-1$
       }
       try
       {
@@ -104,7 +105,7 @@ public class DeleteCmdFactory
           }
           else
           {
-            throw new UnsupportedOperationException( "No delete command implemented for this feature:" + feature );
+            throw new UnsupportedOperationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory.5") + feature ); //$NON-NLS-1$
           }
         }
       }

@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -193,7 +194,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     m_flowRelModel = flowModel;
     m_discModel = discModel;
     m_outputStream = outputStream;
-    m_status = StatusUtilities.createStatus( IStatus.INFO, "Berechnung steht aus: " + m_flowRel.getName(), null );
+    m_status = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.0") + m_flowRel.getName(), null ); //$NON-NLS-1$
   }
 
   public void execute( final IProgressMonitor monitor )
@@ -202,17 +203,17 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     {
       m_running = true;
 
-      m_status = StatusUtilities.createStatus( IStatus.INFO, "Berechnung läuft: " + m_flowRel.getName(), null );
+      m_status = StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.1") + m_flowRel.getName(), null ); //$NON-NLS-1$
       m_result = calculateFlowRel( m_calculation, m_flowRel, monitor );
-      m_status = StatusUtilities.createStatus( IStatus.OK, "Berechnung erfolgreich: " + m_flowRel.getName(), null );
+      m_status = StatusUtilities.createStatus( IStatus.OK, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.2") + m_flowRel.getName(), null ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
-      m_status = StatusUtilities.createStatus( IStatus.ERROR, "Berechnung fehlgeschlagen: " + m_flowRel.getName(), e );
+      m_status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.3") + m_flowRel.getName(), e ); //$NON-NLS-1$
     }
     catch( final InvocationTargetException e )
     {
-      m_status = StatusUtilities.createStatus( IStatus.ERROR, "Berechnung fehlgeschlagen: " + m_flowRel.getName(), e.getTargetException() );
+      m_status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.4") + m_flowRel.getName(), e.getTargetException() ); //$NON-NLS-1$
     }
     finally
     {
@@ -226,7 +227,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     {
       final IProfileFeature teschkeProfile = ((ITeschkeFlowRelation) flowRel).getProfile();
       if( teschkeProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Knoten-Parameter ist kein Profil zugeordnet:" + teschkeProfile.getName(), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.5") + teschkeProfile.getName(), null ) ); //$NON-NLS-1$
 
       return runCalculation( calculation, flowRel, new IProfil[] { teschkeProfile.getProfil() }, monitor );
     }
@@ -250,11 +251,11 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       final IProfileFeature upProfile = tUp.getProfile();
 
       if( downProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Unterwasserknoten kein Profil zugeordnet:" + tDown.getName(), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.6") + tDown.getName(), null ) ); //$NON-NLS-1$
       if( upProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Oberwasserknoten kein Profil zugeordnet:" + tUp.getName(), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.7") + tUp.getName(), null ) ); //$NON-NLS-1$
       if( buildingProfile == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Bauwerk kein Profil zugeordnet:" + building.getName(), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.8") + building.getName(), null ) ); //$NON-NLS-1$
 
       final IProfil downStreamProfil = downProfile.getProfil();
       final IProfil buildingProfil = buildingProfile.getProfil();
@@ -263,7 +264,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       return runCalculation( calculation, flowRel, new IProfil[] { downStreamProfil, buildingProfil, upStreamProfil }, monitor );
     }
 
-    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Parameterberechnung nicht möglich für: " + flowRel + " (unbekannter Typ)", null ) );
+    throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.9") + flowRel + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.10"), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private QIntervallResult runCalculation( final TuhhCalculation templateCalculation, final IFlowRelation1D flowRel, final IProfil[] profiles, final IProgressMonitor monitor ) throws InvocationTargetException
@@ -271,12 +272,12 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     File tmpDir = null;
     try
     {
-      tmpDir = SimulationUtilitites.createSimulationTmpDir( "" + System.currentTimeMillis() );
+      tmpDir = SimulationUtilitites.createSimulationTmpDir( "" + System.currentTimeMillis() ); //$NON-NLS-1$
 
       final TuhhCalculation calculation = createCalculation( flowRel, templateCalculation, profiles );
 
       // Prepare wspm model
-      final File modelFile = new File( tmpDir, "modell.gml" );
+      final File modelFile = new File( tmpDir, "modell.gml" ); //$NON-NLS-1$
       final GMLWorkspace calcWorkspace = calculation.getFeature().getWorkspace();
       GmlSerializer.serializeWorkspace( modelFile, calcWorkspace, Charset.defaultCharset().name() );
 
@@ -286,7 +287,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       inputProvider.put( WspmTuhhCalcJob.INPUT_MODELL_GML, modelFile.toURI().toURL() );
       inputProvider.put( WspmTuhhCalcJob.INPUT_CALC_PATH, new GMLXPath( calculation.getFeature() ).toString() );
       // eps-thinning is big, as we do not need the tin result and bigger is faster
-      inputProvider.put( WspmTuhhCalcJob.INPUT_EPS_THINNING, "100.0" );
+      inputProvider.put( WspmTuhhCalcJob.INPUT_EPS_THINNING, "100.0" ); //$NON-NLS-1$
 
       final DefaultSimulationResultEater resultEater = new DefaultSimulationResultEater();
       final NullSimulationMonitorExtension simMonitor = new NullSimulationMonitorExtension( monitor );
@@ -323,7 +324,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
           return qresult;
       }
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Kein Ergebnis gefunden", null ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.14"), null ) ); //$NON-NLS-1$
     }
     catch( final InvocationTargetException e )
     {
@@ -372,10 +373,10 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
     final TuhhCalculation calculation = project.createReibConstCalculation();
     final boolean direction = true; // TODO: depends on building stuff
-    final WspmWaterBody waterBody = project.createWaterBody( "someWater", direction );
+    final WspmWaterBody waterBody = project.createWaterBody( "someWater", direction ); //$NON-NLS-1$
     project.createNewReach( waterBody.getName(), direction );
     final TuhhReach reach = TuhhWspmProject.createNewReachForWaterBody( waterBody );
-    reach.setName( "someReach" );
+    reach.setName( "someReach" ); //$NON-NLS-1$
 
     // Add Profiles to reach
     double minStation = Double.MAX_VALUE;
@@ -393,9 +394,9 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     }
 
     // Initialize calculation
-    calculation.setCalcCreation( "fe1d2d", new Date() );
-    calculation.setDescription( "Recalculation of 1d-parameters" );
-    calculation.setName( "1dparameters" );
+    calculation.setCalcCreation( "fe1d2d", new Date() ); //$NON-NLS-1$
+    calculation.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.18") ); //$NON-NLS-1$
+    calculation.setName( "1dparameters" ); //$NON-NLS-1$
     calculation.setReachRef( reach );
     calculation.setSubReachDef( minStation - 1, maxStation + 1 );
 
@@ -405,7 +406,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     final Double maxQ = template.getMaxQ();
     final Double step = template.getQStep();
     if( minQ == null || maxQ == null || step == null )
-      throw new InvocationTargetException( new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Abflussintervall nicht definiert", null ) ) );
+      throw new InvocationTargetException( new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelationshipCalcOperation.20"), null ) ) ); //$NON-NLS-1$
 
     calculation.setQRange( minQ, maxQ, step );
     final boolean calcBuildings;

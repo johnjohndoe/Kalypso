@@ -54,6 +54,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -103,11 +104,11 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     m_featureGroup.setLayout( new GridLayout() );
     final GridData groupData = new GridData( SWT.FILL, SWT.FILL, true, true );
     m_featureGroup.setLayoutData( groupData );
-    m_featureGroup.setText( "Steuerparameter" );
+    m_featureGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.0") ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) );
-    featureviewFactory.addView( getClass().getResource( "resources/waterlevelParameter.gft" ) );
+    featureviewFactory.addView( getClass().getResource( "resources/calcControlPage.gft" ) ); //$NON-NLS-1$
+    featureviewFactory.addView( getClass().getResource( "resources/waterlevelParameter.gft" ) ); //$NON-NLS-1$
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
@@ -147,7 +148,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
       if( m_template == null )
       {
         // show error message
-        setErrorMessage( "Keine Vorlage für Steuerparameter verfügbar" );
+        setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.3") ); //$NON-NLS-1$
       }
       else
       {
@@ -162,7 +163,7 @@ public class FlowRelCalcControlPage extends WizardPage implements IWizardPage
     {
       e.printStackTrace();
 
-      setErrorMessage( "Fehler bei der Erstellung der Steuerparameter-Vorlage: " + e.toString() );
+      setErrorMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcControlPage.4") + e.toString() ); //$NON-NLS-1$
     }
   }
 

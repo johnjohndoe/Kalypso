@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -87,10 +88,10 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
 
   public EditParameter1dWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten oder Elements bearbeiten", new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME,
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITeschkeFlowRelation.QNAME, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -108,7 +109,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -131,7 +132,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {
@@ -187,7 +188,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
       final IFlowRelationshipModel flowModel = dataProvider.getModel( IFlowRelationshipModel.class );
 
       final FlowRelCalcWizard wizard = new FlowRelCalcWizard( flowRels, flowModel, discModel );
-      wizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) );
+      wizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "flowRelCalcWizard" ) ); //$NON-NLS-1$
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       wizardDialog2.setRememberSize( true );
       if( wizardDialog2.open() == Window.OK )
@@ -198,7 +199,7 @@ public class EditParameter1dWidget extends AbstractDelegateWidget
     catch( final CoreException e )
     {
       KalypsoModel1D2DPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, "Parameter berechnen", "Modelldaten stehen nicht zur Verfügung", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.8"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.9"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

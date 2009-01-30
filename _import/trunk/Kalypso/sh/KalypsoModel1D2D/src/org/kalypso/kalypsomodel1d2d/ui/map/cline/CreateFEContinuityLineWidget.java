@@ -16,7 +16,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
@@ -62,7 +62,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @SuppressWarnings("unchecked")
   public CreateFEContinuityLineWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.1" ) ); //$NON-NLS-1$ $NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_nodeList = new ArrayList<IFE1D2DNode>();
   }
 
@@ -274,7 +274,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       {
         public void run( )
         {
-          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.2" ), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.2" ), status ); //$NON-NLS-1$
         }
       } );
     }

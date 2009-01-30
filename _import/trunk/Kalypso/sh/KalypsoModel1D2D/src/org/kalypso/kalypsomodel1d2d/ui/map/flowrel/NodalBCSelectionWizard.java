@@ -62,6 +62,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -77,7 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class NodalBCSelectionWizard extends Wizard implements IWizard
 {
-  protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
+  protected static final DateFormat DF = new SimpleDateFormat( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.0") ); //$NON-NLS-1$
 
   private NodalBCSelectionWizardPage m_selectionPage;
 
@@ -109,15 +110,15 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
     m_parentModelElement = parentModelElement;
-    setWindowTitle( "Randbedingung definieren" );
-    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.1") ); //$NON-NLS-1$
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void addPages( )
   {
-    m_descriptorPage = new NodalBCDescriptorPage( "descriptorPage", m_descriptors );
-    m_selectionPage = new NodalBCSelectionWizardPage( "selectionPage", m_descriptors, m_descriptorPage );
+    m_descriptorPage = new NodalBCDescriptorPage( "descriptorPage", m_descriptors ); //$NON-NLS-1$
+    m_selectionPage = new NodalBCSelectionWizardPage( "selectionPage", m_descriptors, m_descriptorPage ); //$NON-NLS-1$
 
     addPage( m_selectionPage );
     addPage( m_descriptorPage );
@@ -175,7 +176,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
                 try
                 {
-                  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+                  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
                   m_selectionManager.setSelection( new EasyFeatureWrapper[] { easyFeatureWrapper } );
                 }
                 catch( final Throwable pie )
@@ -204,7 +205,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Erzeugen der Zeitreihe", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard.6"), status ); //$NON-NLS-1$
 
     if( status.isOK() )
       m_boundaryCondition = bc;

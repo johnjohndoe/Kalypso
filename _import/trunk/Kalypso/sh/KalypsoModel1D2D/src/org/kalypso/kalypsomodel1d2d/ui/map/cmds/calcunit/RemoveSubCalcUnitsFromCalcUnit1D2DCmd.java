@@ -68,7 +68,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements ICommand
    */
   public String getDescription( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

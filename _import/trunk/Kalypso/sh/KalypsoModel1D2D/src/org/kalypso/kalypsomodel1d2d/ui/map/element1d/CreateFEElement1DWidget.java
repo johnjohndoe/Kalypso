@@ -20,6 +20,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -63,7 +64,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
   public CreateFEElement1DWidget( )
   {
-    super( "Neues 1D FE-Element", "Ein neues 1D FE-Element kreieren" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -81,7 +82,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   {
     final IMapPanel mapPanel = getMapPanel();
 
-    mapPanel.setMessage( "Klicken Sie in die Karte um 1D-Elemente hinzuzufügen." );
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.2") ); //$NON-NLS-1$
 
     final IMapModell mapModell = mapPanel.getMapModell();
     m_theme = UtilMap.findEditableTheme( mapPanel, IElement1D.QNAME );
@@ -119,7 +120,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
     /* If we have a node, take this position, else take the current one */
     final GM_Point currentPos = m_node == null ? MapUtilities.transform( mapPanel, p ) : m_node.getPoint();
 
-    mapPanel.setMessage( "Doppelklick: Beenden -  <ESC> abbrechen - <BACKSPACE> löschen" );
+    mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.3") ); //$NON-NLS-1$
 
     try
     {
@@ -132,7 +133,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
       e.printStackTrace();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-      mapPanel.setMessage( "Fehler: " + status.getMessage() );
+      mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.4") + status.getMessage() ); //$NON-NLS-1$
       reinit();
     }
   }
@@ -166,7 +167,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         final IMapPanel mapPanel = getMapPanel();
-        mapPanel.setMessage( "Fehler: " + status.getMessage() );
+        mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.5") + status.getMessage() ); //$NON-NLS-1$
         reinit();
       }
     }
@@ -217,7 +218,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
   private ICommand finishLine2( final GM_Curve curve ) throws GM_Exception
   {
-    final CompositeCommand command = new CompositeCommand( "Erzeuge 1D-Element" );
+    final CompositeCommand command = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.6") ); //$NON-NLS-1$
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final FeatureList featureList = m_theme.getFeatureList();
@@ -286,7 +287,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
     final Rectangle bounds = mapPanel.getScreenBounds();
 
-    m_toolTipRenderer.setTooltip( "Generieren Sie neue 1D-Elemente durch Klicken in die Karte.\n    'Doppelklick': Generierung abschließen.\n    'Esc':               abbrechen.\n    'Del':                letzten Punkt löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.7") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
   }

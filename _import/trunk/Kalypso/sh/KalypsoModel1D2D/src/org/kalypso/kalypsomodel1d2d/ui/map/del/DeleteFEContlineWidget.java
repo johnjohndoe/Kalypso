@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -73,9 +74,9 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
 
   public DeleteFEContlineWidget( )
   {
-    super( "Kontinuitätslinien löschen", "Kontinuitätslinien löschen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.10"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.11"), new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.14") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
@@ -94,7 +95,7 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.15") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -116,7 +117,7 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
       if( status != Status.OK_STATUS )
       {
         final Shell shell = Display.getCurrent().getActiveShell();
-        MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.16"), status.getMessage() ); //$NON-NLS-1$
       }
     }
     super.keyPressed( event );

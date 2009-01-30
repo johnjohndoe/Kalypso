@@ -48,6 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * Wrapped a {@link GM_Point} and mimes the possibility to changes it
@@ -60,7 +61,7 @@ class MutableGMPoint implements GM_Point
 
   public MutableGMPoint( final GM_Point point )
   {
-    Assert.throwIAEOnNull( point, Messages.getString( "MutableGMPoint.0" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( point, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.MutableGMPoint.0" ) ); //$NON-NLS-1$
     this.point = point;
   }
 

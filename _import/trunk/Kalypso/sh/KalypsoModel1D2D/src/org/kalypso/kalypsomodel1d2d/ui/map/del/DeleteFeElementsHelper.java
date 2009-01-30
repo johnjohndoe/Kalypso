@@ -86,7 +86,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * @author Thomas Jung
  *
@@ -100,9 +100,9 @@ public class DeleteFeElementsHelper
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
     if( selected.length == 0 )
-      return StatusUtilities.createErrorStatus( "Fe-Elemente löschen fehlgeschlagen. Keine Elemente selektiert." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.0") ); //$NON-NLS-1$
 
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return Status.OK_STATUS;
 
     selectionManager.clear();
@@ -115,7 +115,7 @@ public class DeleteFeElementsHelper
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
 
       if( discretisationModel == null )
-        throw new RuntimeException( "Could not found model1d2d" );
+        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.3") ); //$NON-NLS-1$
 
       // make a list of all the nodes contained by all the continuity lines
       final List<IFENode> clNodes = new ArrayList<IFENode>();
@@ -134,7 +134,7 @@ public class DeleteFeElementsHelper
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         if( easyFeatureWrapper == null )
-          throw new IllegalArgumentException( "All easy features in selected must be non null" );
+          throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.4") ); //$NON-NLS-1$
         final IFE1D2DElement element = (IFE1D2DElement) easyFeatureWrapper.getFeature().getAdapter( IFE1D2DElement.class );
         final List<IFE1D2DNode> nodes = element.getNodes();
         for( final IFE1D2DNode node : nodes )
@@ -142,7 +142,7 @@ public class DeleteFeElementsHelper
           {
             if( element instanceof IElement2D )
             {
-              SWT_AWT_Utilities.showSwtMessageBoxInformation( "Löschen nicht möglich", "Mindestens eines der selektierten 2D-Elemente ist Teil einer Kontinuitätslinie. Bitte löschen Sie zuerst die Kontinuitätslinie." );
+              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.5"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.6") ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.OK_STATUS;
             }
             if( element instanceof IElement1D )
@@ -154,7 +154,7 @@ public class DeleteFeElementsHelper
                   numberOfEdgeContainers++;
               if( numberOfEdgeContainers < 2 )
               {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( "Löschen nicht möglich", "Mindestens eines der selektierten 1D-Elemente ist Teil einer Kontinuitätslinie. Bitte löschen Sie zuerst die Kontinuitätslinie." );
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.7"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.8") ); //$NON-NLS-1$ //$NON-NLS-2$
                 return Status.OK_STATUS;
               }
             }
@@ -191,7 +191,7 @@ public class DeleteFeElementsHelper
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fe-Elemente löschen fehlgeschlagen." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.9") ); //$NON-NLS-1$
     }
     return Status.OK_STATUS;
   }
@@ -202,9 +202,9 @@ public class DeleteFeElementsHelper
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
     if( selected.length == 0 )
-      return StatusUtilities.createErrorStatus( "Kontinuitätslinien löschen fehlgeschlagen. Keine Objekte selektiert." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.10") ); //$NON-NLS-1$
 
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.11"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.12") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return Status.OK_STATUS;
 
     try
@@ -227,7 +227,7 @@ public class DeleteFeElementsHelper
             for( final EasyFeatureWrapper element : selected )
               if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.4" ), Messages.getString( "DeleteFEContlineWidget.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.24" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.25" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return Status.OK_STATUS;
               }
@@ -242,14 +242,14 @@ public class DeleteFeElementsHelper
             for( final EasyFeatureWrapper element : selected )
               if( line.getGmlID().equals( element.getFeature().getId() ) )
               {
-                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.6" ), Messages.getString( "DeleteFEContlineWidget.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.26" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.27" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 selectionManager.clear();
                 return Status.OK_STATUS;
               }
           }
         }
       }
-      final CompositeCommand compositeCommand = new CompositeCommand( "Objekte löschen" );
+      final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFeElementsHelper.13") ); //$NON-NLS-1$
 
       // check for boundary conditions on the continuity lines
       final FeatureList wrappedList = flowRelationshipModel.getWrappedList();
@@ -262,7 +262,7 @@ public class DeleteFeElementsHelper
           for( final EasyFeatureWrapper element : selected )
             if( element.getFeature().getId().equals( parentElementID ) )
             {
-              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "DeleteFEContlineWidget.8" ), Messages.getString( "DeleteFEContlineWidget.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+              SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.28" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.29" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               selectionManager.clear();
               return Status.OK_STATUS;
             }

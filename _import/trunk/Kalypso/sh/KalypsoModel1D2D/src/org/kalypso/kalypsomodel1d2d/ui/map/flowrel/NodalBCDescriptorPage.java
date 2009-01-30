@@ -96,7 +96,7 @@ public class NodalBCDescriptorPage extends WizardPage implements IWizardPage
       }
     }
 
-    throw new IllegalStateException( "No control found for: " + selectedDescriptor );
+    throw new IllegalStateException( "No control found for: " + selectedDescriptor ); //$NON-NLS-1$
   }
 
   public IBoundaryConditionDescriptor getDescriptor( )

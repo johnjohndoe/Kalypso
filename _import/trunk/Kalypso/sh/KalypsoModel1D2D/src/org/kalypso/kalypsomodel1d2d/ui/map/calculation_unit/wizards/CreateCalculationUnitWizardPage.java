@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 public class CreateCalculationUnitWizardPage extends WizardPage
 {
@@ -64,11 +65,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
 //  private Text m_calcUnitDescription;
 
-  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizardPage.0"); //$NON-NLS-1$
+  private static final String QNAME_KEY_1D2D = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.0");  //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizardPage.1"); //$NON-NLS-1$
+  private static final String QNAME_KEY_2D = "2D Berechnungseinheit";  //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizardPage.2"); //$NON-NLS-1$
+  private static final String QNAME_KEY_1D = "1D Berechnungseinheit";  //$NON-NLS-1$
 
   public CreateCalculationUnitWizardPage( final String name, final String description )
   {
@@ -89,20 +90,20 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     setControl( composite );
 
     final Label nameLabel = new Label( composite, SWT.RIGHT );
-    nameLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.3") ); //$NON-NLS-1$
+    nameLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.3") );  //$NON-NLS-1$
     m_calcUnitName = new Text( composite, SWT.SINGLE | SWT.BORDER );
     m_calcUnitName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_calcUnitName.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
-        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) ); //$NON-NLS-1$
+        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) );  //$NON-NLS-1$
         getContainer().updateButtons();
       }
     } );
 
     Label typeLabel = new Label( composite, SWT.RIGHT );
-    typeLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.10") ); //$NON-NLS-1$
+    typeLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.5") );  //$NON-NLS-1$
 
     m_calcUnitType = new Combo( composite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
     m_calcUnitType.add( QNAME_KEY_1D2D );
@@ -135,12 +136,12 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     else if( QNAME_KEY_1D2D.equals( qNameKey ) )
       return ICalculationUnit1D2D.QNAME;
     else
-      throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizardPage.6") + qNameKey );  //$NON-NLS-1$
   }
 
   public String getCalculationUnitDescription( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
 //    return m_calcUnitDescription.getText();
   }
 

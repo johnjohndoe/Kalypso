@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -84,9 +85,9 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
 
   public CreateJunctionElementWidget( )
   {
-    super( "1d-Einmündung erzeugen", "1d-Einmündung erzeugen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie min. zwei Randlinien in der Karte.\n    'Enter': Einmündungselement erzeugen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -106,7 +107,7 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie min. zwei Randlinien in der Karte.\n    'Enter': Einmündungselement erzeugen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

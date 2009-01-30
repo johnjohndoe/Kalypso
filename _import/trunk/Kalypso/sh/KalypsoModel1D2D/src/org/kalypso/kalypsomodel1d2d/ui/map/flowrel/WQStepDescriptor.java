@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -74,9 +75,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class WQStepDescriptor implements IBoundaryConditionDescriptor
 {
-  private static final String MSG_PAGE = "Auf dieser Seite kann die gewünschte W/Q-Beziehung definiert werden.";
+  private static final String MSG_PAGE = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.0"); //$NON-NLS-1$
 
-  private static final String DEFAULTSTEP = "10";
+  private static final String DEFAULTSTEP = "10"; //$NON-NLS-1$
 
   private WizardPage m_page;
 
@@ -114,15 +115,15 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
 
     new Label( container, SWT.NONE );
     // TODO: check needed units
-    new Label( container, SWT.NONE ).setText( "h [cm]" );
-    new Label( container, SWT.NONE ).setText( "Q [m³/s]" );
+    new Label( container, SWT.NONE ).setText( "h [cm]" ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( "Q [m³/s]" ); //$NON-NLS-1$
 
-    createFromToLine( container, "Von:", 0, 0.0, 0.0 );
-    createFromToLine( container, "Bis:", 1, 100.0, 10.0 );
+    createFromToLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.4"), 0, 0.0, 0.0 ); //$NON-NLS-1$
+    createFromToLine( container, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.5"), 1, 100.0, 10.0 ); //$NON-NLS-1$
 
     final Label stepLabel = new Label( container, SWT.NONE );
     stepLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    stepLabel.setText( "Anzahl Schritte:" );
+    stepLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.6") ); //$NON-NLS-1$
 
     final Text stepText = new Text( container, SWT.BORDER );
     stepText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -161,7 +162,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
       }
     } );
 
-    textH.setText( String.format( "%s", h ) );
+    textH.setText( String.format( "%s", h ) ); //$NON-NLS-1$
 
     final Text textQ = new Text( parent, SWT.BORDER );
     textQ.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -175,7 +176,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
       }
     } );
 
-    textQ.setText( String.format( "%s", q ) );
+    textQ.setText( String.format( "%s", q ) ); //$NON-NLS-1$
   }
 
   protected void updatePageState( final IStatus status )
@@ -192,20 +193,20 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
   private IStatus checkPageComplete( )
   {
     if( m_h[0] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie einen unteren Wasserstand ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.9") ); //$NON-NLS-1$
     if( m_h[1] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie einen oberen Wasserstand ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.10") ); //$NON-NLS-1$
     if( m_q[0] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie ein unteren Abfluss ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.11") ); //$NON-NLS-1$
     if( m_q[1] == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie ein oberen Abfluss ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.12") ); //$NON-NLS-1$
     if( m_step == null )
-      return StatusUtilities.createWarningStatus( "Geben Sie eine Schrittanahl ein." );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.13") ); //$NON-NLS-1$
 
     if( !(m_h[0] < m_h[1]) )
-      return StatusUtilities.createErrorStatus( "Unterer Wasserstand muss kleiner als der obere Wasserstand sein." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.14") ); //$NON-NLS-1$
     if( !(m_q[0] < m_q[1]) )
-      return StatusUtilities.createErrorStatus( "Unterer Abfluss muss kleiner als der obere Abfluss sein." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.15") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -215,7 +216,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( "W/Q-Beziehung definieren" );
+    m_page.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.16") ); //$NON-NLS-1$
     m_page.setDescription( MSG_PAGE );
 
     updatePageState( Status.OK_STATUS );
@@ -240,7 +241,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
 
       obs.setName( getName() );
       // TODO: change
-      obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
+      obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) ); //$NON-NLS-1$
 
       final IComponent[] components = result.getComponents();
       final IComponent domainComponent = components[0];
@@ -283,7 +284,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler im Zeitschritt: geben Sie einen Ganzzahlwert ein" );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.18") ); //$NON-NLS-1$
       m_step = null;
     }
 
@@ -299,7 +300,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler in Wasserstand. Geben Sie eine Dezimalzahl ein." );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.19") ); //$NON-NLS-1$
 
       m_h[index] = null;
     }
@@ -316,7 +317,7 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
     }
     catch( final Throwable t )
     {
-      status = StatusUtilities.statusFromThrowable( t, "Formatfehler in Wasserstand. Geben Sie eine Dezimalzahl ein." );
+      status = StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.WQStepDescriptor.20") ); //$NON-NLS-1$
 
       m_q[index] = null;
     }

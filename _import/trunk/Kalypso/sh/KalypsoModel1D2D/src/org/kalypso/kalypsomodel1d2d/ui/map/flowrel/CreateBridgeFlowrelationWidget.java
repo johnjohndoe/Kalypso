@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -56,7 +57,7 @@ public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWi
 {
   public CreateBridgeFlowrelationWidget( )
   {
-    super( "Brücke hinzufügen", "Brücke einem 1D-Element zuordnen", IBridgeFlowRelation.QNAME );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBridgeFlowrelationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBridgeFlowrelationWidget.1"), IBridgeFlowRelation.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

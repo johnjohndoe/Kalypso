@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 
 /**
@@ -52,6 +53,6 @@ public class EditPolygonWidgetWrapper extends EditGeometryWidget
 {
   public EditPolygonWidgetWrapper( )
   {
-    super("Polygon bearbeiten", "");
+    super(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditPolygonWidgetWrapper.0"), ""); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

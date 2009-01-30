@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -82,7 +83,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Delete element 1D";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.0"); //$NON-NLS-1$
   }
 
   /**
@@ -143,7 +144,7 @@ public class DeleteElement1DCmd implements IDiscrModel1d2dChangeCommand
     m_changedFeatureList.add( edge.getFeature() );
     if( !isRemoved )
     {
-      throw new RuntimeException( "Could not remove element as edge container" );
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteElement1DCmd.1") ); //$NON-NLS-1$
     }
 
     final IFeatureWrapperCollection nodes = edge.getNodes();

@@ -71,6 +71,7 @@ import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -262,7 +263,7 @@ public class CreateChannelData
 
   public void initSegments( )
   {
-    final Job job = new Job( "Init segments" )
+    final Job job = new Job( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.0") ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -402,7 +403,7 @@ public class CreateChannelData
       final IStatus status = mergeMeshList();
       if( status != Status.OK_STATUS && m_shell != null )
       {
-        MessageDialog.openInformation( m_shell, "Schlauchgenerator", "Es traten Fehler bei der Erzeugung des Flussschlauches auf. Bitte überprüfen Sie Ihre Eingangsdaten." );
+        MessageDialog.openInformation( m_shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.2") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -549,7 +550,7 @@ public class CreateChannelData
       {
         final Coordinate[][] coordinates = m_coordList.get( i );
         if( numX != coordinates.length )
-          return StatusUtilities.createErrorStatus( "Schlauchgenerator: Unterteilungsgrößen stimmen nicht überein." );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3") ); //$NON-NLS-1$
         // coordSegmentPointer = coordYPosPointer;
         // loop over all profile intersections -> coords [x][]
         for( int j = 0; j < coordinates.length; j++ )
@@ -566,8 +567,8 @@ public class CreateChannelData
       }
       if( coordYPosPointer != overallYCoordNum - 1 )
       {
-        System.out.println( "consolidateMesh: wrong number of coord array!! " );
-        return StatusUtilities.createErrorStatus( "consolidateMesh: wrong number of coord array!! " );
+        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.4") ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5") ); //$NON-NLS-1$
       }
 
       m_meshCoords = newCoords;
@@ -577,7 +578,7 @@ public class CreateChannelData
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Schlauchgenerator: Fehler bei Erstellung des FLussschlauches. Überprüfen Sie Ihre Eingangsdaten." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.6") ); //$NON-NLS-1$
     }
   }
 
@@ -733,7 +734,7 @@ public class CreateChannelData
     {
       // this should actually never happen!!
       error = true;
-      System.out.println( "Flussschlauchgenerator: An error during the orientation of the segment lines occured " );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.7") ); //$NON-NLS-1$
       return null;
     }
 
@@ -742,7 +743,7 @@ public class CreateChannelData
     final Point startpoint = lineArray[0].getStartPoint();
 
     if( endpoint.distance( startpoint ) > 0.001 || error == true )
-      System.out.println( "Flussschlauchgenerator: An error during the orientation of the segment lines occured " );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.8") ); //$NON-NLS-1$
 
     return lineArray;
   }
@@ -761,7 +762,7 @@ public class CreateChannelData
     if( profileFeatures.length == 0 )
       return;
 
-    monitor.beginTask( "Processing profiles", profileFeatures.length );
+    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9"), profileFeatures.length ); //$NON-NLS-1$
 
     final Feature firstFeature = profileFeatures[0];
     final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QNAME_STATION );
@@ -776,15 +777,15 @@ public class CreateChannelData
       // get the profile line
       final IProfileFeature profile = (IProfileFeature) (profileFeature);
 
-      monitor.subTask( "Station km " + profile.getStation() );
+      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10") + profile.getStation() ); //$NON-NLS-1$
 
       if( lastProfile != null )
       {
         // working on the segment
         final int numBankIntersections = getGlobNumBankIntersections();
         final SegmentData segment = new SegmentData( this, profile, lastProfile, m_selectedBanks, numBankIntersections );
-        System.out.println( "up profile: " + lastProfile.getStation() );
-        System.out.println( "down profile: " + profile.getStation() );
+        System.out.println( "up profile: " + lastProfile.getStation() ); //$NON-NLS-1$
+        System.out.println( "down profile: " + profile.getStation() ); //$NON-NLS-1$
 
         // add to list
         m_segmentList.add( segment );

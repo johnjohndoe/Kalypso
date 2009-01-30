@@ -12,10 +12,10 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -47,7 +47,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   public CreateFE2DElementWidget( )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -78,7 +78,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
   {
     super.finish();
 
-    getMapPanel().setMessage( "" );
+    getMapPanel().setMessage( "" ); //$NON-NLS-1$
     getMapPanel().setCursor( Cursor.getDefaultCursor() );
   }
 
@@ -114,7 +114,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
     super.paint( g );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
-    m_toolTipRenderer.setTooltip( "Generieren Sie neue 2D-Elemente durch Klicken in die Karte.\n    'Doppelklick': Generierung abschließen.\n    'Esc':               abbrechen.\n    'Del':                letzten Punkt löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.3") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -129,7 +129,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       final double z = snapNode.getPoint().getZ();
       if( !Double.isNaN( z ) )
       {
-        final String format = String.format( " Knotenhöhe: %.3f", z );
+        final String format = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.4"), z ); //$NON-NLS-1$
         getMapPanel().setMessage( format );
       }
     }
@@ -288,7 +288,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
       m_warning = false;
     else
     {
-      if( status.getMessage().equals( "Warnung! Element ohne Geometrie in Modell vorhanden." ) )
+      if( status.getMessage().equals( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.5") ) ) //$NON-NLS-1$
       {
         // TODO: delete element!
 

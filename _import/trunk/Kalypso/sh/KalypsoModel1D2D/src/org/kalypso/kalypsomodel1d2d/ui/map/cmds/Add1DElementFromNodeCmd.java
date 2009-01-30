@@ -46,6 +46,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -70,18 +71,18 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public Add1DElementFromNodeCmd( final IFEDiscretisationModel1d2d model, final AddNodeCommand[] elementNodeCmds )
   {
-    Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
+    Assert.throwIAEOnNullParam( model, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.0") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elementNodeCmds, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.1") ); //$NON-NLS-1$
     for( final IDiscrModel1d2dChangeCommand cmd : elementNodeCmds )
     {
       if( cmd == null )
       {
-        throw new IllegalArgumentException( "elementNodeCmds must only contains non null node cmds:" + elementNodeCmds );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.2") + elementNodeCmds ); //$NON-NLS-1$
       }
     }
     if( elementNodeCmds.length != 2 )
     {
-      throw new IllegalArgumentException( "This create 1D element command required 2 create node command " + "\n\tbut got=" + elementNodeCmds.length + " node Command" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.3") + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.4") + elementNodeCmds.length + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.5") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     this.model = model;
@@ -95,7 +96,7 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Add FE element";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.6"); //$NON-NLS-1$
   }
 
   /**
@@ -120,11 +121,11 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
       final IFE1D2DNode node1 = elementNodeCmds[1].getAddedNode();
       if( node0 == null || node1 == null )
       {
-        throw new IllegalStateException( "One of the base node command returns a null node:" + "\n\tnode0=" + node0 + "\n\tnode1=" + node1 );
+        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.7") + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.8") + node0 + Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.9") + node1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       if( node0.equals( node1 ) )
       {
-        throw new UnsupportedOperationException( "Building an edge from one node not supported" );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.10") ); //$NON-NLS-1$
       }
 
       curEdge = model.findEdge( node0, node1 );
@@ -135,7 +136,7 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
         final int size2 = model.getEdges().size();
         if( size2 - size1 != 1 )
         {
-          throw new IllegalStateException( "Multi edge created" );
+          throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd.11") ); //$NON-NLS-1$
         }
       }
       else

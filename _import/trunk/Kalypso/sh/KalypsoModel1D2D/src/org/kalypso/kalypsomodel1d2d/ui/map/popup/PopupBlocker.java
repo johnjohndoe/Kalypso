@@ -48,7 +48,7 @@ import org.eclipse.ui.IViewPart;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ui.views.map.MapView;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * This class provides a SWT-Popup blocker functionality for SWT-Control
  * if it is register as one of the control menu detect({@link SWT#MenuDetect}) listener
@@ -101,7 +101,7 @@ public class PopupBlocker implements Listener
     if( controlToBlock.isDisposed() )
     {
       throw new IllegalArgumentException(
-      Messages.getString("PopupBlocker.0")); //$NON-NLS-1$
+      Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker.0")); //$NON-NLS-1$
     }
     
     if( blockedControl != null )

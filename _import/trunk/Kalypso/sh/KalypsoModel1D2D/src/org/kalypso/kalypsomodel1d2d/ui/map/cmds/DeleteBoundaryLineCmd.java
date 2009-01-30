@@ -44,6 +44,7 @@ import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -87,8 +88,8 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
 
   public DeleteBoundaryLineCmd( final IFEDiscretisationModel1d2d model1d2d, final IFELine bLine )
   {
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    Assert.throwIAEOnNullParam( bLine, "bLine" );
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( bLine, "bLine" ); //$NON-NLS-1$
     // if( TypeInfo.isJunctionContextLine( bLine ) )
     // {
     // throw new IllegalArgumentException( "Linien element ist in einem Komplungskontext und " + "kann daher nicht
@@ -104,7 +105,7 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Delete element boundary line";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd.2"); //$NON-NLS-1$
   }
 
   /**
@@ -229,7 +230,7 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    throw new UnsupportedOperationException( "Operation unsupported" );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd.3") ); //$NON-NLS-1$
   }
 
   /**

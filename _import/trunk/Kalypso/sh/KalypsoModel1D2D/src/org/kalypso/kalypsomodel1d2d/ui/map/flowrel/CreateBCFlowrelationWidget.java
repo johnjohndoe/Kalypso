@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -72,7 +73,7 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
   public CreateBCFlowrelationWidget( )
   {
-    super( "Randbedingung erzeugen", "Randbedinung für einen FE-Knoten erzeugen", IBoundaryCondition.QNAME );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.1"), IBoundaryCondition.QNAME ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -103,14 +104,14 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
 
   public static IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
   {
-    final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-    final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Quelle/Senke oder Elementzufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
-    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Quelle/Senke oder Elementzufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
-    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+    final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.2"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ); //$NON-NLS-1$
+    final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.3"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ); //$NON-NLS-1$
+    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.4"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ); //$NON-NLS-1$
+    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.5"), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ); //$NON-NLS-1$
+    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.6") ); //$NON-NLS-1$
 
     final IFolder importFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );
-    final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
+    final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.7"), importFolder ); //$NON-NLS-1$
 
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )

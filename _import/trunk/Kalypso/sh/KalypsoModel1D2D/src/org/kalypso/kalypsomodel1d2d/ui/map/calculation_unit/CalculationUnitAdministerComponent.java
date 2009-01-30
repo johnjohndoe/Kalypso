@@ -57,6 +57,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
 
 /**
  * @author Madanagopal
@@ -93,7 +95,7 @@ public class CalculationUnitAdministerComponent
     final Button btnAddRemoveElements = new Button( rootComposite, SWT.PUSH );
     btnAddRemoveElements.setImage( IMAGEDATA_ADDREMOVE_ELEMENTS_1D.createImage() );
     DisposeButtonImageListener.hookToButton( btnAddRemoveElements );
-    btnAddRemoveElements.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.5" ) ); //$NON-NLS-1$
+    btnAddRemoveElements.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitAdministerComponent.0"));  //$NON-NLS-1$
     btnAddRemoveElements.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -107,7 +109,7 @@ public class CalculationUnitAdministerComponent
     final Button btnAddRemoveContinuityLines = new Button( rootComposite, SWT.PUSH );
     btnAddRemoveContinuityLines.setImage( IMAGEDATA_ADDREMOVE_CONTILINES.createImage() );
     DisposeButtonImageListener.hookToButton( btnAddRemoveContinuityLines );
-    btnAddRemoveContinuityLines.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.6" ) ); //$NON-NLS-1$
+    btnAddRemoveContinuityLines.setToolTipText(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitAdministerComponent.1")) ;  //$NON-NLS-1$
     btnAddRemoveContinuityLines.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -121,7 +123,7 @@ public class CalculationUnitAdministerComponent
     final Button btnAddRemoveBoundaryConditions = new Button( rootComposite, SWT.PUSH );
     btnAddRemoveBoundaryConditions.setImage( IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS.createImage() );
     DisposeButtonImageListener.hookToButton( btnAddRemoveBoundaryConditions );
-    btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.7" ) ); //$NON-NLS-1$
+    btnAddRemoveBoundaryConditions.setToolTipText(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitAdministerComponent.2")) ;   //$NON-NLS-1$
     btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionAdapter()
     {
       @Override

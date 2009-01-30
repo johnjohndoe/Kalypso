@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Button;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
@@ -90,7 +91,7 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
     m_flowModel = flowModel;
     m_discModel = discModel;
 
-    m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new ArrayContentProvider(), new LabelProvider()
+    m_chooseFlowsRelPage = new ListSelectionWizardPage( "selectFLowRelsPage", new ArrayContentProvider(), new LabelProvider() //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -105,21 +106,21 @@ public class FlowRelCalcWizard extends Wizard implements IWizard
 
     m_chooseFlowsRelPage.setInput( m_flowRels );
     m_chooseFlowsRelPage.setCheckedElements( m_flowRels );
-    m_chooseFlowsRelPage.setTitle( "Parameter auswählen" );
-    m_chooseFlowsRelPage.setMessage( "Auf dieser Seite können Sie die zu berechnenden Parameter auswählen." );
+    m_chooseFlowsRelPage.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.1") ); //$NON-NLS-1$
+    m_chooseFlowsRelPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.2") ); //$NON-NLS-1$
     m_chooseFlowsRelPage.setAllowNextIfEmpty( false );
 
-    m_controlPage = new FlowRelCalcControlPage( "controlPage", "Steuerparameter konfigurieren", null );
-    m_controlPage.setMessage( "Auf dieser Seite können Sie die Steuerparameter der Berechnung einstellen." );
+    m_controlPage = new FlowRelCalcControlPage( "controlPage", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.4"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_controlPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.5") ); //$NON-NLS-1$
 
-    m_simulationPage = new FlowRelCalcSimulationPage( "simulationPage", "Simulationverlauf", null );
-    m_simulationPage.setMessage( "Auf dieser Seite wird die Berechnung durchgeführt und die Ergebnisse werden dargestelt." );
+    m_simulationPage = new FlowRelCalcSimulationPage( "simulationPage", Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.7"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_simulationPage.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.8") ); //$NON-NLS-1$
 
     addPage( m_chooseFlowsRelPage );
     addPage( m_controlPage );
     addPage( m_simulationPage );
 
-    setWindowTitle( "1D-Parameter berechnen" );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcWizard.9") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

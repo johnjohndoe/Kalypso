@@ -50,50 +50,50 @@ public interface ICommonKeys
   /**
    * Key for for the workspace which root feature constains the boundary conditions
    */
-  public static final String KEY_BOUNDARY_CONDITION_CMD_WORKSPACE = "_bc_condition_commandable_workspace_";
+  public static final String KEY_BOUNDARY_CONDITION_CMD_WORKSPACE = "_bc_condition_commandable_workspace_"; //$NON-NLS-1$
 
   /**
    * Key for data entry holding the map panel
    */
-  public static final String KEY_MAP_PANEL = "_map_panel_";
+  public static final String KEY_MAP_PANEL = "_map_panel_"; //$NON-NLS-1$
 
   /**
    * Key used in the context of feature wrapper list editor denoting the data the list of feature wrapper which is to be
    * shown in the list
    */
-  public static final String KEY_FEATURE_WRAPPER_LIST = "_feature_wrapper_list_";
+  public static final String KEY_FEATURE_WRAPPER_LIST = "_feature_wrapper_list_"; //$NON-NLS-1$
 
   /**
    * Key used in the context of feature wrapper list editor denoting the currently selected feature wrapper
    */
-  public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_";
+  public static final String KEY_SELECTED_FEATURE_WRAPPER = "_sel_feature_wrapper_"; //$NON-NLS-1$
 
   /**
    * Key for data entry holding a {@link org.eclipse.swt.widgets.Display}
    */
-  public static final String KEY_SELECTED_DISPLAY = "_ui_display_";
+  public static final String KEY_SELECTED_DISPLAY = "_ui_display_"; //$NON-NLS-1$
 
   /**
    * Key for data entry holding the discretisation model
    */
-  public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_";
+  public static final String KEY_DISCRETISATION_MODEL = "_discretisation_model_"; //$NON-NLS-1$
 
-  public static final String KEY_DATA_PROVIDER = "_data_provider_";
+  public static final String KEY_DATA_PROVIDER = "_data_provider_"; //$NON-NLS-1$
 
   /**
    * Data entry holding the {@link org.kalypso.commons.command.ICommandTarget} used to post command to the
    * discretisation model.
    */
-  public static final String KEY_COMMAND_TARGET_DISC_MODEL = "_command target_discmodel_";
+  public static final String KEY_COMMAND_TARGET_DISC_MODEL = "_command target_discmodel_"; //$NON-NLS-1$
 
   /**
    * Key for data entry holding the {@link org.kalypso.commons.command.ICommandManager} to be use to post command to the
    * discretisation model.
    */
-  public static final String KEY_COMMAND_MANAGER_DISC_MODEL = "_command_manager_discmodel_";
+  public static final String KEY_COMMAND_MANAGER_DISC_MODEL = "_command_manager_discmodel_"; //$NON-NLS-1$
 
-  public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
+  public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_"; //$NON-NLS-1$
 
-  public static final String KEY_GRAB_DISTANCE_PROVIDER = "_grab_distance_provider_";
+  public static final String KEY_GRAB_DISTANCE_PROVIDER = "_grab_distance_provider_"; //$NON-NLS-1$
 
 }

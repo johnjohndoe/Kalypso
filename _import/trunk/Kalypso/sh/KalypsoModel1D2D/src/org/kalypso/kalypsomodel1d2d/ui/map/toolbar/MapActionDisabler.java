@@ -53,7 +53,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * Provides the mechanism to disable map view contribution items.
  * The mechanism consists of decorating the manager overrides with
@@ -129,7 +129,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
       }
       else
       {
-        logger.warning( Messages.getString("MapActionDisabler.3")+itemId ); //$NON-NLS-1$
+        logger.warning( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.3")+itemId ); //$NON-NLS-1$
       }
     }
     
@@ -147,14 +147,14 @@ public class MapActionDisabler implements IContributionManagerOverrides
     IViewPart findView = UtilMap.getMapView();
     if( findView == null )
     {
-      logger.warning(Messages.getString("MapActionDisabler.4")); //$NON-NLS-1$
+      logger.warning(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.4")); //$NON-NLS-1$
       return;
     }
     
     IViewSite viewSite = findView.getViewSite();
     if( viewSite == null )
     {
-      logger.warning(Messages.getString("MapActionDisabler.5")); //$NON-NLS-1$
+      logger.warning(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.5")); //$NON-NLS-1$
       return;
     }
     IActionBars actionBars = viewSite.getActionBars();
@@ -173,7 +173,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
       }
       else
       {
-        logger.warning( Messages.getString("MapActionDisabler.6")+itemId); //$NON-NLS-1$
+        logger.warning( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler.6")+itemId); //$NON-NLS-1$
       }
     }
     toolBarManager.update( true );

@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -67,9 +68,9 @@ public class EditTransitionElementWidget extends AbstractDelegateWidget
 
   public EditTransitionElementWidget( )
   {
-    super( "1D-2D-Linienkopplung bearbeiten", "1D-2D-Linienkopplung bearbeiten", new SelectFeatureWidget( "", "", new QName[] { ITransitionElement.QNAME }, ITransitionElement.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.1"), new SelectFeatureWidget( "", "", new QName[] { ITransitionElement.QNAME }, ITransitionElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-2D-Linienkopplung in der Karte.\n" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -87,7 +88,7 @@ public class EditTransitionElementWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-2D-Linienkopplung in der Karte.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -110,7 +111,7 @@ public class EditTransitionElementWidget extends AbstractDelegateWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.6"), null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {

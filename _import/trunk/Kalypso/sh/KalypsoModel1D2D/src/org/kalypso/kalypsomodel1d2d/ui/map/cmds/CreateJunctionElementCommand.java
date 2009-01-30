@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -140,6 +141,6 @@ public class CreateJunctionElementCommand implements IDiscrModel1d2dChangeComman
    */
   public String getDescription( )
   {
-    return "Creates junction element";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand.0"); //$NON-NLS-1$
   }
 }

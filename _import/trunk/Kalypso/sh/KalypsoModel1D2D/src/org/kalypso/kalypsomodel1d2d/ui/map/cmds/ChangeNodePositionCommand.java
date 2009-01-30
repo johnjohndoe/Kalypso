@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -79,7 +80,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Changing node positiom";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.0"); //$NON-NLS-1$
   }
 
   /**
@@ -145,7 +146,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     StringBuffer buf = new StringBuffer();
-    buf.append( "ChangeNodePositionCommand[" );
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand.1") ); //$NON-NLS-1$
     buf.append( newNodePoint );
     buf.append( ']' );
     return buf.toString();

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
+package org.kalypso.kalypsomodel1d2d.ui.map.i18n;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -49,7 +49,7 @@ import java.util.ResourceBundle;
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.map.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

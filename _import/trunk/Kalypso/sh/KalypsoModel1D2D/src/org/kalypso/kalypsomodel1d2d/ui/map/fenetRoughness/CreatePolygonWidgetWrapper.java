@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.CreateGeometeryWidget2;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -55,6 +56,6 @@ public class CreatePolygonWidgetWrapper extends CreateGeometeryWidget2
 
   public CreatePolygonWidgetWrapper(  )
   {
-    super( "Polygon zeichnen", "", GeometryUtilities.getPolygonClass() );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.CreatePolygonWidgetWrapper.0"), "", GeometryUtilities.getPolygonClass() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

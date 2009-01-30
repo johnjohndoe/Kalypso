@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -71,8 +72,8 @@ public class NodalBCSelectionWizardPage extends WizardPage
 
     m_descriptorPage = descriptorPage;
 
-    setTitle( "Art der Randbedingung" );
-    setDescription( "Geben Sie auf dieser Seite die Art der Randbedingung ein." );
+    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizardPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizardPage.1") ); //$NON-NLS-1$
     m_descriptors = descriptors;
     m_radioBtnGroup = new Button[m_descriptors.length];
   }
@@ -88,9 +89,9 @@ public class NodalBCSelectionWizardPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    new Label( container, SWT.NONE ).setText( "Stationäre Randbedingung:" );
+    new Label( container, SWT.NONE ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizardPage.2") ); //$NON-NLS-1$
     m_bcValue = new Text( container, SWT.BORDER );
-    m_bcValue.setText( "20.0" );
+    m_bcValue.setText( "20.0" ); //$NON-NLS-1$
     m_bcValue.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     // bcValue.addKeyListener( new KeyListener()
     // {
@@ -117,7 +118,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
     final Group radioGroup = new Group( container, SWT.NONE );
     radioGroup.setLayoutData( radioGroupGridData );
     radioGroup.setLayout( (new GridLayout( 1, false )) );
-    radioGroup.setText( " Instationäre Randbedinungen " );
+    radioGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizardPage.4") ); //$NON-NLS-1$
     for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
       final GridData radioButtonGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );

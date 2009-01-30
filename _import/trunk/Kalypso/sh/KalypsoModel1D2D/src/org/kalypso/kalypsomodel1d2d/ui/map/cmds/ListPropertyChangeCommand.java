@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,7 +77,7 @@ public class ListPropertyChangeCommand implements ICommand
       final FeatureChange change = changes[i];
       if( !change.getProperty().isList() )
       {
-        throw new IllegalArgumentException( "Change must be done on a list property" );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand.0") ); //$NON-NLS-1$
       }
       // final Object oldValue =
       // change.getFeature().getProperty( change.getProperty() );
@@ -121,7 +122,7 @@ public class ListPropertyChangeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Feature verändern";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand.1"); //$NON-NLS-1$
   }
 
   private void doChanges( final FeatureChange[] changes )
@@ -139,7 +140,7 @@ public class ListPropertyChangeCommand implements ICommand
       propType = change.getProperty();
       if( propType == null )
       {
-        System.out.println( "Proptype is null; feature to change:" + featureToChange );
+        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand.2") + featureToChange ); //$NON-NLS-1$
         continue;
       }
       if( featureToChange == null )

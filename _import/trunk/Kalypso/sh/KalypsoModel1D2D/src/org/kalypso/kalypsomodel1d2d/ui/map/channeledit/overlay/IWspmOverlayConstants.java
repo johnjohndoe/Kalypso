@@ -46,5 +46,5 @@ package org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay;
  */
 public interface IWspmOverlayConstants
 {
-  public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY";
+  public static String LAYER_OVERLAY = "org.kalypso.model.wspm.tuhh.ui.chart.overlay.LAYER_OVERLAY"; //$NON-NLS-1$
 }

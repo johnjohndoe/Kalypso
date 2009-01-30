@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 public class GridPointCollector
 {
@@ -97,7 +98,7 @@ public class GridPointCollector
     final int pointRectSize = GridWidgetFace.getPointRectSize();
     for( int i = 0; i < m_sides.length; i++ )
     {
-      m_lpcConfigs[i] = new LinePointCollectorConfig( Messages.getString( "GridPointCollector.1" ) + (i + 1), colors[i], m_sides[i] ); //$NON-NLS-1$
+      m_lpcConfigs[i] = new LinePointCollectorConfig( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.1" ) + (i + 1), colors[i], m_sides[i] ); //$NON-NLS-1$
       m_lpcConfigs[i].setPointRectSize( pointRectSize );
     }
   }
@@ -127,7 +128,7 @@ public class GridPointCollector
     if( m_hasAllSides || actualSideKey >= SIDE_MAX_NUM )
       return null;
 
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "GridPointCollector.3" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.3" ) ); //$NON-NLS-1$
 
     final GM_Point lastAdded = (GM_Point) m_sides[actualSideKey].addPoint( p );
     final GM_Point autocompleted = autoComplete();
@@ -144,7 +145,7 @@ public class GridPointCollector
   /**
    * Auto complete this line collector and returns the completing point if done. Auto completion is only done for the
    * last side because
-   *
+   * 
    * @return the auto completion point
    */
   public GM_Point autoComplete( )
@@ -161,7 +162,7 @@ public class GridPointCollector
           return point;
         }
         else
-          throw new RuntimeException( Messages.getString( "GridPointCollector.5" ) ); //$NON-NLS-1$
+          throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.5" ) ); //$NON-NLS-1$
       }
       else
         return null;
@@ -180,13 +181,13 @@ public class GridPointCollector
     if( actualSideKey >= SIDE_MAX_NUM )
       return null;
 
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "GridPointCollector.6" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.6" ) ); //$NON-NLS-1$
     return m_sides[actualSideKey].getLastPoint();
   }
 
   public GM_Object finishSide( )
   {
-    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "GridPointCollector.7" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( m_sides[actualSideKey], Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.7" ) ); //$NON-NLS-1$
     if( actualSideKey >= SIDE_MAX_NUM )
     {
       return null;
@@ -215,7 +216,7 @@ public class GridPointCollector
       if( lastP != null )
         newSide.addPoint( lastP );
       else
-        logger.warning( Messages.getString( "GridPointCollector.8" ) ); //$NON-NLS-1$
+        logger.warning( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.8" ) ); //$NON-NLS-1$
     }
     else
     {
@@ -257,7 +258,7 @@ public class GridPointCollector
         return;
 
       builder = m_sides[actualSideKey];
-      Assert.throwIAEOnNull( builder, Messages.getString( "GridPointCollector.9" ) ); //$NON-NLS-1$
+      Assert.throwIAEOnNull( builder, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.9" ) ); //$NON-NLS-1$
     }
 
     final Color curColor = g.getColor();
@@ -421,7 +422,7 @@ public class GridPointCollector
   /**
    * To get the with for the square that are drawn to show point. if ther is an active {@link LinePointCollectorConfig}
    * its actual point rect size is resturn otherwise the point square size of the first {@link LinePointCollectorConfig}
-   *
+   * 
    * @return Returns the with for the square that are drawn to show point
    */
   public int getPointRectSize( )
@@ -451,7 +452,7 @@ public class GridPointCollector
   public void setPointRectSize( final int pointRectSize )
   {
     if( pointRectSize <= 0 )
-      throw new IllegalArgumentException( Messages.getString( "GridPointCollector.12" ) + pointRectSize ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.GridPointCollector.12" ) + pointRectSize ); //$NON-NLS-1$
     else
     {
       for( final LinePointCollectorConfig config : m_lpcConfigs )

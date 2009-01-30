@@ -67,7 +67,7 @@ public class KeyBasedDataModel
 
   public KeyBasedDataModel( final String[] keys, final IDataModelCheck modelCheck )
   {
-    Assert.throwIAEOnNullParam( keys, "keys" );
+    Assert.throwIAEOnNullParam( keys, "keys" ); //$NON-NLS-1$
 
     final String[] tempKeys = new String[keys.length];
     try
@@ -118,7 +118,7 @@ public class KeyBasedDataModel
     }
     else
     {
-      final String message = String.format( "Illegal type in model:" + " \n\texpected=%s" + "\n\tcurrent=%s" + "\n\tkey=%s", dataType, obj.getClass(), key );
+      final String message = String.format( "Illegal type in model:" + " \n\texpected=%s" + "\n\tcurrent=%s" + "\n\tkey=%s", dataType, obj.getClass(), key ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       throw new RuntimeException( message );
     }
 
@@ -149,7 +149,7 @@ public class KeyBasedDataModel
     key = Assert.throwIAEOnNullOrEmpty( key );
     final int pos = findPosition( key );
     if( pos == NO_POS )
-      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( m_keys ) );
+      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( m_keys ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // Don't notify or check if value does not change
     if( m_data[pos] == newEntry )
@@ -172,7 +172,7 @@ public class KeyBasedDataModel
     final int pos = findPosition( key );
     if( pos == NO_POS )
     {
-      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( m_keys ) );
+      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( m_keys ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
     {
@@ -206,13 +206,13 @@ public class KeyBasedDataModel
 
   public void addKeyBasedDataChangeListener( final KeyBasedDataModelChangeListener newListener )
   {
-    Assert.throwIAEOnNullParam( newListener, "newListener" );
+    Assert.throwIAEOnNullParam( newListener, "newListener" ); //$NON-NLS-1$
     m_listeners.add( newListener );
   }
 
   public void removeKeyBasedDataChangeListener( final KeyBasedDataModelChangeListener newListener )
   {
-    Assert.throwIAEOnNullParam( newListener, "newListener" );
+    Assert.throwIAEOnNullParam( newListener, "newListener" ); //$NON-NLS-1$
     m_listeners.remove( newListener );
   }
 

@@ -47,6 +47,7 @@ import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -72,13 +73,13 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public AddElementCommand( IFEDiscretisationModel1d2d model, IDiscrModel1d2dChangeCommand[] elementEdgeCmds )
   {
-    Assert.throwIAEOnNullParam( model, "model" );
-    Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
+    Assert.throwIAEOnNullParam( model, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand.0") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elementEdgeCmds, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand.1") ); //$NON-NLS-1$
     for( IDiscrModel1d2dChangeCommand cmd : elementEdgeCmds )
     {
       if( !(cmd instanceof AddEdgeCommand) )
       {
-        throw new IllegalArgumentException( "elementEdgeCmds must only contains edge or edgeinv  command: " + cmd );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand.2") + cmd ); //$NON-NLS-1$
       }
     }
 
@@ -93,7 +94,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Add FE element";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand.3"); //$NON-NLS-1$
   }
 
   /**
@@ -123,7 +124,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
 
       }
       addedElement = ModelOps.createElement2d( model, edges );
-      System.out.println( "Adding elment:" + addedElement );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand.4") + addedElement ); //$NON-NLS-1$
     }
   }
 

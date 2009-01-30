@@ -50,6 +50,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Patrice Congo
@@ -73,7 +74,7 @@ class CalculationUnitWidgetFace
     // Calculation Unit Section
     final Section calculationUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
 
-    calculationUnitSection.setText( Messages.getString( "CalculationUnitWidgetFace.0" ) ); //$NON-NLS-1$
+    calculationUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.0") );  //$NON-NLS-1$
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -82,7 +83,7 @@ class CalculationUnitWidgetFace
 
     // Creates Section for "Calculation Settings Unit"
     final Section calculationSettingsSection = toolkit.createSection( body, Section.TITLE_BAR );
-    calculationSettingsSection.setText( Messages.getString( "CalculationUnitWidgetFace.1" ) ); //$NON-NLS-1$
+    calculationSettingsSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.1") );  //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -91,7 +92,7 @@ class CalculationUnitWidgetFace
 
     // Creates Section for "Calculation Elements Unit"
     final Section calculationElementUnitSection = toolkit.createSection( body, Section.TITLE_BAR );
-    calculationElementUnitSection.setText( Messages.getString( "CalculationUnitWidgetFace.2" ) ); //$NON-NLS-1$
+    calculationElementUnitSection.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidgetFace.2") );  //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.FILL, TableWrapData.FILL_GRAB, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;

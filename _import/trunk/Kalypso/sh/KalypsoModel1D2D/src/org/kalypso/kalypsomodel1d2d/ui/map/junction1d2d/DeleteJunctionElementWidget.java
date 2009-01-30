@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -67,9 +68,9 @@ public class DeleteJunctionElementWidget extends AbstractDelegateWidget
 
   public DeleteJunctionElementWidget( )
   {
-    super( "1D-Einmündung löschen", "1D-Einmündung löschen", new SelectFeatureWidget( "", "", new QName[] { IJunctionElement.QNAME }, IAbstractJunction.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IJunctionElement.QNAME }, IAbstractJunction.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Einmündung in der Karte.\n    'Del': selektierte Einmündung löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
@@ -88,7 +89,7 @@ public class DeleteJunctionElementWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Einmündung in der Karte.\n    'Del': selektierte Einmündung löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

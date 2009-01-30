@@ -59,11 +59,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
 import org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler;
@@ -123,7 +123,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   public CalculationUnitWidget( )
   {
-    this( "Berechnungseinheiten definieren", "Berechnungseinheiten definieren" ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitWidget( final String name, final String toolTip )
@@ -160,8 +160,8 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
-    final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default";
-    m_calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( "Aktuelle Berechnungseinheit" ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+    final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default"; //$NON-NLS-1$
+    m_calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.2") ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
     // mapModell.addTheme( calUnitTheme );
     mapModell.insertTheme( m_calcUnitTheme, 0 );
     m_dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
@@ -169,7 +169,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapPanel, IBoundaryCondition.QNAME );
     if( bcTheme == null )
     {
-      throw new RuntimeException( Messages.getString( "CalculationUnitWidget.3" ) ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.3") ); //$NON-NLS-1$
     }
     final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
     m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, bcWorkspace );

@@ -44,6 +44,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -74,7 +75,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Adding Edge";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.0"); //$NON-NLS-1$
   }
 
   /**
@@ -144,7 +145,7 @@ public class AddEdgeCommand implements IDiscrModel1d2dChangeCommand
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "AddEdgeCommand[" );
+    buf.append( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddEdgeCommand.1") ); //$NON-NLS-1$
     buf.append( node1Command );
     buf.append( node2Command );
     buf.append( ']' );

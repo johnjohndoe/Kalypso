@@ -59,6 +59,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
@@ -83,15 +84,15 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWidget
 {
-  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_"; //$NON-NLS-1$
+  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_";  //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif"; //$NON-NLS-1$
+  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif";  //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif"; //$NON-NLS-1$
+  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";  //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.3" ); //$NON-NLS-1$
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = "Randlinie von Berechnungseinheit entfernen";  //$NON-NLS-1$
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.4" ); //$NON-NLS-1$
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Randlinie zur Berechnungseinheit hinzufügen";  //$NON-NLS-1$
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
@@ -111,9 +112,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
 
   public AddRemoveContinuityLineToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    super( "Randlinien zu Teilmodell hinzufügen / löschen", "Randlinien zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.5"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.6"), new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.9") ); //$NON-NLS-1$
     final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
     m_toolTipRenderer.setBackgroundColor( color );
 
@@ -300,7 +301,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     for( final String[] spec : MENU_ITEM_SPECS )
     {
       if( spec.length != 2 )
-        throw new RuntimeException( "Spec must have length 2, but has:" + spec.length ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.10") + spec.length );  //$NON-NLS-1$
       final String text = spec[0];
       if( SEPARATOR_PSEUDO_TEXT.equals( text ) )
         menu.addSeparator();
@@ -331,7 +332,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.AddRemoveContinuityLineToCalcUnitWidget.11") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -71,9 +72,9 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
 
   public DeleteFEElements1DWidget( )
   {
-    super( "1D-Elemente löschen", "1D-Elemente löschen", new SelectFeatureWidget( "", "", new QName[] { IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IElement1D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
@@ -92,7 +93,7 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.5") + delegateTooltip ); //$NON-NLS-1$
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }
@@ -115,7 +116,7 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
       if( status != Status.OK_STATUS )
       {
         final Shell shell = Display.getCurrent().getActiveShell();
-        MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.6"), status.getMessage() ); //$NON-NLS-1$
       }
     }
     super.keyPressed( e );

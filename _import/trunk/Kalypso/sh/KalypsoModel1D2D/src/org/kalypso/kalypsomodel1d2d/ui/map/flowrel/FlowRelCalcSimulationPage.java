@@ -94,6 +94,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
@@ -109,11 +110,11 @@ import org.kalypso.util.swt.StatusLabelProvider;
  */
 public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
 {
-  private static final String URN_QRESULT_GFT = "urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:featureview:default";
+  private static final String URN_QRESULT_GFT = "urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:QIntervallResult:featureview:default"; //$NON-NLS-1$
 
-  protected static final String SETTING_SASH_LEFT = "settingsSimulationSashLeft";
+  protected static final String SETTING_SASH_LEFT = "settingsSimulationSashLeft"; //$NON-NLS-1$
 
-  protected static final String SETTING_SASH_RIGHT = "settingsSimulationSashRight";
+  protected static final String SETTING_SASH_RIGHT = "settingsSimulationSashRight"; //$NON-NLS-1$
 
   private Runnable m_refreshConsoleRunnable = null;
 
@@ -167,7 +168,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
   {
     super( pageName, title, titleImage );
 
-    m_console = new IOConsole( "ioConsole", null );
+    m_console = new IOConsole( "ioConsole", null ); //$NON-NLS-1$
     m_consoleOS = m_console.newOutputStream();
   }
 
@@ -243,10 +244,10 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
 
     final TabItem tableTab = new TabItem( tabFolder, SWT.NONE );
     tableTab.setControl( consoleComposite );
-    tableTab.setText( "Konsole" );
+    tableTab.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.4") ); //$NON-NLS-1$
 
     final TabItem resultTab = new TabItem( tabFolder, SWT.NONE );
-    resultTab.setText( "Diagramm" );
+    resultTab.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.5") ); //$NON-NLS-1$
     resultTab.setControl( featurePanel );
 
     m_resultTableViewer.addOpenListener( new IOpenListener()
@@ -255,7 +256,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
       {
         final FlowRelationshipCalcOperation op = (FlowRelationshipCalcOperation) ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( op != null )
-          new StatusDialog( parent.getShell(), op.getStatus(), "Berechnungsergebnis " + op.getFlowRelation1D().getName() ).open();
+          new StatusDialog( parent.getShell(), op.getStatus(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.6") + op.getFlowRelation1D().getName() ).open(); //$NON-NLS-1$
       }
     } );
 
@@ -268,7 +269,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
         final FlowRelationshipCalcOperation op = (FlowRelationshipCalcOperation) (selection).getFirstElement();
         if( op == null )
         {
-          resultText.setText( "" );
+          resultText.setText( "" ); //$NON-NLS-1$
           return;
         }
 
@@ -373,7 +374,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
   {
     m_console.getDocument().addDocumentListener( m_documentListener );
 
-    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Berechnung läuft...", null ) );
+    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.8"), null ) ); //$NON-NLS-1$
 
     final List<FlowRelationshipCalcOperation> operations = m_operations;
     final IOConsole console = m_console;
@@ -386,10 +387,10 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Parameter", operations.size() );
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.9"), operations.size() ); //$NON-NLS-1$
 
         final String pluginId = PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() );
-        final MultiStatus multiStatus = new MultiStatus( pluginId, -1, "Ergebnisse der Paremeterberechnung", null );
+        final MultiStatus multiStatus = new MultiStatus( pluginId, -1, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.10"), null ); //$NON-NLS-1$
 
         for( final FlowRelationshipCalcOperation op : operations )
         {
@@ -414,13 +415,13 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
         /* Create nice message for multi-status */
         final String message;
         if( multiStatus.isOK() || multiStatus.matches( IStatus.INFO ) )
-          message = "Alle Parameter wurden erfolgreich berechnet";
+          message = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.11"); //$NON-NLS-1$
         else if( multiStatus.matches( IStatus.WARNING ) )
-          message = "Warnung(en) bei der Parameterberechnung";
+          message = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.12"); //$NON-NLS-1$
         else if( multiStatus.matches( IStatus.ERROR ) )
-          message = "Fehler bei der Parameterberechnung";
+          message = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.13"); //$NON-NLS-1$
         else
-          message = "unbekannter status";
+          message = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.14"); //$NON-NLS-1$
         return new MultiStatus( pluginId, -1, multiStatus.getChildren(), message, null );
       }
     };
@@ -450,7 +451,7 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
         op.applyResult();
 
       // Post an empty command to flowrelationship model in order to make it dirty
-      KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, new EmptyCommand( "", false ) );
+      KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider().postCommand( IFlowRelationshipModel.class, new EmptyCommand( "", false ) ); //$NON-NLS-1$
 
       return Status.OK_STATUS;
     }
@@ -465,13 +466,13 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
   public void reset( final TuhhCalculation templateCalculation, final IFlowRelation1D[] flowRels, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel )
   {
     m_simulationWasRun = false;
-    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, "Berechnung noch nicht gestartet", null ) );
+    m_statusComposite.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.16"), null ) ); //$NON-NLS-1$
     m_console.clearConsole();
     m_operations.clear();
 
     final IWizardContainer container = getContainer();
     if( container instanceof WizardDialog2 )
-      ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID ).setText( "Start" );
+      ((WizardDialog2) container).getButton( IDialogConstants.FINISH_ID ).setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.FlowRelCalcSimulationPage.17") ); //$NON-NLS-1$
 
     for( final IFlowRelation1D flowRel : flowRels )
     {

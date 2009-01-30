@@ -45,6 +45,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement.TRANSITION_TYPE;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -147,6 +148,6 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
    */
   public String getDescription( )
   {
-    return "Creates transition element";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand.0"); //$NON-NLS-1$
   }
 }

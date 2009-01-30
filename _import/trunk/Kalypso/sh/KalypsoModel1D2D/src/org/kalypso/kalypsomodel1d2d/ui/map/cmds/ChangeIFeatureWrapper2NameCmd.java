@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -87,8 +88,8 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
               IFeatureWrapper2 featureToRename,
               String newName )
   {
-    Assert.throwIAEOnNullParam( featureToRename, "featureToRename" );
-    Assert.throwIAEOnNullParam( newName, "newName" );
+    Assert.throwIAEOnNullParam( featureToRename, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.0") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( newName, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.1") ); //$NON-NLS-1$
     this.featureToRename = featureToRename;
     this.newName = newName;
   }
@@ -121,7 +122,7 @@ public class ChangeIFeatureWrapper2NameCmd implements IDiscrModel1d2dChangeComma
    */
   public String getDescription( )
   {
-    return "Feature Umbenennen ";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd.2"); //$NON-NLS-1$
   }
 
   /**

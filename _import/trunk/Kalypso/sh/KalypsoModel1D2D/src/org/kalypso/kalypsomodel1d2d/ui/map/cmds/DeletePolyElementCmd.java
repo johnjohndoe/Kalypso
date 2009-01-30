@@ -48,6 +48,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -79,7 +80,7 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Delete element 2D";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeletePolyElementCmd.0"); //$NON-NLS-1$
   }
 
   /**

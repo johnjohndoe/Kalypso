@@ -46,6 +46,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -136,7 +137,7 @@ public class LinePointCollector
     }
     else
     {
-      System.out.println( Messages.getString( "LinePointCollector.0" ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector.0" ) ); //$NON-NLS-1$
       return null;
     }
 

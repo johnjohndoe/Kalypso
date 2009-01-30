@@ -49,6 +49,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
 
 /**
@@ -61,7 +62,7 @@ public class EditRoughnessParametersOfPolygonWidget extends SingleElementSelectW
 
   public EditRoughnessParametersOfPolygonWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten" );
+    super( Messages.getString("EditRoughnessParametersOfPolygonWidget.0"), Messages.getString("EditRoughnessParametersOfPolygonWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -81,7 +82,7 @@ public class EditRoughnessParametersOfPolygonWidget extends SingleElementSelectW
           if( selection.isEmpty() && m_featureView != null )
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView( m_featureView );
           else
-            m_featureView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" );
+            m_featureView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {

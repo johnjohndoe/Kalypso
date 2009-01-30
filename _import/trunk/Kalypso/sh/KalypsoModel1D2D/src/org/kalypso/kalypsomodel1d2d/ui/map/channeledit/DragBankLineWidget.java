@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -117,7 +118,7 @@ public class DragBankLineWidget extends AbstractWidget
 
   public DragBankLineWidget( final CreateChannelData channeldata, final SegmentData currentSegment, final int side ) throws GM_Exception
   {
-    super( "Uferline", "Dieses Widget ermöglicht das Verändern der Uferlinie." );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( side == 1 )
       m_bankline = (GM_Curve) JTSAdapter.wrap( currentSegment.getBankLeftInters() );

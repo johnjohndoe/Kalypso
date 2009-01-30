@@ -52,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCm
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 
 public class CreateCalculationUnitWizard extends Wizard
@@ -63,13 +64,13 @@ public class CreateCalculationUnitWizard extends Wizard
   public CreateCalculationUnitWizard( final KeyBasedDataModel dataModel )
   {
     m_dataModel = dataModel;
-    super.setWindowTitle( Messages.getString( "CreateCalculationUnitWizard.0" ) ); //$NON-NLS-1$
+    super.setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard.0") );  //$NON-NLS-1$
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new CreateCalculationUnitWizardPage( Messages.getString( "CreateCalculationUnitWizard.1" ), Messages.getString( "CreateCalculationUnitWizard.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new CreateCalculationUnitWizardPage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard.2") );   //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 

@@ -42,6 +42,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -70,7 +71,7 @@ public abstract class ZmlChooserControl
     public boolean select( final Viewer viewer, final Object parentElement, final Object element )
     {
       if( element instanceof File )
-        return ((File) element).getName().endsWith( ".zml" );
+        return ((File) element).getName().endsWith( ".zml" ); //$NON-NLS-1$
       return true;
     }
   }
@@ -91,7 +92,7 @@ public abstract class ZmlChooserControl
 
   private IObservation m_observation;
 
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
   static
   {
@@ -134,7 +135,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = false;
-    loadZmlBtn.setText( "Importieren" );
+    loadZmlBtn.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.2") ); //$NON-NLS-1$
     loadZmlBtn.setLayoutData( data );
     final IFolder importFolder = m_importFolder;
     loadZmlBtn.addSelectionListener( new SelectionAdapter()
@@ -146,7 +147,7 @@ public abstract class ZmlChooserControl
       public void widgetSelected( final SelectionEvent e )
       {
         // TODO: ths is very strange. Where does the wizard put the files??
-        final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" );
+        final IWizardDescriptor wizardDesc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" ); //$NON-NLS-1$
         final Shell shell = topComposite.getShell();
         try
         {
@@ -158,7 +159,7 @@ public abstract class ZmlChooserControl
         catch( final CoreException e1 )
         {
           final IStatus status = e1.getStatus();
-          ErrorDialog.openError( shell, "Fehler", "Konnte den Assistenten zum Import von Zeitreihen nicht starten", status );
+          ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.4"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
           KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         }
         treeViewer.refresh();
@@ -170,7 +171,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 1;
     data.grabExcessHorizontalSpace = true;
-    vonLbl.setText( "Von:" );
+    vonLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.6") ); //$NON-NLS-1$
     vonLbl.setAlignment( SWT.RIGHT );
     vonLbl.setLayoutData( data );
 
@@ -200,7 +201,7 @@ public abstract class ZmlChooserControl
     } );
 
     final Button dateFromBtn = new Button( topComposite, SWT.PUSH );
-    dateFromBtn.setText( "..." );
+    dateFromBtn.setText( "..." ); //$NON-NLS-1$
     dateFromBtn.setEnabled( false );
     dateFromBtn.addSelectionListener( new SelectionAdapter()
     {
@@ -227,7 +228,7 @@ public abstract class ZmlChooserControl
     data.horizontalAlignment = GridData.FILL;
     data.horizontalSpan = 2;
     data.grabExcessHorizontalSpace = true;
-    bisLbl.setText( "Bis:" );
+    bisLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.8") ); //$NON-NLS-1$
     bisLbl.setAlignment( SWT.RIGHT );
     bisLbl.setLayoutData( data );
 
@@ -258,7 +259,7 @@ public abstract class ZmlChooserControl
     } );
 
     final Button dateToBtn = new Button( topComposite, SWT.PUSH );
-    dateToBtn.setText( "..." );
+    dateToBtn.setText( "..." ); //$NON-NLS-1$
     dateToBtn.setEnabled( false );
     dateToBtn.addSelectionListener( new SelectionAdapter()
     {
@@ -296,7 +297,7 @@ public abstract class ZmlChooserControl
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) );
+    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_chart.addSubtitle( m_subTitle );
 
     final Frame vFrame = SWT_AWT.new_Frame( new Composite( innerComposite, SWT.RIGHT | SWT.BORDER | SWT.EMBEDDED | SWT.Paint ) );
@@ -332,7 +333,7 @@ public abstract class ZmlChooserControl
           e.printStackTrace();
         }
 
-        m_subTitle.setText( "" );
+        m_subTitle.setText( "" ); //$NON-NLS-1$
         if( m_observation != null )
         {
           DateRange dateRange = null;
@@ -340,7 +341,7 @@ public abstract class ZmlChooserControl
           {
             final ITuppleModel values = m_observation.getValues( null );
             final IAxis[] axisList = values.getAxisList();
-            final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" );
+            final IAxis axis = ObservationUtilities.findAxisByType( axisList, "date" ); //$NON-NLS-1$
             m_dateFrom = (Date) values.getElement( 0, axis );
             m_dateTo = (Date) values.getElement( values.getCount() - 1, axis );
             dateRange = new DateRange( m_dateFrom, m_dateTo );
@@ -363,8 +364,8 @@ public abstract class ZmlChooserControl
         }
         else
         {
-          m_dateFromTxt.setText( "" );
-          m_dateToTxt.setText( "" );
+          m_dateFromTxt.setText( "" ); //$NON-NLS-1$
+          m_dateToTxt.setText( "" ); //$NON-NLS-1$
           m_dateFromTxt.setEnabled( false );
           m_dateToTxt.setEnabled( false );
           dateFromBtn.setEnabled( false );
@@ -394,7 +395,7 @@ public abstract class ZmlChooserControl
     final String fromTxt = DATE_FORMAT.format( range.getFrom() );
     final String toTxt = DATE_FORMAT.format( range.getTo() );
 
-    return fromTxt + " - " + toTxt;
+    return fromTxt + " - " + toTxt; //$NON-NLS-1$
   }
 
   public Date getFromDate( )
@@ -424,11 +425,11 @@ public abstract class ZmlChooserControl
     // TODO: this is not nice...
     final String type = ObservationUtilities.findAxesByClass( m_observation.getAxisList(), Double.class )[0].getType();
 
-    if( type.equals( "W" ) )
+    if( type.equals( "W" ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL;
-    else if( type.equals( "Q" ) )
+    else if( type.equals( "Q" ) ) //$NON-NLS-1$
       return Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE;
 
-    throw new IllegalStateException( "Wrong ZML-Type" );
+    throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl.0") ); //$NON-NLS-1$
   }
 }

@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -140,7 +141,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
   public RefineFEGeometryWidget( )
   {
-    super( "FE Modell Geometrie Verfeinern", "FE Model Geometrie Verfeinern" );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -164,7 +165,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( "Verfeinern Sie bestehende 2D-Elemente mittels Digitalisieren einer Line.\n    'Doppelklick': Linie abschließen.\n    'Esc':               abbrechen.\n    'Enter':              Verfeinerung durchführen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.2") ); //$NON-NLS-1$
 
     m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
@@ -278,7 +279,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     final Rectangle bounds = mapPanel.getScreenBounds();
     final GeoTransform projection = mapPanel.getProjection();
 
-    m_toolTipRenderer.setTooltip( "Verfeinern Sie bestehende 2D-Elemente mittels Digitalisieren einer Line.\n    'Doppelklick': Linie abschließen.\n    'Esc':               abbrechen.\n    'Enter':             Verfeinerung durchführen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.3") ); //$NON-NLS-1$
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 
     if( m_warning == true )
@@ -464,7 +465,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
         final IMapPanel mapPanel = getMapPanel();
-        mapPanel.setMessage( "Fehler: " + status.getMessage() );
+        mapPanel.setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.4") + status.getMessage() ); //$NON-NLS-1$
         reinit();
       }
     }
@@ -553,7 +554,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     if( refinementList.size() == 0 )
     {
       m_warning = true;
-      m_warningRenderer.setTooltip( "Linie schneidet keine Elemente oder ein Element mehrfach.\nBitte versuchen Sie es noch einmal." );
+      m_warningRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.5") ); //$NON-NLS-1$
     }
 
     // create new GM_Objects

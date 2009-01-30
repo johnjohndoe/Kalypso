@@ -49,6 +49,7 @@ import java.util.Set;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -92,7 +93,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
   {
     if( m_data.getMeshStatus() == true )
     {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Uferlinien selektieren", "Wenn Sie fortfahren werden Ihre bisherigen Eingaben verworfen und der Flussschlauch neu initialisiert. Möchten Sie fortfahren?" ) )
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return;
     }
 
@@ -132,12 +133,12 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
         if( multiline == null )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.2"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.3") ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
         if( multiline.getSize() > 1 )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion fehlgeschlagen. Linie nicht zusammenhängend." );
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.4"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.5") ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
 
@@ -148,7 +149,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final GM_Curve curve = (GM_Curve) geometry;
         if( curve == null )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( "Uferlinien selektieren", "Selektion nicht möglich. Überprüfen Sie bitte Ihre Eingangsdaten." );
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.6"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
         line = curve;

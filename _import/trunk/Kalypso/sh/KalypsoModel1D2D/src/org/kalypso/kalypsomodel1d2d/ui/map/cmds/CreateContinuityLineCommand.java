@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -79,7 +80,7 @@ public class CreateContinuityLineCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Create continuity line command";
+    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand.0"); //$NON-NLS-1$
   }
 
   /**

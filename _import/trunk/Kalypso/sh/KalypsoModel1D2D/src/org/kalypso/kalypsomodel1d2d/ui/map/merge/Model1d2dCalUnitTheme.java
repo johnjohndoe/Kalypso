@@ -61,7 +61,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * Theme that shows a calculation unit
  *

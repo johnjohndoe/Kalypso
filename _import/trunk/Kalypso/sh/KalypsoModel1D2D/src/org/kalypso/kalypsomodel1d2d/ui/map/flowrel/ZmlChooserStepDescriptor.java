@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.wizardPageZmlImportWithPreview.ZmlChooserControl;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -102,8 +103,8 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
    */
   public void activate( )
   {
-    m_page.setTitle( "Zeitreihenauswahl" );
-    m_page.setDescription( "Auf dieser Seite können importierte Zeitreihen übernommen werden." );
+    m_page.setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ZmlChooserStepDescriptor.0") ); //$NON-NLS-1$
+    m_page.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ZmlChooserStepDescriptor.1") ); //$NON-NLS-1$
     m_page.setPageComplete( false );
   }
 
@@ -117,7 +118,7 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
 
     obs.setName( getName() );
     // TODO: change?
-    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) );
+    obs.setPhenomenon( new Phenomenon( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D", null, null ) ); //$NON-NLS-1$
 
     // TODO: Refaktor in order to let different types of observations to be created
     final IComponent[] components = result.getComponents();

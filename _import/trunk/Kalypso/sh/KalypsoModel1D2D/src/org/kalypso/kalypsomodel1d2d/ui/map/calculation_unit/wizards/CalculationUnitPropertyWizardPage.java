@@ -73,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnit1D2DLabelProvider;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Madanagopal
@@ -92,7 +93,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
 
   public CalculationUnitPropertyWizardPage( final ICalculationUnit calcUnit, final ICalculationUnit[] availableCalcUnits )
   {
-    super( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) ); //$NON-NLS-1$
+    super( "" );  //$NON-NLS-1$
 
     m_parentCalcUnit = calcUnit;
     m_availableCalcUnits = availableCalcUnits;
@@ -106,7 +107,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
       m_selectedSubUnits.addAll( ((ICalculationUnit1D2D) calcUnit).getChangedSubUnits() );
 
     setTitle( m_parentCalcUnit.getName() );
-    setDescription( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.1" ) );
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -143,7 +144,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
 
     final Label nameLabel = new Label( composite, SWT.NONE );
     nameLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    nameLabel.setText( "Name" );
+    nameLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.2") ); //$NON-NLS-1$
     final Text nameText = new Text( composite, SWT.BORDER );
     nameText.setText( m_name );
     nameText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -162,9 +163,9 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
 
       final Label interpolLabel = new Label( composite, SWT.NONE );
       interpolLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-      interpolLabel.setText( "Interpolation" );
+      interpolLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.3") ); //$NON-NLS-1$
       final Text interpolText = new Text( composite, SWT.BORDER );
-      interpolText.setText( "" + m_interpolationCount );
+      interpolText.setText( "" + m_interpolationCount ); //$NON-NLS-1$
       interpolText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       interpolText.addModifyListener( new DoubleModifyListener( goodColor, badColor ) );
       interpolText.addModifyListener( new ModifyListener()
@@ -218,7 +219,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
     formData.right = new FormAttachment( 45, 0 );
 
     final Group availableCalcUnitsGroup = new Group( composite, SWT.NONE );
-    availableCalcUnitsGroup.setText( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.3" ) ); // NON-NLS-1$
+    availableCalcUnitsGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.5") ) ; //$NON-NLS-1$
     availableCalcUnitsGroup.setLayoutData( formData );
     availableCalcUnitsGroup.setLayout( new GridLayout( 1, false ) );
 
@@ -235,7 +236,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
     }
 
     final Button addButton = new Button( composite, SWT.PUSH );
-    final Image addImage = new Image( composite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/forward.gif" ).getImageData() ); //$NON-NLS-1$
+    final Image addImage = new Image( composite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/forward.gif" ).getImageData() );  //$NON-NLS-1$
     addButton.setImage( addImage );
 
     formData = new FormData();
@@ -245,7 +246,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
     addButton.setLayoutData( formData );
 
     final Button removeButton = new Button( composite, SWT.PUSH );
-    final Image removeImage = new Image( composite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/backward.gif" ).getImageData() ); //$NON-NLS-1$
+    final Image removeImage = new Image( composite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/backward.gif" ).getImageData() );  //$NON-NLS-1$
     removeButton.setImage( removeImage );
     formData = new FormData();
     formData.left = new FormAttachment( availableCalcUnitsGroup, 5 );
@@ -260,7 +261,7 @@ public class CalculationUnitPropertyWizardPage extends WizardPage
     formData.right = new FormAttachment( 100, -5 );
 
     final Group selectedSubUnitsGroup = new Group( composite, SWT.NONE );
-    selectedSubUnitsGroup.setText( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.4" ) ); //$NON-NLS-1$
+    selectedSubUnitsGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizardPage.8") );  //$NON-NLS-1$
     selectedSubUnitsGroup.setLayoutData( formData );
     selectedSubUnitsGroup.setLayout( new GridLayout( 1, false ) );
 

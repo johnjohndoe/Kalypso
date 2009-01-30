@@ -31,6 +31,7 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * Provides the mechanism to create automaticaly fem element within a grid
@@ -72,7 +73,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public CreateGridWidget( )
   {
-    super( Messages.getString( "CreateGridWidget.0" ), Messages.getString( "CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -287,7 +288,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int m_radius, final GeoTransform transform )
   {
-    Assert.throwIAEOnNull( transform, Messages.getString( "CreateGridWidget.6" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( transform, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.grid.CreateGridWidget.6" ) ); //$NON-NLS-1$
     if( ref == null || toCompare == null )
       return false;
     else

@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataM
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -90,7 +91,7 @@ public class CalculationUnitPropertyWizard extends Wizard
 
     m_wizardPage = new CalculationUnitPropertyWizardPage( m_parentCalcUnit, calculationUnits );
 
-    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.0") );  //$NON-NLS-1$
   }
 
   @Override
@@ -128,7 +129,7 @@ public class CalculationUnitPropertyWizard extends Wizard
           final int newInterpolationCount = m_wizardPage.getChangedInterpolationCount();
           if( !ObjectUtils.equals( calcUnit1D.getInterpolationCount(), newInterpolationCount ) )
           {
-            final ChangeFeatureCommand changeNameCmd = new ChangeFeatureCommand( calcUnitFeature, calcUnitFeature.getFeatureType().getProperty( ICalculationUnit1D.QNAME_PROP_INTERP_COUNT ), new BigInteger( ""
+            final ChangeFeatureCommand changeNameCmd = new ChangeFeatureCommand( calcUnitFeature, calcUnitFeature.getFeatureType().getProperty( ICalculationUnit1D.QNAME_PROP_INTERP_COUNT ), new BigInteger( "" //$NON-NLS-1$
                 + newInterpolationCount ) );
             commandManager.postCommand( changeNameCmd );
           }
@@ -150,14 +151,14 @@ public class CalculationUnitPropertyWizard extends Wizard
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Verändern der Berechnungseinheit", status );
+        ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.2"), status ); //$NON-NLS-1$
       }
 
       return true;
     }
     else
     {
-      MessageDialog.openWarning( getShell(), Messages.getString( "CreateSubCalculationUnitCopyWizard.1" ), Messages.getString( "CreateSubCalculationUnitCopyWizard.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.3"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CalculationUnitPropertyWizard.4") );   //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
   }
