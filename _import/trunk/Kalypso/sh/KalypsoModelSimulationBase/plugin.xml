@@ -8,9 +8,6 @@
             class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"
             id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase"/>
       <catalog
-            class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogGmlImitations"
-            id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelGmlImitations"/>
-      <catalog
             class="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness"
             id="org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness"/>
    </extension>

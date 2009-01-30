@@ -20,7 +20,7 @@
 	</xs:annotation>
 
 	<xs:import namespace="http://www.opengis.net/gml" />
-	<xs:include schemaLocation="simulation_model.xsd" />
+	<xs:include schemaLocation="simulation_model_base.xsd" />
 
 	<!-- =================================================================
 		FlowRelatioshipModel

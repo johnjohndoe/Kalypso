@@ -89,17 +89,6 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
    */
   final static public String SIM_MODEL_RESULT_NS_PREFIX = "resultMeta"; //$NON-NLS-1$
 
-  final static public String GML_IMITATIONS_REL_PATH = CURRENT_VERSION + "/gml_imitations.xsd"; //$NON-NLS-1$
-
-  /**
-   * Namespace for gml_imitations
-   */
-  final static public String GML_IMITATIONS_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"; //$NON-NLS-1$
-
-  /**
-   * Prefix for the simulation model base
-   */
-  final static public String GML_IMITATIONS_NS_PREFIX = "wbGml"; //$NON-NLS-1$
 
   /**
    * Fills the catalog with the roughness and model simulation base schemas schema elements
@@ -109,16 +98,11 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-
     catalog.put( SIM_MODEL_NS, myClass.getResource( SIM_MODEL_REL_PATH ) );
     prefixes.put( SIM_MODEL_NS, SIM_MODEL_NS_PREFIX );
 
     catalog.put( SIM_MODEL_RESULT_NS, myClass.getResource( SIM_MODEL_RESULT_REL_PATH ) );
     prefixes.put( SIM_MODEL_RESULT_NS, SIM_MODEL_RESULT_NS_PREFIX );
-
-    // TODO: this (not used schema!) is registered twice
-    catalog.put( GML_IMITATIONS_NS, myClass.getResource( GML_IMITATIONS_REL_PATH ) );
-    prefixes.put( GML_IMITATIONS_NS, GML_IMITATIONS_NS_PREFIX );
   }
 
 }

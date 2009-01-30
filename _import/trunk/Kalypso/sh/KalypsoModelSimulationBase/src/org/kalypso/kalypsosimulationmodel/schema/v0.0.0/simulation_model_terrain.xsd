@@ -15,7 +15,6 @@
 	xmlns:wbr="http://www.tu-harburg.de/wb/kalypso/schemata/roughness"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:wspmprofile="org.kalypso.model.wspmprofile"
-	xmlns:wbGml="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:annotation>
@@ -24,7 +23,7 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	<xs:include schemaLocation="simulation_model.xsd" />
+	<xs:include schemaLocation="simulation_model_base.xsd" />
 
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
@@ -33,10 +32,6 @@
 		schemaLocation="roughness_model.xsd" />
 	<xs:import namespace="org.kalypso.model.wspmprofile"
 		schemaLocation="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/profile.xsd" />
-	<!--xs:import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"
-		schemaLocation="gml_imitations.xsd" /-->
-
 
 	<!-- =================================================================
 		terrainModel

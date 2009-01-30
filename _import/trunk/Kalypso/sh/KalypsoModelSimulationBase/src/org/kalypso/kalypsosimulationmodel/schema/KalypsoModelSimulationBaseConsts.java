@@ -44,8 +44,6 @@ public class KalypsoModelSimulationBaseConsts
 
   public static final QName SIM_BASE_P_OPERATIONAL_CONCEPT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "operationalConcept" ); //$NON-NLS-1$
 
-  public static final QName SIM_BASE_P_POINT_COVERAGE = new QName( UrlCatalogModelSimulationBase.GML_IMITATIONS_NS_PREFIX, "pointCoverage" ); //$NON-NLS-1$
-
   public static final QName SIM_BASE_F_FLOW_RESISTANCE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowResistanceModel" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_P_FLOW_RESISTANCE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowResistanceModel" ); //$NON-NLS-1$
