@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -49,7 +48,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * representation compatible with the wb1d2d:ComplexElement
  * 
  */
-public interface IFE1D2DComplexElement <ET extends IFeatureWrapper2> extends IFEComplexElement
+public interface IFE1D2DComplexElement <ET extends IFeatureWrapper2> extends IFeatureWrapper2
 {
   
   /**

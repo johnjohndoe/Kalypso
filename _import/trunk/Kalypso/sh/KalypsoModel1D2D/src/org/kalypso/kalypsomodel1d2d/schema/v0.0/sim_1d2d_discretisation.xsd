@@ -81,7 +81,7 @@
 	</xs:complexType>
 	<!-- ComplexElement (abstract) -->
 	<xs:element name="ComplexElement" type="wb1d2d:ComplexElementType"
-		substitutionGroup="simBase:_FEComplexElement" abstract="true" />
+		substitutionGroup="gml:_Feature" abstract="true" />
 	<xs:complexType name="ComplexElementType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -90,7 +90,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:FEAbstractComplexElementType" />
+			<xs:extension base="gml:AbstractFeatureType" />
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- CalculationUnit (abstract) -->
