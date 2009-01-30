@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IWspmTuhhConstants
 {
-  public static final QName QNAME_PROFILEREACHSEGMENT = new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" );
+  public static final QName QNAME_PROFILEREACHSEGMENT = new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ); //$NON-NLS-1$
 
   public TuhhReachProfileSegment( final Feature reachSegment )
   {
@@ -67,7 +67,7 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
 
   public void setProfileMember( final IProfileFeature profileReference )
   {
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() );
+    getFeature().setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getId() ); //$NON-NLS-1$
 
     getFeature().invalidEnvelope();
   }
@@ -90,12 +90,12 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
 
   public BigDecimal getStation( )
   {
-    return (BigDecimal) getFeature().getProperty( new QName( NS_WSPM_TUHH, "station" ) );
+    return (BigDecimal) getFeature().getProperty( new QName( NS_WSPM_TUHH, "station" ) ); //$NON-NLS-1$
   }
 
   public IProfileFeature getProfileMember( )
   {
-    final String href = (String) getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileMember" ) );
+    final String href = (String) getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileMember" ) ); //$NON-NLS-1$
     final GMLWorkspace workspace = getFeature().getWorkspace();
     final Feature feature = workspace == null ? null : workspace.getFeature( href );
 
@@ -109,12 +109,12 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
   public void setStation( final double station )
   {
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), bigStation );
+    getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), bigStation ); //$NON-NLS-1$
   }
 
   public GM_Curve getGeometry( )
   {
-    final Object geomProp = getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileLocation" ) );
+    final Object geomProp = getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileLocation" ) ); //$NON-NLS-1$
     if( geomProp instanceof GM_Curve )
     {
       return (GM_Curve) geomProp;

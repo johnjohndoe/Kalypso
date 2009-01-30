@@ -65,7 +65,7 @@ public final class BuildingTrapez extends AbstractObservationBuilding
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
     result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
-    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Trapez", result );
+    final Observation<TupleResult> observation = new Observation<TupleResult>( ID, "Trapez", result ); //$NON-NLS-1$
 
     init( profil, observation );
   }

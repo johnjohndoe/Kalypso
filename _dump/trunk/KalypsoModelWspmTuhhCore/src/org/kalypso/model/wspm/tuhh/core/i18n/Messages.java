@@ -71,7 +71,7 @@ public class Messages
 
   public static String getFormatString( final String key, Object... args )
   {
-    String formatStr = "";
+    String formatStr = ""; //$NON-NLS-1$
     try
     {
       formatStr = RESOURCE_BUNDLE.getString( key );

@@ -74,13 +74,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhConstants
 {
-  private static final QName QNAME_WATER_BODY_LINK_MEMBER = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" );
+  private static final QName QNAME_WATER_BODY_LINK_MEMBER = new QName( NS_WSPM_TUHH, "waterBodyLinkMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" );
+  public final static QName QNAME_TUHH_REACH = new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ); //$NON-NLS-1$
 
-  private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" );
+  private static final QName QNAME_MARKER_MEMBER = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "markerMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_REACHSEGMENTMEMBER = new QName( NS_WSPM_TUHH, "reachSegmentMember" );
+  public static final QName QNAME_PROP_REACHSEGMENTMEMBER = new QName( NS_WSPM_TUHH, "reachSegmentMember" ); //$NON-NLS-1$
 
   public TuhhReach( final Feature reach )
   {
@@ -94,7 +94,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   {
     try
     {
-      final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) );
+      final Feature feature = FeatureHelper.addFeature( getFeature(), QNAME_PROP_REACHSEGMENTMEMBER, new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ); //$NON-NLS-1$
       final TuhhReachProfileSegment tuhhProfilesegment = new TuhhReachProfileSegment( feature );
 
       // set default values
@@ -120,7 +120,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
     for( final Object object : reachSegmentList )
     {
       final Feature segmentFeature = (Feature) object;
-      if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) )
+      if( GMLSchemaUtilities.substitutes( segmentFeature.getFeatureType(), new QName( NS_WSPM_TUHH, "ProfileReachSegmentWspmTuhhSteadyState" ) ) ) //$NON-NLS-1$
       {
         final TuhhReachProfileSegment segment = new TuhhReachProfileSegment( segmentFeature );
         final IProfileFeature profileMember = segment.getProfileMember();

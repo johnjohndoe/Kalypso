@@ -52,11 +52,11 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class TuhhMarker extends AbstractFeatureBinder implements IWspmTuhhConstants
 {
-  public final static QName QNAME_MARKER = new QName( NS_WSPM_TUHH, "ProfileMarker" );
+  public final static QName QNAME_MARKER = new QName( NS_WSPM_TUHH, "ProfileMarker" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_TYPE = new QName( NS_WSPM_TUHH, "type" );
+  private static final QName QNAME_PROP_TYPE = new QName( NS_WSPM_TUHH, "type" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_LOCATION = new QName( NS_WSPM_TUHH, "location" );
+  private static final QName QNAME_PROP_LOCATION = new QName( NS_WSPM_TUHH, "location" ); //$NON-NLS-1$
 
   public TuhhMarker( final Feature featureToBind )
   {

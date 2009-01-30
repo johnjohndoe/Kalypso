@@ -47,6 +47,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -107,7 +108,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     if( index < 0 )
       throw new IllegalArgumentException( component == null ? m_observation.getDescription() : component.getDescription() );
     if( result.size() > 1 )
-      throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.0") ); //$NON-NLS-1$
     else if( result.size() == 0 )
       result.add( result.createRecord() );
 
@@ -130,7 +131,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   {
     final TupleResult result = m_observation.getResult();
     if( result.size() > 1 )
-      throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.buildingsAbstractObservationBuilding.1") ); //$NON-NLS-1$
     final int index = result.indexOf( component );
     if( index < 0 )
       throw new IllegalArgumentException( component.getName() );
@@ -181,7 +182,7 @@ public abstract class AbstractObservationBuilding implements IProfileObject
 
   protected IComponent createObjectProperty( final String id )
   {
-    final String[] split = id.split( "#" );
+    final String[] split = id.split( "#" ); //$NON-NLS-1$
     final String urn = split[0];
 
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();

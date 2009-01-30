@@ -54,25 +54,25 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class PolynomeProperties extends AbstractFeatureBinder
 {
-  private static final QName QNAME_PROP_ALPHALIMIT = new QName( TuhhCalculation.NS_WSPM_TUHH, "alphaLimit" );
+  private static final QName QNAME_PROP_ALPHALIMIT = new QName( TuhhCalculation.NS_WSPM_TUHH, "alphaLimit" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_INGORE_OUTLIER = new QName( TuhhCalculation.NS_WSPM_TUHH, "ignoreOutlier" );
+  private static final QName QNAME_PROP_INGORE_OUTLIER = new QName( TuhhCalculation.NS_WSPM_TUHH, "ignoreOutlier" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_TRIPPLE_IT = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleIt" );
+  private static final QName QNAME_PROP_TRIPPLE_IT = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleIt" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_TRIPPLE_MODE = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleMode" );
+  private static final QName QNAME_PROP_TRIPPLE_MODE = new QName( TuhhCalculation.NS_WSPM_TUHH, "trippleMode" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( TuhhCalculation.NS_WSPM_TUHH, "CalcPolynomes" );
+  public final static QName QNAME = new QName( TuhhCalculation.NS_WSPM_TUHH, "CalcPolynomes" ); //$NON-NLS-1$
 
-  private final static QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" );
+  private final static QName QNAME_PROP_DEEGREE = new QName( TuhhCalculation.NS_WSPM_TUHH, "degree" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_RUNOFF_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "runoffSlope" );
+  private static final QName QNAME_PROP_RUNOFF_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "runoffSlope" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_AREA_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "areaSlope" );
+  private static final QName QNAME_PROP_AREA_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "areaSlope" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_ALPHA_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "alphaSlope" );
+  private static final QName QNAME_PROP_ALPHA_SLOPE = new QName( TuhhCalculation.NS_WSPM_TUHH, "alphaSlope" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_WEIGHT_SPLINE_POINT = new QName( TuhhCalculation.NS_WSPM_TUHH, "weightSplinePoint" );
+  private static final QName QNAME_PROP_WEIGHT_SPLINE_POINT = new QName( TuhhCalculation.NS_WSPM_TUHH, "weightSplinePoint" ); //$NON-NLS-1$
 
   public enum TripleMode
   {
@@ -147,7 +147,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     final BigDecimal value = getProperty( QNAME_PROP_ALPHALIMIT, BigDecimal.class );
     if( value == null )
-      return new BigDecimal( "01.40" );
+      return new BigDecimal( "01.40" ); //$NON-NLS-1$
 
     return value;
   }
@@ -161,7 +161,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     final BigDecimal value = getProperty( QNAME_PROP_RUNOFF_SLOPE, BigDecimal.class );
     if( value == null )
-      return new BigDecimal( "02.0000" );
+      return new BigDecimal( "02.0000" ); //$NON-NLS-1$
 
     return value;
   }
@@ -175,7 +175,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     final BigDecimal value = getProperty( QNAME_PROP_AREA_SLOPE, BigDecimal.class );
     if( value == null )
-      return new BigDecimal( "02.0000" );
+      return new BigDecimal( "02.0000" ); //$NON-NLS-1$
 
     return value;
   }
@@ -189,7 +189,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     final BigDecimal value = getProperty( QNAME_PROP_ALPHA_SLOPE, BigDecimal.class );
     if( value == null )
-      return new BigDecimal( "02.0000" );
+      return new BigDecimal( "02.0000" ); //$NON-NLS-1$
 
     return value;
   }
@@ -203,7 +203,7 @@ public class PolynomeProperties extends AbstractFeatureBinder
   {
     final BigDecimal value = getProperty( QNAME_PROP_WEIGHT_SPLINE_POINT, BigDecimal.class );
     if( value == null )
-      return new BigDecimal( "1.00" );
+      return new BigDecimal( "1.00" ); //$NON-NLS-1$
 
     return value;
   }

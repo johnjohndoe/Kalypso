@@ -84,7 +84,7 @@ public class TuhhProfil extends AbstractProfil
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
     if( profileObjects != null && profileObjects.length > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) );
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
     setProperty( PROFILE_OBJECTS, null );
     if( profileObjects != null && profileObjects.length > 0 )
       return super.addProfileObjects( profileObjects );
@@ -103,7 +103,7 @@ public class TuhhProfil extends AbstractProfil
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
     if( profileObjects == null || profileObjects.length > 1 )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) );
+      throw new IllegalStateException( Messages.getString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.1" ) ); //$NON-NLS-1$
     final IProfileObject profileObject = createProfileObjectInternal( profileObjects[0] );
     addProfileObjects( new IProfileObject[] { profileObject } );
   }
@@ -131,12 +131,12 @@ public class TuhhProfil extends AbstractProfil
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider == null )
-      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.3", getType() ) );
+      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.3", getType() ) ); //$NON-NLS-1$
 
     final IComponent marker = getPointPropertyFor( markerID );
     /* first check, if provider provides markerType */
     if( !provider.isMarker( markerID ) )
-      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.4", marker.getName() ) );
+      throw new IllegalStateException( Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.profile.TuhhProfil.4", marker.getName() ) ); //$NON-NLS-1$
     /* point has component already defined? */
     if( !hasPointProperty( marker ) )
     {

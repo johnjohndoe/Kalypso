@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
 {
-  public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" );
+  public static final QName QNAME_PROP_CALC_MEMBER = new QName( NS_WSPM, "calculationMember" ); //$NON-NLS-1$
 
   public TuhhWspmProject( final Feature wspProject )
   {
@@ -90,7 +90,7 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   /** Not in waterbody, as we create a TuhhWaterBody */
   public static TuhhReach createNewReachForWaterBody( final WspmWaterBody waterBody ) throws GMLSchemaException
   {
-    final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) );
+    final Feature newTuhhReach = FeatureHelper.addFeature( waterBody.getFeature(), WspmWaterBody.QNAME_REACH_MEMBER, new QName( NS_WSPM_TUHH, "ReachWspmTuhhSteadyState" ) ); //$NON-NLS-1$
 
     final TuhhReach tuhhReach = new TuhhReach( newTuhhReach );
 
