@@ -93,8 +93,6 @@ public interface IRMA10SModelElementHandler
    */
   public void handleError( String lineString, EReadError errorHints );
 
-  public void setIRoughnessIDProvider( IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException;
-
   public List<IFeatureWrapper2> getCreatedFeatures( );
 
   public void handleTime( final String line, final Date time );

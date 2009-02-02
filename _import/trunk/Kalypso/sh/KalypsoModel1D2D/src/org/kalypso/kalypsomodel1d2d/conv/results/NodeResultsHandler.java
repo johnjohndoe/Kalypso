@@ -70,7 +70,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
-import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
@@ -186,7 +185,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private void extrapolateWaterLevel( int count )
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( count > WSP_EXTRAPOLATION_RANGE )
       return;
@@ -200,8 +199,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       count = count + 1;
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.3") + assigned + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.6") + count + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.3" ) + assigned + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.6" ) + count + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       extrapolateWaterLevel( count );
     }
@@ -287,7 +286,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.9") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.9" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -336,12 +335,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         {
           final IStatus status = handle1dElement( nodeDown, nodeUp, calcUnit );
           if( status != Status.OK_STATUS )
-            KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.11") + status.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+            KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.11" ) + status.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
         catch( final Exception e )
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.13") ); //$NON-NLS-1$ //$NON-NLS-2$
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           e.printStackTrace();
           return;
         }
@@ -358,7 +357,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         catch( final Exception e )
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.15") ); //$NON-NLS-1$ //$NON-NLS-2$
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.15" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           e.printStackTrace();
           return;
         }
@@ -469,7 +468,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.17") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.17" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -520,7 +519,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final BigDecimal area = NodeResultHelper.getCrossSectionArea( (ITeschkeFlowRelation) flowRelation1d, depth );
 
     if( area == null )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18") + nodeResult.getGmlID() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.19") + station.doubleValue() ); //$NON-NLS-1$ //$NON-NLS-2$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.18" ) + nodeResult.getGmlID() + Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.19" ) + station.doubleValue() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final BigDecimal discharge = velocity.multiply( area ).setScale( 3, BigDecimal.ROUND_HALF_UP );
     nodeResult.setDischarge( discharge.doubleValue() );
@@ -578,7 +577,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     /* Probably profile information missing */
     if( curves[0] == null || curves[1] == null )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.20" ) ); //$NON-NLS-1$
 
     final double curveDistance = curves[0].distance( curves[1] );
     create1dTriangles( nodes, curves, curveDistance );
@@ -670,34 +669,34 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       strmPolyInput.close();
 
       // create command
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.24") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.24" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
       // start Triangle
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.26") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.26" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
       // get the triangulation
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.28") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.28" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final File nodeFile = new File( tempDir, "input.1.node" ); //$NON-NLS-1$
       final File eleFile = new File( tempDir, "input.1.ele" ); //$NON-NLS-1$
 
       if( !nodeFile.exists() || !eleFile.exists() )
       {
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.31") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.32") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.33") ); //$NON-NLS-1$
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.35") ); //$NON-NLS-1$ //$NON-NLS-2$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.31" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.32" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.33" ) ); //$NON-NLS-1$
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.35" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
 
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.37") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.37" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.39") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.39" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
@@ -745,34 +744,34 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       strmPolyInput.close();
 
       // create command
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.43") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.43" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
       // start Triangle
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.45") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.45" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
       // get the triangulation
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.47") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.47" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final File nodeFile = new File( tempDir, "input.1.node" ); //$NON-NLS-1$
       final File eleFile = new File( tempDir, "input.1.ele" ); //$NON-NLS-1$
 
       if( !nodeFile.exists() || !eleFile.exists() )
       {
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.50") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.51") ); //$NON-NLS-1$
-        pwSimuLog.append( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.52") ); //$NON-NLS-1$
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.54") ); //$NON-NLS-1$ //$NON-NLS-2$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.50" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.51" ) ); //$NON-NLS-1$
+        pwSimuLog.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.52" ) ); //$NON-NLS-1$
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.54" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
 
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.56") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.56" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.58") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.58" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
@@ -825,7 +824,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       // TODO: what happens, if the boundaryCurve intersects the 1d-profile ?
       if( nodeCurve1d.intersects( boundaryCurve ) )
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.60") ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.60" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       else
       {
         if( buffer.intersects( nodeCurve1d ) == true )
@@ -852,7 +851,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         else
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.62") ); //$NON-NLS-1$ //$NON-NLS-2$
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.62" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -905,7 +904,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
       }
       if( intersectFound == false )
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.64") ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.64" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
@@ -1360,7 +1359,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
       else
       {
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.66") ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.66" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -1539,7 +1538,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.68") ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.68" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -1682,15 +1681,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
-   */
-  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
    */
   public void start( )
@@ -1706,7 +1696,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.71"), id ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.71" ), id ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -1722,7 +1712,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.73"), id ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.73" ), id ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     switch( resultlines )
@@ -1851,7 +1841,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.75"), id ); //$NON-NLS-1$ //$NON-NLS-2$
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.75" ), id ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     result.setDry( dry );

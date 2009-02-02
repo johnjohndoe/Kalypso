@@ -282,13 +282,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
-   */
-  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
-  {
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
    */
   public List<IFeatureWrapper2> getCreatedFeatures( )

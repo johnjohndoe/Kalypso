@@ -79,6 +79,7 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
+	
 	<!-- ComplexElement (abstract) -->
 	<xs:element name="ComplexElement" type="wb1d2d:ComplexElementType"
 		substitutionGroup="gml:_Feature" abstract="true" />
@@ -93,6 +94,7 @@
 			<xs:extension base="gml:AbstractFeatureType" />
 		</xs:complexContent>
 	</xs:complexType>
+	
 	<!-- CalculationUnit (abstract) -->
 	<xs:element name="CalculationUnit" type="wb1d2d:CalculationUnitType"
 		substitutionGroup="wb1d2d:ComplexElement" abstract="true" />
@@ -107,6 +109,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
 	<!-- CalculationUnit1D -->
 	<xs:element name="CalculationUnit1D"
 		type="wb1d2d:CalculationUnitType1D"
@@ -136,15 +139,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- element1D property (unused)
-		<xs:element name="element1D" type="wb1d2d:Element1DPropertyType" />
-		<xs:complexType name="Element1DPropertyType">
-		<xs:sequence>
-		<xs:element ref="wb1d2d:Element1D" minOccurs="0"
-		maxOccurs="0" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-		</xs:complexType> -->
+
 	<!-- CalculationUnit2D -->
 	<xs:element name="CalculationUnit2D"
 		type="wb1d2d:CalculationUnitType2D"
@@ -159,15 +154,7 @@
 			<xs:extension base="wb1d2d:CalculationUnitType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- element2D property (unused)
-		<xs:element name="element2D" type="wb1d2d:Element2DPropertyType" />
-		<xs:complexType name="Element2DPropertyType">
-		<xs:sequence>
-		<xs:element ref="wb1d2d:Element2D" minOccurs="0"
-		maxOccurs="1" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-		</xs:complexType> -->
+
 	<!-- CalculationUnit1D2D -->
 	<xs:element name="CalculationUnit1D2D"
 		type="wb1d2d:CalculationUnitType1D2D"
@@ -319,7 +306,7 @@
 	</xs:complexType>
 	<!-- Element (abstract) -->
 	<xs:element name="Element" type="wb1d2d:ElementType"
-		substitutionGroup="simBase:_FEElement" abstract="true" />
+		substitutionGroup="gml:_Feature" abstract="true" />
 	<xs:complexType name="ElementType" abstract="true">
 		<xs:annotation>
 			<xs:documentation>
@@ -327,7 +314,7 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:AbstractFEElementType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:elementContainer"
 						minOccurs="0" maxOccurs="unbounded" />
@@ -421,31 +408,14 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- directedEdge property -->
-	<xs:element name="directedEdge"
-		type="wb1d2d:DirectedEdgePropertyType" />
-	<xs:complexType name="DirectedEdgePropertyType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">
-				A directed nod holds a reference to an edge and has a
-				direction property element. No attribute is used due to
-				Kalpso limitations.
-			</xs:documentation>
-		</xs:annotation>
-		<!--  TODO: the above comment says this property is ment as reference.
-			But here, also inline-features are allowed.
-			TODO: change min- and max-Occurs to 0  to allow only refernced egdes. -->
-		<xs:sequence>
-			<xs:element ref="simBase:_FEEdge" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
 
 	<!--====================================================================
 		edges
 		====================================================================-->
 	<!-- edge property -->
 	<xs:element name="edge" type="wb1d2d:EdgePropertyType" />
+	<!-- directedEdge property, copy of wb1d2d:edge (above) for backwards compatibility -->
+	<xs:element name="directedEdge" type="wb1d2d:EdgePropertyType" />
 	<xs:complexType name="EdgePropertyType">
 		<xs:sequence>
 			<xs:element ref="wb1d2d:Edge" minOccurs="0" maxOccurs="1" />
@@ -454,7 +424,7 @@
 	</xs:complexType>
 	<!-- Edge -->
 	<xs:element name="Edge" type="wb1d2d:EdgeType"
-		substitutionGroup="simBase:_FEEdge">
+		substitutionGroup="gml:_Feature">
 	</xs:element>
 	<xs:complexType name="EdgeType">
 		<xs:annotation>
@@ -470,7 +440,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:FEAbstractEdgeType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<!-- @deprecated -->
 					<xs:element ref="wb1d2d:edgeInv" minOccurs="0"
@@ -584,7 +554,7 @@
 	</xs:complexType>
 	<!-- Node -->
 	<xs:element name="Node" type="wb1d2d:NodeType"
-		substitutionGroup="simBase:_FENode">
+		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">
 				Represents a node in a finite element network.
@@ -606,7 +576,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="simBase:FEAbstractNodeType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element ref="gml:pointProperty" minOccurs="1"
 						maxOccurs="1" />
@@ -644,12 +614,12 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	<!-- Line (abstract, substitutes _FELine) -->
+	<!-- Line (abstract, substitutes _Feature) -->
 	<xs:element name="Line" type="wb1d2d:LineType"
-		substitutionGroup="simBase:_FELine" abstract="true" />
+		substitutionGroup="gml:_Feature" abstract="true" />
 	<xs:complexType name="LineType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="simBase:FEAbstractLineType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element name="geometry"
 						type="gml:LineStringPropertyType" />

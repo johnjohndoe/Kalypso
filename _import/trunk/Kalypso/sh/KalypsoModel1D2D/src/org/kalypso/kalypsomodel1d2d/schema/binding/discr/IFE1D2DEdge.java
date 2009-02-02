@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEEdge;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  */
-public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge
+public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" ); //$NON-NLS-1$
 

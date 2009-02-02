@@ -48,6 +48,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -171,6 +172,11 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     }
 
     return GeometryFactory.createGM_Curve( positions, crs );
+  }
+
+  public GM_Curve getGeometry( )
+  {
+    return getProperty( QNAME_PROP_GEOMETRY, GM_Curve.class );
   }
 
   /**

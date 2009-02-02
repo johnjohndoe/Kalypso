@@ -252,8 +252,8 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    */
   private GM_Object geometryFromNetItem( final IFENetItem netItem )
   {
-    try
-    {
+//    try
+//    {
       // TODO: add other known classes to switch
 
       // ATTENTION: order of these ifs is importent, because
@@ -261,19 +261,22 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
       // has no surface...
       // FIX: make an own wrapper-class for Polygon-Elements, only those
       // have a surface
-      if( netItem instanceof IElement1D )
-        return ((IElement1D) netItem).recalculateElementGeometry();
+    
+     return netItem.getFeature().getDefaultGeometryPropertyValue();
+     
+//      if( netItem instanceof IElement1D )
+//        return ((IElement1D) netItem).getGeometry();
+//
+//      if( netItem instanceof IPolyElement )
+//        return ((IPolyElement) netItem).getGeometry();
 
-      if( netItem instanceof IPolyElement )
-        return ((IPolyElement) netItem).recalculateElementGeometry();// getGeometry();
-
-      return null;
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    // return null;
+//    }
+//    catch( final GM_Exception e )
+//    {
+//      e.printStackTrace();
+//      return null;
+//    }
 
   }
 

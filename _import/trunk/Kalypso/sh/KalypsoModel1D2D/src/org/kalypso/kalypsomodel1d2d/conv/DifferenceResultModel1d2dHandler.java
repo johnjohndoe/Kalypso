@@ -335,16 +335,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   {
     m_formatter.format( "%s%n", lineString ); //$NON-NLS-1$
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
-   */
-  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#start()
    */
