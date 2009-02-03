@@ -58,10 +58,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
@@ -161,7 +161,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     final IMapModell mapModell = mapPanel.getMapModell();
     mapPanel.repaintMap();
 
-    m_theme = UtilMap.findEditableTheme( mapPanel, IElement2D.QNAME );
+    m_theme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_model1d2d = UtilMap.findFEModelTheme( mapPanel );
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
@@ -369,7 +369,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       // add remove element command
       for( final Feature feature : refineList )
       {
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IElement2D.QNAME ) )
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
         {
           final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( feature, discModel );
           workspace.postCommand( deleteCmd );
@@ -400,7 +400,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
     final List<Feature> refineList = new ArrayList<Feature>();
     for( final Feature feature : m_featuresToRefine )
     {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IElement2D.QNAME ) )
+      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
       {
         final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
         if( geom instanceof GM_Surface )
@@ -490,7 +490,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
 
     for( final Feature feature : selectedFeatures )
     {
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IElement2D.QNAME ) )
+      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
       {
         // get the geometry
         final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
@@ -599,7 +599,7 @@ public class RefineFEGeometryWidget extends AbstractWidget
       {
         final Feature feature = FeatureHelper.getFeature( workspace, object );
 
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IElement2D.QNAME ) )
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IPolyElement.QNAME ) )
         {
           final GM_Object geom = (GM_Object) feature.getProperty( IFE1D2DElement.PROP_GEOMETRY );
           if( geom != null )

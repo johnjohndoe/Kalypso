@@ -70,7 +70,7 @@ public interface ICalculationUnit extends IFE1D2DComplexElement<IFENetItem>
 
   public List<IElement1D> getElements1D( );
 
-  public List<IElement2D> getElements2D( );
+  public List<IPolyElement> getElements2D( );
 
   public boolean contains( final IFENetItem member );
 }

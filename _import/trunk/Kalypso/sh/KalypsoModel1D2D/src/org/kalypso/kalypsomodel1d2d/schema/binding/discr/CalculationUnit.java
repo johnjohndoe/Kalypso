@@ -130,14 +130,14 @@ public class CalculationUnit extends FE1D2DComplexElement<IFENetItem> implements
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements2D()
    */
-  public List<IElement2D> getElements2D( )
+  public List<IPolyElement> getElements2D( )
   {
-    final List<IElement2D> list = new ArrayList<IElement2D>();
+    final List<IPolyElement> list = new ArrayList<IPolyElement>();
     final IFeatureWrapperCollection<IFENetItem> elements = getElements();
     for( final IFENetItem element : elements )
     {
-      if( element instanceof IElement2D )
-        list.add( (IElement2D) element );
+      if( element instanceof IPolyElement )
+        list.add( (IPolyElement) element );
     }
     return list;
   }

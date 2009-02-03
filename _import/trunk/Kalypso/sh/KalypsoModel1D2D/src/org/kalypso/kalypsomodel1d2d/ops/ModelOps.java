@@ -47,7 +47,6 @@ import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -59,11 +58,12 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 @SuppressWarnings("unchecked")
-/**
+/*
  * (static) helper functions for the {@link org.kalypso.kalypsomodel1d2d.schema.binding.FE1D2DDiscretisationModel}
  * class.
  * 
  * @author Gernot Belger
+ * 
  * @author Thomas Jung
  */
 public class ModelOps
@@ -90,7 +90,7 @@ public class ModelOps
     final int EDGE_NUM = edges.size();
     if( !(EDGE_NUM == 3 || EDGE_NUM == 4) )
     {
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.ModelOps.2") + EDGE_NUM ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.2" ) + EDGE_NUM ); //$NON-NLS-1$
     }
 
     IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
@@ -110,10 +110,10 @@ public class ModelOps
   public static final void sortElementEdges( final IFE1D2DElement element )
   {
     // TODO: not every IFE1D2DElement is a IElement2D!!! What to do?
-    if( !(element instanceof IElement2D) )
+    if( !(element instanceof IPolyElement) )
       return;
 
-    final IFeatureWrapperCollection edgeFeatureCollection = ((IElement2D) element).getEdges();
+    final IFeatureWrapperCollection edgeFeatureCollection = ((IPolyElement) element).getEdges();
     final IFeatureWrapperCollection<IFE1D2DEdge> edges = edgeFeatureCollection;
     final FeatureList edgeFeatureList = edges.getWrappedList();
 
@@ -156,7 +156,7 @@ public class ModelOps
       }
       else
       {
-        throw new RuntimeException( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.ops.ModelOps.3") , edge, edges )); //$NON-NLS-1$
+        throw new RuntimeException( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.ops.ModelOps.3" ), edge, edges ) ); //$NON-NLS-1$
       }
     }
   }
@@ -166,7 +166,7 @@ public class ModelOps
    * or in the case of a normal edge through its edge inv
    * 
    * @param egde
-   *            the edge to test
+   *          the edge to test
    * @return true if the given edge is in an element
    */
   public static final boolean isContainedInAnElement( final IFE1D2DEdge edge )

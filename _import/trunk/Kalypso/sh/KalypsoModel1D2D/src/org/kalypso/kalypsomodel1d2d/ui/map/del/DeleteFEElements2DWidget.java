@@ -50,11 +50,10 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -69,10 +68,10 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
 
   public DeleteFEElements2DWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IElement2D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IPolyElement.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.4") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.4" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -89,7 +88,7 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.5") + delegateTooltip ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.5" ) + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
@@ -114,7 +113,7 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
       if( !status.isOK() )
       {
         // TODO: should be error instead, but probably never happens at all
-        SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.6"), status.getMessage() ); //$NON-NLS-1$
+        SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.6" ), status.getMessage() ); //$NON-NLS-1$
       }
     }
     super.keyPressed( e );

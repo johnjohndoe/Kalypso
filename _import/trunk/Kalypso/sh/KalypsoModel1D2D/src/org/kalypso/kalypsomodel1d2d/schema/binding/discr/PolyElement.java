@@ -20,6 +20,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -34,7 +35,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-public class PolyElement extends Element2D implements IPolyElement
+public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> implements IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> m_containers;
 
@@ -42,12 +43,12 @@ public class PolyElement extends Element2D implements IPolyElement
 
   public PolyElement( final Feature featureToBind )
   {
-    this( featureToBind, Element2D.WB1D2D_F_FE1D2D_2DElement );
+    this( featureToBind, IPolyElement.QNAME );
   }
 
   public PolyElement( final Feature featureToBind, final QName featureQName )
   {
-    super( featureToBind, featureQName );
+    super( featureToBind, featureQName, IFE1D2DComplexElement.class );
     //
     Object prop = null;
     try
@@ -85,7 +86,7 @@ public class PolyElement extends Element2D implements IPolyElement
     if( prop == null )
     {
       // create the property that is still missing
-      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Element2D.WB1D2D_F_FE1D2D_2DElement, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
+      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IPolyElement.QNAME, FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
     }
     else
     {
@@ -116,13 +117,20 @@ public class PolyElement extends Element2D implements IPolyElement
 
   public PolyElement( final Feature parentFeature, final QName propQName, final String gmlID )
   {
-    this( FeatureHelper.createFeatureWithId( Element2D.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( IPolyElement.QNAME, parentFeature, propQName, gmlID ) );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
+   */
+  public GM_Surface<GM_SurfacePatch> getGeometry( )
+  {
+    return getProperty( QNAME_PROP_GEOMETRY, GM_Surface.class );
   }
 
   /**
    * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
    */
-  @Override
   public FE1D2DEdge[] getEdgesAsArray( )
   {
     final Feature feature = getFeature();
@@ -162,6 +170,21 @@ public class PolyElement extends Element2D implements IPolyElement
     // ModelOps.sortElementEdges( this );
 
     edgeList.invalidate();
+    getFeature().invalidEnvelope();
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
+   */
+  public void addEdge( final String edgeID )
+  {
+    if( edgeID == null )
+      throw new IllegalArgumentException( Messages.getString( "Element2D.2" ) ); //$NON-NLS-1$
+    final FeatureList edgeFeatureList = m_edges.getWrappedList();
+    if( edgeFeatureList.contains( edgeID ) )
+      return;
+    edgeFeatureList.add( edgeID );
+    edgeFeatureList.invalidate();
     getFeature().invalidEnvelope();
   }
 

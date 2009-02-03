@@ -162,12 +162,12 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#getElements2D()
    */
   @Override
-  public List<IElement2D> getElements2D( )
+  public List<IPolyElement> getElements2D( )
   {
-    final List<IElement2D> list = new ArrayList<IElement2D>();
+    final List<IPolyElement> list = new ArrayList<IPolyElement>();
     for( final IFeatureWrapper2 element : m_virtualElements )
-      if( element instanceof IElement2D )
-        list.add( (IElement2D) element );
+      if( element instanceof IPolyElement )
+        list.add( (IPolyElement) element );
     return list;
   }
 

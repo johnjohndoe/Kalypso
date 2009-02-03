@@ -53,9 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -141,7 +139,7 @@ public class ElementGeometryEditor
     // add remove element command
     for( final IFE1D2DElement element : m_elementList )
     {
-      if( element instanceof Element2D )
+      if( element instanceof IPolyElement )
       {
         final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getFeature(), discModel );
         m_nodeTheme.getWorkspace().postCommand( deleteCmd );
@@ -151,7 +149,7 @@ public class ElementGeometryEditor
     /* create new elements */
     for( final IFE1D2DElement element : m_elementList )
     {
-      if( element instanceof Element2D )
+      if( element instanceof IPolyElement )
       {
         // get ring of the new geometries
         final GM_Ring ring = getEditedGeometryAsRing( element );
@@ -239,7 +237,7 @@ public class ElementGeometryEditor
       for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.0" ) ); //$NON-NLS-1$
       }
 
       /* B) node position checks */
@@ -247,7 +245,7 @@ public class ElementGeometryEditor
       if( m_endNode != null )
       {
         if( m_startNode.equals( m_endNode ) )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.1") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.1" ) ); //$NON-NLS-1$
       }
 
       // B.2) New Node lies inside an element, that is not in the current elements list
@@ -259,12 +257,12 @@ public class ElementGeometryEditor
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( m_endPoint ) && !m_elementList.contains( elementForNewNode ) )
-            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2") ); //$NON-NLS-1$
+            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.2" ) ); //$NON-NLS-1$
         }
       }
       else
         // B.3) right now we don't allow that the new Node lies on an already existing node
-        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.3") ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.3" ) ); //$NON-NLS-1$
 
       /* C) edge checks */
       // C.1) one of the new edges crosses other edges
@@ -277,22 +275,22 @@ public class ElementGeometryEditor
         final GM_Position[] poses = ring.getPositions();
         // D.1) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( poses ) )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.4" ) ); //$NON-NLS-1$
 
         // D.2) new elements intersect other elements
         final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( poses, new GM_Position[][] {}, null, crs );
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {
-          if( element instanceof IElement2D )
+          if( element instanceof IPolyElement )
           {
-            final IElement2D element2D = (IElement2D) element;
+            final IPolyElement element2D = (IPolyElement) element;
             final GM_Surface<GM_SurfacePatch> eleGeom = element2D.getGeometry();
             if( eleGeom.intersects( newSurface ) && !m_elementList.contains( element2D ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5") ); //$NON-NLS-1$
+                return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.5" ) ); //$NON-NLS-1$
             }
           }
         }
@@ -304,7 +302,7 @@ public class ElementGeometryEditor
           final GM_Point point = GeometryFactory.createGM_Point( positions[i], crs );
           final IFELine contiLine = discModel.findContinuityLine( point, SEARCH_DISTANCE );
           if( contiLine != null )
-            return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6") ); //$NON-NLS-1$
+            return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6" ) ); //$NON-NLS-1$
         }
       }
       return Status.OK_STATUS;
@@ -325,7 +323,7 @@ public class ElementGeometryEditor
     final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
     for( final IFE1D2DElement element : m_elementList )
     {
-      if( element instanceof IElement2D )
+      if( element instanceof IPolyElement )
         ringList.add( getEditedGeometryAsRing( element ) );
     }
     return ringList.toArray( new GM_Ring[ringList.size()] );

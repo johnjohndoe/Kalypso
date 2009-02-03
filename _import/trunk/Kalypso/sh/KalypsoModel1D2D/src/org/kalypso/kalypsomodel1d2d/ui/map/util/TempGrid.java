@@ -55,9 +55,9 @@ import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -92,7 +92,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
  * supposed to be in the same coordinate reference system so that no no reference system convertion is done
- *
+ * 
  * @author Patrice Congo
  * @author Thomas Jung
  */
@@ -115,7 +115,7 @@ public class TempGrid
   /**
    * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that
    * system and no reference system conversion made in by the {@link TempGrid}
-   *
+   * 
    * @param targetCrs
    *          the target {@link CS_CoordinateSystem}
    * @throws IllegalArgumentException
@@ -129,7 +129,7 @@ public class TempGrid
 
   /**
    * Class this to display the {@link TempGrid} on the screen.
-   *
+   * 
    * @param g
    *          the display graphic context
    * @param projection
@@ -203,7 +203,7 @@ public class TempGrid
 
   /**
    * Reset this {@link TempGrid}. It is empty, i.e. contains no points after reset
-   *
+   * 
    * @param crs
    *          the target coordinate reference system for the grid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
@@ -218,7 +218,7 @@ public class TempGrid
 
   /**
    * config the with its side points.
-   *
+   * 
    * @param topSidePoints
    *          the collector containing the top side points
    * @param bottomSidePoints
@@ -351,9 +351,9 @@ public class TempGrid
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {
-          if( element instanceof IElement2D )
+          if( element instanceof IPolyElement )
           {
-            final GM_Surface<GM_SurfacePatch> eleGeom = ((IElement2D) element).getGeometry();
+            final GM_Surface<GM_SurfacePatch> eleGeom = ((IPolyElement) element).getGeometry();
             if( eleGeom.intersects( newSurface ) )
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );

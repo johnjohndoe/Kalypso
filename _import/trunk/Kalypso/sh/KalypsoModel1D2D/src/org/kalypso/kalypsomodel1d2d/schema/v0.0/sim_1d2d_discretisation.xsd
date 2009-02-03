@@ -343,15 +343,15 @@
 				maxOccurs="1" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-	<!-- Element2D (abstract) -->
-	<xs:element name="Element2D" type="wb1d2d:Element2DType"
-		abstract="true" substitutionGroup="wb1d2d:Element" />
-	<xs:complexType name="Element2DType">
+	</xs:complexType>	
+	<!-- PolyElement -->
+	<xs:element name="PolyElement" type="wb1d2d:PolyElementType"
+		substitutionGroup="wb1d2d:Element" />
+	<xs:complexType name="PolyElementType">
 		<xs:annotation>
 			<xs:documentation>
-				An 2D fe element is defined by edges. singular edges
-				cannot be used. the edges must build a close kurve.
+				A PolyElement is defined by 3 or 4 edges. The edges must
+				build a closed curve.
 			</xs:documentation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
@@ -361,21 +361,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="wb1d2d:ElementType" />
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- PolyElement -->
-	<xs:element name="PolyElement" type="wb1d2d:PolyElementType"
-		substitutionGroup="wb1d2d:Element2D" />
-	<xs:complexType name="PolyElementType">
-		<xs:annotation>
-			<xs:documentation>
-				A PolyElement is defined by 3 or 4 edges. The edges must
-				build a closed curve.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="wb1d2d:Element2DType">
+			<xs:extension base="wb1d2d:ElementType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:directedEdge" minOccurs="3"
 						maxOccurs="4" />
