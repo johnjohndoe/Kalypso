@@ -19,11 +19,15 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature;
 
-public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeature
+public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
 {
-  public ProfileFeatureBinding( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  private GM_Curve m_curve = null;
+
+  private IProfil m_iProfile = null;
+
+  public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -43,7 +47,17 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
   @Override
   public GM_Curve getLine( )
   {
-    return (GM_Curve) getFeature().getProperty( QNAME_LINE );
+    if( m_curve == null || isDirty( QNAME_LINE ) )
+    {
+      m_curve = (GM_Curve) getFeature().getProperty( QNAME_LINE );
+
+      if( isDirty( QNAME_LINE ) )
+      {
+        setValid( QNAME_LINE );
+      }
+    }
+
+    return m_curve;
   }
 
   /**
@@ -54,7 +68,13 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
   {
     try
     {
-      return toProfile( );
+      if( m_iProfile == null || isDirty( QNAME_OBS_MEMBERS, QNAME_STATION ) )
+      {
+        m_iProfile = toProfile();
+        setValid( QNAME_OBS_MEMBERS, QNAME_STATION );
+      }
+
+      return m_iProfile;
     }
     catch( final Exception e )
     {
@@ -92,8 +112,10 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
   public WspmWaterBody getWater( )
   {
     final Feature parent = getFeature().getOwner();
-    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) ) //$NON-NLS-1$
+    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
+    {
       return new WspmWaterBody( parent );
+    }
 
     return null;
   }
@@ -102,7 +124,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
    * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setBigStation(java.math.BigDecimal)
    */
   @Override
-  public void setBigStation( BigDecimal bigStation )
+  public void setBigStation( final BigDecimal bigStation )
   {
     setProperty( ProfileFeatureFactory.QNAME_STATION, bigStation );
   }
@@ -111,7 +133,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
    * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setSrsName(java.lang.String)
    */
   @Override
-  public void setSrsName( String srsName )
+  public void setSrsName( final String srsName )
   {
     getFeature().setProperty( QNAME_SRS, srsName );
 
@@ -121,7 +143,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
    * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setStation(double)
    */
   @Override
-  public void setStation( double station )
+  public void setStation( final double station )
   {
     final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
     setBigStation( bigStation );
@@ -145,7 +167,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
     return this.getId();
   }
 
-  public String getProfileType(  )
+  public String getProfileType( )
   {
     return getProperty( ProfileFeatureFactory.QNAME_TYPE, String.class );
   }
@@ -155,19 +177,20 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
     setProperty( ProfileFeatureFactory.QNAME_TYPE, type );
   }
 
-  
-  private IProfil toProfile(  )
+  private IProfil toProfile( )
   {
     /* profile type */
-    final String type = getProfileType(  );
+    final String type = getProfileType();
     if( type == null )
+    {
       return null;
+    }
 
     /* observation of profile */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
 
     final IProfil profil = ProfilFactory.createProfil( type, observation );
-    
+
     /* station of profile */
     final BigDecimal bigStation = (BigDecimal) getProperty( ProfileFeatureFactory.QNAME_STATION );
     if( bigStation != null )
@@ -179,23 +202,27 @@ public class ProfileFeatureBinding extends Feature_Impl implements  IProfileFeat
     /* Some metadata */
     final String crs = getSrsName();
     profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
-    
+
     /* building of profile */
     // REMARK: handle buildings before table, because the setBuilding method resets the
     // corresponding table properties.
-    final IObservation<TupleResult>[] profileObjects = getProfileObjects(  );
+    final IObservation<TupleResult>[] profileObjects = getProfileObjects();
     if( profileObjects.length > 0 )
+    {
       profil.createProfileObjects( profileObjects );
+    }
 
     return profil;
   }
-  
+
   @SuppressWarnings("unchecked")
-  private IObservation<TupleResult>[] getProfileObjects(  )
+  private IObservation<TupleResult>[] getProfileObjects( )
   {
     final List< ? > objects = (List< ? >) getProperty( QNAME_OBS_MEMBERS );
     if( objects.size() == 0 )
+    {
       return new IObservation[] {};
+    }
 
     final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
 
