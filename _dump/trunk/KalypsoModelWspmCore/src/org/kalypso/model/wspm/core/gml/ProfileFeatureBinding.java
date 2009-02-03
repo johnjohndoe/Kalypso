@@ -19,13 +19,14 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
-public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
+//public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
+public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeature
 {
-  private GM_Curve m_curve = null;
-
-  private IProfil m_iProfile = null;
+// private GM_Curve m_curve = null;
+//
+// private IProfil m_iProfile = null;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -47,17 +48,18 @@ public class ProfileFeatureBinding extends AbstractCachedFeature implements IPro
   @Override
   public GM_Curve getLine( )
   {
-    if( m_curve == null || isDirty( QNAME_LINE ) )
-    {
-      m_curve = (GM_Curve) getFeature().getProperty( QNAME_LINE );
-
-      if( isDirty( QNAME_LINE ) )
-      {
-        setValid( QNAME_LINE );
-      }
-    }
-
-    return m_curve;
+    return (GM_Curve) getFeature().getProperty( QNAME_LINE );
+// if( m_curve == null || isDirty( QNAME_LINE ) )
+// {
+// m_curve = (GM_Curve) getFeature().getProperty( QNAME_LINE );
+//
+// if( isDirty( QNAME_LINE ) )
+// {
+// setValid( QNAME_LINE );
+// }
+// }
+//
+// return m_curve;
   }
 
   /**
@@ -66,15 +68,27 @@ public class ProfileFeatureBinding extends AbstractCachedFeature implements IPro
   @Override
   public IProfil getProfil( )
   {
+// try
+// {
+// if( m_iProfile == null || isDirty( QNAME_OBS_MEMBERS, QNAME_STATION ) )
+// {
+// m_iProfile = toProfile();
+// setValid( QNAME_OBS_MEMBERS, QNAME_STATION );
+// }
+//
+// return m_iProfile;
+// }
+// catch( final Exception e )
+// {
+// final IStatus status = StatusUtilities.statusFromThrowable( e );
+// KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+//
+// return null;
+// }
+
     try
     {
-      if( m_iProfile == null || isDirty( QNAME_OBS_MEMBERS, QNAME_STATION ) )
-      {
-        m_iProfile = toProfile();
-        setValid( QNAME_OBS_MEMBERS, QNAME_STATION );
-      }
-
-      return m_iProfile;
+      return toProfile();
     }
     catch( final Exception e )
     {
@@ -113,9 +127,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature implements IPro
   {
     final Feature parent = getFeature().getOwner();
     if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
-    {
       return new WspmWaterBody( parent );
-    }
 
     return null;
   }
@@ -182,9 +194,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature implements IPro
     /* profile type */
     final String type = getProfileType();
     if( type == null )
-    {
       return null;
-    }
 
     /* observation of profile */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
@@ -220,9 +230,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature implements IPro
   {
     final List< ? > objects = (List< ? >) getProperty( QNAME_OBS_MEMBERS );
     if( objects.size() == 0 )
-    {
       return new IObservation[] {};
-    }
 
     final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
 
