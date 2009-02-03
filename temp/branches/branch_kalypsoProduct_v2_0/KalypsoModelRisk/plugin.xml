@@ -41,6 +41,7 @@
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
         class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        descriptionImage="icons/risk_project.gif"
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/risk_project.gif"
         id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
@@ -48,6 +49,19 @@
         project="true">
 		<description>Creates a new risk project</description>
 		</wizard>
+
+        <wizard
+              canFinishEarly="false"
+              category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+              class="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+              descriptionImage="icons/risk_project.gif"
+              finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+              hasPages="true"
+              icon="icons/risk_project.gif"
+              id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
+              name="Kalypso RISK Model - Demo Projekt"
+              project="true"/>
+
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/risk_project.gif"
