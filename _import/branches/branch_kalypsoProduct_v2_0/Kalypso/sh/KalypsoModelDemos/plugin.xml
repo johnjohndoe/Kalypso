@@ -21,8 +21,29 @@
             category="org.kalypso.kalypso1d2d.pjt.demoProject"
             data="etc/demos/2DDemo.zip"
             description="Ein einfaches reines 2D-Beispielprojekt."
-            label="1D2D Demo Projekt"
+            label="1D2D Demo Projekt - rein 2D"
             projectName="2DDemo">
+      </project>
+      <project
+            category="org.kalypso.kalypso1d2d.pjt.demoProject"
+            data="etc/demos/1D2D_Demo.zip"
+            description="Ein gekoppeltes 1D/2D-Beispielprojekt. Das Projekt enthält bereits Ergebnisse"
+            label="1D2D Demo Projekt - 1D/2D gekoppelt"
+            projectName="1D2D_Demo">
+      </project>
+      <project
+            category="org.kalypso.model.flood.demoProject"
+            data="etc/demos/FloodDemo_1D2D.zip"
+            description="Ein Flood Model Projekt basierend auf dem 1D/2D Demo Projekt."
+            label="FLOOD Demo Projekt aus 1D/2D"
+            projectName="FloodDemo_1D2D">
+      </project>
+      <project
+            category="org.kalypso.model.risk.demoProject"
+            data="etc/demos/RiskDemo_1D2D.zip"
+            description="Ein Risk Model Projekt basierend auf dem 1D/2D Demo Projekt."
+            label="RISK Demo Projekt aus 1D/2D"
+            projectName="RiskDemo_1D2D">
       </project>
    </extension>
 </plugin>
