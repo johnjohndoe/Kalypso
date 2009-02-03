@@ -78,7 +78,6 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
@@ -736,7 +735,7 @@
             </parameter>
          </defaultHandler>
       </command>
-    <command
+      <command
           categoryId="org.kalypso.ui.tupleResult.category"
           description="%command.description.addrow"
           id="org.kalypso.model1d2d.Command1D2DTimestepsAddRow"
