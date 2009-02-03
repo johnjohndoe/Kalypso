@@ -329,6 +329,7 @@
             descriptionImage="content/images/button_flood.gif"
             finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
             hasPages="true"
+            icon="content/images/button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
             name="Kalypso Flood Model"
             project="true">
@@ -342,6 +343,7 @@
             class="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
             descriptionImage="content/images/button_flood.gif"
             hasPages="true"
+            icon="content/images/button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
             name="Kalypso Flood Model - Demo Projekt"
             project="true">
