@@ -75,9 +75,7 @@ public class ScenarioHandler extends CaseHandler implements IScenario
   {
     final Scenario parentScenario = m_scenario.getParentScenario();
     if( parentScenario == null )
-    {
       return null;
-    }
 
     return new ScenarioHandler( parentScenario, getProject() );
   }
@@ -100,4 +98,18 @@ public class ScenarioHandler extends CaseHandler implements IScenario
     m_scenario.setParentScenario( parentScenario.getScenario() );
   }
 
+  /**
+   * @see org.kalypso.afgui.scenarios.IScenario#getHierarchicalLevel()
+   */
+  @Override
+  public int getHierarchicalLevel( )
+  {
+    final IScenario parent = getParentScenario();
+    if( parent == null )
+      return 0;
+
+    final int level = parent.getHierarchicalLevel();
+
+    return (level + 1);
+  }
 }

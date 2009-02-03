@@ -69,4 +69,12 @@ public interface IScenario extends ICase
    *          parent {@link IScenario} of this workflow {@link IScenario}
    */
   void setParentScenario( IScenario parentScenario );
+
+  /**
+   * Hierarchical Level of IScenario. Base/Root Scenario returns 0, SubScenarion returns 1, SubSubScenario returns 2,
+   * aso
+   * 
+   * @return hierarchical Level of IScenario
+   */
+  int getHierarchicalLevel( );
 }
