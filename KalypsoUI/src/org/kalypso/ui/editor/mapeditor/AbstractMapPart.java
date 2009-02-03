@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.net.URL;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
@@ -181,13 +184,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     if( input instanceof IStorageEditorInput )
       try
-    {
+      {
         startLoadJob( ((IStorageEditorInput) input).getStorage() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
   }
 
   /**
@@ -283,7 +286,21 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFocus( )
   {
     if( m_control != null && !m_control.isDisposed() )
-      m_control.setFocus();
+    {
+      final IMapPanel mapPanel = m_mapPanel;
+      if( mapPanel instanceof Component )
+      {
+        SwingUtilities.invokeLater( new Runnable()
+        {
+          public void run( )
+          {
+            ((Component) mapPanel).requestFocus();
+          }
+        } );
+      }
+      else
+        m_control.setFocus();
+    }
   }
 
   /**

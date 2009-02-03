@@ -219,6 +219,7 @@ public class ResourcePool
 
     // REMARK: we do not save inside the sync-block, because saving may cause acces to
     // the pool (Example: saving a GML might cause access to Xlinked properties)
+    // TODO: monitor handling wrong!
     for( final KeyInfo keyInfo : infosToSave )
       keyInfo.saveObject( monitor );
   }
