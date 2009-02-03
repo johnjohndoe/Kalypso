@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @author Dejan Antanaskovic
  *
  */
-public interface IAbstractJunction extends IFE1D2DComplexElement<IFENetItem>
+public interface IAbstractJunction extends IFE1D2DComplexElement
 {
   public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 

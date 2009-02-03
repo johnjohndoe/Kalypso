@@ -20,7 +20,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
@@ -117,10 +116,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
      * @param cls
      * @return
      * @throws IllegalArgumentException
-     *             if
-     *             <ul>
-     *             <li/>feature or cls is null <li/>feature cannnot be converted
-     *             </ul>
+     *           if
+     *           <ul>
+     *           <li/>feature or cls is null
+     *           <li/>feature cannnot be converted
+     *           </ul>
      */
     public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException;
   }

@@ -47,9 +47,14 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * Default implementation for {@link ICalculationUnit}
@@ -57,13 +62,17 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * @author Patrice Congo
  * 
  */
-public class CalculationUnit extends FE1D2DComplexElement<IFENetItem> implements ICalculationUnit
+public class CalculationUnit extends AbstractFeatureBinder implements ICalculationUnit
 {
   private Set<String> m_memberIDs;
+  private final IFeatureWrapperCollection<IFENetItem> elements;
 
   public CalculationUnit( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<IFENetItem> wrapperClass )
   {
-    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    super( featureToBind, qnameToBind );
+    elements = Util.<IFENetItem> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFE1D2DElement.class );
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFELine.class );
   }
 
   private Set<String> getMemberIDs( )
@@ -76,6 +85,36 @@ public class CalculationUnit extends FE1D2DComplexElement<IFENetItem> implements
         m_memberIDs.add( element.getGmlID() );
     }
     return m_memberIDs;
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEComplexElement#getElements()
+   */
+  public IFeatureWrapperCollection<IFENetItem> getElements( )
+  {
+    return elements;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public boolean addElementAsRef( final IFENetItem element )
+  {
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
+    return elements.addRef( element );
+  }
+
+  public boolean addFlowRelationAsRef( final IFlowRelationship element )
+  {
+    return addElementAsRef( (IFENetItem) element );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
+   */
+  public void removeElementAsRef( final IFENetItem element )
+  {
+    elements.removeAllRefs( element );
   }
 
   /**

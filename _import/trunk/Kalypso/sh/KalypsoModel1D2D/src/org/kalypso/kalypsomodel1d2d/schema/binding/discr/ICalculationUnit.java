@@ -51,7 +51,7 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
  * @author Dejan Antanaskovic
  * 
  */
-public interface ICalculationUnit extends IFE1D2DComplexElement<IFENetItem>
+public interface ICalculationUnit extends IFE1D2DComplexElement
 {
   public static enum TYPE
   {

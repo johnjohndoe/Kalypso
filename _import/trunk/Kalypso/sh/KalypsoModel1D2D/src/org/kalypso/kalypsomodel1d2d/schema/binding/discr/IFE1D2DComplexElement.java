@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -48,7 +49,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * representation compatible with the wb1d2d:ComplexElement
  * 
  */
-public interface IFE1D2DComplexElement <ET extends IFeatureWrapper2> extends IFeatureWrapper2
+public interface IFE1D2DComplexElement extends IFeatureWrapper2
 {
   
   /**
@@ -57,20 +58,20 @@ public interface IFE1D2DComplexElement <ET extends IFeatureWrapper2> extends IFe
    * @return a {@link IFeatureWrapperCollection} of element 
    *            composing this complex elements
    */
-  public IFeatureWrapperCollection<ET> getElements( );
+  public IFeatureWrapperCollection<IFENetItem> getElements( );
   
   /**
    * Adds the given element as reference to this complex type
    * @param element the 1d 2d element to be added as reference
    * @return true if the element has been added  otherwise false
    */
-  public boolean addElementAsRef(ET element);
+  public boolean addElementAsRef(IFENetItem element);
   
   /**
    * Remove all reference to this element from this complex element
    * @return true if a referen to the given element as been added
    *    otherwis false
    */
-  public void removeElementAsRef(ET elment);
+  public void removeElementAsRef(IFENetItem elment);
 
 }
