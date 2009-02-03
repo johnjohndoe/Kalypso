@@ -277,9 +277,24 @@ public final class KeyInfo extends Job implements ILoaderListener
       element.dirtyChanged( m_key, isDirty );
   }
 
+
+  /**
+   * Reloads the pool object if it is dirty.
+   */
   public void reload( )
   {
-    if( !isDirty() )
+    reload( false );
+  }
+
+  /**
+   * Reloads the pool object.
+   * 
+   * @param force
+   *          If <code>false</code>, the object only is reloaded if it is dirty.
+   */
+  public void reload( final boolean force )
+  {
+    if( !force && !isDirty() )
       return;
 
     try

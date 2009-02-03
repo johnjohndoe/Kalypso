@@ -625,7 +625,12 @@ public class ObservationPlot extends XYPlot
         g2.setPaint( vac.alarm.color );
         g2.draw( line );
 
-        // and draw the text annotation
+        // and draw the text annotation: if annotation is outside (on top); label it below the line
+        if( yy < dataArea.getMinY() + 20 )
+          vac.annotation.setAngle( Math.toRadians( 20 ) );
+        else
+          vac.annotation.setAngle( Math.toRadians( 340 ) );
+        
         vac.annotation.draw( g2, this, dataArea, getDomainAxis(), axis );
       }
     }
@@ -808,12 +813,9 @@ public class ObservationPlot extends XYPlot
       alarm = al;
       label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
       axis = diagAxis;
-      // this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
       annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
-      annotation.setAngle( Math.toRadians( 340 ) );
       annotation.setArrowLength( 10.0 );
       annotation.setLabelOffset( 30 );
-      // annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
       annotation.setArrowPaint( al.color );
       annotation.setPaint( al.color );
     }

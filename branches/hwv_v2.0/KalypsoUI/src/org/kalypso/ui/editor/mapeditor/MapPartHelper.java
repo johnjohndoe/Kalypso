@@ -47,8 +47,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.SwingUtilities;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,8 +62,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -186,28 +182,6 @@ public class MapPartHelper
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
     virtualFrame.add( mapPanel );
 
-    // channel focus to awt
-    mapComposite.addFocusListener( new FocusAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusGained(org.eclipse.swt.events.FocusEvent)
-       */
-      @Override
-      public void focusGained( final FocusEvent e )
-      {
-        SwingUtilities.invokeLater( new Runnable()
-        {
-          public void run( )
-          {
-            mapPanel.requestFocus();
-          }
-        } );
-      }
-    } );
-
-// final MapCanvas mapPanel = new MapCanvas( parent, style, commandTarget, selectionManager );
-// mapPanel.setLayoutData( layoutData );
-
     return mapPanel;
   }
 
@@ -232,7 +206,6 @@ public class MapPartHelper
 
     return menuManager;
   }
-
 
   /**
    * Add some special actions to the menuManager, depending on the current selection.
