@@ -186,7 +186,7 @@ public class KalypsoCorePlugin extends Plugin
 
     try
     {
-      return TimeZone.getTimeZone( timeZoneID );
+      return TimeZone.getTimeZone( timezone );
     }
     catch( final Exception e )
     {
