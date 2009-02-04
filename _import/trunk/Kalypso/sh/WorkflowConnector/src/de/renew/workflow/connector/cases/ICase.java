@@ -53,10 +53,11 @@ import de.renew.workflow.cases.Case;
  */
 public interface ICase
 {
-  /**
-   * Base URI of Workflow case
-   */
-  public static final String CASE_BASE_URI = "case://${casePath}";
+  /** old case base uri (before refactoring case://{projectname}/{foldername} */
+  public static final String OLD_CASE_BASE_URI = "case://";
+
+  /** old case base uri (before refactoring case://{foldername} */
+  public static final String NEW_CASE_BASE_URI = "scenario://";
 
   /**
    * @return the workflow {@link Case}

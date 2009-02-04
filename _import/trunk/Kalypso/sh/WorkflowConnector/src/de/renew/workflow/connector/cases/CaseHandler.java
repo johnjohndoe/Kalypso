@@ -70,9 +70,13 @@ public class CaseHandler implements ICase
     m_caze = caze;
     m_project = project;
 
-    if( getURI() == null )
+    if( m_caze.getURI() == null )
     {
-      setURI( getName() );
+      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getName() ) );
+    }
+    else if( !getURI().startsWith( NEW_CASE_BASE_URI ) && !getURI().startsWith( OLD_CASE_BASE_URI ) )
+    {
+      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getURI() ) );
     }
   }
 
@@ -179,8 +183,23 @@ public class CaseHandler implements ICase
   @Override
   public IFolder getFolder( ) throws CoreException
   {
+    final IFolder folder;
+
     final String uri = getURI();
-    final IFolder folder = getProject().getFolder( uri );
+    if( uri.startsWith( OLD_CASE_BASE_URI ) )
+    {
+      final String base = uri.substring( OLD_CASE_BASE_URI.length() );
+      final int cleaned = base.indexOf( "/" );
+
+      folder = getProject().getFolder( base.substring( cleaned + 1 ) );
+    }
+    else if( uri.startsWith( NEW_CASE_BASE_URI ) )
+    {
+      folder = getProject().getFolder( uri.substring( NEW_CASE_BASE_URI.length() ) );
+    }
+    else
+      throw new IllegalStateException();
+
     if( !folder.exists() )
     {
       folder.create( true, true, new NullProgressMonitor() );
