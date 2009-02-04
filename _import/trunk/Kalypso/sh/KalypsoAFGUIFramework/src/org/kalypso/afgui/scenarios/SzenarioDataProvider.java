@@ -193,9 +193,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     /* Nothing to do if scenario folder stays the same */
     if( ObjectUtils.equals( m_scenario, scenario ) )
-    {
       return;
-    }
 
     /* Release current models && reset state */
     reset();
@@ -212,9 +210,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     fireCazeChanged( m_scenario );
 
     if( scenario == null || m_dataSetScope == null )
-    {
       return;
-    }
 
     final String dataSetScope = m_dataSetScope;
     final Job job = new Job( "Initalisiere Daten für das aktuelle Szenario." )
@@ -274,19 +270,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
       private IFolder resolveFolder( final IScenario scene, final String gmlLocation ) throws CoreException
       {
-
         final IFolder folder = scene.getFolder();
         final IFile file = folder.getFile( gmlLocation );
         if( file.exists() )
-        {
           return folder;
-        }
 
         final IScenario parent = scene.getParentScenario();
         if( parent != null )
-        {
           return resolveFolder( parent, gmlLocation );
-        }
 
         return null;
       }
@@ -337,20 +328,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
   {
     if( szenarioFolder == null )
-    {
       return null;
-    }
 
     if( szenarioFolder.getFile( new Path( modelFile ) ).exists() )
-    {
       return szenarioFolder;
-    }
 
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
-    {
       return findModelContext( (IFolder) parent, modelFile );
-    }
 
     return null;
   }
@@ -392,9 +377,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
     final IPoolableObjectType oldKey = oldListener == null ? null : oldListener.getKey();
     if( ObjectUtils.equals( oldKey, newKey ) )
-    {
       return;
-    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
@@ -460,9 +443,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   {
     final Feature rootFeature = workspace.getRootFeature();
     if( modelClass.isAssignableFrom( rootFeature.getClass() ) )
-    {
       return (T) rootFeature;
-    }
 
     return (T) rootFeature.getAdapter( modelClass );
   }
@@ -505,9 +486,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       for( final String modelClass : m_keyMap.keySet() )
       {
         if( isDirty( modelClass ) )
-        {
           return true;
-        }
       }
     }
     return false;
@@ -535,24 +514,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
 
     if( keyPoolListener == null )
-    {
       return false;
-    }
 
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
-    {
       // TODO throw (core/other) exception?
       return false;
-    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
     if( infoForKey == null )
-    {
       // TODO throw (core/other) exception?
       return false;
-    }
 
     return infoForKey.isDirty();
   }
@@ -585,9 +558,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       if( keyPoolListener == null )
-      {
         throw new IllegalArgumentException( "Unknown model: " + id );
-      }
 
       final IPoolableObjectType key = keyPoolListener.getKey();
       if( key != null )
@@ -648,9 +619,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( m_dataSetScope );
 
     if( locationMap == null || !locationMap.containsKey( id ) )
-    {
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
-    }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
@@ -661,15 +630,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
 
     if( keyPoolListener == null )
-    {
       return null;
-    }
 
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
-    {
       return null;
-    }
 
     return (CommandableWorkspace) pool.getObject( key );
   }
@@ -680,9 +645,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   public IContainer getScenarioFolder( ) throws CoreException
   {
     if( m_scenario != null )
-    {
       return m_scenario.getFolder();
-    }
 
     return null;
   }

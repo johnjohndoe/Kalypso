@@ -65,9 +65,7 @@ public class ScenarioListHandler implements IScenarioList
     final Scenario scenario = m_scenarioHandler.getScenario();
     final ScenarioList derived = scenario.getDerivedScenarios();
     if( derived == null )
-    {
       return new ArrayList<IScenario>();
-    }
 
     final List<IScenario> myScenarios = new ArrayList<IScenario>()
     {
@@ -90,7 +88,14 @@ public class ScenarioListHandler implements IScenarioList
     final List<Scenario> scenarios = derived.getScenarios();
     for( final Scenario scen : scenarios )
     {
-      myScenarios.add( new ScenarioHandler( scen, m_scenarioHandler.getProject() ) );
+      final Scenario parent = scen.getParentScenario();
+      if( parent == null )
+      {
+        scen.setParentScenario( m_scenarioHandler.getScenario() );
+      }
+
+      final ScenarioHandler handler = new ScenarioHandler( scen, m_scenarioHandler.getProject() );
+      myScenarios.add( handler );
     }
 
     return myScenarios;
