@@ -584,5 +584,6 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 006.) Increase accuracy of variables in *.2d file to minimize restart error. Problem is to prohibit mistakes with older models. That should be prevented.
 007.) Speed up calculation of velocity distribution. Restart file was used to get the correct water stages for the distribution calculation. Problem was that restart was read after preperation of
       boundary conditions. This changed already months ago. Consequently this file reading that was pretty slow could be deleted.
+008.) Set all variables (including depth) of dry nodes to zero.
 
 --- Nico Schrage, 04.02.2009 (RMAKalypso 1.1.1alpha2)

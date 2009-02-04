@@ -104,17 +104,17 @@ C-
         ENDDO
       ENDDO wetnodes
 
-      !*******************************
-      !Nullify velocities of dry nodes
-      !*******************************
-      NullifyVelocities: DO L = 1, NP
+      !******************************
+      !Nullify variables of dry nodes
+      !******************************
+      NullifyVariables: DO L = 1, NP
         !cycle wet nodes
-        IF (NDRY (L) == 1) CYCLE NullifyVelocities
-        !for dry nodes reduce the velocities to 0.0
-        DO IA = 1, 2
+        IF (NDRY (L) == 1) CYCLE NullifyVariables
+        !for dry nodes reduce the variables to 0.0
+        DO IA = 1, 3
           VEL (IA, L) = 0.
         ENDDO
-      ENDDO NullifyVelocities
+      ENDDO NullifyVariables
 
       !***************************
       !Process eliminated elements
