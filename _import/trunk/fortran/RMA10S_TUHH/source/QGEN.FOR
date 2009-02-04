@@ -296,39 +296,7 @@ CIPK OCT01
       !NiS,sep06: Using the Kalypso-2D-option for Q-boundary condition transformation
         ELSEIF (BSWIT.eq.2) then
 
-          !Nis,oct06: Problem is, that in Kalypso2D, version 1.2.4 (Ocotber 2006), the boundary conditions are later in assigned as
-          !           the initial conditions. In RMA10S it behaves the other way round. Because of that the algorithm in Kalypso2D for setting the
-          !           BCs can not directly be applied in RMA10S. Therefore the rdKalypso-subroutine has to be changed in a new way,
-          !           that it can get the initial conditions for the boundary lines from the input file.
-          !
-          !Getting the initial solution for first iteration, if restarting
-          do i = 1, lmt(j)
-            iostaterror = 0
-            !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
-            if (nb.ne.0) then
-              REWIND(nb)
-              reading: do
-                !WRITE(*,*) lineID
-                read (nb,'(a2)', iostat = iostaterror) LineID
-                if (iostaterror /= 0) EXIT reading
-                if (LineID.eq.'VA') then
-                  BACKSPACE(nb)
-                  read (nb,*) LineID, tmpnode,tmpvx,tmpvy,tmpdepth,tmpwl
-                  if (tmpnode.eq.line(j,i)) then
-                    VEL(1,tmpnode)=tmpvx
-                    VEL(2,tmpnode)=tmpvy
-                    VEL(3,tmpnode)=tmpdepth
-
-                    EXIT reading
-                  endif
-                endif
-              enddo reading
-              REWIND(nb)
-            endif
-          enddo
-          !-
-
-          !nis,aug: check, whether Q-Line is valid. Flow should cross every segment in same direction
+          !check, whether Q-Line is valid. Flow should cross every segment in same direction
           vnomx = COS (thet)
           vnomy = SIN (thet)
 
