@@ -90,7 +90,7 @@ use blk10mod , only: &
             !TODO: what is vel(7,x)
 !           7 - ??? perhaps water column potential by element
 
-use blkdrmod, only: imato
+use blkdrmod, only: imato, ndry
 !meaning of the variables
 !------------------------
 !imato      old material type of an element from the last time step
@@ -644,7 +644,7 @@ reading: do
 
     !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
     IF (linie (1:2) =='VA') then
-      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
+      READ(linie,'(a2,i10,2f20.14,2f20.13)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
       !nis,aug08: If node number is zero, it has no coordinates; use dummy coordinates 0.0
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, 0.0d0, 0.0d0)
@@ -711,19 +711,20 @@ reading: do
     ENDIF
 
 !    !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
-!    IF (linie (1:2) =='ZU') then
-!      !NiS,apr06: variables deactivated for RMA10S
-!      !cvzu = 1
-!      !NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command
-!      !READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)
-!      READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)
-!
-!      !NiS,mar06: name of variable changed; changed mnd to MaxP
-!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-!      IF (i>MaxP) stop 'i>MaxP'
-!      !Stop program execution on negative NODE number
-!      IF (i<=0) stop 'Knotennummer<=0'
-!    ENDIF
+    IF (linie (1:2) =='ZU') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvzu = 1
+      !NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command
+      !READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)
+      !READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)
+      READ (linie, '(a2,i10,i6)') id, i, ndry(i)
+
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i>MaxP) stop 'i>MaxP'
+      !Stop program execution on negative NODE number
+      IF (i<=0) stop 'Knotennummer<=0'
+    ENDIF
 
 ! TEST BLOCK FOR ERRORS ------------------------------------------------------------------------
 

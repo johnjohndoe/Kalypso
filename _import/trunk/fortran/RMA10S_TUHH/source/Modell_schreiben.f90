@@ -77,7 +77,7 @@ INTEGER              :: DefLine                        !Number of lines, that ne
 INTEGER              :: lile, Rest, Startnode, NoLines
 
 !NiS,apr06: changing length of variable, because the length of filenames in RMA10S is 96.
-CHARACTER (LEN = 96), INTENT (IN) :: nameout!, namein
+CHARACTER (LEN = 96), INTENT (IN) :: nameout !, namein
 CHARACTER (LEN =  4), INTENT (IN) :: resulttype
 
 INTEGER              :: istat                          !Variable for I/O errors
@@ -462,8 +462,8 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7002 FORMAT ('FE', 4i10)
 
  !aktuelle Freiheitsgrade; Knotennummer, x-, y-Geschwindigkeit, Wasserspiegel):
- 7003 FORMAT ('VA', i10,4f20.7)
-
+ 7003 FORMAT ('VA', i10, 2f20.14, 2f20.13)
+ 
  !aktuelle Zeitgradienten:
  7004 FORMAT ('GA', i10,3f20.7)
                                                                         
