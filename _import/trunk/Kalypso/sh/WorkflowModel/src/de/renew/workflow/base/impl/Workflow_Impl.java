@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base.impl;
 
+import java.util.List;
 import java.util.Properties;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Task;
+import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
 
 /**
@@ -88,6 +90,38 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
   public void setDefaultTask( final ITask task )
   {
     m_defaultTask = task;
+  }
+
+  /**
+   * @see de.renew.workflow.base.IWorkflow#setDefaultTask(java.lang.String)
+   */
+  @Override
+  public void setDefaultTask( final String uri )
+  {
+    final List<Task> tasks = getWorkflow().getTasks();
+
+    setDefaultTask( tasks.toArray( new Task[] {} ), uri );
+  }
+
+  private void setDefaultTask( final Task[] tasks, final String uri )
+  {
+    for( final Task task : tasks )
+    {
+      if( task instanceof TaskGroup )
+      {
+        final TaskGroup group = (TaskGroup) task;
+        final List<Task> myTasks = group.getTasks();
+
+        setDefaultTask( myTasks.toArray( new Task[] {} ), uri );
+      }
+
+      if( task.getURI().equals( uri ) )
+      {
+        m_defaultTask = new Task_Impl( task, getI18nProperties() );
+        return;
+      }
+    }
+
   }
 
 }

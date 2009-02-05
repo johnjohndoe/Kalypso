@@ -49,5 +49,15 @@ public interface IWorkflow extends ITaskGroup
 {
   ITask getDefaultTask( );
 
+  /**
+   * @param task
+   *          task which will be the new default task
+   */
   void setDefaultTask( ITask task );
+
+  /**
+   * @param uri
+   *          uri of task which will be the new default task
+   */
+  void setDefaultTask( String uri );
 }

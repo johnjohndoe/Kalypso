@@ -57,7 +57,9 @@ import de.renew.workflow.contexts.ContextType;
 public class Task_Impl implements ITask
 {
   private final Task m_task;
+
   private final ITaskHelp m_help;
+
   private final Properties m_i10nproperties;
 
   public Task_Impl( final Task task, final Properties i10nproperties )
@@ -127,5 +129,8 @@ public class Task_Impl implements ITask
     return value;
   }
 
-
+  protected Properties getI18nProperties( )
+  {
+    return m_i10nproperties;
+  }
 }
