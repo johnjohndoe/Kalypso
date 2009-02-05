@@ -56,7 +56,13 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.vfs.AllFileSelector;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.NameScope;
 import org.eclipse.core.resources.IFolder;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -619,66 +625,20 @@ public class FileUtilities
    * @throws IOException
    *           If the move failed.
    */
-  public static void moveContents( final File sourceDir, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
+  public static void moveContents( final File sourceDir, final File dest ) throws IOException
   {
-    final File[] children = sourceDir.listFiles();
-    if( children == null )
-      throw new IOException( "Invalid directory for move: " + sourceDir );
+    final FileSystemManager vfsManager = VFSUtilities.getManager();
+    final FileObject source = vfsManager.toFileObject( sourceDir );
+    final FileObject destDir = vfsManager.toFileObject( dest );
 
-    for( final File child : children )
-      move( child, destDir, deleteExisting, alternateCopy );
-  }
-
-  /**
-   * Moves one single file/dir into another directory.
-   * 
-   * @param deleteExisting
-   *          If <code>true</code>, the destDir will be deleted before removal, if existant.
-   * @throws IOException
-   *           If the move failed.
-   */
-  public static void move( final File source, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
-  {
-    // TODO: probably platform dependend.
-    // Handle the following problems:
-    // - file will be moved onto another file system (in that case copy/delete is probably better)
-    // - also a moving from one drive to another on the same platform is not possible.
-
-    final File destFile = new File( destDir, source.getName() );
-
-    if( destFile.exists() )
+    final FileObject[] findFiles = source.findFiles( new AllFileSelector() );
+    for( final FileObject fileObject : findFiles )
     {
-      if( deleteExisting )
-        FileUtils.forceDelete( destFile );
-      else
+      if( FileType.FILE.equals( fileObject.getType() ) )
       {
-        final String message = String.format( "Unable move file %s into %s. Destination file already exists: %s", source, destDir, destFile );
-        throw new IOException( message );
-      }
-    }
-
-    final boolean success = source.renameTo( destFile );
-    if( !success )
-    {
-      // If the file cannot be moved, because its on a different drive, we try to copy it.
-      if( alternateCopy )
-      {
-        FileUtils.copyFile( source, destFile );
-        if( !destFile.exists() )
-        {
-          final String message = String.format( "Unable move file %s into %s.", source, destDir );
-          throw new IOException( message );
-        }
-        else
-        {
-          if( deleteExisting )
-            FileUtils.forceDelete( destFile );
-        }
-      }
-      else
-      {
-        final String message = String.format( "Unable move file %s into %s.", source, destDir );
-        throw new IOException( message );
+        final String relPath = source.getName().getRelativeName( fileObject.getName() );
+        final FileObject destFile = destDir.resolveFile( relPath, NameScope.DESCENDENT_OR_SELF );
+        fileObject.moveTo( destFile );
       }
     }
   }

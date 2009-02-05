@@ -93,7 +93,7 @@ public class ZipFileVisitor implements FileVisitor
 
   public void setBaseReplace( final String baseReplace )
   {
-    m_baseReplace = baseReplace;
+    m_baseReplace = java.util.regex.Matcher.quoteReplacement(baseReplace);
   }
 
   /**
