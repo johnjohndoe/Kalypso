@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ogc31.www.opengis.net.gml.FileType;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -24,18 +31,19 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -68,6 +76,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* collect the flood model data, that is needed for Risk Modeler */
       // get the data provider
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" );
 
       // get the flood model
       final IFloodModel model = dataProvider.getModel( IFloodModel.class );
@@ -121,12 +130,27 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
         createdFeatures.add( annualCoverageCollection.getFeature() );
+        final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
+        final String rasterFolderPath = "raster/input/";
+        final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
         {
+          if( floodModelScenarioFolder != null && rasterFolder != null && coverage instanceof RectifiedGridCoverage )
+          {
+            final RectifiedGridCoverage rCoverage = (RectifiedGridCoverage) coverage;
+            final FileType fileType = rCoverage.getRangeSet().getFile();
+            final IResource resource = floodModelScenarioFolder.findMember( fileType.getFileName() );
+            if( resource != null && resource instanceof IFile )
+            {
+              final IFile file = (IFile) resource;
+              final String newRelativePath = rasterFolderPath.concat( file.getName() );
+              file.copy( rasterFolder.getFullPath().addTrailingSeparator().append( file.getName() ), false, new NullProgressMonitor() );
+              fileType.setFileName( newRelativePath );
+            }
+          }
           annualCoverageCollection.add( coverage );
         }
-        // TODO: dejan, copy/reference coverage into risk model for each event
       }
 
       /* ------ */
