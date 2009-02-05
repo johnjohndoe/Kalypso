@@ -181,13 +181,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     initMapPanel( site );
 
     if( input instanceof IStorageEditorInput )
+    {
       try
-    {
+      {
         startLoadJob( ((IStorageEditorInput) input).getStorage() );
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -242,7 +244,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         }
 
         if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
+        {
           startLoadJob( file );
+        }
       }
     };
 
@@ -263,7 +267,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
     if( m_mapModell == null )
-      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+    {
+      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
+    }//$NON-NLS-1$;
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
@@ -284,7 +290,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFocus( )
   {
     if( m_control != null && !m_control.isDisposed() )
+    {
       m_control.setFocus();
+    }
   }
 
   /**
@@ -321,7 +329,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_mapPanel != null )
+    {
       loadMap( monitor, input.getStorage() );
+    }
   }
 
   /**
@@ -363,7 +373,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     if( m_saving )
       return;
@@ -379,7 +389,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       showBusy( true );
 
       if( m_mapPanel != null )
-        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );//$NON-NLS-1$;
+      {
+        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
+      }//$NON-NLS-1$;
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
       monitor.worked( 1 );
@@ -414,7 +426,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setFile( null );
 
       if( m_mapPanel != null )
-        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );//$NON-NLS-1$;
+      {
+        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );
+      }//$NON-NLS-1$;
 
       throw new CoreException( status );
     }
@@ -454,7 +468,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         public void run( )
         {
           if( !control.isDisposed() )
+          {
             control.setBusy( false );
+          }
         }
       } );
     }
@@ -506,16 +522,22 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
   {
     if( m_mapModell != null )
+    {
       m_mapModell.dispose();
+    }
 
     m_mapModell = mapModell;
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
     final String partName;
     if( m_mapModell == null )
-      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
+    {
+      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" );
+    }
     else
+    {
       partName = m_mapModell.getLabel( m_mapModell );
+    }
     setCustomName( partName );
 //
 // final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
@@ -535,7 +557,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       m_mapPanel.setMapModell( m_mapModell );
       if( env != null )
+      {
         m_mapPanel.setBoundingBox( env );
+      }
     }
   }
 
@@ -599,7 +623,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( adapter == ModellEventProvider.class )
       return new MapPanelModellEventProvider( m_mapPanel );
 
-    if( adapter.isAssignableFrom( Control.class ))
+    if( adapter.isAssignableFrom( Control.class ) )
       return m_control;
 
     return super.getAdapter( adapter );
@@ -663,7 +687,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.dispose();
 
     if( m_file != null )
+    {
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
+    }
 
     super.dispose();
   }
