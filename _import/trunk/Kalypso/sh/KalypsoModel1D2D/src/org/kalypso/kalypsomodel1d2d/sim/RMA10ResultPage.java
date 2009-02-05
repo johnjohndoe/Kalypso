@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.JFaceResources;
@@ -80,6 +82,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.util.swt.StatusComposite;
 
@@ -90,7 +93,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulation1D2DConstants
 {
-
   private final ResultManager m_resultManager;
 
   private IStatus m_simulationStatus;
@@ -110,13 +112,14 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   private CheckboxTableViewer m_resultProcessViewer;
 
   private Date[] m_selection = null;
-
+  
   private final RMA10CalculationWizard m_parentWizard;
 
-  protected RMA10ResultPage( final String pageName, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard )
+  protected RMA10ResultPage( final String pageName, final File resultDir, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
-
+    final ResultManager resultManager = new ResultManager( resultDir, caseDataProvider, geoLog );
+    
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
@@ -304,13 +307,13 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
    * </p>
    * 
    * @param parent
-   *          the parent composite
+   *            the parent composite
    * @param id
-   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *          the label from the button
+   *            the label from the button
    * @param defaultButton
-   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @return the new button
    * @see #getCancelButton
    * @see #getOKButton()
@@ -436,7 +439,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     }
   }
 
-  public void runResultProcessing( )
+  public void runResultProcessing()
   {
     m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13"), null ) ); //$NON-NLS-1$
     setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.14") ); //$NON-NLS-1$
@@ -487,6 +490,10 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   public boolean isProcessing( )
   {
     return m_isProcessing;
+  }
+  
+  public File getResultDir() {
+    return m_resultManager.getOutputDir();
   }
 
 }

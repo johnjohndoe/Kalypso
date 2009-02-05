@@ -130,7 +130,6 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       final IControlModel1D2D controlModel = m_resultManager.getControlModel();
       final IScenarioResultMeta scenarioMeta = m_resultManager.getScenarioMeta();
       final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-      final File outputDir = m_resultManager.getOutputDir();
 
       final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -147,6 +146,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       // Step 2: Process results and add new entries to result-DB
       final ICalcUnitResultMeta calcUnitMeta = scenarioMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
       final IStatus processResultsStatus = m_resultManager.processResults( calcUnitMeta, progress.newChild( 90 ) );
+      final File outputDir = m_resultManager.getOutputDir();
       m_geoLog.log( processResultsStatus );
 
       // Step 3: Fill in result of calculation
@@ -245,13 +245,13 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
 
       if( dates.size() > 0 )
       {
-        final Date firstCalculated = dates.first();
-        for( final Date date : existingSteps )
-        {
-          if( date.after( firstCalculated ) )
-            dates.add( date );
-        }
+      final Date firstCalculated = dates.first();
+      for( final Date date : existingSteps )
+      {
+        if( date.after( firstCalculated ) )
+          dates.add( date );
       }
+    }
       // then add them again.
       if( maxi == true )
         dates.add( MAXI_DATE );
@@ -272,7 +272,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       final File unitWorkspaceDir = m_unitFolder.getLocation().toFile();
       FileUtils.forceMkdir( unitWorkspaceDir );
 
-      FileUtilities.moveContents( outputDir, unitWorkspaceDir, true, true );
+      FileUtilities.moveContents( outputDir, unitWorkspaceDir );
       ProgressUtilities.worked( progress, 70 );
 
       m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );

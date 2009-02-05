@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -69,7 +70,7 @@ public class IterationInfoJob extends Job
   {
     super( "IterationInfoJob" ); //$NON-NLS-1$
 
-    m_monitor = monitor;
+    m_monitor = SubMonitor.convert( monitor );
     m_controlModel = model;
     m_iterationInfo = info;
   }

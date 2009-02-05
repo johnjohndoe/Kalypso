@@ -40,27 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
@@ -71,16 +67,10 @@ import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.Feature;
-
-import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Starting point for running 1d2d simulations.
@@ -89,25 +79,16 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class Model1D2DSimulation implements ISimulation1D2DConstants
 {
-  private static final String STRING_DLG_TITLE_RMA10S =  Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.0"); //$NON-NLS-1$
-
-  private final ICaseDataProvider<IModel> m_caseDataProvider;
-
-  private final IContainer m_scenarioFolder;
-
-  private final IFolder m_unitFolder;
-
-  private final String m_calculationUnit;
+  /*
+   * this is a duplicate of the constant in RMA10CalculationWizard
+   */
+  private static final String STRING_DLG_TITLE_RMA10S = RMA10CalculationWizard.STRING_DLG_TITLE_RMA10S;
 
   private final Shell m_shell;
 
-  public Model1D2DSimulation( final Shell shell, final ICaseDataProvider<IModel> caseDataProvider, final IContainer scenarioFolder, final IFolder unitFolder, final String calculationUnit )
+  public Model1D2DSimulation( final Shell shell )
   {
     m_shell = shell;
-    m_caseDataProvider = caseDataProvider;
-    m_scenarioFolder = scenarioFolder;
-    m_unitFolder = unitFolder;
-    m_calculationUnit = calculationUnit;
   }
 
   /**
@@ -117,40 +98,73 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
    * <li>create output directory and make sure it gets synchronized with workspace after calculation</li>
    * </ul>
    */
-  public void process( )
+  public void process( final ICalculationUnit calculationUnit )
   {
-    File tmpDir = null;
-    File outputDir = null;
+    final IGeoLog geoLog = initGeoLog();
+    final Date startTime = geoLog.getStartTime();
+    final String calcUnitId = calculationUnit.getGmlID();
+
+    final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
 
     try
     {
-      tmpDir = SimulationUtilitites.createSimulationTmpDir( "rmakalypso" + m_calculationUnit ); //$NON-NLS-1$
-      outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + m_calculationUnit ); //$NON-NLS-1$
+      /* Initialize result meta */
+      initResultMeta( calculationUnit, startTime, caseDataProvider );
 
-      FileUtils.forceMkdir( outputDir );
+      /* Set correct activeControlModel according to selected calcUnit and save */
+      final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+      setActiveControlModel( controlModelGroup, calcUnitId );
+      // Saves ALL models, this is not really necessary but not really a problem, as only
+      // dirty models get saved (and probably here only the control model is dirty).
+      caseDataProvider.saveModel( null );
 
-      process1( tmpDir, outputDir );
+      final RMA10CalculationWizard calcWizard = new RMA10CalculationWizard( caseDataProvider, geoLog );
+      final WizardDialog2 calcDialog = new WizardDialog2( m_shell, calcWizard );
+      calcDialog.setRememberSize( true );
+      if( calcDialog.open() == Window.OK )
+      {
+        // save log
+
+        // move results and save them
+
+        // TODO: maybe just save log and result stuff depending on wizard result?
+        // PROBLEM: if the user cancels during result processing, maybe old result already have been deleted...
+      }
     }
-    catch( final IOException e )
+    catch( final CoreException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.3") + tmpDir ); //$NON-NLS-1$
-    }
-    finally
-    {
-      SimulationUtilitites.clearTmpDir( tmpDir );
-      SimulationUtilitites.clearTmpDir( outputDir );
+      // REMARK: this should only happen if the data cannot be retrieved from the caseDataProvider and so should never
+      // happen...
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.5")); //$NON-NLS-1$
     }
   }
 
-  /**
-   * Second level of calculation:
-   * <ul>
-   * <li>initialize logging</li>
-   * <li>start level-2</li>
-   * <li>save log file</li>
-   * </ul>
-   */
-  private void process1( final File tmpDir, final File outputDir )
+  private void initResultMeta( final ICalculationUnit calculationUnit, final Date startTime, final SzenarioDataProvider caseDataProvider ) throws CoreException
+  {
+    final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
+    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
+    final ICalcUnitResultMeta calcUnitMeta;
+    if( existingCalcUnitMeta == null )
+      calcUnitMeta = scenarioResultMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
+    else
+      calcUnitMeta = existingCalcUnitMeta;
+
+    calcUnitMeta.setCalcStartTime( startTime );
+    calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
+    calcUnitMeta.setName( calculationUnit.getName() );
+    calcUnitMeta.setDescription( calculationUnit.getDescription() );
+    calcUnitMeta.setPath( new Path( calculationUnit.getGmlID() ) );
+    calcUnitMeta.setCalcEndTime( new Date() );
+
+    // Add geo log to calcMeta as document
+    final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
+    logMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.7") ); //$NON-NLS-1$
+    logMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.8") ); //$NON-NLS-1$
+    logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
+    logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
+  }
+
+  private IGeoLog initGeoLog( )
   {
     // First level of calculation: initialize logging, then call real calculation stuff
     IGeoLog geoLog = null;
@@ -160,115 +174,47 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
       final ILog model1d2dlog = KalypsoModel1D2DPlugin.getDefault().getLog();
       // Additionally, everything is logged into the log of the KalypsoModel1D2D-Plug-In
       geoLog = new GeoLog( model1d2dlog );
-
-      process2( tmpDir, outputDir, geoLog );
     }
     catch( final InvocationTargetException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.4") + e.getTargetException().toString() ); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht initialisiert werden: " + e.getTargetException().toString() );
     }
-    catch( final CoreException e )
-    {
-      // REMARK: this should only happen if the data cannot be retrieved from the caseDataProvider and so should never
-      // happen...
-      ErrorDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.5"), e.getStatus() ); //$NON-NLS-1$
-    }
+    return geoLog;
   }
 
   /**
-   * third level of calculation:
-   * <ul>
-   * <li>run RMA·Kalypso in wizard</li>
-   * </ul>
-   */
-  public void process2( final File tmpDir, final File outputDir, final IGeoLog geoLog ) throws CoreException
-  {
-    final IFEDiscretisationModel1d2d discModel = m_caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
-    final IFlowRelationshipModel flowModel = m_caseDataProvider.getModel( IFlowRelationshipModel.class );
-    final IControlModelGroup controlModelGroup = m_caseDataProvider.getModel( IControlModelGroup.class );
-    final IRoughnessClsCollection roughnessModel = m_caseDataProvider.getModel( IRoughnessClsCollection.class );
-    final IScenarioResultMeta scenarioResultMeta = m_caseDataProvider.getModel( IScenarioResultMeta.class );
-
-    /* Set correct activeControlModel according to selected calcUnit */
-    final IControlModel1D2D controlModel = saveControlModel( controlModelGroup );
-    if( controlModel == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.6") + m_calculationUnit ) ); //$NON-NLS-1$
-
-    /* Initialize result meta */
-    final ICalculationUnit calculationUnit = controlModel.getCalculationUnit();
-    final ICalcUnitResultMeta existingCalcUnitMeta = scenarioResultMeta.findCalcUnitMetaResult( calculationUnit.getGmlID() );
-    final ICalcUnitResultMeta calcUnitMeta;
-    if( existingCalcUnitMeta == null )
-      calcUnitMeta = scenarioResultMeta.getChildren().addNew( ICalcUnitResultMeta.QNAME, ICalcUnitResultMeta.class );
-    else
-      calcUnitMeta = existingCalcUnitMeta;
-
-    calcUnitMeta.setCalcStartTime( geoLog.getStartTime() );
-    calcUnitMeta.setCalcUnit( calculationUnit.getGmlID() );
-    calcUnitMeta.setName( calculationUnit.getName() );
-    calcUnitMeta.setDescription( calculationUnit.getDescription() );
-    calcUnitMeta.setPath( new Path( m_unitFolder.getName() ) );
-    calcUnitMeta.setCalcEndTime( new Date() );
-
-    // Add geo log to calcMeta as document
-    final IDocumentResultMeta logMeta = calcUnitMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
-    logMeta.setName( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.7") ); //$NON-NLS-1$
-    logMeta.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.8") ); //$NON-NLS-1$
-    logMeta.setDocumentType( IDocumentResultMeta.DOCUMENTTYPE.log );
-    logMeta.setPath( new Path( SIMULATION_LOG_GML ) );
-
-    final RMA10Calculation calculation = new RMA10Calculation( tmpDir, geoLog, discModel, flowModel, controlModel, roughnessModel, m_scenarioFolder );
-    final ResultManager resultManager = new ResultManager( tmpDir, outputDir, "A", controlModel, flowModel, discModel, scenarioResultMeta, geoLog ); //$NON-NLS-1$
-
-    final RMA10CalculationWizard calcWizard = new RMA10CalculationWizard( calculation, resultManager, m_unitFolder, m_caseDataProvider, geoLog );
-    calcWizard.setWindowTitle( STRING_DLG_TITLE_RMA10S );
-    calcWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) ); //$NON-NLS-1$
-    final WizardDialog2 calcDialog = new WizardDialog2( m_shell, calcWizard );
-    calcDialog.setRememberSize( true );
-    if( calcDialog.open() == Window.OK )
-    {
-      // save log
-
-      // move results and save them
-
-      // TODO: maybe just save log and result stuff depending on wizard result?
-      // PROBLEM: if the user cancels during result processing, maybe old result already have been deleted...
-    }
-
-  }
-
-  /**
-   * Sets the unit to calculate into the Control-Model as active unit, and save all models.<br>
+   * Sets the unit to calculate into the Control-Model as active unit.<br>
    * 
    * TODO: this is a bit fishy... Better would be to couple calc-units and its corresponding control-models more
    * closely. Then no search for and/or setting of active unit should be necessary any more.
    */
-  private IControlModel1D2D saveControlModel( final IControlModelGroup controlModelGroup ) throws CoreException
+  private void setActiveControlModel( final IControlModelGroup controlModelGroup, final String calcUnitId ) throws CoreException
+  {
+    final IControlModel1D2D controlModel = findControlModel( controlModelGroup, calcUnitId );
+
+    final Feature feature = controlModelGroup.getModel1D2DCollection().getFeature();
+    final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getGmlID() );
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
+    try
+    {
+      final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
+      commandableWorkspace.postCommand( command );
+    }
+    catch( final Throwable e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11") + calcUnitId ) ); //$NON-NLS-1$
+    }
+  }
+
+  protected static IControlModel1D2D findControlModel( final IControlModelGroup controlModelGroup, final String calcUnitId )
   {
     for( final IControlModel1D2D controlModel : controlModelGroup.getModel1D2DCollection() )
     {
       final ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
       if( currentCalcUnit != null )
       {
-        if( m_calculationUnit.equals( currentCalcUnit.getGmlID() ) )
+        if( calcUnitId.equals( currentCalcUnit.getGmlID() ) )
         {
-          final Feature feature = controlModelGroup.getModel1D2DCollection().getFeature();
-          final FeatureChange change = new FeatureChange( feature, feature.getFeatureType().getProperty( ControlModel1D2DCollection.WB1D2DCONTROL_XP_ACTIVE_MODEL ), controlModel.getGmlID() );
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( feature.getWorkspace(), new FeatureChange[] { change } );
-          try
-          {
-            final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
-            commandableWorkspace.postCommand( command );
-          }
-          catch( final Throwable e )
-          {
-            throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.11") + m_calculationUnit ) ); //$NON-NLS-1$
-          }
-
-          // Saves ALL models, this is not really necessary but not really a problem, as only
-          // dirty models get saved (and probably here only the control model is dirty).
-          m_caseDataProvider.saveModel( null );
-
           return controlModel;
         }
       }

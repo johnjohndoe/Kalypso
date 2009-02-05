@@ -44,8 +44,10 @@ import java.io.File;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -56,15 +58,18 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Button;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
-
-import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * A wizard showing the progress of a RMA·Kalypso calculation.
@@ -73,6 +78,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
 {
+  public static final String STRING_DLG_TITLE_RMA10S = Messages.getString( "CalculationUnitPerformComponent.2" );
+
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
     public void pageChanged( PageChangedEvent event )
@@ -83,21 +90,35 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
   private final RMA10CalculationPage m_calcPage;
 
-  private final RMA10ResultPage m_resultPage;
+  private RMA10ResultPage m_resultPage;
 
   private final IGeoLog m_geoLog;
 
   private final IContainer m_unitFolder;
 
-  public RMA10CalculationWizard( final RMA10Calculation calculation, final ResultManager resultManager, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog )
+  private final SzenarioDataProvider m_caseDataProvider;
+
+  public RMA10CalculationWizard( final SzenarioDataProvider caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
-    m_unitFolder = unitFolder;
+    m_caseDataProvider = caseDataProvider;
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+    final IControlModel1D2D controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+
+    final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
+    // this is where the name of the result folder is actually set
+    final String calcUnitId = controlModel.getCalculationUnit().getGmlID();
+    final Path unitFolderRelativePath = new Path( "results/" + calcUnitId ); //$NON-NLS-1$
+    m_unitFolder = scenarioFolder.getFolder( unitFolderRelativePath );
+
     m_geoLog = geoLog;
-    m_calcPage = new RMA10CalculationPage( "calcPage", calculation ); //$NON-NLS-1$
-    m_resultPage = new RMA10ResultPage( "resultPage", resultManager, unitFolder, caseDataProvider, this  ); //$NON-NLS-1$
+
+    m_calcPage = new RMA10CalculationPage( "calcPage", geoLog, caseDataProvider ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
+
+    setWindowTitle( STRING_DLG_TITLE_RMA10S );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "rma10simulation" ) );
   }
 
   protected void handlePageChanged( final PageChangedEvent event )
@@ -186,12 +207,20 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   {
     m_calcPage.runCalculation();
 
-    final IStatus simulationStatus = m_calcPage.getSimulationStatus();
-
     /* Jump to next page and set simulation status to result page */
+    try
+    {
+      m_resultPage = new RMA10ResultPage( "resultPage", m_calcPage.getResultDir(), m_geoLog, m_unitFolder, m_caseDataProvider, this );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
     addPage( m_resultPage );
     getContainer().updateButtons();
 
+    // get status
+    final IStatus simulationStatus = m_calcPage.getSimulationStatus();
     if( simulationStatus.matches( IStatus.ERROR ) )
     {
       // HACK: disable cancel, after result processing, as canceling will not change anything from now on
@@ -268,7 +297,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       /* On cancel, directly close the dialog */
       if( simulationStatus.matches( IStatus.CANCEL ) )
       {
-        saveLog();
+        saveLogAndCleanup();
         return true;
       }
 
@@ -286,7 +315,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     /* On finish after simulation error, close the dialog */
     if( m_calcPage.getSimulationStatus().matches( IStatus.ERROR ) )
     {
-      saveLog();
+      saveLogAndCleanup();
       return true;
     }
 
@@ -295,7 +324,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
       final boolean closeWizard = runResultProcessing();
       if( closeWizard )
       {
-        saveLog();
+        saveLogAndCleanup();
         return true;
       }
 
@@ -310,9 +339,8 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
       return false;
     }
-
-    saveLog();
-
+    
+    saveLogAndCleanup();
     return true;
   }
 
@@ -322,22 +350,19 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
   @Override
   public boolean performCancel( )
   {
-    if( m_calcPage.getSimulationStatus() != null )
-    {
-      /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
-      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4"), null, null ); //$NON-NLS-1$
-    }
-
     /* Only save log on cancel if something happened, else, everything stays as before. */
     // TODO: still a problem: if the user only simulates, the log shows the simulation, but results are still like
     // before.
     if( m_calcPage.getSimulationStatus() != null )
-      saveLog();
-
+    {
+      /* If calculation was made, but user canceled this dialog before result processing, put a message in the log. */
+      m_geoLog.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.4"), null, null ); //$NON-NLS-1$
+      saveLogAndCleanup();
+    }
     return true;
   }
 
-  private void saveLog( )
+  private void saveLogAndCleanup( )
   {
     try
     {
@@ -361,6 +386,11 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     {
       MessageDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationWizard.6") + e.toString() ); //$NON-NLS-1$
     }
+    finally
+    {
+      SimulationUtilitites.clearTmpDir( m_calcPage.getResultDir() );
+      if( m_resultPage != null )
+        SimulationUtilitites.clearTmpDir( m_resultPage.getResultDir() );
+    }
   }
-
 }

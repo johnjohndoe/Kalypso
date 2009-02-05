@@ -2,44 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
- *  and
  * 
+ *  and
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -56,11 +59,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.util.swt.StatusComposite;
 
 /**
@@ -70,7 +76,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 {
   private static final String SETTING_START_RESULT_PROCESSING = "startResultProcessing"; //$NON-NLS-1$
 
-  private RMA10Calculation m_calculation;
+  // private final RMA10Calculation m_calculation;
+  private final RMAKalypsoSimulationRunner m_calculation;
 
   private IStatus m_simulationStatus;
 
@@ -82,13 +89,14 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
   private Spinner m_resultInterval;
 
-  protected RMA10CalculationPage( final String pageName, final RMA10Calculation calculation )
+  protected RMA10CalculationPage( final String pageName, final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {
     super( pageName );
 
-    m_calculation = calculation;
+    m_calculation = new RMAKalypsoSimulationRunner( geoLog, caseDataProvider );
+    final ICalculationUnit calculationUnit = m_calculation.getControlModel().getCalculationUnit();
 
-    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0") + m_calculation.getControlModel().getCalculationUnit().getName() ); //$NON-NLS-1$
+	setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0") + calculationUnit.getName() ); //$NON-NLS-1$
 
     setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2") ); //$NON-NLS-1$
   }
@@ -108,9 +116,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
     /* Status composite */
     final Group statusGroup = new Group( composite, SWT.NONE );
-
     statusGroup.setLayout( new GridLayout() );
-
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     statusGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.3") ); //$NON-NLS-1$
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
@@ -203,12 +209,11 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12"), null ) ); //$NON-NLS-1$
     setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13") ); //$NON-NLS-1$
 
-    final RMA10Calculation calculation = m_calculation;
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        return calculation.runCalculation( monitor );
+        return m_calculation.runCalculation( monitor );
       }
     };
 
@@ -242,5 +247,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     return m_simulationStatus;
   }
 
+  public File getResultDir( )
+  {
+    return m_calculation.getTempDir();
+  }
 
 }

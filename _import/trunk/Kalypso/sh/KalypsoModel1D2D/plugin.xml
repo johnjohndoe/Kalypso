@@ -1063,4 +1063,11 @@
         </property>
      </product>
   </extension>
+  <extension
+        point="org.kalypso.simulation.core.simulation">
+     <simulation
+           simulationClass="org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation"
+           typeID="org.kalypso.model1d2d">
+     </simulation>
+  </extension>
 </plugin>

@@ -98,7 +98,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 public class Control1D2DConverter
 {
   /** Directory name for RMA·Kalypso result files (Output...) files */
-  public static final String RESULT_DIR_NAME = "result"; //$NON-NLS-1$
+  public static final String RESULT_DIR_NAME = "./"; //$NON-NLS-1$
 
   /** Base filename name for RMA·Kalypso result files (Output...) files */
   public static final String RESULT_FILE_BASE = "Output"; //$NON-NLS-1$
@@ -184,7 +184,7 @@ public class Control1D2DConverter
     calendarForFirstTimeStep.setTime( firstDate );
 
     /* FILES DATA BLOCK */
-    formatter.format( "OUTFIL  %s\\%s%n", RESULT_DIR_NAME, RESULT_FILE_BASE ); //$NON-NLS-1$
+    formatter.format( "OUTFIL  %s%s%n", RESULT_DIR_NAME, RESULT_FILE_BASE ); //$NON-NLS-1$
     formatter.format( "INKALYPSmodel.2d%n" ); //$NON-NLS-1$
     formatter.format( "CONTROL A %4d 2d 0%n", m_controlModel.getIaccyc() ); //$NON-NLS-1$
     if( m_controlModel.getRestart() )
@@ -242,14 +242,7 @@ public class Control1D2DConverter
       formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
     // C7
     formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
-
-    // C6
-    if( m_controlModel.getIcpu() != 0 )
-      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
-
-    // C7
-    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
-
+    
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
 

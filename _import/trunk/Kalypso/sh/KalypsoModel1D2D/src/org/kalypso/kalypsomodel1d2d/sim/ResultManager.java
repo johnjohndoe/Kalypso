@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -70,16 +69,21 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
+
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
@@ -93,11 +97,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private final File m_outputDir;
-
-  private final File m_inputDir;
-
-  private final Pattern m_resultFilePattern;
+  // never read
+//  private final Pattern m_resultFilePattern = Pattern.compile( "A(\\d+)" );
 
   /* just for test purposes TODO: still? */
   private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
@@ -112,22 +113,24 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
-
   private File[] m_stepsToProcess;
 
-  private Map<Date, File> m_dateFileMap;
+  private File m_outputDir;
 
-  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
+  private final File m_resultDir;
+
+  private Map<Date, File> m_dateFileMap;  
+
+  public ResultManager( final File resultDir, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
-    m_controlModel = controlModel;
-    m_flowModel = flowModel;
-    m_discModel = discModel;
-    m_scenarioMeta = scenarioResultMeta;
-    m_inputDir = inputDir;
-    m_outputDir = outputDir;
+    m_resultDir = resultDir;
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+    m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();    
+    m_flowModel = caseDataProvider.getModel( IFlowRelationshipModel.class );
+    m_discModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
+    m_scenarioMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
 
     m_geoLog = geoLog;
-    m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" ); //$NON-NLS-1$
 
     m_parameters.add( ResultType.TYPE.DEPTH );
     m_parameters.add( ResultType.TYPE.WATERLEVEL );
@@ -140,11 +143,13 @@ public class ResultManager implements ISimulation1D2DConstants
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.3"), 1000 ); //$NON-NLS-1$
     progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.4") ); //$NON-NLS-1$
 
-    if( m_stepsToProcess == null )
-      return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
-
     try
     {
+      m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() );
+      
+      if( m_stepsToProcess == null )
+        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
+      
       /* Process all remaining .2d files. Now including min and max files */
       final File[] existing2dFiles = m_stepsToProcess;
 
@@ -261,7 +266,7 @@ public class ResultManager implements ISimulation1D2DConstants
   public Date[] findCalculatedSteps( )
   {
     final Set<Date> dates = new TreeSet<Date>();
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+    final File[] existing2dFiles = m_resultDir.listFiles( FILTER_2D );
     for( final File file : existing2dFiles )
     {
       final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
@@ -298,11 +303,9 @@ public class ResultManager implements ISimulation1D2DConstants
     return m_geoLog;
   }
 
-
   public void setStepsToProcess( Date[] dates, final IControlModel1D2D controlModel )
   {
     final List<File> fileList = new ArrayList<File>();
-
     if( m_dateFileMap == null )
       fillStepMap( controlModel );
 
@@ -326,7 +329,7 @@ public class ResultManager implements ISimulation1D2DConstants
   {
     m_dateFileMap = new HashMap<Date, File>();
 
-    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+    final File[] existing2dFiles = m_resultDir.listFiles( FILTER_2D );
 
     for( final File file : existing2dFiles )
     {

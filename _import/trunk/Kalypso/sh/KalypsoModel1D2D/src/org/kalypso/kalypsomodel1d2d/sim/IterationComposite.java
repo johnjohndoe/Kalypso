@@ -103,7 +103,7 @@ public class IterationComposite extends Composite
 
   private final StatusComposite m_statusComposite;
 
-  public IterationComposite( final RMA10Calculation calculation, final Composite composite, final int style )
+  public IterationComposite( final RMAKalypsoSimulationRunner calculation, final Composite composite, final int style )
   {
     super( composite, style );
 
@@ -258,7 +258,7 @@ public class IterationComposite extends Composite
     layout();
   }
 
-  protected void updateControl( final RMA10Calculation calculation )
+  protected void updateControl( final RMAKalypsoSimulationRunner calculation )
   {
     final IterationInfo iterationInfo = calculation.getIterationInfo();
     if( iterationInfo == null )

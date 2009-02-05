@@ -44,7 +44,9 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
@@ -57,7 +59,10 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.process.IProcess;
+import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -74,9 +79,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -95,8 +102,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private final IControlModel1D2D m_controlModel;
 
-  private final File m_tmpDir;
-
   private final IGeoLog m_log;
 
   private final IContainer m_scenarioFolder;
@@ -105,25 +110,22 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private IterationInfo m_iterationInfo;
 
-  public RMA10Calculation( final File tmpDir, final IGeoLog geoLog, final IFEDiscretisationModel1d2d discModel, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IRoughnessClsCollection roughnessModell, final IContainer folder )
+  private boolean m_gridProcess = false;
+
+  /*
+   * this will be null if calculation has not been run
+   */
+  private File m_tmpDir = null;
+
+  public RMA10Calculation( final IGeoLog geoLog, final SzenarioDataProvider caseDataProvider ) throws CoreException
   {
-    m_tmpDir = tmpDir;
     m_log = geoLog;
-    m_discretisationModel = discModel;
-    m_flowRelationshipModel = flowModel;
-    m_roughnessModel = roughnessModell;
-    m_controlModel = controlModel;
-    m_scenarioFolder = folder;
-  }
-
-  public IFlowRelationshipModel getFlowModel( )
-  {
-    return m_flowRelationshipModel;
-  }
-
-  public IFEDiscretisationModel1d2d getDiscModel( )
-  {
-    return m_discretisationModel;
+    m_discretisationModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
+    m_flowRelationshipModel = caseDataProvider.getModel( IFlowRelationshipModel.class );
+    m_roughnessModel = caseDataProvider.getModel( IRoughnessClsCollection.class );
+    final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
+    m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
+    m_scenarioFolder = caseDataProvider.getScenarioFolder();
   }
 
   public IControlModel1D2D getControlModel( )
@@ -161,12 +163,19 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
     try
     {
-      writeRma10Files( progress.newChild( 10 ) );
-      return startCalcCore( progress.newChild( 90 ) );
+      final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
+      m_tmpDir = SimulationUtilitites.createSimulationTmpDir( "rma10s" + calculationUnit.getGmlID() );
+
+      writeRma10Files( m_tmpDir, progress.newChild( 10 ) );
+      return startCalcCore( m_tmpDir, progress.newChild( 90 ) );
     }
     catch( final CoreException ce )
     {
       return ce.getStatus();
+    }
+    catch( final IOException e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
     }
   }
 
@@ -196,7 +205,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     // null );
   }
 
-  private void writeRma10Files( final IProgressMonitor monitor ) throws CoreException
+  private void writeRma10Files( final File tmpDir, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, 100 );
 
@@ -220,16 +229,16 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       /* .2d File */
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.6") ); //$NON-NLS-1$
       monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.7") ); //$NON-NLS-1$
-      final File modelFile = new File( m_tmpDir, MODEL_2D );
+      final File modelFile = new File( tmpDir, MODEL_2D );
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
       final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true, m_log );
       converter2D.writeRMA10sModel( modelFile );
       ProgressUtilities.worked( progress, 20 );
 
       /* Control File */
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.8") ); //$NON-NLS-1$
+       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.8") ); //$NON-NLS-1$
       progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.9") ); //$NON-NLS-1$
-      final File r10file = new File( m_tmpDir, ISimulation1D2DConstants.R10_File );
+      final File r10file = new File( tmpDir, ISimulation1D2DConstants.R10_File );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
       final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider, m_log );
       controlConverter.writeR10File( r10file );
@@ -238,7 +247,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       /* Building File */
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.10") ); //$NON-NLS-1$
       progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.11") ); //$NON-NLS-1$
-      final File buildingFile = new File( m_tmpDir, ISimulation1D2DConstants.BUILDING_File );
+      final File buildingFile = new File( tmpDir, ISimulation1D2DConstants.BUILDING_File );
       final Building1D2DConverter buildingConverter = new Building1D2DConverter( buildingProvider );
       buildingConverter.writeBuildingFile( buildingFile );
       ProgressUtilities.worked( progress, 20 );
@@ -246,7 +255,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       /* W/Q BC File */
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.12") ); //$NON-NLS-1$
       progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.13") ); //$NON-NLS-1$
-      final File bcWQFile = new File( m_tmpDir, ISimulation1D2DConstants.BC_WQ_File );
+      final File bcWQFile = new File( tmpDir, ISimulation1D2DConstants.BC_WQ_File );
       final WQboundaryConditions1D2DConverter bc1D2DConverter = new WQboundaryConditions1D2DConverter( controlConverter.getBoundaryConditionsIDProvider() );
       bc1D2DConverter.writeWQbcFile( bcWQFile );
       ProgressUtilities.worked( progress, 20 );
@@ -263,49 +272,79 @@ public class RMA10Calculation implements ISimulation1D2DConstants
   }
 
   /**
-   * Runs the RMAKalypso simulation, i.e. starts the rma-kalypso_Version.exe in the temp-dir and waits until the process returns.
+   * Runs the RMAKalypso simulation, i.e. starts the rma-kalypso_Version.exe in the temp-dir and waits until the process
+   * returns.
    */
-  private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
+  private IStatus startCalcCore( final File tmpDir, final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() );
+    final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() + 1 );
     progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.15") ); //$NON-NLS-1$
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
-    final File resultDir = new File( m_tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
-    final File itrDir = new File( m_tmpDir, "iterObs" ); //$NON-NLS-1$
+    final File resultDir = new File( tmpDir, Control1D2DConverter.RESULT_DIR_NAME );
+    final File itrDir = new File( tmpDir, "iterObs" ); //$NON-NLS-1$
     resultDir.mkdirs();
     itrDir.mkdirs();
 
-    FileOutputStream logOS = null;
-    FileOutputStream errorOS = null;
+    // Generate the process-factory-id
+    // TODO: at the moment, this is hard wired.... later we should get it from System.properties and/or from our own
+    // simulation-id (as we are no simulation, this does not work yet).
+    // Example1: org.kalypso.simulation.process.factory.<simulation-id>=<factory-id>
+    // For the moment, we could also provide it directly from outside or from a system-property
+    // (fall-back should always be the default factory)
+    final String processFactoryId;
+    if( m_gridProcess )
+    {
+      processFactoryId = "org.kalypso.simulation.gridprocess";
+    }
+    else
+    {
+      processFactoryId = IProcessFactory.DEFAULT_PROCESS_FACTORY_ID;
+    }
+
+    // The iteration job (and its info) monitor the content of the output.itr file
+    // and inform the user about the current progress of the process.
+    // TODO: this is too deep inside this code and should probably be moved further away...
+    final File itrFile = new File( resultDir, OUTPUT_ITR );
+    m_iterationInfo = new IterationInfo( itrFile, itrDir, m_controlModel );
+
+    final IterationInfoJob iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel, progress );
+
+    iterationJob.setSystem( true );
+    iterationJob.schedule();
+
+    OutputStream logOS = null;
+    OutputStream errorOS = null;
     try
     {
       final File exeFile = findRma10skExe();
-
-      final String commandString = exeFile.getAbsolutePath();
 
       // Run the Calculation
       logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) ); //$NON-NLS-1$
       errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) ); //$NON-NLS-1$
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
-      final Runnable idleRunnable = new Runnable()
-      {
-        public void run( )
-        {
-          updateIteration( progress );
-        }
-      };
 
       /* Initialize Iteration Job */
       m_iterationInfo = new IterationInfo( new File( resultDir, OUTPUT_ITR ), itrDir, m_controlModel );
 
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.19"), commandString ); //$NON-NLS-1$
-      ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+      final URL exeURL = exeFile.toURI().toURL();
+      final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, m_tmpDir, exeURL, null );
+      final SubMonitor newChild = progress.newChild( 1 );
+      process.setProgressMonitor( newChild );
+      process.startProcess( logOS, errorOS, null, progressCancelable );
 
       // TODO: specific error message if exe was not found
 
-      // TODO: read other outputs:
+      // clean up if cancelled
+      if( progress.isCanceled() )
+      {
+        // wait for process to really exit
+        Thread.sleep( 1000 );
+        SimulationUtilitites.clearTmpDir( tmpDir );
+      }
+
+      // TODO: read other outputs
       // - error-log
       // - border conditions-log
 
@@ -314,7 +353,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       m_iterationInfo.finish(); // save the last observation
 
       // Check for success
-      final File errorFile = findErrorFile( m_tmpDir );
+      final File errorFile = findErrorFile( tmpDir );
       if( errorFile == null )
         return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.20") ); //$NON-NLS-1$
 
@@ -338,6 +377,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
 
+      iterationJob.finish();
+
       ProgressUtilities.done( progress );
     }
   }
@@ -350,7 +391,15 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       // REMARK: maybe could instead use a default or the one with the biggest version number?
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23") ) ); //$NON-NLS-1$
 
-    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
+    final String exeName;
+    if( m_gridProcess )
+    {
+      exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version;
+    }
+    else
+    {
+      exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
+    }
 
     // REMARK: This is OS dependent; we use should use a pattern according to OS
     final Location installLocation = Platform.getInstallLocation();
@@ -412,7 +461,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
   private IStatus errorToStatus( final String errorMessage )
   {
-    // TODO: error or warning depends, if any steps where calculated; the RMA·Kalypso should determine if result processing
+    // TODO: error or warning depends, if any steps where calculated; the RMA·Kalypso should determine if result
+    // processing
     // makes sense
 
     final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
@@ -446,4 +496,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     return m_simulationStatus;
   }
 
+  public File getTempDir( )
+  {
+    return m_tmpDir;
+  }
 }

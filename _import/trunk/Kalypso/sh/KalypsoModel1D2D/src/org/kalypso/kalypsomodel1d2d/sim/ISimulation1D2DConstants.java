@@ -51,13 +51,13 @@ public interface ISimulation1D2DConstants
 
   public static final String MODEL_2D = "model.2d"; //$NON-NLS-1$
 
-  public static final String OUTPUT_DIR_NAME = "Ergebnisse"; //$NON-NLS-1$
+  public static final String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
 
   public static final String RESOURCEBASE = "resource/"; //$NON-NLS-1$
 
 //  public static final String RMA10S_BASE = RESOURCEBASE + "rma10s/";
 
-  public static final String R10_File = "control.R10"; //$NON-NLS-1$
+  public static final String R10_File = "control.r10"; //$NON-NLS-1$
 
   public static final String BUILDING_File = "bauwerke.txt"; //$NON-NLS-1$
 

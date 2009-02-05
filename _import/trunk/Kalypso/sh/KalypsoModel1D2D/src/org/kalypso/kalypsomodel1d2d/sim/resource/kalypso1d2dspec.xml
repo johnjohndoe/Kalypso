@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model1d2d">
+	<output id="results" type="xs:anyURI" description="2d-result directory"/>
+</modelspec>
