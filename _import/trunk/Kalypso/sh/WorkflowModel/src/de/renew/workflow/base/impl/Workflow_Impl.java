@@ -96,14 +96,14 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
    * @see de.renew.workflow.base.IWorkflow#setDefaultTask(java.lang.String)
    */
   @Override
-  public void setDefaultTask( final String uri )
+  public synchronized void setDefaultTask( final String uri )
   {
     final List<Task> tasks = getWorkflow().getTasks();
 
     setDefaultTask( tasks.toArray( new Task[] {} ), uri );
   }
 
-  private void setDefaultTask( final Task[] tasks, final String uri )
+  private synchronized void setDefaultTask( final Task[] tasks, final String uri )
   {
     for( final Task task : tasks )
     {
