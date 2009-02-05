@@ -133,4 +133,29 @@ public class Task_Impl implements ITask
   {
     return m_i10nproperties;
   }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof Task_Impl )
+    {
+      final Task_Impl other = (Task_Impl) obj;
+
+      return getURI().equals( other.getURI() );
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return getURI().hashCode();
+  }
 }
