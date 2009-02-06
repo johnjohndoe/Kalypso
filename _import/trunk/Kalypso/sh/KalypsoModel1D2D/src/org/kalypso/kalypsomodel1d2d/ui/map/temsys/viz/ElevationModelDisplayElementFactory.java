@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePaintPlainTriangleVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * @author Gernot Belger
  */
@@ -90,7 +90,7 @@ public class ElevationModelDisplayElementFactory
       }
       else
       {
-        throw new RuntimeException( Messages.getString("ElevationModelDisplayElementFactory.1") + elevationProvider ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory.1") + elevationProvider ); //$NON-NLS-1$
       }
     }
     else

@@ -80,7 +80,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context, shouldShowChildren );
+    super( name, Messages.getString( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0") ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
@@ -155,7 +155,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   @Override
   public String getType( )
   {
-    return "GML_MERGE";
+    return "GML_MERGE"; //$NON-NLS-1$
   }
 
   public void setModelBoundaryConditions( final IFlowRelationshipModel bcs )

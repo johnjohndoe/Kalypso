@@ -80,7 +80,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * 
  * @author Madanagopal
@@ -109,7 +109,7 @@ public class ElevationModelSystemEditorComponent
           return ((ITerrainElevationModel) element).getGmlID();
       }
       else
-        throw new RuntimeException( Messages.getString( "ElevationModelSystemEditorComponent.0" ) + Messages.getString( "ElevationModelSystemEditorComponent.1" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.0" ) + Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.1" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
@@ -140,7 +140,7 @@ public class ElevationModelSystemEditorComponent
     elevFormData.top = new FormAttachment( 0, 5 );
     final Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
 
-    terrainModelLabel.setText( Messages.getString( "ElevationModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
+    terrainModelLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
     terrainModelLabel.setLayoutData( elevFormData );
 
     elevFormData = new FormData();
@@ -241,7 +241,7 @@ public class ElevationModelSystemEditorComponent
 
     final Button buttonShowTerrain = new Button( elevationComposite, SWT.PUSH );
 
-    buttonShowTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.10" ) ); //$NON-NLS-1$
+    buttonShowTerrain.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.10" ) ); //$NON-NLS-1$
 
     final Image showTerrainImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_SHOW );
 
@@ -268,7 +268,7 @@ public class ElevationModelSystemEditorComponent
     elevFormData.bottom = new FormAttachment( 100, 0 );
     final Button buttonDeleteTerrain = new Button( elevationComposite, SWT.PUSH );
 
-    buttonDeleteTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.12" ) ); //$NON-NLS-1$
+    buttonDeleteTerrain.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.12" ) ); //$NON-NLS-1$
 
     final Image deleteTerrainImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_DELETE );
 
@@ -286,7 +286,7 @@ public class ElevationModelSystemEditorComponent
     } );
 
     m_descriptionGroupText = new Group( elevationComposite, SWT.NONE );
-    m_descriptionGroupText.setText( Messages.getString( "ElevationModelSystemEditorComponent.14" ) ); //$NON-NLS-1$
+    m_descriptionGroupText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.14" ) ); //$NON-NLS-1$
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( buttonMoveUp, 5 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 10 );
@@ -297,7 +297,7 @@ public class ElevationModelSystemEditorComponent
     final FormLayout formDescription = new FormLayout();
     m_descriptionGroupText.setLayout( formDescription );
     m_descriptionText = new Text( m_descriptionGroupText, SWT.MULTI | SWT.WRAP );
-    m_descriptionText.setText( Messages.getString( "ElevationModelSystemEditorComponent.15" ) ); //$NON-NLS-1$
+    m_descriptionText.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.15" ) ); //$NON-NLS-1$
     final FormData formDescripData = new FormData();
     formDescripData.left = new FormAttachment( 0, 0 );
     formDescripData.right = new FormAttachment( 100, 0 );
@@ -314,7 +314,7 @@ public class ElevationModelSystemEditorComponent
       if( selection.isEmpty() )
       {
         m_dataModel.setElevationModel( null );
-        m_descriptionText.setText( "" );
+        m_descriptionText.setText( "" ); //$NON-NLS-1$
       }
       else
       {
@@ -339,13 +339,13 @@ public class ElevationModelSystemEditorComponent
     if( selection.isEmpty() )
       return;
 
-    if( !MessageDialog.openConfirm( shell, "Höhenmodell löschen", "Sind Sie sicher?" ) )
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.17"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
     if( model1d2d == null )
     {
-      System.out.println( Messages.getString( "ElevationModelSystemEditorComponent.16" ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.16" ) ); //$NON-NLS-1$
     }
 
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();
@@ -383,7 +383,7 @@ public class ElevationModelSystemEditorComponent
     } );
 
     final IStatus deleteFiles = compositeCommand.deleteFiles();
-    ErrorDialog.openError( shell, "Höhenmodell(e) löschen", "Fehler beim Löschen der Datendatei(en)", deleteFiles );
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.3"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ElevationModelSystemEditorComponent.4"), deleteFiles ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 

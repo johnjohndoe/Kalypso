@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
@@ -348,7 +348,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Group minMaxGroup = new Group( clientComposite, SWT.NONE );
     final GridData gridDataminMaxGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
     minMaxGroup.setLayoutData( gridDataminMaxGroup );
-    minMaxGroup.setText( Messages.getString( "ColorModelChangeComponent.4" ) ); //$NON-NLS-1$
+    minMaxGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.4" ) ); //$NON-NLS-1$
 
     final Group optionsColorGroup = new Group( clientComposite, SWT.NONE );
     final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
@@ -435,7 +435,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     compositeSwitchSchema.setLayoutData( gridDataCompositeSwitchSchema );
 
     final Button checkBtnOptionMinMax1 = new Button( compositeSwitchSchema, SWT.CHECK );
-    checkBtnOptionMinMax1.setText( Messages.getString( "ColorModelChangeComponent.9" ) ); //$NON-NLS-1$
+    checkBtnOptionMinMax1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.9" ) ); //$NON-NLS-1$
     checkBtnOptionMinMax1.setSelection( false );
     checkBtnOptionMinMax1.addSelectionListener( new SelectionAdapter()
     {
@@ -443,7 +443,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        System.out.println( Messages.getString( "ColorModelChangeComponent.11" ) + checkBtnOptionMinMax1.getSelection() ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.11" ) + checkBtnOptionMinMax1.getSelection() ); //$NON-NLS-1$
         ElevationColorControl.setMinMaxStatus( checkBtnOptionMinMax1.getSelection() );
         preferenceStore_.setValue( LINE_MIN_MAX, checkBtnOptionMinMax1.getSelection() );
         windowCanvas.redraw();
@@ -542,7 +542,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
    */
   private void secondGroup( final Group optionsColorGroup )
   {
-    optionsColorGroup.setText( Messages.getString( "ColorModelChangeComponent.12" ) ); //$NON-NLS-1$
+    optionsColorGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.12" ) ); //$NON-NLS-1$
     optionsColorGroup.setLayout( new GridLayout( 2, false ) );
 
     final GridData gridDataoptionsColorGroup = new GridData( SWT.CENTER, SWT.UP, false, true );
@@ -551,9 +551,9 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Composite elevationChooseComposite = m_toolkit.createComposite( optionsColorGroup, SWT.NONE );
     elevationChooseComposite.setLayout( new GridLayout( 2, false ) );
     @SuppressWarnings("unused")
-    final Label maxElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "ColorModelChangeComponent.14" ), SWT.FILL ); //$NON-NLS-1$
+    final Label maxElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.14" ), SWT.FILL ); //$NON-NLS-1$
     @SuppressWarnings("unused")
-    final Label minElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "ColorModelChangeComponent.16" ), SWT.FILL ); //$NON-NLS-1$
+    final Label minElevationLabel = m_toolkit.createLabel( elevationChooseComposite, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.16" ), SWT.FILL ); //$NON-NLS-1$
 
     final Text maxText = new Text( elevationChooseComposite, SWT.BORDER );
     final double maxElevation = ElevationColorControl.getMaxElevation();
@@ -638,7 +638,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     gridDataColorChooseComposite.horizontalSpan = 2;
     colorChooseComposite.setLayoutData( gridDataColorChooseComposite );
 
-    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, Messages.getString( "ColorModelChangeComponent.28" ), colorChooseComposite ); //$NON-NLS-1$
+    final ColorFieldEditor maxColorSelector = new ColorFieldEditor( LINE_MAX_COLOR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.28" ), colorChooseComposite ); //$NON-NLS-1$
     maxColorSelector.setPreferenceStore( preferenceStore_ );
     maxColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     maxColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -646,7 +646,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Button buttonMax = maxColorSelector.getColorSelector().getButton();
     buttonMax.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, Messages.getString( "ColorModelChangeComponent.29" ), colorChooseComposite ); //$NON-NLS-1$
+    final ColorFieldEditor minColorSelector = new ColorFieldEditor( LINE_MIN_COLOR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.29" ), colorChooseComposite ); //$NON-NLS-1$
     minColorSelector.setPreferenceStore( preferenceStore_ );
     minColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     minColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -654,7 +654,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final Button buttonMin = minColorSelector.getColorSelector().getButton();
     buttonMin.setLayoutData( new GridData( GridData.CENTER, GridData.CENTER, false, false ) );
 
-    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString( "ColorModelChangeComponent.30" ), colorChooseComposite ); //$NON-NLS-1$
+    noColorSelector = new ColorFieldEditor( LINE_NO_COLOR, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.30" ), colorChooseComposite ); //$NON-NLS-1$
     noColorSelector.setPreferenceStore( preferenceStore_ );
     noColorSelector.setPropertyChangeListener( storePropertyChangeListener_ );
     noColorSelector.getColorSelector().addListener( storePropertyChangeListener_ );
@@ -670,7 +670,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     spinnerComposite.setLayoutData( gridDataSpinnerComposite );
 
     final Label colorNumberCells = new Label( spinnerComposite, SWT.NONE );
-    colorNumberCells.setText( Messages.getString( "ColorModelChangeComponent.31" ) ); //$NON-NLS-1$
+    colorNumberCells.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.31" ) ); //$NON-NLS-1$
 
     final Spinner spinNumColorClasses = new Spinner( spinnerComposite, SWT.NONE );
     m_toolkit.adapt( spinNumColorClasses );
@@ -695,7 +695,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     } );
 
     final Label transparencyLabel = new Label( spinnerComposite, SWT.NONE );
-    transparencyLabel.setText( Messages.getString( "ColorModelChangeComponent.33" ) ); //$NON-NLS-1$
+    transparencyLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.33" ) ); //$NON-NLS-1$
 
     final Spinner spinTransparency = new Spinner( spinnerComposite, SWT.NONE );
     m_toolkit.adapt( spinTransparency );
@@ -726,7 +726,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
         windowCanvas.redraw();
       }
     } );
-    m_applyColors.setToolTipText( Messages.getString( "ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
+    m_applyColors.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.37" ) ); //$NON-NLS-1$
     image_Apply = new Image( optionsColorGroup.getDisplay(), AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/ok.gif" ).getImageData() ); //$NON-NLS-1$
     m_applyColors.setImage( image_Apply );
     windowCanvas.redraw();
@@ -747,7 +747,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();
     if( elevationTheme == null )
     {
-      System.out.println( Messages.getString( "ColorModelChangeComponent.39" ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent.39" ) ); //$NON-NLS-1$
       return;
     }
     else

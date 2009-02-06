@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -152,7 +152,7 @@ public class AssignNodeElevationFaceComponent
         // return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
         final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) m_dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
         if( nodeTheme == null )
-          System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.3" ) ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.3" ) ); //$NON-NLS-1$
 
         final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );// nodeTheme.getWorkspace();
 
@@ -207,7 +207,7 @@ public class AssignNodeElevationFaceComponent
       {
         if( FENodeLabelProvider.getNameOrID( node ).equals( value ) )
         {
-          System.out.println( Messages.getString( "AssignNodeElevationFaceComponent.4" ) ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.4" ) ); //$NON-NLS-1$
           return;
         }
         final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
@@ -335,7 +335,7 @@ public class AssignNodeElevationFaceComponent
       }
       catch( Throwable th )
       {
-        return Messages.getString( "AssignNodeElevationFaceComponent.11" ); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.11" ); //$NON-NLS-1$
       }
 
     }
@@ -372,7 +372,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.left = new FormAttachment( 0, 5 );
     regionFormData.top = new FormAttachment( 0, 5 );
     final Label infoLabel = new Label( cComposite, SWT.FLAT );
-    infoLabel.setText( Messages.getString( "AssignNodeElevationFaceComponent.14" )/* "Selected Terrain Model" */); //$NON-NLS-1$
+    infoLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.14" )/* "Selected Terrain Model" */); //$NON-NLS-1$
     infoLabel.setLayoutData( regionFormData );
 
     regionFormData = new FormData();
@@ -390,16 +390,16 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( infoLabel, 10 );
     // regionFormData.right = new FormAttachment( 100, 0 );
     noElevationGroup = new Group( cComposite, SWT.NONE );
-    noElevationGroup.setText( Messages.getString( "AssignNodeElevationFaceComponent.16" ) );// Modelle Knoten Suchen
+    noElevationGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.16" ) );// Modelle Knoten Suchen //$NON-NLS-1$
     // //$NON-NLS-1$
     noElevationGroup.setLayoutData( regionFormData );
     noElevationGroup.setLayout( new GridLayout( 2, false ) );
 
     selectNoElevationLabel = new Label( noElevationGroup, SWT.FLAT );
-    selectNoElevationLabel.setText( Messages.getString( "AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
+    selectNoElevationLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.17" ) ); //$NON-NLS-1$
 
     selectNoElevationButton = new Button( noElevationGroup, SWT.PUSH );
-    selectNoElevationButton.setText( Messages.getString( "AssignNodeElevationFaceComponent.18" ) ); //$NON-NLS-1$
+    selectNoElevationButton.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.18" ) ); //$NON-NLS-1$
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -417,7 +417,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( noElevationGroup, 10 );
     // regionFormData.right = new FormAttachment( 100, 0 );
     nodeViewerGroup = new Group( cComposite, SWT.NONE );
-    nodeViewerGroup.setText( Messages.getString( "AssignNodeElevationFaceComponent.19" ) ); //$NON-NLS-1$
+    nodeViewerGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.19" ) ); //$NON-NLS-1$
     nodeViewerGroup.setLayoutData( regionFormData );
     nodeViewerGroup.setLayout( new FormLayout() );
 
@@ -440,7 +440,7 @@ public class AssignNodeElevationFaceComponent
     m_table.setLinesVisible( true );
 
     final TableColumn lineColumn = new TableColumn( m_table, SWT.LEFT );
-    lineColumn.setText( Messages.getString( "AssignNodeElevationFaceComponent.22" )/* "Node" */); //$NON-NLS-1$
+    lineColumn.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.22" )/* "Node" */); //$NON-NLS-1$
     lineColumn.setWidth( 100 / 1 );
     lineColumn.addSelectionListener( new SelectionAdapter()
     {
@@ -453,7 +453,7 @@ public class AssignNodeElevationFaceComponent
     } );
 
     final TableColumn actualPointNum = new TableColumn( m_table, SWT.LEFT );
-    actualPointNum.setText( Messages.getString( "AssignNodeElevationFaceComponent.23" )/* "Elevation" */); //$NON-NLS-1$
+    actualPointNum.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.23" )/* "Elevation" */); //$NON-NLS-1$
     actualPointNum.setWidth( 100 / 2 );
     actualPointNum.addSelectionListener( new SelectionAdapter()
     {
@@ -478,7 +478,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( 0, 10 );
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button selectAll = new Button( nodeViewerGroup, SWT.PUSH );
-    selectAll.setText( Messages.getString( "AssignNodeElevationFaceComponent.24" )/* "Select All" */); //$NON-NLS-1$
+    selectAll.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.24" )/* "Select All" */); //$NON-NLS-1$
     selectAll.setLayoutData( regionFormData );
     selectAll.addSelectionListener( new SelectionAdapter()
     {
@@ -495,7 +495,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button deSelectAll = new Button( nodeViewerGroup, SWT.PUSH );
     deSelectAll.setLayoutData( regionFormData );
-    deSelectAll.setText( Messages.getString( "AssignNodeElevationFaceComponent.25" )/* "DeSelect All" */); //$NON-NLS-1$
+    deSelectAll.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.25" )/* "DeSelect All" */); //$NON-NLS-1$
 
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
@@ -513,7 +513,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button applySelected = new Button( nodeViewerGroup, SWT.PUSH );
     applySelected.setLayoutData( regionFormData );
-    applySelected.setText( Messages.getString( "AssignNodeElevationFaceComponent.26" )/* "Apply Selected" */); //$NON-NLS-1$
+    applySelected.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.26" )/* "Apply Selected" */); //$NON-NLS-1$
     applySelected.addSelectionListener( new SelectionAdapter()
     {
       @Override

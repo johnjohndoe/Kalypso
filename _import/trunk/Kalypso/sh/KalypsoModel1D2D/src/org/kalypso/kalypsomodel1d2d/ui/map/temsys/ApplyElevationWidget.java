@@ -76,6 +76,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  *
@@ -99,8 +100,8 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
   public ApplyElevationWidget( )
   {
-    super( "Knoten selektieren", "Knoten selektieren", new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) );
-    m_toolTipRendererDesc.setTooltip( "Selektieren Sie die Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen." );
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1"), new SelectFeatureWidget( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.12"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.13"), new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    m_toolTipRendererDesc.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.14") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -270,14 +271,14 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
         nodePoint = node.getPoint();
         if( nodePoint.getCoordinateDimension() <= 2 )
         {
-          tooltipText.append( Messages.getString( "ApplyElevationWidget.2" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.2" ) ); //$NON-NLS-1$
         }
         else
         {
-          tooltipText.append( Messages.getString( "ApplyElevationWidget.3" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.3" ) ); //$NON-NLS-1$
           tooltipText.append( String.format( "%.3f m", nodePoint.getZ() ) ); //$NON-NLS-1$
         }
-        tooltipText.append( "\n" );
+        tooltipText.append( "\n" ); //$NON-NLS-1$
       }
 
       if( nodePoint == null )
@@ -289,14 +290,14 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
         final double elevation = elevationProvider.getElevation( nodePoint );
         if( !Double.isNaN( elevation ) )
         {
-          tooltipText.append( Messages.getString( "ApplyElevationWidget.6" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.6" ) ); //$NON-NLS-1$
           tooltipText.append( String.format( "%.3f m", elevation ) ); //$NON-NLS-1$
         }
         else
-          tooltipText.append( Messages.getString( "ApplyElevationWidget.9" ) ); //$NON-NLS-1$
+          tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.9" ) ); //$NON-NLS-1$
       }
       else
-        tooltipText.append( Messages.getString( "ApplyElevationWidget.10" ) ); //$NON-NLS-1$
+        tooltipText.append( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.10" ) ); //$NON-NLS-1$
 
       m_toolTipRenderer.setTooltip( tooltipText.toString() );
       m_toolTipRenderer.paintToolTip( p, g, getMapPanel().getScreenBounds() );
@@ -353,7 +354,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     final Rectangle bounds = mapPanel.getScreenBounds();
     final String delegateTooltip = getDelegate().getToolTip();
 
-    m_toolTipRendererDesc.setTooltip( "Selektieren Sie FE-Knoten in der Karte.\n    'Enter': Höhen zuweisen.\n" + delegateTooltip );
+    m_toolTipRendererDesc.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.16") + delegateTooltip ); //$NON-NLS-1$
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }
 

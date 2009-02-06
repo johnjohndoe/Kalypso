@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -152,7 +152,7 @@ class ApplyElevationWidgetFace
         IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
         if( activeWorkbenchWindow == null )
         {
-          System.out.println( Messages.getString( "ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
           return;
         }
 
@@ -192,7 +192,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select Elevation Model"
     elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationSelectStatus.setText( Messages.getString( "ApplyElevationWidgetFace.2" ) ); //$NON-NLS-1$
+    elevationSelectStatus.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.2" ) ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -201,7 +201,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText( Messages.getString( "ApplyElevationWidgetFace.3" ) ); //$NON-NLS-1$
+    areaSelectSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.3" ) ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -211,7 +211,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationColorSection.setText( Messages.getString( "ApplyElevationWidgetFace.4" ) //$NON-NLS-1$
+    elevationColorSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.4" ) //$NON-NLS-1$
     // "Select Colors for MAX Elevation and MIN Elevation "
     );
     // elevationColorSection.addPaintListener( drawListener );
@@ -266,7 +266,7 @@ class ApplyElevationWidgetFace
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
     if( rootPanel == null )
     {
-      System.out.println( Messages.getString( "ApplyElevationWidgetFace.5" ) ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidgetFace.5" ) ); //$NON-NLS-1$
       return;
     }
     if( !rootPanel.isDisposed() )

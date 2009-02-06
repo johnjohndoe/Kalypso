@@ -54,6 +54,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Patrice Congo
@@ -181,7 +182,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     final double opacity = alpha / 255.0;
     final Fill fill = StyleFactory.createFill( rgbColor, opacity );
     final Stroke stroke = StyleFactory.createStroke( rgbColor, 1, 0.1 );
-    final String label = "";
+    final String label = ""; //$NON-NLS-1$
     final double from = getFrom( i );
     final double to = getTo( i );
 
@@ -317,7 +318,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     else
     {
       // or return a translucent color
-      throw new IllegalArgumentException( Messages.getString( "SimpleElevationColorModel.0" ) + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SimpleElevationColorModel.0" ) + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   }
 
