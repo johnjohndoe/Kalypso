@@ -54,11 +54,13 @@
         name="ImportWaterlevelRaster"
         project="false">
   </wizard>
+  <!--
   <wizard
         class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
         id="org.kalypso.risk.model.actions.rasterizeLanduse.RasterizationWizard"
         name="RasterizationWizard">
   </wizard>
+  -->
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
@@ -102,16 +104,19 @@
        <scenarioDatum
              bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
+             id="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              modelPath="models/VectorDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
              bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
+             id="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              modelPath="models/RasterDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
              bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
+             id="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              modelPath="models/RasterizationControlModel.gml">
        </scenarioDatum>
     </dataSet>

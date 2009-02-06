@@ -14,6 +14,8 @@ public interface IRasterizationControlModel extends IModel
 {
   public static final String MODEL_NAME = "RasterizationControlModel"; //$NON-NLS-1$
 
+  public static final String MODEL_ID = "org.kalypso.risk.model.schema.binding.IRasterizationControlModel"; //$NON-NLS-1$
+
   public static final String MODEL_FILENAME_GML = "RasterizationControlModel.gml"; //$NON-NLS-1$
 
   public static final double RISKZONE_URBANAREA_LOW = 1.0;

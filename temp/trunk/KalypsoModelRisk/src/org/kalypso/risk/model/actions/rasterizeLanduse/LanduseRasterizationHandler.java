@@ -41,7 +41,7 @@ public class LanduseRasterizationHandler extends AbstractHandler implements ISim
 
     try
     {
-      final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.class );
+      final IRasterDataModel rasterModel = scenarioDataProvider.getModel( IRasterDataModel.MODEL_ID, IRasterDataModel.class );
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = rasterModel.getWaterlevelCoverageCollection();
 
       if( waterDepthCoverageCollection.size() == 0 )
@@ -64,7 +64,7 @@ public class LanduseRasterizationHandler extends AbstractHandler implements ISim
       if( dialog.open() != 0 )
         return null;
 
-      final Job job = new Job( "Berechne..." )
+      final Job job = new Job( Messages.getString( "LanduseRasterizationHandler.8" ) )
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

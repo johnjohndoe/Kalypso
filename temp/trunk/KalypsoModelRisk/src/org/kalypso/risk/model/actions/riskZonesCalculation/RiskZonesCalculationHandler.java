@@ -48,7 +48,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       final IEvaluationContext context = handlerService.getCurrentState();
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final Job job = new Job( "Berechne..." )
+      final Job job = new Job( Messages.getString( "RiskZonesCalculationHandler.8" ) )
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
@@ -60,7 +60,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
           }
           catch( final CoreException e )
           {
-            ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
+            ErrorDialog.openError( shell, Messages.getString( "RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
             return Status.CANCEL_STATUS;
           }
           return status;

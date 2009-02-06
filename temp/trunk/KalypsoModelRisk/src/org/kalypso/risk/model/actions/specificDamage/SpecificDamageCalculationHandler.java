@@ -57,7 +57,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
       try
       {
-        final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
+        final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.MODEL_ID, IRasterizationControlModel.class );
 
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
@@ -65,7 +65,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final Job job = new Job( "Berechne..." )
+        final Job job = new Job( Messages.getString( "DamagePotentialCalculationHandler.5" ) )
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -81,7 +81,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
                 while( !mapPanel.getMapModell().isLoaded() )
                   Thread.sleep( 300 );
                 final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
-                final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
+                final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.MODEL_ID, IRasterDataModel.class );
                 final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
                 final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = rasterDataModel.getSpecificDamageCoverageCollection();
                 RiskModelHelper.updateDamageStyle( sldFile, specificDamageCoverageCollection );
