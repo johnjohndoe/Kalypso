@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -52,7 +53,9 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,7 +73,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
  * first implementing the LayerTableViewer. Should be refaktored as soon as we refaktor the LayerTableViewer.<br>
  * Copy/Pasted from the old {@link IKalypsoFeatureTheme}, in order to more easily refaktor that one.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
@@ -87,7 +90,9 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
 
   public KalypsoTableFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final URL context, final boolean shouldShowChildren )
   {
-    super( name, "FeatureTheme", null, null, context, shouldShowChildren ); //$NON-NLS-1$
+    // Because of Assert.isNotNull( mapModel ) in AbstractKalypsoTheme, we need some map model for table theme...
+    // super( name, "FeatureTheme", null, null, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null ), null, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;
