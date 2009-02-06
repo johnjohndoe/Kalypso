@@ -503,7 +503,7 @@ public class CalculationContentBean
     final String line = lnr.ready() ? lnr.readLine() : null;
     if( line == null )
 ////      throw new ParseException( "More lines expected", lnr.getLineNumber() );
-      return "";
+      return ""; //$NON-NLS-1$
 
     return line;
   }

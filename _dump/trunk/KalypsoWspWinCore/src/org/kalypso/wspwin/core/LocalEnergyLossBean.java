@@ -53,6 +53,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * @author thuel2
@@ -63,7 +64,7 @@ public class LocalEnergyLossBean
 
   private final Map<LOSSKIND, Double> m_entries;
 
-  private static String STATION = "STATION";
+  private static String STATION = "STATION"; //$NON-NLS-1$
 
   public static enum LOSSKIND
   {
@@ -109,11 +110,11 @@ public class LocalEnergyLossBean
           count++;
           final StringTokenizer tokenizer = new StringTokenizer( nextLine );
           if( tokenizer.countTokens() % 2 != 0 )
-            throw new ParseException( "Syntax error in block start: " + nextLine, count );
+            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.LocalEnergyLossBean.1") + nextLine, count ); //$NON-NLS-1$
           final int countKinds = tokenizer.countTokens() / 2 - 1;
           final String key = tokenizer.nextToken();
           if( !STATION.equalsIgnoreCase( key ) )
-            throw new ParseException( "Line doesn't start with '" + STATION + "': " + nextLine, count );
+            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.LocalEnergyLossBean.2") + STATION + "': " + nextLine, count ); //$NON-NLS-1$ //$NON-NLS-2$
           final Double station = Double.parseDouble( tokenizer.nextToken() );
 
           // read pairs: kind -> value
@@ -121,7 +122,7 @@ public class LocalEnergyLossBean
           for( int i = 0; i < countKinds; i++ )
           {
             // TODO spelling of kind is changed / normalized. Is it better to wait until conversion to feature?
-            final LOSSKIND kind = LOSSKIND.valueOf( tokenizer.nextToken().toUpperCase().replaceAll( "Ü", "UE" ) );
+            final LOSSKIND kind = LOSSKIND.valueOf( tokenizer.nextToken().toUpperCase().replaceAll( "Ü", "UE" ) ); //$NON-NLS-1$ //$NON-NLS-2$
             double value = Double.parseDouble( tokenizer.nextToken() );
             // energy losses of same kind are summed up
             if( entries.containsKey( kind ) )

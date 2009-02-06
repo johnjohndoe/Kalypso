@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 
@@ -75,7 +76,7 @@ public class PrfWriter
   {
     writeMetadata( pw );
     writeZeile14( m_dbs, pw );
-    pw.println( "0.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0 0 0" );// Plotvorgaben
+    pw.println( "0.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0 0 0" );// Plotvorgaben //$NON-NLS-1$
     try
     {
       for( final IDataBlock db : m_dbs )
@@ -112,90 +113,90 @@ public class PrfWriter
   {
     final DataBlockHeader dbh = new DataBlockHeader();
 
-    if( key.startsWith( "GEL" ) )
+    if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "GELAENDE-" );
-      dbh.setSecondLine( "HOEHE" );
+      dbh.setFirstLine( "GELAENDE-" ); //$NON-NLS-1$
+      dbh.setSecondLine( "HOEHE" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "TRENNF" ) )
+    else if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "TRENNFLAECHEN" );
+      dbh.setFirstLine( "TRENNFLAECHEN" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "DUR" ) )
+    else if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "DURCHSTROEMTE" );
-      dbh.setSecondLine( "BEREICHE" );
+      dbh.setFirstLine( "DURCHSTROEMTE" ); //$NON-NLS-1$
+      dbh.setSecondLine( "BEREICHE" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "KST" ) )
+    else if( key.startsWith( "KST" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "RAUHEIT" );
-      dbh.setSecondLine( "kst   m" );
+      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
+      dbh.setSecondLine( "kst   m" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "KS" ) )
+    else if( key.startsWith( "KS" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "RAUHEIT" );
-      dbh.setSecondLine( "k-s   m" );
+      dbh.setFirstLine( "RAUHEIT" ); //$NON-NLS-1$
+      dbh.setSecondLine( "k-s   m" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "REC" ) )
+    else if( key.startsWith( "REC" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "RECHTSWERT" );
+      dbh.setFirstLine( "RECHTSWERT" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "HOC" ) )
+    else if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "HOCHWERT" );
+      dbh.setFirstLine( "HOCHWERT" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "UK-B" ) )
+    else if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "UK-BRUECKE" );
+      dbh.setFirstLine( "UK-BRUECKE" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "OK-B" ) )
+    else if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "OK-BRUECKE" );
+      dbh.setFirstLine( "OK-BRUECKE" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "KOM" ) )
+    else if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "KOMMENTAR:" );
+      dbh.setFirstLine( "KOMMENTAR:" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "BOR" ) )
+    else if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "BORDVOLL" );
+      dbh.setFirstLine( "BORDVOLL" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "AX" ) )
+    else if( key.startsWith( "AX" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "AX   m" );
+      dbh.setFirstLine( "AX   m" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "AY" ) )
+    else if( key.startsWith( "AY" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "AY   m" );
+      dbh.setFirstLine( "AY   m" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "DP" ) )
+    else if( key.startsWith( "DP" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "DP   m" );
+      dbh.setFirstLine( "DP   m" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "EI" ) )
+    else if( key.startsWith( "EI" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "EI" );
+      dbh.setFirstLine( "EI" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "KRE" ) )
+    else if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "KREIS" );
+      dbh.setFirstLine( "KREIS" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "TRA" ) )
+    else if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "TRAPEZ" );
+      dbh.setFirstLine( "TRAPEZ" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "MAU" ) )
+    else if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "MAULPROFIL" );
+      dbh.setFirstLine( "MAULPROFIL" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "OK-W" ) )
+    else if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "OK-WEHR" );
+      dbh.setFirstLine( "OK-WEHR" ); //$NON-NLS-1$
     }
-    else if( key.startsWith( "TRENNL" ) )
+    else if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
     {
-      dbh.setFirstLine( "TRENNLINIE" );
-      dbh.setSecondLine( "WEHR" );
+      dbh.setFirstLine( "TRENNLINIE" ); //$NON-NLS-1$
+      dbh.setSecondLine( "WEHR" ); //$NON-NLS-1$
     }
 
     return dbh;
@@ -206,7 +207,7 @@ public class PrfWriter
     for( int i = 1; i < 14; i++ )
     {
       final String[] line = m_metaMap.get( i );
-      final StringBuffer buffer = new StringBuffer( "#" );
+      final StringBuffer buffer = new StringBuffer( "#" ); //$NON-NLS-1$
       buffer.append( line[0] );
 
       if( buffer.length() > 41 )

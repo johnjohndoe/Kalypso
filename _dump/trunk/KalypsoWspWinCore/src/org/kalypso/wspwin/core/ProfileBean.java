@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.kalypso.wspwin.core.i18n.Messages;
+
 /**
  * Represents a line from a profproj.txt or .str file
  * @author Belger
@@ -102,15 +104,15 @@ public class ProfileBean
     for( int i = 0; i < profilCount; i++ )
     {
       if( !reader.ready() )
-        throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ProfileBean.0") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       final String line = reader.readLine();
       if( line == null || line.trim().length() == 0 )
-        throw new ParseException( "Syntax error. End of file reached before all profile were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ProfileBean.1") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       final StringTokenizer tokenizer = new StringTokenizer( line );
       if( tokenizer.countTokens() != 6 )
-        throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ProfileBean.2") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       try
       {
@@ -123,16 +125,16 @@ public class ProfileBean
 
         // give unused data in form of metadata entries
         final Map<String, String> metadata = new HashMap<String, String>( 2 );
-        metadata.put( "VZK", vzk );
-        metadata.put( "MFB", mfb );
-        metadata.put( "ZUSTAND", zustandName );
+        metadata.put( "VZK", vzk ); //$NON-NLS-1$
+        metadata.put( "MFB", mfb ); //$NON-NLS-1$
+        metadata.put( "ZUSTAND", zustandName ); //$NON-NLS-1$
 
         final ProfileBean bean = new ProfileBean( waterName, zustandName, station, fileName, metadata );
         beans.add( bean );
       }
       catch( final NumberFormatException e )
       {
-        throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ProfileBean.6") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
       }
 
     }

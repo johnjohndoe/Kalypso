@@ -54,6 +54,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * @author Gernot
@@ -99,7 +100,7 @@ public class RunOffEventBean
         count++;
         final StringTokenizer tokenizer = new StringTokenizer( nextLine );
         if( tokenizer.countTokens() != 2 )
-          throw new ParseException( "Syntax error in block start: " + nextLine, count );
+          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.RunOffEventBean.0") + nextLine, count ); //$NON-NLS-1$
 
         final String eventName = tokenizer.nextToken();
         final int eventLength = Integer.parseInt( tokenizer.nextToken() );
@@ -109,13 +110,13 @@ public class RunOffEventBean
         for( int i = 0; i < eventLength; i++ )
         {
           if( !lineIt.hasNext() )
-            throw new ParseException( "End of file reached for event: " + eventName, count );
+            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.RunOffEventBean.1") + eventName, count ); //$NON-NLS-1$
 
           final String line = lineIt.nextLine();
           count++;
           final StringTokenizer tz = new StringTokenizer( line );
           if( tz.countTokens() != 2 )
-            throw new ParseException( "Syntax error in line: " + nextLine, count );
+            throw new ParseException( Messages.getString("org.kalypso.wspwin.core.RunOffEventBean.2") + nextLine, count ); //$NON-NLS-1$
 
           final double station = Double.parseDouble( tz.nextToken() );
           final double value = Double.parseDouble( tz.nextToken() );

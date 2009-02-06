@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of a .str file
@@ -110,15 +111,15 @@ public class ZustandContentBean
     for( int i = 0; i < segmentCount; i++ )
     {
       if( !reader.ready() )
-        throw new ParseException( "Syntax error. End of file reached before all reach-segments were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ZustandContentBean.0") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       final String line = reader.readLine();
       if( line == null || line.trim().length() == 0 )
-        throw new ParseException( "Syntax error. End of file reached before all reach-segments were read. Line numer: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ZustandContentBean.1") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       final StringTokenizer tokenizer = new StringTokenizer( line );
       if( tokenizer.countTokens() != 7 )
-        throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ZustandContentBean.2") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
       try
       {
@@ -137,7 +138,7 @@ public class ZustandContentBean
       catch( final NumberFormatException e )
       {
         e.printStackTrace();
-        throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.ZustandContentBean.3") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
       }
 
     }

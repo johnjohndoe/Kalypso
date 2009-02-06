@@ -48,7 +48,7 @@ import java.io.File;
  */
 public class WspWinHelper
 {
-  public static final String DIR_PROF = "prof";
+  public static final String DIR_PROF = "prof"; //$NON-NLS-1$
 
   private WspWinHelper( )
   {

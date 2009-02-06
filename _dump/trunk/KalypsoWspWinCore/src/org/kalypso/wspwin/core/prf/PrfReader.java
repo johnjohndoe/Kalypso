@@ -50,6 +50,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.CoordDataBlock;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
@@ -115,7 +116,7 @@ public class PrfReader
       }
       catch( IOException e )
       {
-        m_logger.log( Level.SEVERE, "Weniger Datenblöcke in Zeile 14 angegeben als tatsächlich vorhanden" );
+        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.0") ); //$NON-NLS-1$
         throw new IOException();
       }
     }
@@ -124,44 +125,44 @@ public class PrfReader
 
   public String createFirstLine( final String key )
   {
-    if( key.startsWith( "GEL" ) )
-      return "GELAENDE-";
-    if( key.startsWith( "TRENNF" ) )
-      return "TRENNFLAECHEN";
-    if( key.startsWith( "DUR" ) )
-      return "DURCHSTROEMTE";
-    if( key.startsWith( "RAU" ) )
-      return "RAUHEIT";
-    if( key.startsWith( "REC" ) )
-      return "RECHTSWERT";
-    if( key.startsWith( "HOC" ) )
-      return "HOCHWERT";
-    if( key.startsWith( "UK-B" ) )
-      return "UK-BRUECKE";
-    if( key.startsWith( "OK-B" ) )
-      return "OK-BRUECKE";
-    if( key.startsWith( "KOM" ) )
-      return "KOMMENTAR:";
-    if( key.startsWith( "BOR" ) )
-      return "BORDVOLL";
-    if( key.startsWith( "AX" ) )
-      return "AX   m";
-    if( key.startsWith( "AY" ) )
-      return "AY   m";
-    if( key.startsWith( "DP" ) )
-      return "DP   m";
-    if( key.startsWith( "EI" ) )
-      return "EI";
-    if( key.startsWith( "KRE" ) )
-      return "KREIS";
-    if( key.startsWith( "TRA" ) )
-      return "TRAPEZ";
-    if( key.startsWith( "MAU" ) )
-      return "MAULPROFIL";
-    if( key.startsWith( "OK-W" ) )
-      return "OK-WEHR";
-    if( key.startsWith( "TRENNL" ) )
-      return "TRENNLINIE";
+    if( key.startsWith( "GEL" ) ) //$NON-NLS-1$
+      return "GELAENDE-"; //$NON-NLS-1$
+    if( key.startsWith( "TRENNF" ) ) //$NON-NLS-1$
+      return "TRENNFLAECHEN"; //$NON-NLS-1$
+    if( key.startsWith( "DUR" ) ) //$NON-NLS-1$
+      return "DURCHSTROEMTE"; //$NON-NLS-1$
+    if( key.startsWith( "RAU" ) ) //$NON-NLS-1$
+      return "RAUHEIT"; //$NON-NLS-1$
+    if( key.startsWith( "REC" ) ) //$NON-NLS-1$
+      return "RECHTSWERT"; //$NON-NLS-1$
+    if( key.startsWith( "HOC" ) ) //$NON-NLS-1$
+      return "HOCHWERT"; //$NON-NLS-1$
+    if( key.startsWith( "UK-B" ) ) //$NON-NLS-1$
+      return "UK-BRUECKE"; //$NON-NLS-1$
+    if( key.startsWith( "OK-B" ) ) //$NON-NLS-1$
+      return "OK-BRUECKE"; //$NON-NLS-1$
+    if( key.startsWith( "KOM" ) ) //$NON-NLS-1$
+      return "KOMMENTAR:"; //$NON-NLS-1$
+    if( key.startsWith( "BOR" ) ) //$NON-NLS-1$
+      return "BORDVOLL"; //$NON-NLS-1$
+    if( key.startsWith( "AX" ) ) //$NON-NLS-1$
+      return "AX   m"; //$NON-NLS-1$
+    if( key.startsWith( "AY" ) ) //$NON-NLS-1$
+      return "AY   m"; //$NON-NLS-1$
+    if( key.startsWith( "DP" ) ) //$NON-NLS-1$
+      return "DP   m"; //$NON-NLS-1$
+    if( key.startsWith( "EI" ) ) //$NON-NLS-1$
+      return "EI"; //$NON-NLS-1$
+    if( key.startsWith( "KRE" ) ) //$NON-NLS-1$
+      return "KREIS"; //$NON-NLS-1$
+    if( key.startsWith( "TRA" ) ) //$NON-NLS-1$
+      return "TRAPEZ"; //$NON-NLS-1$
+    if( key.startsWith( "MAU" ) ) //$NON-NLS-1$
+      return "MAULPROFIL"; //$NON-NLS-1$
+    if( key.startsWith( "OK-W" ) ) //$NON-NLS-1$
+      return "OK-WEHR"; //$NON-NLS-1$
+    if( key.startsWith( "TRENNL" ) ) //$NON-NLS-1$
+      return "TRENNLINIE"; //$NON-NLS-1$
 
     return key.toUpperCase();
   }
@@ -180,7 +181,7 @@ public class PrfReader
     final StringTokenizer sT = (string == null) ? null : new StringTokenizer( string );
     final int count = (sT == null) ? -1 : sT.countTokens() - 1;
     if( (count < 0) || (count != Integer.parseInt( sT.nextToken() )) )
-      m_logger.log( Level.SEVERE, "Format der Zeile 14 Falsch" );
+      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.39") ); //$NON-NLS-1$
 
     final int[] counts = new int[count];
     for( int i = 0; i < count; i++ )
@@ -205,7 +206,7 @@ public class PrfReader
 
     if( !r.ready() )
     {
-      m_logger.log( Level.SEVERE, "Fehler beim öffnen der Profildatei." );
+      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.40") ); //$NON-NLS-1$
       throw new IOException();
     }
 
@@ -214,14 +215,14 @@ public class PrfReader
       final String line = r.readLine();
       if( line == null )
       {
-        m_logger.log( Level.SEVERE, "Header der Profildatei falsch." );
+        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.PrfReader.41") ); //$NON-NLS-1$
         break;
       }
 
       // Linie nach Daten und Text trennen (max 40 Zeichen Text)
       final String textString = line.substring( 0, Math.min( 40, line.length() ) );
       textString.trim();
-      final String dataString = line.length() > 40 ? line.substring( 40, line.length() ).trim() : "";
+      final String dataString = line.length() > 40 ? line.substring( 40, line.length() ).trim() : ""; //$NON-NLS-1$
       m_metaMap.put( i, new String[] { textString, dataString } );
 
     }

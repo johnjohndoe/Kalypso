@@ -54,6 +54,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents the contents of an wsp.cfg file
@@ -105,7 +106,7 @@ public class WspCfgBean
 
   public static WspCfgBean read( final File wspwinDir ) throws IOException, ParseException
   {
-    final File wspCfgFile = new File( WspWinHelper.getProfDir( wspwinDir ), "wsp.cfg" );
+    final File wspCfgFile = new File( WspWinHelper.getProfDir( wspwinDir ), "wsp.cfg" ); //$NON-NLS-1$
 
     LineNumberReader reader = null;
     try
@@ -117,7 +118,7 @@ public class WspCfgBean
 
       final String firstLine = reader.readLine();
       if( firstLine == null || firstLine.length() == 0 )
-        throw new ParseException( "First line of wsp.cfg is empty.", reader.getLineNumber() );
+        throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.1"), reader.getLineNumber() ); //$NON-NLS-1$
 
       // ignore the values, we read the count from the linecount
       // just parse the type
@@ -136,7 +137,7 @@ public class WspCfgBean
 
         final StringTokenizer tokenizer = new StringTokenizer( line );
         if( tokenizer.countTokens() != 6 )
-          throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
+          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.2") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
 
         try
         {
@@ -154,7 +155,7 @@ public class WspCfgBean
         catch( final NumberFormatException e )
         {
           e.printStackTrace();
-          throw new ParseException( "Wrong syntax in line: " + reader.getLineNumber(), reader.getLineNumber() );
+          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.3") + reader.getLineNumber(), reader.getLineNumber() ); //$NON-NLS-1$
         }
 
       }
@@ -169,7 +170,7 @@ public class WspCfgBean
 
   public static void write( final WspCfgBean wspcfg, final File wspCfgFile )
   {
-    throw new UnsupportedOperationException( "" + wspcfg + wspCfgFile );
+    throw new UnsupportedOperationException( "" + wspcfg + wspCfgFile ); //$NON-NLS-1$
   }
 
   /**
@@ -177,7 +178,7 @@ public class WspCfgBean
    */
   public ProfileBean[] readProfproj( final File wspwinDir ) throws IOException, ParseException
   {
-    final File profprojFile = new File( WspWinHelper.getProfDir( wspwinDir ), "profproj.txt" );
+    final File profprojFile = new File( WspWinHelper.getProfDir( wspwinDir ), "profproj.txt" ); //$NON-NLS-1$
 
     LineNumberReader reader = null;
     try
@@ -197,7 +198,7 @@ public class WspCfgBean
     }
     catch( final ParseException pe )
     {
-      final String msg = "Error in File:" + profprojFile.getAbsolutePath() + " \n" + pe.getLocalizedMessage();
+      final String msg = Messages.getString("org.kalypso.wspwin.core.WspCfgBean.6") + profprojFile.getAbsolutePath() + " \n" + pe.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
       final ParseException newPe = new ParseException( msg, pe.getErrorOffset() );
       newPe.setStackTrace( pe.getStackTrace() );
       throw newPe;
@@ -213,13 +214,13 @@ public class WspCfgBean
   {
     final String firstLine = reader.readLine();
     if( firstLine == null || firstLine.length() == 0 )
-      throw new ParseException( "First line of profproj.txt is empty.", reader.getLineNumber() );
+      throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.8"), reader.getLineNumber() ); //$NON-NLS-1$
 
     // ignore the values, we read the count from the linecount
     // just parse the type
     final StringTokenizer firstLineTokenizer = new StringTokenizer( firstLine );
     if( firstLineTokenizer.countTokens() < 2 )
-      throw new ParseException( "Syntax of first line ist wrong.", reader.getLineNumber() );
+      throw new ParseException( Messages.getString("org.kalypso.wspwin.core.WspCfgBean.9"), reader.getLineNumber() ); //$NON-NLS-1$
 
     final int[] counts = new int[2];
     counts[0] = Integer.parseInt( firstLineTokenizer.nextToken() );

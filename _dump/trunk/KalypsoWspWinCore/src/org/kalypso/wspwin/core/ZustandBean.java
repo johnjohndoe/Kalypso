@@ -114,31 +114,31 @@ public class ZustandBean
   {
     final String strFileName = getFileName();
     final String strBaseName = FileUtilities.nameWithoutExtension( strFileName );
-    final File qwtFile = new File( profDir, strBaseName + "." + suffix );
+    final File qwtFile = new File( profDir, strBaseName + "." + suffix ); //$NON-NLS-1$
     return qwtFile;
   }
 
   public RunOffEventBean[] readRunOffs( final File profDir ) throws ParseException, IOException
   {
-    final File qwtFile = getZustandFile( profDir, "qwt" );
+    final File qwtFile = getZustandFile( profDir, "qwt" ); //$NON-NLS-1$
     return RunOffEventBean.read( qwtFile );
   }
 
   public RunOffEventBean[] readWspFixes( final File profDir ) throws ParseException, IOException
   {
-    final File wsfFile = getZustandFile( profDir, "wsf" );
+    final File wsfFile = getZustandFile( profDir, "wsf" ); //$NON-NLS-1$
     return RunOffEventBean.read( wsfFile );
   }
 
   public LocalEnergyLossBean[] readLocalEnergyLosses( final File profDir ) throws ParseException, IOException
   {
-    final File lelFile = getZustandFile( profDir, "psi" );
+    final File lelFile = getZustandFile( profDir, "psi" ); //$NON-NLS-1$
     return LocalEnergyLossBean.read( lelFile );
   }
 
   public CalculationBean[] readCalculations( File profDir ) throws ParseException, IOException
   {
-    final File berFile = getZustandFile( profDir, "ber" );
+    final File berFile = getZustandFile( profDir, "ber" ); //$NON-NLS-1$
     return CalculationBean.readBerFile( berFile );
   }
 }

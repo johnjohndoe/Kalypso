@@ -49,6 +49,7 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.kalypso.wspwin.core.i18n.Messages;
 
 /**
  * Represents one line of a .ber file.
@@ -117,14 +118,14 @@ public class CalculationBean
         count++;
 
         if( line.length() < 60 )
-          throw new ParseException( "Line too short: " + line, count );
+          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.CalculationBean.0") + line, count ); //$NON-NLS-1$
 
         final String name = line.substring( 0, 60 ).trim();
 
         final StringTokenizer tokenizer = new StringTokenizer( line.substring( 60 ) );
 
         if( tokenizer.countTokens() != 3 )
-          throw new ParseException( "Syntax error: " + line, count );
+          throw new ParseException( Messages.getString("org.kalypso.wspwin.core.CalculationBean.1") + line, count ); //$NON-NLS-1$
 
         final double fromStation = Double.parseDouble( tokenizer.nextToken() );
         final double toStation = Double.parseDouble( tokenizer.nextToken() );
