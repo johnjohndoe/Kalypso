@@ -373,8 +373,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * Use this method to set a new map-file to this map-view.
    */
-  public synchronized void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
+  public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
+
     if( m_saving )
       return;
 
@@ -382,40 +383,43 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     try
     {
-      // prepare for exception
-      setMapModell( null, null );
-
-      /* "Loading map..." */
-      showBusy( true );
-
-      if( m_mapPanel != null )
+      synchronized( this )
       {
-        m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
-      }//$NON-NLS-1$;
+        // prepare for exception
+        setMapModell( null, null );
 
-      final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
-      monitor.worked( 1 );
+        /* "Loading map..." */
+        showBusy( true );
 
-      final URL context;
-      final IProject project;
-      if( storage instanceof IFile )
-      {
-        setFile( (IFile) storage );
-        context = ResourceUtilities.createURL( getFile() );
-        project = ((IFile) storage).getProject();
-      }
-      else
-      {
-        context = null;
-        project = null;
-      }
+        if( m_mapPanel != null )
+        {
+          m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
+        }//$NON-NLS-1$;
 
-      if( !m_disposed )
-      {
-        final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
-        mapModell.createFromTemplate( gisview );
-        setMapModell( mapModell, env );
+        final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
+        monitor.worked( 1 );
+
+        final URL context;
+        final IProject project;
+        if( storage instanceof IFile )
+        {
+          setFile( (IFile) storage );
+          context = ResourceUtilities.createURL( getFile() );
+          project = ((IFile) storage).getProject();
+        }
+        else
+        {
+          context = null;
+          project = null;
+        }
+
+        if( !m_disposed )
+        {
+          final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
+          final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
+          mapModell.createFromTemplate( gisview );
+          setMapModell( mapModell, env );
+        }
       }
     }
     catch( final Throwable e )
@@ -432,6 +436,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       throw new CoreException( status );
     }
+
     finally
     {
       monitor.done();
