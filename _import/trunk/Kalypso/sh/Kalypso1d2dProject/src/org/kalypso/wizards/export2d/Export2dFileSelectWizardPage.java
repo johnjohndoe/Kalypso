@@ -55,8 +55,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.wizards.i18n.Messages;
 
 public class Export2dFileSelectWizardPage extends WizardPage
 {

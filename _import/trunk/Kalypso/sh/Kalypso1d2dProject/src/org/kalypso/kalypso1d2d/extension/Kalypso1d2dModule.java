@@ -19,7 +19,7 @@ import org.kalypso.afgui.extension.IProjectHandler;
 import org.kalypso.afgui.extension.SzenarioProjectOpenAction;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.i18n.Messages;
+import org.kalypso.kalypso1d2d.extension.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;

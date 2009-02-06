@@ -74,7 +74,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -84,6 +83,7 @@ import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 

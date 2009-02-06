@@ -85,8 +85,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.FCVArrayDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
-import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 
 /**

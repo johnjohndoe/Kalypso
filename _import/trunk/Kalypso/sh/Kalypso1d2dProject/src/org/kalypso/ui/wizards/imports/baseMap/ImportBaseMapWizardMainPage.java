@@ -46,8 +46,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizards.i18n.Messages;
 
 
 /**

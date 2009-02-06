@@ -72,7 +72,6 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
-import org.kalypso.kalypso1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -90,6 +89,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.file.FileItem;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 

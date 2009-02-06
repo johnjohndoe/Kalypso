@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.kalypso1d2d.i18n.Messages;
+import org.kalypso.ui.wizards.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
