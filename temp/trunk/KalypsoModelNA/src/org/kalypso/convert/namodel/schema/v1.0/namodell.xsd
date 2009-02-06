@@ -278,6 +278,14 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="riverCode" type="string" />
+					<element name="riverKilometer" >
+						<simpleType id="nonNegativeDouble">
+							<restriction base="double">
+								<minInclusive value="0.0"></minInclusive>
+							</restriction>
+						</simpleType>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

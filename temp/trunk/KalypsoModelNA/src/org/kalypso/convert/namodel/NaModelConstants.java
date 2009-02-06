@@ -242,6 +242,10 @@ public interface NaModelConstants
 
   public static final QName NODE_PEGEL_ZR_PROP = new QName( NS_NAMODELL, "pegelZR" );
 
+  public static final QName NODE_RIVER_CODE_PROP = new QName( NS_NAMODELL, "riverCode" );
+
+  public static final QName NODE_RIVER_KILOMETER_PROP = new QName( NS_NAMODELL, "riverKilometer" );
+
   // catchments
   public static final QName CATCHMENT_ELEMENT_FT = new QName( NS_NAMODELL, "Catchment" );
 
