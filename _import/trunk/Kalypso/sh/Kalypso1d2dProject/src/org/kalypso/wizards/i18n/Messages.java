@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.i18n;
+package org.kalypso.wizards.i18n;
 
 import java.util.IllegalFormatException;
 import java.util.MissingResourceException;
@@ -46,10 +46,11 @@ import java.util.ResourceBundle;
 
 /**
  * @author kimwerner
+ *
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.wizards.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
@@ -67,9 +68,7 @@ public class Messages
     {
       return '!' + key + '!';
     }
-  }
-
-  public static String getFormatString( final String key, Object... args )
+  }public static String getFormatString( final String key, Object... args )
   {
     String formatStr = ""; //$NON-NLS-1$
     try
