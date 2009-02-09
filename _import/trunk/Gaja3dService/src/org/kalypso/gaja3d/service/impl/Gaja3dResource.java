@@ -1,13 +1,12 @@
 package org.kalypso.gaja3d.service.impl;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
 import javax.xml.namespace.QName;
-
-import net.opengeospatial.ows.stubs.CodeType;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.message.MessageElement;
@@ -29,6 +28,9 @@ import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.CreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.DetectBreaklinesStrategy;
+import org.kalypso.gaja3d.service.internal.strategy.DummyCreateGridStrategy;
+import org.kalypso.gaja3d.service.internal.strategy.DummyCreateTinStrategy;
+import org.kalypso.gaja3d.service.internal.strategy.DummyDetectBreaklinesStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSDetectBreaklinesStrategy;
@@ -66,13 +68,25 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 	private Calendar terminationTime;
 
 	/* Strategy for grid creation */
-	private CreateGridStrategy createGridStrategy = new WPSCreateGridStrategy();
+	private final CreateGridStrategy createGridStrategy;
 
 	/* Strategy for breakline detection */
-	private DetectBreaklinesStrategy detectBreaklinesStrategy = new WPSDetectBreaklinesStrategy();
+	private final DetectBreaklinesStrategy detectBreaklinesStrategy;
 
 	/* Strategy for tin creation */
-	private CreateTinStrategy createTinStrategy = new WPSCreateTinStrategy();
+	private final CreateTinStrategy createTinStrategy;
+
+	public Gaja3dResource() {
+		if ("true".equals(System.getProperty("gaja3d.dummy"))) {
+			createGridStrategy = new DummyCreateGridStrategy();
+			detectBreaklinesStrategy = new DummyDetectBreaklinesStrategy();
+			createTinStrategy = new DummyCreateTinStrategy();
+		} else {
+			createGridStrategy = new WPSCreateGridStrategy();
+			detectBreaklinesStrategy = new WPSDetectBreaklinesStrategy();
+			createTinStrategy = new WPSCreateTinStrategy();
+		}
+	}
 
 	/* Initializes RPs and returns a unique identifier for this resource */
 	public Object initialize() {
@@ -286,16 +300,42 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 			final URL demGridLocation = new URL(demGridURI.toString());
 			final URL breaklinesLocation = detectBreaklinesStrategy
 					.detectBreaklines(boundaryLocation, demGridLocation);
+			// final File shpTmp = FileUtilities.createNewTempDir("shptmp");
+			// ZipUtilities.unzip(breaklinesLocation.openStream(), shpTmp);
+			// final File[] files = shpTmp.listFiles((FileFilter)
+			// FileFilterUtils
+			// .suffixFileFilter(".shp"));
+			// final File breaklinesGml = new File(shpTmp, "breaklines.gml");
+			// if (files.length > 0) {
+			// // process first file in list. this may change
+			// final File file = files[0];
+			// final String absolutePath = file.getAbsolutePath();
+			// final String shapeBase = FileUtilities
+			// .nameWithoutExtension(absolutePath);
+			// final String crs = KalypsoDeegreePlugin.getDefault()
+			// .getCoordinateSystem();
+			// final GMLWorkspace shpWorkspace = ShapeSerializer.deserialize(
+			// shapeBase, crs);
+			// GmlSerializer.serializeWorkspace(breaklinesGml, shpWorkspace,
+			// "UTF-8");
+			// }
 			final Breaklines breaklines = new Breaklines();
 			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
 					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
 			breaklines.setHref(new URI(breaklinesLocation.toExternalForm()));
+			// breaklines.setHref(new
+			// URI(breaklinesGml.toURI().toASCIIString()));
 			setBreaklines(breaklines);
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
 		} catch (final MalformedURLException e) {
 			throw AxisFault.makeFault(e);
+		} catch (final IOException e) {
+			throw AxisFault.makeFault(e);
 		}
+		// catch (GmlSerializeException e) {
+		// throw AxisFault.makeFault(e);
+		// }
 	}
 
 	public void createTin() throws RemoteException {
@@ -394,11 +434,10 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 			return;
 
 		final Identifier valueIdentifier = newValue.getIdentifier();
-		final CodeType codeType = valueIdentifier.get_value();
-		final URI namespaceURI = codeType.getCodeSpace();
+		final URI namespaceURI = valueIdentifier.getCodeSpace();
 		final boolean qNamesEqual = namespaceURI.toString().equals(
 				qName.getNamespaceURI());
-		final String localPart = codeType.get_value();
+		final String localPart = valueIdentifier.get_value();
 		final boolean localPartEqual = localPart.equals(qName.getLocalPart());
 		if (!(localPartEqual && qNamesEqual)) {
 			throw new IllegalArgumentException(

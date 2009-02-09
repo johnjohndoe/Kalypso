@@ -25,15 +25,16 @@
 	============================================================-->
 <element name="Identifier">
 	<complexType>
-		<simpleContent>
+		<complexContent>
 			<restriction base="ows:CodeType">
+				<attribute name="codeSpace" type="anyURI" fixed="http://org.kalypso.gaja3d.service"/>
 				<enumeration value="Boundary"/>
 				<enumeration value="DemPoints"/>
 				<enumeration value="DemGrid"/>
 				<enumeration value="Breaklines"/>
 				<enumeration value="ModelTin"/>
 			</restriction>
-		</simpleContent>
+		</complexContent>
 	</complexType>
 </element>
 

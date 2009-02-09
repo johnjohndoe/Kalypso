@@ -69,18 +69,20 @@ public class Client {
 	private static final boolean SAVE_EPR = true;
 	private static final boolean USE_SAVED_EPR = false;
 
-	private static final String BOUNDARY_FILENAME = "resources/boundary.zip";
-	private static final String DEMPOINTS_FILENAME = "resources/allpoints.zip";
+	public static final String BOUNDARY_FILENAME = "resources/boundary.zip";
+	public static final String DEMPOINTS_FILENAME = "resources/allpoints.zip";
 
 	/*
 	 * for skipping grid creation
 	 */
-	private static final String DEMGRID_FILENAME = "resources/DemGrid.asc";
+	public static final String DEMGRID_FILENAME = "resources/DemGrid.asc";
 
 	/*
 	 * for skipping breakline creation
 	 */
-	private static final String BREAKLINES_FILENAME = "resources/breaklines.zip";
+	public static final String BREAKLINES_FILENAME = "resources/breaklines.zip";
+
+	public static final String MODEL_TIN_FILENAME = "resources/ModelTin.zip";
 
 	public static void main(String[] args) throws RemoteException,
 			ServiceException {
@@ -133,31 +135,29 @@ public class Client {
 		setSecurity(gaja3d);
 
 		// call GetCapabilities
-		final Capabilities capabilities = callGetCapabilities(gaja3d);
+		// final Capabilities capabilities = callGetCapabilities(gaja3d);
 		// call DescribeProcess for all offered processes
-		callDescribeProcess(gaja3d, capabilities);
+		// callDescribeProcess(gaja3d, capabilities);
 
-		/*
-		 * // set Boundary RP final SetResourceProperties_Element
-		 * setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
-		 * gaja3d.setResourceProperties(setResourcePropertiesRequest);
-		 * printResourceProperties(gaja3d);
-		 * 
-		 * // call Execute_createGrid final CreateGridParametersType
-		 * execute_createGrid = buildExecuteCreateGrid();
-		 * gaja3d.execute_createGrid(execute_createGrid);
-		 * printResourceProperties(gaja3d);
-		 * 
-		 * // call Execute_detectBreaklines final DetectBreaklinesParametersType
-		 * detectBreaklinesParameters = buildExecuteDetectBreaklines();
-		 * gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-		 * printResourceProperties(gaja3d);
-		 * 
-		 * // call Execute_createTin final CreateTinParametersType
-		 * createTinParameters = buildExecuteCreateTin();
-		 * gaja3d.execute_createTin(createTinParameters);
-		 * printResourceProperties(gaja3d);
-		 */
+		// set Boundary RP
+		final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
+		gaja3d.setResourceProperties(setResourcePropertiesRequest);
+		printResourceProperties(gaja3d);
+
+		// call Execute_createGrid
+		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
+		gaja3d.execute_createGrid(execute_createGrid);
+		printResourceProperties(gaja3d);
+
+		// call Execute_detectBreaklines
+		final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
+		gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+		printResourceProperties(gaja3d);
+
+		// call Execute_createTin
+		final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
+		gaja3d.execute_createTin(createTinParameters);
+		printResourceProperties(gaja3d);
 
 		if (!SAVE_EPR) {
 			// call Destroy

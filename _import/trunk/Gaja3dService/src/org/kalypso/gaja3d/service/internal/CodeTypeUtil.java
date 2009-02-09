@@ -12,14 +12,13 @@ public class CodeTypeUtil {
 
 	public static Identifier fillCodeType(final Identifier identifier,
 			final QName qName) {
-		final CodeType codeType = new CodeType();
-		codeType.set_value(qName.getLocalPart());
+		identifier.set_value(qName.getLocalPart());
 		try {
-			codeType.setCodeSpace(new URI(qName.getNamespaceURI()));
+			final URI codeSpace = new URI(qName.getNamespaceURI());
+			identifier.setCodeSpace(codeSpace);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-		identifier.set_value(codeType);
 		return identifier;
 	}
 
