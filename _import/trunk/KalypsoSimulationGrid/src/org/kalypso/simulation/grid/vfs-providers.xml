@@ -134,5 +134,6 @@
     <mime-type-map mime-type="message/rfc822" scheme="mime"/>
     <provider class-name="org.apache.commons.vfs.provider.gsiftp.GsiFtpFileProvider">
         <scheme name="gsiftp"/>
+        <scheme name="gridftp"/>
     </provider>
 </providers>

@@ -51,18 +51,20 @@ import org.kalypso.commons.process.IProcessFactory;
  * 
  * @author Gernot Belger
  */
-public class GridProcessFactory implements IProcessFactory {
-	public static final String ID = "org.kalypso.simulation.gridprocess";
-	public static final String GRID_SERVER_URL = "gramd1.gridlab.uni-hannover.de";
-	//public static final String GRID_SERVER_URL = "gt4-gdi.sugi.uni-kl.de";
+public class GridProcessFactory implements IProcessFactory
+{
+  public static final String ID = "org.kalypso.simulation.gridprocess";
 
-	/**
-	 * @see org.kalypso.commons.process.IProcessFactory#newProcess(java.io.File,
-	 *      java.net.URL, java.lang.String[])
-	 */
-	@Override
-	public IProcess newProcess(final File workingDir, final URL exeUrl,
-			final String[] commandlineArgs) {
-		return new GridProcess(workingDir, exeUrl, commandlineArgs);
-	}
+  public static final String GRID_SERVER_URL = "gramd1.gridlab.uni-hannover.de";
+
+  // public static final String GRID_SERVER_URL = "gt4-gdi.sugi.uni-kl.de";
+
+  /**
+   * @see org.kalypso.commons.process.IProcessFactory#newProcess(java.io.File, java.net.URL, java.lang.String[])
+   */
+  @Override
+  public IProcess newProcess( final File workingDir, final URL exeUrl, final String[] commandlineArgs )
+  {
+    return new SimpleGridProcess( workingDir, exeUrl, commandlineArgs );
+  }
 }
