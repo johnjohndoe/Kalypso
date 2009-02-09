@@ -216,7 +216,7 @@ public class Control1D2DConverter
 
     // C1
     // m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
-    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 1 ); //$NON-NLS-1$
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
