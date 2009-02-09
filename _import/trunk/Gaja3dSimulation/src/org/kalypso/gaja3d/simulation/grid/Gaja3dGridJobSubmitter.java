@@ -72,8 +72,8 @@ import org.kalypso.simulation.core.NullSimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
-import org.kalypso.simulation.grid.GridProcess;
 import org.kalypso.simulation.grid.GridProcessFactory;
+import org.kalypso.simulation.grid.SimpleGridProcess;
 
 /**
  * Submits a Gaja3d job to the grid using ISimulation inputs/outputs
@@ -188,10 +188,35 @@ public class Gaja3dGridJobSubmitter
     try
     {
       final String processFactoryId = GridProcessFactory.ID;
-      final GridProcess process = (GridProcess) KalypsoCommonsExtensions.createProcess( processFactoryId, tmpdir, EXEC_SCRIPT_URL, arguments.toArray( new String[arguments.size()] ) );
+      final SimpleGridProcess process = (SimpleGridProcess) KalypsoCommonsExtensions.createProcess( processFactoryId, tmpdir, EXEC_SCRIPT_URL, arguments.toArray( new String[arguments.size()] ) );
       process.setProgressMonitor( new SimulationMonitorAdaptor( monitor ) );
-      process.addExternalInputs( externalInputs );
+      for( URL einput : externalInputs )
+      {
+        process.addInput( einput );
+      }
       process.environment().put( "OMP_NUM_THREADS", "4" );
+      
+      // add required output files
+      final List<DataType> output = modelSpec.getOutput();
+      for( final DataType data : output )
+      {
+        final String id = data.getId();
+        // only URI is supported for outputs at the time
+        if( data.getType().equals( QNAME_ANY_URI ) )
+        {
+          // stage out file
+          final String outputName = outputNames.get( id );
+          final String source;
+          if( outputName != null )
+            source = outputName;
+          else
+            source = id;
+          process.addOutput(source);
+          final File outputLocation = new File( tmpdir, source );
+          resultEater.addResult( id, outputLocation );
+        }
+        // TODO: support literal outputs
+      }
 
       stdOut = new BufferedOutputStream( new FileOutputStream( stdoutFile ) );
       stdErr = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
@@ -229,7 +254,9 @@ public class Gaja3dGridJobSubmitter
       String errString = "Process could not be started.";
       try
       {
-        errString = errString + "\n" + IOUtils.toString( new FileReader( stderrFile ) );
+        final FileReader input2 = new FileReader( stderrFile );
+        errString = errString + "\n" + IOUtils.toString( input2 );
+        input2.close();
       }
       catch( final IOException e )
       {
