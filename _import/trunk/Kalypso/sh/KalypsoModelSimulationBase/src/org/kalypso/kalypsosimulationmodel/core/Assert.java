@@ -5,11 +5,12 @@ import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.Util;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides assertion methods
- * 
+ *
  * @author Patrice Congo
  */
 public class Assert
@@ -22,7 +23,7 @@ public class Assert
   /**
    * Assert the given object for null value. This method throws concequently an illegal argument exception if the passed
    * object is null
-   * 
+   *
    * @param obj
    *            the object to be asserted
    * @param message
@@ -30,7 +31,7 @@ public class Assert
    * @throws IllegalArgumentException
    *             if the passed object is null
    */
-  public static final void throwIAEOnNull( Object obj, String message ) throws IllegalArgumentException
+  public static final void throwIAEOnNull( final Object obj, final String message ) throws IllegalArgumentException
   {
     if( obj == null )
     {
@@ -41,7 +42,7 @@ public class Assert
   /**
    * Assert the given object for null value. This method throws concequently an illegal argument exception if the passed
    * object is null
-   * 
+   *
    * @param obj
    *            the object to be asserted
    * @param message
@@ -49,11 +50,11 @@ public class Assert
    * @throws IllegalArgumentException
    *             if the passed object is null
    */
-  public static final void throwIAEOnNullParam( Object param, String paramName ) throws IllegalArgumentException
+  public static final void throwIAEOnNullParam( final Object param, final String paramName ) throws IllegalArgumentException
   {
     if( param == null )
     {
-      StringBuffer buf = new StringBuffer( 128 );
+      final StringBuffer buf = new StringBuffer( 128 );
       buf.append( Messages.getString( "Assert.0" ) ); //$NON-NLS-1$
       buf.append( paramName );
       throw new IllegalArgumentException( buf.toString() );
@@ -63,7 +64,7 @@ public class Assert
   /**
    * Assert the given object for null value. This method throws concequently an illegal argument exception if the passed
    * object is null
-   * 
+   *
    * @param obj
    *            the object to be asserted
    * @param message
@@ -71,37 +72,37 @@ public class Assert
    * @throws IllegalArgumentException
    *             if the passed object is null
    */
-  public static final void throwIAEOnCollectionNullOrHasNullElements( Collection param, String paramName ) throws IllegalArgumentException
+  public static final void throwIAEOnCollectionNullOrHasNullElements( final Collection param, final String paramName ) throws IllegalArgumentException
   {
     if( param == null )
     {
-      StringBuffer buf = new StringBuffer( 128 );
+      final StringBuffer buf = new StringBuffer( 128 );
       buf.append( Messages.getString( "Assert.1" ) ); //$NON-NLS-1$
       buf.append( paramName );
       throw new IllegalArgumentException( buf.toString() );
     }
 
-    for( Object ele : param )
+    for( final Object ele : param )
     {
       if( ele == null )
       {
-        String message = String.format( Messages.getString( "Assert.2" ) + "\n\tparam name:%s \n\tparam value=", paramName, param ); //$NON-NLS-1$ //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Assert.2" ) + "\n\tparam name:%s \n\tparam value=", paramName, param ); //$NON-NLS-1$
         throw new IllegalArgumentException( message );
       }
     }
   }
 
-  public static final void throwIAEOnCollectionNullOrEmpty( Collection param, String paramName ) throws IllegalArgumentException
+  public static final void throwIAEOnCollectionNullOrEmpty( final Collection param, final String paramName ) throws IllegalArgumentException
   {
     if( param == null )
     {
-      String message = String.format( "Parameter must not be null; \n\tparam name:%s", paramName ); //$NON-NLS-1$
+      final String message = String.format( "Parameter must not be null; \n\tparam name:%s", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 
     if( param.isEmpty() )
     {
-      String message = String.format( "Parameter must not be empty; \n\tparam name:%s", paramName ); //$NON-NLS-1$
+      final String message = String.format( "Parameter must not be empty; \n\tparam name:%s", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 
@@ -135,7 +136,7 @@ public class Assert
     return false;
   }
 
-  public static final void throwIAEOnLessThan0( double d, String message ) throws IllegalArgumentException
+  public static final void throwIAEOnLessThan0( final double d, String message ) throws IllegalArgumentException
   {
     if( d < 0 )
     {
@@ -147,7 +148,7 @@ public class Assert
     }
   }
 
-  public static final void throwIAEOnNotDirectInstanceOf( Feature feature, QName expectedType ) throws IllegalArgumentException
+  public static final void throwIAEOnNotDirectInstanceOf( final Feature feature, final QName expectedType ) throws IllegalArgumentException
   {
     if( !Util.directInstanceOf( feature, expectedType ) )
     {
@@ -156,7 +157,7 @@ public class Assert
     }
   }
 
-  public static final void throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( File file ) throws IllegalArgumentException
+  public static final void throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( final File file ) throws IllegalArgumentException
   {
     if( file == null )
     {

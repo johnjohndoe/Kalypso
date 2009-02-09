@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -76,7 +77,6 @@ import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -88,7 +88,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- * 
+ *
  * @author Gernot Belger
  */
 public class ResultManager implements ISimulation1D2DConstants
@@ -119,13 +119,13 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final File m_resultDir;
 
-  private Map<Date, File> m_dateFileMap;  
+  private Map<Date, File> m_dateFileMap;
 
   public ResultManager( final File resultDir, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
     m_resultDir = resultDir;
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
-    m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();    
+    m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
     m_flowModel = caseDataProvider.getModel( IFlowRelationshipModel.class );
     m_discModel = caseDataProvider.getModel( IFEDiscretisationModel1d2d.class );
     m_scenarioMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
@@ -146,10 +146,10 @@ public class ResultManager implements ISimulation1D2DConstants
     try
     {
       m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() );
-      
+
       if( m_stepsToProcess == null )
         return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
-      
+
       /* Process all remaining .2d files. Now including min and max files */
       final File[] existing2dFiles = m_stepsToProcess;
 
@@ -303,7 +303,7 @@ public class ResultManager implements ISimulation1D2DConstants
     return m_geoLog;
   }
 
-  public void setStepsToProcess( Date[] dates, final IControlModel1D2D controlModel )
+  public void setStepsToProcess( final Date[] dates, final IControlModel1D2D controlModel )
   {
     final List<File> fileList = new ArrayList<File>();
     if( m_dateFileMap == null )

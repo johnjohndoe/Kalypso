@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;

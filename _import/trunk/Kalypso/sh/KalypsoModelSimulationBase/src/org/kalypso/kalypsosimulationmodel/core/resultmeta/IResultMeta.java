@@ -44,13 +44,13 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public interface IResultMeta extends IModel
 {

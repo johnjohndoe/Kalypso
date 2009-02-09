@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -17,8 +17,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
  * Those classes kann be used as java abtract for the subtituable of wb1d2d:FE1D2D_2DElement:
  * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
- * 
- * 
+ *
+ *
  * @author Gernot Belger, Patrice Congo
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
@@ -64,7 +64,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
    * feaure and linked to it by the property of the type specified by the argument propQName. The Type of the feature is
    * also specified by the given element. This constructor is typicaly used to construct feature like
    * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
-   * 
+   *
    * @param parentFeature
    *            the parent feature for the new wbr:Roughness class
    * @param propQName

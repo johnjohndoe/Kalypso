@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -25,12 +25,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * TODO: also make interface for this element
- * 
+ *
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
  * Those classes kann be used as java abtract for the subtituable of wb1d2d:FE1D2D_2DElement:
  * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
- * 
- * 
+ *
+ *
  * @author Gernot Belger, Patrice Congo
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
@@ -100,7 +100,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
    * feaure and linked to it by the property of the type specified by the argument propQName. The Type of the feature is
    * also specified by the given element. This constructor is typicaly used to construct feature like
    * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
-   * 
+   *
    * @param parentFeature
    *            the parent feature for the new wbr:Roughness class
    * @param propQName
@@ -197,8 +197,8 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
 //    if(surface==null)
 //      System.out.println("Geometry cannot be calculated for "+getGmlID());
     return surface;
-    
-//    
+
+//
 //    // TODO Patrice use ModelGeometryBuilder createSurface
 //    final List<IFE1D2DNode> nodes = getNodes();
 //    final int SIZE = nodes.size();
@@ -291,7 +291,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
 
   private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, final List<IFE1D2DNode> excludeNodes )
   {
-    for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
+    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
     {
       final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes.get( 0 );

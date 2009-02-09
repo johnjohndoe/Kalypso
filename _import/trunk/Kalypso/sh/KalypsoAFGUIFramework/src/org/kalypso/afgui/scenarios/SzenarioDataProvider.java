@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.model.ICommandPoster;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -41,8 +43,6 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,7 +58,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
  * always at the same place.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
@@ -342,7 +342,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Reloads all models.
-   * 
+   *
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
   public void reloadModel( )
@@ -365,7 +365,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Resets the pool-key for the given folder.
-   * 
+   *
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */

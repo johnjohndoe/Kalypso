@@ -44,8 +44,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.osgi.framework.Bundle;
 
 /**

@@ -45,20 +45,20 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public abstract class ResultMeta extends UnversionedModel implements IResultMeta
 {
   private final IFeatureWrapperCollection<IResultMeta> m_children = new FeatureWrapperCollection<IResultMeta>( getFeature(), IResultMeta.class, QNAME_PROP_CHILDREN );
 
-  public ResultMeta( Feature featureToBind, QName qnameToBind )
+  public ResultMeta( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
   }
@@ -118,7 +118,7 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setStatus(org.eclipse.core.runtime.IStatus)
    */
-  public void setStatus( IStatus status )
+  public void setStatus( final IStatus status )
   {
     if( status instanceof org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus )
       getFeature().setProperty( QNAME_PROP_STATUS, ((org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus) status).getFeature() );
@@ -148,9 +148,9 @@ public abstract class ResultMeta extends UnversionedModel implements IResultMeta
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#deleteChild(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
    */
-  public void removeChild( IResultMeta result )
+  public void removeChild( final IResultMeta result )
   {
-    IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
     if( children != null )
       children.remove( result );
   }

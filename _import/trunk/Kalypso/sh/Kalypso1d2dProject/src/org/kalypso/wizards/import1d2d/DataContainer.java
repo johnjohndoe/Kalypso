@@ -4,10 +4,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 
 /**
@@ -26,12 +26,12 @@ public class DataContainer
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
-  public final void setInputFile( String inputFile )
+  public final void setInputFile( final String inputFile )
   {
     this.m_inputFile = inputFile;
   }
 
-  public final void setCoordinateSystem( String coordinateSystem )
+  public final void setCoordinateSystem( final String coordinateSystem )
   {
     this.m_coordinateSystem = coordinateSystem;
   }
@@ -47,14 +47,14 @@ public class DataContainer
     {
       return new URL( "file:" + m_inputFile ); //$NON-NLS-1$
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
     }
     return null;
   }
 
-  public String getCoordinateSystem( boolean getDefaultIfNull )
+  public String getCoordinateSystem( final boolean getDefaultIfNull )
   {
     if( m_coordinateSystem == null && getDefaultIfNull )
       return m_defaultCoordinateSystem;

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -60,7 +61,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollec
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -78,9 +78,9 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
@@ -97,21 +97,21 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * the discretisation model holding the calculation unit
    */
-  private IFEDiscretisationModel1d2d m_model1d2d;
+  private final IFEDiscretisationModel1d2d m_model1d2d;
 
   /**
    * the name the calculation unit will be assigned to
    */
-  private String m_calcUnitName;
+  private final String m_calcUnitName;
 
   /**
    * the description for the calculation unit
    */
-  private String m_calcUnitDescription;
+  private final String m_calcUnitDescription;
 
   /**
    * Creates a Calculation unit of the given q-name
-   * 
+   *
    * @param cuFeatureQName
    *            the q-name of the calculation unit to create
    * @param model1d2d
@@ -183,7 +183,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       createControlModel();
       fireProcessChanges( m_calculationUnit, true );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw e;
@@ -192,13 +192,13 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   }
 
   /**
-   * 
+   *
    * @param calculationUnit
    *            the added or removed calculation unit
    * @param added
    *            true if the calculation unit was added false otherwise
    */
-  private final void fireProcessChanges( final ICalculationUnit calculationUnit, boolean added )
+  private final void fireProcessChanges( final ICalculationUnit calculationUnit, final boolean added )
   {
     final int changedType;
     if( added )
@@ -226,7 +226,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
     ce.remove( m_calculationUnit );
     final ICalculationUnit deletedCreatedCU = m_calculationUnit;
     m_calculationUnit = null;
@@ -298,9 +298,9 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           /**
            * <om:observedProperty xmlns:om="http://www.opengis.net/om"
            * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           * 
-           * 
-           * 
+           *
+           *
+           *
            * IPhenomenon phenomenon = new
            * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
            * "", ""); obs.setPhenomenon( phenomenon );

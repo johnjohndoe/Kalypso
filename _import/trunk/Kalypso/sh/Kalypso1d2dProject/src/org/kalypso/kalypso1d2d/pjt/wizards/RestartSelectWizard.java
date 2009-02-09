@@ -55,6 +55,8 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.model.ICommandPoster;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
@@ -65,8 +67,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
@@ -152,13 +152,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       {
         if( calcUnitChild instanceof IStepResultMeta )
         {
-          IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
-          IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
-          for( IResultMeta resultMeta : children )
+          final IStepResultMeta stepResult = (IStepResultMeta) calcUnitChild;
+          final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+          for( final IResultMeta resultMeta : children )
           {
             if( resultMeta instanceof IDocumentResultMeta )
             {
-              IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+              final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
 
               if( docResult.getDocumentType().equals( IDocumentResultMeta.DOCUMENTTYPE.nodes ) )
               {
@@ -199,13 +199,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         restartInfo.setStepResultMetaID( result.getGmlID() );
 
         // TODO: implement accessing zip file!
-        IFeatureWrapperCollection<IResultMeta> children = result.getChildren();
+        final IFeatureWrapperCollection<IResultMeta> children = result.getChildren();
 
-        for( IResultMeta resultMeta : children )
+        for( final IResultMeta resultMeta : children )
         {
           if( resultMeta instanceof IDocumentResultMeta )
           {
-            IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            final IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
             if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.nodes )
               restartInfo.setRestartFilePath( docResult.getFullPath().toPortableString() );
           }

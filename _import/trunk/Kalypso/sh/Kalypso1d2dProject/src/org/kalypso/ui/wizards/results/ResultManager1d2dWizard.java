@@ -49,11 +49,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -66,7 +66,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Wizard to manage result data for Kalypso 1D/2D.
- * 
+ *
  * @author Thomas Jung
  */
 public class ResultManager1d2dWizard extends Wizard implements IKalypsoDataImportWizard

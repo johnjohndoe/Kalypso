@@ -71,13 +71,13 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -94,7 +94,7 @@ public class AssignNodeElevationFaceComponent
 {
   /**
    * @author Thomas Jung
-   * 
+   *
    */
   private final class ICellModifierImplementation implements ICellModifier
   {
@@ -105,7 +105,7 @@ public class AssignNodeElevationFaceComponent
       return property.equals( properties[0] ) || property.equals( properties[1] );
     }
 
-    public Object getValue( Object element, String property )
+    public Object getValue( final Object element, final String property )
     {
       if( property.equals( m_nodeElevationViewer.getColumnProperties()[1] ) )
         return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
@@ -115,7 +115,7 @@ public class AssignNodeElevationFaceComponent
         return null;
     }
 
-    public void modify( Object element, String property, Object value )
+    public void modify( final Object element, final String property, final Object value )
     {
       final IFE1D2DNode node;
       if( element instanceof TableItem )
@@ -142,7 +142,7 @@ public class AssignNodeElevationFaceComponent
           newElevation = Double.parseDouble( (String) value );
 
         }
-        catch( Throwable th )
+        catch( final Throwable th )
         {
           // TODO Patrice show the user a message
           th.printStackTrace();
@@ -162,12 +162,12 @@ public class AssignNodeElevationFaceComponent
           {
             try
             {
-              IMapPanel mapPanel = m_dataModel.getMapPanel();
+              final IMapPanel mapPanel = m_dataModel.getMapPanel();
               mapPanel.invalidateMap();
               m_nodeElevationViewer.refresh( node, true );
 
             }
-            catch( Throwable th )
+            catch( final Throwable th )
             {
               th.printStackTrace();
             }
@@ -186,11 +186,11 @@ public class AssignNodeElevationFaceComponent
             super.process();
 
             // get notification fired for the nodes
-            FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( workspace, model1d2d.getFeature(), new Feature[] { getMovedNode().getFeature(),
+            final FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( workspace, model1d2d.getFeature(), new Feature[] { getMovedNode().getFeature(),
                 model1d2d.getFeature() },// changedFeaturesArray,
             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
             workspace.fireModellEvent( modellEvent );
-            Display display = m_table.getDisplay();
+            final Display display = m_table.getDisplay();
             display.asyncExec( updateTable );
           }
         };
@@ -198,7 +198,7 @@ public class AssignNodeElevationFaceComponent
         {
           workspace.postCommand( command );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -221,7 +221,7 @@ public class AssignNodeElevationFaceComponent
               m_nodeElevationViewer.refresh( node, true );
 
             }
-            catch( Throwable th )
+            catch( final Throwable th )
             {
               th.printStackTrace();
             }
@@ -238,7 +238,7 @@ public class AssignNodeElevationFaceComponent
           public void process( ) throws Exception
           {
             super.process();
-            Display display = m_table.getDisplay();
+            final Display display = m_table.getDisplay();
             display.asyncExec( updateTable );
           }
         };
@@ -246,7 +246,7 @@ public class AssignNodeElevationFaceComponent
         {
           workspace.postCommand( cmd );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -273,15 +273,15 @@ public class AssignNodeElevationFaceComponent
    */
   private final ISelectionChangedListener nodeSelectionListener = new ISelectionChangedListener()
   {
-    public void selectionChanged( SelectionChangedEvent event )
+    public void selectionChanged( final SelectionChangedEvent event )
     {
-      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+      final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
       m_selectionNodeList.clear();
-      List tableSelection = selection.toList();
+      final List tableSelection = selection.toList();
       m_selectionNodeList.addAll( tableSelection );
 
       m_dataModel.setSelectedNodeList( m_selectionNodeList );
-      IMapPanel mapPanel = m_dataModel.getMapPanel();
+      final IMapPanel mapPanel = m_dataModel.getMapPanel();
       if( mapPanel != null )
         mapPanel.repaintMap();
     }
@@ -326,14 +326,14 @@ public class AssignNodeElevationFaceComponent
   private final ICellEditorValidator doubleValidator = new ICellEditorValidator()
   {
 
-    public String isValid( Object value )
+    public String isValid( final Object value )
     {
       try
       {
         Double.parseDouble( (String) value );
         return null;
       }
-      catch( Throwable th )
+      catch( final Throwable th )
       {
         return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.AssignNodeElevationFaceComponent.11" ); //$NON-NLS-1$
       }

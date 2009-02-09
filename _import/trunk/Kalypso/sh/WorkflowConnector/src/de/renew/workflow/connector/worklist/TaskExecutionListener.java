@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
 
@@ -54,14 +54,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
  * {@link IExecutionListener} requests a work item from the workflow system after the command has been executed and
  * confirms it before the execution of the next command.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class TaskExecutionListener implements IExecutionListener
@@ -152,7 +152,7 @@ public class TaskExecutionListener implements IExecutionListener
     }
     if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
     {
-      WorkflowConnector.getConnector().confirm( commandId, returnValue );
+      WorkflowConnectorPlugin.getDefault().getConnector().confirm( commandId, returnValue );
     }
   }
 
@@ -171,7 +171,7 @@ public class TaskExecutionListener implements IExecutionListener
     }
     if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
     {
-      WorkflowConnector.getConnector().cancel( commandId );
+      WorkflowConnectorPlugin.getDefault().getConnector().cancel( commandId );
     }
   }
 
@@ -188,9 +188,9 @@ public class TaskExecutionListener implements IExecutionListener
       // the command should always be defined
       e.printStackTrace();
     }
-    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) && WorkflowConnector.getConnector().canRequest( commandId ) )
+    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) && WorkflowConnectorPlugin.getDefault().getConnector().canRequest( commandId ) )
     {
-      return WorkflowConnector.getConnector().request( commandId );
+      return WorkflowConnectorPlugin.getDefault().getConnector().request( commandId );
     }
     return null;
   }

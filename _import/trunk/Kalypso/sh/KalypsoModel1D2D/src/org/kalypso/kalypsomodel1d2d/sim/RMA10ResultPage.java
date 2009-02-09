@@ -77,13 +77,13 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.util.swt.StatusComposite;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -199,7 +199,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         if( element instanceof Date )
         {
@@ -305,7 +305,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
    * button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *            the parent composite
    * @param id
@@ -340,13 +340,13 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   protected void updateSelection( )
   {
-    Object[] selection = m_resultProcessViewer.getCheckedElements();
+    final Object[] selection = m_resultProcessViewer.getCheckedElements();
 
     final List<Date> dateList = new ArrayList<Date>();
-    for( int i = 0; i < selection.length; i++ )
+    for( final Object element : selection )
     {
-      if( selection[i] instanceof Date )
-        dateList.add( (Date) selection[i] );
+      if( element instanceof Date )
+        dateList.add( (Date) element );
     }
 
     m_selection = dateList.toArray( new Date[dateList.size()] );
@@ -402,7 +402,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
   }
 
-  protected void updateTableSelection( TableViewer resultProcessViewer, Spinner spinNumStepProcessing )
+  protected void updateTableSelection( final TableViewer resultProcessViewer, final Spinner spinNumStepProcessing )
   {
     final TableItem[] items = resultProcessViewer.getTable().getItems();
     final int selection = spinNumStepProcessing.getSelection();

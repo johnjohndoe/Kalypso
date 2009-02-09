@@ -3,8 +3,8 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -12,14 +12,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Default implementation for {@link IRoughnessCls} which serves as a wrapper arround a wbd:Roughness feature
- * 
+ *
  * @author Patrice Congo
  */
 public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 {
   /**
    * Create a Roughness object wrapping the given feature.
-   * 
+   *
    * @param feature
    *          - the wbr:Roughness feature to wrapped
    * @throw IllegalArgumentException if feature is null or is note a wbr:Roughness feature
@@ -32,7 +32,7 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   /**
    * This constructor creates {@link RoughnessCls} based on a wbr:RoughnessCls feature which is created as child of the
    * given parent feaure and linked to it by the property of the type specified by the argument propQName.
-   * 
+   *
    * @param parentFeature
    *          the parent feature for the new wbr:Roughness class
    * @param propQName
@@ -43,7 +43,6 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public RoughnessCls( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
   {
     super( Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS ), KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-
   }
 
   /*

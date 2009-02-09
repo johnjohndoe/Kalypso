@@ -41,7 +41,7 @@
 package org.kalypso.afgui.scenarios;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 
 /**
  * @author kurzbach

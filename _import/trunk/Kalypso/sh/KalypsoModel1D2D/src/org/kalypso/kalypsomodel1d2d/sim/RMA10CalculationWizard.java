@@ -61,19 +61,20 @@ import org.eclipse.swt.widgets.Button;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 
+
 /**
  * A wizard showing the progress of a RMA·Kalypso calculation.
- * 
+ *
  * @author Gernot Belger
  */
 public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulation1D2DConstants
@@ -82,7 +83,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
   private final IPageChangedListener m_pageChangeListener = new IPageChangedListener()
   {
-    public void pageChanged( PageChangedEvent event )
+    public void pageChanged( final PageChangedEvent event )
     {
       handlePageChanged( event );
     }
@@ -339,7 +340,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
 
       return false;
     }
-    
+
     saveLogAndCleanup();
     return true;
   }

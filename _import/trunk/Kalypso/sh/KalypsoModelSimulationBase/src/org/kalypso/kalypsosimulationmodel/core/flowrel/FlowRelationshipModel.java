@@ -43,7 +43,7 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;

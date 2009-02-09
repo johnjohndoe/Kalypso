@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -20,7 +20,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * The default implementation of {@link IFE1D2DNode} based on {@link AbstractFeatureBinder} to bind wb1d2d:Node elements
- * 
+ *
  * @author Gernot Belger, Patrice Congo
  */
 public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
@@ -30,7 +30,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
   /**
    * Creates a new node object that binds the given feature.
-   * 
+   *
    * @param featureToBind
    *            the feature to bind
    * @see FE1D2DNode#FE1D2DNode(Feature, QName)
@@ -61,7 +61,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   /**
    * This constructor creates {@link FE1D2DNode} based on a wb1d2d:Node feature which is created as child of the given
    * parent feaure and linked to it by the property of the type specified by the argument propQName.
-   * 
+   *
    * @param parentFeature
    *            the parent feature for the new wbr:Roughness class
    * @param propQName

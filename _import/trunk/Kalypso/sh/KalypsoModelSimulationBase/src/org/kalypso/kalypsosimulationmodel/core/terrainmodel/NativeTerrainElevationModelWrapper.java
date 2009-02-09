@@ -49,9 +49,9 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -60,10 +60,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * Provide the implementaion of {@link ITerrainElevationModel} for simBase:NativeTerrainElevationModelWrapper model.
  * This class colaboratewith ...
- * 
+ *
  * @author Madanagopal
  * @author Patrice Congo
- * 
+ *
  */
 public class NativeTerrainElevationModelWrapper extends TerrainElevationModel implements INativeTerrainElevationModelWrapper
 {

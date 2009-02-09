@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -8,11 +8,11 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -99,7 +99,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * This constructor creates {@link FE1D2DNode} based on a wb1d2d:FE1D2DNode feature which is created as child of the
    * given parent feaure and linked to it by the property of the type specified by the argument propQName.
-   * 
+   *
    * @param parentFeature
    *            the parent feature for the new wbr:Roughness class
    * @param propQName

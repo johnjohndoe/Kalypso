@@ -59,6 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -71,7 +72,6 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.imports.Restart1DImporter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.ui.wizards.imports.wspmrestart.ImportWspmRestartWizard;
 import org.kalypso.ui.wizards.results.IThemeConstructionFactory;
@@ -82,7 +82,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class RestartSelectWizardPage1 extends SelectResultWizardPage
 {
@@ -90,7 +90,7 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   private final ICaseDataProvider<IModel> m_modelProvider;
 
-  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
+  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final Result1d2dMetaComparator comparator, final IThemeConstructionFactory factory, final IFolder scenarioFolder, final ICaseDataProvider<IModel> modelProvider )
   {
     super( pageName, title, titleImage, filter, comparator, factory );
 

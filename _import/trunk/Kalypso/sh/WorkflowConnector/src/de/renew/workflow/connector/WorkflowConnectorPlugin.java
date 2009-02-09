@@ -12,9 +12,8 @@ public class WorkflowConnectorPlugin extends Plugin
 
   private static WorkflowConnectorPlugin plugin;
 
-  /**
-   * The constructor
-   */
+  private final IWorkflowConnector m_connector = new DummyConnector();
+
   public WorkflowConnectorPlugin( )
   {
     plugin = this;
@@ -22,11 +21,21 @@ public class WorkflowConnectorPlugin extends Plugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static WorkflowConnectorPlugin getDefault( )
   {
     return plugin;
+  }
+
+  /**
+   * Returns the currently configured connector.<br>
+   * REMARK: at the moment, the {@link DummyConnector} is returned, doing nothing.<br>
+   * A new mechanism (extension-point?) that decides, which implementations should be used must be introduced.
+   */
+  public IWorkflowConnector getConnector( )
+  {
+    return m_connector;
   }
 }

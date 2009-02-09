@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartInfo;
@@ -85,7 +86,6 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessCls;
@@ -99,9 +99,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Adapter Factory for feature in the simBase namespace
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 @SuppressWarnings("unchecked")
 public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
@@ -110,7 +110,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   {
     /**
      * Construct the Adapter of the specified class for the given feature
-     * 
+     *
      * @param <T>
      * @param feature
      * @param cls
