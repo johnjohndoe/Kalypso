@@ -2,7 +2,7 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;

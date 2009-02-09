@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
@@ -58,7 +58,7 @@ public interface IRasterizationControlModel extends IModel
 
   /**
    * Creates a new asset value class with the specified values.
-   * 
+   *
    */
   public IAssetValueClass createNewAssetValueClass( );
 
@@ -71,7 +71,7 @@ public interface IRasterizationControlModel extends IModel
   /**
    * The list of GmlIDs of the landuse classes with the given name (because there is no guarantee that landuse name is
    * unique)
-   * 
+   *
    * @param landuseClassName
    *          The name of landuse class
    * @return The list of landuse classes IDs; if no ID is found, returns empty list

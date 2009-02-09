@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;

@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.afgui.model.IModel;
 import org.kalypso.risk.model.schema.binding.AdministrationUnit;
 import org.kalypso.risk.model.schema.binding.AnnualCoverage;
 import org.kalypso.risk.model.schema.binding.AssetValueClass;
@@ -203,7 +203,7 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
