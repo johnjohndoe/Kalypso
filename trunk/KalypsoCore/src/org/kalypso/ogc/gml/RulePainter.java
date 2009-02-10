@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.GC;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LegendGraphic;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -72,7 +73,9 @@ public class RulePainter
     {
       final Symbolizer[] symbolizers = rule.getSymbolizers();
       for( final Symbolizer symbolizer : symbolizers )
+      {
         symbolizer.paint( gc, feature );
+      }
     }
   }
 
@@ -113,10 +116,14 @@ public class RulePainter
             final Rectangle size = getSize( graphic );
 
             if( maxWidth < size.width )
+            {
               maxWidth = size.width;
+            }
 
             if( maxHeight < size.height )
+            {
               maxHeight = size.height;
+            }
           }
 
           continue;
@@ -152,19 +159,37 @@ public class RulePainter
       if( o instanceof ExternalGraphic )
       {
         final ExternalGraphic externalGraphic = (ExternalGraphic) o;
-        final BufferedImage asImage = externalGraphic.getAsImage();
+        final ParameterValueType sizeParameter = graphic.getSizeParameter();
+        final Object[] components = sizeParameter.getComponents();
+       
+        final BufferedImage asImage;
+        if( components.length > 0 )
+        {
+          final Integer size = Integer.valueOf( components[0].toString() );
+          asImage = externalGraphic.getAsImage( size, size );
+        }
+        else
+        {
+          asImage = externalGraphic.getAsImage( 10, 10 );
+        }
 
         if( asImage == null )
+        {
           continue;
+        }
 
         final int width = asImage.getWidth();
         final int height = asImage.getWidth();
 
         if( maxWidth < width )
+        {
           maxWidth = width;
+        }
 
         if( maxHeight < height )
+        {
           maxHeight = height;
+        }
 
         continue;
       }
