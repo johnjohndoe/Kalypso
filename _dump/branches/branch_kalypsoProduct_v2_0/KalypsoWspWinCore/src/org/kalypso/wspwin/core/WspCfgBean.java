@@ -67,7 +67,7 @@ public class WspCfgBean
 
   private File m_projectDir;
 
-  private List<ZustandBean> m_zustaende = new ArrayList<ZustandBean>();
+  private final List<ZustandBean> m_zustaende = new ArrayList<ZustandBean>();
 
   public WspCfgBean( )
   {
@@ -88,7 +88,7 @@ public class WspCfgBean
     return m_type;
   }
 
-  public void setType( char type )
+  public void setType( final char type )
   {
     m_type = type;
   }
@@ -134,9 +134,14 @@ public class WspCfgBean
         if( line == null || line.trim().length() == 0 )
           break;
 
+        // TODO: not OK: should read wsp.cfg with fixed columns instead. As the strings in column 2 can reach just to
+        // column 3.
         final StringTokenizer tokenizer = new StringTokenizer( line );
         if( tokenizer.countTokens() != 6 )
-          throw new ParseException( "Wrong number of entries in line: " + reader.getLineNumber(), reader.getLineNumber() );
+        {
+          final String msg = String.format( "WSP.CFG: Wrong number of entries in line: %d (Should be 6 entries)", reader.getLineNumber() );
+          throw new ParseException( msg, reader.getLineNumber() );
+        }
 
         try
         {
@@ -209,7 +214,7 @@ public class WspCfgBean
   }
 
   /** Reads the first line of a profproj.txt or .str file. Returns 2 ints: profile count + second count. */
-  public static int[] readStrHeader( LineNumberReader reader ) throws IOException, ParseException
+  public static int[] readStrHeader( final LineNumberReader reader ) throws IOException, ParseException
   {
     final String firstLine = reader.readLine();
     if( firstLine == null || firstLine.length() == 0 )
