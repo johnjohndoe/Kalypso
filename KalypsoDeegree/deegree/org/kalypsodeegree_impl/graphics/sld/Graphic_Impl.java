@@ -218,9 +218,7 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
 
       if( (opacityVal < 0.0) || (opacityVal > 1.0) )
-      {
         throw new FilterEvaluationException( "Value for parameter 'opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
-      }
     }
 
     return opacityVal;
@@ -268,9 +266,7 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
 
       if( sizeVal <= 0.0 )
-      {
         throw new FilterEvaluationException( "Value for parameter 'size' (given: '" + value + "') must be greater than 0!" );
-      }
     }
 
     return sizeVal;
@@ -299,7 +295,8 @@ public class Graphic_Impl implements Graphic, Marshallable
 
         if( o instanceof ExternalGraphic )
         {
-          final BufferedImage extImage = ((ExternalGraphic) o).getAsImage();
+          final int iSize = Double.valueOf( size ).intValue();
+          final BufferedImage extImage = ((ExternalGraphic) o).getAsImage( iSize, iSize );
           size = extImage.getHeight();
           break;
         }
@@ -308,7 +305,9 @@ public class Graphic_Impl implements Graphic, Marshallable
 
     // if there is none, use default value of 6
     if( size < 0 )
+    {
       size = 6;
+    }
 
     switch( uom )
     {
@@ -447,9 +446,13 @@ public class Graphic_Impl implements Graphic, Marshallable
   private void paintAwtMarkAndExtGraphic( final Graphics2D g, final Feature feature, final int size, final Object o ) throws FilterEvaluationException
   {
     if( o instanceof ExternalGraphic )
-      ((ExternalGraphic) o).paintAwt( g );
+    {
+      ((ExternalGraphic) o).paintAwt( g, size, size );
+    }
     else
+    {
       ((Mark) o).paintAwt( g, feature, size );
+    }
   }
 
   /**

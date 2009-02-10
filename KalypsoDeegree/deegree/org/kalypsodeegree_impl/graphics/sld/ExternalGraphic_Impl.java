@@ -37,23 +37,35 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
+import org.kalypsodeegree_impl.tools.NetWorker;
+
+import com.sun.media.jai.codec.MemoryCacheSeekableStream;
 
 /**
  * The ExternalGraphic element allows a reference to be made to an external graphic file with a Web URL. The
@@ -79,6 +91,14 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
 
   private Image m_swtImage;
 
+  private ByteArrayOutputStream m_bos;
+
+  private TranscoderOutput m_output;
+
+  private PNGTranscoder m_transcoder;
+
+  private TranscoderInput m_transcoderInput;
+
   /**
    * Creates a new ExternalGraphic_Impl object.
    * 
@@ -95,7 +115,9 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   public void dispose( )
   {
     if( m_swtImage != null )
+    {
       m_swtImage.dispose();
+    }
   }
 
   /**
@@ -112,7 +134,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * sets the format (MIME type)
    * 
    * @param format
-   *            Format of the external graphic
+   *          Format of the external graphic
    */
   public void setFormat( final String format )
   {
@@ -141,13 +163,70 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * sets the online resource / URL of the external graphic
    * 
    * @param onlineResource
-   *            URL of the external graphic
+   *          URL of the external graphic
    */
   public void setOnlineResource( final String onlineResource )
   {
     m_image = null;
     m_swtImage = null;
     m_onlineResource = onlineResource;
+
+    try
+    {
+      final URL url = getOnlineResourceURL();
+      final String file = url.getFile();
+      final int idx = file.indexOf( "$" );
+      if( idx == -1 )
+      {
+        retrieveImage( url );
+      }
+    }
+    catch( final MalformedURLException e )
+    {
+      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
+
+  /**
+   * @param onlineResource
+   */
+  private void retrieveImage( final URL onlineResource )
+  {
+
+    try
+    {
+      final String t = onlineResource.toExternalForm();
+      if( t.trim().toLowerCase().endsWith( ".svg" ) )
+      {
+        // initialize the the classes required for svg handling
+        m_bos = new ByteArrayOutputStream( 2000 );
+        m_output = new TranscoderOutput( m_bos );
+        // PNGTranscoder is needed to handle transparent parts
+        // of a SVG
+        m_transcoder = new PNGTranscoder();
+        try
+        {
+          m_transcoderInput = new TranscoderInput( NetWorker.url2String( onlineResource ) );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+      }
+      else
+      {
+        final InputStream is = onlineResource.openStream();
+        final MemoryCacheSeekableStream mcss = new MemoryCacheSeekableStream( is );
+        final RenderedOp rop = JAI.create( "stream", mcss );
+        m_image = rop.getAsBufferedImage();
+        mcss.close();
+        is.close();
+      }
+    }
+    catch( final IOException e )
+    {
+      System.out.println( "Yikes: " + e );
+    }
   }
 
   /**
@@ -156,42 +235,86 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * 
    * @return the external graphic as BufferedImage
    */
-  public BufferedImage getAsImage( )
+  public BufferedImage getAsImage( final int targetSizeX, final int targetSizeY )
   {
     if( m_image == null )
     {
-      RenderedOp rop = null;
-      try
+      if( m_transcoderInput != null )
       {
-        final URL url = m_resolver.resolveURL( m_onlineResource );
-        rop = JAI.create( "url", url );
-        m_image = rop.getAsBufferedImage();
+        m_transcoder.addTranscodingHint( PNGTranscoder.KEY_HEIGHT, new Float( targetSizeX ) );
+        m_transcoder.addTranscodingHint( PNGTranscoder.KEY_WIDTH, new Float( targetSizeY ) );
+        try
+        {
+          m_transcoder.transcode( m_transcoderInput, m_output );
+          try
+          {
+            m_bos.flush();
+            m_bos.close();
+          }
+          catch( final IOException e3 )
+          {
+            e3.printStackTrace();
+          }
+        }
+        catch( final TranscoderException e )
+        {
+          e.printStackTrace();
+        }
+        try
+        {
+          final ByteArrayInputStream is = new ByteArrayInputStream( m_bos.toByteArray() );
+          final MemoryCacheSeekableStream mcss = new MemoryCacheSeekableStream( is );
+          final RenderedOp rop = JAI.create( "stream", mcss );
+          m_image = rop.getAsBufferedImage();
+          mcss.close();
+        }
+        catch( final IOException e1 )
+        {
+          e1.printStackTrace();
+        }
       }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        if( rop != null )
-          rop.dispose();
-      }
-
     }
+
     return m_image;
+
+// if( m_image == null )
+// {
+// RenderedOp rop = null;
+// try
+// {
+// final URL url = m_resolver.resolveURL( m_onlineResource );
+// rop = JAI.create( "url", url );
+// m_image = rop.getAsBufferedImage();
+// }
+// catch( final IOException e )
+// {
+// e.printStackTrace();
+// }
+// finally
+// {
+// if( rop != null )
+// {
+// rop.dispose();
+// }
+// }
+//
+// }
+// return m_image;
   }
 
   /**
    * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#paintAwt(java.awt.Graphics2D)
    */
-  public void paintAwt( final Graphics2D g )
+  public void paintAwt( final Graphics2D g, final int targetSizeX, final int targetSizeY )
   {
     /* Make sure buffered image is created */
-    getAsImage();
+    getAsImage( targetSizeX, targetSizeY );
 
     // Is there a better way? Is it possible to render a Jai-Image directly into an awt-graphics?
     if( m_image != null )
+    {
       g.drawImage( m_image, 0, 0, m_image.getWidth(), m_image.getHeight(), null );
+    }
   }
 
   /**
@@ -199,32 +322,45 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    */
   public void paint( final GC gc )
   {
-    final Image image = loadImage( gc );
-    gc.drawImage( image, 0, 0 );
+    if( m_image != null )
+    {
+      if( m_swtImage == null )
+      {
+        try
+        {
+          m_swtImage = makeSWTImage( null, m_image );
+        }
+        catch( final Exception e )
+        {
+          KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+
+      gc.drawImage( m_swtImage, 0, 0 );
+    }
   }
 
-  private Image loadImage( final GC gc )
+  /**
+   * implementation taken from http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg10712.html
+   */
+  private static Image makeSWTImage( final Display display, final java.awt.Image ai ) throws Exception
   {
-    if( m_swtImage == null )
-    {
-      try
-      {
-        final URL url = m_resolver.resolveURL( m_onlineResource );
-        final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
-        final Image swtImage = imgDesc.createImage( true, gc.getDevice() );
-        m_swtImage = swtImage;
-      }
-      catch( final MalformedURLException e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Could not load online resource: " + m_onlineResource );
-        KalypsoDeegreePlugin.getDefault().getLog().log( status );
-      }
-    }
+    final int width = ai.getWidth( null );
+    final int height = ai.getHeight( null );
 
-    if( m_swtImage == null )
-      m_swtImage = ImageDescriptor.getMissingImageDescriptor().createImage();
+    final BufferedImage bufferedImage = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
 
-    return m_swtImage;
+    final Graphics2D g2d = bufferedImage.createGraphics();
+    g2d.drawImage( ai, 0, 0, null );
+    g2d.dispose();
+
+    final int[] data = ((DataBufferInt) bufferedImage.getData().getDataBuffer()).getData();
+    final ImageData imageData = new ImageData( width, height, 24, new PaletteData( 0xFF0000, 0x00FF00, 0x0000FF ) );
+    imageData.setPixels( 0, 0, data.length, data, 0 );
+
+    final Image swtImage = new Image( display, imageData );
+
+    return swtImage;
   }
 
   /**
