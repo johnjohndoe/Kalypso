@@ -383,14 +383,14 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     try
     {
+      // prepare for exception
+      setMapModell( null, null );
+
+      /* "Loading map..." */
+      showBusy( true );
+      
       synchronized( this )
       {
-        // prepare for exception
-        setMapModell( null, null );
-
-        /* "Loading map..." */
-        showBusy( true );
-
         if( m_mapPanel != null )
         {
           m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
