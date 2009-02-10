@@ -105,6 +105,8 @@ public class OperationDefines
 
   public static final int PROPERTYISNOTEQUALTO = 108;
 
+  public static final int PROPERTYISINSTANCEOF = 150;
+  
   // logical operations
   public static final int AND = 200;
 
@@ -117,7 +119,9 @@ public class OperationDefines
   static
   {
     if( names == null )
+    {
       buildHashMaps();
+    }
   }
 
   /**
@@ -208,7 +212,8 @@ public class OperationDefines
     addOperationInfo( PROPERTYISNULL, "PropertyIsNull", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISBETWEEN, "PropertyIsBetween", TYPE_COMPARISON );
     addOperationInfo( PROPERTYISNOTEQUALTO, "PropertyIsNotEqualTo", TYPE_COMPARISON );
-
+    addOperationInfo( PROPERTYISINSTANCEOF, "PropertyIsInstanceOf", TYPE_COMPARISON );
+    
     addOperationInfo( AND, "And", TYPE_LOGICAL );
     addOperationInfo( OR, "Or", TYPE_LOGICAL );
     addOperationInfo( NOT, "Not", TYPE_LOGICAL );
