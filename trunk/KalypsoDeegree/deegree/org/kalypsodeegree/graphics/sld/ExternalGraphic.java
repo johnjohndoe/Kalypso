@@ -72,7 +72,7 @@ public interface ExternalGraphic
    * @param format
    *            Format of the external graphic
    */
-  void setFormat( String format );
+  void setFormat( final String format );
 
   /**
    * The OnlineResource gives the URL of the external graphic
@@ -90,7 +90,7 @@ public interface ExternalGraphic
    * @param onlineResource
    *            URL of the external graphic
    */
-  void setOnlineResource( String onlineResource );
+  void setOnlineResource( final String onlineResource );
 
   /**
    * returns the external graphic as an image. this method is not part of the sld specifications but it is added for
@@ -98,12 +98,12 @@ public interface ExternalGraphic
    * 
    * @return the external graphic as BufferedImage
    */
-  BufferedImage getAsImage( );
+  BufferedImage getAsImage( final int targetSizeX, final int targetSizeY );
 
   /**
    * Paints the external graphic into an awt graphics context.
    */
-  void paintAwt( final Graphics2D g );
+  void paintAwt( final Graphics2D g, final int targetSizeX, final int targetSizeY );
 
   void paint( final GC gc );
 
