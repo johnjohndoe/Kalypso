@@ -42,36 +42,56 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
  * 
- * 
  * @author Patrice Congo
  */
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
+  @SuppressWarnings("unchecked")
+  private final IFE1D2DNode m_node;
 
-  private IFE1D2DNode movedNode;
+  private final GM_Point m_newPosition;
 
-  private GM_Point newNodePoint;
+  private final GM_Point m_oldPosition;
 
-  private IFEDiscretisationModel1d2d discretisationModel;
+  private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private GM_Point oldPosition = null;
+  private final boolean m_fireEvents;
 
-  public ChangeNodePositionCommand( IFEDiscretisationModel1d2d model, IFE1D2DNode nodeToChange, double elevation )
+  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final double elevation, final boolean fireEvents )
   {
-    this.discretisationModel = model;
-    this.movedNode = nodeToChange;
-    GM_Point oldPos = nodeToChange.getPoint();
+    this( model, nodeToChange, createPoint( elevation, nodeToChange.getPoint() ), fireEvents );
+  }
+
+  public static GM_Point createPoint( final double elevation, final GM_Point pos )
+  {
     if( Double.isNaN( elevation ) )
-      this.newNodePoint = GeometryFactory.createGM_Point( oldPos.getX(), oldPos.getY(), oldPos.getCoordinateSystem() );
-    else
-      this.newNodePoint = GeometryFactory.createGM_Point( oldPos.getX(), oldPos.getY(), elevation, oldPos.getCoordinateSystem() );
+      return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), pos.getCoordinateSystem() );
+
+    return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), elevation, pos.getCoordinateSystem() );
+  }
+
+  /**
+   * @param fireEvents
+   *            If <code>true</code>, modell-events will be fired.
+   */
+  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final GM_Point newNodePoint, final boolean fireEvents )
+  {
+    m_discretisationModel = model;
+    m_node = nodeToChange;
+    m_newPosition = newNodePoint;
+    m_oldPosition = m_node.getPoint();
+    m_fireEvents = fireEvents;
   }
 
   /**
@@ -79,7 +99,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Changing node positiom";
+    return "Change node positiom";
   }
 
   /**
@@ -95,8 +115,22 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    oldPosition = movedNode.getPoint();
-    movedNode.setPoint( newNodePoint );
+    process( m_newPosition );
+  }
+
+  /**
+   * @see org.kalypso.commons.command.ICommand#process()
+   */
+  public void process( final GM_Point position ) throws Exception
+  {
+    m_node.setPoint( position );
+
+    if( m_fireEvents )
+    {
+      final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
+      final ModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { m_node.getFeature() } );
+      workspace.fireModellEvent( event );
+    }
   }
 
   /**
@@ -104,10 +138,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if( oldPosition == null )
-    {
-      process();
-    }
+    process( m_newPosition );
   }
 
   /**
@@ -115,11 +146,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if( oldPosition != null )
-    {
-      movedNode.setPoint( oldPosition );
-      oldPosition = null;
-    }
+    process( m_oldPosition );
   }
 
   /**
@@ -127,7 +154,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { movedNode };
+    return new IFeatureWrapper2[] { m_node };
   }
 
   /**
@@ -135,7 +162,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return discretisationModel;
+    return m_discretisationModel;
   }
 
   /**
@@ -144,15 +171,15 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   @Override
   public String toString( )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
     buf.append( "ChangeNodePositionCommand[" );
-    buf.append( newNodePoint );
+    buf.append( m_newPosition );
     buf.append( ']' );
     return buf.toString();
   }
 
   public IFE1D2DNode getMovedNode( )
   {
-    return movedNode;
+    return m_node;
   }
 }

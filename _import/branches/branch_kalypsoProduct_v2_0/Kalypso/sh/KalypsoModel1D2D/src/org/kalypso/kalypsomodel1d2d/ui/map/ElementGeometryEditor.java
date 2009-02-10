@@ -50,29 +50,23 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -117,11 +111,11 @@ public class ElementGeometryEditor
   }
 
   @SuppressWarnings("unchecked")
-  public void addElements( IFE1D2DElement[] elements )
+  public void addElements( final IFE1D2DElement[] elements )
   {
-    for( int i = 0; i < elements.length; i++ )
+    for( final IFE1D2DElement element : elements )
     {
-      m_elementList.add( elements[i] );
+      m_elementList.add( element );
     }
   }
 
@@ -133,48 +127,10 @@ public class ElementGeometryEditor
   @SuppressWarnings("unchecked")
   public void finish( ) throws Exception
   {
-    final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
-    final FeatureList featureList = m_nodeTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
-
-    /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-
-    // add remove element command
-    for( IFE1D2DElement element : m_elementList )
-    {
-      if( element instanceof Element2D )
-      {
-        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getFeature(), discModel );
-        m_nodeTheme.getWorkspace().postCommand( deleteCmd );
-      }
-    }
-
-    /* create new elements */
-    for( IFE1D2DElement element : m_elementList )
-    {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
-      final List<GM_Point> points = new ArrayList<GM_Point>();
-
-      if( element instanceof Element2D )
-      {
-        // get nodes array of the new geometries
-        final GM_Ring ring = getEditedGeometryAsRing( element );
-        final GM_Position[] positions = ring.getPositions();
-
-        for( int i = 0; i < positions.length - 1; i++ )
-        {
-          final GM_Point point = GeometryFactory.createGM_Point( positions[i], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-          points.add( point );
-        }
-      }
-
-      // create the new elements
-      ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, points );
-
-      m_nodeTheme.getWorkspace().postCommand( command );
-    }
+    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class );
+    final GM_Point newPosition = ChangeNodePositionCommand.createPoint( m_startNode.getPoint().getZ(), m_endPoint );
+    final ICommand changeCommand = new ChangeNodePositionCommand( discModel, m_startNode, newPosition, true );
+    Util.postCommand( IFEDiscretisationModel1d2d.class, changeCommand );
   }
 
   /**
@@ -185,31 +141,20 @@ public class ElementGeometryEditor
   {
     if( m_startNode != null )
     {
-      // /* paint a line between start point and current position. */
-      // final int[][] points = getLineAsPointArrays( projection, m_startNode.getPoint(), currentPoint );
-      //
-      // int[] arrayX = points[0];
-      // int[] arrayY = points[1];
-      //
-      // // line
-      // g.drawPolygon( arrayX, arrayY, arrayX.length );
-      // // small start point rect
-      // drawHandles( g, arrayX, arrayY );
-
       // paint preview
       paintPreview( g, projection, currentPoint );
     }
   }
 
   @SuppressWarnings("unchecked")
-  private void paintPreview( Graphics g, GeoTransform projection, Point currentPoint )
+  private void paintPreview( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
-    for( IFE1D2DElement element : elements )
+    final IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
+    for( final IFE1D2DElement element : elements )
     {
-      List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
+      final List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
 
-      List<IFE1D2DNode> nodes = element.getNodes();
+      final List<IFE1D2DNode> nodes = element.getNodes();
       for( int i = 0; i < nodes.size(); i++ )
       {
         if( nodes.get( i ).equals( m_startNode ) )
@@ -221,15 +166,15 @@ public class ElementGeometryEditor
     }
   }
 
-  private void paintPreviewElement( Graphics g, GeoTransform projection, GM_Point[] points )
+  private void paintPreviewElement( final Graphics g, final GeoTransform projection, final GM_Point[] points )
   {
     for( int i = 0; i < points.length - 1; i++ )
     {
       /* paint a line between start point and current position. */
       final int[][] drawPoints = ElementGeometryHelper.getPolygonAsPointArrays( projection, points );
 
-      int[] arrayX = drawPoints[0];
-      int[] arrayY = drawPoints[1];
+      final int[] arrayX = drawPoints[0];
+      final int[] arrayY = drawPoints[1];
 
       final Color color = g.getColor();
 
@@ -267,7 +212,7 @@ public class ElementGeometryEditor
       /* A) element type checks */
       // A.1) check for 1d-elements (they are not supported yet)
       final IFE1D2DElement[] startElements = m_startNode.getElements();
-      for( IFE1D2DElement element : startElements )
+      for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
           return StatusUtilities.createErrorStatus( "1D Knoten können nicht verschoben werden" );
@@ -303,7 +248,7 @@ public class ElementGeometryEditor
       /* D) element geometry checks */
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_Ring[] rings = getNewGeometries();
-      for( GM_Ring ring : rings )
+      for( final GM_Ring ring : rings )
       {
         final GM_Position[] poses = ring.getPositions();
         // D.1) New Element self-intersects
@@ -329,10 +274,10 @@ public class ElementGeometryEditor
         }
 
         /* E) Boundary Condition check */
-        GM_Position[] positions = ring.getPositions();
-        for( int i = 0; i < positions.length; i++ )
+        final GM_Position[] positions = ring.getPositions();
+        for( final GM_Position element : positions )
         {
-          final GM_Point point = GeometryFactory.createGM_Point( positions[i], crs );
+          final GM_Point point = GeometryFactory.createGM_Point( element, crs );
           final IFELine contiLine = discModel.findContinuityLine( point, SEARCH_DISTANCE );
           if( contiLine != null )
             return StatusUtilities.createErrorStatus( "Zu verändernde Elemente enthalten eine Kontinuitätslinie" );
@@ -354,7 +299,7 @@ public class ElementGeometryEditor
   private GM_Ring[] getNewGeometries( ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
-    for( IFE1D2DElement element : m_elementList )
+    for( final IFE1D2DElement element : m_elementList )
     {
       if( element instanceof IElement2D )
         ringList.add( getEditedGeometryAsRing( element ) );
@@ -389,8 +334,8 @@ public class ElementGeometryEditor
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();
-        double x = position.getX();
-        double y = position.getY();
+        final double x = position.getX();
+        final double y = position.getY();
         double z;
         if( m_startNode.getPoint().getCoordinateDimension() == 3 )
         {
@@ -403,8 +348,8 @@ public class ElementGeometryEditor
       else
       {
         final GM_Position position = node.getPoint().getPosition();
-        double x = position.getX();
-        double y = position.getY();
+        final double x = position.getX();
+        final double y = position.getY();
         double z;
         if( node.getPoint().getCoordinateDimension() == 3 )
         {
@@ -426,7 +371,7 @@ public class ElementGeometryEditor
   }
 
   @SuppressWarnings("unchecked")
-  public void setStartNode( IFE1D2DNode startNode )
+  public void setStartNode( final IFE1D2DNode startNode )
   {
     m_startNode = startNode;
 
@@ -440,7 +385,7 @@ public class ElementGeometryEditor
    * check the node
    */
   @SuppressWarnings("unchecked")
-  public IStatus checkNewNode( Object newNode )
+  public IStatus checkNewNode( final Object newNode )
   {
     /* set the new end node candidate */
     if( newNode instanceof IFE1D2DNode )

@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
@@ -117,15 +118,17 @@ public class RoughnessAssignListener implements ModellEventListener
     {
       final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent) modellEvent;
       final Feature[] changedFeatures = event.getChangedFeatures();
-      if( isRoughnessAssignNeeded( changedFeatures ) )
-        startJob( FeatureHelper.getEnvelope( changedFeatures ) );
+      final GM_Envelope envelope = isRoughnessAssignNeeded( changedFeatures );
+      if( envelope != null )
+        startJob( envelope );
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent) modellEvent;
       final Feature[] changedFeatures = event.getFeatures();
-      if( changedFeatures != null && isRoughnessAssignNeeded( changedFeatures ) )
-        startJob( FeatureHelper.getEnvelope( changedFeatures ) );
+      final GM_Envelope envelope = isRoughnessAssignNeeded( changedFeatures );
+      if( envelope != null )
+        startJob( envelope );
     }
     else
       startJob( null );
@@ -137,18 +140,29 @@ public class RoughnessAssignListener implements ModellEventListener
       m_job.cancel();
   }
 
-  private boolean isRoughnessAssignNeeded( final Feature[] features )
+  private GM_Envelope isRoughnessAssignNeeded( final Feature[] features )
   {
     if( features == null || features.length == 0 )
-      return false;
+      return null;
+
     for( final Feature element : features )
     {
       if( element == null )
         continue;
       final QName qname = element.getFeatureType().getQName();
       if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) || qname.equals( IRoughnessLayer.QNAME ) )
-        return true;
+        return FeatureHelper.getEnvelope( features );
+
+      if( qname.equals( IFE1D2DNode.QNAME ) )
+      {
+        final GM_Envelope envelope = FeatureHelper.getEnvelope( features );
+        // WE do buffer the envelope a bit here, as it may be only one point. A too big envelope only results in too
+        // many
+        // elements to be reassigned, which is not a problem.
+        // REMARK: the size of the buffer depends on the coordinate system...; lets hope no one uses lat/lon here...
+        return envelope.getBuffer( 1.0 );
+      }
     }
-    return false;
+    return null;
   }
 }

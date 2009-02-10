@@ -105,7 +105,7 @@ public class AssignNodeElevationFaceComponent
       return property.equals( properties[0] ) || property.equals( properties[1] );
     }
 
-    public Object getValue( Object element, String property )
+    public Object getValue( final Object element, final String property )
     {
       if( property.equals( m_nodeElevationViewer.getColumnProperties()[1] ) )
         return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
@@ -115,7 +115,7 @@ public class AssignNodeElevationFaceComponent
         return null;
     }
 
-    public void modify( Object element, String property, Object value )
+    public void modify( final Object element, final String property, final Object value )
     {
       final IFE1D2DNode node;
       if( element instanceof TableItem )
@@ -141,7 +141,7 @@ public class AssignNodeElevationFaceComponent
         {
           newElevation = Double.parseDouble( (String) value );
         }
-        catch( Throwable th )
+        catch( final Throwable th )
         {
           // TODO Patrice show the user a message
           th.printStackTrace();
@@ -174,7 +174,7 @@ public class AssignNodeElevationFaceComponent
           }
         };
 
-        final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation )
+        final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation, false )
         {
           /**
            * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand#process()
@@ -197,7 +197,7 @@ public class AssignNodeElevationFaceComponent
         {
           workspace.postCommand( command );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
@@ -245,7 +245,7 @@ public class AssignNodeElevationFaceComponent
         {
           workspace.postCommand( cmd );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }

@@ -91,7 +91,7 @@ public class ApplyElevationHelper
       {
         final double elevation = elevationProvider.getElevation( node.getPoint() );
 
-        changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation );
+        changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation, false );
         changePosCmd.process();
         compositeCommand.addCommand( changePosCmd, null );
       }

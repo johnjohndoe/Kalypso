@@ -46,7 +46,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
  * A command that changed the discretisation model
  * 
  * @author Patrice Congo
+ * @deprecated Do not use anymore. No one calls this extra method a t the moment; interface should be removed.
  */
+@Deprecated
 public interface IDiscrModel1d2dChangeCommand extends IFeatureChangeCommand
 {
   /**
