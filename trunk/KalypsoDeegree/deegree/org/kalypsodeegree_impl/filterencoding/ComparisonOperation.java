@@ -62,7 +62,6 @@ public abstract class ComparisonOperation extends AbstractOperation
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
-
     // check if root element's name is a known operator
     final String name = element.getLocalName();
     final int operatorId = OperationDefines.getIdByName( name );
@@ -93,6 +92,11 @@ public abstract class ComparisonOperation extends AbstractOperation
       case OperationDefines.PROPERTYISBETWEEN:
       {
         operation = (ComparisonOperation) PropertyIsBetweenOperation.buildFromDOM( element );
+        break;
+      }
+      case OperationDefines.PROPERTYISINSTANCEOF:
+      {
+        operation = (ComparisonOperation) PropertyIsInstanceOfOperation.buildFromDOM( element );
         break;
       }
       default:
