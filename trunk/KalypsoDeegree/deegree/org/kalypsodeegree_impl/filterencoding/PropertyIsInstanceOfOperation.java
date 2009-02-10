@@ -127,10 +127,18 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
     boolean equals = false;
-    final Object propertyValue = feature.getProperty( propertyName.getValue() );
-
-    if( CommonNamespaces.GMLNS.equals( this.typeName.getNamespace() ) )
+    
+    final String value = propertyName.getValue();
+    final Object propertyValue;
+    if( value.contains( ":" ) )
     {
+      propertyValue = feature.getProperty( value.substring( value.indexOf( ":" ) + 1 ) );
+    }
+    else
+    {
+      propertyValue = feature.getProperty( value );
+    }
+    
       final String localName = this.typeName.getLocalName();
       if( "Point".equals( localName ) )
       {
@@ -149,12 +157,6 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
         final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.typeName + " is not a supported type to check for.";
         throw new FilterEvaluationException( msg );
       }
-    }
-    else
-    {
-      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.typeName + " is not a supported type to check for.";
-      throw new FilterEvaluationException( msg );
-    }
     
     return equals;
   }
