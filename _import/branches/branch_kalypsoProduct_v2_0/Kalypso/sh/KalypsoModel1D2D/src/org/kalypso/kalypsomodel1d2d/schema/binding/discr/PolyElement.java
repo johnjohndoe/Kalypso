@@ -171,33 +171,34 @@ public class PolyElement extends Element2D implements IPolyElement
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     final GM_Surface surface = ModelGeometryBuilder.createSurfaceFromNode( getNodes() );
-//    if(surface==null)
-//      System.out.println("Geometry cannot be calculated for "+getGmlID());
+    // if(surface==null)
+    // System.out.println("Geometry cannot be calculated for "+getGmlID());
     return surface;
-    
-//    
-//    // TODO Patrice use ModelGeometryBuilder createSurface
-//    final List<IFE1D2DNode> nodes = getNodes();
-//    final int SIZE = nodes.size();
-//    /* Positions from nodes */
-//    final GM_Position[] poses = new GM_Position[SIZE];
-//
-//    if( SIZE <= 3 )
-//    {
-//      return null;
-//    }
-//
-//    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-//    if( crs == null )
-//      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-//
-//    for( int i = 0; i < poses.length; i++ )
-//    {
-//      final GM_Point point = nodes.get( i ).getPoint();
-//      poses[i] = point.getPosition();
-//    }
-//
-//    return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
+
+    //    
+    // // TODO Patrice use ModelGeometryBuilder createSurface
+    // final List<IFE1D2DNode> nodes = getNodes();
+    // final int SIZE = nodes.size();
+    // /* Positions from nodes */
+    // final GM_Position[] poses = new GM_Position[SIZE];
+    //
+    // if( SIZE <= 3 )
+    // {
+    // return null;
+    // }
+    //
+    // CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    // if( crs == null )
+    // crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    //
+    // for( int i = 0; i < poses.length; i++ )
+    // {
+    // final GM_Point point = nodes.get( i ).getPoint();
+    // poses[i] = point.getPosition();
+    // }
+    //
+    // return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl(
+    // GM_SurfaceInterpolation.PLANAR ), crs );
   }
 
   public static IPolyElement createPolyElement( final IFEDiscretisationModel1d2d discModel )
@@ -268,14 +269,22 @@ public class PolyElement extends Element2D implements IPolyElement
 
   private IFE1D2DNode getAdjacentNode( final IFE1D2DNode node, final List<IFE1D2DNode> excludeNodes )
   {
-    for( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
+    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
     {
       final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes.get( 0 );
       final IFE1D2DNode secondNode = nodes.get( 1 );
+
+      if( firstNode == null )
+        throw new IllegalStateException( "Invalid mesh: no first node for edge: " + edge.getGmlID() );
+
       if( firstNode.equals( node ) && !excludeNodes.contains( secondNode ) )
         return secondNode;
-      else if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
+
+      if( secondNode == null )
+        throw new IllegalStateException( "Invalid mesh: no second node for edge: " + edge.getGmlID() );
+
+      if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
         return firstNode;
     }
     return null;
