@@ -276,30 +276,6 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     }
 
     return m_image;
-
-// if( m_image == null )
-// {
-// RenderedOp rop = null;
-// try
-// {
-// final URL url = m_resolver.resolveURL( m_onlineResource );
-// rop = JAI.create( "url", url );
-// m_image = rop.getAsBufferedImage();
-// }
-// catch( final IOException e )
-// {
-// e.printStackTrace();
-// }
-// finally
-// {
-// if( rop != null )
-// {
-// rop.dispose();
-// }
-// }
-//
-// }
-// return m_image;
   }
 
   /**
@@ -345,6 +321,8 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    */
   private static Image makeSWTImage( final Display display, final java.awt.Image ai ) throws Exception
   {
+    // TODO transparent pixel (ATM transparent pixels are converted into black pixels)
+    
     final int width = ai.getWidth( null );
     final int height = ai.getHeight( null );
 
