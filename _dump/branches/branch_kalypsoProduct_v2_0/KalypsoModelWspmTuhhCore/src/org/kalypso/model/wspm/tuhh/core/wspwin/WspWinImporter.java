@@ -285,7 +285,8 @@ public class WspWinImporter
       }
       catch( final IOException e )
       {
-        status.add( StatusUtilities.statusFromThrowable( e ) );
+        final String msg = String.format( "Failed to load profile '%s', referenced from profproj.txt. Profile will be ignored.", bean.getFileName() );
+        status.add( StatusUtilities.createStatus( IStatus.WARNING, msg, e ) );
       }
       catch( final GMLSchemaException e )
       {
@@ -616,8 +617,8 @@ public class WspWinImporter
 
     final IComponent stationComp;
     final IComponent valueComp;
-//    if( components.length < 1 )
-//      return;
+// if( components.length < 1 )
+// return;
     if( components[0].getName().startsWith( "Station" ) )
     {
       stationComp = components[0];
