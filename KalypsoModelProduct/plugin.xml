@@ -5,9 +5,10 @@
          id="kalypsomodelapplication"
          point="org.eclipse.core.runtime.applications">
       <application>
-         <run class="org.kalypso.model.product.application.KalypsoModelApplication"/>
+         <run class="org.kalypso.model.application.KalypsoModelApplication"/>
       </application>
    </extension>
+
    <extension
          id="product"
          point="org.eclipse.core.runtime.products">
@@ -42,11 +43,11 @@
                value="plugin_customization.ini">
          </property>
       </product>
-   </extension> 
- <extension
+   </extension>
+   <extension
          point="org.eclipse.ui.intro">
       <intro
-            class="org.kalypso.model.product.view.KalypsoWelcomePage"
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
             icon="etc/applicationicons/icon_16.gif"
             id="org.kalypso.model.product.introID">
       </intro>
@@ -55,6 +56,22 @@
             productId="org.kalypso.model.product.product">
       </introProductBinding>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.kalypso.model.product.introID"
+            content="content/introContent.xml"
+            id="org.kalypso.model.product.configId">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
     <extension
          point="org.eclipse.ui.activities">
   
