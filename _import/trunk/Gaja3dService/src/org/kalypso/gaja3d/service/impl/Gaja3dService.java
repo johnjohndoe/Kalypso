@@ -3,6 +3,8 @@ package org.kalypso.gaja3d.service.impl;
 import java.io.StringReader;
 import java.rmi.RemoteException;
 
+import javax.security.auth.Subject;
+
 import net.opengeospatial.ows.stubs.GetCapabilitiesType;
 import net.opengeospatial.wps.stubs.Capabilities;
 import net.opengeospatial.wps.stubs.DescribeProcess;
@@ -11,8 +13,11 @@ import net.opengeospatial.wps.stubs.ExecuteResponseType;
 import net.opengeospatial.wps.stubs.ProcessDescriptions;
 
 import org.apache.axis.message.MessageElement;
+import org.globus.gsi.jaas.JaasSubject;
+import org.globus.wsrf.Resource;
 import org.globus.wsrf.ResourceContext;
 import org.globus.wsrf.encoding.ObjectDeserializer;
+import org.globus.wsrf.security.SecurityManager;
 import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateGridResponseType;
@@ -65,6 +70,11 @@ public class Gaja3dService {
 	 */
 	public Capabilities getCapabilities(final GetCapabilitiesType parameters)
 			throws RemoteException {
+		SecurityManager.getManager().setServiceOwnerFromContext();
+		
+		final Gaja3dResource resource = getResource();
+		logSecurityInfo("getCapabilities", resource);
+
 		try {
 			// extract request as string
 			final MessageElement getCapabilities = new MessageElement(
@@ -95,6 +105,9 @@ public class Gaja3dService {
 	 */
 	public ProcessDescriptions describeProcess(final DescribeProcess parameters)
 			throws RemoteException {
+		final Gaja3dResource resource = getResource();
+		logSecurityInfo("describeProcess", resource);
+
 		try {
 			// extract request as string
 			final MessageElement describeProcess = new MessageElement(
@@ -124,6 +137,9 @@ public class Gaja3dService {
 	 */
 	public ExecuteResponseType execute(final Execute parameters)
 			throws RemoteException {
+		final Gaja3dResource resource = getResource();
+		logSecurityInfo("execute", resource);
+
 		try {
 			// extract request as string
 			final MessageElement execute = new MessageElement(WPSQNames.EXECUTE);
@@ -153,6 +169,8 @@ public class Gaja3dService {
 	public CreateGridResponseType execute_createGrid(
 			final CreateGridParametersType parameters) throws RemoteException {
 		final Gaja3dResource resource = getResource();
+		logSecurityInfo("execute_createGrid", resource);
+
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
 		final Gaja3DResourcePropertyLinkType demPoints = parameters
@@ -186,7 +204,8 @@ public class Gaja3dService {
 			final DetectBreaklinesParametersType parameters)
 			throws RemoteException {
 		final Gaja3dResource resource = getResource();
-
+		logSecurityInfo("execute_detectBreaklines", resource);
+		
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
 		final DemGrid demGrid = parameters.getDemGrid();
@@ -228,6 +247,8 @@ public class Gaja3dService {
 			org.kalypso.gaja3d.service.stubs.CreateTinParametersType parameters)
 			throws RemoteException {
 		final Gaja3dResource resource = getResource();
+		logSecurityInfo("execute_createTin", resource);
+		
 		// required
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
@@ -252,5 +273,50 @@ public class Gaja3dService {
 		final ModelTin modelTin = resource.getModelTin();
 		createTinResponseType.setModelTin(modelTin);
 		return createTinResponseType;
+	}
+
+	public void logSecurityInfo(final String methodName, final Resource resource) {
+		Subject subject;
+		System.out.println("SECURITY INFO FOR METHOD '" + methodName + "'");
+
+		// Print out the caller
+		String identity = SecurityManager.getManager().getCaller();
+		System.out.println("The caller is:" + identity);
+
+		// Print out the invocation subject
+		subject = JaasSubject.getCurrentSubject();
+		System.out.println("INVOCATION SUBJECT");
+		System.out.println(subject == null ? "NULL" : subject.toString());
+
+		try {
+			// Print out service subject
+			System.out.println("SERVICE SUBJECT");
+			subject = SecurityManager.getManager().getServiceSubject();
+			System.out.println(subject == null ? "NULL" : subject.toString());
+		} catch (Exception e) {
+			System.out.println("Unable to obtain service subject");
+		}
+
+		try {
+			// Print out system subject
+			System.out.println("SYSTEM SUBJECT");
+			subject = SecurityManager.getManager().getSystemSubject();
+			System.out.println(subject == null ? "NULL" : subject.toString());
+		} catch (Exception e) {
+			System.out.println("Unable to obtain system subject");
+		}
+
+		System.out.println("RESOURCE SUBJECT");
+		if (resource == null) {
+			System.out.println("No resource");
+		} else {
+			try {
+				subject = SecurityManager.getManager().getSubject(resource);
+				System.out.println(subject == null ? "NULL" : subject
+						.toString());
+			} catch (Exception e) {
+				System.out.println("Unable to obtain resource subject");
+			}
+		}
 	}
 }

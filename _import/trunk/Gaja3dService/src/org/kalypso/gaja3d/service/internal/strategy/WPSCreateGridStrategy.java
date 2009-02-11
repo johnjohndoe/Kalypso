@@ -107,7 +107,7 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 		outputs.add("stderr");
 
 		/* Create the delegate which can handle ISimulations. */
-		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
+		final String serviceEndpoint = System.getProperty(WPSRequest.SYSTEM_PROP_WPS_ENDPOINT);//WPSRequest.SERVICE_LOCAL;
 
 		final WPSRequest simulationJob = new WPSRequest(
 				CreateGridSimulation.ID, serviceEndpoint, 300000);

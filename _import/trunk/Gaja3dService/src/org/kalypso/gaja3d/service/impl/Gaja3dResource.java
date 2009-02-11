@@ -12,7 +12,9 @@ import org.apache.axis.AxisFault;
 import org.apache.axis.message.MessageElement;
 import org.apache.axis.types.URI;
 import org.apache.axis.types.URI.MalformedURIException;
-import org.globus.wsrf.Resource;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.globus.wsrf.ResourceIdentifier;
 import org.globus.wsrf.ResourceLifetime;
 import org.globus.wsrf.ResourceProperties;
@@ -20,17 +22,18 @@ import org.globus.wsrf.ResourceProperty;
 import org.globus.wsrf.ResourcePropertySet;
 import org.globus.wsrf.TopicList;
 import org.globus.wsrf.TopicListAccessor;
+import org.globus.wsrf.config.ConfigException;
 import org.globus.wsrf.impl.ResourcePropertyTopic;
 import org.globus.wsrf.impl.SimpleResourceProperty;
 import org.globus.wsrf.impl.SimpleResourcePropertySet;
 import org.globus.wsrf.impl.SimpleTopicList;
+import org.globus.wsrf.impl.security.descriptor.ResourceSecurityConfig;
+import org.globus.wsrf.impl.security.descriptor.ResourceSecurityDescriptor;
+import org.globus.wsrf.security.SecureResource;
 import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.CreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.DetectBreaklinesStrategy;
-import org.kalypso.gaja3d.service.internal.strategy.DummyCreateGridStrategy;
-import org.kalypso.gaja3d.service.internal.strategy.DummyCreateTinStrategy;
-import org.kalypso.gaja3d.service.internal.strategy.DummyDetectBreaklinesStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSDetectBreaklinesStrategy;
@@ -51,8 +54,9 @@ import org.kalypso.gaja3d.service.stubs.MinAngle;
 import org.kalypso.gaja3d.service.stubs.ModelTin;
 import org.kalypso.gaja3d.service.stubs.SmoothFilter;
 import org.kalypso.gaja3d.service.stubs.SmoothFilterMethod;
+import org.osgi.framework.Bundle;
 
-public class Gaja3dResource implements Resource, ResourceIdentifier,
+public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		ResourceProperties, ResourceLifetime, TopicListAccessor {
 
 	/* Resource key. This uniquely identifies this resource. */
@@ -76,20 +80,16 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 	/* Strategy for tin creation */
 	private final CreateTinStrategy createTinStrategy;
 
+	private ResourceSecurityConfig config;
+
 	public Gaja3dResource() {
-		if ("true".equals(System.getProperty("gaja3d.dummy"))) {
-			createGridStrategy = new DummyCreateGridStrategy();
-			detectBreaklinesStrategy = new DummyDetectBreaklinesStrategy();
-			createTinStrategy = new DummyCreateTinStrategy();
-		} else {
-			createGridStrategy = new WPSCreateGridStrategy();
-			detectBreaklinesStrategy = new WPSDetectBreaklinesStrategy();
-			createTinStrategy = new WPSCreateTinStrategy();
-		}
+		createGridStrategy = new WPSCreateGridStrategy();
+		detectBreaklinesStrategy = new WPSDetectBreaklinesStrategy();
+		createTinStrategy = new WPSCreateTinStrategy();
 	}
 
 	/* Initializes RPs and returns a unique identifier for this resource */
-	public Object initialize() {
+	public Object initialize() throws ConfigException {
 		this.key = new Integer(hashCode());
 		this.gaja3dRPs = new SimpleResourcePropertySet(
 				Gaja3dQNames.RESOURCE_PROPERTIES);
@@ -102,6 +102,20 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 			topic.setSendOldValue(true);
 			this.gaja3dRPs.add(topic); // important: add topic, not RP
 			this.topicList.addTopic(topic);
+		}
+
+		final Bundle gaja3dBundle = Platform
+				.getBundle("org.kalypso.gaja3d.service");
+		final URL secDesc = FileLocator.find(gaja3dBundle, new Path(
+				"service/security-config-resource.xml"), null);
+		URL fileURL;
+		try {
+			fileURL = FileLocator.toFileURL(secDesc);
+			config = new ResourceSecurityConfig(fileURL.getFile());
+			config.init();
+		} catch (final IOException e) {
+			throw new ConfigException(
+					"Could not load resource security descriptor.", e);
 		}
 		return key;
 	}
@@ -447,5 +461,10 @@ public class Gaja3dResource implements Resource, ResourceIdentifier,
 									qName, valueIdentifier.toString()));
 		}
 		property.add(newValue);
+	}
+
+	@Override
+	public ResourceSecurityDescriptor getSecurityDescriptor() {
+		return config.getSecurityDescriptor();
 	}
 }

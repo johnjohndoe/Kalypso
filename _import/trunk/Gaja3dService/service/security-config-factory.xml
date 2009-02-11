@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<securityConfig xmlns="http://www.globus.org">
+	
+	<method name="createResource">
+		<auth-method>
+			<GSISecureConversation/>
+		</auth-method>
+		<run-as>
+			<caller-identity/>
+		</run-as>
+	</method>
+	
+	<authz value="none"/>
+	
+</securityConfig>
