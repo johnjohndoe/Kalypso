@@ -282,7 +282,8 @@ public class WspWinImporter
       }
       catch( final IOException e )
       {
-        status.add( StatusUtilities.statusFromThrowable( e ) );
+        final String msg = Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );
+        status.add( StatusUtilities.createStatus( IStatus.WARNING, msg, e ) );
       }
       catch( final GMLSchemaException e )
       {
