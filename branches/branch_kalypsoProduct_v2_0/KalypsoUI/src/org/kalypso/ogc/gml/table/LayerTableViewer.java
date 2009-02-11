@@ -975,7 +975,11 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       // as result==null does not explicitly mean that
       // the value is invalid, we have to ask the celleditor for invalidity
       final int columnID = getColumnID( property );
-      if( !getCellEditors()[columnID].isValueValid() )
+      if( columnID == -1 )
+        return;
+
+      final CellEditor[] cellEditors = getCellEditors();
+      if( !cellEditors[columnID].isValueValid() )
         return;
 
       final Object object = modifier.parseInput( feature, value );
