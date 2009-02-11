@@ -21,6 +21,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypso.risk.project.KalypsoRiskDemoProjectWizard;
 import org.kalypso.risk.project.KalypsoRiskProjectWizard;
 
 import de.renew.workflow.base.IWorkflow;
@@ -162,7 +163,7 @@ public class KalypsoRiskModule implements IKalypsoModule
       @Override
       public INewProjectWizard getDemoProjectWizard( )
       {
-        return null;
+        return new KalypsoRiskDemoProjectWizard();
       }
 
       /**
@@ -171,7 +172,7 @@ public class KalypsoRiskModule implements IKalypsoModule
       @Override
       public boolean hasDemoProjectWizard( )
       {
-        return false;
+        return true;
       }
 
       @Override
