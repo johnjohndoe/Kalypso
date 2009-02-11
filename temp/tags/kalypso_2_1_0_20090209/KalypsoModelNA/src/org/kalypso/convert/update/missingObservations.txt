@@ -1,0 +1,82 @@
+ 9.Dez.'04
+
+TODO-Liste zur vollständigen Verknüpüfung des NA-Modells
+mit PSI-Compact bzw. der DWD-Vorhersage.
+
+Einige Punkte haben sich evt. schon erledigt, da diese Liste unserem 
+Wissenstand vom 25.11 entspricht.
+
+1. Ombrometer Niederschlag:
+
+Für das Weisse-Elster NA-Modell wird noch
+für die 6 folgenden Ombrometer die Einrichtung 
+innerhalb von PSI-Compact benötigt:
+
+(Stationskennzeichen/KennzifferDWD) Name
+ 10471 / ? Leipzig
+ 10564 / 43057 Schleiz
+ 10567 / 43316 Gera
+ 10574 / 42013 Carlsfeld
+ 10575 / 42030 Aue
+ 10577 / 42155 Chemnitz
+
+Es werden von uns die IDs in PSI-Compact benötigt, sowie die Einrichtung dieser in PSI-Compact. 
+(ggf. als leere Zeitreihen, falls die Stationen noch nicht angeschlossen sind).
+
+Weiterhin benötigt, aber bereits eingerichtet sind die folgenden Ombrometer:
+10469/42544 Leipzig-Schkeuditz (PSI_ID: 425440)
+10569/43306 Plauen (PSI_ID: 433060)
+
+Wird die PSI-ID generell gebildet indem eine '0' an die Kennziffer-DWD angehängt wird ?
+
+
+
+2. Ombrometer Temperatur:
+Da für gemessene Niederschläge keine Schneeabtaurate vorliegt, 
+wurde verabredet dass zukünftig Temperatur-Messwerte geliefert werden.
+Auch wenn die Ombrometer diese noch nicht liefern, wird für die Zuordnung 
+eine PSI-ID benötigt.
+ggf. können auch hier zunächst leere Zeitreihen angelegt werden.
+Zu den 8 oben genannten Ombrometern benötigen wir also die PSI-ID zu den Zeitreihen, 
+in denen (zukünftig) die Temperaturmessung abgelegt ist.
+
+3. Vorhersage Temperatur:
+Ebenfalls wird für die Vorhersage auch die vorhergesagte Temperatur benötigt.
+Die DWD-Rasterdaten (lm-Format) liefern momentan nur Vorhersage
+für den flüssigen Niederschlag (Schlüssel 424) 
+und den festen Niederschlag (Schlüssel 425).
+Vermutlich wird die Temperatur zusätzlich in den DWD-Rasterdateien geliefert.
+Wir benötigen hier Informationen, ob dies so realisiert wird und eine Beispieldatei,
+um die Implementierung zu testen.
+
+
+
+3. Pegel
+zu folgenden Pegeln werden die PSI-IDs benötigt, bzw. diese waren bisher noch
+nicht in PSI-Compact eingerichtet und müßten eingerichtet werden.
+
+Greiz
+Weida
+Albrechtshein
+
+4. Zuflussganglinien im NA-Modell Vorhersage
+Es sind einige Zuflüsse (z.B. Talsperren) im Modell verknüpft:
+ Dröda
+ Pöhl
+ Böhlen
+ Magwitz
+ Neukirchen
+
+Für die Vorhersagerechnung wird ebenfalls eine Vorhersage der Talsperrenabgabe benötigt.
+Diese muß vom Hydrologen ggf. von Hand eingegeben werden, da es meines Wissens 
+bisher keine automatische Zuflussvorhersage gibt.
+Um dies vielleicht in Zukunft zu automatisieren, wäre es sinnvoll für diese 5 Zuläufe 
+ebenfalls eine Zeitreihe für die Vorhersage in PSI-Compact anzulegen.
+Bleibt diese leer, so müssen bei einer Vorhersagerechnung die Werte
+manuell eingegeben werden.
+
+5. Zuflussganglinien im NA-Modell Messung
+Die Zulaufpegel für
+ Dröda
+ Pöhl
+müsten in PSI-Compact ebenfalls eingerichtet werden.
