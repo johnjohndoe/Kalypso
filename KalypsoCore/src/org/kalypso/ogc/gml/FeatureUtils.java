@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * useful feature utilities used by nofdp idss
- * 
+ *
  * @author Dirk Kuch
  */
 public class FeatureUtils
@@ -243,7 +243,7 @@ public class FeatureUtils
 
     final Feature result = FeatureHelper.getFeature( targetWorkspace, property );
     if( result == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.20" ) + property.toString() + Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.21" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.20" ) + " " + property.toString() + Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.21" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return result;
   }
@@ -264,9 +264,9 @@ public class FeatureUtils
   public static GM_Envelope getMaxExtend( final Feature[] features )
   {
     GM_Envelope base = null;
-    for( Feature feature : features )
+    for( final Feature feature : features )
     {
-      GM_Envelope envelope = feature.getEnvelope();
+      final GM_Envelope envelope = feature.getEnvelope();
 
       if( base == null )
         base = envelope;
