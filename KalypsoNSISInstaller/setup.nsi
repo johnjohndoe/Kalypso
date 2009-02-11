@@ -8,11 +8,11 @@ Name Kalypso
 !define REGKEY "SOFTWARE\$(^Name)"
 
 # version number, which is used for builind pathes and menu entries.
-!define VERSION 2.0.1
-!define DATE 20080923
+!define VERSION 2.1.0
+!define DATE 20090209
 
 !define COMPANY BCE
-!define URL http://www.bjoernsen.de
+!define URL http://kalypso.bjoernsen.de
 
 # MUI Interface Einstellungen (muss vor den Page-Makros sein).
 !define MUI_ABORTWARNING
@@ -98,7 +98,7 @@ InstallDir $PROGRAMFILES\Kalypso
 CRCCheck on
 XPStyle on
 ShowInstDetails hide
-VIProductVersion 20080923.0.0.0
+VIProductVersion 2.1.0.0
 
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_GERMAN} ProductName Kalypso
@@ -175,7 +175,7 @@ Section Kalypso SEC0000
 ; File /r install_data\kalypso\*
 
 # Path to your deploy folder
-    File /r C:\temp\Kalypso2.0.1_build20080923\*
+    File /r C:\temp\Kalypso\*
 SectionEnd
 
 # Diese Sektion ist versteckt (wegen dem -).
