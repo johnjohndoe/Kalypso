@@ -40,6 +40,7 @@
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
         class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
+        descriptionImage="icons/kalypso1d2d.png"
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/kalypso1d2d.png"
         id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
@@ -52,6 +53,7 @@
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
         class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        descriptionImage="icons/kalypso1d2d.png"
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/kalypso1d2d.png"
         id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
@@ -275,12 +277,6 @@
           </class>
        </handler>
 	</extension>
-   <extension
-           point="org.eclipse.ui.intro.configExtension">
-        <configExtension
-              configId="org.kalypso.model.product.configId"
-              content="content/ext.xml"/>
-   </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
       <viewer
