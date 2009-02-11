@@ -294,8 +294,9 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="par:SoilLayer"/>
+					<element ref="par:SoilLayer" minOccurs="0" maxOccurs="0"/>
 				</sequence>
+				<attributeGroup ref="xlink:simpleLink"/>
 			</restriction>
 		</complexContent>
 	</complexType>
