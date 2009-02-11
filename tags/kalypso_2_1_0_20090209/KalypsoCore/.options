@@ -1,0 +1,13 @@
+# Activates or reactivates validation of bindings while marshaling/unmarshaling
+
+org.kalypso.core/debug/validatebinding/gismapview = false
+org.kalypso.core/debug/validatebinding/featureview = false
+
+# Performance Measurement
+org.kalypso.core/perf/serialization/gml = true
+
+# MapModell output
+org.kalypso.core/debug/mapModell = false
+
+# Spatial Index
+org.kalypso.core/debug/spatialIndex/paint = false
