@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -77,6 +77,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -175,7 +176,7 @@ public class AssignNodeElevationFaceComponent
           }
         };
 
-        final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation )
+        final ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation, false )
         {
           /**
            * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand#process()

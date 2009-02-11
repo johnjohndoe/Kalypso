@@ -59,7 +59,6 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
-import org.deegree.model.feature.Feature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -219,7 +218,7 @@ public class Control1D2DConverter
 
     // C1
     // m_formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
-    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 0 ); //$NON-NLS-1$
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 0, 0, 0, 0, 0, 0, 1 ); //$NON-NLS-1$
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
@@ -242,7 +241,7 @@ public class Control1D2DConverter
       formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() ); //$NON-NLS-1$
     // C7
     formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 ); //$NON-NLS-1$
-    
+
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
 

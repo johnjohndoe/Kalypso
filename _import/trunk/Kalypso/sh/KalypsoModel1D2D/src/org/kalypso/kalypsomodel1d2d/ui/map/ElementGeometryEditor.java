@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
@@ -50,26 +50,23 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.afgui.model.Util;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -82,7 +79,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class is used to edit 1D2D Elements
- * 
+ *
  * @author Thomas Jung
  */
 public class ElementGeometryEditor
@@ -115,49 +112,24 @@ public class ElementGeometryEditor
   @SuppressWarnings("unchecked")
   public void addElements( final IFE1D2DElement[] elements )
   {
-    for( int i = 0; i < elements.length; i++ )
+    for( final IFE1D2DElement element : elements )
     {
-      m_elementList.add( elements[i] );
+      m_elementList.add( element );
     }
   }
 
   /**
    * REMARK: No validity check is done here. Call {@link #checkNewNode(Object)} before a new node is added.
-   * 
+   *
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
   @SuppressWarnings("unchecked")
   public void finish( ) throws Exception
   {
-    final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
-    final FeatureList featureList = m_nodeTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
-
-    /* Initialize elements needed for edges and elements */
-    final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-
-    // add remove element command
-    for( final IFE1D2DElement element : m_elementList )
-    {
-      if( element instanceof IPolyElement )
-      {
-        final IDiscrModel1d2dChangeCommand deleteCmd = DeleteCmdFactory.createDeleteCmd( element.getFeature(), discModel );
-        m_nodeTheme.getWorkspace().postCommand( deleteCmd );
-      }
-    }
-
-    /* create new elements */
-    for( final IFE1D2DElement element : m_elementList )
-    {
-      if( element instanceof IPolyElement )
-      {
-        // get ring of the new geometries
-        final GM_Ring ring = getEditedGeometryAsRing( element );
-
-        // create the new elements
-        ElementGeometryHelper.createFE1D2DfromRing( workspace, m_nodeTheme, parentFeature, discModel, ring );
-      }
-    }
+    final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class );
+    final GM_Point newPosition = ChangeNodePositionCommand.createPoint( m_startNode.getPoint().getZ(), m_endPoint );
+    final ICommand changeCommand = new ChangeNodePositionCommand( discModel, m_startNode, newPosition, true );
+    Util.postCommand( IFEDiscretisationModel1d2d.class, changeCommand );
   }
 
   /**
@@ -297,9 +269,9 @@ public class ElementGeometryEditor
 
         /* E) Boundary Condition check */
         final GM_Position[] positions = ring.getPositions();
-        for( int i = 0; i < positions.length; i++ )
+        for( final GM_Position position : positions )
         {
-          final GM_Point point = GeometryFactory.createGM_Point( positions[i], crs );
+          final GM_Point point = GeometryFactory.createGM_Point( position, crs );
           final IFELine contiLine = discModel.findContinuityLine( point, SEARCH_DISTANCE );
           if( contiLine != null )
             return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryEditor.6" ) ); //$NON-NLS-1$

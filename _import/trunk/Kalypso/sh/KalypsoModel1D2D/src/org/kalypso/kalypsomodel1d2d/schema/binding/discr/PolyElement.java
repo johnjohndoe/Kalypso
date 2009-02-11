@@ -119,7 +119,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   {
     this( FeatureHelper.createFeatureWithId( IPolyElement.QNAME, parentFeature, propQName, gmlID ) );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
    */
@@ -172,7 +172,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     edgeList.invalidate();
     getFeature().invalidEnvelope();
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
    */
@@ -296,9 +296,17 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
       final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
       final IFE1D2DNode firstNode = nodes.get( 0 );
       final IFE1D2DNode secondNode = nodes.get( 1 );
+
+      if( firstNode == null )
+        throw new IllegalStateException( "Invalid mesh: no first node for edge: " + edge.getGmlID() );
+
       if( firstNode.equals( node ) && !excludeNodes.contains( secondNode ) )
         return secondNode;
-      else if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
+
+      if( secondNode == null )
+        throw new IllegalStateException( "Invalid mesh: no second node for edge: " + edge.getGmlID() );
+
+      if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
         return firstNode;
     }
     return null;
