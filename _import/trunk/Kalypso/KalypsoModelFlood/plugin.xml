@@ -330,9 +330,10 @@
             canFinishEarly="false"
             category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
             class="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
-            descriptionImage="content/images/button_flood.gif"
+            descriptionImage="icons/button_flood.gif"
             finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
             hasPages="true"
+            icon="icons//button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
             name="Kalypso Flood Model"
             project="true">
@@ -344,8 +345,9 @@
             canFinishEarly="false"
             category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
             class="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
-            descriptionImage="content/images/button_flood.gif"
+            descriptionImage="icons//button_flood.gif"
             hasPages="true"
+            icon="icons//button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
             name="Kalypso Flood Model - Demo Projekt"
             project="true">

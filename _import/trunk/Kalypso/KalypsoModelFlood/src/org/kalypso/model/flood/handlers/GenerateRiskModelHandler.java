@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ogc31.www.opengis.net.gml.FileType;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,6 +40,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -65,6 +72,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* collect the flood model data, that is needed for Risk Modeler */
       // get the data provider
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" );
 
       // get the flood model
       final IFloodModel model = dataProvider.getModel( IFloodModel.class );
@@ -118,12 +126,33 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
         createdFeatures.add( annualCoverageCollection.getFeature() );
+        final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
+        final String rasterFolderPath = "raster/input/";
+        final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" );
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
         {
+          if( floodModelScenarioFolder != null && rasterFolder != null && coverage instanceof RectifiedGridCoverage )
+          {
+            final RectifiedGridCoverage rCoverage = (RectifiedGridCoverage) coverage;
+            final Object rangeSet = rCoverage.getRangeSet();
+            // TODO: support other rangeSet types; possibly put this code into a helper class
+            if( rangeSet instanceof FileType )
+            {
+              final FileType fileType = (FileType) rangeSet;
+
+              final IResource resource = floodModelScenarioFolder.findMember( fileType.getFileName() );
+              if( resource != null && resource instanceof IFile )
+              {
+                final IFile file = (IFile) resource;
+                final String newRelativePath = rasterFolderPath.concat( file.getName() );
+                file.copy( rasterFolder.getFullPath().addTrailingSeparator().append( file.getName() ), false, new NullProgressMonitor() );
+                fileType.setFileName( newRelativePath );
+              }
+            }
+          }
           annualCoverageCollection.add( coverage );
         }
-        // TODO: dejan, copy/reference coverage into risk model for each event
       }
 
       /* ------ */
@@ -152,9 +181,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     // decision dialog for user, if he wants to overwrite existing data
     final List<IRunoffEvent> eventList = new LinkedList<IRunoffEvent>();
 
-    for( int i = 0; i < selectedEvents.length; i++ )
+    for( final IRunoffEvent runoffEvent : selectedEvents )
     {
-      final IRunoffEvent runoffEvent = selectedEvents[i];
       final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
 
       if( resultCoverages.size() == 0 )
