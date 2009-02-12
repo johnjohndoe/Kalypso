@@ -83,11 +83,11 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
    * Add Cascading theme constructor
    * 
    * @param mapModell
-   *            the gmt file
+   *          the gmt file
    * @param name
-   *            name of the theme / layer in the map outline
+   *          name of the theme / layer in the map outline
    * @param layerCommands
-   *            cmd for adding sub-layers
+   *          cmd for adding sub-layers
    */
   public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ICommand[] layerCommands, final ADD_THEME_POSITION position )
   {
@@ -96,7 +96,9 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     m_position = position;
 
     for( final ICommand command : layerCommands )
+    {
       m_layerCommands.add( command );
+    }
   }
 
   public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ADD_THEME_POSITION position )
@@ -217,7 +219,9 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
       m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
     }
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
+    {
       m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
+    }
 
     m_mapModell.activateTheme( m_theme );
   }
@@ -261,6 +265,21 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   public StyledLayerType toStyledLayerType( )
   {
     final org.kalypso.template.gismapview.ObjectFactory factory = new org.kalypso.template.gismapview.ObjectFactory();
-    return init( factory );
+    final CascadingLayer layer = init( factory );
+
+    final List<JAXBElement< ? extends StyledLayerType>> childLayers = layer.getLayer();
+
+    for( final ICommand command : m_layerCommands )
+    {
+      if( command instanceof IThemeCommand )
+      {
+        final IThemeCommand theme = (IThemeCommand) command;
+        final StyledLayerType childLayer = theme.toStyledLayerType();
+
+        childLayers.add( factory.createLayer( childLayer ) );
+      }
+    }
+
+    return layer;
   }
 }
