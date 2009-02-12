@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
@@ -66,16 +65,16 @@ import org.xml.sax.InputSource;
  */
 public class Client {
 
-	private static final String SERVICE_FACTORY_URI = "http://127.0.1.1:8080/services/Gaja3dResourceFactoryService";
-	
+	private static final String SERVICE_FACTORY_URI = "http://127.0.0.1:8080/services/Gaja3dResourceFactoryService";
+
 	// private static final String SERVICE_FACTORY_URI =
 	// "http://automatix/services/Gaja3dResourceFactoryService";
 	private static final String EPR_FILENAME = "test.epr";
 	private static final boolean SAVE_EPR = true;
 	private static final boolean USE_SAVED_EPR = false;
 
-	public static final String BOUNDARY_FILENAME = "resources/boundary.zip";
-	public static final String DEMPOINTS_FILENAME = "resources/allpoints.zip";
+	public static final String BOUNDARY_FILENAME = "resources/boundaries.zip";
+	public static final String DEMPOINTS_FILENAME = "resources/allpoints2.zip";
 
 	/*
 	 * for skipping grid creation
@@ -120,7 +119,7 @@ public class Client {
 				e.printStackTrace();
 				return;
 			}
-			
+
 			// set security
 			setSecurity((Stub) gaja3dFactory);
 
@@ -143,7 +142,7 @@ public class Client {
 
 		// set security
 		setSecurity((Stub) gaja3d);
-		
+
 		// call GetCapabilities
 		final Capabilities capabilities = callGetCapabilities(gaja3d);
 		// call DescribeProcess for all offered processes
@@ -155,10 +154,11 @@ public class Client {
 		printResourceProperties(gaja3d);
 
 		// call Execute_createGrid
-		 final CreateGridParametersType execute_createGrid =
-		 buildExecuteCreateGrid();
-		 gaja3d.execute_createGrid(execute_createGrid);
-		 printResourceProperties(gaja3d);
+		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
+		// wait 60 minutes
+		((Stub) gaja3d).setTimeout(60 * 1000 * 60); 
+		gaja3d.execute_createGrid(execute_createGrid);
+		printResourceProperties(gaja3d);
 
 		// call Execute_detectBreaklines
 		// final DetectBreaklinesParametersType detectBreaklinesParameters =
@@ -269,14 +269,17 @@ public class Client {
 				Gaja3dQNames.RP_DEM_POINTS));
 
 		try {
-			final URI demPointsHref = new URI(Client.class.getResource(
-					DEMPOINTS_FILENAME).toURI().toString());
+			// final URI demPointsHref = new URI(Client.class.getResource(
+			// DEMPOINTS_FILENAME).toURI().toString());
+			final URI demPointsHref = new URI(
+					"file:///home/skurzbach/example/allpoints2.zip");
 			demPoints.setHref(demPointsHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
-		} catch (final URISyntaxException e) {
-			e.printStackTrace();
 		}
+		// catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
 		execute_createGrid.setDemPoints(demPoints);
 
 		final GridX gridX = new GridX();
@@ -303,14 +306,17 @@ public class Client {
 				Gaja3dQNames.RP_BOUNDARY));
 
 		try {
-			final URI boundaryHref = new URI(Client.class.getResource(
-					BOUNDARY_FILENAME).toURI().toString());
+			// final URI boundaryHref = new URI(Client.class.getResource(
+			// BOUNDARY_FILENAME).toURI().toString());
+			final URI boundaryHref = new URI(
+					"file:///home/skurzbach/example/boundaries2.zip");
 			boundary.setHref(boundaryHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
-		} catch (final URISyntaxException e) {
-			e.printStackTrace();
 		}
+		// catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
 		update.set_any(new MessageElement[] { new MessageElement(
 				Gaja3dQNames.RP_BOUNDARY, boundary) });
 		setResourcePropertiesRequest.setUpdate(update);
@@ -354,8 +360,7 @@ public class Client {
 		// stub._setProperty(Constants.AUTHORIZATION, NoAuthorization
 		// .getInstance());
 
-		stub._setProperty(Constants.CLIENT_DESCRIPTOR_FILE,
-				secDescFile);
+		stub._setProperty(Constants.CLIENT_DESCRIPTOR_FILE, secDescFile);
 		// stub._setProperty(GSIConstants.GSI_MODE,
 		// GSIConstants.GSI_MODE_FULL_DELEG);
 	}

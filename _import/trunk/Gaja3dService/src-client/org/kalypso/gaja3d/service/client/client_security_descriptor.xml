@@ -2,8 +2,8 @@
 <securityConfig xmlns="http://www.globus.org">
 	<GSISecureConversation>
 		<privacy/>
-		<!--  <delegation value="full"/> -->
+		<delegation value="full"/>
 	</GSISecureConversation>
-	<!-- <authz value="self"/> --> 
-	<authz value="none"/>
+	<authz value="self"/>  
+	<!-- <authz value="none"/>  -->
 </securityConfig>
