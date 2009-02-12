@@ -171,11 +171,8 @@ Section Kalypso SEC0000
     SetOverwrite On
     SetOutPath $INSTDIR\$sub_folder
 
-    # TODO
-; File /r install_data\kalypso\*
-
-# Path to your deploy folder
-    File /r C:\temp\Kalypso\*
+    # Path to your deploy folder
+    File /r install_data\kalypso\*
 SectionEnd
 
 # Diese Sektion ist versteckt (wegen dem -).
