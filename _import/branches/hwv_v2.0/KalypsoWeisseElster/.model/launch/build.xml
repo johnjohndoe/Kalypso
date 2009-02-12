@@ -424,31 +424,31 @@
           target: mergeCase			
          ================================= 
     -->
-	<target name="mergeCase" if="doMergeCase" depends="setProperties">
+	<target name="mergeCase" if="doMergeCase" depends="setProperties" description="Handeingaben übernehmen (Zeitreihen zusammenführen)">
         <!-- Niederschläge - Messung -->
-        <kalypso.mergeObservation gml="${calc.url}/ombrometer.gml"
+	        <kalypso.mergeObservation gml="${calc.url}/ombrometer.gml" description="Handeingaben übernehmen (Ombrometer)"
                                  featurePath="ombrometerMember"
                                  context="${calc.url}"
         						 sourcecontext="${calc.merge.url}"
         						 observationproperty="N"/>
 
-        <!-- Niederschläge - Gebiete -->
+        <!-- Niederschläge - Gebiete --> 
         <kalypso.mergeObservation gml="${calc.url}/rcm.gml"
-                                 featurePath="catchmentCollectionMember/catchmentMember"
+                featurePath="catchmentCollectionMember/catchmentMember" description="Handeingaben übernehmen (Niederschlagsgebiete)"
         						 depth="zero"
                                  context="${calc.url}"
         						 sourcecontext="${calc.merge.url}"
         						 observationproperty="rainfall"/>
 
         <!-- Zuflüsse -->
-        <kalypso.mergeObservation gml="${project.url}/.model/observationConf/ZuflussMessungMapping.gml"
+	        <kalypso.mergeObservation gml="${project.url}/.model/observationConf/ZuflussMessungMapping.gml" description="Handeingaben übernehmen (Zuflüsse)"
                                  featurePath="mappingMember"
                                  context="${calc.url}"
         						 sourcecontext="${calc.merge.url}"
         						 observationproperty="outObservationLink"/>
 
         <!-- Pegel -->
-        <kalypso.mergeObservation gml="${pegelMappingURL}"
+	        <kalypso.mergeObservation gml="${pegelMappingURL}" description="Handeingaben übernehmen (Pegel)"
                                  featurePath="mappingMember"
                                  context="${calc.url}"
         						 sourcecontext="${calc.merge.url}"
