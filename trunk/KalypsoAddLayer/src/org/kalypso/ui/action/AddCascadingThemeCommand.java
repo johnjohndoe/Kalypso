@@ -181,6 +181,13 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     layer.setVisible( true );
     layer.getDepends();
 
+    final List<Property> properties = layer.getProperty();
+
+    for( final Property property : m_properties )
+    {
+      properties.add( property );
+    }
+
     return layer;
   }
 
