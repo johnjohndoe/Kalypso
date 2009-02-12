@@ -172,7 +172,7 @@ Section Kalypso SEC0000
     SetOutPath $INSTDIR\$sub_folder
 
     # Path to your deploy folder
-    File /r install_data\kalypso\*
+    File /r /x .svn install_data\kalypso\*
 SectionEnd
 
 # Diese Sektion ist versteckt (wegen dem -).
