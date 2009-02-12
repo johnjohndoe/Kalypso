@@ -149,7 +149,7 @@ public class SldLoader extends AbstractLoader
         }
         else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
         {
-          sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
+//          sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
         }
         else
           throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.6") + styleURL ); //$NON-NLS-1$
