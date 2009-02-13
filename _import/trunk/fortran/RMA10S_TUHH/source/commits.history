@@ -587,3 +587,12 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 008.) Set all variables (including depth) of dry nodes to zero.
 
 --- Nico Schrage, 04.02.2009 (RMAKalypso 1.1.1alpha2)
+
+009.) Introduce changes from coef25nt to the other coef2* subroutines: Goal is to make them comparable so the can be merged for reducing the amount of files.
+010.) Release notes into RMA·Kalypso console output
+
+--- committed ---
+
+--- Nico Schrage, 13.02.2009 (released RMA·Kalypso Version 1.1.1 build 13.02.2009 with filename: rma-kalypso_1.1.1_build20090213.exe)
+
+001.) 
