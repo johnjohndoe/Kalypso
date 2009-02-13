@@ -88,23 +88,23 @@ public class AddThemeCommand implements IThemeCommand
    * This command adds a new layer to
    * 
    * @param model
-   *            active GisTemplateMapModell from the active Map
+   *          active GisTemplateMapModell from the active Map
    * @param name
-   *            name of the layer
+   *          name of the layer
    * @param type
-   *            type of source (must be a valid loader) ex.: wms, wfs, shape, etc.
+   *          type of source (must be a valid loader) ex.: wms, wfs, shape, etc.
    * @param featurePath
-   *            the feature path in the gml workspace
+   *          the feature path in the gml workspace
    * @param source
-   *            a String having keywords and (paired values) depending on the Loader context
+   *          a String having keywords and (paired values) depending on the Loader context
    * @param stylelinktype
-   *            keyword for the used style type (normally sld)
+   *          keyword for the used style type (normally sld)
    * @param style
-   *            name of the style
+   *          name of the style
    * @param styleLocation
-   *            a valid resouce path (of the used plugin or a valid URL )
+   *          a valid resouce path (of the used plugin or a valid URL )
    * @param styleType
-   *            sets the type simple or complex
+   *          sets the type simple or complex
    * @deprecated use constrtuctor without style information TODO separate AddTheme from AddStyle, at the moment AddTheme
    *             is both
    */
