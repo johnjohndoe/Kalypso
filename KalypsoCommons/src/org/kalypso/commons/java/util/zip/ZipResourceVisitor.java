@@ -64,13 +64,36 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
  */
 public class ZipResourceVisitor implements IResourceVisitor
 {
+  public static enum PATH_TYPE
+  {
+    PROJECT_RELATIVE,
+    PLATFORM_RELATIVE
+  }
+
   private final ZipOutputStream m_zos;
 
   private final Set<String> m_entries = new HashSet<String>();
 
+  private PATH_TYPE m_pathType = PATH_TYPE.PROJECT_RELATIVE;
+
   public ZipResourceVisitor( final File zipfile ) throws FileNotFoundException
   {
     m_zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( zipfile ) ) );
+  }
+
+  public ZipResourceVisitor( final File zipfile, final PATH_TYPE pathType ) throws FileNotFoundException
+  {
+    this( zipfile );
+    m_pathType = pathType;
+  }
+
+  /**
+   * A type of path to use for internal zip-file structure. By default, project relative paths will be used. Platform
+   * relative paths are intended for accessing data from several projects at once.
+   */
+  public void setPathType( final PATH_TYPE pathType )
+  {
+    m_pathType = pathType;
   }
 
   /**
@@ -78,7 +101,7 @@ public class ZipResourceVisitor implements IResourceVisitor
    * 
    * @throws IOException
    */
-  public void close() throws IOException
+  public void close( ) throws IOException
   {
     m_zos.close();
   }
@@ -90,9 +113,18 @@ public class ZipResourceVisitor implements IResourceVisitor
   {
     if( resource.getType() == IResource.FILE )
     {
-      final IFile file = (IFile)resource;
-      final String relativePathTo = file.getProjectRelativePath().toString();
-
+      final IFile file = (IFile) resource;
+      final String relativePathTo;
+      switch( m_pathType )
+      {
+        case PLATFORM_RELATIVE:
+          relativePathTo = file.getFullPath().makeRelative().toString();
+          break;
+        case PROJECT_RELATIVE:
+        default:
+          relativePathTo = file.getProjectRelativePath().toString();
+          break;
+      }
       try
       {
         if( !m_entries.contains( relativePathTo ) )
