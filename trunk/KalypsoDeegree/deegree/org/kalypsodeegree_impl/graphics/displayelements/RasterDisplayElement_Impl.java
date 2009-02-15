@@ -48,6 +48,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -137,10 +138,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
         paintGrid( (Graphics2D) g, grid, projection, symbolizer, targetCrs, monitor );
       }
     }
+    catch( final CoreException ce )
+    {
+      throw ce;
+    }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to paint grid", e );
+      throw new CoreException( status );
     }
     finally
     {
