@@ -62,7 +62,7 @@ public class EditRoughnessParametersOfPolygonWidget extends SingleElementSelectW
 
   public EditRoughnessParametersOfPolygonWidget( )
   {
-    super( Messages.getString("EditRoughnessParametersOfPolygonWidget.0"), Messages.getString("EditRoughnessParametersOfPolygonWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

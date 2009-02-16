@@ -164,7 +164,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     try
     {
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-      m_tmpDir = SimulationUtilitites.createSimulationTmpDir( "rma10s" + calculationUnit.getGmlID() );
+      m_tmpDir = SimulationUtilitites.createSimulationTmpDir( "rma10s" + calculationUnit.getGmlID() ); //$NON-NLS-1$
 
       writeRma10Files( m_tmpDir, progress.newChild( 10 ) );
       return startCalcCore( m_tmpDir, progress.newChild( 90 ) );
@@ -295,7 +295,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final String processFactoryId;
     if( m_gridProcess )
     {
-      processFactoryId = "org.kalypso.simulation.gridprocess";
+      processFactoryId = "org.kalypso.simulation.gridprocess"; //$NON-NLS-1$
     }
     else
     {

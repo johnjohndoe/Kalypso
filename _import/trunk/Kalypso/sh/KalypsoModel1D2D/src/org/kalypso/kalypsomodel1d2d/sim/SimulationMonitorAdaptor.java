@@ -2,6 +2,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.simulation.core.ISimulationMonitor;
 
 public class SimulationMonitorAdaptor implements IProgressMonitor
@@ -28,7 +29,7 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   public void done( )
   {
     m_monitor.setProgress( 100 );
-    m_monitor.setFinishInfo( IStatus.OK, "Finished." );
+    m_monitor.setFinishInfo( IStatus.OK, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.SimulationMonitorAdaptor.0") ); //$NON-NLS-1$
   }
 
   @Override

@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -61,7 +62,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
 /**
  * Theme that shows a calculation unit
  *
@@ -80,7 +81,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, Messages.getString( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0") ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name,  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0") , mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )

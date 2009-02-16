@@ -132,7 +132,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
 
   private IStatus doRunCalculation( final IProgressMonitor monitor )
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "", 1000 );
+    final SubMonitor progress = SubMonitor.convert( monitor, "", 1000 ); //$NON-NLS-1$
 
     // finish this job in finally block if not null
     IterationInfoJob iterationJob = null;
@@ -143,7 +143,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
 
       // result temp dir is "[scenarioFolder]/results/[calcUnitID]/temp"
       final IFolder scenarioResultsFolder = m_scenarioFolder.getFolder( ISimulation1D2DConstants.OUTPUT_DIR_NAME );
-      final IFolder resultTempFolder = scenarioResultsFolder.getFolder( calcUnitID ).getFolder( "temp" );
+      final IFolder resultTempFolder = scenarioResultsFolder.getFolder( calcUnitID ).getFolder( "temp" ); //$NON-NLS-1$
 
       // remember result temp dir for later result processing (absolute path)
       m_resultTmpDir = new File( resultTempFolder.getLocationURI() );
@@ -151,7 +151,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
       // simulation temp dir
       // will be deleted at the end of simulation!!!
       // final File simulationTmpDir = SimulationUtilitites.createSimulationTmpDir( "rmaKalypso-" + calcUnitID );
-      final File simulationTmpDir = new File( m_resultTmpDir, "rma" );
+      final File simulationTmpDir = new File( m_resultTmpDir, "rma" ); //$NON-NLS-1$
       simulationTmpDir.mkdirs();
 
       // modeldata
@@ -165,7 +165,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
       final Modeldata.Output e = new Modeldata.Output();
       final String resultFile = resultTempFolder.getProjectRelativePath().toOSString();
       e.setPath( resultFile );
-      e.setId( "results" );
+      e.setId( "results" ); //$NON-NLS-1$
       modeldata.getOutput().add( e );
 
       // set up iteration monitoring
@@ -215,7 +215,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
     // watch iteration observation directly in temp dir (only possible for local simulation)
     final File iterObsFile = new File( simulationTmpDir, OUTPUT_ITR );
     // and put processed iterations GML into folder "iterObs" in result temp dir
-    final File iterObsDir = new File( m_resultTmpDir, "iterObs" );
+    final File iterObsDir = new File( m_resultTmpDir, "iterObs" ); //$NON-NLS-1$
     iterObsDir.mkdirs();
     m_iterationInfo = new IterationInfo( iterObsFile, iterObsDir, m_controlModel );
     iterationJob = new IterationInfoJob( m_iterationInfo, m_controlModel, monitor );
@@ -232,9 +232,9 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
   private static File findErrorFile( final File dir )
   {
     // TODO: @Nico: we should stick to one defined error file in the future; whic one is it?
-    final File errorDatFile = new File( dir, "ERROR.DAT" );
-    final File errorOutFile = new File( dir, "ERROR.OUT" );
-    final File errorErrFile = new File( dir, "exe.err" );
+    final File errorDatFile = new File( dir, "ERROR.DAT" ); //$NON-NLS-1$
+    final File errorOutFile = new File( dir, "ERROR.OUT" ); //$NON-NLS-1$
+    final File errorErrFile = new File( dir, "exe.err" ); //$NON-NLS-1$
 
     if( errorDatFile.exists() )
       return errorDatFile;
@@ -253,7 +253,7 @@ public class RMAKalypsoSimulationRunner implements ISimulation1D2DConstants
     // TODO: error or warning depends, if any steps where calculated; the rma10s should determine if result processing
     // makes sense
 
-    final String[] lines = errorMessage.split( "\n" );
+    final String[] lines = errorMessage.split( "\n" ); //$NON-NLS-1$
     if( lines.length != 7 )
       return StatusUtilities.createStatus( IStatus.WARNING, CODE_RMA10S, errorMessage, null );
 

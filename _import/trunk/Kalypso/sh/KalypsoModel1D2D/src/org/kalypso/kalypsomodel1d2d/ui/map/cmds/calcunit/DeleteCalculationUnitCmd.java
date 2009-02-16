@@ -210,7 +210,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final String message = Messages.getString( "DeleteCalculationUnitCmd.1" ); //$NON-NLS-1$
+        final String message = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.1" ); //$NON-NLS-1$
         final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
         return;
@@ -264,7 +264,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     catch( final CoreException e )
     {
-      throw new RuntimeException( Messages.getString( "DeleteCalculationUnitCmd.4" ), e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd.4" ), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection controlModel1D2DCollection = modelGroup.getModel1D2DCollection();
     IControlModel1D2D controlModel1D2D = null;

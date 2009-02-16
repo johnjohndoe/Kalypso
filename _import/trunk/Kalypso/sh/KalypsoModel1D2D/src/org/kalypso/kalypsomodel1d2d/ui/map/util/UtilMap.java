@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-
+import  org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -151,7 +151,7 @@ public class UtilMap
           return model;
       }
     }
-    throw new RuntimeException( Messages.getString( "UtilMap.4" ) );
+    throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap.4" ) ); //$NON-NLS-1$
   }
 
   private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapPanel panel )

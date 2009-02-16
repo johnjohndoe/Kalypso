@@ -100,7 +100,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
   public ApplyElevationWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1"), new SelectFeatureWidget( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.12"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.13"), new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
     m_toolTipRendererDesc.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.14") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 

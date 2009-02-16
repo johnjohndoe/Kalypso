@@ -175,7 +175,7 @@ public class Model1D2DSimulation implements ISimulation1D2DConstants
     }
     catch( final InvocationTargetException e )
     {
-      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, "Simulation-Log konnte nicht initialisiert werden: " + e.getTargetException().toString() );
+      MessageDialog.openError( m_shell, STRING_DLG_TITLE_RMA10S, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.Model1D2DSimulation.0") + e.getTargetException().toString() ); //$NON-NLS-1$
     }
     return geoLog;
   }

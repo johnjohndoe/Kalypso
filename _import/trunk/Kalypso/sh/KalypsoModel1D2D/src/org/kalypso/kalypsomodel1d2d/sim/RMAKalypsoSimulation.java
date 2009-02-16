@@ -96,7 +96,7 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstants
 {
-  public static final String ID = "org.kalypso.model1d2d";
+  public static final String ID = "org.kalypso.model1d2d"; //$NON-NLS-1$
 
   private IFEDiscretisationModel1d2d m_discretisationModel;
 
@@ -116,7 +116,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resource/kalypso1d2dspec.xml" );
+    return getClass().getResource( "resource/kalypso1d2dspec.xml" ); //$NON-NLS-1$
   }
 
   /**
@@ -142,7 +142,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     }
     catch( final InvocationTargetException e )
     {
-      throw new SimulationException( "Could not initialize GeoLog", e );
+      throw new SimulationException( "Could not initialize GeoLog", e ); //$NON-NLS-1$
     }
 
     final SzenarioDataProvider caseDataProvider = ScenarioHelper.getScenarioDataProvider();
@@ -160,23 +160,23 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
 
       writeRma10Files( tmpdir, progressMonitor );
 
-      final File stdoutFile = new File( tmpdir, "exe.log" );
-      final File stderrFile = new File( tmpdir, "exe.err" );
+      final File stdoutFile = new File( tmpdir, "exe.log" ); //$NON-NLS-1$
+      final File stderrFile = new File( tmpdir, "exe.err" ); //$NON-NLS-1$
 
       logOS = new BufferedOutputStream( new FileOutputStream( stdoutFile ) );
       errorOS = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
 
       startCalcCore( tmpdir, logOS, errorOS, progressMonitor );
 
-      resultEater.addResult( "results", new File( tmpdir, Control1D2DConverter.RESULT_DIR_NAME ) );
+      resultEater.addResult( "results", new File( tmpdir, Control1D2DConverter.RESULT_DIR_NAME ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
-      throw new SimulationException( String.format( "Simulation error in %s", m_scenarioFolder.getFullPath() ), e );
+      throw new SimulationException( String.format( "Simulation error in %s", m_scenarioFolder.getFullPath() ), e ); //$NON-NLS-1$
     }
     catch( final FileNotFoundException e )
     {
-      throw new SimulationException( String.format( "Simulation error in %s", m_scenarioFolder.getFullPath() ), e );
+      throw new SimulationException( String.format( "Simulation error in %s", m_scenarioFolder.getFullPath() ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -275,7 +275,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
       final String commandString = exeFile.getAbsolutePath();
 
       // Run the Calculation
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.0" ) + ": " + commandString ); //$NON-NLS-1$
+      m_log.formatLog( IStatus.INFO, CODE_RUNNING, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.0" ) + ": " + commandString ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final ICancelable progressCancelable = new ProgressCancelable( progress );
 
@@ -287,7 +287,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     }
     catch( final OperationCanceledException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), e ) ); //$NON-NLS-1$
     }
     catch( final CoreException ce )
     {
@@ -313,11 +313,11 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.23" ) ) ); //$NON-NLS-1$
 
     // REMARK: This is OS dependent; we use should use a pattern according to OS
-    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe";
+    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe"; //$NON-NLS-1$
 
     final Location installLocation = Platform.getInstallLocation();
     final File installDir = FileUtils.toFile( installLocation.getURL() );
-    final File exeDir = new File( installDir, "bin" );
+    final File exeDir = new File( installDir, "bin" ); //$NON-NLS-1$
     final File exeFile = new File( exeDir, exeName );
     if( exeFile.exists() )
       return exeFile;

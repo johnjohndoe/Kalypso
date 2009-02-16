@@ -60,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -245,7 +246,7 @@ public class TempGrid
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Griderzeugung fehlgeschlagen." );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.0") ); //$NON-NLS-1$
     }
   }
 
@@ -296,7 +297,7 @@ public class TempGrid
     final GM_Point[][] points2D = m_gridPoints;
 
     if( points2D.length == 0 )
-      return StatusUtilities.createErrorStatus( "FE-Griderzeugung schlug fehl." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.1") ); //$NON-NLS-1$
 
     // we must have the node theme. First node theme gets it
     final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( panel, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
@@ -309,11 +310,11 @@ public class TempGrid
       catch( final Exception e )
       {
         e.printStackTrace();
-        return StatusUtilities.statusFromThrowable( e, "FE-Griderzeugung schlug fehl." );
+        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.2") ); //$NON-NLS-1$
       }
     }
     else
-      return StatusUtilities.createErrorStatus( "FE-Griderzeugung schlug fehl. Kein FE-Thema verfügbar." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.3") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }
@@ -335,7 +336,7 @@ public class TempGrid
   private IStatus checkElements( )
   {
     if( m_nodeTheme == null )
-      return StatusUtilities.createErrorStatus( "kein Knotenthema vorhanden, daher keine Netzprüfung." );
+      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.4") ); //$NON-NLS-1$
     try
     {
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
@@ -344,7 +345,7 @@ public class TempGrid
       {
         // 4) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
-          return StatusUtilities.createErrorStatus( "Ungültiges Polygon: selbstschneidend" );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.5") ); //$NON-NLS-1$
 
         // New Element intersects other elements
         final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -358,7 +359,7 @@ public class TempGrid
             {
               final GM_Object intersection = eleGeom.intersection( newSurface );
               if( intersection instanceof GM_Surface )
-                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+                return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid.6") ); //$NON-NLS-1$
             }
           }
         }

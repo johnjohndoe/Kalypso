@@ -155,7 +155,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return Messages.getString( "CreateCalculationUnitCmd.0" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -252,7 +252,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     catch( final CoreException e )
     {
-      throw new RuntimeException( Messages.getString( "CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.1" ), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
     final Feature parentFeature = model1D2DCollection.getFeature();
@@ -292,7 +292,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         /* If not yet initialized, create components and write obs back to feature. */
         if( result.getComponents().length == 0 )
         {
-          obs.setName( Messages.getString( "CreateCalculationUnitCmd.3" ) ); //$NON-NLS-1$
+          obs.setName( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.3" ) ); //$NON-NLS-1$
 
           // TODO put this inside c1d2d:TimestepsObservation
           /**
@@ -330,7 +330,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      throw new RuntimeException( Messages.getString( "CreateCalculationUnitCmd.4" ), e1 ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd.4" ), e1 ); //$NON-NLS-1$
     }
   }
 }

@@ -145,7 +145,7 @@ public class ResultManager implements ISimulation1D2DConstants
 
     try
     {
-      m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() );
+      m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() ); //$NON-NLS-1$
 
       if( m_stepsToProcess == null )
         return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
