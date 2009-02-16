@@ -54,10 +54,22 @@ public class RemoveThemeCommand implements ICommand
 
   private final IKalypsoTheme m_theme;
 
+  private final boolean m_force;
+
   public RemoveThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme )
+  {
+    this( mapModell, theme, false );
+  }
+
+  /**
+   * @param force
+   *          force the deletion of a not deleteable theme
+   */
+  public RemoveThemeCommand( final IMapModell mapModell, final IKalypsoTheme theme, final boolean force )
   {
     m_mapModell = mapModell;
     m_theme = theme;
+    m_force = force;
   }
 
   /**
@@ -76,8 +88,8 @@ public class RemoveThemeCommand implements ICommand
     /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
     final String deleteableStr = m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
     final boolean deletable = Boolean.parseBoolean( deleteableStr );
-    if( !deletable )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.command.RemoveThemeCommand.0") + m_theme.getName() ); //$NON-NLS-1$
+    if( !m_force && !deletable )
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.0" ) + m_theme.getName() ); //$NON-NLS-1$
 
     m_mapModell.removeTheme( m_theme );
   }
@@ -103,6 +115,6 @@ public class RemoveThemeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.RemoveThemeCommand.1"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.1" ); //$NON-NLS-1$
   }
 }
