@@ -126,7 +126,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
   public WspmWaterBody getWater( )
   {
     final Feature parent = getFeature().getOwner();
-    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
+    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) ) //$NON-NLS-1$
       return new WspmWaterBody( parent );
 
     return null;

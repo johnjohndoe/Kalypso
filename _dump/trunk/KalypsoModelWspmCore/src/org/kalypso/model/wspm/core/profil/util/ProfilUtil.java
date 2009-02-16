@@ -463,7 +463,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil_1", point ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getFormatString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
 
     return points.get( pos + 1 );
   }
