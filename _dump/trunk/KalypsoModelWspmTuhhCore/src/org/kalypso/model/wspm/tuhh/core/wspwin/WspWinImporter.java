@@ -125,7 +125,7 @@ public class WspWinImporter
    */
   public static IStatus importProject( final File wspwinDirectory, final IContainer targetContainer, final IProgressMonitor monitor ) throws Exception
   {
-    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.WspWinImporter.1"), null ); //$NON-NLS-1$
+    final MultiStatus logStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), 0, Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.1"), null ); //$NON-NLS-1$
 
     monitor.beginTask( Messages.getString("org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.2"), 1000 ); //$NON-NLS-1$
 
@@ -282,7 +282,7 @@ public class WspWinImporter
       }
       catch( final IOException e )
       {
-        final String msg = Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );
+        final String msg = Messages.getFormatString( "org.kalypso.model.wspm.tuhh.core.wspwin.WspWinImporter.119", bean.getFileName() );//$NON-NLS-1$
         status.add( StatusUtilities.createStatus( IStatus.WARNING, msg, e ) );
       }
       catch( final GMLSchemaException e )
