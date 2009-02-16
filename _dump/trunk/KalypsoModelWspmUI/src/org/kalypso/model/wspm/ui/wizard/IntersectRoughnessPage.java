@@ -75,6 +75,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -159,7 +160,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
     m_assignmentGroup.setDialogSettings( getDialogSettings() );
     final IResource initialSelection = getAssignmentPath() == null ? null : root.findMember( getAssignmentPath() );
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, "Zuordnungsdatei", new String[] { "gml" }, root, new ResourceSelectionValidator() );  //$NON-NLS-2$
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.getString("org.kalypso.model.wspm.ui.wizard.IntersectRoughnessPage.14"), new String[] { "gml" }, root, new ResourceSelectionValidator() );   //$NON-NLS-1$//$NON-NLS-2$
     m_assignmentGroup.setSelectionDialog( dialog );
 
     final Control assignmentGroup = m_assignmentGroup.createControl( composite );

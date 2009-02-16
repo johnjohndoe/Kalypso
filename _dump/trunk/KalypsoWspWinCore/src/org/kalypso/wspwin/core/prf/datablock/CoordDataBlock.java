@@ -51,6 +51,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kalypso.wspwin.core.i18n.Messages;
+
 /**
  * @author belger
  */
@@ -119,7 +121,7 @@ public class CoordDataBlock extends AbstractDataBlock
       {
         final String readLine = reader.readLine();
         if( readLine == null )
-          throw new EOFException( "Trying to read more coordinates" );
+          throw new EOFException( Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.0") ); //$NON-NLS-1$
           
         sT = new StringTokenizer( readLine );
       }
@@ -127,7 +129,7 @@ public class CoordDataBlock extends AbstractDataBlock
       {
         // TODO: ist das gut, vielleicht doch lieber ne exception raus werfen und das ganze profil
         // verwerfen??
-        m_logger.log( Level.SEVERE, "unbekannter Formatfehler. " + e.getMessage() );
+        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1") + e.getMessage() ); //$NON-NLS-1$
         return coords;
       }
       
@@ -136,13 +138,13 @@ public class CoordDataBlock extends AbstractDataBlock
       
       // TODO: auch den Fall abfangen, dass weniger als 4 koordinaten in der Zeile sind aber noch mehr erwartet werden!
       
-      String dblStr = "";
+      String dblStr = ""; //$NON-NLS-1$
       final int ci = (sT.countTokens() / 2);
       
       if( ci < 4 && counter + ci < count )
       {
         // line contains not enough tokens!
-        m_logger.log( Level.SEVERE, "Not enough coordinates in coord-data-block " );
+        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.3") ); //$NON-NLS-1$
         return coords;
       }
       
@@ -158,7 +160,7 @@ public class CoordDataBlock extends AbstractDataBlock
         catch( NoSuchElementException e )
         {
           coords[counter] = 0.0;
-          m_logger.log( Level.SEVERE, "Formatfehler: Profilpunkt Nr." + Integer.toString( counter + 1 ) + "(" + dblStr + ") -> " + e.getMessage() );
+          m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.4") + Integer.toString( counter + 1 ) + "(" + dblStr + ") -> " + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         counter++;
         if( counter == count )

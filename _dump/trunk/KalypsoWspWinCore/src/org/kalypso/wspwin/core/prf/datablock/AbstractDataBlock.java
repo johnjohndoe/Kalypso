@@ -68,7 +68,7 @@ public abstract class AbstractDataBlock implements IDataBlock
 
   public static final String formatDouble( final double d )
   {
-    return String.format( Locale.US, " 0 %12.4f", new Object[] { Double.isNaN( d ) ? new Double( 0.0 ) : new Double( d ) } );
+    return String.format( Locale.US, " 0 %12.4f", new Object[] { Double.isNaN( d ) ? new Double( 0.0 ) : new Double( d ) } ); //$NON-NLS-1$
   }
 
   /**

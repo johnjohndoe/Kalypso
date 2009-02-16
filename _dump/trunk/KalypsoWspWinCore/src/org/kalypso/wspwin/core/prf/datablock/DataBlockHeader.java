@@ -78,8 +78,8 @@ public class DataBlockHeader
 
   public DataBlockHeader( )
   {
-    m_secondLine = "[-]";
-    m_thirdLine = "0  0  0  0  0  0  0  0  0";
+    m_secondLine = "[-]"; //$NON-NLS-1$
+    m_thirdLine = "0  0  0  0  0  0  0  0  0"; //$NON-NLS-1$
   }
 
   public String getFirstLine( )
