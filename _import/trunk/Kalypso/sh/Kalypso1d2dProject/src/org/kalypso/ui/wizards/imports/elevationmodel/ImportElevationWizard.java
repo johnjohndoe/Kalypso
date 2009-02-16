@@ -149,7 +149,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
       final IPath sourcePath = mPage.getSourceLocation();// .toOSString();
       final String setFileName = mPage.getNameForFile();
       final String setFileDescription = mPage.getDescriptionForFileArea();
-      final String defaultText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ); //$NON-NLS-1$
+      final String defaultText = "" ; //$NON-NLS-1$
       final String replaceText = Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.10" ); //$NON-NLS-1$
       final String selectedCoordinateSystem = mPage.getCoordinateSystem();
 

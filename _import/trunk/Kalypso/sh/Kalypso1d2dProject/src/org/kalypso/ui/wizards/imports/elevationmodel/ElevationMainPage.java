@@ -146,7 +146,7 @@ public class ElevationMainPage extends WizardPage
     gridData_4.horizontalSpan = 2;
     gridData_4.heightHint = 100;
     m_tileDescription.setLayoutData( gridData_4 );
-    m_tileDescription.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) ); //$NON-NLS-1$
+    m_tileDescription.setText( "" ); //$NON-NLS-1$
 
     initContents();
   }
