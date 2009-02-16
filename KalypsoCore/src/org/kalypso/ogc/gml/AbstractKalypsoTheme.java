@@ -211,10 +211,14 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_listeners.clear();
 
     if( m_standardThemeIcon != null )
+    {
       m_standardThemeIcon.dispose();
+    }
 
     if( m_externIcon != null )
+    {
       m_externIcon.dispose();
+    }
   }
 
   /**
@@ -497,7 +501,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_standardThemeIcon == null )
+    {
       m_standardThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) ); //$NON-NLS-1$
+    }
 
     return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
@@ -794,4 +800,37 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     return false;
   }
+
+// /**
+// * @see java.lang.Object#equals(java.lang.Object)
+// */
+// @Override
+// public boolean equals( final Object obj )
+// {
+// if( obj instanceof IKalypsoTheme )
+// {
+// final IKalypsoTheme other = (IKalypsoTheme) obj;
+//
+// final EqualsBuilder builder = new EqualsBuilder();
+// builder.append( this.getLabel(), other.getLabel() );
+// builder.append( this.getType(), other.getType() );
+//
+// return builder.isEquals();
+// }
+//
+// return super.equals( obj );
+// }
+//
+// /**
+// * @see java.lang.Object#hashCode()
+// */
+// @Override
+// public int hashCode( )
+// {
+// final HashCodeBuilder builder = new HashCodeBuilder();
+// builder.append( this.getLabel() );
+// builder.append( this.getType() );
+//
+// return builder.toHashCode();
+// }
 }

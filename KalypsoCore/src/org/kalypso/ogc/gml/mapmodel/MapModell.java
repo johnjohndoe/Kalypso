@@ -56,6 +56,7 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
@@ -125,7 +126,9 @@ public class MapModell implements IMapModell
     m_themes.clear();
 
     for( final IKalypsoTheme theme : themeArray )
+    {
       theme.dispose();
+    }
 
     m_project = null;
   }
@@ -134,7 +137,7 @@ public class MapModell implements IMapModell
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public void activateTheme( final IKalypsoTheme theme )
@@ -168,7 +171,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   *
+   * 
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -230,7 +233,9 @@ public class MapModell implements IMapModell
     fireThemeAdded( theme );
 
     if( m_activeTheme == null )
+    {
       activateTheme( theme );
+    }
   }
 
   /**
@@ -259,7 +264,9 @@ public class MapModell implements IMapModell
       final IKalypsoTheme theme = themes[i - 1];
       progress.subTask( theme.getLabel() );
       if( theme.isVisible() )
+      {
         theme.paint( g, p, null, progress.newChild( 1 ) );
+      }
     }
   }
 
@@ -282,14 +289,18 @@ public class MapModell implements IMapModell
   {
     final int pos = m_themes.indexOf( theme );
     if( pos > 0 )
+    {
       swapThemes( theme, getTheme( pos - 1 ) );
+    }
   }
 
   public void moveUp( final IKalypsoTheme theme )
   {
     final int pos = m_themes.indexOf( theme );
     if( pos + 1 < m_themes.size() )
+    {
       swapThemes( theme, getTheme( pos + 1 ) );
+    }
   }
 
   public void removeTheme( final int pos )
@@ -300,13 +311,62 @@ public class MapModell implements IMapModell
   public void removeTheme( final IKalypsoTheme theme )
   {
     theme.removeKalypsoThemeListener( m_themeListener );
-    m_themes.remove( theme );
+
+    if( m_themes.contains( theme ) )
+    {
+      m_themes.remove( theme );
+    }
+    else
+    {
+      this.accept( new IKalypsoThemeVisitor()
+      {
+
+        @Override
+        public boolean visit( final IKalypsoTheme t )
+        {
+          if( t instanceof IKalypsoCascadingTheme )
+          {
+            final IKalypsoCascadingTheme cascading = (IKalypsoCascadingTheme) t;
+            return !removeFromCascadingTheme( cascading, theme );
+          }
+
+          return true;
+        }
+      }, 1 );
+    }
 
     fireThemeRemoved( theme, theme.isVisible() );
-
     if( m_activeTheme == theme )
+    {
       // TODO: is this right? The theme has gone... probably activateTheme( null ) was meant?
       activateTheme( theme );
+    }
+  }
+
+  /**
+   * @hack normally it is better a IKalypsoTheme nows it's parent and iterate over these parent / child structure by
+   *       IKalypsoThemeVisitor
+   */
+  protected boolean removeFromCascadingTheme( final IKalypsoCascadingTheme cascading, final IKalypsoTheme remove )
+  {
+    final IKalypsoTheme[] themes = cascading.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
+    {
+      if( theme.equals( remove ) )
+      {
+        cascading.removeTheme( remove );
+        return true;
+      }
+      else if( theme instanceof IKalypsoCascadingTheme )
+      {
+        final IKalypsoCascadingTheme subCascading = (IKalypsoCascadingTheme) theme;
+        final boolean removed = removeFromCascadingTheme( subCascading, remove );
+        if( removed )
+          return true;
+      }
+    }
+
+    return false;
   }
 
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
@@ -341,7 +401,9 @@ public class MapModell implements IMapModell
   {
     final IKalypsoTheme[] allThemes = getAllThemes();
     for( final IKalypsoTheme element : allThemes )
+    {
       accept( ktv, depth, element );
+    }
   }
 
   public void accept( final IKalypsoThemeVisitor ktv, final int depth, final IKalypsoTheme theme )
@@ -538,7 +600,7 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   public boolean isLoaded( )
