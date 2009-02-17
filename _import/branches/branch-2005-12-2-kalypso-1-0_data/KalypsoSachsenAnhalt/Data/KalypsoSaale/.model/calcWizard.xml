@@ -3084,13 +3084,15 @@
 		<!--arg name="timeserie1" value="nameString=%axisname% - Beobachtung#linkColumn=Inhalt#color=0x0000ff"/-->
 		<arg name="timeserie2" value="nameString=%axisname% - Berechnet#linkColumn=Inhalt_gerechnet#color=0x0000ff"/>
 		<!--arg name="timeserie3" value="nameString=Abgabe - Beobachtung#nameColumn=Name#linkColumn=Abgabe"/-->
-		<arg name="timeserie4" value="nameString=Vorhersage#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
-		<arg name="timeserie5" value="nameString=Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
-	        <arg name="timeserie6" value="nameString=%metadata-Label%#nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
+		<arg name="timeserie4" value="nameString=TS-Abgabe#nameColumn=Name#linkColumn=Abgabe_gerechnet"/>
+		<arg name="timeserie5" value="nameString=TS-Zufluss#nameColumn=Name#linkColumn=Zufluss_gerechnet#color=0xff8040"/>
+		<!--arg name="timeserie6" value="nameString=Steuerpegel (%featureprop%)#nameColumn=Name#linkColumn=Steuerung_gerechnet#color=0xa08270"/-->
+	    <arg name="timeserie6" value="nameString=%metadata-Label%#nameColumn=STEUNAME#linkColumn=Steuerung_Betriebsplan_gerechnet#color=0xa08270"/>
+	        
 		<!-- bräunlich, entspricht (160, 130, 70) -->
-	        <arg name="timeserie7" value="nameString=%metadata-Label%#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
-		<!-- hell blau, entspricht (160, 255, 255) -->
-		<arg name="ignoreType1" value="NN;W"/>
+        <arg name="timeserie7" value="nameString=%metadata-Label%#nameColumn=Name#linkColumn=Überleitung_gerechnet#color=0xa0ffff"/>
+        <!-- hell blau, entspricht (160, 255, 255) -->
+		<arg name="ignoreType1" value="NN;W"/>		
 		<!-- 
         Tabelle -->
 		<!-- 
@@ -3107,13 +3109,13 @@
 			<arg name="height" value="600"/>
 			<arg name="imageFormat" value="png"/>
 			<arg name="tokens">
-			        <arg name="title" value="TS_NAME"/>
+			    <arg name="title" value="TS_NAME"/>
 				<arg name="href1" value="Inhalt"/>
 				<arg name="href2" value="Inhalt_gerechnet"/>
 				<arg name="href3" value="Abgabe"/>
 				<arg name="href4" value="Abgabe_gerechnet"/>
 				<arg name="href5" value="Zufluss_gerechnet"/>
-			        <arg name="href6" value="Steuerung_Betriebsplan_gerechnet"/>
+			    <arg name="href6" value="Steuerung_Betriebsplan_gerechnet"/>
 				<arg name="href7" value="Überleitung_gerechnet"/>
 			</arg>
 			<arg name="templateDiagV">
