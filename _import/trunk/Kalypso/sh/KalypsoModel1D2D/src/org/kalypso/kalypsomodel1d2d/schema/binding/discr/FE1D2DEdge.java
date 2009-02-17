@@ -227,8 +227,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   public GM_Curve getCurve( )
   {
-    return (GM_Curve) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM
-    /* QNAME_PROP_CURVE */);
+    return (GM_Curve) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM );
   }
 
   public void setCurve( final GM_Curve curve )
@@ -245,6 +244,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   {
     try
     {
+    // Obscure! The geometry gets recaluclated in any case, if accessed.
+    // So this makes no sense...
+    // TODO: we should change this class to the new feature framework,
+    // so the function property is no more needed. Then look at this again...
       setCurve( recalculateEgdeGeometry() );
     }
     catch( final GM_Exception e )
