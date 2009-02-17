@@ -205,6 +205,9 @@ public class MapUtilities
    */
   public static GM_Point transform( final IMapPanel mapPanel, final Point p )
   {
+    if( p == null )
+      return null;
+
     final GeoTransform projection = mapPanel.getProjection();
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
@@ -212,7 +215,9 @@ public class MapUtilities
 
     String coordinatesSystem = mapModell.getCoordinatesSystem();
     if( coordinatesSystem == null )
+    {
       coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    }
 
     final double x = p.getX();
     final double y = p.getY();
@@ -344,7 +349,7 @@ public class MapUtilities
    *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, Device device, Insets insets, int sizeWidth, int sizeHeight, final IProgressMonitor monitor )
+  public static IStatus exportLegends( final IKalypsoTheme[] themes, final File file, final int format, final Device device, Insets insets, final int sizeWidth, final int sizeHeight, final IProgressMonitor monitor )
   {
     /* Monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
@@ -354,7 +359,9 @@ public class MapUtilities
     {
       /* Set default insets, if none are given. */
       if( insets == null )
+      {
         insets = new Insets( 5, 5, 5, 5 );
+      }
 
       image = exportLegends( themes, device, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
       ProgressUtilities.worked( progress, 50 );
@@ -375,7 +382,9 @@ public class MapUtilities
     finally
     {
       if( image != null )
+      {
         image.dispose();
+      }
 
       progress.done();
     }
@@ -402,7 +411,7 @@ public class MapUtilities
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public static Image exportLegends( final IKalypsoTheme[] themes, final Device device, final Insets insets, final RGB backgroundRGB, int sizeWidth, int sizeHeight, final IProgressMonitor monitor ) throws CoreException
+  public static Image exportLegends( final IKalypsoTheme[] themes, final Device device, final Insets insets, final RGB backgroundRGB, final int sizeWidth, final int sizeHeight, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), themes.length * 100 + 100 ); //$NON-NLS-1$
 
@@ -422,7 +431,9 @@ public class MapUtilities
       /* Get the legend. */
       final Image legend = theme.getLegendGraphic( font );
       if( legend != null )
+      {
         legends.add( legend );
+      }
 
       ProgressUtilities.worked( progress, 100 );
     }
@@ -445,7 +456,9 @@ public class MapUtilities
       {
         final Rectangle bounds = legend.getBounds();
         if( bounds.width > width )
+        {
           width = bounds.width;
+        }
 
         height = height + bounds.height;
       }
