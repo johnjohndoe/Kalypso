@@ -63,7 +63,7 @@ import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
  * Composite for rendering and handling remote and local projects
- * 
+ *
  * @author Dirk Kuch
  */
 public class ProjectDatabaseComposite extends Composite implements IProjectDatabaseListener, IPreferenceChangeListener, IProjectDatabaseUiLocker
@@ -79,8 +79,6 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   protected UIJob m_updateJob = null;
 
   private boolean m_updateLock = false;
-
-  private final boolean m_isExpert;
 
   private final IKalypsoProjectOpenAction m_openAction;
 
@@ -100,7 +98,6 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     m_toolkit = toolkit;
     m_filter = filter;
     m_openAction = openAction;
-    m_isExpert = isExpert;
 
     m_model = KalypsoProjectDatabaseClient.getDefault().getProjectDatabaseModel();
     m_model.addListener( this );
@@ -123,7 +120,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @see org.eclipse.swt.widgets.Control#update()
    */
   @Override
-  public final synchronized void update( )
+  public final void update( )
   {
     if( m_updateLock )
     {
@@ -174,7 +171,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
     updateUI();
   }
 
-  private synchronized void updateUI( )
+  private void updateUI( )
   {
     if( m_updateLock )
     {
