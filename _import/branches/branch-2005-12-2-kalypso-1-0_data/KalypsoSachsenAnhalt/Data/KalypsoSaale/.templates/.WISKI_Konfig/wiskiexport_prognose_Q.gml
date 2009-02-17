@@ -648,11 +648,11 @@
       </lokal>
       <wiski_vergangenheit/>
       <wiski_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.Durchfluss.575"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_Prog.ZuflussTS.575"/>
       </wiski_zukunft>
       <wiski_simulation_vergangenheit/>
       <wiski_simulation_zukunft>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.Durchfluss.575"/>
+              <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:wiski://HVZ_Modellierung_Saale_SimProg.ZuflussTS.575"/>
       </wiski_simulation_zukunft>
     </Wiski>
   </WiskiMember>

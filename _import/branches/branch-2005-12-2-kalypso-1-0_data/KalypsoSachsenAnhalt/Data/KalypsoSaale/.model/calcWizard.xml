@@ -3252,10 +3252,7 @@
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
 				
-				<arg name="obs3">
-					<arg name="label" value="%metadata-Label%"/>
-					<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
-				</arg>
+				
 				<arg name="obs5">
 					<arg name="label" value="%metadata-Label%"/>
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
