@@ -115,7 +115,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 // *
 // * @see java.awt.Component#repaint(long)
 // */
-// private static final long MAP_REPAINT_MILLIS = 250;
+// private static final long MAP_REPAINT_MILLIS = 500;
 
   private static interface IListenerRunnable
   {
@@ -514,7 +514,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   /**
    * Invalidates the whole map, all data is redrawn freshly.<br>
    * Should not be invoked from outside; normally every theme invalidates itself, if its data is changed; if not check,
-   * if all events are correctly sent.
+   * if all events are correctly sent.<br>
+   * Important: does not invalidate the theme's buffers, so this will in most cases not do what you want.. please always
+   * invalidate the theme by correctly firing gml-events
    */
   public void invalidateMap( )
   {
@@ -532,9 +534,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       return;
 
     final IMapLayer[] layers = getLayersForRendering();
-    final IPaintable modelPainter = new MapPanelPainter( layers, mapModell, getProjection(), m_backgroundColor );
+    final IPaintable paintable = new MapPanelPainter( layers, mapModell, getProjection(), m_backgroundColor );
 
-    final BufferPaintJob bufferPaintJob = new BufferPaintJob( modelPainter );
+    final BufferPaintJob bufferPaintJob = new BufferPaintJob( paintable );
     bufferPaintJob.setRule( m_painterMutex );
     bufferPaintJob.setPriority( Job.SHORT );
     bufferPaintJob.setUser( false );

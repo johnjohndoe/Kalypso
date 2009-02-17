@@ -43,8 +43,11 @@ package org.kalypso.ogc.gml.map.layer;
 import java.awt.Graphics;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -122,8 +125,11 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       // else, we wait for it to finish; then m_tile will be good
     }
 
+    // If we have a running tile, that already has started
+    if( runningTile != null && runningTile.intersects( world2screen ) && runningTile.getState() == Job.RUNNING )
+      runningTile.paint( g, world2screen );
     // If we have a good tile, paint it
-    if( tile != null && tile.intersects( world2screen ) )
+    else if( tile != null && tile.intersects( world2screen ) )
       tile.paint( g, world2screen );
     // only we have no good tile, paint the running tile
     else if( runningTile != null && runningTile.intersects( world2screen ) )
@@ -180,6 +186,29 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, this, world2screen );
+
+    // Trigger map-invalidates during paint of theme; not too often, else map never gets repainted, as
+    // it schedules it paint job with a time-limit
+    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", runningTile, 750 )
+    {
+      @Override
+      protected void jobRunning( )
+      {
+        getMapPanel().invalidateMap();
+      }
+
+      /**
+       * @see org.kalypso.contribs.eclipse.jobs.JobObserverJob#jobDone(org.eclipse.core.runtime.IStatus)
+       */
+      @Override
+      protected void jobDone( final IStatus result )
+      {
+        // overwritten in order not to repaint when done
+      }
+    };
+    repaintJob.setSystem( true );
+    repaintJob.schedule();
+
     runningTile.setUser( false );
     runningTile.setRule( m_rule );
     runningTile.schedule( 250 );
