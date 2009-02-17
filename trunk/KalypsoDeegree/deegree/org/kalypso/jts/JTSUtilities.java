@@ -41,6 +41,7 @@
 package org.kalypso.jts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -135,12 +136,16 @@ public class JTSUtilities
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
       if( point.distance( ls ) >= 10E-06 )
+      {
         continue;
+      }
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
       final LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
       for( int j = 0; j < coords.length - 1; j++ )
+      {
         lineCoords.add( coords[j] );
+      }
 
       /* ... and add the point as last one. */
       lineCoords.add( point.getCoordinate() );
@@ -187,7 +192,9 @@ public class JTSUtilities
       final double lineLength = line.getLength();
 
       if( distance - lineLength < 0 )
+      {
         break;
+      }
 
       distance -= lineLength;
     }
@@ -229,7 +236,9 @@ public class JTSUtilities
         }
       }
       else
+      {
         zStart = Double.NaN;
+      }
 
       final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
       final Point pointJTS = factory.createPoint( new Coordinate( x, y, zStart ) );
@@ -331,7 +340,9 @@ public class JTSUtilities
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       if( testLine.distance( start.getCoordinate() ) < 10E-06 )
+      {
         first = true;
+      }
 
       if( testLine.distance( end.getCoordinate() ) < 10E-06 )
       {
@@ -375,13 +386,17 @@ public class JTSUtilities
       final Point pointN1 = line.getPointN( i + 1 );
 
       if( add )
+      {
         points.add( pointN );
+      }
 
       /* Build a line with the two points to check the flag. */
       final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       if( testLine.distance( start.getCoordinate() ) < 10E-06 )
+      {
         add = true;
+      }
 
       if( testLine.distance( end.getCoordinate() ) < 10E-06 )
       {
@@ -396,7 +411,9 @@ public class JTSUtilities
     final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
+    {
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
+    }
 
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
@@ -446,13 +463,17 @@ public class JTSUtilities
         final Point pointN1 = lineN.getPointN( j + 1 );
 
         if( add )
+        {
           points.add( pointN );
+        }
 
         /* Build a line with the two points to check the flag. */
         final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
         if( testLine.distance( start.getCoordinate() ) < 10E-06 )
+        {
           add = true;
+        }
 
         if( testLine.distance( end.getCoordinate() ) < 10E-06 )
         {
@@ -463,7 +484,9 @@ public class JTSUtilities
       }
 
       if( endPointFound )
+      {
         break;
+      }
     }
 
     points.add( end );
@@ -472,7 +495,9 @@ public class JTSUtilities
     final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
+    {
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
+    }
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     return factory.createLineString( coordinates );
@@ -810,7 +835,9 @@ public class JTSUtilities
 
       final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
       for( int i = coordinates.length - 1; i >= 0; i-- )
+      {
         myCoordinates.add( coordinates[i] );
+      }
 
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
@@ -970,7 +997,9 @@ public class JTSUtilities
   {
     final double[] factors = new double[coverPolygons.length];
     for( int i = 0; i < coverPolygons.length; i++ )
+    {
       factors[i] = JTSUtilities.fractionAreaOf( basePolygon, coverPolygons[i] );
+    }
 
     return factors;
   }
@@ -1004,19 +1033,19 @@ public class JTSUtilities
 
   public static Polygon cleanPolygonInteriorRings( Polygon poly )
   {
-    GeometryFactory factory = new GeometryFactory();
+    final GeometryFactory factory = new GeometryFactory();
 
-    List<LinearRing> myInnerRings = new ArrayList<LinearRing>();
+    final List<LinearRing> myInnerRings = new ArrayList<LinearRing>();
     final int rings = poly.getNumInteriorRing();
 
     for( int i = 0; i < rings; i++ )
     {
-      LineString lineString = poly.getInteriorRingN( i );
-      Coordinate[] coordinates = lineString.getCoordinates();
-      LinearRing ring = factory.createLinearRing( coordinates );
+      final LineString lineString = poly.getInteriorRingN( i );
+      final Coordinate[] coordinates = lineString.getCoordinates();
+      final LinearRing ring = factory.createLinearRing( coordinates );
 
-      Polygon innerPolygon = factory.createPolygon( ring, null );
-      double area = innerPolygon.getArea();
+      final Polygon innerPolygon = factory.createPolygon( ring, null );
+      final double area = innerPolygon.getArea();
       if( area > 0.1 )
       {
         myInnerRings.add( ring );
@@ -1025,9 +1054,9 @@ public class JTSUtilities
 
     if( myInnerRings.size() != rings )
     {
-      LineString outer = poly.getExteriorRing();
-      Coordinate[] outerCoordinates = outer.getCoordinates();
-      LinearRing outerRing = factory.createLinearRing( outerCoordinates );
+      final LineString outer = poly.getExteriorRing();
+      final Coordinate[] outerCoordinates = outer.getCoordinates();
+      final LinearRing outerRing = factory.createLinearRing( outerCoordinates );
 
       poly = factory.createPolygon( outerRing, myInnerRings.toArray( new LinearRing[] {} ) );
     }
@@ -1035,7 +1064,7 @@ public class JTSUtilities
     return poly;
   }
 
-  public static Polygon[] cleanPolygonExteriorRing( Polygon poly )
+  public static Polygon[] cleanPolygonExteriorRing( final Polygon poly )
   {
     throw new NotImplementedException();
 
@@ -1084,5 +1113,21 @@ public class JTSUtilities
 // }
 //
 // return new Polygon[] { poly };
+  }
+
+  public static Geometry[] findGeometriesInRange( final Geometry[] geometries, final Geometry base, final double radius )
+  {
+    final Set<Geometry> myGeometries = new HashSet<Geometry>();
+
+    for( final Geometry geometry : geometries )
+    {
+      final double distance = base.distance( geometry );
+      if( distance <= radius )
+      {
+        myGeometries.add( geometry );
+      }
+    }
+
+    return myGeometries.toArray( new Geometry[] {} );
   }
 }
