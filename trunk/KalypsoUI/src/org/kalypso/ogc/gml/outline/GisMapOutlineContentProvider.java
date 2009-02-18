@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
@@ -95,18 +100,56 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
     final Object[] children2 = super.getChildren( child );
 
     /* If there are more then one as a result, return them instead. */
-    if( children2 != null && children2.length > 1 )
-      return children2;
-
-    if( children2.length == 1 )
+    if( children == null )
+      return new Object[] {};
+    else if( children2.length == 1 )
     {
       final Object subchild = children2[0];
       if( subchild instanceof IWorkbenchAdapter )
         return ((IWorkbenchAdapter) subchild).getChildren( subchild );
     }
+    else if( children2.length > 1 )
+      if( areRuleTreeObjects( children2 ) )
+        return getUniqueRuleLabels( children2 );
+      else
+        return children2;
 
     /* Otherwise ignore it. */
     return new Object[] {};
+  }
+
+  private Object[] getUniqueRuleLabels( final Object[] children )
+  {
+    // sort out obsolete rule labels
+    final List<Object> rules = new ArrayList<Object>();
+    final Set<String> rulenames = new HashSet<String>();
+
+    for( final Object object : children )
+    {
+      final RuleTreeObject rule = (RuleTreeObject) object;
+
+      final String name = rule.getRule().getName();
+      if( rulenames.contains( name ) )
+      {
+        continue;
+      }
+
+      rulenames.add( name );
+      rules.add( rule );
+    }
+
+    return rules.toArray();
+  }
+
+  private boolean areRuleTreeObjects( final Object[] children )
+  {
+    for( final Object object : children )
+    {
+      if( !(object instanceof RuleTreeObject) )
+        return false;
+    }
+
+    return true;
   }
 
   /**
