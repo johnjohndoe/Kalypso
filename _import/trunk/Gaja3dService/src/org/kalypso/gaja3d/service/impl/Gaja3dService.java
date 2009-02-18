@@ -13,9 +13,12 @@ import net.opengeospatial.wps.stubs.ExecuteResponseType;
 import net.opengeospatial.wps.stubs.ProcessDescriptions;
 
 import org.apache.axis.message.MessageElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.globus.gsi.jaas.JaasSubject;
 import org.globus.wsrf.Resource;
 import org.globus.wsrf.ResourceContext;
+import org.globus.wsrf.container.Activator;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.security.SecurityManager;
 import org.kalypso.gaja3d.service.stubs.Breaklines;
@@ -45,6 +48,8 @@ public class Gaja3dService {
 	 */
 	private static final String WPS_URL = System
 			.getProperty("org.kalypso.service.wps.service");
+	
+	private Log logger = LogFactory.getLog(Activator.class.getName());
 
 	/*
 	 * Private method that gets a reference to the resource specified in the
@@ -277,45 +282,45 @@ public class Gaja3dService {
 
 	public void logSecurityInfo(final String methodName, final Resource resource) {
 		Subject subject;
-		System.out.println("SECURITY INFO FOR METHOD '" + methodName + "'");
+		logger.debug("SECURITY INFO FOR METHOD '" + methodName + "'");
 
 		// Print out the caller
 		String identity = SecurityManager.getManager().getCaller();
-		System.out.println("The caller is:" + identity);
+		logger.debug("The caller is:" + identity);
 
 		// Print out the invocation subject
 		subject = JaasSubject.getCurrentSubject();
-		System.out.println("INVOCATION SUBJECT");
-		System.out.println(subject == null ? "NULL" : subject.toString());
+		logger.debug("INVOCATION SUBJECT");
+		logger.debug(subject == null ? "NULL" : subject.toString());
 
 		try {
 			// Print out service subject
-			System.out.println("SERVICE SUBJECT");
+			logger.debug("SERVICE SUBJECT");
 			subject = SecurityManager.getManager().getServiceSubject();
-			System.out.println(subject == null ? "NULL" : subject.toString());
+			logger.debug(subject == null ? "NULL" : subject.toString());
 		} catch (Exception e) {
-			System.out.println("Unable to obtain service subject");
+			logger.debug("Unable to obtain service subject");
 		}
 
 		try {
 			// Print out system subject
-			System.out.println("SYSTEM SUBJECT");
+			logger.debug("SYSTEM SUBJECT");
 			subject = SecurityManager.getManager().getSystemSubject();
-			System.out.println(subject == null ? "NULL" : subject.toString());
+			logger.debug(subject == null ? "NULL" : subject.toString());
 		} catch (Exception e) {
-			System.out.println("Unable to obtain system subject");
+			logger.debug("Unable to obtain system subject");
 		}
 
-		System.out.println("RESOURCE SUBJECT");
+		logger.debug("RESOURCE SUBJECT");
 		if (resource == null) {
-			System.out.println("No resource");
+			logger.debug("No resource");
 		} else {
 			try {
 				subject = SecurityManager.getManager().getSubject(resource);
-				System.out.println(subject == null ? "NULL" : subject
+				logger.debug(subject == null ? "NULL" : subject
 						.toString());
 			} catch (Exception e) {
-				System.out.println("Unable to obtain resource subject");
+				logger.debug("Unable to obtain resource subject");
 			}
 		}
 	}

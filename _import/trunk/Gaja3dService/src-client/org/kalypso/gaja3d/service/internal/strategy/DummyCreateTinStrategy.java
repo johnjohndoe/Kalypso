@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
+import org.apache.axis.AxisFault;
 import org.kalypso.gaja3d.service.client.Client;
 
 /**
@@ -52,9 +54,13 @@ import org.kalypso.gaja3d.service.client.Client;
  */
 public class DummyCreateTinStrategy implements CreateTinStrategy {
 
-	public URL createTin(final URL boundaryLocation,
-			final URL breaklinesLocation) throws RemoteException {
-		return Client.class.getResource(Client.MODEL_TIN_FILENAME);
+	public URI createTin(final URI boundaryLocation,
+			final URI breaklinesLocation) throws RemoteException {
+		try {
+			return Client.class.getResource(Client.MODEL_TIN_FILENAME).toURI();
+		} catch (final URISyntaxException e) {
+			throw AxisFault.makeFault(e);
+		}
 	}
 
 	@Override

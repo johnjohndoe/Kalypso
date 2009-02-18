@@ -1,11 +1,11 @@
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.URL;
+import java.net.URI;
 import java.rmi.RemoteException;
 
 public interface DetectBreaklinesStrategy {
-	public URL detectBreaklines(final URL boundaryLocation,
-			final URL demGridLocation) throws RemoteException;
+	public URI detectBreaklines(final URI boundaryLocation,
+			final URI demGridLocation) throws RemoteException;
 
 	/**
 	 * @param edgeMethod

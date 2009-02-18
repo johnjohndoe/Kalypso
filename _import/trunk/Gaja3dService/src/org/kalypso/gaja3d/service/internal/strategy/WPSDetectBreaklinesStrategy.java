@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,8 +75,8 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 	private double highThresh = -1;
 	private double distanceTolerance = -1;
 
-	public URL detectBreaklines(final URL boundaryLocation,
-			final URL demGridLocation) throws RemoteException {
+	public URI detectBreaklines(final URI boundaryLocation,
+			final URI demGridLocation) throws RemoteException {
 		IFolder calcCaseFolder;
 		try {
 			/* Create folder for simulation */
@@ -152,8 +152,8 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 		final ComplexValueReference breaklinesLocation = (ComplexValueReference) references
 				.get(DetectBreaklinesSimulation.OUTPUT_BREAKLINES);
 		try {
-			return new URL(breaklinesLocation.getReference());
-		} catch (final MalformedURLException e) {
+			return new URI(breaklinesLocation.getReference());
+		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
 	}

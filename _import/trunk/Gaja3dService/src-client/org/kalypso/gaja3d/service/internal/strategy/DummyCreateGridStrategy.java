@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
+import org.apache.axis.AxisFault;
 import org.kalypso.gaja3d.service.client.Client;
 
 /**
@@ -59,10 +61,14 @@ public class DummyCreateGridStrategy implements CreateGridStrategy {
 	 * org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy#createGrid
 	 * (java.lang.String, java.lang.String, double, double)
 	 */
-	public URL createGrid(final URL boundaryLocation,
-			final URL demPointsLocation, double dx, double dy)
+	public URI createGrid(final URI boundaryLocation,
+			final URI demPointsLocation, final double dx, final double dy)
 			throws RemoteException {
-		return Client.class.getResource(Client.DEMGRID_FILENAME);
+		try {
+			return Client.class.getResource(Client.DEMGRID_FILENAME).toURI();
+		} catch (final URISyntaxException e) {
+			throw AxisFault.makeFault(e);
+		}
 	}
 
 }

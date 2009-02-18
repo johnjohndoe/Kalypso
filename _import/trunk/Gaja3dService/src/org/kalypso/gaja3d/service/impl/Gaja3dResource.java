@@ -1,7 +1,7 @@
 package org.kalypso.gaja3d.service.impl;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Calendar;
@@ -253,18 +253,20 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		final GridY gridY = getGridY();
 		final double dy = gridY.getDy();
 		try {
-			final URL boundaryLocation = new URL(boundaryURI.toString());
-			final URL demPointsLocation = new URL(demPointsURI.toString());
-			final URL demGridLocation = createGridStrategy.createGrid(
+			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
+					.toString());
+			final java.net.URI demPointsLocation = new java.net.URI(
+					demPointsURI.toString());
+			final java.net.URI demGridLocation = createGridStrategy.createGrid(
 					boundaryLocation, demPointsLocation, dx, dy);
 			final DemGrid demGrid = new DemGrid();
 			demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 					Gaja3dQNames.RP_DEM_GRID));
-			demGrid.setHref(new URI(demGridLocation.toExternalForm()));
+			demGrid.setHref(new URI(demGridLocation.toString()));
 			setDemGrid(demGrid);
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
-		} catch (final MalformedURLException e) {
+		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
 	}
@@ -310,9 +312,11 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		}
 
 		try {
-			final URL boundaryLocation = new URL(boundaryURI.toString());
-			final URL demGridLocation = new URL(demGridURI.toString());
-			final URL breaklinesLocation = detectBreaklinesStrategy
+			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
+					.toString());
+			final java.net.URI demGridLocation = new java.net.URI(demGridURI
+					.toString());
+			final java.net.URI breaklinesLocation = detectBreaklinesStrategy
 					.detectBreaklines(boundaryLocation, demGridLocation);
 			// final File shpTmp = FileUtilities.createNewTempDir("shptmp");
 			// ZipUtilities.unzip(breaklinesLocation.openStream(), shpTmp);
@@ -336,20 +340,17 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 			final Breaklines breaklines = new Breaklines();
 			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
 					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-			breaklines.setHref(new URI(breaklinesLocation.toExternalForm()));
+			breaklines.setHref(new URI(breaklinesLocation.toString()));
 			// breaklines.setHref(new
 			// URI(breaklinesGml.toURI().toASCIIString()));
 			setBreaklines(breaklines);
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
-		} catch (final MalformedURLException e) {
-			throw AxisFault.makeFault(e);
 		} catch (final IOException e) {
 			throw AxisFault.makeFault(e);
+		} catch (final URISyntaxException e) {
+			throw AxisFault.makeFault(e);
 		}
-		// catch (GmlSerializeException e) {
-		// throw AxisFault.makeFault(e);
-		// }
 	}
 
 	public void createTin() throws RemoteException {
@@ -371,18 +372,20 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		}
 
 		try {
-			final URL boundaryLocation = new URL(boundaryURI.toString());
-			final URL breaklinesLocation = new URL(breaklinesURI.toString());
-			final URL modelTinLocation = createTinStrategy.createTin(
+			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
+					.toString());
+			final java.net.URI breaklinesLocation = new java.net.URI(
+					breaklinesURI.toString());
+			final java.net.URI modelTinLocation = createTinStrategy.createTin(
 					boundaryLocation, breaklinesLocation);
 			final ModelTin modelTin = new ModelTin();
 			modelTin.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 					Gaja3dQNames.RP_MODEL_TIN));
-			modelTin.setHref(new URI(modelTinLocation.toExternalForm()));
+			modelTin.setHref(new URI(modelTinLocation.toString()));
 			setModelTin(modelTin);
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
-		} catch (final MalformedURLException e) {
+		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
 	}
@@ -418,20 +421,22 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	/* Private methods */
 	private Gaja3DResourcePropertyType getRPinternal(final QName qName) {
 		final ResourceProperty property = gaja3dRPs.get(qName);
-		if (property == null || property.isEmpty())
+		if ((property == null) || property.isEmpty()) {
 			return null;
+		}
 		Object object = property.get(0);
-		if (object == null)
+		if (object == null) {
 			return null;
+		}
 		if (object instanceof MessageElement) {
 			try {
 				object = ((MessageElement) object)
 						.getObjectValue(Gaja3DResourcePropertyLinkType.class);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				try {
 					object = ((MessageElement) object)
 							.getObjectValue(Gaja3DResourcePropertyType.class);
-				} catch (Exception e1) {
+				} catch (final Exception e1) {
 					e1.printStackTrace();
 					return null;
 				}
@@ -441,11 +446,12 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	}
 
 	private <T extends Gaja3DResourcePropertyType> void setRPinternal(
-			T newValue, final QName qName) {
+			final T newValue, final QName qName) {
 		final ResourceProperty property = this.gaja3dRPs.get(qName);
 		property.clear();
-		if (newValue == null)
+		if (newValue == null) {
 			return;
+		}
 
 		final Identifier valueIdentifier = newValue.getIdentifier();
 		final URI namespaceURI = valueIdentifier.getCodeSpace();

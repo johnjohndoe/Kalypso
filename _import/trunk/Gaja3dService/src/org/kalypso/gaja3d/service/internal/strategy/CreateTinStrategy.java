@@ -1,6 +1,6 @@
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.URL;
+import java.net.URI;
 import java.rmi.RemoteException;
 
 public interface CreateTinStrategy {
@@ -10,8 +10,8 @@ public interface CreateTinStrategy {
 	 * @return
 	 * @throws RemoteException
 	 */
-	public URL createTin(final URL boundaryLocation,
-			final URL breaklinesLocation)
+	public URI createTin(final URI boundaryLocation,
+			final URI breaklinesLocation)
 			throws RemoteException;
 	
 

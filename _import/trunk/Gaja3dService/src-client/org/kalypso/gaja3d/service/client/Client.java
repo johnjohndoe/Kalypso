@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
@@ -23,6 +24,9 @@ import org.apache.axis.message.addressing.Address;
 import org.apache.axis.message.addressing.EndpointReferenceType;
 import org.apache.axis.types.URI;
 import org.apache.axis.types.URI.MalformedURIException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.encoding.ObjectSerializer;
 import org.globus.wsrf.encoding.SerializationException;
@@ -70,11 +74,11 @@ public class Client {
 	// private static final String SERVICE_FACTORY_URI =
 	// "http://automatix/services/Gaja3dResourceFactoryService";
 	private static final String EPR_FILENAME = "test.epr";
-	private static final boolean SAVE_EPR = true;
+	private static final boolean SAVE_EPR = false;
 	private static final boolean USE_SAVED_EPR = false;
 
-	public static final String BOUNDARY_FILENAME = "resources/boundaries.zip";
-	public static final String DEMPOINTS_FILENAME = "resources/allpoints2.zip";
+	public static final String BOUNDARY_FILENAME = "resources/boundary1.zip";
+	public static final String DEMPOINTS_FILENAME = "resources/allpoints.zip";
 
 	/*
 	 * for skipping grid creation
@@ -88,9 +92,15 @@ public class Client {
 
 	public static final String MODEL_TIN_FILENAME = "resources/ModelTin.zip";
 
+	private static Log logger = LogFactory.getLog(Client.class.getName());
+
 	public static void main(String[] args) throws RemoteException,
 			ServiceException {
+		PropertyConfigurator.configure(Client.class
+				.getResource("log4j.properties"));
+
 		final EndpointReferenceType instanceEPR;
+
 		if (USE_SAVED_EPR) {
 			try {
 				final InputSource inputSource = new InputSource(
@@ -138,45 +148,48 @@ public class Client {
 		final Gaja3DServiceAddressingLocator instanceLocator = new Gaja3DServiceAddressingLocator();
 		final Gaja3DPortType gaja3d = instanceLocator
 				.getGaja3dPortTypePort(instanceEPR);
-		System.out.println("Retrieved service instance.");
+		logger.debug("Retrieved service instance.");
 
-		// set security
-		setSecurity((Stub) gaja3d);
+		try {
+			// set security
+			setSecurity((Stub) gaja3d);
 
-		// call GetCapabilities
-		final Capabilities capabilities = callGetCapabilities(gaja3d);
-		// call DescribeProcess for all offered processes
-		// callDescribeProcess(gaja3d, capabilities);
+			// call GetCapabilities
+			// final Capabilities capabilities = callGetCapabilities(gaja3d);
+			// call DescribeProcess for all offered processes
+			// callDescribeProcess(gaja3d, capabilities);
 
-		// set Boundary RP
-		final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
-		gaja3d.setResourceProperties(setResourcePropertiesRequest);
-		printResourceProperties(gaja3d);
+			// set Boundary RP
+			final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
+			gaja3d.setResourceProperties(setResourcePropertiesRequest);
+			printResourceProperties(gaja3d);
 
-		// call Execute_createGrid
-		final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
-		// wait 60 minutes
-		((Stub) gaja3d).setTimeout(60 * 1000 * 60); 
-		gaja3d.execute_createGrid(execute_createGrid);
-		printResourceProperties(gaja3d);
+			// call Execute_createGrid
+			final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
+			// wait 60 minutes
+			((Stub) gaja3d).setTimeout(60 * 1000 * 60);
+			gaja3d.execute_createGrid(execute_createGrid);
+			printResourceProperties(gaja3d);
 
-		// call Execute_detectBreaklines
-		// final DetectBreaklinesParametersType detectBreaklinesParameters =
-		// buildExecuteDetectBreaklines();
-		// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-		// printResourceProperties(gaja3d);
+			// call Execute_detectBreaklines
+			// final DetectBreaklinesParametersType detectBreaklinesParameters =
+			// buildExecuteDetectBreaklines();
+			// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+			// printResourceProperties(gaja3d);
 
-		// call Execute_createTin
-		// final CreateTinParametersType createTinParameters =
-		// buildExecuteCreateTin();
-		// gaja3d.execute_createTin(createTinParameters);
-		// printResourceProperties(gaja3d);
+			// call Execute_createTin
+			// final CreateTinParametersType createTinParameters =
+			// buildExecuteCreateTin();
+			// gaja3d.execute_createTin(createTinParameters);
+			// printResourceProperties(gaja3d);
 
-		if (!SAVE_EPR) {
-			// call Destroy
-			final Destroy destroyRequest = new Destroy();
-			gaja3d.destroy(destroyRequest);
-			System.out.println("Destroyed instance.");
+		} finally {
+			if (!SAVE_EPR) {
+				// call Destroy
+				final Destroy destroyRequest = new Destroy();
+				gaja3d.destroy(destroyRequest);
+				logger.debug("Destroyed instance.");
+			}
 		}
 
 	}
@@ -269,29 +282,31 @@ public class Client {
 				Gaja3dQNames.RP_DEM_POINTS));
 
 		try {
-			// final URI demPointsHref = new URI(Client.class.getResource(
-			// DEMPOINTS_FILENAME).toURI().toString());
+//			 final URI demPointsHref = new URI(Client.class.getResource(
+//			 DEMPOINTS_FILENAME).toURI().toString());
 			final URI demPointsHref = new URI(
-					"file:///home/skurzbach/example/allpoints2.zip");
+					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/allpoints.zip");
+//			 final URI demPointsHref = new
+//			 URI("file:///home/skurzbach/example/allpoints.zip");
 			demPoints.setHref(demPointsHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-		// catch (final URISyntaxException e) {
-		// e.printStackTrace();
-		// }
+//		 catch (final URISyntaxException e) {
+//		 e.printStackTrace();
+//		 }
 		execute_createGrid.setDemPoints(demPoints);
 
 		final GridX gridX = new GridX();
 		gridX.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 				Gaja3dQNames.RP_GRID_X));
-		gridX.setDx(20);
+		gridX.setDx(100);
 		execute_createGrid.setGridX(gridX);
 
 		final GridY gridY = new GridY();
 		gridY.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 				Gaja3dQNames.RP_GRID_Y));
-		gridY.setDy(20);
+		gridY.setDy(100);
 		execute_createGrid.setGridY(gridY);
 
 		return execute_createGrid;
@@ -306,17 +321,19 @@ public class Client {
 				Gaja3dQNames.RP_BOUNDARY));
 
 		try {
-			// final URI boundaryHref = new URI(Client.class.getResource(
-			// BOUNDARY_FILENAME).toURI().toString());
+//			 final URI boundaryHref = new URI(Client.class.getResource(
+//			 BOUNDARY_FILENAME).toURI().toString());
 			final URI boundaryHref = new URI(
-					"file:///home/skurzbach/example/boundaries2.zip");
+			"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip");
+//			final URI boundaryHref = new URI(
+//					"file:///home/skurzbach/example/boundary1.zip");
 			boundary.setHref(boundaryHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-		// catch (final URISyntaxException e) {
-		// e.printStackTrace();
-		// }
+//		 catch (final URISyntaxException e) {
+//		 e.printStackTrace();
+//		 }
 		update.set_any(new MessageElement[] { new MessageElement(
 				Gaja3dQNames.RP_BOUNDARY, boundary) });
 		setResourcePropertiesRequest.setUpdate(update);
@@ -333,11 +350,11 @@ public class Client {
 					new javax.xml.namespace.QName(
 							"http://www.opengeospatial.net/wps",
 							"ProcessDescriptions"));
-			System.out.println("Got process descriptions:");
+			logger.debug("Got process descriptions:");
 			// don't know how to pretty print the ProcessDescriptions using
 			// GT4 ObjectSerializer, so we use KalypsoWPS JAXB
 			final Object fromKalypsoWPS = MarshallUtilities.unmarshall(pds);
-			System.out.println(MarshallUtilities.marshall(fromKalypsoWPS));
+			logger.debug(MarshallUtilities.marshall(fromKalypsoWPS));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -348,7 +365,7 @@ public class Client {
 		final GetCapabilitiesType getCapabilities = buildGetCapabilities();
 		final Capabilities capabilities = gaja3d
 				.getCapabilities(getCapabilities);
-		System.out.println("Got process capabilities.");
+		logger.debug("Got process capabilities.");
 		return capabilities;
 	}
 
@@ -435,8 +452,7 @@ public class Client {
 			final BufferedWriter bfWriter = new BufferedWriter(fileWriter);
 			bfWriter.write(endpointString);
 			bfWriter.close();
-			System.out.println("Endpoint reference written to file "
-					+ EPR_FILENAME);
+			logger.debug("Endpoint reference written to file " + EPR_FILENAME);
 		} catch (final SerializationException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
@@ -460,8 +476,8 @@ public class Client {
 			final MessageElement[] get_any = response.get_any();
 			for (final MessageElement messageElement : get_any) {
 				final String value = messageElement.getAsString();
-				System.out.println(String.format("Value of RP %s: %s",
-						messageElement.getQName(), value));
+				logger.debug(String.format("Value of RP %s: %s", messageElement
+						.getQName(), value));
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();

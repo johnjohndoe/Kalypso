@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,8 +73,8 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 	private double minAngle;
 	private double maxArea;
 
-	public URL createTin(final URL boundaryLocation,
-			final URL breaklinesLocation) throws RemoteException {
+	public URI createTin(final URI boundaryLocation,
+			final URI breaklinesLocation) throws RemoteException {
 		IFolder calcCaseFolder;
 		try {
 			/* Create folder for simulation */
@@ -124,8 +124,8 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 		final ComplexValueReference modelTinLocation = (ComplexValueReference) references
 				.get(CreateTinSimulation.OUTPUT_MODEL_TIN);
 		try {
-			return new URL(modelTinLocation.getReference());
-		} catch (final MalformedURLException e) {
+			return new URI(modelTinLocation.getReference());
+		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
 	}

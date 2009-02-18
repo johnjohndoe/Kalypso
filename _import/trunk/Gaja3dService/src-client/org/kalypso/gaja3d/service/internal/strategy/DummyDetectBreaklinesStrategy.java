@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
+import org.apache.axis.AxisFault;
 import org.kalypso.gaja3d.service.client.Client;
 
 /**
@@ -52,9 +54,13 @@ import org.kalypso.gaja3d.service.client.Client;
  */
 public class DummyDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 
-	public URL detectBreaklines(final URL boundaryLocation,
-			final URL demGridLocation) throws RemoteException {
-		return Client.class.getResource(Client.BREAKLINES_FILENAME);
+	public URI detectBreaklines(final URI boundaryLocation,
+			final URI demGridLocation) throws RemoteException {
+		try {
+			return Client.class.getResource(Client.BREAKLINES_FILENAME).toURI();
+		} catch (final URISyntaxException e) {
+			throw AxisFault.makeFault(e);
+		}
 	}
 
 	/**

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,8 +75,8 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 	 * org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy#createGrid
 	 * (java.lang.String, java.lang.String, double, double)
 	 */
-	public URL createGrid(final URL boundaryLocation,
-			final URL demPointsLocation, double dx, double dy)
+	public URI createGrid(final URI boundaryLocation,
+			final URI demPointsLocation, final double dx, final double dy)
 			throws RemoteException {
 		IFolder calcCaseFolder;
 		try {
@@ -107,10 +107,11 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 		outputs.add("stderr");
 
 		/* Create the delegate which can handle ISimulations. */
-		final String serviceEndpoint = System.getProperty(WPSRequest.SYSTEM_PROP_WPS_ENDPOINT);//WPSRequest.SERVICE_LOCAL;
+		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
+		final int timeout = 60 * 60 * 1000;
 		final WPSRequest simulationJob = new WPSRequest(
-				CreateGridSimulation.ID, serviceEndpoint, 300000);
+				CreateGridSimulation.ID, serviceEndpoint, timeout);
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());
 
@@ -123,8 +124,8 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 		final ComplexValueReference demGridLocation = (ComplexValueReference) references
 				.get(CreateGridSimulation.OUTPUT_DEM_GRID);
 		try {
-			return new URL(demGridLocation.getReference());
-		} catch (final MalformedURLException e) {
+			return new URI(demGridLocation.getReference());
+		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
 	}
