@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.simulation.grid;
 
@@ -47,6 +47,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,9 +60,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsExtensions;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -127,17 +127,35 @@ public class Gaja3dGridJobSubmitter
     final Map<String, String> outputNames = new HashMap<String, String>();
 
     // create list of inputs
-    final List<URL> externalInputs = new ArrayList<URL>();
-    externalInputs.add( EXEC_ZIP_URL );
+    final List<URI> externalInputs = new ArrayList<URI>();
+    try
+    {
+      externalInputs.add( EXEC_ZIP_URL.toURI() );
+    }
+    catch( final Exception e )
+    {
+      // could be null or not a valid uri
+      throw new SimulationException( "Problem with executable.", e );
+    }
 
     // convert inputs to command line arguments
     final List<DataType> input = modelSpec.getInput();
     for( final DataType data : input )
     {
       final String id = data.getId();
-      if( !inputProvider.hasID( id ) && data.isOptional() )
-        // ignore missing optional inputs
-        continue;
+      if( !inputProvider.hasID( id ) )
+      {
+        if( data.isOptional() )
+        {
+          // ignore missing optional inputs
+          continue;
+        }
+        else
+        {
+          throw new SimulationException( "Unexpected input with id " + id );
+        }
+
+      }
       final Object inputForID = inputProvider.getInputForID( id );
       if( id.startsWith( "_" ) )
       {
@@ -152,12 +170,29 @@ public class Gaja3dGridJobSubmitter
       arguments.add( id );
 
       // value depends on type of input
-      final QName dataInputType = data.getType();
-      if( dataInputType.equals( QNAME_ANY_URI ) )
+      if( inputForID instanceof URI )
       {
-        // if it is a URI, stage in a file for given URL
-        final URL inputURL = (URL) inputForID;
+        // if it is a URI, stage in a file for given URI
+        final URI inputURL = (URI) inputForID;
         externalInputs.add( inputURL );
+
+        final String inputURLString = inputURL.toString();
+        final String inputBaseName = inputURLString.substring( inputURLString.lastIndexOf( '/' ) + 1 );
+        // add local file (on grid node) as argument
+        arguments.add( inputBaseName );
+      }
+      else if( inputForID instanceof URL )
+      {
+        // if it is a URL, stage in a file for given URL
+        final URL inputURL = (URL) inputForID;
+        try
+        {
+          externalInputs.add( inputURL.toURI() );
+        }
+        catch( final URISyntaxException e )
+        {
+          throw new SimulationException( "The input URL is not a valid URI for staging.", e );
+        }
 
         final String inputURLString = inputURL.toExternalForm();
         final String inputBaseName = inputURLString.substring( inputURLString.lastIndexOf( '/' ) + 1 );
@@ -175,11 +210,9 @@ public class Gaja3dGridJobSubmitter
     }
 
     // stream stdout and stderr to files
-    final File stdoutFile = FileUtilities.createNewUniqueFile( "stdout", tmpdir );
-    final File stderrFile = FileUtilities.createNewUniqueFile( "stderr", tmpdir );
-    // make sure they are deleted on exit at the latest
-    stdoutFile.deleteOnExit();
-    stderrFile.deleteOnExit();
+    final File stdoutFile = new File( tmpdir, "stdout" );
+    final File stderrFile = new File( tmpdir, "stderr" );
+
     // prepare streams
     OutputStream stdOut = null;
     OutputStream stdErr = null;
@@ -190,12 +223,12 @@ public class Gaja3dGridJobSubmitter
       final String processFactoryId = GridProcessFactory.ID;
       final SimpleGridProcess process = (SimpleGridProcess) KalypsoCommonsExtensions.createProcess( processFactoryId, tmpdir, EXEC_SCRIPT_URL, arguments.toArray( new String[arguments.size()] ) );
       process.setProgressMonitor( new SimulationMonitorAdaptor( monitor ) );
-      for( URL einput : externalInputs )
+      for( final URI einput : externalInputs )
       {
         process.addInput( einput );
       }
       process.environment().put( "OMP_NUM_THREADS", "4" );
-      
+
       // add required output files
       final List<DataType> output = modelSpec.getOutput();
       for( final DataType data : output )
@@ -208,10 +241,14 @@ public class Gaja3dGridJobSubmitter
           final String outputName = outputNames.get( id );
           final String source;
           if( outputName != null )
+          {
             source = outputName;
+          }
           else
+          {
             source = id;
-          process.addOutput(source);
+          }
+          process.addOutput( source );
           final File outputLocation = new File( tmpdir, source );
           resultEater.addResult( id, outputLocation );
         }
@@ -249,9 +286,9 @@ public class Gaja3dGridJobSubmitter
     }
 
     // process failure handling
-    if( returnCode != Status.OK )
+    if( returnCode != IStatus.OK )
     {
-      String errString = "Process could not be started.";
+      String errString = "Process failed.";
       try
       {
         final FileReader input2 = new FileReader( stderrFile );
@@ -282,14 +319,22 @@ public class Gaja3dGridJobSubmitter
         final String outputName = outputNames.get( id );
         final String source;
         if( outputName != null )
+        {
           source = outputName;
+        }
         else
+        {
           source = id;
+        }
         final File outputLocation = new File( tmpdir, source );
         if( outputLocation.exists() )
+        {
           resultEater.addResult( id, outputLocation );
+        }
         else
+        {
           Activator.getDefault().getLog().log( StatusUtilities.createErrorStatus( "Missing output %s.", source ) );
+        }
       }
       // TODO: support literal outputs
     }
