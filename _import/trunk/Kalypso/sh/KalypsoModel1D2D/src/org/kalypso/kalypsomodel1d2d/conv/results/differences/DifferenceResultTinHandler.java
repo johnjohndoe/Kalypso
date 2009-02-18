@@ -52,13 +52,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.differences.IMathOperatorDelegate.MATH_OPERATOR;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.MinMaxCatcher;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -70,13 +70,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class DifferenceResultTinHandler
 {
   public static IStatus generateDifferences( final GM_TriangulatedSurface[] surfaces, final MATH_OPERATOR operator, final IFile diffFile, final MinMaxCatcher minMaxCatcher, final IProgressMonitor monitor )
   {
-    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     final File tinResultFile = diffFile.getLocation().toFile();
 
@@ -93,7 +93,7 @@ public class DifferenceResultTinHandler
       final GM_TriangulatedSurface masterSurface = surfaces[0];
       final GM_TriangulatedSurface slaveSurface = surfaces[1];
 
-      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE );
+      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE, new TriangulatedSurfaceTriangleEater.QNameAndString[] {} );
 
       // monitor:
       // 70% available
@@ -116,7 +116,7 @@ public class DifferenceResultTinHandler
 
         final List<GM_Point> nodeList = new LinkedList<GM_Point>();
 
-        GM_Position[] ring = triangle.getExteriorRing();
+        final GM_Position[] ring = triangle.getExteriorRing();
 
         for( int j = 0; j < ring.length - 1; j++ )
         {
@@ -156,14 +156,14 @@ public class DifferenceResultTinHandler
 
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.DifferenceResultTinHandler.7") ); //$NON-NLS-1$
     }
   }
 
-  private static BigDecimal updateMonitor( IProgressMonitor monitor, BigDecimal val, BigDecimal monitorValue )
+  private static BigDecimal updateMonitor( final IProgressMonitor monitor, final BigDecimal val, BigDecimal monitorValue )
   {
     monitorValue = monitorValue.add( new BigDecimal( 1 ).divide( val, 4, BigDecimal.ROUND_HALF_UP ) );
     if( monitorValue.doubleValue() > 1 )

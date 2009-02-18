@@ -60,7 +60,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
@@ -76,7 +76,7 @@ public class RMA10S2GmlConv
 
   private final int m_monitorStep;
 
-  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
+  //  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
 
   private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
 

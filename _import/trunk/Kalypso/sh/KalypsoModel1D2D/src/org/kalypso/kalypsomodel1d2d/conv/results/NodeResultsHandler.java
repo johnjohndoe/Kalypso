@@ -1378,7 +1378,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private void splitIntoTwoTriangles( final List<INodeResult> nodes, final Integer splitArc )
   {
-
     if( splitArc == 0 )
     {
       /*

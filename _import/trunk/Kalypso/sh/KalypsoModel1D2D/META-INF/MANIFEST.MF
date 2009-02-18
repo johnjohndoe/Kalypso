@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModel1D2D
 Bundle-SymbolicName: org.kalypso.model1d2d;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Require-Bundle: org.junit;resolution:=optional,
+Require-Bundle: org.junit4;resolution:=optional,
  org.eclipse.ui.intro,
  org.kalypso.deegree,
  org.kalypso.commons,

@@ -44,20 +44,15 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class MultiTriangleEater implements ITriangleEater
 {
   private final List<ITriangleEater> m_eaters = new LinkedList<ITriangleEater>();
-
-  public MultiTriangleEater( )
-  {
-
-  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
@@ -65,21 +60,16 @@ public class MultiTriangleEater implements ITriangleEater
   public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
     for( final ITriangleEater eater : m_eaters )
-    {
       eater.add( nodes, isWet );
-    }
-
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
    */
-  public void finished( )
+  public void finished( ) throws CoreException
   {
     for( final ITriangleEater eater : m_eaters )
-    {
       eater.finished();
-    }
   }
 
   public void addEater( final ITriangleEater triangleEater )
@@ -103,9 +93,6 @@ public class MultiTriangleEater implements ITriangleEater
   public void setTime( final Date time )
   {
     for( final ITriangleEater eater : m_eaters )
-    {
       eater.setTime( time );
-    }
-
   }
 }

@@ -67,6 +67,23 @@ import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
  */
 public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
+  /**
+   * Just a pair of qname and a string.<br>
+   * Used as additional property values for the root feature of the surface.
+   */
+  public final static class QNameAndString
+  {
+    public final QName m_qname;
+
+    public final String m_value;
+
+    public QNameAndString( final QName qname, final String value )
+    {
+      m_qname = qname;
+      m_value = value;
+    }
+  }
+
   private final GM_TriangulatedSurface m_surface;
 
   private ResultType.TYPE m_parameter = null;
@@ -75,154 +92,45 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
   private File m_tinResultFile = null;
 
-  public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
+  public TriangulatedSurfaceTriangleEater( final String crs, final QNameAndString[] properties ) throws GM_Exception
+  {
+    this( null, null, new GM_TriangulatedSurface_Impl( crs ), null, properties );
+  }
+
+  public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter, final QNameAndString[] properties )
   {
     m_surface = surface;
     m_parameter = parameter;
     m_workspace = workspace;
     m_tinResultFile = tinResultFile;
-  }
 
-  public TriangulatedSurfaceTriangleEater( String crs ) throws GM_Exception
-  {
-    m_surface = new GM_TriangulatedSurface_Impl( crs );
+    if( m_workspace != null )
+    {
+      final Feature rootFeature = m_workspace.getRootFeature();
+      for( final QNameAndString nameAndString : properties )
+        rootFeature.setProperty( nameAndString.m_qname, nameAndString.m_value );
+    }
   }
 
   /**
    * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
    * the triangle is marked as wet or dry.
-   * 
+   *
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
-    if( nodes.size() < 3 )
-      return;
-    GM_Triangle_Impl gmTriangle = null;
-    GM_Position pos[] = null;
-
-    final String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-    if( m_parameter != null )
-    {
-      if( isWet == true )
-      {
-        // process the wet triangles in order to get data only inside the inundation area
-        pos = processWetNodes( nodes );
-      }
-      else
-      {
-        if( m_parameter == ResultType.TYPE.TERRAIN )
-        {
-          // for fem terrain data add the dry triangles as well
-          pos = processNodes( nodes );
-        }
-        else
-        {
-          // TODO Case not covered, pos is null!
-        }
-      }
-    }
-    else
-    {
-      // if no parameter is set, add all triangles
-      pos = processNodes( nodes );
-    }
-
     try
     {
-      if( pos != null )
-        gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+      final GM_Triangle_Impl gmTriangle = TriangulatedSurfaceDirectTriangleEater.createTriangle( nodes, isWet, m_parameter );
+      if( gmTriangle != null )
+        m_surface.add( gmTriangle );
     }
     catch( final GM_Exception e )
     {
       KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater.1") ); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
     }
-
-    if( gmTriangle != null )
-      m_surface.add( gmTriangle );
-
-  }
-
-  private GM_Position[] processNodes( final List<INodeResult> nodes )
-  {
-    final GM_Position pos[] = new GM_Position[3];
-
-    for( int i = 0; i < nodes.size(); i++ )
-    {
-      final double x = nodes.get( i ).getPoint().getX();
-      final double y = nodes.get( i ).getPoint().getY();
-      final double z = nodes.get( i ).getPoint().getZ();
-
-      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
-    }
-
-    return pos;
-  }
-
-  private GM_Position[] processWetNodes( final List<INodeResult> nodes )
-  {
-    final GM_Position pos[] = new GM_Position[3];
-
-    for( int i = 0; i < nodes.size(); i++ )
-    {
-      final double x = nodes.get( i ).getPoint().getX();
-      final double y = nodes.get( i ).getPoint().getY();
-      double z;
-
-      if( m_parameter != null )
-      {
-        switch( m_parameter )
-        {
-          case VELOCITY:
-            z = nodes.get( i ).getAbsoluteVelocity();
-            break;
-
-          case VELOCITY_X:
-            z = nodes.get( i ).getVelocity().get( 0 );
-            break;
-
-          case VELOCITY_Y:
-            z = nodes.get( i ).getVelocity().get( 1 );
-            break;
-
-          case WATERLEVEL:
-            z = nodes.get( i ).getWaterlevel();
-            break;
-
-          case DEPTH:
-            z = nodes.get( i ).getDepth();
-            break;
-
-          case TERRAIN:
-            z = nodes.get( i ).getPoint().getZ();
-            break;
-
-          case SHEARSTRESS:
-
-            // get the node shear stress depending on nodes velocity and
-            // the averaged lambda value (derived by the neighboring elements).
-            final double lambda = nodes.get( i ).getAveragedLambda();
-
-            // get velocity
-            final double vAbs = nodes.get( i ).getAbsoluteVelocity();
-            // calculate shearstress
-            z = lambda * 0.125 * 1000 * vAbs * vAbs;
-
-            break;
-
-          default:
-            z = nodes.get( i ).getPoint().getZ();
-            break;
-
-        }
-      }
-      else
-        z = nodes.get( i ).getPoint().getZ();
-
-      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
-    }
-    return pos;
   }
 
   /**
