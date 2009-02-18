@@ -1,0 +1,180 @@
+Compiler version: 4.8 (R2008a) 
+mcc -o 'Gaja3dService' -W 'main' -d 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src' -T 'link:exe' -v -C 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\Gaja3dService.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\set_classpath.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\assert_equalsTol.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\bfilter2.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\boundariesForGrids.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\bufferPolygon.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\clipLine.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\constructRefMat.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\convertArguments.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\createGrid.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\exportArea.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\exportNodeEle.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\exportNodes.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\exportPoly.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\getPointInPolygon.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\griddedBoundaries.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\gridfit.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\inpoly.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\interptri.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\reduceToBoundary.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\utils\simplifyLine.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\saveTrianglesAsShape.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadDbf.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadGrid.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadLineData.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadPointData.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadPointShape.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadPolygonData.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadTriangleOutput.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\loadTriangleShape.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\progressbar.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\readAsciiGrid.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\saveAsciiGrid.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\savePointShape.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\saveTiff.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\saveTrianglesAsBce2d.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\data\saveTrianglesAsEle.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\SimpleFeatureDetector.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\TriangulatedSurface.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\BilateralFilter.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\CannyDetector.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\Curve.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\EdgeFilter.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\FeatureDetector.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\Gaja3D.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\GaussianFilter.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\Polygon.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\RectifiedGridCoverage.m' -a 'D:\EigeneDateien\Matlab\gaja3d_15.10.08\+org\+kalypso\+gaja3d\+matlab\Shape.m'  
+Processing C:\Programme\MATLAB\R2008a\toolbox\matlab\mcc.enc 
+Processing C:\Programme\MATLAB\R2008a\toolbox\images\mcc.enc 
+Processing C:\Programme\MATLAB\R2008a\toolbox\map\mcc.enc 
+Processing C:\Programme\MATLAB\R2008a\toolbox\shared\imageslib\mcc.enc 
+Processing C:\Programme\MATLAB\R2008a\toolbox\shared\mapgeodesy\mcc.enc 
+Processing include files... 
+2 item(s) added. 
+Processing directories installed with MCR... 
+The file D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\mccExcludedFiles.log contains a list of functions excluded from the CTF archive. 
+1 item(s) added. 
+Generating MATLAB path for the compiled application... 
+Created 53 path items. 
+Begin validation of MEX files: Wed Feb 11 16:32:31 2009 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\clc.mexw32'. 
+Found M-file 'C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\clc.m'. 
+MEX file  
+    'C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\clc.mexw32'  
+ is valid. It contains 'mexFunction.' 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\deploywhich.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\readline.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\applylutc.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwboundariesmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwlabel1.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwlabel2.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwlabelnmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwpackc.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\bwunpackc.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\compute_md5.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\imfilter_mex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\imlincombc.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\immultmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\imreconstructmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\intlutc.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\morphmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\parityscan.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\regionboundariesmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\regionpropsmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\images\private\utf16be_to_string.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\iptcheckinput.mexw32'. 
+Found M-file 'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\iptcheckinput.m'. 
+MEX file  
+    'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\iptcheckinput.mexw32'  
+ is valid. It contains 'mexFunction.' 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\private\iptregistry.mexw32'. 
+Found M-file 'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\private\iptregistry.m'. 
+MEX file  
+    'C:\Programme\MATLAB\R2008a\toolbox\images\iptutils\private\iptregistry.mexw32'  
+ is valid. It contains 'mexFunction.' 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\medformats\private\bitparse.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\medformats\private\dicom_decode_rle_segment.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\medformats\private\dicomlookup_helper.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\medformats\private\dicomparse.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\images\medformats\private\tobits.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\map\private\checkinput_mex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\map\private\gpcmex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\map\private\ind2rgb8c.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\mapformats\private\checkinput_mex.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\mapformats\private\gtifinfo.mexw32'. 
+No conflicting M-file found. 
+Validating 'C:\Programme\MATLAB\R2008a\toolbox\map\mapformats\private\sdtsmex.mexw32'. 
+No conflicting M-file found. 
+End validation of MEX files: Wed Feb 11 16:32:32 2009 
+Deleting 34 temporary MEX authorization files. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_16256_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_5265_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_32286_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_6507_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_18713_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_22784_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_8552_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_8452_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_5155_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_12191_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_24213_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_28066_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_19480_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_12177_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_25480_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_23470_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_27021_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_1451_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_9750_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_21682_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_3764_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_28384_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_17586_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_15722_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_3366_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_14076_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_23114_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_2589_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_30943_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_3990_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_18796_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_27949_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_27786_2520.auth'. 
+Removing: 'C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mathworks_tmp_2520_21311_2520.auth'. 
+Parsing file "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\Gaja3dService.m" 
+	(Referenced from: "Compiler Command Line"). 
+Parsing file "C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\deployprint.m" 
+	(Referenced from: "Compiler Command Line"). 
+Parsing file "C:\Programme\MATLAB\R2008a\toolbox\compiler\deploy\printdlg.m" 
+	(Referenced from: "Compiler Command Line"). 
+Generating file "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_main.c". 
+Generating file "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\readme.txt". 
+Generating file "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_mcc_component_data.c". 
+Executing command: mbuild  -O -v -output "Gaja3dService" -I"D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src" "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_main.c" "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_mcc_component_data.c" -link exe -outdir "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src" 
+ This is mbuild Copyright 1984-2006 The MathWorks, Inc. 
+ 
+-> Default options filename found in C:\Dokumente und Einstellungen\kurzbach\Anwendungsdaten\MathWorks\MATLAB\R2008a 
+---------------------------------------------------------------- 
+->    Options file           = C:\Dokumente und Einstellungen\kurzbach\Anwendungsdaten\MathWorks\MATLAB\R2008a\compopts.bat 
+->    COMPILER               = cl 
+->    Compiler flags: 
+         COMPFLAGS           = -c -Zp8 -GR -W3 -EHsc- -Zc:wchar_t- -nologo /D_CRT_SECURE_NO_DEPRECATE 
+         OPTIMFLAGS          = -O2 -DNDEBUG 
+         DEBUGFLAGS          = -Zi -Fd"D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService.pdb" 
+         arguments           =  -ID:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src 
+         Name switch         = /Fo 
+->    Pre-linking commands   =  
+->    LINKER                 = link 
+->    Link directives: 
+         LINKFLAGS           = kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib oleaut32.lib ole32.lib uuid.lib odbc32.lib odbccp32.lib /LIBPATH:"C:\PROGRA~1\MATLAB\R2008a\extern\lib\win32\microsoft" /nologo mclmcrrt.lib 
+         LINKFLAGSPOST       =  
+         Name directive      = "/out:D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService.exe" 
+         File link directive =  
+         Lib. link directive =  
+         Rsp file indicator  = @ 
+->    Resource Compiler      = rc /fo "D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\.res" 
+->    Resource Linker        =  
+---------------------------------------------------------------- 
+ 
+ 
+--> cl  -ID:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src -c -Zp8 -GR -W3 -EHsc- -Zc:wchar_t- -nologo /D_CRT_SECURE_NO_DEPRECATE /FoC:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\Gaja3dService_main.obj -IC:\PROGRA~1\MATLAB\R2008a\extern\include -IC:\PROGRA~1\MATLAB\R2008a\simulink\include -O2 -DNDEBUG D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_main.c 
+ 
+Gaja3dService_main.c 
+ 
+--> cl  -ID:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src -c -Zp8 -GR -W3 -EHsc- -Zc:wchar_t- -nologo /D_CRT_SECURE_NO_DEPRECATE /FoC:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\Gaja3dService_mcc_component_data.obj -IC:\PROGRA~1\MATLAB\R2008a\extern\include -IC:\PROGRA~1\MATLAB\R2008a\simulink\include -O2 -DNDEBUG D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService_mcc_component_data.c 
+ 
+Gaja3dService_mcc_component_data.c 
+    Contents of C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\mbuild_tmp.rsp: 
+  C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\Gaja3dService_main.obj  C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\Gaja3dService_mcc_component_data.obj 
+ 
+ 
+--> link "/out:D:\EigeneDateien\Matlab\gaja3d_15.10.08\Gaja3dService\src\Gaja3dService.exe" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib oleaut32.lib ole32.lib uuid.lib odbc32.lib odbccp32.lib /LIBPATH:"C:\PROGRA~1\MATLAB\R2008a\extern\lib\win32\microsoft" /nologo mclmcrrt.lib  @C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\mbuild_tmp.rsp   
+ 
+ 
+--> if exist C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\templib.def del C:\DOKUME~1\kurzbach\LOKALE~1\Temp\mbuild_c8GcbG\templib.def 
+ 
