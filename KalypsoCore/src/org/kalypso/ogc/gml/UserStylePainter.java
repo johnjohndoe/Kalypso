@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -174,7 +175,8 @@ public class UserStylePainter
     }
     catch( final CoreException e )
     {
-      e.printStackTrace();
+      if( !e.getStatus().matches( IStatus.CANCEL ) )// do not print cancel stuff
+        e.printStackTrace();
       throw e;
     }
     catch( final Exception e )
