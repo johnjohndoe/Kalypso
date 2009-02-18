@@ -59,17 +59,18 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * collection
    * 
    * @param index
-   *            index at which the specified element is to be inserted.
+   *          index at which the specified element is to be inserted.
    * @param newChildType
-   *            the type of the element to add
+   *          the type of the element to add
    * @throws UnsupportedOperationException
-   *             if the <tt>add</tt> method is not supported by this list.
+   *           if the <tt>add</tt> method is not supported by this list.
    * @throws IllegalArgumentException
-   *             if some aspect of the specified newChildType prevents it from being added to this list. E.g.
-   *             <ul>
-   *             <li/>newChildType is null <li/>the underlaying feature collection does not accepts elements of the
-   *             specified type <li/>the type is not adaptable to the class {@link FWCls}
-   *             </ul>
+   *           if some aspect of the specified newChildType prevents it from being added to this list. E.g.
+   *           <ul>
+   *           <li/>newChildType is null
+   *           <li/>the underlaying feature collection does not accepts elements of the specified type
+   *           <li/>the type is not adaptable to the class {@link FWCls}
+   *           </ul>
    */
   public FWCls addNew( final QName newChildType );
 
@@ -83,19 +84,20 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Creates and Adds a new element of the specified type into the feature collection at the specified position
    * 
    * @param index
-   *            index at which the specified element is to be inserted.
+   *          index at which the specified element is to be inserted.
    * @param newChildType
-   *            the type of the element to add
+   *          the type of the element to add
    * @throws UnsupportedOperationException
-   *             if the <tt>add</tt> method is not supported by this list.
+   *           if the <tt>add</tt> method is not supported by this list.
    * @throws IllegalArgumentException
-   *             if some aspect of the specified newChildType prevents it from being added to this list. E.g.
-   *             <ul>
-   *             <li/>newChildType is null <li/>the underlaying feature collection does not accepts elements of the
-   *             specified type <li/>the type is not adaptable to the class {@link FWCls}
-   *             </ul>
+   *           if some aspect of the specified newChildType prevents it from being added to this list. E.g.
+   *           <ul>
+   *           <li/>newChildType is null
+   *           <li/>the underlaying feature collection does not accepts elements of the specified type
+   *           <li/>the type is not adaptable to the class {@link FWCls}
+   *           </ul>
    * @throws IndexOutOfBoundsException
-   *             if the index is out of range (index &lt; 0 || index &gt; size()).
+   *           if the index is out of range (index &lt; 0 || index &gt; size()).
    */
   public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt );
 
@@ -110,9 +112,9 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Renove all reference to this feature from this list
    * 
    * @param toRemove
-   *            a wrapper wrapping the feature which reference is to be remove from this list
+   *          a wrapper wrapping the feature which reference is to be remove from this list
    * @throws IllegalArgumentException
-   *             if the argument toRemove is null
+   *           if the argument toRemove is null
    */
   public void removeAllRefs( FWCls toRemove ) throws IllegalArgumentException;
 
@@ -120,10 +122,10 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Add this feature as reference to this list
    * 
    * @param toAdd
-   *            a wrapper wrapping the feature to be added as list
+   *          a wrapper wrapping the feature to be added as list
    * @return true if the feature has been added
    * @throws IllegalArgumentException
-   *             if the argument toAdd is null
+   *           if the argument toAdd is null
    */
   public boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
 
@@ -131,26 +133,28 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Answer all feature wrappers overlaping the selected zone
    * 
    * @param selectionSurface
-   *            the selection surface
+   *          the selection surface
+   * @param qname
+   *          qname of geometry property
    * @param containedOnly
-   *            control the selection of feature according to whether a feature (limited to a geometry specified by
-   *            checkedGeometryPropertyName ) are contained in the selectionSurface or not:
-   *            <ul>
-   *            <li/> true to select only features that are contains in the area <li/> false to allow selection of all
-   *            overlapping feature
-   *            </ul>
+   *          control the selection of feature according to whether a feature (limited to a geometry specified by
+   *          checkedGeometryPropertyName ) are contained in the selectionSurface or not:
+   *          <ul>
+   *          <li/>true to select only features that are contains in the area
+   *          <li/>false to allow selection of all overlapping feature
+   *          </ul>
    * @param checkedGeometryPropertyName
-   *            the q-name of the feature property to check
+   *          the q-name of the feature property to check
    * @return a list of feature overlaping the given surface
    * @thorws {@link IllegalArgumentException} if selectionSurface is null
    */
-  public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final boolean containedOnly );
+  public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final QName qname, final boolean containedOnly );
 
   /**
    * Answer all feature wrappers overlaping the given envelope
    * 
    * @param envelope
-   *            the envelope specifying the selection area
+   *          the envelope specifying the selection area
    * @return a list of feature overlaping the given surface
    * @thorws {@link IllegalArgumentException} if envelope is null
    */
@@ -160,10 +164,9 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Answer all feature wrappers containing the given position
    * 
    * @param selectionSurface
-   *            the selection surface
+   *          the selection surface
    * @return a list of feature overlaping the given surface
-   * @throws {@link IllegalArgumentException}
-   *             if position is null
+   * @throws {@link IllegalArgumentException} if position is null
    */
   public List<FWCls> query( final GM_Position position );
 

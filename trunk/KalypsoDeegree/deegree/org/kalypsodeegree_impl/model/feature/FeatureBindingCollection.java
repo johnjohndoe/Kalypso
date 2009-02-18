@@ -109,7 +109,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   FeatureList getFeatureList( )
   {
     if( m_featureLst == null )
+    {
       m_featureLst = (FeatureList) m_featureCollection.getProperty( m_featureMemberProp );
+    }
 
     return m_featureLst;
   }
@@ -137,9 +139,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       feature = FeatureHelper.createFeatureForListProp( getFeatureList(), newChildType, -1 );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
-      {
         throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
-      }
 
       return wrapper;
     }
@@ -162,9 +162,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       feature = FeatureHelper.createFeatureWithId( newChildType, m_featureCollection, m_featureMemberProp, newFeatureId );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
-      {
         throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
-      }
       return wrapper;
     }
     catch( final Exception e )
@@ -185,9 +183,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final Feature feature = FeatureHelper.createFeatureForListProp( getFeatureList(), newChildType, index );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
-      {
         throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
-      }
 
       return wrapper;
     }
@@ -398,24 +394,24 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     {
       boolean removed = getFeatureList().remove( (o) );
       if( !removed )
+      {
         removed = getFeatureList().remove( (o) );
+      }
       return removed;
     }
     else if( o instanceof String )
-    {
       return getFeatureList().remove( o );
-    }
     else
-    {
       return getFeatureList().remove( o );
-    }
   }
 
   public boolean removeAll( final Collection< ? > c )
   {
     boolean ret = false;
     for( final Object o : c )
+    {
       ret = ret || remove( o );
+    }
     return ret;
   }
 
@@ -453,7 +449,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         throw new RuntimeException( "Type not known:" + fObj );
       final Object object = getAdaptedFeature( feature );
       if( object != null )
+      {
         objs[i] = object;
+      }
     }
     return objs;
   }
@@ -463,9 +461,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final int SIZE = size();
     final Class compType = a.getClass().getComponentType();
     if( !compType.isAssignableFrom( m_defaultWrapperClass ) )
-    {
       throw new ArrayStoreException();
-    }
 
     if( a.length < SIZE )
     {
@@ -487,30 +483,22 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public boolean equals( final Object obj )
   {
     if( obj instanceof FeatureBindingCollection )
-    {
       return getFeatureList().equals( ((FeatureBindingCollection) obj).getFeatureList() );
-    }
     else if( obj instanceof IFeatureBindingCollection )
     {
       final IFeatureBindingCollection frs = (IFeatureBindingCollection) obj;
       final int SIZE = size();
       if( SIZE != frs.size() )
-      {
         return false;
-      }
       for( int i = SIZE - 1; i >= 0; i-- )
       {
         if( !get( i ).equals( frs.get( 0 ) ) )
-        {
           return false;
-        }
       }
       return true;
     }
     else
-    {
       return super.equals( obj );
-    }
   }
 
   public FeatureList getWrappedList( )
@@ -537,9 +525,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final String gmlID = toAdd.getId();
     // TODO: this can cause major performance leaks
     if( getFeatureList().contains( gmlID ) )
-    {
       return false;
-    }
     return getFeatureList().add( gmlID );
   }
 
@@ -547,7 +533,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
    *      boolean, javax.xml.namespace.QName)
    */
-  public List<FWCls> query( final GM_Surface selectionSurface, final boolean containedOnly )
+  public List<FWCls> query( final GM_Surface selectionSurface, final QName qname, final boolean containedOnly )
   {
     final List selectedFeature = getFeatureList().query( selectionSurface.getEnvelope(), null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
@@ -558,16 +544,24 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final GM_Object prop = feature.getDefaultGeometryProperty();
-        if( containedOnly )
+        final Object property = feature.getProperty( qname );
+        if( property instanceof GM_Object )
         {
-          if( selectionSurface.contains( prop ) )
-            selFW.add( feature );
-        }
-        else
-        {
-          if( selectionSurface.intersects( prop ) )
-            selFW.add( feature );
+          final GM_Object gmo = (GM_Object) property;
+          if( containedOnly )
+          {
+            if( selectionSurface.contains( gmo ) )
+            {
+              selFW.add( feature );
+            }
+          }
+          else
+          {
+            if( selectionSurface.intersects( gmo ) )
+            {
+              selFW.add( feature );
+            }
+          }
         }
       }
     }
@@ -588,7 +582,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final Feature feature = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), linkOrFeature );
       final FWCls adaptedFeature = getAdaptedFeature( feature );
       if( adaptedFeature != null )
+      {
         selFW.add( adaptedFeature );
+      }
     }
     return selFW;
   }
@@ -621,7 +617,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     int num = 0;
     for( final FWCls ele : this )
       if( wrapperClass.isInstance( ele ) )
+      {
         num++;
+      }
     return num;
   }
 
@@ -637,7 +635,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public void addSecondaryWrapper( final Class<FWCls> secondaryWrapper )
   {
     if( !m_secondaryWrapperClasses.contains( secondaryWrapper ) )
+    {
       m_secondaryWrapperClasses.add( secondaryWrapper );
+    }
   }
 
   private FWCls getAdaptedFeature( final Feature feature )
