@@ -83,7 +83,7 @@ public class TriangulatedSurfaceMarshaller
 
   private final GM_TriangulatedSurface m_surface;
 
-  private static final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
+  public static final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
 
   private static final char[] WHITESPACE = new char[] { ' ' };
 
@@ -98,10 +98,11 @@ public class TriangulatedSurfaceMarshaller
     try
     {
       final String crs = m_surface.getCoordinateSystem();
-      startSurface( crs );
+      final Attributes atts = crs == null ? EMPTY_ATTRIBUTES : createCrsAttributes( crs );
+      startSurface( atts );
 
       for( final GM_Triangle triangle : m_surface )
-        marshalTriangle( triangle );
+        marshalTriangle( triangle, crs );
 
       endSurface();
     }
@@ -111,15 +112,9 @@ public class TriangulatedSurfaceMarshaller
     }
   }
 
-  public void startSurface( final String crs ) throws UnknownCRSException, SAXException
+  public void startSurface( final Attributes atts ) throws SAXException
   {
     final ContentHandler contentHandler = m_reader.getContentHandler();
-
-    final Attributes atts;
-    if( crs != null )
-      atts = createCrsAttributes( crs );
-    else
-      atts = EMPTY_ATTRIBUTES;
 
     contentHandler.startElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE, atts );
     contentHandler.startElement( NS.GML3, TAG_TRIANGLE_PATCHES, QNAME_TRIANGLE_PATCHES, EMPTY_ATTRIBUTES );
@@ -132,16 +127,19 @@ public class TriangulatedSurfaceMarshaller
     contentHandler.endElement( NS.GML3, TAG_TRIANGULATED_SURFACE, QNAME_TRIANGULATED_SURFACE );
   }
 
-
-  public void marshalTriangle( final GM_Triangle triangle ) throws SAXException, UnknownCRSException
+  /**
+   * @param surfaceCrs
+   *          If the crs of the triangle is different from the given one, the srs parameter is written to xml, ese it is
+   *          ommitted.
+   */
+  public void marshalTriangle( final GM_Triangle triangle, final String surfaceCrs ) throws SAXException, UnknownCRSException
   {
     final ContentHandler contentHandler = m_reader.getContentHandler();
 
-    final String crs = m_surface == null ? null : m_surface.getCoordinateSystem();
     final String crsTri = triangle.getCoordinateSystem();
 
     final AttributesImpl atts;
-    if( crsTri != null && !crsTri.equals( crs ) )
+    if( crsTri != null && !crsTri.equals( surfaceCrs ) )
       atts = createCrsAttributes( crsTri );
     else
       atts = new AttributesImpl();

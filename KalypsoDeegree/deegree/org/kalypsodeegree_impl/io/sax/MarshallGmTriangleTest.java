@@ -92,14 +92,14 @@ public class MarshallGmTriangleTest
 
       // Write header
       ch.startDocument();
-      marshaller.startSurface( null );
+      marshaller.startSurface( TriangulatedSurfaceMarshaller.EMPTY_ATTRIBUTES );
 
       // write one triangle
       final GM_Position pos1 = GeometryFactory.createGM_Position( 0.0, 0.0, 1.0 );
       final GM_Position pos2 = GeometryFactory.createGM_Position( 0.0, 1.0, 2.0 );
       final GM_Position pos3 = GeometryFactory.createGM_Position( 1.0, 0.0, 3.0 );
       final GM_Triangle triangle = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, null );
-      marshaller.marshalTriangle( triangle );
+      marshaller.marshalTriangle( triangle, null );
 
       // Write footer
       marshaller.endSurface();
