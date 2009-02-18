@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystem;
@@ -101,9 +103,9 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
   private final URL m_exeUrl;
 
-  private final List<URL> m_inputs;
+  private final List<URI> m_inputs = new ArrayList<URI>();
 
-  private final List<String> m_outputs;
+  private final List<String> m_outputs = new ArrayList<String>();
 
   private final List<String> m_commandLine = new ArrayList<String>();
 
@@ -134,8 +136,6 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
     m_workingDir = workingDir;
     m_exeUrl = exeUrl;
-    m_inputs = new ArrayList<URL>();
-    m_outputs = new ArrayList<String>();
 
     if( commandlineArgs != null )
     {
@@ -189,7 +189,7 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     m_timeout = timeout;
   }
 
-  public void addInput( final URL input )
+  public void addInput( final URI input )
   {
     m_inputs.add( input );
   }
@@ -206,8 +206,8 @@ public class SimpleGridProcess implements IProcess, GDIObserver
   @Override
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws ProcessTimeoutException, IOException
   {
-    // try to convert bundle resouce url to local file
-    final String exeUrlName = getUrlAsString( m_exeUrl );
+    // try to convert bundle resouce url to local file url
+    final String exeUrlName = FileLocator.toFileURL( m_exeUrl ).toString();
 
     // initialize simulation monitor if not set
     m_monitor = SubMonitor.convert( m_monitor, String.format( "Running grid process for executable %s in directoy %s.", exeUrlName, m_workingDir.getAbsolutePath() ), TOTAL_WORK );
@@ -218,10 +218,10 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     // stage-in 3 files: all zipped input files, the executable and the
     // run-script
     final ArrayList<GDIFileTransfer> stageInFiles = new ArrayList<GDIFileTransfer>();
-    for( final URL externalInput : m_inputs )
+    for( final URI externalInput : m_inputs )
     {
       // try to convert bundle resouce url to local file
-      final String externalForm = getUrlAsString( externalInput );
+      final String externalForm = getUriAsString( externalInput );
       final String inputBaseName = FileUtilities.nameFromPath( externalForm );
       stageInFiles.add( new GDIFileTransfer( externalForm, GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + inputBaseName ) );
     }
@@ -232,9 +232,11 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
     /* configure and submit grid job */
 
-    // and logging output
-    final String stdOutFileName = exeBaseName + ".out";
-    final String stdErrFileName = exeBaseName + ".err";
+    // logging output
+    final String stdOutFileName = "stdout";
+    final String stdErrFileName = "stderr";
+    addOutput( stdOutFileName );
+    addOutput( stdErrFileName );
 
     final GDIJobProperties props = new GDIJobProperties();
     props.addPreference( "gdi.targethostname", GridProcessFactory.GRID_SERVER_URL );
@@ -245,11 +247,17 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     props.addPreference( "gdi.filestagein", stageInFiles );
 
     // no stage-out, we will handle it ourselves
-    final ArrayList<GDIFileTransfer> noStageOut = new ArrayList<GDIFileTransfer>();
-    props.addPreference( "gdi.filestageout", noStageOut );
+// final ArrayList<GDIFileTransfer> loggingStageOut = new ArrayList<GDIFileTransfer>();
+// final URI localStdOutURI = stdOutFile.toURI();
+// final URI localStdErrURI = stdErrFile.toURI();
+// loggingStageOut.add( new GDIFileTransfer( GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + stdOutFileName,
+    // localStdOutURI.toASCIIString() ) );
+// loggingStageOut.add( new GDIFileTransfer( GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + stdErrFileName,
+    // localStdErrURI.toASCIIString() ) );
+// props.addPreference( "gdi.filestageout", loggingStageOut );
+    props.addPreference( "gdi.factory", "PBS" ); // for hannover
     props.addPreference( "gdi.queue", "dgitest" ); // for hannover
-    props.addPreference( "gdi.factory", "Fork" ); // for hannover
-    // props.addPreference( "gdi.queue", "SGE" ); // for kaiserslautern
+// props.addPreference( "gdi.queue", "SGE" ); // for kaiserslautern
 
     props.addPreference( "gdi.sandboxdir", m_sandboxRoot );
     props.addPreference( "gdi.environment", m_environment );
@@ -257,7 +265,8 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
     m_monitor.subTask( String.format( "Submitting grid job to server %s.", GridProcessFactory.GRID_SERVER_URL ) );
 
-    final PrintWriter errorPrinter = new PrintWriter( stdErr );
+    final PrintWriter stdPrinter = new PrintWriter( stdOut );
+    final PrintWriter errPrinter = new PrintWriter( stdErr );
 
     // register observer
     ((GDIObserverSubject) m_job).registerObserver( this );
@@ -285,8 +294,8 @@ public class SimpleGridProcess implements IProcess, GDIObserver
         }
         switch( m_status )
         {
-          case UNSUBMITTED:
           case RUNNING:
+          case UNSUBMITTED:
           case STAGEIN:
           case STAGEOUT:
             sleep();
@@ -308,7 +317,7 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     }
     catch( final Throwable e )
     {
-      e.printStackTrace( errorPrinter );
+      e.printStackTrace( errPrinter );
     }
     finally
     {
@@ -325,10 +334,13 @@ public class SimpleGridProcess implements IProcess, GDIObserver
 
       if( m_monitor.isCanceled() || (cancelable != null && cancelable.isCanceled()) )
       {
-        errorPrinter.println( "Job has been canceled." );
+        errPrinter.println( "Job has been canceled." );
         throw new OperationCanceledException();
       }
     }
+
+    IOUtils.closeQuietly( stdPrinter );
+    IOUtils.closeQuietly( errPrinter );
 
     return returnCode;
   }
@@ -345,16 +357,17 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     }
   }
 
-  private String getUrlAsString( final URL url ) throws IOException
+  private String getUriAsString( final URI uri )
   {
-    URL exeUrl = FileLocator.toFileURL( url );
-    if( exeUrl == null )
+    try
     {
-      // if this did not work, try to use original url
-      exeUrl = url;
+      final URL url = FileLocator.toFileURL( uri.toURL() );
+      return url.toExternalForm();
     }
-    final String exeUrlName = exeUrl.toExternalForm();
-    return exeUrlName;
+    catch( final IOException e )
+    {
+      return uri.toString();
+    }
   }
 
   private FileObject getServerHomeDir( final FileSystemManager manager ) throws FileSystemException

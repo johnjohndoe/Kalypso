@@ -80,9 +80,9 @@ public class TestSimpleGridProcess extends TestCase {
 				processFactoryId, tmpDir, exeURL, null);
 		process.environment().put("OMP_NUM_THREADS", "4");
 		((SimpleGridProcess)process).addInput( FileLocator.find(Activator.getDefault().getBundle(),
-                new Path("model.2d"), null));
+                new Path("model.2d"), null).toURI());
 		((SimpleGridProcess)process).addInput( FileLocator.find(Activator.getDefault().getBundle(),
-            new Path("control.r10"), null));
+            new Path("control.r10"), null).toURI());
 		((SimpleGridProcess)process).addOutput( "A*.2d" );
 		process.startProcess(System.out, System.err, null, null);
 	}
