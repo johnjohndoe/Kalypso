@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -85,6 +86,14 @@ public abstract class AbstractWidget implements IWidget
   }
 
   /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
+   */
+  public void setCursor( final Cursor cursor )
+  {
+    getMapPanel().setCursor( cursor );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
   public void setSelection( final ISelection selection )
@@ -94,8 +103,8 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * @param selection
-   *            The selection of the part, here the selection of the map which is the selection of the active theme
-   *            TODO: maybe it is better to give the whole selection
+   *          The selection of the part, here the selection of the map which is the selection of the active theme TODO:
+   *          maybe it is better to give the whole selection
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
   public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
@@ -279,7 +288,9 @@ public abstract class AbstractWidget implements IWidget
   {
     final IMapPanel panel = getMapPanel();
     if( panel != null )
+    {
       panel.repaintMap();
+    }
   }
 
   protected final IMapPanel getMapPanel( )
