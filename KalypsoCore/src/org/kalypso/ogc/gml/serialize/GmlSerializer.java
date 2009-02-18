@@ -107,7 +107,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- * 
+ *
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -152,7 +152,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   * 
+   *
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -424,7 +424,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   * 
+   *
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -441,7 +441,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   * 
+   *
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -474,6 +474,7 @@ public final class GmlSerializer
     {
       final ZipEntry newEntry = new ZipEntry( zipEntryName );
       zos.putNextEntry( newEntry );
+      // TODO: grrr, do not use fixed CP1252 here!!! And do not use writers as well
       final OutputStreamWriter gmlWriter = new OutputStreamWriter( zos, "CP1252" );
 
       serializeWorkspace( gmlWriter, resultWorkspace, "CP1252", new HashMap<String, String>() );
