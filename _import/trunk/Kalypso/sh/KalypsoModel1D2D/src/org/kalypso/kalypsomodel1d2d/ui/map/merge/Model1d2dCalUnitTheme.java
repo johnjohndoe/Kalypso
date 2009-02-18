@@ -91,6 +91,8 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
       calUnitDisplayElement = new CalUnitDisplayElement( m_calcUnit );
     else
       calUnitDisplayElement = null;
+
+    fireRepaintRequested( null );
   }
 
   /**

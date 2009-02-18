@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
@@ -109,7 +108,6 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
       {
         m_calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
-        KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     }
   };

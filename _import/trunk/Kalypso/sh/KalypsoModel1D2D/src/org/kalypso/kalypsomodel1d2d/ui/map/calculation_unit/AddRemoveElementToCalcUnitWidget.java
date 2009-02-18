@@ -67,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalcul
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -75,7 +76,6 @@ import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
  * @author Patrice Congo
@@ -111,8 +111,6 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     {
       super.process();
       KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
-
     }
   }
 
@@ -131,7 +129,6 @@ public class AddRemoveElementToCalcUnitWidget extends AbstractDelegateWidget
     {
       super.process();
       KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
     }
   }
 

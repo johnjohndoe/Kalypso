@@ -46,11 +46,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -585,25 +582,12 @@ public class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 
     if( calculationUnit != null )
     {
-      try
-      {
       final Shell shell = event.display.getActiveShell();
-      
-      final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) getDataModel().getData( ICommonKeys.KEY_DATA_PROVIDER );
-      final IContainer scenarioFolder = caseDataProvider.getScenarioFolder();
-
-      final IFolder unitFolder = scenarioFolder.getFolder( new Path( "results/" + calculationUnit.getGmlID() ) ); //$NON-NLS-1$
-      
       final Model1D2DSimulation runnable = new Model1D2DSimulation( shell );
       runnable.process(calculationUnit);
 
       // Force fire a data change event here, so the log get updated now
       getDataModel().fireDataChanged( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
-    }
-      catch( final CoreException e )
-      {
-        KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
     }
   }
 

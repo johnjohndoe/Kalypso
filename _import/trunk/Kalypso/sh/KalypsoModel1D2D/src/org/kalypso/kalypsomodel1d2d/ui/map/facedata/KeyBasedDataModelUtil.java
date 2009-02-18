@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -109,46 +108,6 @@ public class KeyBasedDataModelUtil
     Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( key, "key" ); //$NON-NLS-1$
     dataModel.setData( key, dataModel.getData( key ) );
-  }
-
-  /**
-   * Repaints the map panel stored in the data model using the provided key.
-   *
-   * @param dataModel
-   *            the data model holding the map panel
-   * @param key
-   *            the key for the map panel entry
-   * @throws IllegalArgumentException
-   *             if dataModel or key is null or if the data corresponding to key is not a IMapPanel; this also include
-   *             null values
-   */
-  public static void repaintMapPanel( final KeyBasedDataModel dataModel, final String key )
-  {
-    Assert.throwIAEOnNullParam( key, "key" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
-    final Object mapPanelEntry = dataModel.getData( key );
-    if( !(mapPanelEntry instanceof IMapPanel) )
-    {
-      throw new IllegalArgumentException( "Key does not correspond to a IMapPanel:" + key ); //$NON-NLS-1$
-    }
-
-    final Object displayEntry = dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
-    if( !(displayEntry instanceof Display) )
-    {
-      throw new IllegalArgumentException( "dataModel must contains a entry with key .KEY_SELECTED_DISPLAY " + "representing a Display : current entry=" + displayEntry ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    final Runnable repaintRunnable = new Runnable()
-    {
-      public void run( )
-      {
-        // TODO: probably wrong to call it from here; instead let the theme fire the corresponding event
-
-        ((IMapPanel) mapPanelEntry).invalidateMap();
-      }
-    };
-    // dataModel.getData( key )
-    ((Display) displayEntry).asyncExec( repaintRunnable );
   }
 
   public static final CommandableWorkspace getBCWorkSpace( final KeyBasedDataModel dataModel )
