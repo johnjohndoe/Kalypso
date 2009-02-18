@@ -140,6 +140,5 @@ public class MapPanelPainter implements IPaintable
       // Check for cancel
       ProgressUtilities.worked( monitor, 0 );
     }
-    System.out.println( "Painted Map" );
   }
 }
