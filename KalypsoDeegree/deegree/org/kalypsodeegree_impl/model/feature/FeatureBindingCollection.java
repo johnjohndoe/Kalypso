@@ -544,24 +544,32 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final Object property = feature.getProperty( qname );
-        if( property instanceof GM_Object )
+
+        try
         {
-          final GM_Object gmo = (GM_Object) property;
-          if( containedOnly )
+          final Object property = feature.getProperty( qname );
+          if( property instanceof GM_Object )
           {
-            if( selectionSurface.contains( gmo ) )
+            final GM_Object gmo = (GM_Object) property;
+            if( containedOnly )
             {
-              selFW.add( feature );
+              if( selectionSurface.contains( gmo ) )
+              {
+                selFW.add( feature );
+              }
+            }
+            else
+            {
+              if( selectionSurface.intersects( gmo ) )
+              {
+                selFW.add( feature );
+              }
             }
           }
-          else
-          {
-            if( selectionSurface.intersects( gmo ) )
-            {
-              selFW.add( feature );
-            }
-          }
+        }
+        catch( final Exception e )
+        {
+
         }
       }
     }
