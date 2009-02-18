@@ -171,7 +171,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- * 
+ *
  * @author Thomas Jung
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -569,7 +569,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   public static IFolder getEventsFolder( ) throws CoreException
   {
-    return KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    final IFolder szenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
+    return szenarioFolder.getFolder( "events" );
   }
 
   private IRunoffEvent getCurrentEvent( )

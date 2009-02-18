@@ -115,6 +115,9 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   {
     final String path = getProperty( QNAME_PROP_SOURCE_PATH, String.class );
 
+    if( path == null )
+      return null;
+
     final GMLWorkspace workspace = getFeature().getWorkspace();
 
     return new GMLXPath( path, workspace.getNamespaceContext() );
@@ -218,7 +221,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#setSourceType(org.kalypso.model.flood.binding.ITinReference.SOURCETYPE)
    */
-  public void setSourceType( SOURCETYPE type )
+  public void setSourceType( final SOURCETYPE type )
   {
     getFeature().setProperty( QNAME_PROP_SOURCE_TYPE, type.name() );
   }
@@ -226,7 +229,7 @@ public class TinReference extends AbstractFeatureBinder implements ITinReference
   /**
    * @see org.kalypso.model.flood.binding.ITinReference#getTraingle(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  public GM_Triangle getTraingle( GM_Position pos )
+  public GM_Triangle getTraingle( final GM_Position pos )
   {
     final GM_TriangulatedSurface tin = getTin();
 

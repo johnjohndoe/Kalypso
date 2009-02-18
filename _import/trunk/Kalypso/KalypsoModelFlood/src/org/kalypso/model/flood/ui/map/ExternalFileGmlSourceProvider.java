@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.map;
 
@@ -56,6 +56,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
@@ -64,6 +65,8 @@ import org.kalypso.core.gml.provider.GmlSource;
 import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Thomas Jung
@@ -81,7 +84,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     @Override
     public String[] getFilterNames( )
     {
-      return new String[] { "HMO-Dateien (*.hmo)", "ESRI-Shape Dateien (*.shp)", "GML-Dateien (*.gml)" };
+      return new String[] { "Alle Dateien (*.*)", "HMO-Dateien (*.hmo)", "ESRI-Shape Dateien (*.shp)", "GML-Dateien (*.gml)" };
     }
 
     /**
@@ -90,27 +93,23 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     @Override
     public String[] getFilterExtensions( )
     {
-      return new String[] { "*.hmo", "*.shp", "*.gml" };
+      return new String[] { "*.*", "*.hmo", "*.shp", "*.gml" };
     }
   };
 
-  private final FileChooserGroup m_fileChooserGroup = new FileChooserGroup( m_fileDelegate );
+  private FileChooserGroup m_fileChooserGroup;
 
   private final FileChangedListener m_fileChangedListener = new FileChangedListener()
   {
-    @SuppressWarnings("synthetic-access")
-    public void fileChanged( File file )
+    public void fileChanged( final File file )
     {
-      m_file = file;
+      handleFileChanged( file );
     }
   };
 
   private File m_file;
 
-  public ExternalFileGmlSourceProvider( )
-  {
-    m_fileChooserGroup.addFileChangedListener( m_fileChangedListener );
-  }
+  private CRSSelectionPanel m_crsPanel;
 
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createContentProvider()
@@ -124,25 +123,30 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createInfoControl(org.eclipse.swt.widgets.Composite,
    *      java.lang.Object)
    */
-  public void createInfoControl( Composite parent, Object element )
+  public void createInfoControl( final Composite parent, final Object element )
   {
     Assert.isTrue( element == THE_ELEMENT );
 
-    Composite panel = new Composite( parent, SWT.NONE );
+    m_fileChooserGroup = new FileChooserGroup( m_fileDelegate );
+    m_fileChooserGroup.addFileChangedListener( m_fileChangedListener );
+
+    final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
 
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" );
-    m_fileChooserGroup.setDialogSettings( dialogSettings );
-
-    Label label = new Label( panel, SWT.NONE );
+    final Label label = new Label( panel, SWT.NONE );
     label.setText( "Externe Datei als Wasserspiegel-Tin importieren: " );
 
-    Group fileControl = m_fileChooserGroup.createControl( panel, SWT.NONE );
-    fileControl.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
+    final Group fileControl = m_fileChooserGroup.createControl( panel, SWT.NONE );
+    fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fileControl.setText( "Externe Datei" );
 
-    // SRS. TODO: ask Dirk for reusable SRS-ComboViewer
+    m_crsPanel = new CRSSelectionPanel( panel, SWT.NONE );
+    m_crsPanel.setSelectedCRS( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    // Set dialog settings at the end, so update is correctly done for all controls
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" );
+    m_fileChooserGroup.setDialogSettings( dialogSettings );
   }
 
   /**
@@ -156,24 +160,27 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   /**
    * @see org.kalypso.core.gml.provider.IGmlSourceProvider#createSource(java.lang.Object)
    */
-  public IGmlSource createSource( Object element )
+  public IGmlSource createSource( final Object element )
   {
     Assert.isTrue( element == THE_ELEMENT );
 
-    final File externalFile = m_file;
-    final String srs = "EPSG:31466"; // TODO: ask user for that
-
-    if( externalFile == null || srs == null )
+    if( m_file == null )
       return null;
 
-    final String name = externalFile.getName();
+    final boolean needsCrs = checkNeedsCrs( m_file );
+    final String crs = needsCrs ? m_crsPanel.getSelectedCRS() : null;
+    if( needsCrs && crs == null )
+      return null;
+
+    final String name = m_file.getName();
     final String description = "";
 
     try
     {
-      final URL fileUrl = externalFile.toURL();
-      final URL location = new URL( fileUrl.toExternalForm() + "?srs=" + srs );
+      final URL fileUrl = m_file.toURI().toURL();
+      final URL location = crs == null ? fileUrl : new URL( fileUrl.toExternalForm() + "?srs=" + crs );
 
+      // TODO: we should set here a correct xpath to the GM_TriangualtedSurface (for tins)
       return new GmlSource( name, description, location, null );
     }
     catch( final MalformedURLException e )
@@ -185,9 +192,33 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   }
 
   /**
+   * Checks, if the given file needs a coordinate system defined by the user.
+   */
+  private boolean checkNeedsCrs( final File file )
+  {
+    final String ext = FileUtilities.getSuffix( file );
+    if( ext == null )
+      return false;
+
+    final String extLow = ext.toLowerCase();
+    if( "hmo".equals( extLow ) || "shp".equals( extLow ) )
+      return true;
+
+    return false;
+  }
+
+  protected void handleFileChanged( final File file )
+  {
+    m_file = file;
+
+    m_crsPanel.setVisible( checkNeedsCrs( file ) );
+  }
+
+
+  /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( final Object parentElement )
   {
     return new Object[] {};
   }
@@ -195,7 +226,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     return null;
   }
@@ -203,7 +234,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     return false;
   }
@@ -211,7 +242,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     return new Object[] { THE_ELEMENT };
   }
@@ -221,14 +252,13 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
    */
   public void dispose( )
   {
-    m_fileChooserGroup.removeFileChangedListener( m_fileChangedListener );
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
   }
 

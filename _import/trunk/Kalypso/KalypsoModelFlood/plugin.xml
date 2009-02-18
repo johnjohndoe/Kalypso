@@ -289,6 +289,7 @@
               locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
            <command
                  commandId="org.kalypso.model.flood.command.createExtrapolationPolygon"
+                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">
@@ -299,6 +300,7 @@
            </command>
            <command
                  commandId="org.kalypso.model.flood.command.createClipPolygon"
+                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">
@@ -309,6 +311,7 @@
            </command>
            <command
                  commandId="org.kalypso.model.flood.command.createVolumePolygon"
+                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">

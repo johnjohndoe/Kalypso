@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.ui.map;
 
@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.ITinReference;
@@ -95,11 +96,11 @@ import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * TODO: remove the TriangulatedSurfaceTriangleEater from here: we do not want to have a dependency on 1d2d!<br>
- * 
+ *
  * Updates the data of some tin-references. I.e. re-reads the original tin and copies the data into the reference.
- * 
+ *
  * @author Gernot Belger
- * 
+ *
  */
 public class UpdateTinsOperation implements ICoreRunnableWithProgress
 {
@@ -170,14 +171,13 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
         sourceWorkspace = GmlSerializer.createGMLWorkspace( sourceLocation, null );
 
-        final Object sourceObject = GMLXPathUtilities.query( sourcePath, sourceWorkspace );
-        if( sourceObject == null || !(sourceObject instanceof GM_TriangulatedSurface) )
+        final Object sourceObject = sourcePath == null ? sourceWorkspace : GMLXPathUtilities.query( sourcePath, sourceWorkspace );
+        final GM_TriangulatedSurface surface = findSurface( sourceObject );
+        if( surface == null )
         {
           final String msg = String.format( "Zielpfad (%s) referenziert kein GM_TriangulatedSurface: %s", sourcePath, sourceObject );
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
         }
-
-        final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) sourceObject;
 
         ProgressUtilities.worked( monitor, 33 );
 
@@ -192,7 +192,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
         clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor, subMon );
 
-        desc = String.format( "Daten importiert:%nHerkunft: %s # %s%nDatum: %3$te.%3$tm.%3$tY %3$tk:%3$tM", sourceLocation.toExternalForm(), sourcePath.toString(), sourceDate );
+        desc = String.format( "Daten importiert:%nHerkunft: %s # %s%nDatum: %3$te.%3$tm.%3$tY %3$tk:%3$tM", sourceLocation.toExternalForm(), sourcePath, sourceDate );
 
         ref.setDescription( desc );
         ref.setMin( minmaxVisitor.getMin() );
@@ -204,7 +204,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
       case hmo:
         crs = getCoordinateSytem( properties.getProperty( "srs" ) );
-        eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), new TriangulatedSurfaceTriangleEater.QNameAndString[] {} );
 
         final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
@@ -255,7 +255,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         // open shape
         crs = getCoordinateSytem( properties.getProperty( "srs" ) );
 
-        eater = new TriangulatedSurfaceTriangleEater( crs );
+        eater = new TriangulatedSurfaceTriangleEater( crs, new TriangulatedSurfaceTriangleEater.QNameAndString[] {} );
 
         final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
         final String file2 = shapeURL.getFile();
@@ -338,6 +338,38 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
     monitor.done();
     return Status.OK_STATUS;
+  }
+
+  private GM_TriangulatedSurface findSurface( final Object sourceObject )
+  {
+    if( sourceObject == null )
+      return null;
+
+    if( sourceObject instanceof GM_TriangulatedSurface )
+      return (GM_TriangulatedSurface) sourceObject;
+
+    /* Check, if it is a feature or take rootFeature if it is a workspace */
+    final Feature feature;
+    if( sourceObject instanceof Feature )
+      feature = (Feature) sourceObject;
+    else if( sourceObject instanceof GMLWorkspace )
+      feature = ((GMLWorkspace) sourceObject).getRootFeature();
+    else
+      feature = null;
+
+    if( feature == null )
+      return null;
+
+    /* Get first tin we find as property */
+    final IPropertyType[] properties = feature.getFeatureType().getProperties();
+    for( final IPropertyType pt : properties )
+    {
+      final Object property = feature.getProperty( pt );
+      if( property instanceof GM_TriangulatedSurface )
+        return (GM_TriangulatedSurface) property;
+    }
+
+    return null;
   }
 
   protected static String getCoordinateSytem( final String crsName )
