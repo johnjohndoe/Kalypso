@@ -157,6 +157,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
       final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default"; //$NON-NLS-1$
       final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.2" ) ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+      calcUnitTheme.setCalculationUnit( m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
       mapModell.insertTheme( calcUnitTheme, 0 );
 
       final CalculationUnitDataModel dataModel = m_dataModel;
