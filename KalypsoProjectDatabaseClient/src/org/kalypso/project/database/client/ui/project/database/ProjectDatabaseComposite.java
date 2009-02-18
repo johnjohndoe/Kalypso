@@ -92,7 +92,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
    * @param isExpert
    *          show expert debug informations?
    */
-  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoProjectOpenAction openAction, final boolean isExpert )
+  public ProjectDatabaseComposite( final Composite parent, final FormToolkit toolkit, final IProjectDatabaseFilter filter, final IKalypsoProjectOpenAction openAction )
   {
     super( parent, SWT.NONE );
     m_toolkit = toolkit;
@@ -123,14 +123,10 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   public final void update( )
   {
     if( m_updateLock )
-    {
       return;
-    }
 
     if( this.isDisposed() )
-    {
       return;
-    }
 
     if( m_body != null && !m_body.isDisposed() )
     {
@@ -174,9 +170,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
   private void updateUI( )
   {
     if( m_updateLock )
-    {
       return;
-    }
 
     if( m_updateJob == null )
     {
