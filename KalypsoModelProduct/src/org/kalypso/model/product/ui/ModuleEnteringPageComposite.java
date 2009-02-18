@@ -175,7 +175,7 @@ public class ModuleEnteringPageComposite extends Composite
     final IProjectDatabaseFilter handler = m_enteringPage.getDatabaseFilter();
     final IKalypsoProjectOpenAction openAction = m_enteringPage.getProjectOpenAction();
 
-    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, toolkit, handler, openAction, KalypsoModelProductPlugin.getDefault().isExpert() );
+    final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, toolkit, handler, openAction );
     projects.setLayout( new GridLayout() );
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
 
