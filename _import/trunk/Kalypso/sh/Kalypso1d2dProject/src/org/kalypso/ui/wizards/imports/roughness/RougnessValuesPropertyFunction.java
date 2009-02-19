@@ -48,8 +48,8 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
@@ -128,7 +128,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
     if( object != null )
     {
-      final Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+      final Feature member = FeatureHelper.resolveLinkedFeature( feature.getWorkspace(), object );
 
       if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
         return getValue( member.getProperty( ptQName ) );
@@ -138,7 +138,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
     if( object != null )
     {
-      final Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+      final Feature member = FeatureHelper.resolveLinkedFeature( feature.getWorkspace(), object );
 
       if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
         return getValue( member.getProperty( ptQName ) );
@@ -148,7 +148,7 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
     if( object != null )
     {
-      final Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+      final Feature member = FeatureHelper.resolveLinkedFeature( feature.getWorkspace(), object );
 
       if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
         return getValue( member.getProperty( ptQName ) );
