@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.LineString;
@@ -225,7 +226,7 @@ public class Branch implements IBranch
     final Object property = m_branch.getProperty( lnkBranch );
     final GMLWorkspace workspace = getFeature().getWorkspace();
 
-    return FNNodeUtils.getNode( m_model, FeatureUtils.resolveFeature( workspace, property ) );
+    return FNNodeUtils.getNode( m_model, FeatureHelper.resolveLinkedFeature( workspace, property ) );
   }
 
   /**

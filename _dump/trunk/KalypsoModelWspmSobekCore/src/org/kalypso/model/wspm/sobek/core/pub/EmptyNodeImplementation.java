@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -105,7 +106,7 @@ public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
     }
 
     final Object objBranch = getFeature().getProperty( myProperty );
-    final Feature feature = FeatureUtils.resolveFeature( getModel().getWorkspace(), objBranch );
+    final Feature feature = FeatureHelper.resolveLinkedFeature( getModel().getWorkspace(), objBranch );
 
     if( feature == null )
       return null;

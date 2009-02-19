@@ -53,11 +53,11 @@ import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzone;
 import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzonenDistances;
 import org.kalypso.model.wspm.sobek.core.sperrzone.Sperrzone;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddRelationCommand;
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -156,7 +156,7 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
 
     for( final Object obj : inflowing )
     {
-      final Feature feature = FeatureUtils.resolveFeature( getFeature().getWorkspace(), obj );
+      final Feature feature = FeatureHelper.resolveLinkedFeature( getFeature().getWorkspace(), obj );
       branches.add( new Branch( getModel(), feature ) );
     }
 

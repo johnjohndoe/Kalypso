@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Dirk Kuch
@@ -135,7 +136,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
       final Feature member = (Feature) object;
 
-      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
+      final Feature fLastfall = FeatureHelper.resolveLinkedFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
       if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue
         // statement
         continue;

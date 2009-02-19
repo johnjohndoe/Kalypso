@@ -53,6 +53,7 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -84,7 +85,7 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   public IBranch getLinkToBranch( )
   {
     final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
-    final Feature feature = FeatureUtils.resolveFeature( getModel().getWorkspace(), objBranch );
+    final Feature feature = FeatureHelper.resolveLinkedFeature( getModel().getWorkspace(), objBranch );
 
     if( feature == null )
       return null;
