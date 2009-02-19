@@ -69,14 +69,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.globus.wsrf.container.Activator;
 import org.kalypso.commons.Debug;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.contribs.java.lang.ICancelable;
-import org.osgi.framework.Bundle;
 
 import de.unihannover.rvs.gdi.jobsubmit.impl.GDIFileTransfer;
 import de.unihannover.rvs.gdi.jobsubmit.impl.GDIJobFactory;
@@ -141,20 +139,6 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     {
       for( final String arg : commandlineArgs )
         m_commandLine.add( arg );
-    }
-
-    try
-    {
-      final Bundle globusBundle = Activator.getContext().getBundle();
-      final File globusDir = FileLocator.getBundleFile( globusBundle );
-      if( globusDir.isDirectory() )
-      {
-        System.setProperty( "GLOBUS_LOCATION", globusDir.getAbsolutePath() );
-      }
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
     }
   }
 

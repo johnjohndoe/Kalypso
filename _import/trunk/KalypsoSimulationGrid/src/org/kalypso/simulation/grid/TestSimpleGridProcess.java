@@ -45,46 +45,38 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.digester.RegexMatcher;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.WildcardFilter;
-import org.apache.tools.ant.types.selectors.FilenameSelector;
-import org.apache.tools.ant.util.RegexpPatternMapper;
-import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-import org.apache.tools.ant.util.regexp.RegexpUtil;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.process.IProcess;
-import org.kalypso.contribs.java.util.regex.RegexpUtilities;
 
-public class TestSimpleGridProcess extends TestCase {
+public class TestSimpleGridProcess extends TestCase
+{
 
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
+  protected void setUp( ) throws Exception
+  {
+    super.setUp();
+  }
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+  protected void tearDown( ) throws Exception
+  {
+    super.tearDown();
+  }
 
-	public void testGridProcess() throws Exception {
-		final String processFactoryId = "org.kalypso.simulation.gridprocess";
-		final File tmpDir = new File("test");
-		System.setProperty( "GLOBUS_LOCATION", "d:/workspace3.4/org.globus.ws.core" );
-		// final URL exeURL = new
-		// File("d:\\eclipse3.4\\bin\\RMA10Sk_35").toURI().toURL();
-		final URL exeURL = FileLocator.find(Activator.getDefault().getBundle(),
-				new Path("RMA10Sk_35"), null);
-		final IProcess process = KalypsoCommonsExtensions.createProcess(
-				processFactoryId, tmpDir, exeURL, null);
-		process.environment().put("OMP_NUM_THREADS", "4");
-		((SimpleGridProcess)process).addInput( FileLocator.find(Activator.getDefault().getBundle(),
-                new Path("model.2d"), null).toURI());
-		((SimpleGridProcess)process).addInput( FileLocator.find(Activator.getDefault().getBundle(),
-            new Path("control.r10"), null).toURI());
-		((SimpleGridProcess)process).addOutput( "A*.2d" );
-		process.startProcess(System.out, System.err, null, null);
-	}
+  public void testGridProcess( ) throws Exception
+  {
+    final String processFactoryId = "org.kalypso.simulation.gridprocess";
+    final File tmpDir = new File( "test" );
+    System.setProperty( "GLOBUS_LOCATION", "d:/workspace3.4/org.globus.ws.core" );
+    // final URL exeURL = new
+    // File("d:\\eclipse3.4\\bin\\RMA10Sk_35").toURI().toURL();
+    final URL exeURL = FileLocator.find( Activator.getDefault().getBundle(), new Path( "RMA10Sk_35" ), null );
+    final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, tmpDir, exeURL, null );
+    process.environment().put( "OMP_NUM_THREADS", "4" );
+    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "model.2d" ), null ).toURI() );
+    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "control.r10" ), null ).toURI() );
+    ((SimpleGridProcess) process).addOutput( "A*.2d" );
+    process.startProcess( System.out, System.err, null, null );
+  }
 
 }
