@@ -113,7 +113,9 @@ public class ShapeSerializer
 
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
+      {
         shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
+      }
 
       shapeFile.writeShape( shapeDataProvider );
       shapeFile.close();
@@ -182,7 +184,9 @@ public class ShapeSerializer
 
         int datacount = 1;
         for( final Entry<String, String> entry : mapping.entrySet() )
+        {
           data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
+        }
 
         final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
         shapeFeatures.add( feature );
@@ -191,9 +195,13 @@ public class ShapeSerializer
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
 
       if( shapeDataProvider == null )
+      {
         shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      }
       else
+      {
         shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      }
 
       shapeFile.writeShape( shapeDataProvider );
 
@@ -266,16 +274,36 @@ public class ShapeSerializer
 
         final Object[] data = new Object[ftps.length];
 
-        data[0] = kalypsoFeature.getProperty( geomProperty );
+        final IPropertyType geomPT = kalypsoFeature.getFeatureType().getProperty( geomProperty );
+
+        final Object geom = kalypsoFeature.getProperty( geomProperty );
+        if( geomPT.isList() )
+        {
+          // HACK: if geomProperty is a list property, we just take the first element
+          // as Shape does not support lists of geometries.
+          final List< ? > geomList = (List< ? >) geom;
+          if( !geomList.isEmpty() )
+          {
+            data[0] = geomList.get( 0 );
+          }
+        }
+        else
+        {
+          data[0] = geom;
+        }
 
         int datacount = 1;
         for( final Entry<String, QName> entry : mapping.entrySet() )
         {
           final QName qname = entry.getValue();
           if( qname == ShapeSerializer.QNAME_GMLID )
+          {
             data[datacount++] = kalypsoFeature.getId();
+          }
           else
+          {
             data[datacount++] = kalypsoFeature.getProperty( qname );
+          }
         }
 
         final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
@@ -286,9 +314,13 @@ public class ShapeSerializer
 
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
+      {
         shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      }
       else
+      {
         shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      }
 
       shapeFile.writeShape( shapeDataProvider );
 
@@ -363,7 +395,9 @@ public class ShapeSerializer
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
+        {
           workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
+        }
       }
 
       return workspace;
@@ -375,6 +409,7 @@ public class ShapeSerializer
     finally
     {
       if( sf != null )
+      {
         try
         {
           sf.close();
@@ -383,6 +418,7 @@ public class ShapeSerializer
         {
           throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.20" ), e ); //$NON-NLS-1$
         }
+      }
     }
   }
 
@@ -421,6 +457,7 @@ public class ShapeSerializer
     finally
     {
       if( dbf != null )
+      {
         try
         {
           dbf.close();
@@ -429,6 +466,7 @@ public class ShapeSerializer
         {
           e.printStackTrace();
         }
+      }
     }
   }
 
