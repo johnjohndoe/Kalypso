@@ -126,7 +126,7 @@
 
       !model dimension parameters
       !--------------------------
-      integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, ncl
+      integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, maxps, ncl
       integer (kind = 4) :: np, ne, lp, le
       integer (kind = 4) :: npm, nem
       integer (kind = 4) :: nmat
@@ -140,7 +140,8 @@
       !           maxt is set up in getgeo, because only if the geometry of all elements is recognized
       !           it can be determined, whether and how many 1D/2D node-2-element transitions are present
       !maxlt:     maximum number of 1D/2D transition elements for 1D/2D line-2-element transitions
-      !ncl:    number of continuity lines
+      !maxps:     maximum number of pipe-surface connections
+      !ncl:       number of continuity lines
       !ne         maximum element number
       !le         minimum element number
       !np         maximum node number
@@ -256,6 +257,17 @@
       !------------------------
       !translines   data of transition lines; transitioning line, 1D-element, and node
       !jpoint       determines connections of nodes in 1D/2D and 2D/3D-vertical elements
+      
+      !pipe surface connections
+      !------------------------
+      type PipeSurfaceConnection
+        integer (kind = 4) :: SurfElt
+        integer (kind = 4) :: pipeElt
+        real (kind = 8) :: flow
+      end type
+      type (PipeSurfaceConnection), allocatable, 
+     +                              dimension (:) :: PipeSurfConn
+      integer (kind = 4), allocatable, dimension (:) :: ConnectedElt
 
       !input control parameters - elevations
       !-------------------------------------

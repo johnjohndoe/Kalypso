@@ -49,6 +49,7 @@ implicit none
 
 !maxsize shows the maximum size of the kntimel allocation, so the largest element
 INTEGER :: maxsize, JunctionSize
+integer :: lastentry
 integer :: maxc, maxcn
 integer :: qlist (2, 160)
 INTEGER, allocatable :: icon (:, :), kntimel (:, :)
@@ -72,8 +73,13 @@ if (MaxLT /= 0) then
     if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
   end do
 else
+  if (maxps == 0) then
   !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
-  maxsize = 8
+    maxsize = 8
+  else
+    !might be a doubled dependency
+    maxsize = 16
+  endif
 endif
 
 allocate (icon (1: MaxP, 1: 60), kntimel (1: MaxE, 1: maxsize))
@@ -130,10 +136,19 @@ StoreConnectivity: DO i = 1, MaxE
     !if it is a quadrilateral element increase number of corner nodes to 4
     IF (nop (i, 7) > 0) k = 4
     !save the node numbers
+    lastentry = 0
     DO j = 1, k
       l = 2 * j - 1
       kntimel (i, j) = nop (i, l)
+      lastEntry = j
     ENDDO
+    if (maxps /= 0) then
+      if (ConnectedElt (i) /= 0) then
+        do j = 1, ncorn(ConnectedElt(i))
+          kntimel (i, lastEntry + j) = nop (ConnectedElt(i), j)
+        enddo
+      endif
+    endif
 
     !TODO: This is not efficient, there must be another way to find out membership in 1D-2D-Transition line
     !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel

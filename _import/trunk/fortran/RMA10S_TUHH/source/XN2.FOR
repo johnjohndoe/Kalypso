@@ -2,7 +2,16 @@
       REAL*8 FUNCTION XN2(IT,K,X,Y)
       SAVE
 C-
-      REAL*8 X,Y
+      !definitions
+      real (kind = 8) :: x, y
+      integer (kind = 4) :: k
+      integer (kind = 4) :: it
+      !it     type of element
+      !       = 1 => quadrilateral element
+      !      /= 1 => triangular element
+      !k      ordinal number of the node in the master element to get the function value for
+      !x, y   xi and eta for as local coordinates to get the function values for
+      
 C......FUNCTION TO DEFINE SHAPE FUNCTION VALUES
 C-
       IF(IT.EQ.1) GO TO 500

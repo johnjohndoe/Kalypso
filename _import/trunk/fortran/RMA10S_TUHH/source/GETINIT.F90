@@ -37,7 +37,7 @@ REAL (kind = 8) :: VDUM
 DIMENSION TV(3),TVD(3)
 !NiS,apr06: adding variable for inquire statement and dummy for calling RDKALYPS to Restart
 CHARACTER(LEN=20)    :: inquiretest
-INTEGER              :: dummy(7), j
+INTEGER              :: dummy(8), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
 REAL (KIND = 8)      :: VAAA, HTP, H, HS
@@ -68,7 +68,7 @@ IF (NB > 0 .and. NB < 100) then
 
   RESTARTTEST: IF (inquiretest == 'FORMATTED' .and. nb < 100) THEN
     WRITE(*,*) ' Going to RDKALYPSO for restarting'
-    call RDKALYPS (dummy(1), dummy(2), dummy(3), dummy(4), dummy(5), dummy(6), dummy(7), 2)
+    call RDKALYPS (dummy(1), dummy(2), dummy(3), dummy(4), dummy(5), dummy(6), dummy(7), dummy (8), 2)
     npx = maxp-1
     ndx = 9
 

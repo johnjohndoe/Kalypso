@@ -800,7 +800,18 @@ CIPK MAR01
           TransLines (i,j) = 0
         ENDDO
       ENDDO
-!
+      
+      allocate (PipeSurfConn(1:maxps))
+      do i = 1, maxps
+        PipeSurfConn(i)%SurfElt = 0
+        PipeSurfConn(i)%pipeElt = 0
+        PipeSurfConn(i)%flow = 0.0d0
+      enddo
+      allocate (ConnectedElt (1:MaxE))
+      do i = 1, maxe
+        ConnectedElt(i) = 0
+      enddo
+      
 
 !nis,nov06: allocating the 1D-2D-Transition-line-Factor array and initialization of that (at the beginning no scaling)
 !           in the coefs subroutines this factor is generally applied!

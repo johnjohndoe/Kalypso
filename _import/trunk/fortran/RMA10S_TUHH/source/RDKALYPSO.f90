@@ -1,4 +1,4 @@
-SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt,KSWIT)
+SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !
 ! This Subroutine reads the model data to run FE-net-data in Kalypso-2D-format
@@ -35,14 +35,14 @@ SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, Po
 !-----------------------------------------------------------------------
 
 use blk10mod , only: &
-&   maxe, maxa, maxp, maxt, maxlt, ncl, &
+&   maxe, maxa, maxp, maxt, maxlt, maxps, ncl, &
 &   width, ss1, ss2, wids, widbs, wss, &
 &   ifile, nb, lout, id, &
 &   title, &
 &   nop, nops, ncorn, imat, nfixh, &
 &   cord, ao, &
 &   line, lmt, &
-&   translines,&
+&   translines, PipeSurfConn, ConnectedElt, &
 &   vel, vold, vdot, vdoto, &
 &   iyrr, tett
 !meaning of the variables
@@ -54,6 +54,7 @@ use blk10mod , only: &
 !           maxt is set up in getgeo, because only if the geometry of all elements is recognized
 !           it can be determined, whether and how many 1D/2D node-2-element transitions are present
 !maxlt      maximum number of 1D/2D transition elements for 1D/2D line-2-element transitions
+!maxps      maximum number of pipe surface connections
 !ncl        number of continuity lines
 !width      Channel bed width of a 1D-node within the trapezoidal geometry approach
 !wids       storage width (flood plain width) of a 1D-node within the trapezoidal geometry approach
@@ -76,6 +77,10 @@ use blk10mod , only: &
 !line       continuity line definition; stores all the nodes 
 !lmt        number of nodes within continuity line
 !translines data of transition lines; transitioning line, 1D-element, and node
+!PipeSurfConn
+!           data of pipe surface connections
+!           1 - Surface element ID
+!           2 - pipe element ID
 !vel        The degree of freedom field; it's the key array
 !vdot       derivative of the degrees of freedom
 !vold       The degree of freedom field from the last time step; i.e. storage of old results
@@ -174,7 +179,7 @@ implicit none
 integer (kind = 4), intent (in) :: kswit
 !output variables
 !-----------------
-integer (kind = 4), intent (out) :: nodecnt, elcnt, arccnt, tlcnt
+integer (kind = 4), intent (out) :: nodecnt, elcnt, arccnt, tlcnt, psConn
 integer (kind = 4), intent (out) :: polysplitcounta, polysplitcountq, polysplitcountb
 !meaning of the variables
 !------------------------
@@ -186,6 +191,7 @@ integer (kind = 4), intent (out) :: polysplitcounta, polysplitcountq, polysplitc
 !elcnt            maximum necessary ID number of the elements
 !arccnt           maximum necessary ID number of the arcs
 !tlcnt            maximum necessary ID number of the 1D/2D line-2-element transition constructs
+!psConn           maximum necessary ID number of pipe surface connections
 !polysplitcounta  maximum number of intersections for the A(h) polynomial
 !polysplitcountq  maximum number of intersections for the Q(h) (Schluesselkurve) polynomial
 !polysplitcountb  maximum number of intersections for the alpha/beta(h) polynomial
@@ -323,6 +329,7 @@ nodecnt = 0
 arccnt  = 0
 elcnt   = 0
 TLcnt   = 0
+psConn  = 0
 PolySplitCountA = 0
 PolySplitCountQ = 0
 PolySplitCountB = 0
@@ -414,10 +421,9 @@ reading: do
         nodecnt = max (i, nodecnt)
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
       ENDIF
-    ENDIF
 
     !ARC DEFINITIONS ---
-    IF (linie (1:2) =='AR') then
+    ELSEIF (linie (1:2) =='AR') then
       !Find out maximum ARC number
       IF (KSWIT == 1) then
         !NiS,mar06: changed id to id_local; global conflict
@@ -441,10 +447,9 @@ reading: do
         !ERROR - negative arc number
         IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0d0, 0.0d0)
       ENDIF
-    ENDIF
 
     !Interpolation information for elements
-    IF (linie(1:2) == 'IP') THEN
+    ELSEIF (linie(1:2) == 'IP') THEN
       IF (kswit == 1) THEN
         READ (linie, '(a2, i10, i10)') id_local, i, j
         NodesToIntPol = NodesToIntPol + j
@@ -452,17 +457,17 @@ reading: do
       ELSEIF (kswit == 0) then
         READ (linie, '(a2, i10, i10)') id_local, i, IntPolNo(i)
       ENDIF
-    ENDIF
 
     !nis,aug08: Valid range of polynomials is not needed anymore
-    IF (linie(1:2) == 'MM') continue
+    ELSEIF (linie(1:2) == 'MM') then
+      continue
 
     !nis,nov07: new range line ID (polynom range PR)
     !id_local  = 'PR'
     !       i  = node-ID
     !       j  = number of polynom splitting parts
     !polyrange = maximum values
-    if (linie(1:3) == 'PRA') then
+    elseif (linie(1:3) == 'PRA') then
       IF (KSWIT == 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j
@@ -473,8 +478,7 @@ reading: do
         hhmin(i) = max (hhmin(i), hhmin_loc)
         hhmax(i) = min (hhmax(i), polyrangeA (i, polySplitsA(i)))
       endif
-    end if
-    if (linie(1:3) == 'PRQ') then
+    ELSEIF (linie(1:3) == 'PRQ') then
       IF (KSWIT == 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j
@@ -485,8 +489,7 @@ reading: do
         hhmin(i) = max (hhmin (i), hhmin_loc)
         hhmax(i) = min (hhmax (i), polyrangeQ (i, polySplitsQ(i)))
       endif
-    end if
-    if (linie(1:3) == 'PRB') then
+    ELSEIF (linie(1:3) == 'PRB') then
       IF (KSWIT == 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j
@@ -501,44 +504,39 @@ reading: do
           hbordv (i) = polyrangeB (i, 1)
         endif
       endif
-    end if
     !nis,nov07: new range line ID (polynom range PR)
     !id_local  = 'AP '
     !       i  = node-ID
     !       j  = number of polynom splitting parts
-    if (linie(1:3) == 'AP ') then
+    ELSEIF (linie(1:3) == 'AP ') then
       IF (KSWIT /= 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j, (apoly(j, i, k), k = 0, 12)
       endif
-    end if
-    if (linie(1:3) == 'QP ') then
+    ELSEIF (linie(1:3) == 'QP ') then
       IF (KSWIT /= 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 12)
         !remember, that the node is a 1D polynomial approach node
         if (.not. IsPolynomNode (i)) IsPolynomNode (i) = .true.
       endif
-    end if
-    if (linie(1:3) == 'ALP') then
+    ELSEIF (linie(1:3) == 'ALP') then
       if (beient /= 0 .and. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 12)
         endif
       endif
-    end if
-    if (linie(1:3) == 'BEP') then
+    ELSEIF (linie(1:3) == 'BEP') then
       if (beient /= 0 .and. beient /= 3) then
         IF (KSWIT /= 1) then
           linestat = 0
           read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 12)
         endif
       endif
-    end if
 
     !ELEMENT DEFINITIONS ---
-    IF (linie (1:2) =='FE') then
+    ELSEIF (linie (1:2) =='FE') then
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local, i
@@ -559,10 +557,9 @@ reading: do
         IF (i > elcnt) elcnt = i
         IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0d0, 0.0d0)
       ENDIF
-    ENDIF
 
     !1D JUNCTION ELEMENT DEFINITIONS ---
-    IF (linie (1:2) =='JE') then
+    ELSEIF (linie (1:2) =='JE') then
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local,i
@@ -573,27 +570,24 @@ reading: do
         elcnt = max (i, elcnt)
         IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0d0, 0.0d0)
       ENDIF
-    ENDIF
 
     !ROUGHNESS CORRECTION LAYER ---
-    if (linie (1:2) == 'RC') then
+    ELSEIF (linie (1:2) == 'RC') then
       if (KSWIT == 1) CYCLE reading
       read (linie, '(a2, i10, 3(f10.6))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
-    end if
 
     !NiS,may06: cross section reading for 1D-ELEMENTS
     !CROSS SECTIONAL INFORMATIONS FOR 1D-NODES ---
-    IF (linie (1:2) =='CS') THEN
+    ELSEIF (linie (1:2) =='CS') THEN
       !Only interesting for geometry reading run
       IF (KSWIT==1) CYCLE reading
       !read informations into proper arrays
       READ (linie, '(a2,i10,6F10.0)') id_local, i, width(i), ss1(i), ss2(i), wids(i), widbs(i), wss(i)
-    END IF
     !-
 
     !NiS,may06: Transition elements between 1D- and 2D- network parts
     !1D-2D-TRANSITION ELEMENTS ---
-    IF (linie (1:2) =='TE') THEN
+    ELSEIF (linie (1:2) =='TE') THEN
       IF (KSWIT==1) THEN
         READ (linie, '(a2,i10)') id_local, i
         elcnt = max (i, elcnt)
@@ -602,7 +596,6 @@ reading: do
         !Increase number of 1D-2D-TRANSITION ELEMENTS
         MaxT = MaxT + 1
       END IF
-    END IF
     !-
 
     !NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection
@@ -610,10 +603,9 @@ reading: do
     !           TransLines(i,2): transitioning line
     !           TransLines(i,3): node, which is connected on the 1D side of the transition element
     !           TransLines(i,4):
-    if (linie(1:2)=='TL') then
+    ELSEIF (linie(1:2)=='TL') then
       IF (KSWIT==1) THEN
         READ (linie,'(a2,i10)') id_local, i
-        WRITE(*,*) 'getting here, TLcnt definition'
         IF (i>TLcnt) TLcnt = i
       ELSE
         WRITE(*,*) MaxLT
@@ -626,7 +618,18 @@ reading: do
         end if
         TransitionElement (TransLines(i, 1)) = .true.
       END IF
-    end if
+    
+    ELSEIF (linie(1:2) == 'PS') then
+      if (kswit == 1) then
+        read (linie, '(a2,i10)') id_local, i
+        if (i>psConn) psConn = i
+      else
+        write(*,*) psconn
+        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn%SurfElt, PipeSurfConn%pipeElt
+        ConnectedElt (PipeSurfConn%SurfElt) = PipeSurfConn%pipeElt
+        ConnectedElt (PipeSurfConn%pipeElt) = PipeSurfConn%SurfElt
+      endif
+    endif
 
   ELSEIF (KSWIT == 2) THEN
 

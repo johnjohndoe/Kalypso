@@ -5,7 +5,7 @@ subroutine RMA_Kalypso
 USE BLK10MOD, only: &
 &  niti, nita, maxn, nitn, itpas, iaccyc, icyc, ncyc, it, &
 &  ioutrwd, nprtf, nprti, irsav, &
-&  maxp, maxe, maxlt, ne, np, npm, nem, nmat, &
+&  maxp, maxe, maxlt, maxps, ne, np, npm, nem, nmat, &
 &  ncrn, nops, imat, &
 &  ao, &
 &  vel, vdot, vold, vdoto, v2ol, vvel, &
@@ -40,6 +40,7 @@ USE BLK10MOD, only: &
 !maxp:                  maximum number of points (surface points; includes midsides)
 !maxe:                  maximum number of elements
 !maxlt:                 maximum number of 1D/2D transition elements for 1D/2D line-2-element transitions
+!maxps:                 maximum number of pipe surface connections
 !ne                     maximum element number
 !np                     maximum node number
 !npm                    maximum node number; copy for 3D purposes
@@ -404,6 +405,7 @@ steadyCycle: Do
   !Calculate 1D/2D line-2-element transition distribution
   !------------------------------------------------------
   if (MaxLT /= 0) call TransVelDistribution
+  if (maxps /= 0) call PipeSurfaceConnectionQs
 
   !???
   !---
@@ -973,6 +975,7 @@ DynamicTimestepCycle: do n = 1, ncyc
     !Calculate 1D/2D line-2-element transition distribution
     !------------------------------------------------------
     if (MaxLT /= 0) call TransVelDistribution
+    if (maxps /= 0) call PipeSurfaceConnectionQs
 
     !drying/ wetting, if desired
     !---------------
