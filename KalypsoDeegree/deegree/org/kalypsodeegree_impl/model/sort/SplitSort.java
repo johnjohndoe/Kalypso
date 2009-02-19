@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -121,11 +122,11 @@ public class SplitSort implements FeatureList
    * The constructor.
    * 
    * @param parentFeature
-   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
-   *            null then.
+   *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
+   *          null then.
    * @param parentFTP
-   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
-   *            parentFeature is also null then.
+   *          The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
+   *          parentFeature is also null then.
    */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
@@ -136,13 +137,13 @@ public class SplitSort implements FeatureList
    * The constructor.
    * 
    * @param parentFeature
-   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
-   *            null then.
+   *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
+   *          null then.
    * @param parentFTP
-   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
-   *            parentFeature is also null then.
+   *          The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
+   *          parentFeature is also null then.
    * @param envelopeProvider
-   *            The provider returns evenlopes. If null, the default one is used.
+   *          The provider returns evenlopes. If null, the default one is used.
    */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
@@ -184,9 +185,13 @@ public class SplitSort implements FeatureList
         if( env != null )
         {
           if( bbox == null )
+          {
             bbox = new Envelope( env );
+          }
           else
+          {
             bbox.expandToInclude( env );
+          }
         }
       }
 
@@ -214,7 +219,9 @@ public class SplitSort implements FeatureList
     synchronized( m_lock )
     {
       if( m_index != null )
+      {
         m_index.insert( env, object );
+      }
       return m_items.add( object );
     }
   }
@@ -230,11 +237,15 @@ public class SplitSort implements FeatureList
     synchronized( m_lock )
     {
       if( result == null )
+      {
         result = new ArrayList();
+      }
       final Envelope env = JTSAdapter.export( queryEnv );
       final List list = m_index.query( env );
       for( final Object object : list )
+      {
         result.add( object );
+      }
       return result;
     }
   }
@@ -246,7 +257,9 @@ public class SplitSort implements FeatureList
   public List query( final GM_Position pos, List result )
   {
     if( result == null )
+    {
       result = new ArrayList();
+    }
     return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
 
@@ -264,7 +277,9 @@ public class SplitSort implements FeatureList
       // TODO: slow!
       final boolean removed = m_items.remove( object );
       if( m_index != null )
+      {
         m_index.remove( env, object );
+      }
       return removed;
     }
   }
@@ -395,7 +410,9 @@ public class SplitSort implements FeatureList
     {
       m_items.add( index, item );
       if( m_index != null )
+      {
         m_index.insert( env, item );
+      }
     }
   }
 
@@ -459,7 +476,9 @@ public class SplitSort implements FeatureList
       if( m_index != null )
       {
         for( final Entry<Object, Envelope> entry : newItems.entrySet() )
+        {
           m_index.insert( entry.getValue(), entry.getKey() );
+        }
       }
       return added;
     }
@@ -484,7 +503,9 @@ public class SplitSort implements FeatureList
       if( m_index != null )
       {
         for( final Entry<Object, Envelope> entry : newItems.entrySet() )
+        {
           m_index.insert( entry.getValue(), entry.getKey() );
+        }
       }
       return added;
     }
@@ -526,7 +547,9 @@ public class SplitSort implements FeatureList
   {
     boolean result = false;
     for( final Object object : c )
+    {
       result |= remove( object );
+    }
 
     return result;
   }
@@ -623,30 +646,42 @@ public class SplitSort implements FeatureList
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
-  @Deprecated
   public Feature[] toFeatures( )
   {
     synchronized( m_lock )
     {
-      // TODO: this will probably not work, as the list may contain non-features
+      // FIXME: this will probably not work, as the list may contain non-features
       return m_items.toArray( new Feature[m_items.size()] );
     }
   }
 
   /**
-   * TODO: add flags for visiting links/depth
-   * 
    * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   public void accept( final FeatureVisitor visitor )
   {
-    // TODO: not synchronized: Problem?
+    accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+  }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
+   */
+  public void accept( final FeatureVisitor visitor, final int depth )
+  {
+    // TODO: not synchronized: Problem?
+    final Feature parentFeature = getParentFeature();
+    final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : m_items )
     {
-      // TODO: also visit links?
-      if( object instanceof Feature )
+      if( workspace != null && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
+      {
+        final Feature linkedFeature = FeatureHelper.resolveLinkedFeature( workspace, object );
+        visitor.visit( linkedFeature );
+      }
+      else if( object instanceof Feature )
+      {
         visitor.visit( (Feature) object );
+      }
     }
   }
 

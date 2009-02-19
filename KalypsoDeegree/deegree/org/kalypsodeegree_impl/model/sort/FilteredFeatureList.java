@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
  * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
  * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
  * ändern auch die Originalliste.
- *
+ * 
  * @author belger
  */
 public class FilteredFeatureList implements FeatureList
@@ -74,15 +74,12 @@ public class FilteredFeatureList implements FeatureList
   }
 
   /**
-   * TODO: this is the key method of this implementation, but it probably does not work properly, as not all elements
-   * must be features...
-   *
    * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
    */
   public Feature[] toFeatures( )
   {
     m_filterVisitor.setVisitor( m_collector );
-    m_original.accept( m_filterVisitor );
+    m_original.accept( m_filterVisitor, FeatureVisitor.DEPTH_INFINITE_LINKS );
     return m_collector.getResults( true );
   }
 
@@ -90,6 +87,14 @@ public class FilteredFeatureList implements FeatureList
    * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
    */
   public void accept( final FeatureVisitor visitor )
+  {
+    accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
+   */
+  public void accept( final FeatureVisitor visitor, final int depth )
   {
     m_filterVisitor.setVisitor( visitor );
     m_original.accept( m_filterVisitor );
@@ -111,7 +116,9 @@ public class FilteredFeatureList implements FeatureList
   {
     final Feature[] features = toFeatures();
     for( final Feature element : features )
+    {
       m_original.remove( element );
+    }
   }
 
   /**
@@ -232,7 +239,9 @@ public class FilteredFeatureList implements FeatureList
   public boolean addAll( final Collection c )
   {
     for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
+    {
       add( cIt.next() );
+    }
 
     return !c.isEmpty();
   }
@@ -351,7 +360,9 @@ public class FilteredFeatureList implements FeatureList
       final Object next = sIt.next();
       final Feature f = FeatureHelper.getFeature( m_original.getParentFeature().getWorkspace(), next );
       if( !m_filterVisitor.matchesType( f ) )
+      {
         sIt.remove();
+      }
     }
 
     return originalList;

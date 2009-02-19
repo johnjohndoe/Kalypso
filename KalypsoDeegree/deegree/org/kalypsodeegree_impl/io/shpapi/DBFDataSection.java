@@ -119,7 +119,7 @@ public class DBFDataSection
       throw new DBaseException( "invalid index: " + index );
 
     if( recData.size() != this.m_fieldDesc.length )
-      throw new DBaseException( "invalid size of recData" );
+      throw new DBaseException( "invalid size of recData: " + recData.size() );
 
     int offset = 0;
 

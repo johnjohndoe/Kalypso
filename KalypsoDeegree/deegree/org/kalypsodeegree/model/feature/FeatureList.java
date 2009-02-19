@@ -46,10 +46,17 @@ import org.kalypsodeegree.model.sort.JMSpatialIndex;
 public interface FeatureList extends List, JMSpatialIndex
 {
   /**
-   * @deprecated use toArray() cause in a splitsort can be also featureIds (String), if feature is linked from the list
+   * Gets ALL features in this list. Resolves any links.
    */
-  @Deprecated
   public Feature[] toFeatures( );
+
+  /**
+   * Visit all Features in the list.
+   * 
+   * @param depth
+   *          One of {@link FeatureVisitor#DEPTH_INFINITE}...
+   */
+  public void accept( final FeatureVisitor visitor, final int depth );
 
   /** Visit all Features in the list. */
   public void accept( final FeatureVisitor visitor );

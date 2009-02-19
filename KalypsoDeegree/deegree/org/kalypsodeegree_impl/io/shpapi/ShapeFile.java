@@ -317,9 +317,7 @@ public class ShapeFile
   public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
@@ -474,9 +472,7 @@ public class ShapeFile
     final DBaseIndex index = dBaseIndexes.get( column );
 
     if( index == null )
-    {
       return null;
-    }
 
     return index.search( value );
   }
@@ -496,9 +492,7 @@ public class ShapeFile
     GM_Envelope mbr = getFileMBR();
 
     if( !mbr.intersects( r ) )
-    {
       return null;
-    }
 
     if( hasRTreeIndex )
     {
@@ -582,9 +576,7 @@ public class ShapeFile
     final DBaseIndex index = dBaseIndexes.get( property );
 
     if( index == null )
-    {
       return false;
-    }
 
     return index.isUnique();
   }
@@ -596,9 +588,7 @@ public class ShapeFile
   public String[] getProperties( ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getProperties();
   }
@@ -610,9 +600,7 @@ public class ShapeFile
   public String[] getDataTypes( ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getDataTypes();
   }
@@ -641,9 +629,7 @@ public class ShapeFile
   public String[] getDataTypes( final String[] fields ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getDataTypes( fields );
   }
@@ -655,9 +641,7 @@ public class ShapeFile
   public Object[] getRow( final int rowNo ) throws HasNoDBaseFileException, DBaseException
   {
     if( !hasDBaseFile )
-    {
       throw new HasNoDBaseFileException( "Exception: there is no dBase-file " + "associated to this shape-file" );
-    }
 
     return m_dbf.getRow( rowNo );
   }
@@ -747,9 +731,7 @@ public class ShapeFile
     final int featuresLength = dataProvider.getFeaturesLength();
 
     if( featuresLength == 0 )
-    {
       throw new Exception( "Can't write an empty shape." );
-    }
 
     // mbr of the whole shape file
     SHPEnvelope shpmbr = new SHPEnvelope();
@@ -791,16 +773,28 @@ public class ShapeFile
         else if( clazz == BigDecimal.class )
         {
           if( value != null )
+          {
             vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+          }
           else
+          {
             vec.add( null );
+          }
         }
         else if( clazz == BigInteger.class )
         {
           if( value != null )
+          {
             vec.add( new Long( ((BigInteger) value).longValue() ) );
+          }
           else
+          {
             vec.add( null );
+          }
+        }
+        else
+        {
+          System.out.println( "Oups..." );
         }
       }
 
@@ -812,7 +806,7 @@ public class ShapeFile
       catch( final DBaseException db )
       {
         db.printStackTrace();
-        throw new Exception( db.toString() );
+        throw new Exception( db.toString(), db );
       }
 
       // ==================== SHAPE ENTRIES =====================
@@ -827,7 +821,9 @@ public class ShapeFile
 
       byte[] byteArray = null;
       if( shpGeom != null )
+      {
         byteArray = shpGeom.writeShape();
+      }
 
       /* check for null geometry */
       if( byteArray == null )
@@ -840,7 +836,9 @@ public class ShapeFile
 
       final int nbyte = shpGeom.size();
       if( i == 0 || (i > 0 && shpmbr == null) )
+      {
         shpmbr = mbr;
+      }
 
       // write bytearray to the shape file
       final IndexRecord record = new IndexRecord( offset / 2, nbyte / 2 );
@@ -859,16 +857,24 @@ public class ShapeFile
       if( mbr != null )
       {
         if( mbr.west < shpmbr.west )
+        {
           shpmbr.west = mbr.west;
+        }
 
         if( mbr.east > shpmbr.east )
+        {
           shpmbr.east = mbr.east;
+        }
 
         if( mbr.south < shpmbr.south )
+        {
           shpmbr.south = mbr.south;
+        }
 
         if( mbr.north > shpmbr.north )
+        {
           shpmbr.north = mbr.north;
+        }
       }
     }
 
