@@ -74,6 +74,11 @@ public abstract class AbstractListWrapper implements FeatureList
    */
   public void accept( final FeatureVisitor visitor )
   {
+    accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  public void accept( final FeatureVisitor visitor, final int depth )
+  {
     m_list.accept( visitor );
   }
 
