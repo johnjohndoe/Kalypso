@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -134,7 +133,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public IAssetValueClass getAssetValue( )
   {
     final Object property = getFeature().getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
-    Feature assetFeature = FeatureUtils.resolveFeature( getFeature().getWorkspace(), property );
+    Feature assetFeature = FeatureHelper.resolveLinkedFeature( getFeature().getWorkspace(), property );
     if( assetFeature == null )
       return null;
 

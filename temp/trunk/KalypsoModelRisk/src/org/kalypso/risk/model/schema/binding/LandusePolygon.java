@@ -3,7 +3,6 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
@@ -12,6 +11,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class LandusePolygon extends AbstractFeatureBinder implements ILandusePolygon
 {
@@ -207,7 +207,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
   {
     final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
-    final Feature feature = FeatureUtils.resolveFeature( model.getFeature().getWorkspace(), property );
+    final Feature feature = FeatureHelper.resolveLinkedFeature( model.getFeature().getWorkspace(), property );
 
     return new LanduseClass( feature );
   }
