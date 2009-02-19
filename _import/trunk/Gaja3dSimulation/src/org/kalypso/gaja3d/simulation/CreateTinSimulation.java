@@ -73,6 +73,8 @@ public class CreateTinSimulation implements ISimulation
   public static final String INPUT_MAX_AREA = "MaxArea";
 
   public static final String INPUT_MIN_ANGLE = "MinAngle";
+  
+  public static final String INPUT_DEM_GRID = "DemGrid";
 
   public static final String OUTPUT_MODEL_TIN = "ModelTin";
 
@@ -114,6 +116,11 @@ public class CreateTinSimulation implements ISimulation
     final ArrayList<String> arguments = new ArrayList<String>();
     arguments.add( "createTin" );
     arguments.add( "true" );
+    
+    if(inputProvider.hasID( INPUT_DEM_GRID )) {
+      arguments.add( "assignElevations" );
+      arguments.add( "true" );
+    }
 
     final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
     jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );

@@ -4,8 +4,9 @@
   <!-- Input -->
   <input id="Boundary" type="xs:anyURI" description="The boundary for restricting the points." />
   <input id="Breaklines" type="xs:anyURI" description="The breaklines for the model tin." />
-  <input id="MaxArea" type="xs:double" optional="true" description="" />
-  <input id="MinAngle" type="xs:double" optional="true" description="" />
+  <input id="MaxArea" type="xs:double" optional="true" description="The maximum area to enforce for each triangle." />
+  <input id="MinAngle" type="xs:double" optional="true" description="The minimum internal angle to enforce for each triangle." />
+  <input id="DemGrid" type="xs:anyURI" optional="true" description="The digital elevation grid to assign elevations from." />  
 
   <!-- Output -->
   <input id="_ModelTin" type="xs:string" description="File name for tin output."/>
