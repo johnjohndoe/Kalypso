@@ -72,9 +72,9 @@ public class Feature_Impl extends AbstractFeature
    */
   private final Object[] m_properties;
 
-  private IFeatureType m_featureType;
+  private final IFeatureType m_featureType;
 
-  private String m_id;
+  private final String m_id;
 
   private Object m_parent = null;
 
@@ -125,7 +125,7 @@ public class Feature_Impl extends AbstractFeature
 
   /**
    * Accesses a property value of this feature.
-   *
+   * 
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -173,7 +173,7 @@ public class Feature_Impl extends AbstractFeature
     {
       return getBoundedBy();
     }
-    catch( GeometryException e )
+    catch( final GeometryException e )
     {
       e.printStackTrace();
 
@@ -407,12 +407,18 @@ public class Feature_Impl extends AbstractFeature
       {
         final Object o = getProperty( element );
         if( o == null )
+        {
           continue;
+        }
 
         if( element.isList() )
+        {
           result.addAll( (List) o );
+        }
         else
+        {
           result.add( (GM_Object) o );
+        }
       }
     }
 
@@ -467,7 +473,7 @@ public class Feature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
-  public void setFeatureType( IFeatureType ft )
+  public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException();
   }
@@ -475,7 +481,7 @@ public class Feature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
-  public void setId( String fid )
+  public void setId( final String fid )
   {
     throw new UnsupportedOperationException();
   }
@@ -517,7 +523,7 @@ public class Feature_Impl extends AbstractFeature
    */
   public GM_Object getLocation( )
   {
-    Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
+    final Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
       return (GM_Object) property;
 
@@ -534,7 +540,7 @@ public class Feature_Impl extends AbstractFeature
 
   /**
    * feature given the property {@link QName}
-   *
+   * 
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */

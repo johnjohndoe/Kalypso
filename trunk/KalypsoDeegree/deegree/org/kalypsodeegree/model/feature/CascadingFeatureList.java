@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -82,11 +83,15 @@ public class CascadingFeatureList implements FeatureList
    */
   public void accept( final FeatureVisitor visitor )
   {
-    // TODO
-    // for( int i = 0; i < m_lists.length; i++ )
-    // {
-    // m_lists[i];
-    // }
+    accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
+   */
+  public void accept( final FeatureVisitor visitor, final int depth )
+  {
+    throw new NotImplementedException();
   }
 
   /**
@@ -96,7 +101,9 @@ public class CascadingFeatureList implements FeatureList
   {
     int result = 0;
     for( final FeatureList element : m_lists )
+    {
       result += element.size();
+    }
     return result;
   }
 
@@ -134,7 +141,9 @@ public class CascadingFeatureList implements FeatureList
     {
       final int size = element.size();
       if( c + size < index )
+      {
         c += size;
+      }
       else
         return element.get( index - c );
     }
@@ -184,7 +193,9 @@ public class CascadingFeatureList implements FeatureList
     {
       final int index = element.indexOf( o );
       if( index >= 0 )
+      {
         result = index + c;
+      }
       c += element.size();
     }
     return result;
@@ -248,7 +259,9 @@ public class CascadingFeatureList implements FeatureList
       {
         final Object object = iter.next();
         if( !m_lists[i].contains( object ) )
+        {
           stillLeft.add( object );
+        }
       }
       if( stillLeft.isEmpty() )
         return true;
@@ -323,11 +336,11 @@ public class CascadingFeatureList implements FeatureList
     {
       final Object[] objects = toArray();
       if( objects.length != a.length )
-      {
         throw new ArrayStoreException( "wrong length" );
-      }
       for( int i = 0; i < objects.length; i++ )
+      {
         a[i] = objects[i];
+      }
     }
     catch( final Exception e )
     {
@@ -343,9 +356,13 @@ public class CascadingFeatureList implements FeatureList
   public List query( final GM_Envelope env, List result )
   {
     if( result == null )
+    {
       result = new ArrayList();
+    }
     for( final FeatureList element : m_lists )
+    {
       result = element.query( env, result );
+    }
     return result;
   }
 
@@ -356,9 +373,13 @@ public class CascadingFeatureList implements FeatureList
   public List query( final GM_Position env, List result )
   {
     if( result == null )
+    {
       result = new ArrayList();
+    }
     if( result == null )
+    {
       result = new ArrayList();
+    }
     for( final FeatureList element : m_lists )
     {
       result = element.query( env, result );
@@ -388,9 +409,13 @@ public class CascadingFeatureList implements FeatureList
     {
       final GM_Envelope boundingBox = element.getBoundingBox();
       if( result == null )
+      {
         result = boundingBox;
+      }
       else
+      {
         result = result.getMerged( boundingBox );
+      }
     }
     return result;
   }
@@ -419,7 +444,9 @@ public class CascadingFeatureList implements FeatureList
   public void invalidate( )
   {
     for( final FeatureList list : m_lists )
+    {
       list.invalidate();
+    }
   }
 
   /**
@@ -428,7 +455,9 @@ public class CascadingFeatureList implements FeatureList
   public void invalidate( final Object o )
   {
     for( final FeatureList list : m_lists )
+    {
       list.invalidate( o );
+    }
   }
 
   /**
