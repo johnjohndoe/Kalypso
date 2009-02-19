@@ -48,7 +48,7 @@ public class Gaja3dService {
 	 */
 	private static final String WPS_URL = System
 			.getProperty("org.kalypso.service.wps.service");
-	
+
 	private Log logger = LogFactory.getLog(Activator.class.getName());
 
 	/*
@@ -76,7 +76,7 @@ public class Gaja3dService {
 	public Capabilities getCapabilities(final GetCapabilitiesType parameters)
 			throws RemoteException {
 		SecurityManager.getManager().setServiceOwnerFromContext();
-		
+
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("getCapabilities", resource);
 
@@ -176,19 +176,25 @@ public class Gaja3dService {
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("execute_createGrid", resource);
 
+		// required
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
-		final Gaja3DResourcePropertyLinkType demPoints = parameters
-				.getDemPoints();
-		final GridX gridX = parameters.getGridX();
-		final GridY gridY = parameters.getGridY();
-
 		if (boundary != null)
 			resource.setBoundary(boundary);
+
+		// required
+		final Gaja3DResourcePropertyLinkType demPoints = parameters
+				.getDemPoints();
 		if (demPoints != null)
 			resource.setDemPoints(demPoints);
+
+		// required
+		final GridX gridX = parameters.getGridX();
 		if (gridX != null)
 			resource.setGridX(gridX);
+
+		// required
+		final GridY gridY = parameters.getGridY();
 		if (gridY != null)
 			resource.setGridY(gridY);
 
@@ -210,28 +216,36 @@ public class Gaja3dService {
 			throws RemoteException {
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("execute_detectBreaklines", resource);
-		
+
+		// required
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
+		if (boundary != null)
+			resource.setBoundary(boundary);
+
+		// required
 		final DemGrid demGrid = parameters.getDemGrid();
+		if (demGrid != null)
+			resource.setDemGrid(demGrid);
 
 		// optional
 		final EdgeFilter edgeFilter = parameters.getEdgeFilter();
-		final SmoothFilter smoothFilter = parameters.getSmoothFilter();
-		final FeatureDetector featureDetector = parameters.getFeatureDetector();
-		final DistanceTolerance distanceTolerance = parameters
-				.getDistanceTolerance();
-
-		if (boundary != null)
-			resource.setBoundary(boundary);
-		if (demGrid != null)
-			resource.setDemGrid(demGrid);
 		if (edgeFilter != null)
 			resource.setEdgeFilter(edgeFilter);
+
+		// optional
+		final SmoothFilter smoothFilter = parameters.getSmoothFilter();
 		if (smoothFilter != null)
 			resource.setSmoothFilter(smoothFilter);
+
+		// optional
+		final FeatureDetector featureDetector = parameters.getFeatureDetector();
 		if (featureDetector != null)
 			resource.setFeatureDetector(featureDetector);
+
+		// optional
+		final DistanceTolerance distanceTolerance = parameters
+				.getDistanceTolerance();
 		if (distanceTolerance != null)
 			resource.setDistanceTolerance(distanceTolerance);
 
@@ -253,22 +267,30 @@ public class Gaja3dService {
 			throws RemoteException {
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("execute_createTin", resource);
-		
+
 		// required
 		final Gaja3DResourcePropertyLinkType boundary = parameters
 				.getBoundary();
+		if (boundary != null)
+			resource.setBoundary(boundary);
+
+		// optional
+		final DemGrid demGrid = parameters.getDemGrid();
+		if (demGrid != null)
+			resource.setDemGrid(demGrid);
+
+		// required
 		final Breaklines breaklines = parameters.getBreaklines();
+		if (breaklines != null)
+			resource.setBreaklines(breaklines);
 
 		// optional
 		final MaxArea maxArea = parameters.getMaxArea();
-		final MinAngle minAngle = parameters.getMinAngle();
-
-		if (boundary != null)
-			resource.setBoundary(boundary);
-		if (breaklines != null)
-			resource.setBreaklines(breaklines);
 		if (maxArea != null)
 			resource.setMaxArea(maxArea);
+
+		// optional
+		final MinAngle minAngle = parameters.getMinAngle();
 		if (minAngle != null)
 			resource.setMinAngle(minAngle);
 
@@ -317,8 +339,7 @@ public class Gaja3dService {
 		} else {
 			try {
 				subject = SecurityManager.getManager().getSubject(resource);
-				logger.debug(subject == null ? "NULL" : subject
-						.toString());
+				logger.debug(subject == null ? "NULL" : subject.toString());
 			} catch (Exception e) {
 				logger.debug("Unable to obtain resource subject");
 			}

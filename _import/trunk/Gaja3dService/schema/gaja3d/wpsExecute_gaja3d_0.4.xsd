@@ -289,6 +289,7 @@
 		<element ref="tns:Breaklines" minOccurs="0" />
 		<element ref="tns:MinAngle" minOccurs="0" />
 		<element ref="tns:MaxArea" minOccurs="0" />
+		<element ref="tns:DemGrid" minOccurs="0" />
 	</sequence>
 </complexType>
 <complexType name="CreateTinResponseType">

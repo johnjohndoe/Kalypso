@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.internal.strategy;
 
@@ -70,23 +70,27 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 
 	private static final String MODEL_TIN_FILE = "ModelTin.zip";
 
-	private double minAngle;
-	private double maxArea;
+	private double m_minAngle;
+	private double m_maxArea;
+	private URI m_breaklinesLocation;
+	private URI m_demGridLocation;
 
-	public URI createTin(final URI boundaryLocation,
-			final URI breaklinesLocation) throws RemoteException {
+	public URI createTin(final URI boundaryLocation) throws RemoteException {
 		IFolder calcCaseFolder;
 		try {
 			/* Create folder for simulation */
 			final IProject project = ResourcesPlugin.getWorkspace().getRoot()
 					.getProject(CreateTinSimulation.ID);
-			if (!project.exists())
+			if (!project.exists()) {
 				project.create(null);
-			if (!project.isOpen())
+			}
+			if (!project.isOpen()) {
 				project.open(null);
+			}
 			calcCaseFolder = project.getFolder(new Path("simulation"));
-			if (!calcCaseFolder.exists())
+			if (!calcCaseFolder.exists()) {
 				calcCaseFolder.create(true, true, null);
+			}
 		} catch (final CoreException e) {
 			throw AxisFault.makeFault(e);
 		}
@@ -94,14 +98,23 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 		/* Modify the model data to your needs. */
 		final Map<String, Object> inputs = new HashMap<String, Object>();
 		inputs.put(CreateTinSimulation.INPUT_BOUNDARY, boundaryLocation);
-		inputs.put(CreateTinSimulation.INPUT_BREAKLINES, breaklinesLocation);
-		if (maxArea != 0)
+		if (m_breaklinesLocation != null) {
+			inputs.put(CreateTinSimulation.INPUT_BREAKLINES,
+					m_breaklinesLocation);
+		}
+		if (m_demGridLocation != null) {
+			inputs.put(CreateTinSimulation.INPUT_DEM_GRID, m_demGridLocation);
+		}
+		if (m_maxArea != 0) {
 			inputs.put(CreateTinSimulation.INPUT_MAX_AREA, Double
-					.toString(maxArea));
-		if (minAngle != 0)
+					.toString(m_maxArea));
+		}
+		if (m_minAngle != 0) {
 			inputs.put(CreateTinSimulation.INPUT_MIN_ANGLE, Double
-					.toString(minAngle));
+					.toString(m_minAngle));
+		}
 		inputs.put("_" + CreateTinSimulation.OUTPUT_MODEL_TIN, MODEL_TIN_FILE);
+
 		final List<String> outputs = new ArrayList<String>();
 		outputs.add(CreateTinSimulation.OUTPUT_MODEL_TIN);
 		outputs.add("stdout");
@@ -110,18 +123,20 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 		/* Create the delegate which can handle ISimulations. */
 		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
+		final int timeout = 60 * 60 * 1000;
 		final WPSRequest simulationJob = new WPSRequest(CreateTinSimulation.ID,
-				serviceEndpoint, 300000);
+				serviceEndpoint, timeout);
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());
 
-		if (!status.isOK())
+		if (!status.isOK()) {
 			throw AxisFault.makeFault(new CoreException(status));
+		}
 
 		/* Get the result. */
 		final Map<String, ComplexValueReference> references = simulationJob
 				.getReferences();
-		final ComplexValueReference modelTinLocation = (ComplexValueReference) references
+		final ComplexValueReference modelTinLocation = references
 				.get(CreateTinSimulation.OUTPUT_MODEL_TIN);
 		try {
 			return new URI(modelTinLocation.getReference());
@@ -131,13 +146,23 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 	}
 
 	@Override
-	public void setMaxArea(double maxArea) {
-		this.maxArea = maxArea;
+	public void setMaxArea(final double maxArea) {
+		this.m_maxArea = maxArea;
 	}
 
 	@Override
-	public void setMinAngle(double minAngle) {
-		this.minAngle = minAngle;
+	public void setMinAngle(final double minAngle) {
+		this.m_minAngle = minAngle;
+	}
+
+	@Override
+	public void setDemGridLocation(final URI gridLocation) {
+		m_demGridLocation = gridLocation;
+	}
+
+	@Override
+	public void setBreaklinesLocation(final URI breaklinesLocation) {
+		this.m_breaklinesLocation = breaklinesLocation;
 	}
 
 }

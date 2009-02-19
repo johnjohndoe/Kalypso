@@ -137,9 +137,9 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 		/* Create the delegate which can handle ISimulations. */
 		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
 
-		/* Start the simulation with a timeout of 300000 ms. */
+		final int timeout = 60 * 60 * 1000;
 		final WPSRequest simulationJob = new WPSRequest(
-				DetectBreaklinesSimulation.ID, serviceEndpoint, 300000);
+				DetectBreaklinesSimulation.ID, serviceEndpoint, timeout);
 		final IStatus status = simulationJob.run(inputs, outputs,
 				new NullProgressMonitor());
 

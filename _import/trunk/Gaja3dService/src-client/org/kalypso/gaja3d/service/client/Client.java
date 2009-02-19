@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
@@ -39,8 +38,10 @@ import org.kalypso.gaja3d.service.factory.stubs.Gaja3DResourceFactoryPortType;
 import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.stubs.Boundary;
+import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateTinParametersType;
+import org.kalypso.gaja3d.service.stubs.DemGrid;
 import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesParametersType;
 import org.kalypso.gaja3d.service.stubs.Gaja3DPortType;
@@ -65,14 +66,12 @@ import org.xml.sax.InputSource;
  * EndPointReference.
  * 
  * The service's GetCapabilities, DescribeProcess, CreateGrid, DetectBreaklines
- * and CreateTin operations are called in order.
+ * and CreateTin operations can be called in order.
  */
 public class Client {
 
 	private static final String SERVICE_FACTORY_URI = "http://127.0.0.1:8080/services/Gaja3dResourceFactoryService";
 
-	// private static final String SERVICE_FACTORY_URI =
-	// "http://automatix/services/Gaja3dResourceFactoryService";
 	private static final String EPR_FILENAME = "test.epr";
 	private static final boolean SAVE_EPR = false;
 	private static final boolean USE_SAVED_EPR = false;
@@ -151,8 +150,9 @@ public class Client {
 		logger.debug("Retrieved service instance.");
 
 		try {
-			// set security
+			// set security and timeout
 			setSecurity((Stub) gaja3d);
+			((Stub) gaja3d).setTimeout(60 * 1000 * 60);
 
 			// call GetCapabilities
 			// final Capabilities capabilities = callGetCapabilities(gaja3d);
@@ -162,26 +162,24 @@ public class Client {
 			// set Boundary RP
 			final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
 			gaja3d.setResourceProperties(setResourcePropertiesRequest);
-			printResourceProperties(gaja3d);
+			logger.debug("Finished setting boundaries.");
 
 			// call Execute_createGrid
 			final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
-			// wait 60 minutes
-			((Stub) gaja3d).setTimeout(60 * 1000 * 60);
 			gaja3d.execute_createGrid(execute_createGrid);
-			printResourceProperties(gaja3d);
+			logger.debug("Finished creating grid.");
 
 			// call Execute_detectBreaklines
-			// final DetectBreaklinesParametersType detectBreaklinesParameters =
-			// buildExecuteDetectBreaklines();
-			// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-			// printResourceProperties(gaja3d);
+			final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
+			gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+			logger.debug("Finished detecting breaklines.");
 
 			// call Execute_createTin
-			// final CreateTinParametersType createTinParameters =
-			// buildExecuteCreateTin();
-			// gaja3d.execute_createTin(createTinParameters);
-			// printResourceProperties(gaja3d);
+			final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
+			gaja3d.execute_createTin(createTinParameters);
+			logger.debug("Finished creating tin.");
+
+			printResourceProperties(gaja3d);
 
 		} finally {
 			if (!SAVE_EPR) {
@@ -199,26 +197,30 @@ public class Client {
 		/*
 		 * remove comment when skipping breakline detection
 		 */
-		// try {
-		// final Boundary boundary = new Boundary();
-		// boundary.setIdentifier(CodeTypeUtil.fillCodeType(new
-		// Identifier(),
-		// Gaja3dQNames.RP_BOUNDARY));
-		// final URI boundaryHref = new URI(Client.class.getResource(
-		// BOUNDARY_FILENAME).toURI().toString());
-		// boundary.setHref(boundaryHref);
-		// execute_createTin.setBoundary(boundary);
-		//
-		// final Breaklines breaklines = new Breaklines();
-		// breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
-		// new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-		// final URI breaklinesHref = new URI(Client.class.getResource(
-		// BREAKLINES_FILENAME).toURI().toString());
-		// breaklines.setHref(breaklinesHref);
-		// execute_createTin.setBreaklines(breaklines);
-		// } catch (final MalformedURIException e) {
-		// e.printStackTrace();
-		// } catch (final URISyntaxException e) {
+		try {
+			final DemGrid demGrid = new DemGrid();
+			demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+					Gaja3dQNames.RP_DEM_GRID));
+			final URI demGridHref = new URI(
+					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
+			// final URI demGridHref = new URI(Client.class.getResource(
+			// DEMGRID_FILENAME).toURI().toString());
+			demGrid.setHref(demGridHref);
+			execute_createTin.setDemGrid(demGrid);
+
+			final Breaklines breaklines = new Breaklines();
+			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
+					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
+			// final URI breaklinesHref = new URI(Client.class.getResource(
+			// BREAKLINES_FILENAME).toURI().toString());
+			final URI breaklinesHref = new URI(
+					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines.zip");
+			breaklines.setHref(breaklinesHref);
+			execute_createTin.setBreaklines(breaklines);
+		} catch (final MalformedURIException e) {
+			e.printStackTrace();
+		}
+		// catch (final URISyntaxException e) {
 		// e.printStackTrace();
 		// }
 		final MinAngle minAngle = new MinAngle();
@@ -230,7 +232,7 @@ public class Client {
 		final MaxArea maxArea = new MaxArea();
 		maxArea.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 				Gaja3dQNames.RP_MAX_AREA));
-		maxArea.setArea(1000);
+		maxArea.setArea(10000);
 		execute_createTin.setMaxArea(maxArea);
 
 		return execute_createTin;
@@ -249,17 +251,19 @@ public class Client {
 		// BOUNDARY_FILENAME).toURI().toString());
 		// boundary.setHref(boundaryHref);
 		// execute_detectBreaklines.setBoundary(boundary);
-		//
 		// final DemGrid demGrid = new DemGrid();
 		// demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 		// Gaja3dQNames.RP_DEM_GRID));
 		// final URI demGridHref = new URI(Client.class.getResource(
 		// DEMGRID_FILENAME).toURI().toString());
+		// final URI demGridHref = new URI(
+		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
 		// demGrid.setHref(demGridHref);
 		// execute_detectBreaklines.setDemGrid(demGrid);
 		// } catch (final MalformedURIException e) {
 		// e.printStackTrace();
-		// } catch (final URISyntaxException e) {
+		// }
+		// catch (final URISyntaxException e) {
 		// e.printStackTrace();
 		// }
 		final SmoothFilter smoothFilter = new SmoothFilter();
@@ -282,19 +286,19 @@ public class Client {
 				Gaja3dQNames.RP_DEM_POINTS));
 
 		try {
-//			 final URI demPointsHref = new URI(Client.class.getResource(
-//			 DEMPOINTS_FILENAME).toURI().toString());
+			// final URI demPointsHref = new URI(Client.class.getResource(
+			// DEMPOINTS_FILENAME).toURI().toString());
 			final URI demPointsHref = new URI(
 					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/allpoints.zip");
-//			 final URI demPointsHref = new
-//			 URI("file:///home/skurzbach/example/allpoints.zip");
+			// final URI demPointsHref = new
+			// URI("file:///home/skurzbach/example/allpoints.zip");
 			demPoints.setHref(demPointsHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-//		 catch (final URISyntaxException e) {
-//		 e.printStackTrace();
-//		 }
+		// catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
 		execute_createGrid.setDemPoints(demPoints);
 
 		final GridX gridX = new GridX();
@@ -321,19 +325,19 @@ public class Client {
 				Gaja3dQNames.RP_BOUNDARY));
 
 		try {
-//			 final URI boundaryHref = new URI(Client.class.getResource(
-//			 BOUNDARY_FILENAME).toURI().toString());
+			// final URI boundaryHref = new URI(Client.class.getResource(
+			// BOUNDARY_FILENAME).toURI().toString());
 			final URI boundaryHref = new URI(
-			"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip");
-//			final URI boundaryHref = new URI(
-//					"file:///home/skurzbach/example/boundary1.zip");
+					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip");
+			// final URI boundaryHref = new URI(
+			// "file:///home/skurzbach/example/boundary1.zip");
 			boundary.setHref(boundaryHref);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-//		 catch (final URISyntaxException e) {
-//		 e.printStackTrace();
-//		 }
+		// catch (final URISyntaxException e) {
+		// e.printStackTrace();
+		// }
 		update.set_any(new MessageElement[] { new MessageElement(
 				Gaja3dQNames.RP_BOUNDARY, boundary) });
 		setResourcePropertiesRequest.setUpdate(update);

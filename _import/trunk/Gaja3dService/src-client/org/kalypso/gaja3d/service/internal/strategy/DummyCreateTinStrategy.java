@@ -71,4 +71,17 @@ public class DummyCreateTinStrategy implements CreateTinStrategy {
 	public void setMinAngle(double minAngle) {
 	}
 
+	@Override
+	public void setDemGridLocation(URI gridLocation) {
+	}
+
+	@Override
+	public void setBreaklinesLocation(URI breaklinesLocation) {
+	}
+
+	@Override
+	public URI createTin(URI boundaryLocation) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

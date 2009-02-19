@@ -156,6 +156,7 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	}
 
 	public void setBreaklines(final Breaklines breaklines) {
+		setModelTin(null);
 		final QName qName = Gaja3dQNames.RP_BREAKLINES;
 		setRPinternal(breaklines, qName);
 	}
@@ -246,12 +247,16 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	public void createGrid() throws RemoteException {
 		final Gaja3DResourcePropertyLinkType boundary = getBoundary();
 		final URI boundaryURI = boundary.getHref();
+
 		final Gaja3DResourcePropertyLinkType demPoints = getDemPoints();
 		final URI demPointsURI = demPoints.getHref();
+
 		final GridX gridX = getGridX();
 		final double dx = gridX.getDx();
+
 		final GridY gridY = getGridY();
 		final double dy = gridY.getDy();
+
 		try {
 			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
 					.toString());
@@ -272,11 +277,6 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	}
 
 	public void detectBreaklines() throws RemoteException {
-		final Gaja3DResourcePropertyLinkType boundary = getBoundary();
-		final URI boundaryURI = boundary.getHref();
-		final Gaja3DResourcePropertyLinkType demGrid = getDemGrid();
-		final URI demGridURI = demGrid.getHref();
-
 		final EdgeFilter edgeFilter = getEdgeFilter();
 		if (edgeFilter != null) {
 			final EdgeFilterMethod method = edgeFilter.getMethod();
@@ -312,12 +312,19 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		}
 
 		try {
+			final Gaja3DResourcePropertyLinkType boundary = getBoundary();
+			final URI boundaryURI = boundary.getHref();
 			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
 					.toString());
+
+			final Gaja3DResourcePropertyLinkType demGrid = getDemGrid();
+			final URI demGridURI = demGrid.getHref();
 			final java.net.URI demGridLocation = new java.net.URI(demGridURI
 					.toString());
+
 			final java.net.URI breaklinesLocation = detectBreaklinesStrategy
 					.detectBreaklines(boundaryLocation, demGridLocation);
+
 			// final File shpTmp = FileUtilities.createNewTempDir("shptmp");
 			// ZipUtilities.unzip(breaklinesLocation.openStream(), shpTmp);
 			// final File[] files = shpTmp.listFiles((FileFilter)
@@ -337,6 +344,7 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 			// GmlSerializer.serializeWorkspace(breaklinesGml, shpWorkspace,
 			// "UTF-8");
 			// }
+
 			final Breaklines breaklines = new Breaklines();
 			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
 					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
@@ -354,17 +362,14 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	}
 
 	public void createTin() throws RemoteException {
-		final Gaja3DResourcePropertyLinkType boundary = getBoundary();
-		final URI boundaryURI = boundary.getHref();
-		final Gaja3DResourcePropertyLinkType breaklines = getBreaklines();
-		final URI breaklinesURI = breaklines.getHref();
-
+		// optional
 		final MaxArea maxArea = getMaxArea();
 		if (maxArea != null) {
 			final double area = maxArea.getArea();
 			createTinStrategy.setMaxArea(area);
 		}
 
+		// optional
 		final MinAngle minAngle = getMinAngle();
 		if (minAngle != null) {
 			final double angle = minAngle.getAngle();
@@ -372,12 +377,33 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 		}
 
 		try {
+			// optional
+			final Gaja3DResourcePropertyLinkType demGrid = getDemGrid();
+			if (demGrid != null) {
+				final URI demGridURI = demGrid.getHref();
+				final java.net.URI demGridLocation = new java.net.URI(
+						demGridURI.toString());
+				createTinStrategy.setDemGridLocation(demGridLocation);
+			}
+
+			// required
+			final Gaja3DResourcePropertyLinkType boundary = getBoundary();
+			final URI boundaryURI = boundary.getHref();
 			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
 					.toString());
-			final java.net.URI breaklinesLocation = new java.net.URI(
-					breaklinesURI.toString());
-			final java.net.URI modelTinLocation = createTinStrategy.createTin(
-					boundaryLocation, breaklinesLocation);
+
+			// optional
+			final Gaja3DResourcePropertyLinkType breaklines = getBreaklines();
+			if (breaklines != null) {
+				final URI breaklinesURI = breaklines.getHref();
+				final java.net.URI breaklinesLocation = new java.net.URI(
+						breaklinesURI.toString());
+				createTinStrategy.setBreaklinesLocation(breaklinesLocation);
+			}
+
+			final java.net.URI modelTinLocation = createTinStrategy
+					.createTin(boundaryLocation);
+
 			final ModelTin modelTin = new ModelTin();
 			modelTin.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 					Gaja3dQNames.RP_MODEL_TIN));
@@ -416,6 +442,11 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	/* Required by interface TopicListAccessor */
 	public TopicList getTopicList() {
 		return topicList;
+	}
+
+	/* Required by interface SecureResource */
+	public ResourceSecurityDescriptor getSecurityDescriptor() {
+		return config.getSecurityDescriptor();
 	}
 
 	/* Private methods */
@@ -467,10 +498,5 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 									qName, valueIdentifier.toString()));
 		}
 		property.add(newValue);
-	}
-
-	@Override
-	public ResourceSecurityDescriptor getSecurityDescriptor() {
-		return config.getSecurityDescriptor();
 	}
 }
