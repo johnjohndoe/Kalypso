@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -219,33 +218,6 @@ public class FeatureUtils
       return (CommandableWorkspace) workspace;
     else
       return new CommandableWorkspace( workspace );
-  }
-
-  public static Feature resolveFeature( final GMLWorkspace targetWorkspace, final Object property )
-  {
-    if( property == null )
-      return null;
-
-    if( property instanceof XLinkedFeature_Impl )
-    {
-      try
-      {
-        final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
-        return xLnk.getFeature();
-      }
-      catch( final IllegalStateException e )
-      {
-        e.printStackTrace();
-
-        return null;
-      }
-    }
-
-    final Feature result = FeatureHelper.getFeature( targetWorkspace, property );
-    if( result == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.20" ) + " " + property.toString() + Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.21" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return result;
   }
 
   public static String getFeatureName( final Feature feature )
