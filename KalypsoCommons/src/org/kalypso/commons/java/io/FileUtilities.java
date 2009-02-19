@@ -638,6 +638,8 @@ public class FileUtilities
       {
         final String relPath = source.getName().getRelativeName( fileObject.getName() );
         final FileObject destFile = destDir.resolveFile( relPath, NameScope.DESCENDENT_OR_SELF );
+        final FileObject folder = destFile.getParent();
+        folder.createFolder();
         fileObject.moveTo( destFile );
       }
     }
