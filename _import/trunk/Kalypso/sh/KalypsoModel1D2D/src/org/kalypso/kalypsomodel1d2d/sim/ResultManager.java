@@ -200,7 +200,7 @@ public class ResultManager implements ISimulation1D2DConstants
     {
       final String filename = file.getName();
 
-      if( RMA10Calculation.MODEL_2D.equals( filename ) )
+      if( ISimulation1D2DConstants.MODEL_2D.equals( filename ) )
         return Status.OK_STATUS;
 
       final String resultFileName = FileUtilities.nameWithoutExtension( filename );
