@@ -52,7 +52,6 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -189,7 +188,7 @@ public class ComboBoxModifier implements IFeatureModifier
 
     if( ftp instanceof IRelationType )
     {
-      Feature resolvedFeature = FeatureUtils.resolveFeature( f.getWorkspace(), fprop );
+      Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
       if( resolvedFeature == null )
         return NO_LINK_STRING;
 

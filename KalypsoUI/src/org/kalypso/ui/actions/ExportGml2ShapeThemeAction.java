@@ -57,7 +57,7 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
    */
   public void run( final IAction action )
   {
-    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.1") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ui.actions.ExportGml2ShapeThemeAction.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -101,9 +101,9 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     final IStructuredSelection sel = (IStructuredSelection) m_selection;
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) sel.getFirstElement();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
-    if( featureList == null )
+    if( featureList == null || featureList.isEmpty() )
     {
-      MessageDialog.openWarning( shell, action.getText(), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.2") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, action.getText(), Messages.getString( "org.kalypso.ui.actions.ExportGml2ShapeThemeAction.2" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -117,7 +117,8 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
     fileDialog.setFilterExtensions( new String[] { "*.*", "*.shp", "*.dbf" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.7"), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.8"), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.9") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] {
+        Messages.getString( "org.kalypso.ui.actions.ExportGml2ShapeThemeAction.7" ), Messages.getString( "org.kalypso.ui.actions.ExportGml2ShapeThemeAction.8" ), Messages.getString( "org.kalypso.ui.actions.ExportGml2ShapeThemeAction.9" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( action.getText() );
     if( lastDirPath != null )
     {
@@ -125,7 +126,9 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
       fileDialog.setFileName( theme.getLabel() );
     }
     else
+    {
       fileDialog.setFileName( theme.getLabel() );
+    }
     final String result = fileDialog.open();
     if( result == null )
       return;
@@ -133,21 +136,25 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     dialogSettings.put( SETTINGS_LAST_DIR, new File( result ).getParent() );
 
     final String shapeFileBase;
-    if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) )
+    {
       shapeFileBase = FileUtilities.nameWithoutExtension( result );
+    }
     else
+    {
       shapeFileBase = result;
+    }
 
     final Job job = new Job( action.getText() + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")//$NON-NLS-1$
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         IShapeDataProvider shapeDataProvider = null;
 
-        Feature feature = (Feature) featureList.get( 0 );
-        GM_Object geometryProperty = feature.getDefaultGeometryProperty();
+        final Feature feature = (Feature) featureList.get( 0 );
+        final GM_Object geometryProperty = feature.getDefaultGeometryProperty();
         if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
         {
           final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
@@ -173,7 +180,9 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
   {
     // here we could disable the action if no data is available, listening to the theme would be necessary then
     if( m_action != null )
+    {
       m_action.setEnabled( true );
+    }
   }
 
 }
