@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
+ * StatusDialog using {@link StatusComposite} to display a detailed multi state
+ * 
  * @author Dirk Kuch
  */
 public class StatusDialog2 extends AbstractStatusDialog
