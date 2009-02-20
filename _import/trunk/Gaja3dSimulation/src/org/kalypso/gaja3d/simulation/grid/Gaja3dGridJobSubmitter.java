@@ -58,13 +58,18 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileName;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystem;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gaja3d.simulation.Activator;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
@@ -72,8 +77,6 @@ import org.kalypso.simulation.core.NullSimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
-import org.kalypso.simulation.grid.GridProcessFactory;
-import org.kalypso.simulation.grid.SimpleGridProcess;
 
 /**
  * Submits a Gaja3d job to the grid using ISimulation inputs/outputs
@@ -89,11 +92,6 @@ public class Gaja3dGridJobSubmitter
   public static QName QNAME_ANY_URI = new QName( NS.XSD_SCHEMA, "anyURI" );
 
   /**
-   * Submit jobs to this GRAM
-   */
-  static final String GRAM_HOST = "gramd1.d-grid.uni-hannover.de";
-
-  /**
    * Name of the service. Will determine the name of the executable package (zip) and script (sh).
    */
   private static final URL EXEC_ZIP_URL = Gaja3dGridJobSubmitter.class.getResource( "Gaja3dService_linux64.zip" );
@@ -104,6 +102,8 @@ public class Gaja3dGridJobSubmitter
    * The working directory of Gaja3d
    */
   static final String WORKING_DIR = ".";
+
+  private List<String> m_outputs = new ArrayList<String>();
 
   public void submitJob( final Modelspec modelSpec, final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, ISimulationMonitor monitor, List<String> arguments ) throws SimulationException
   {
@@ -217,16 +217,27 @@ public class Gaja3dGridJobSubmitter
     OutputStream stdOut = null;
     OutputStream stdErr = null;
 
-    int returnCode = 0;
+    int returnCode = IStatus.ERROR;
     try
     {
-      final String processFactoryId = GridProcessFactory.ID;
-      final SimpleGridProcess process = (SimpleGridProcess) KalypsoCommonsExtensions.createProcess( processFactoryId, tmpdir, EXEC_SCRIPT_URL, arguments.toArray( new String[arguments.size()] ) );
+      // create working dir (sandbox)
+      final FileSystemManager manager = VFSUtilities.getManager();
+      final String sandboxRoot = tmpdir.getName();
+      final String serverRoot = "gridftp://gramd1.gridlab.uni-hannover.de";
+
+      final FileObject remoteRoot = manager.resolveFile( serverRoot );
+      final FileSystem fileSystem = remoteRoot.getFileSystem();
+      final String homeDirString = (String) fileSystem.getAttribute( "HOME_DIRECTORY" );
+      final FileObject homeDir = remoteRoot.resolveFile( homeDirString );
+
+      // create working dir if non-existent
+      final FileObject workingDir = homeDir.resolveFile( sandboxRoot );
+      workingDir.createFolder();
+
+      // create process handle
+      final String processFactoryId = "org.kalypso.simulation.gridprocess";
+      final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, workingDir, EXEC_SCRIPT_URL, arguments.toArray( new String[arguments.size()] ) );
       process.setProgressMonitor( new SimulationMonitorAdaptor( monitor ) );
-      for( final URI einput : externalInputs )
-      {
-        process.addInput( einput );
-      }
       process.environment().put( "OMP_NUM_THREADS", "4" );
 
       // add required output files
@@ -239,18 +250,28 @@ public class Gaja3dGridJobSubmitter
         {
           // stage out file
           final String outputName = outputNames.get( id );
-          final String source;
+          final String destName;
           if( outputName != null )
           {
-            source = outputName;
+            destName = outputName;
           }
           else
           {
-            source = id;
+            destName = id;
           }
-          process.addOutput( source );
-          final File outputLocation = new File( tmpdir, source );
-          resultEater.addResult( id, outputLocation );
+          m_outputs.add( destName );
+          // final File outputLocation = new File( tmpdir, source );
+          final FileObject destFile = workingDir.resolveFile( destName );
+          final FileName destFileName = destFile.getName();
+          try
+          {
+            final URI outputLocation = new URI( destFileName.getURI() );
+            resultEater.addResult( id, outputLocation );
+          }
+          catch( final URISyntaxException e )
+          {
+            throw new SimulationException( destFileName + "is not a valid URI." );
+          }
         }
         // TODO: support literal outputs
       }
@@ -258,6 +279,14 @@ public class Gaja3dGridJobSubmitter
       stdOut = new BufferedOutputStream( new FileOutputStream( stdoutFile ) );
       stdErr = new BufferedOutputStream( new FileOutputStream( stderrFile ) );
 
+      // stage-in files
+      for( final URI einput : externalInputs )
+      {
+        final FileObject inputFile = manager.resolveFile( getUriAsString( einput ) );
+        VFSUtilities.copy( inputFile, workingDir );
+      }
+
+      // start process
       returnCode = process.startProcess( stdOut, stdErr, null, null );
     }
     catch( final CoreException e )
@@ -306,37 +335,51 @@ public class Gaja3dGridJobSubmitter
     {
       monitor.setFinishInfo( IStatus.OK, "Process finished successfully." );
     }
+  }
 
-    // check output arguments
-    final List<DataType> output = modelSpec.getOutput();
-    for( final DataType data : output )
+// private void stageOut( final FileObject fromDir, final FileObject toDir ) throws IOException
+// {
+// final FileObject[] children = fromDir.getChildren();
+// nextChild: for( FileObject child : children )
+// {
+// final FileName childName = child.getName();
+// final String baseName = childName.getBaseName();
+// for( final String output : m_outputs )
+// {
+// if( FilenameUtils.wildcardMatch( baseName, output ) )
+// {
+// final FileObject destination = toDir.resolveFile( baseName );
+// if( FileType.FILE.equals( child.getType() ) )
+// {
+// /* Copy ... */
+// VFSUtilities.copyFileTo( child, destination, true );
+// }
+// else if( FileType.FOLDER.equals( child.getType() ) )
+// {
+// /* Copy ... */
+// Debug.println( "Copy directory " + childName + " to " + destination.getName() + " ..." );
+// VFSUtilities.copyDirectoryToDirectory( child, destination, true );
+// }
+// else
+// {
+// Debug.println( "Could not determine the file type ..." );
+// }
+// continue nextChild;
+// }
+// }
+// }
+// }
+
+  private String getUriAsString( final URI uri )
+  {
+    try
     {
-      final String id = data.getId();
-      // only URI is supported for outputs at the time
-      if( data.getType().equals( QNAME_ANY_URI ) )
-      {
-        // stage out file
-        final String outputName = outputNames.get( id );
-        final String source;
-        if( outputName != null )
-        {
-          source = outputName;
-        }
-        else
-        {
-          source = id;
-        }
-        final File outputLocation = new File( tmpdir, source );
-        if( outputLocation.exists() )
-        {
-          resultEater.addResult( id, outputLocation );
-        }
-        else
-        {
-          Activator.getDefault().getLog().log( StatusUtilities.createErrorStatus( "Missing output %s.", source ) );
-        }
-      }
-      // TODO: support literal outputs
+      final URL url = FileLocator.toFileURL( uri.toURL() );
+      return url.toExternalForm();
+    }
+    catch( final IOException e )
+    {
+      return uri.toString();
     }
   }
 }
