@@ -48,31 +48,33 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystem;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileProvider;
+import org.kalypso.commons.io.VFSUtilities;
 
-public class TestGridFTP extends TestCase {
+public class TestGridFTP extends TestCase
+{
 
-	protected void setUp() throws Exception {
-	}
+  protected void setUp( ) throws Exception
+  {
+  }
 
-	protected void tearDown() throws Exception {
-	}
+  protected void tearDown( ) throws Exception
+  {
+  }
 
-	public void testGridFTP() throws Exception {
-		final FileSystemManager manager = VFSProvidersExtension.getManager();
+  public void testGridFTP( ) throws Exception
+  {
+    final FileSystemManager manager = VFSUtilities.getManager();
 
-		final FileObject remoteRoot = manager
-				.resolveFile("gsiftp://gramd1.gridlab.uni-hannover.de");
-		final FileSystem fileSystem = remoteRoot.getFileSystem();
-		final String homeDirString = (String) fileSystem
-				.getAttribute(GsiFtpFileProvider.ATTR_HOME_DIR);
-		final FileObject homeDir = remoteRoot.resolveFile(homeDirString);
-		final String testDirName = "test";
-		final FileObject localDir = manager.toFileObject(new File(testDirName));
-		final FileObject remoteDir = homeDir.resolveFile(testDirName);
-		final FileSynchronizer fileSynchronizer = new FileSynchronizer(
-				localDir, remoteDir);
-		fileSynchronizer.updateRemote();
-		fileSynchronizer.updateLocal();
-	}
+    final FileObject remoteRoot = manager.resolveFile( "gsiftp://gramd1.gridlab.uni-hannover.de" );
+    final FileSystem fileSystem = remoteRoot.getFileSystem();
+    final String homeDirString = (String) fileSystem.getAttribute( GsiFtpFileProvider.ATTR_HOME_DIR );
+    final FileObject homeDir = remoteRoot.resolveFile( homeDirString );
+    final String testDirName = "test";
+    final FileObject localDir = manager.toFileObject( new File( testDirName ) );
+    final FileObject remoteDir = homeDir.resolveFile( testDirName );
+    final FileSynchronizer fileSynchronizer = new FileSynchronizer( localDir, remoteDir );
+    fileSynchronizer.updateRemote();
+    fileSynchronizer.updateLocal();
+  }
 
 }

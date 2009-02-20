@@ -9,5 +9,16 @@
             label="Grid-Job">
       </factory>
    </extension>
+   <extension
+         point="org.apache.commons.vfs.provider">
+      <provider
+            class="org.kalypso.simulation.grid.GsiFtpProviderExtension"
+            scheme="gsiftp">
+      </provider>
+      <provider
+            class="org.kalypso.simulation.grid.GsiFtpProviderExtension"
+            scheme="gridftp">
+      </provider>
+   </extension>
 
 </plugin>

@@ -45,9 +45,11 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.process.IProcess;
 
 public class TestSimpleGridProcess extends TestCase
@@ -71,11 +73,12 @@ public class TestSimpleGridProcess extends TestCase
     // final URL exeURL = new
     // File("d:\\eclipse3.4\\bin\\RMA10Sk_35").toURI().toURL();
     final URL exeURL = FileLocator.find( Activator.getDefault().getBundle(), new Path( "RMA10Sk_35" ), null );
-    final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, tmpDir, exeURL, null );
+    final FileSystemManager manager = VFSUtilities.getManager();
+    final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, manager.toFileObject( tmpDir), exeURL, null );
     process.environment().put( "OMP_NUM_THREADS", "4" );
-    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "model.2d" ), null ).toURI() );
-    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "control.r10" ), null ).toURI() );
-    ((SimpleGridProcess) process).addOutput( "A*.2d" );
+//    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "model.2d" ), null ).toURI() );
+//    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "control.r10" ), null ).toURI() );
+//    ((SimpleGridProcess) process).addOutput( new File(tmpDir, "A*.2d").toURI() );
     process.startProcess( System.out, System.err, null, null );
   }
 

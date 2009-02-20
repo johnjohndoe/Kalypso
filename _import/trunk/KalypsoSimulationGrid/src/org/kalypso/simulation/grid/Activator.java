@@ -40,57 +40,73 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.grid;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
+
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileSystemConfigBuilder;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.globus.common.CoGProperties;
+import org.globus.gsi.CertUtil;
+import org.globus.gsi.GlobusCredential;
+import org.globus.gsi.OpenSSLKey;
+import org.globus.gsi.bc.BouncyCastleOpenSSLKey;
+import org.globus.gsi.gssapi.GlobusGSSCredentialImpl;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin
+{
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.kalypso.simulation.grid";
+  // The plug-in ID
+  public static final String PLUGIN_ID = "org.kalypso.simulation.grid";
 
-	// The shared instance
-	private static Activator plugin;
+  // The shared instance
+  private static Activator plugin;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+  /**
+   * The constructor
+   */
+  public Activator( )
+  {
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+  /**
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void start( final BundleContext context ) throws Exception
+  {
+    super.start( context );
+    plugin = this;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
+  /**
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void stop( final BundleContext context ) throws Exception
+  {
+    plugin = null;
+    super.stop( context );
+  }
 
-	/**
-	 * Returns the shared instance
-	 * 
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
+  /**
+   * Returns the shared instance
+   * 
+   * @return the shared instance
+   */
+  public static Activator getDefault( )
+  {
+    return plugin;
+  }
 
 }
