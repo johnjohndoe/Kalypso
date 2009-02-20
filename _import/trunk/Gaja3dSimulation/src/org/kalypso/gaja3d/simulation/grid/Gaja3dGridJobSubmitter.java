@@ -78,6 +78,8 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.DataType;
 import org.kalypso.simulation.core.simspec.Modelspec;
 
+import uk.ac.dl.escience.vfs.util.VFSUtil;
+
 /**
  * Submits a Gaja3d job to the grid using ISimulation inputs/outputs
  * 
@@ -283,7 +285,8 @@ public class Gaja3dGridJobSubmitter
       for( final URI einput : externalInputs )
       {
         final FileObject inputFile = manager.resolveFile( getUriAsString( einput ) );
-        VFSUtilities.copy( inputFile, workingDir );
+        VFSUtil.copy( inputFile, workingDir, null, true );
+        // VFSUtilities.copy( inputFile, workingDir );
       }
 
       // start process
