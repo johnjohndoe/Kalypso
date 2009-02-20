@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * useful feature utilities used by nofdp idss
- *
+ * 
  * @author Dirk Kuch
  */
 public class FeatureUtils
@@ -87,11 +87,15 @@ public class FeatureUtils
       final String[] parts = name.split( "\\." ); //$NON-NLS-1$
 
       for( int i = 0; i < parts.length - 1; i++ )
+      {
         geoDataSetName += parts[i];
+      }
 
     }
     else
+    {
       geoDataSetName = name;
+    }
 
     return geoDataSetName;
   }
@@ -154,6 +158,14 @@ public class FeatureUtils
 
   public static void updateProperties( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
   {
+    final FeatureChange[] changes = getAsFeatureChange( feature, map );
+    final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, changes );
+
+    workspace.postCommand( chgCmd );
+  }
+
+  public static FeatureChange[] getAsFeatureChange( final Feature feature, final Map<QName, Object> map )
+  {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     final Set<Entry<QName, Object>> entrySet = map.entrySet();
@@ -165,10 +177,7 @@ public class FeatureUtils
       changes.add( change );
     }
 
-    final FeatureChange[] arrChanges = changes.toArray( new FeatureChange[] {} );
-    final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, arrChanges );
-
-    workspace.postCommand( chgCmd );
+    return changes.toArray( new FeatureChange[] {} );
   }
 
   public static void updateProperty( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
@@ -181,19 +190,23 @@ public class FeatureUtils
 
   public static void setInternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Feature linkedFeature ) throws Exception
   {
-    final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
+    final FeatureChange change = getInternalLinkedFeatureAsCommand( feature, qname, linkedFeature );
 
+    final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+    workspace.postCommand( chgCmd );
+  }
+
+  public static FeatureChange getInternalLinkedFeatureAsCommand( final Feature feature, final QName qname, final Feature linkedFeature )
+  {
+    final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
     final String linkId = linkedFeature == null ? null : linkedFeature.getId();
 
-    final FeatureChange change = new FeatureChange( feature, chgProp, linkId );
-    final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
-
-    workspace.postCommand( chgCmd );
+    return new FeatureChange( feature, chgProp, linkId );
   }
 
   /**
    * @param value
-   *            xyz.gml#featureId
+   *          xyz.gml#featureId
    */
   public static void setExternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
@@ -207,7 +220,7 @@ public class FeatureUtils
   }
 
   @Deprecated
-  /**
+  /*
    * ATTENTION: each time a new commandable workspace is returned, so you can't see that an workspace is dirty!
    */
   public static CommandableWorkspace getCommandableWorkspace( final Feature feature )
@@ -241,7 +254,9 @@ public class FeatureUtils
       final GM_Envelope envelope = feature.getEnvelope();
 
       if( base == null )
+      {
         base = envelope;
+      }
       else
       {
         base = base.getMerged( envelope );
