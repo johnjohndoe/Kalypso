@@ -53,10 +53,16 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.Selectors;
+import org.apache.commons.vfs.provider.local.LocalFile;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
@@ -80,17 +86,19 @@ public class DefaultProcess implements IProcess
 
   private final URL m_exeUrl;
 
-  public DefaultProcess( final File workingDir, final URL exeUrl, final String[] commandlineArgs )
+  public DefaultProcess( final FileObject workingDir, final URL exeUrl, final String[] commandlineArgs ) throws IOException
   {
     Assert.isNotNull( workingDir );
     Assert.isNotNull( exeUrl );
+    Assert.isTrue( workingDir instanceof LocalFile );
 
     m_exeUrl = exeUrl;
     m_commandLabel = exeUrl.toString();
-    m_command = findCommand( workingDir, exeUrl );
+    m_command = findCommand( (LocalFile) workingDir, exeUrl );
 
     final List<String> commandLine = new ArrayList<String>();
     commandLine.add( m_command.getAbsolutePath() );
+
     if( commandlineArgs != null )
     {
       for( final String arg : commandlineArgs )
@@ -99,25 +107,36 @@ public class DefaultProcess implements IProcess
 
     m_processBuilder = new ProcessBuilder( commandLine );
 
-    m_processBuilder.directory( workingDir );
+    m_processBuilder.directory();
   }
 
   /** Final because called from constructor. */
-  private final File findCommand( final File workingDir, final URL exeUrl )
+  private final File findCommand( final LocalFile workingDir, final URL exeUrl ) throws IOException
   {
+    final FileSystemManager manager = VFSUtilities.getManager();
+
     // If it is a local file we will directly call it.
-    final File localExeFile = FileUtils.toFile( exeUrl );
+    File localExeFile = FileUtils.toFile( exeUrl );
     if( localExeFile != null )
       return localExeFile;
 
     // Else we will copy the exe to the working directory
-    final String path = exeUrl.getPath();
-    final String name = FileUtilities.nameFromPath( path );
-    final File exeFile = new File( workingDir, name );
+// final String path = exeUrl.getPath();
+// final String name = FileUtilities.nameFromPath( path );
+// final File exeFile = new File( workingDir, name );
+
+    // try to convert bundle resouce url to local file url
+    final String exeUrlName = FileLocator.toFileURL( m_exeUrl ).toString();
+    final FileObject exeFile = manager.resolveFile( exeUrlName );
+    VFSUtilities.copyFileTo( exeFile, workingDir );
+
     if( exeFile.exists() )
       // TODO: better exception
       throw new IllegalArgumentException( "File with same name already exists in working directory" );
-    return exeFile;
+    final FileObject localExeFileObject = workingDir.resolveFile( exeFile.getName().getBaseName() );
+    localExeFile = localExeFileObject.getFileSystem().replicateFile( localExeFileObject, Selectors.SELECT_SELF );
+
+    return localExeFile;
   }
 
   /**

@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.process;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+
+import org.apache.commons.vfs.FileObject;
 
 /**
  * Creates a new {@link IProcess} object.
@@ -67,7 +69,7 @@ public interface IProcessFactory
    * @param commandlineArgs
    *          Command line arguments passed to the executable.
    */
-  IProcess newProcess( final File workingDir, URL executeable, final String[] commandlineArgs );
+  IProcess newProcess( final FileObject workingDir, URL executeable, final String[] commandlineArgs ) throws IOException;
 
 
 }
