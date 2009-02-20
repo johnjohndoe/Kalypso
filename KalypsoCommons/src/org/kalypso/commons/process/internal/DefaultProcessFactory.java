@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.process.internal;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
 
@@ -57,7 +58,7 @@ public class DefaultProcessFactory implements IProcessFactory
    * @see org.kalypso.commons.process.IProcessFactory#newProcess(java.io.File, java.net.URL, java.lang.String[])
    */
   @Override
-  public IProcess newProcess( final File workingDir, final URL exeUrl, final String[] commandlineArgs )
+  public IProcess newProcess( final FileObject workingDir, final URL exeUrl, final String[] commandlineArgs ) throws IOException
   {
     return new DefaultProcess( workingDir, exeUrl, commandlineArgs );
   }
