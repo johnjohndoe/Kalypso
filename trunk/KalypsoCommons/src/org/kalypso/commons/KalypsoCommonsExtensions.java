@@ -29,11 +29,12 @@
  */
 package org.kalypso.commons;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -45,6 +46,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.IProcessFactory;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
  * Extensions of <code>org.kalypso.commons</code>.
@@ -108,7 +110,7 @@ public class KalypsoCommonsExtensions
    *          The extension-id of the {@link IProcessFactory} that should be used in order to create the new process.
    * @see IProcessFactory#newProcess(File, String, String[])
    */
-  public static synchronized IProcess createProcess( final String factoryId, final File workingDir, final URL executeable, final String[] commandlineArgs ) throws CoreException
+  public static synchronized IProcess createProcess( final String factoryId, final FileObject workingDir, final URL executeable, final String[] commandlineArgs ) throws CoreException
   {
     Assert.isNotNull( factoryId );
 
@@ -119,7 +121,15 @@ public class KalypsoCommonsExtensions
       throw new CoreException( status );
     }
 
-    return factory.newProcess( workingDir, executeable, commandlineArgs );
+    try
+    {
+      return factory.newProcess( workingDir, executeable, commandlineArgs );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Problem creating process for executable %s in working dir %s.", executeable.toString(), workingDir.toString() );
+      throw new CoreException( status );
+    }
   }
 
   private static IProcessFactory getProcessFactory( final String id ) throws CoreException
