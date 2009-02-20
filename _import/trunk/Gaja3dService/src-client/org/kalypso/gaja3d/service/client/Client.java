@@ -38,10 +38,8 @@ import org.kalypso.gaja3d.service.factory.stubs.Gaja3DResourceFactoryPortType;
 import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.stubs.Boundary;
-import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateTinParametersType;
-import org.kalypso.gaja3d.service.stubs.DemGrid;
 import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesParametersType;
 import org.kalypso.gaja3d.service.stubs.Gaja3DPortType;
@@ -197,32 +195,32 @@ public class Client {
 		/*
 		 * remove comment when skipping breakline detection
 		 */
-		try {
-			final DemGrid demGrid = new DemGrid();
-			demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_DEM_GRID));
-			final URI demGridHref = new URI(
-					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
-			// final URI demGridHref = new URI(Client.class.getResource(
-			// DEMGRID_FILENAME).toURI().toString());
-			demGrid.setHref(demGridHref);
-			execute_createTin.setDemGrid(demGrid);
-
-			final Breaklines breaklines = new Breaklines();
-			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
-					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-			// final URI breaklinesHref = new URI(Client.class.getResource(
-			// BREAKLINES_FILENAME).toURI().toString());
-			final URI breaklinesHref = new URI(
-					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines.zip");
-			breaklines.setHref(breaklinesHref);
-			execute_createTin.setBreaklines(breaklines);
-		} catch (final MalformedURIException e) {
-			e.printStackTrace();
-		}
-		// catch (final URISyntaxException e) {
+		// try {
+		// final DemGrid demGrid = new DemGrid();
+		// demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
+		// Gaja3dQNames.RP_DEM_GRID));
+		// final URI demGridHref = new URI(
+		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
+		// // final URI demGridHref = new URI(Client.class.getResource(
+		// // DEMGRID_FILENAME).toURI().toString());
+		// demGrid.setHref(demGridHref);
+		// execute_createTin.setDemGrid(demGrid);
+		//
+		// final Breaklines breaklines = new Breaklines();
+		// breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
+		// new Identifier(), Gaja3dQNames.RP_BREAKLINES));
+		// // final URI breaklinesHref = new URI(Client.class.getResource(
+		// // BREAKLINES_FILENAME).toURI().toString());
+		// final URI breaklinesHref = new URI(
+		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines.zip");
+		// breaklines.setHref(breaklinesHref);
+		// execute_createTin.setBreaklines(breaklines);
+		// } catch (final MalformedURIException e) {
 		// e.printStackTrace();
 		// }
+		// // catch (final URISyntaxException e) {
+		// // e.printStackTrace();
+		// // }
 		final MinAngle minAngle = new MinAngle();
 		minAngle.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
 				Gaja3dQNames.RP_MIN_ANGLE));
