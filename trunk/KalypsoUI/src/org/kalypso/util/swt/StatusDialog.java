@@ -43,10 +43,7 @@ package org.kalypso.util.swt;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -68,39 +65,12 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
  * 
  * @author Gernot Belger
  */
-public class StatusDialog extends MessageDialog
+public class StatusDialog extends AbstractStatusDialog
 {
-  private final IStatus m_status;
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
-    super( parentShell, dialogTitle, null, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), new String[] { IDialogConstants.OK_LABEL }, 0 );
-
-    m_status = status;
-  }
-
-  private static int toMessageType( final int severity )
-  {
-    switch( severity )
-    {
-      case IStatus.OK:
-        return MessageDialog.NONE;
-
-      case IStatus.INFO:
-        return MessageDialog.INFORMATION;
-
-      case IStatus.WARNING:
-        return MessageDialog.WARNING;
-
-      case IStatus.ERROR:
-        return MessageDialog.ERROR;
-
-      case IStatus.CANCEL:
-        return MessageDialog.WARNING;
-
-      default:
-        return MessageDialog.NONE;
-    }
+    super( parentShell, status, dialogTitle );
   }
 
   /**
@@ -116,7 +86,7 @@ public class StatusDialog extends MessageDialog
     // TODO show other properties:
     // - time
 
-    final Throwable exception = m_status.getException();
+    final Throwable exception = getStatus().getException();
     if( exception != null )
     {
       final StringWriter sw = new StringWriter();
@@ -141,7 +111,7 @@ public class StatusDialog extends MessageDialog
       stackText.setEnabled( true );
     }
 
-    final IStatus[] children = m_status.getChildren();
+    final IStatus[] children = getStatus().getChildren();
     if( children != null && children.length > 0 )
     {
       final DefaultTableViewer tableViewer = new DefaultTableViewer( composite, SWT.BORDER | SWT.FULL_SELECTION );
@@ -170,15 +140,6 @@ public class StatusDialog extends MessageDialog
     }
 
     return composite;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  protected void createButtonsForButtonBar( final Composite parent )
-  {
-    createButton( parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true );
   }
 
 }
