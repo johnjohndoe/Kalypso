@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.apache.commons.vfs.provider.gsiftp,
- org.kalypso.simulation.grid
+ org.kalypso.simulation.grid,
+ uk.ac.dl.escience.vfs.util
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-ClassPath: .

@@ -240,7 +240,7 @@ public class GsiFtpFileObject extends AbstractFileObject
   /**
    * Fetches the info for this file.
    */
-  private void getInfo( final boolean flush ) throws IOException
+  public void getInfo( final boolean flush ) throws IOException
   {
     final GsiFtpFileObject parent = (GsiFtpFileObject) getParent();
     final FileInfo newFileInfo;

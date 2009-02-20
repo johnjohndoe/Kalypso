@@ -10,7 +10,7 @@
       </factory>
    </extension>
    <extension
-         point="org.apache.commons.vfs.provider">
+         point="org.apache.commons.vfs.provider">         
       <provider
             class="org.kalypso.simulation.grid.GsiFtpProviderExtension"
             scheme="gsiftp">
@@ -20,5 +20,4 @@
             scheme="gridftp">
       </provider>
    </extension>
-
 </plugin>
