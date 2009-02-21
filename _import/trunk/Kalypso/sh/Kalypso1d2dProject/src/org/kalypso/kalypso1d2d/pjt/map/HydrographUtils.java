@@ -139,7 +139,7 @@ public class HydrographUtils
     if( resultMeta != null )
       calcUnitResult.removeChild( resultMeta );
 
-    ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.1") + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.2") ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    ResultMeta1d2dHelper.addDocument( calcUnitResult, Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.0"), Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.1") + calcUnitResult.getName(), DOCUMENTTYPE.hydrograph, new Path( "hydrograph/hydrograph.gml" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return newHydrograph;
   }
@@ -202,12 +202,12 @@ public class HydrographUtils
   public static Feature createNewHydrograph( ICalcUnitResultMeta calcUnitResult, final IFolder scenarioFolder ) throws CoreException, InvocationTargetException, GmlSerializeException, IOException
   {
     /* get a path */
-    final IPath docPath = calcUnitResult.getFullPath().append( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.3") ); //$NON-NLS-1$
+    final IPath docPath = calcUnitResult.getFullPath().append( "hydrograph" ); //$NON-NLS-1$
     final IFolder calcUnitFolder = scenarioFolder.getFolder( docPath );
     if( !calcUnitFolder.exists() )
       FolderUtilities.mkdirs( calcUnitFolder );
 
-    final IFile gmlResultFile = calcUnitFolder.getFile( Messages.getString("org.kalypso.kalypso1d2d.pjt.map.HydrographUtils.4") ); //$NON-NLS-1$
+    final IFile gmlResultFile = calcUnitFolder.getFile( "hydrograph.gml") ; //$NON-NLS-1$
     final URL url = ResourceUtilities.createURL( gmlResultFile );
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IHydrographCollection.QNAME, url, null );
