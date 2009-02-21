@@ -985,37 +985,12 @@
 		<image commandId="org.kalypso.ogc.gml.map.RedoCommand" disabledIcon="icons/map/redo_edit_disabled.gif" icon="icons/map/redo_edit.gif" />
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
-		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler" commandId="org.kalypso.ogc.gml.map.ZoomOutCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler" commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler" commandId="org.kalypso.ogc.gml.map.MoveDownCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MoveUpHandler" commandId="org.kalypso.ogc.gml.map.MoveUpCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler" commandId="org.kalypso.ogc.gml.map.MoveLeftCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MoveRightHandler" commandId="org.kalypso.ogc.gml.map.MoveRightCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext">
-				</reference>
-			</enabledWhen>
-		</handler>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler" commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler" commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler" commandId="org.kalypso.ogc.gml.map.MoveDownCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.MoveUpHandler" commandId="org.kalypso.ogc.gml.map.MoveUpCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler" commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.MoveRightHandler" commandId="org.kalypso.ogc.gml.map.MoveRightCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureHandler" commandId="org.kalypso.gis.newFeature.command">
 			<enabledWhen>
 				<and>
@@ -1036,41 +1011,15 @@
 				</and>
 			</enabledWhen>
 		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature" commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext">
-				</reference>
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot">
-			<enabledWhen>
-				<reference definitionId="mapContext">
-				</reference>
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.FullExtentHandler" commandId="org.kalypso.ogc.gml.map.FullExtentCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext">
-				</reference>
-			</enabledWhen>
-		</handler>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature" commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.FullExtentHandler" commandId="org.kalypso.ogc.gml.map.FullExtentCommand"/>
 		<handler commandId="org.kalypso.ogc.gml.map.ThemeInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ui.map.selectNextFeatureCommand">
 			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
@@ -1078,9 +1027,6 @@
 				<parameter name="rotate" value="false" />
 				<parameter name="image" value="icons/util/forward_nav.gif" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ui.map.selectPreviousFeatureCommand">
 			<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
@@ -1088,40 +1034,19 @@
 				<parameter name="rotate" value="false" />
 				<parameter name="image" value="icons/util/backward_nav.gif" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler" commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryPrevHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryNextHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
+		<handler class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler" commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryPrevHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryPrevCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.ExtentHistoryNextHandler" commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand"/>
 		<handler commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.ZoomInByRectWidget" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.PanToCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.PanToWidget" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.EditRelationsCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -1138,28 +1063,18 @@
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget">
-				</parameter>
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget"/>
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.MeasureMapCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.MeasureMapWidget" />
 			</class>
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -1174,26 +1089,10 @@
 				</and>
 			</enabledWhen>
 		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.SaveThemeHandler" commandId="org.kalypso.ogc.gml.map.SaveThemeCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.UndoHandler" commandId="org.kalypso.ogc.gml.map.UndoCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.RedoHandler" commandId="org.kalypso.ogc.gml.map.RedoCommand">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
-		<handler class="org.kalypso.ogc.gml.map.handlers.PrintMapHandler" commandId="org.eclipse.ui.file.print">
-			<enabledWhen>
-				<reference definitionId="mapContext" />
-			</enabledWhen>
-		</handler>
+		<handler class="org.kalypso.ogc.gml.map.handlers.SaveThemeHandler" commandId="org.kalypso.ogc.gml.map.SaveThemeCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.UndoHandler" commandId="org.kalypso.ogc.gml.map.UndoCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.RedoHandler" commandId="org.kalypso.ogc.gml.map.RedoCommand"/>
+		<handler class="org.kalypso.ogc.gml.map.handlers.PrintMapHandler" commandId="org.eclipse.ui.file.print"/>
 	</extension>
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ogc.gml.map.GISEditorIsActive">
