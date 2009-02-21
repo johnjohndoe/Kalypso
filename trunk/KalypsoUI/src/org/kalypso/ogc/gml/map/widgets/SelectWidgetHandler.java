@@ -262,6 +262,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       else
         element.setChecked( false );
     }
-
   }
+ 
 }
