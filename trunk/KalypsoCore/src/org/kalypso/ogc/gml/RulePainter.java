@@ -84,7 +84,7 @@ public class RulePainter
    * check for legend graphics and point symbolizers.
    * 
    * @param rule
-   *            The rule.
+   *          The rule.
    * @return The size an image should have, for showing the complete symbol without scaling. It can only check for
    *         legend graphics and point symbolizers.
    */
@@ -114,19 +114,9 @@ public class RulePainter
           if( graphic != null )
           {
             final Rectangle size = getSize( graphic );
-
-            if( maxWidth < size.width )
-            {
-              maxWidth = size.width;
-            }
-
-            if( maxHeight < size.height )
-            {
-              maxHeight = size.height;
-            }
+            maxWidth = Math.max( maxWidth, size.width );
+            maxHeight = Math.max( maxHeight, size.height );
           }
-
-          continue;
         }
 
         // TODO How to find out the size from the other symbolizers?
@@ -145,7 +135,7 @@ public class RulePainter
    * This function returns the original size of the image inside this graphic (not the destination size).
    * 
    * @param graphic
-   *            The graphic, which normally contains an image or some marks.
+   *          The graphic, which normally contains an image or some marks.
    * @return The original size of the image.
    */
   private static Rectangle getSize( final Graphic graphic )
@@ -160,41 +150,30 @@ public class RulePainter
       {
         final ExternalGraphic externalGraphic = (ExternalGraphic) o;
         final ParameterValueType sizeParameter = graphic.getSizeParameter();
-        final Object[] components = sizeParameter.getComponents();
-       
+        final Object[] components = sizeParameter == null ? null : sizeParameter.getComponents();
+
+        // TODO: check: we now force the size of the image, so creating it should not be necessary any more?!
         final BufferedImage asImage;
-        if( components.length > 0 )
+        if( components != null && components.length > 0 )
         {
           final Integer size = Integer.valueOf( components[0].toString() );
           asImage = externalGraphic.getAsImage( size, size );
         }
         else
         {
+          // TODO: check: why 10? if no size is given, probably the original image size should be taken?
           asImage = externalGraphic.getAsImage( 10, 10 );
         }
 
-        if( asImage == null )
+        if( asImage != null )
         {
-          continue;
+          maxWidth = Math.max( maxWidth, asImage.getWidth() );
+          maxHeight = Math.max( maxHeight, asImage.getWidth() );
         }
-
-        final int width = asImage.getWidth();
-        final int height = asImage.getWidth();
-
-        if( maxWidth < width )
-        {
-          maxWidth = width;
-        }
-
-        if( maxHeight < height )
-        {
-          maxHeight = height;
-        }
-
-        continue;
       }
 
       /* Ignore the marks. */
+      // TODO: why?
       // Mark mark = (Mark) o;
     }
 
