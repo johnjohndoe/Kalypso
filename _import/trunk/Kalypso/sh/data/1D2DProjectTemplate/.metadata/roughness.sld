@@ -154,12 +154,12 @@
 				</Rule>
 				<Rule>
 					<Name>RoughnessCls117812308790520</Name>
-					<Title>Sohlsch�ttung</Title>
-					<Abstract>Sohlsch�ttung</Abstract>
+					<Title>Sohlschüttung</Title>
+					<Abstract>Sohlschüttung</Abstract>
 					<ogc:Filter>
 						<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 							<ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-							<ogc:Literal>Sohlsch�ttung</ogc:Literal>
+							<ogc:Literal>Sohlschüttung</ogc:Literal>
 						</ogc:PropertyIsLike>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
@@ -212,12 +212,12 @@
 				</Rule>
 				<Rule>
 					<Name>RoughnessCls117812308631332</Name>
-					<Title>B�schung</Title>
-					<Abstract>B�schung</Abstract>
+					<Title>Böschung</Title>
+					<Abstract>Böschung</Abstract>
 					<ogc:Filter>
 						<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 							<ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-							<ogc:Literal>B�schung</ogc:Literal>
+							<ogc:Literal>Böschung</ogc:Literal>
 						</ogc:PropertyIsLike>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
@@ -241,12 +241,12 @@
 				</Rule>
 				<Rule>
 					<Name>RoughnessCls117812308554222</Name>
-					<Title>B�schung_rauh</Title>
-					<Abstract>B�schung_rauh</Abstract>
+					<Title>Böschung_rauh</Title>
+					<Abstract>Böschung_rauh</Abstract>
 					<ogc:Filter>
 						<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 							<ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-							<ogc:Literal>B�schung_rauh</ogc:Literal>
+							<ogc:Literal>Böschung_rauh</ogc:Literal>
 						</ogc:PropertyIsLike>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
@@ -270,12 +270,12 @@
 				</Rule>
 				<Rule>
 					<Name>RoughnessCls117812308473018</Name>
-					<Title>B�schungssicherung</Title>
-					<Abstract>B�schungssicherung</Abstract>
+					<Title>Böschungssicherung</Title>
+					<Abstract>Böschungssicherung</Abstract>
 					<ogc:Filter>
 						<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 							<ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-							<ogc:Literal>B�schungssicherung</ogc:Literal>
+							<ogc:Literal>Böschungssicherung</ogc:Literal>
 						</ogc:PropertyIsLike>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
@@ -357,12 +357,12 @@
 				</Rule>
 				<Rule>
 					<Name>RoughnessCls117812308185619</Name>
-					<Title>Vorland R�hricht ohne Bewuchs</Title>
-					<Abstract>Vorland R�hricht ohne Bewuchs</Abstract>
+					<Title>Vorland Röhricht ohne Bewuchs</Title>
+					<Abstract>Vorland Röhricht ohne Bewuchs</Abstract>
 					<ogc:Filter>
 						<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 							<ogc:PropertyName>roughnessStyle</ogc:PropertyName>
-							<ogc:Literal>Vorland R�hricht ohne Bewuchs</ogc:Literal>
+							<ogc:Literal>Vorland Röhricht ohne Bewuchs</ogc:Literal>
 						</ogc:PropertyIsLike>
 					</ogc:Filter>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
