@@ -400,7 +400,7 @@ public class ZipUtilities
     final InputStream zipStream = null;
     try
     {
-      /* Ensur that the container exists */
+      /* Ensure that the container exists */
       if( !targetContainer.exists() )
       {
         if( targetContainer instanceof IFolder )
