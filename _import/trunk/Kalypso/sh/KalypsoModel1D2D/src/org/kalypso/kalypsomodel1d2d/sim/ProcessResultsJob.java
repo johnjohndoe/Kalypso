@@ -467,12 +467,12 @@ public class ProcessResultsJob extends Job
 
       case DIFFERENCE:
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "-" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Differenz" ) ); //$NON-NLS-1$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.111") ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
       case TERRAIN:
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geländehöhe" ) ); //$NON-NLS-1$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.112") ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
     }
 
