@@ -186,7 +186,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/01_add_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="1d-Element erzeugen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -205,7 +205,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/02_add_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="2d-Elemente erzeugen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -224,7 +224,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/03_add_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kontinuitätslinie erzeugen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContinuityLineWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -243,7 +243,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/13_flowrelation_add_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingung zuordnen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBCFlowrelationWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -262,7 +262,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/30_add_1D2DTransition.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kopplung zuordnen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -281,7 +281,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/01_add_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="1D-Einmündung zuordnen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionElementWidget.tooltip"/>
             </class>
 		 </handler>
 		 <!--*** DeleteElement handlers ***-->
@@ -301,7 +301,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/04_cut_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="2d-Elemente markieren und entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -320,7 +320,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/05_cut_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="1d-Elemente markieren und entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -339,7 +339,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/06_cut_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kontinuitätslinien markieren und entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -358,7 +358,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/14_flowrelation_cut_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingungen markieren und löschen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteBCWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -377,7 +377,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/31_delete_1D2DTransition.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kopplung markieren und entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteTransitionElementWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -396,7 +396,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/cut.png"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Einmündung markieren und entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.DeleteJunctionElementWidget.tooltip"/>
             </class>
 		 </handler>
 
@@ -420,7 +420,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="Zugeordnete Parameter löschen">
+               value="%org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteParameter1DWidget.tooltip">
          </parameter>
       </class>
    </handler>
@@ -447,7 +447,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/07_move_FE_knot.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Knoten bewegen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.tooltip"/>
             </class>
 		 </handler>
 		 
@@ -465,7 +465,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/33_refine_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Elemente verfeinern"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget.tooltip"/>
             </class>
 		 </handler>
 		 
@@ -485,7 +485,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingungen bearbeiten"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditBCWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -504,7 +504,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/32_edit_1D2DTransition.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kopplung bearbeiten"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.EditTransitionElementWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -523,7 +523,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_show.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie darstellen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.result.ShowHydrographWidget.tooltip"/>
             </class>
 		 </handler>
    <handler
@@ -545,7 +545,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="Zugeordnete Parameter bearbeiten">
+               value="%org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditParameter1dWidget.tooltip">
          </parameter>
       </class>
    </handler>
@@ -565,7 +565,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_delete.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie entfernen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.result.DeleteHydrographWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -584,7 +584,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_create.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie erstellen"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler
@@ -603,7 +603,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/16_select_profile_enable.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Profile selektieren"/>
+                    value="%org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget.tooltip"/>
 	       	</class>
 		 </handler>
 		 <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties">
@@ -621,7 +621,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/editPolygon.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Rauheitsklasse für selektiertes Polygon bearbeiten"/>
+                    value="%org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditRoughnessParametersOfPolygonWidget.tooltip"/>
             </class>
 		 </handler>
 		 <handler commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
@@ -644,7 +644,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="Neues Polygon zeichnen">
+               value="%org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.CreatePolygonWidgetWrapper.tooltip">
          </parameter>
       </class>
    </handler>
@@ -668,7 +668,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="Polygone löschen">
+               value="%org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.DeletePolygonWidgetWrapper.tooltip">
          </parameter>
       </class>
    </handler>
@@ -692,7 +692,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-               value="Polygon bearbeiten">
+               value="%org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditPolygonWidgetWrapper.tooltip">
          </parameter>
       </class>
    </handler>
@@ -702,31 +702,31 @@
 	  <command
          categoryId="org.kalypso.ogc.gml.map.category"
          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
-         name="Element erzeugen"/>
+         name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.name"/>
 	  <command
          categoryId="org.kalypso.ogc.gml.map.category"
          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
-         name="Element entfernen"/>
+         name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.name"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
-            name="Element editieren"/>
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.name"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
-            name="Elemente verfeinern"/>
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.name"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties"
-            name="Elementgeometrie editieren"/>
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties.name"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile"
-            name="Profil selektieren"/>
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile.name"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
-            name="Polynomfunktionsparameter einem 1D Knoten hinzufügen">
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.name">
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -751,7 +751,7 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
-            name="Kanalprofilparameter einem 1D Knoten hinzufügen">
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation.name">
           <!--
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -765,7 +765,7 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation"
-            name="Wehr hinzufügen">
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.name">
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -777,7 +777,7 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation"
-            name="Brücke hinzufen">
+            name="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation.name">
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -794,44 +794,44 @@
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
                  icon="icons/elcl16/add.gif"
-                 label="Element erzeugen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.label"
                  style="radio"
-                 tooltip="Ein neues Element erzeugen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
                  icon="icons/elcl16/cut.png"
-                 label="Element entfernen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.label"
                  style="radio"
-                 tooltip="Ein Element entfernen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
                  icon="icons/elcl16/edit.gif"
-                 label="Element editieren"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.label"
                  style="radio"
-                 tooltip="Ein Element editieren">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties"
                  icon="icons/elcl16/editPolygon.gif"
-                 label="Elementgeometrie editieren"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties.label"
                  style="radio"
-                 tooltip="Die Geometrie des Elements editieren">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile"
                  icon="icons/elcl16/16_select_profile_enable.gif"
-                 label="Profil selektieren"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile.label"
                  style="radio"
-                 tooltip="Profil selektieren und in Karte anzeigen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations"
                  icon="icons/elcl16/startCalulation.gif"
-                 label="Paremeter berechnen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations.label"
                  style="radio"
-                 tooltip="Die Parameter neu berechnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CalculateFlowRelations.tooltip">
               <visibleWhen>
                  <reference
                        definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
@@ -844,9 +844,9 @@
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
                  icon="icons/elcl16/edit.gif"
-                 label="anhand Linie"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.label"
                  style="radio"
-                 tooltip="Ein Element verfeinern">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.tooltip">
            </command>
         </menuContribution>
         <menuContribution
@@ -854,30 +854,30 @@
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
                  icon="icons/elcl16/09_add_parameter_teschke.gif"
-                 label="Polynomfunktionsparameter einem 1D Knoten hinzufügen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.label"
                  style="radio"
-                 tooltip="Polynomfunktion zuordnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
                  icon="icons/elcl16/10_add_parameter_king.gif"
-                 label="Kanalprofilparameter einem 1D Knoten hinzufügen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation.label"
                  style="radio"
-                 tooltip="Kanalprofilparameter zuordnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation"
                  icon="icons/elcl16/08_add_weir.gif"
-                 label="Wehr hinzufügen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.label"
                  style="radio"
-                 tooltip="Einem 1D-Element ein Wehr zuordnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation.tooltip">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation"
                  icon="icons/elcl16/08a_add_bridge.gif"
-                 label="Brücke hinzufügen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation.label"
                  style="radio"
-                 tooltip="Einem 1D-Element eine Brücke zuordnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation.tooltip">
            </command>
         </menuContribution>
         <menuContribution
@@ -886,9 +886,9 @@
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
                  icon="icons/elcl16/33_refine_2D.gif"
                  id="org.kalypso.ui.view.mapView.refine2DMenu"
-                 label="Elemente verfeinern"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.label"
                  style="pulldown"
-                 tooltip="Verfeinerungsoptionen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement.tooltip">
               <visibleWhen>
                  <reference
                        definitionId="org.kalypso.ui.views.mapView.expressions.refine">
@@ -902,9 +902,9 @@
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
                  icon="icons/elcl16/09_add_parameter_teschke.gif"
                  id="org.kalypso.ui.view.mapView.createParameterMenu"
-                 label="Polynomfunktionsparameter einem 1D Knoten hinzufügen"
+                 label="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.label"
                  style="pulldown"
-                 tooltip="Polynomfunktion zuordnen">
+                 tooltip="%org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation.tooltip">
               <visibleWhen>
                  <reference
                        definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
@@ -948,7 +948,7 @@
         point="org.kalypso.deegree.functionExpression">
      <function
            class="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression"
-           label="Border-Edges"
+           label="%org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression.label"
            name="org.kalypso.kalypsomodel1d2d.ui.map.function.BorderEdgeFunctionExpression">
      </function>
   </extension>
@@ -991,12 +991,12 @@
      <command
            categoryId="org.kalypso.chart.ui.commands.category"
            id="org.kalypso.model1d2d.removeBuildingParameter"
-           name="Parameter editieren">
+           name="%org.kalypso.model1d2d.removeBuildingParameter.name">
      </command>
      <command
            categoryId="org.kalypso.chart.ui.commands.category"
            id="org.kalypso.model1d2d.saveBuildingParameter"
-           name="geänderter Parameter übernehmen">
+           name="%org.kalypso.model1d2d.saveBuildingParameter.name">
      </command>
   </extension>
   <extension
