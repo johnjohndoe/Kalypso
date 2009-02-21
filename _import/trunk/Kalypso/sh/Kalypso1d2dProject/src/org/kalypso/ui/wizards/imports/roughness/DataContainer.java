@@ -32,9 +32,9 @@ public class DataContainer
 
   private String m_coordinateSystem;
 
-  private LinkedHashMap<String, String> m_roughnessStaticCollectionMap;
+  private final LinkedHashMap<String, String> m_roughnessStaticCollectionMap;
 
-  private LinkedHashMap<String, String> m_roughnessShapeStaticRelationMap;
+  private final LinkedHashMap<String, String> m_roughnessShapeStaticRelationMap;
 
   private String m_roughnessDatabaseLocation;
 
@@ -59,7 +59,7 @@ public class DataContainer
     m_roughnessShapeStaticRelationMap = new LinkedHashMap<String, String>();
   }
 
-  public final void setInputFile( String inputFile )
+  public final void setInputFile( final String inputFile )
   {
     this.m_inputFile = inputFile;
   }
@@ -101,12 +101,12 @@ public class DataContainer
     return m_isBasicLayer;
   }
 
-  public final void setShapeProperty( String shapeProperty )
+  public final void setShapeProperty( final String shapeProperty )
   {
     this.m_shapeProperty = shapeProperty;
   }
 
-  public final void setCoordinateSystem( String coordinateSystem )
+  public final void setCoordinateSystem( final String coordinateSystem )
   {
     this.m_coordinateSystem = coordinateSystem;
   }
@@ -122,7 +122,7 @@ public class DataContainer
     {
       return new URL( "file:" + m_inputFile ); //$NON-NLS-1$
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
     }
@@ -134,7 +134,7 @@ public class DataContainer
     return m_shapeProperty;
   }
 
-  public String getCoordinateSystem( boolean getDefaultIfNull )
+  public String getCoordinateSystem( final boolean getDefaultIfNull )
   {
     if( m_coordinateSystem == null && getDefaultIfNull )
       return m_defaultCoordinateSystem;
@@ -154,7 +154,7 @@ public class DataContainer
 
   public final IRoughnessPolygonCollection getRoughnessPolygonCollection( )
   {
-    IRoughnessPolygonCollection roughnessPolygonCollection = m_model.getRoughnessPolygonCollection( getLayer() );
+    final IRoughnessPolygonCollection roughnessPolygonCollection = m_model.getRoughnessPolygonCollection( getLayer() );
     return roughnessPolygonCollection;
   }
 
@@ -176,7 +176,7 @@ public class DataContainer
     return new URL( "file:" + m_AbsolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public final void setRoughnessDatabaseLocation( String dbLocation, final IRoughnessClsCollection roughnessClsCollection ) throws Exception
+  public final void setRoughnessDatabaseLocation( final String dbLocation, final IRoughnessClsCollection roughnessClsCollection ) throws Exception
   {
     m_roughnessDatabaseLocation = dbLocation;
 
@@ -192,7 +192,7 @@ public class DataContainer
     return m_projectBaseFolder;
   }
 
-  public final void setProjectBaseFolder( String projectBaseFolder )
+  public final void setProjectBaseFolder( final String projectBaseFolder )
   {
     m_projectBaseFolder = projectBaseFolder;
   }
@@ -203,17 +203,18 @@ public class DataContainer
   }
 
   @SuppressWarnings("unchecked")
-  public void loadUserSelection( String userSelectionFile )
+  public void loadUserSelection( final String userSelectionFile )
   {
     try
     {
+      // TODO: use dialog settings stuff instead!
       m_userSelectionFile = m_AbsolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile; //$NON-NLS-1$ //$NON-NLS-2$
-      File file = new File( m_userSelectionFile );
+      final File file = new File( m_userSelectionFile );
       if( file.exists() && file.isFile() && file.length() > 0 )
       {
-        FileInputStream fileStream = new FileInputStream( file );
-        ObjectInputStream objectStream = new ObjectInputStream( fileStream );
-        Object object = objectStream.readObject();
+        final FileInputStream fileStream = new FileInputStream( file );
+        final ObjectInputStream objectStream = new ObjectInputStream( fileStream );
+        final Object object = objectStream.readObject();
         if( object instanceof LinkedHashMap )
           m_userSelectionMap = (LinkedHashMap<String, String>) object;
       }
@@ -223,7 +224,7 @@ public class DataContainer
         m_userSelectionMap = new LinkedHashMap<String, String>();
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_userSelectionMap = new LinkedHashMap<String, String>();
       e.printStackTrace();
@@ -234,11 +235,11 @@ public class DataContainer
   {
     try
     {
-      FileOutputStream fileStream = new FileOutputStream( m_userSelectionFile );
-      ObjectOutputStream objectStream = new ObjectOutputStream( fileStream );
+      final FileOutputStream fileStream = new FileOutputStream( m_userSelectionFile );
+      final ObjectOutputStream objectStream = new ObjectOutputStream( fileStream );
       objectStream.writeObject( m_userSelectionMap );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

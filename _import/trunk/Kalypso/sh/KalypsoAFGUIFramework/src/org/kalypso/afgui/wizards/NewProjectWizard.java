@@ -212,36 +212,44 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final URL zipURl = m_templateProjectPage.getSelectedProject().getData();
     final IProject project = getNewProject();
-    final String newName = project.getName();
+    // final String newName = project.getName();
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( project.getWorkspace().getRoot() )
     {
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 50 );
+        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 80 );
         try
         {
-          /* Unpack project from template */
-          ZipUtilities.unzip( zipURl, project, progress.newChild( 40 ) );
-          ProgressUtilities.worked( progress, 0 );
+          // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
+          // the project description will not be up-to-date in time, resulting in missing natures.
+          project.close( progress.newChild( 10 ) );
 
+          /* Unpack project from template */
+          ZipUtilities.unzip( zipURl, project.getLocation().toFile() );
+          ProgressUtilities.worked( progress, 40 );
+          project.open( progress.newChild( 10 ) );
+          // IMPORTANT: As the project was already open before, we need to refresh here, else
+          // not all resources are up-to-date
+          project.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 10 ) );
+
+          /* validate and configure all natures of this project */
           final IProjectDescription description = project.getDescription();
 
-          /* configure all natures of this project */
           final String[] natureIds = description.getNatureIds();
+          final IStatus validateNatureSetStatus = project.getWorkspace().validateNatureSet( natureIds );
+          if( !validateNatureSetStatus.isOK() )
+            throw new CoreException( validateNatureSetStatus );
 
-          progress.setWorkRemaining( natureIds.length + 5 );
+          progress.setWorkRemaining( natureIds.length );
 
           for( final String natureId : natureIds )
           {
             final IProjectNature nature = project.getNature( natureId );
             nature.configure();
-
             ProgressUtilities.worked( progress, 1 );
           }
-
-          ProgressUtilities.worked( progress, 5 );
 
           /* Also activate new project */
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
@@ -252,10 +260,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
           if( m_activateScenario )
             KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
-
-          project.refreshLocal( IResource.DEPTH_ZERO, monitor );
-          description.setName( newName );
-          project.move( description, false, monitor );
         }
         catch( final CoreException t )
         {
