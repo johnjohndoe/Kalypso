@@ -46,7 +46,10 @@ de_DE</programArgs>
    <intro introId="org.kalypso.model.product.introID"/>
 
    <vm>
-      <windows>J2SE-1.5</windows>
+      <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
+      <macos>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
+      <solaris>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</solaris>
+      <windows>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
    </vm>
 
    <plugins>
@@ -78,13 +81,13 @@ de_DE</programArgs>
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filebuffers"/>
       <plugin id="org.eclipse.core.filesystem"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.net"/>
-      <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.net.win32.x86"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
-      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.core.resources.win32.x86"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
@@ -101,7 +104,7 @@ de_DE</programArgs>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security.win32.x86"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.help.appserver"/>
       <plugin id="org.eclipse.help.base"/>
@@ -124,7 +127,7 @@ de_DE</programArgs>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.search"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86"/>
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.team.ui"/>
       <plugin id="org.eclipse.text"/>
@@ -135,17 +138,18 @@ de_DE</programArgs>
       <plugin id="org.eclipse.ui.externaltools"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.ide.application"/>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.views.properties.tabbed"/>
-      <plugin id="org.eclipse.ui.win32" fragment="true"/>
+      <plugin id="org.eclipse.ui.win32"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.update.configurator"/>
       <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.win32" fragment="true"/>
+      <plugin id="org.eclipse.update.core.win32"/>
       <plugin id="org.eclipse.update.ui"/>
       <plugin id="org.eclipse.wst.common.uriresolver"/>
       <plugin id="org.junit"/>
@@ -191,6 +195,8 @@ de_DE</programArgs>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.risk"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
+      <plugin id="org.kalypso.service.ogc"/>
+      <plugin id="org.kalypso.service.wps"/>
       <plugin id="org.kalypso.simulation.core"/>
       <plugin id="org.kalypso.simulation.ui"/>
       <plugin id="org.kalypso.ui"/>
