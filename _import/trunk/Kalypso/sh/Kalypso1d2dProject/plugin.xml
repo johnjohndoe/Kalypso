@@ -35,7 +35,8 @@
        point="org.eclipse.ui.newWizards">
 		<category
             id="org.kalypso.wizard.Create1d2dpjt"
-            name="1D-2D Modell"
+            name="%org.kalypso.wizard.Create1d2dpjt.name"
+			description="%org.kalypso.wizard.Create1d2dpjt.description"
             parentCategory="org.kalypso.ui.newwizards.kalypso"/>
 		<wizard
         category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
@@ -44,10 +45,10 @@
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/kalypso1d2d.png"
         id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"
-        name="Kalypso 1D-2D gekoppeltes Modell"
+        name="%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard.name"
         project="true">
 		<description>
-				Erzeugt ein neues 1D2D-Modellprojekt.
+				%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard.description
 		</description>
 		</wizard>
 		<wizard
@@ -57,10 +58,10 @@
         finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
         icon="icons/kalypso1d2d.png"
         id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
-        name="Kalypso 1D-2D gekoppeltes Demo-Modell"
+        name="%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard.name"
         project="true">
 		<description>
-				Erzeugt ein neues 1D2D-Demoprojekt.
+				%org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard.description
 		</description>
 		</wizard>
 		<wizard
@@ -115,7 +116,8 @@
              class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
              icon="icons/obj16/repository.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
-             name="Zeitreihen Repositories">
+			 description="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.description"
+             name="%org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView.name">
        </view>
    </extension>
 
@@ -296,9 +298,9 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <commonFilter
             activeByDefault="false"
-            description="Nur Workflow-Projekte anzeigen"
+            description="%de.renew.workflow.connector.filters.kalypso.projects.description"
             id="de.renew.workflow.connector.filters.kalypso.projects"
-            name="Nur Kalypso-1d/2d-Projekte anzeigen">
+            name="%de.renew.workflow.connector.filters.kalypso.projects.name">
          <filterExpression>
     	    <and>
 				<instanceof value="org.eclipse.core.resources.IProject"/>
@@ -312,9 +314,9 @@
       </commonFilter>
       <commonFilter
             activeByDefault="false"
-            description="Nur Ergebnisse des aktiven Szenarios anzeigen"
+            description="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.description"
             id="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter"
-            name="Aktives Szenario">
+            name="%org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter.name">
          <filterExpression>
          	   <not>
                <test
@@ -376,7 +378,8 @@
       <provider
             class="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
             id="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
-            label="Wasserspiegel-Tins">
+			description="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.description"
+            label="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.label">
          <category
                id="org.kalypso.core.tin.waterlevel">
          </category>
@@ -387,7 +390,8 @@
       <decorator
             icon="icons/kalypso1d2d_small.png"
             id="org.kalypso.kalypso1d2d.pjt.natureDecorator"
-            label="Kalypso1d2d-Projekt"
+			description="%org.kalypso.kalypso1d2d.pjt.natureDecorator.description"
+            label="%org.kalypso.kalypso1d2d.pjt.natureDecorator.label"
             lightweight="true"
             location="BOTTOM_RIGHT"
             state="true">
@@ -409,8 +413,8 @@
       <project
             category="org.kalypso.kalypso1d2d.pjt.projectTemplate"
             data="etc/emptyProject.zip"
-            description="Leere Projektvorlage für 1D2D Projekte"
-            label="Leere Vorlage"
+            description="%org.kalypso.kalypso1d2d.pjt.projectTemplate.description"
+            label="%org.kalypso.kalypso1d2d.pjt.projectTemplate.label"
             projectName=" ">
       </project>
    </extension>
