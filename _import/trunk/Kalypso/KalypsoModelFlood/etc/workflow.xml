@@ -5,18 +5,9 @@
 	<Help>NONE</Help>
 	<Name>KalypsoFlood-Workflow</Name>
 
-	<TaskGroup URI="org.kalypso.model.flood.DataLoad">
+	<TaskGroup URI="org.kalypso.model.flood.DataLoad" context="FloodMap">
 		<Help><![CDATA[Grunddaten importieren und verwalten.]]></Help>
 		<Name>Daten verwalten</Name>
-
-		<!--		
-			<Task context="ImportBaseMap"
-			URI="org.kalypso.model.flood.ImportBackgroundData">
-			<Help><![CDATA[Grunddaten anderer Projekte in die Karte importieren]]></Help>
-			<Name><![CDATA[Grunddaten anderer Projekte in die Karte importieren]]></Name>
-			</Task>
-		-->
-
 		<Task context="ImportBaseMap" URI="org.kalypso.model.flood.ImportBackgroundData">
 			<Help><![CDATA[Hier können Sie Hintergrunddaten (topographische Karten u.ä.) importieren.]]></Help>
 			<Name>Hintergrunddaten importieren</Name>
@@ -41,14 +32,14 @@
 		<Name>Fließtiefen generieren</Name>
 	</Task>
 
-	<TaskGroup URI="org.kalypso.model.flood.Postprocessing">
+	<TaskGroup URI="org.kalypso.model.flood.Postprocessing" context="FloodMap">
 		<Help><![CDATA[Ergebnisauswertung]]></Help>
 		<Name>Ergebnisauswertung</Name>
 		<Task context="FloodMap" URI="org.kalypso.model.flood.VisualizeDepthData">
 			<Help><![CDATA[Hier können Sie sich die generierten Fließtiefen anzeigen und exportieren lassen.]]></Help>
 			<Name>Fließtiefen verwalten</Name>
 		</Task>
-		<Task URI="org.kalypso.model.flood.GenerateRiskModel">
+		<Task URI="org.kalypso.model.flood.GenerateRiskModel" context="FloodMap">
 			<Help><![CDATA[Hierüber können Sie mit den erzeugten Fließtiefen ein neues Risk Model anlegen.]]></Help>
 			<Name>Risk Modell erzeugen</Name>
 		</Task>
