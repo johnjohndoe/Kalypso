@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
@@ -30,14 +30,14 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
    */
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-
     /* Get context */
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window.getActivePage();
+    final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
       throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
@@ -73,9 +73,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
-      final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-
-      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePart ); //$NON-NLS-1$
+      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
       job.schedule();
     }
     catch( final CoreException e )

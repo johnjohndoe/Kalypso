@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
@@ -38,7 +38,8 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window.getActivePage();
+    final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
       throw new ExecutionException( Messages.getString( "WaterdepthCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
@@ -69,9 +70,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
-      final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-
-      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
+      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
       job.schedule();
     }
     catch( final CoreException e )

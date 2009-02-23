@@ -67,7 +67,7 @@ public class RiskStatisticsResultView extends ViewPart
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createPartControl( Composite parent )
+  public void createPartControl( final Composite parent )
   {
     try
     {
@@ -81,21 +81,18 @@ public class RiskStatisticsResultView extends ViewPart
       else
       {
         m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );
-        GridLayout gridLayout = new GridLayout();
+        final GridLayout gridLayout = new GridLayout();
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         m_compResult.setLayout( gridLayout );
       }
     }
-    catch( IllegalArgumentException iae )
+    catch( final IllegalArgumentException iae )
     {
-      // This happens on startup, when thi sview gets automatically recreated by eclipse
-      // however its model data is not yet available (maybe even the project is not loaded at all)
-      // Just ignore, the view will be shortly closed by the workflow-system
+      iae.printStackTrace();
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

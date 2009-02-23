@@ -7,7 +7,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
@@ -34,7 +34,8 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window.getActivePage();
+    final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
       throw new ExecutionException( Messages.getString( "WaterdepthCollectionsWidgetHandler.0" ) ); //$NON-NLS-1$
 
@@ -55,9 +56,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
 
     final WaterdepthCollectionsManagementWidget widget = new WaterdepthCollectionsManagementWidget();
 
-    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
+    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
     job.schedule();
 
     return null;
