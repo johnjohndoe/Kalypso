@@ -50,14 +50,11 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
 import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
@@ -108,16 +105,13 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
     {
       e.consume();
 
-      IMapPanel mapPanel = getMapPanel();
+      final IMapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 
-      IStatus status = DeleteFeElementsHelper.deleteSelectedFeElements( mapPanel );
+      final IStatus status = DeleteFeElementsHelper.deleteSelectedFeElements( mapPanel );
       if( status != Status.OK_STATUS )
-      {
-        final Shell shell = Display.getCurrent().getActiveShell();
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.6"), status.getMessage() ); //$NON-NLS-1$
-      }
+        SWT_AWT_Utilities.showSwtMessageBoxError( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget.6" ), status.getMessage() ); //$NON-NLS-1$
     }
     super.keyPressed( e );
   }
