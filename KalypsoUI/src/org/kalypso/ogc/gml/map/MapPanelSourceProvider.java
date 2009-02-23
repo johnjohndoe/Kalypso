@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.AbstractSourceProvider;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -88,6 +89,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   protected final IMapModellListener m_mapModellListener = new MapModellAdapter()
   {
+    // TODO: we should fire a source change on any change of the modell
+
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
@@ -111,6 +114,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
+    // TODO: we should fire a source change on any change of the panel
+    
     /**
      * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
      *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
@@ -155,7 +160,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
 
   /**
    * Creates a new MapPanelSourceProvider on the given MapPanel.<br>
-   * Initialises it state with the given parameters.
+   * Initializes it state with the given parameters.
    */
   public MapPanelSourceProvider( final IServiceLocator serviceLocator, final IMapPanel mapPanel )
   {
@@ -230,6 +235,10 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        // REMARK: priority has been chosen more or less by random... set a correct priority if
+        // clear how that stuff works.
+        fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_MAPPANEL_NAME, m_mapPanel );
+
         activateThemeContextSWT( activeTheme );
         return Status.OK_STATUS;
       }
@@ -272,6 +281,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
         m_contextService.deactivateContext( m_mapPanelContext );
         m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
       }
+      
+
     }
   }
 
