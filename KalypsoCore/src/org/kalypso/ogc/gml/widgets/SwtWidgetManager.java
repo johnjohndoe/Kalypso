@@ -219,7 +219,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
         break;
 
       case 2:
-        actualWidget.middlePressed( point );
+// actualWidget.middlePressed( point );
         break;
 
       case 3:
@@ -260,7 +260,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
         break;
 
       case 2:
-        actualWidget.middleReleased( point );
+// actualWidget.middleReleased( point );
         break;
 
       case 3:
@@ -285,7 +285,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
         break;
 
       case 2:
-        actualWidget.middleClicked( point );
+// actualWidget.middleClicked( point );
         break;
 
       case 3:

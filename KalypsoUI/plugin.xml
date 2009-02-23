@@ -1013,7 +1013,7 @@
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.PanToCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.PanToWidget" />
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.widgets.PanToWidget" />
 			</class>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.EditRelationsCommand">

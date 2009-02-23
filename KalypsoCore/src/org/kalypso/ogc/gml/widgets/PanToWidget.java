@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets;
+package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Point;
 

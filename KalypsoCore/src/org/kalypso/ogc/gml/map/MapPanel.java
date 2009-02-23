@@ -243,6 +243,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
+    addMouseWheelListener( m_widgetManager );
     addKeyListener( m_widgetManager );
     addComponentListener( this );
   }
@@ -324,6 +325,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   {
     removeMouseListener( m_widgetManager );
     removeMouseMotionListener( m_widgetManager );
+    removeMouseWheelListener( m_widgetManager );
     removeKeyListener( m_widgetManager );
     removeComponentListener( this );
 

@@ -47,6 +47,7 @@ import java.awt.event.KeyEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -166,24 +167,6 @@ public class AbstractDelegateWidget extends AbstractWidget
   public void leftReleased( final Point p )
   {
     m_delegate.leftReleased( p );
-  }
-
-  @Override
-  public void middleClicked( final Point p )
-  {
-    m_delegate.middleClicked( p );
-  }
-
-  @Override
-  public void middlePressed( final Point p )
-  {
-    m_delegate.middlePressed( p );
-  }
-
-  @Override
-  public void middleReleased( final Point p )
-  {
-    m_delegate.middleReleased( p );
   }
 
   @Override
