@@ -45,7 +45,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -70,7 +69,6 @@ import org.kalypso.util.swtcalendar.SWTCalendarDialog;
  */
 public class TimeStepFillerWizardPage extends WizardPage implements SelectionListener
 {
-
   private Text m_dateTimeFrom;
 
   private Text m_dateTimeTo;
@@ -312,15 +310,8 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
     container.layout();
   }
 
-  public void init( final IStructuredSelection initialSelection )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
   public Date getStartDate( )
   {
-
     return m_dateFrom;
   }
 

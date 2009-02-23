@@ -51,10 +51,7 @@ import java.util.TimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.observation.IObservation;
@@ -62,7 +59,6 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -72,19 +68,17 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 /**
  * @author madanago
  */
-public class TimeStepFillerWizard extends Wizard implements INewWizard
+public class TimeStepFillerWizard extends Wizard
 {
-  private IStructuredSelection m_initialSelection;
-
   private TimeStepFillerWizardPage m_timeStepFillerWizardPage;
 
   private final Feature m_feature;
 
-  private IObservation<TupleResult> m_observation;
+  private final IObservation<TupleResult> m_observation;
 
   private FeatureChange[] m_changes;
 
-  private TupleResult m_result;
+  private final TupleResult m_result;
 
   public TimeStepFillerWizard( final Feature feature )
   {
@@ -130,15 +124,6 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     return true;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_initialSelection = selection;
-  }
-
   private Boolean hasOldContent( )
   {
     if( m_result.size() == 0 )
@@ -177,7 +162,6 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
     }
 
     addPage( m_timeStepFillerWizardPage );
-    m_timeStepFillerWizardPage.init( m_initialSelection );
   }
 
   public FeatureChange[] getFeatureChange( )
