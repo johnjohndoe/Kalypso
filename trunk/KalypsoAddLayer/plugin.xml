@@ -83,15 +83,6 @@
          </description>
       </wizard>
       <wizard
-            class="org.kalypso.ui.wizard.others.ScrabThemeWizard"
-            icon="icon/scrapTheme.gif"
-            id="org.kalypso.ui.wizard.others.ScrabThemeWizard"
-            name="Skizzier-Thema">
-         <description>
-            Das Skizzier-Thema zum Zeichnen von Hilfsgeometrien hinzfügen.
-         </description>
-      </wizard>
-      <wizard
             class="org.kalypso.ui.wizard.others.CascadingThemeWizard"
             icon="icon/cascadingTheme.gif"
             id="org.kalypso.ui.wizard.others.CascadingThemeWizard"
