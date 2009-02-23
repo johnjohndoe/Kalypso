@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -62,32 +61,35 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
 {
-  /** A global mutex-rule, used when 'useGlobalMutex' is set to <code>true</code>. */
-  private final static ISchedulingRule MUTEX_RULE = new MutexRule();
-
   private BufferedTile m_runningTile = null;
 
   /** The last correctly finished tile. Will be painted as long es the runningTile is about to be painted. */
   private BufferedTile m_tile = null;
 
   /** Rule that is set to all paint jobs of this layer. */
-  private ISchedulingRule m_rule;
+  private final ISchedulingRule m_rule;
+
+  private final long m_repaintMillis;
 
   /**
-   * @param useGlobalMutex
-   *          If <code>true</code>, use the static (global) mutex to start the buffer paint jobs,else a local (per
-   *          layer) mutex is used. REMARK: the global mutex is used for all themes except WMS themes, as parallel
-   *          access to GMLWorkspaces theme to be quite slow. WMS themes however should be allowed to run in parallel,
-   *          else they block everything else. Probably this should be made more transparetn, i.e. better designed...
+   * When constructed with this constructed, no repaint happens during painting of the theme.<br>
+   * Same as {@link #BufferedRescaleMapLayer(IMapPanel, IKalypsoTheme, ISchedulingRule, Long.MAX_Value)}
    */
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final boolean useGlobalMutex )
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule )
+  {
+    this( panel, theme, rule, Long.MAX_VALUE );
+  }
+
+  /**
+   * @param rule
+   *          {@link ISchedulingRule} set to all jobs used to render this layer.
+   */
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final long repaintMillis )
   {
     super( panel, theme );
-
-    if( useGlobalMutex )
-      m_rule = MUTEX_RULE;
-    else
-      m_rule = new MutexRule();
+    
+    m_repaintMillis = repaintMillis;
+    m_rule = rule;
   }
 
   /**
@@ -185,11 +187,9 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     }
 
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
-    final BufferedTile runningTile = new BufferedTile( paintable, this, world2screen );
+    final BufferedTile runningTile = new BufferedTile( paintable, world2screen );
 
-    // Trigger map-invalidates during paint of theme; not too often, else map never gets repainted, as
-    // it schedules it paint job with a time-limit
-    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", runningTile, 750 )
+    final JobObserverJob repaintJob = new JobObserverJob( "Repaint map observer", runningTile, m_repaintMillis )
     {
       @Override
       protected void jobRunning( )
@@ -203,7 +203,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       @Override
       protected void jobDone( final IStatus result )
       {
-        // overwritten in order not to repaint when done
+        applyTile( runningTile, result );
       }
     };
     repaintJob.setSystem( true );
