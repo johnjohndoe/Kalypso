@@ -32,7 +32,7 @@
    <extension
          point="org.eclipse.ui.handlers">
 
-	<!--*** manage waterlevel context handler ***-->
+      <!-- Handler for workflow.xml: non-existing commandId is ok here --> 
       <handler
             commandId="org.kalypso.model.flood.ManageWaterlevelData">
          <class
@@ -40,10 +40,6 @@
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.EventManagementWidget">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-                  value="org.kalypso.model.flood">
             </parameter>
          </class>
       </handler>
@@ -55,33 +51,22 @@
             class="org.kalypso.model.flood.handlers.PolygonEditingHandler"
             commandId="org.kalypso.model.flood.PolygonEditing">
       </handler>
-      <!--
       <handler
-            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-         <activeWhen>
-            <reference
-                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
-            </reference>
-         </activeWhen>
-         <class
-               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonClipWidget">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/create_flood_polygon_clip.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="Clip-Polygon erzeugen">
-            </parameter>
-         </class>
+            class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
+            commandId="org.kalypso.model.flood.ProcessFloodModel">
       </handler>
-      -->
       <handler
-            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+            class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler"
+            commandId="org.kalypso.model.flood.VisualizeDepthData">
+      </handler>
+      <handler
+            class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler"
+            commandId="org.kalypso.model.flood.GenerateRiskModel">
+      </handler>
+
+      <!-- Flood-Polygons -->
+      <handler
+            commandId="org.kalypso.model.flood.command.deleteFloodPolygon">
          <activeWhen>
             <reference
                   definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
@@ -93,18 +78,10 @@
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget">
             </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/delete_flood_polygon.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="WSP-Anpassung löschen">
-            </parameter>
          </class>
       </handler>
       <handler
-            commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+            commandId="org.kalypso.model.flood.command.editFloodPolygon">
          <activeWhen>
             <reference
                   definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
@@ -115,14 +92,6 @@
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.EditFloodPolygonWidget">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/edit_flood_polygon.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="WSP-Anpassung editieren">
             </parameter>
          </class>
       </handler>
@@ -139,14 +108,6 @@
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.CreateFloodPolygonExtrapolationWidget">
             </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/create_flood_polygon_extrapolation.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="Extrapolationspolygon erzeugen">
-            </parameter>
          </class>
       </handler>
       <handler
@@ -161,14 +122,6 @@
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.CreateFloodPolygonClipWidget">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/create_flood_polygon_clip.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="Clip-Polygon erzeugen">
             </parameter>
          </class>
       </handler>
@@ -185,27 +138,7 @@
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                   value="org.kalypso.model.flood.ui.map.CreateFloodPolygonVolumeWidget">
             </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                  value="icons/elcl16/create_flood_polygon_volume.gif">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                  value="Volumen-Polygon erzeugen">
-            </parameter>
          </class>
-      </handler>
-      <handler
-            class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
-            commandId="org.kalypso.model.flood.ProcessFloodModel">
-      </handler>
-      <handler
-            class="org.kalypso.model.flood.handlers.VisualizeDepthDataHandler"
-            commandId="org.kalypso.model.flood.VisualizeDepthData">
-      </handler>
-      <handler
-            class="org.kalypso.model.flood.handlers.GenerateRiskModelHandler"
-            commandId="org.kalypso.model.flood.GenerateRiskModel">
       </handler>
    </extension>
    <extension
@@ -213,7 +146,6 @@
       <dataSet
             id="org.kalypso.model.flood.scenarioDataScope">
          <scenarioDatum
-               bundle="org.kalypso.model.flood"
                classKey="org.kalypso.model.flood.binding.IFloodModel"
                modelPath="models/flood.gml">
          </scenarioDatum>
@@ -251,17 +183,9 @@
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
-         <with
-               variable="activeContexts">
-            <iterate
-                  ifEmpty="false"
-                  operator="or">
-               <equals
-                     value="{org.kalypso.model.flood}AbstractFloodPolygon">
-               </equals>
-            </iterate>
+      <definition id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+         <with variable="activeMapPanel">
+           <test property="org.kalypso.ui.activeThemeQName" value="{org.kalypso.model.flood}AbstractFloodPolygon" />
          </with>
       </definition>
    </extension>
@@ -270,26 +194,36 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createExtrapolationPolygon"
-            name="Extrapolations-Polygon erzeugen">
+            name="Extrapolations-Polygon erzeugen" description="Extrapolations-Polygon erzeugen">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createClipPolygon"
-            name="Clip-Polygon erzeugen">
+            name="Clip-Polygon erzeugen" description="Clip-Polygon erzeugen">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createVolumePolygon"
-            name="Volumen-Polygon erzeugen">
+            name="Volumen-Polygon erzeugen" description="Volumen-Polygon erzeugen">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.editFloodPolygon"
+            name="WSP-Anpassung editieren" description="WSP-Anpassung editieren">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.deleteFloodPolygon"
+            name="WSP-Anpassung entfernen" description="WSP-Anpassung entfernen">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
  		<menuContribution
-              locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
+              locationURI="toolbar:org.kalypso.ui.views.mapView?before=widgets">
+           <!-- Flood-Polygons -->
            <command
                  commandId="org.kalypso.model.flood.command.createExtrapolationPolygon"
-                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">
@@ -300,7 +234,6 @@
            </command>
            <command
                  commandId="org.kalypso.model.flood.command.createClipPolygon"
-                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">
@@ -311,7 +244,6 @@
            </command>
            <command
                  commandId="org.kalypso.model.flood.command.createVolumePolygon"
-                 label=""
                  style="radio">
               <visibleWhen
                     checkEnabled="false">
@@ -320,6 +252,27 @@
                  </reference>
               </visibleWhen>
            </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.editFloodPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.deleteFloodPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+
         </menuContribution>
 	</extension>
    <extension
@@ -391,4 +344,12 @@
             module="org.kalypso.model.flood.extension.KalypsoModelFloodModule">
       </module>
    </extension>
+     <extension point="org.eclipse.ui.commandImages">
+        <!-- Flood-Polygons -->
+        <image commandId="org.kalypso.model.flood.command.deleteFloodPolygon" icon="icons/elcl16/delete_flood_polygon.gif"/>
+        <image commandId="org.kalypso.model.flood.command.editFloodPolygon" icon="icons/elcl16/edit_flood_polygon.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createExtrapolationPolygon" icon="icons/elcl16/create_flood_polygon_extrapolation.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createClipPolygon" icon="icons/elcl16/create_flood_polygon_clip.gif"/>
+        <image commandId="org.kalypso.model.flood.command.createVolumePolygon" icon="icons/elcl16/create_flood_polygon_volume.gif"/>
+     </extension>
 </plugin>
