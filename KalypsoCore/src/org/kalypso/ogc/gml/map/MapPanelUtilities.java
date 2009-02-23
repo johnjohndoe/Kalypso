@@ -81,24 +81,6 @@ public class MapPanelUtilities
     return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, mapPanel.getMapModell().getCoordinatesSystem() );
   }
 
-// public static GM_Envelope calcZoomOutBoundingBox( final IMapPanel mapPanel )
-// {
-// final GeoTransform transform = mapPanel.getProjection();
-// final double ratio = getRatio( mapPanel );
-// final double gisMX = transform.getSourceX( mapPanel.getWidth() / 2d );
-// final double gisMY = transform.getSourceY( mapPanel.getHeight() / 2d );
-//
-// final double gisDX = 2 * (gisMX - transform.getSourceX( 0 ));
-// final double gisDY = gisDX * ratio;
-// final double gisX1 = gisMX - gisDX;
-// final double gisX2 = gisMX + gisDX;
-// final double gisY1 = gisMY - gisDY;
-// final double gisY2 = gisMY + gisDY;
-//
-// return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, mapPanel.getMapModell().getCoordinatesSystem()
-  // );
-// }
-  
   public static GM_Envelope calcZoomInBoundingBox( final GM_Envelope bbox, final boolean in )
   {
     final GM_Position currentMax = bbox.getMax();
