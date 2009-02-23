@@ -4,7 +4,7 @@
 	<extension-point id="mapviewaction" name="mapviewaction" schema="schema/org.kalypso.ui.mapview.action.exsd" />
 	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd" />
 	<extension-point id="componentUiHandlerProvider" name="componentUiHandlerProvider" schema="schema/componentUiHandlerProvider.exsd" />
-	<extension-point id="kalypsoThemeFactory" name="kalypsoThemeFactory" schema="schema/kalypsoThemeFactory.exsd" />
+	<extension-point id="themeFactory" name="themeFactory" schema="schema/themeFactory.exsd" />
 	<extension-point id="modelAdapter" name="modelAdapter" schema="schema/modelAdapter.exsd" />
 	<extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd" />
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
@@ -247,16 +247,6 @@
 		<MapviewAction title="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip" icon="icons/full/elcl16/remove.gif" class="org.kalypso.ogc.gml.outline.RemoveThemeAction" />
 		<MapviewAction title="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.label" enabled="false" tooltip="%org.kalypso.ogc.gml.outline.OpenStyleDialogAction.tooltip" icon="icons/util/update.gif" class="org.kalypso.ogc.gml.outline.OpenStyleDialogAction" />
 	</extension>
-	<!--setting this activity removes the compare functionality in application
-		<extension point="org.eclipse.ui.activities">
-		<activity id="org.kalypso.ui.activity"
-		description="Filters contributions"
-		name="Kalypso activity" />
-		<activityPatternBinding
-		activityId="org.kalypso.ui.activity"
-		pattern="org\.eclipse\.compare/.*"/>
-		</extension>
-	-->
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
@@ -541,26 +531,21 @@
 			</toolbar>
 		</menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.repository.view.RepositoryExplorerPart">
-			<separator name="manageContainers" visible="false">
-			</separator>
+			<separator name="manageContainers" visible="false"/>
 			<command commandId="org.kalypso.ui.command.repositoryAdd"></command>
 			<command commandId="org.kalypso.ui.command.repositoryRemove"></command>
-			<separator name="configureContainers" visible="true">
-			</separator>
+			<separator name="configureContainers" visible="true"/>
 			<command commandId="org.kalypso.ui.command.repositoryConfigure"></command>
 			<command commandId="org.kalypso.ui.command.repositoryReload"></command>
 			<command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
 			<command commandId="org.kalypso.ui.command.repositoryDumpExtended"></command>
-			<separator name="manageTree" visible="true">
-			</separator>
+			<separator name="manageTree" visible="true"/>
 			<command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
-			<separator name="repositoryTools" visible="true">
-			</separator>
+			<separator name="repositoryTools" visible="true"/>
 			<command commandId="org.kalypso.ui.command.repositoryExportAsFile"></command>
 			<command commandId="org.kalypso.ui.command.repositoryCopyLink"></command>
 			<command commandId="org.kalypso.ui.command.repositoryShowWQ"></command>
-			<separator name="additions" visible="true">
-			</separator>
+			<separator name="additions" visible="true"/>
 		</menuContribution>
 		<menuContribution locationURI="popup:org.kalypso.ui.repository.view.RepositoryExplorerPart">
 			<separator name="manageContainers" visible="false">
@@ -589,8 +574,7 @@
 				<visibleWhen checkEnabled="false">
 					<with variable="selection">
 						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-							</instanceof>
+							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
 						</iterate>
 					</with>
 				</visibleWhen>
@@ -599,8 +583,7 @@
 				<visibleWhen checkEnabled="false">
 					<with variable="selection">
 						<iterate ifEmpty="false" operator="and">
-							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-							</instanceof>
+							<instanceof value="org.kalypso.ogc.gml.IKalypsoFeatureTheme"/>
 						</iterate>
 					</with>
 				</visibleWhen>
@@ -993,22 +976,16 @@
 		<handler class="org.kalypso.ogc.gml.map.handlers.MoveRightHandler" commandId="org.kalypso.ogc.gml.map.MoveRightCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureHandler" commandId="org.kalypso.gis.newFeature.command">
 			<enabledWhen>
-				<and>
-					<reference definitionId="mapContext" />
-					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.activeThemeNotNull" />
-					</with>
-				</and>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.activeThemeNotNull" />
+				</with>
 			</enabledWhen>
 		</handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler" commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand">
 			<enabledWhen>
-				<and>
-					<reference definitionId="mapContext" />
-					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.activeThemeHasExtent" />
-					</with>
-				</and>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.activeThemeHasExtent" />
+				</with>
 			</enabledWhen>
 		</handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
@@ -1053,12 +1030,9 @@
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget" />
 			</class>
 			<enabledWhen>
-				<and>
-					<reference definitionId="mapContext" />
-					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
-					</with>
-				</and>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
+				</with>
 			</enabledWhen>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
@@ -1081,12 +1055,9 @@
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.SelectWidget" />
 			</class>
 			<enabledWhen>
-				<and>
-					<reference definitionId="mapContext" />
-					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
-					</with>
-				</and>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.activeThemeIsFeatureTheme" />
+				</with>
 			</enabledWhen>
 		</handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.SaveThemeHandler" commandId="org.kalypso.ogc.gml.map.SaveThemeCommand"/>
@@ -1144,4 +1115,175 @@
             name="WMS Client">
       </imageProvider>
    </extension>
+   
+   
+    <extension
+         point="org.eclipse.ui.activities">
+
+      <category
+            name="KalypsoBASE"
+            description="Disables unwanted ui-elements like java and debug from Kalypso applications."
+            id="org.kalypso.ui.activities.baseCategory">
+      </category>
+  
+      <activity
+            name="HWV Product Activity"
+            description="Disables unwanted ui-elements like java and debug from Kalypso applications."
+            id="org.kalypso.ui.activities.baseActivity">
+         <enabledWhen>
+         	<!-- This activity is only enabled when explicitely specified so -->
+            <systemTest
+                  property="org.kalypso.ui.activities.baseActivity"
+                  value="true">
+            </systemTest>
+         </enabledWhen>
+      </activity>
+
+      <categoryActivityBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            categoryId="org.kalypso.ui.activities.baseCategory">
+      </categoryActivityBinding>
+      
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.ant\.ui/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.debug\.ui/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.ui\.externaltools/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.kalypso\.model/.*"/>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.jdt\.debug/debugModel">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.jdt\..*/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.jdt/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.jdt\.core/javanature">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.pde\..*/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.pde/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.pde/PluginNature">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.team\.ui/org.*">
+      </activityPatternBinding> 
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.compare/compareWithPatch">
+      </activityPatternBinding>           
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.team\.cvs\.ui/.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.kalypso.ui.activities.baseActivity"
+            pattern="org\.eclipse\.team\.cvs\.core/.*cvsnature">
+      </activityPatternBinding>
+   </extension>
+
+	<!--setting this activity removes the compare functionality in application
+		<extension point="org.eclipse.ui.activities">
+		<activity id="org.kalypso.ui.activity"
+		description="Filters contributions"
+		name="Kalypso activity" />
+		<activityPatternBinding
+		activityId="org.kalypso.ui.activity"
+		pattern="org\.eclipse\.compare/.*"/>
+		</extension>
+	-->
+
+	 <extension
+	       point="org.kalypso.ui.themeFactory">
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.WmsThemeFactory"
+           label="WMS Theme"
+           type="wms">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.GmtThemeFactory"
+           label="Cascading Theme"
+           type="gmt">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.LegendThemeFactory"
+           label="Legend Theme"
+           type="legend">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.ScaleThemeFactory"
+           label="Scale Theme"
+           type="scale">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.GisTemplateThemeFactory"
+           label="Feature Theme (GML)"
+           type="gml">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.GisTemplateThemeFactory"
+           label="Feature Theme (shape)"
+           type="shape">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.GisTemplateThemeFactory"
+           label="Feature Theme (WFS)"
+           type="wfs">
+     </factory>
+    <factory
+          class="org.kalypso.ogc.gml.map.themes.OsmThemeFactory"
+          label="OpenStreetMap Theme"
+          type="openStreetMap">
+    </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
+           label="Picture Theme"
+           type="tif">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
+           label="Picture Theme"
+           type="jpg">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
+           label="Picture Theme"
+           type="png">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
+           label="Picture Theme"
+           type="gif">
+     </factory>
+     <factory
+           class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
+           label="Picture Theme"
+           type="gmlpic">
+     </factory>
+	 </extension>
+   
+   
 </plugin>
