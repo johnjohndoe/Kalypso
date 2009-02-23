@@ -67,7 +67,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
@@ -172,28 +171,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-   */
-  @Override
-  public void init( final IEditorSite site, final IEditorInput input )
-  {
-    super.init( site, input );
-    initMapPanel( site );
-
-    if( input instanceof IStorageEditorInput )
-    {
-      try
-      {
-        startLoadJob( ((IStorageEditorInput) input).getStorage() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
    * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite)
    */
   public void init( final IViewSite site )
@@ -203,7 +180,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     initMapPanel( site );
   }
 
-  private void initMapPanel( final IWorkbenchPartSite site )
+  protected void initMapPanel( final IWorkbenchPartSite site )
   {
     final JobExclusiveCommandTarget commandTarget = getCommandTarget();
 
@@ -262,14 +239,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_control = MapPartHelper.createMapForm( parent );
     m_mapPanel = MapPartHelper.createMapPanelInForm( m_control, this, m_selectionManager );
-    setMapModell( m_mapModell, m_initialEnv );
+    m_mapPanel.setMapModell( m_mapModell );
+    if( m_initialEnv != null )
+      m_mapPanel.setBoundingBox( m_initialEnv );
+
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
     m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
-
-    if( m_mapModell == null )
-    {
-      m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
-    }//$NON-NLS-1$;
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
@@ -375,7 +350,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
-
     if( m_saving )
       return;
 
@@ -527,9 +501,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void setMapModell( final GisTemplateMapModell mapModell, final GM_Envelope env )
   {
     if( m_mapModell != null )
-    {
       m_mapModell.dispose();
-    }
 
     m_mapModell = mapModell;
     m_initialEnv = env; // only needed, if mapPanel not yet available
@@ -562,9 +534,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       m_mapPanel.setMapModell( m_mapModell );
       if( env != null )
-      {
         m_mapPanel.setBoundingBox( env );
-      }
     }
   }
 
