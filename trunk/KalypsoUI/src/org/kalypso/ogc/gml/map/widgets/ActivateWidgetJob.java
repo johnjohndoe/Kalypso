@@ -1,11 +1,11 @@
 package org.kalypso.ogc.gml.map.widgets;
 
 import org.eclipse.core.commands.common.CommandException;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
@@ -29,14 +29,17 @@ public final class ActivateWidgetJob extends UIJob
 
   private final IMapPanel m_mapPanel;
 
-  private final IWorkbenchPart m_activePart;
+  private final IWorkbenchPage m_activePage;
 
-  public ActivateWidgetJob( final String name, final IWidget widget, final IMapPanel mapPanel, final IWorkbenchPart activePart )
+  public ActivateWidgetJob( final String name, final IWidget widget, final IMapPanel mapPanel, final IWorkbenchPage activePage )
   {
     super( name );
+    
+    Assert.isNotNull( activePage );
+    
     m_widget = widget;
     m_mapPanel = mapPanel;
-    m_activePart = activePart;
+    m_activePage = activePage;
   }
 
   @Override
@@ -46,7 +49,7 @@ public final class ActivateWidgetJob extends UIJob
     {
       if( m_widget instanceof IWidgetWithOptions )
       {
-        final MapWidgetView widgetView = (MapWidgetView) m_activePart.getSite().getPage().showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
+        final MapWidgetView widgetView = (MapWidgetView) m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
         widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );
       }
       else
