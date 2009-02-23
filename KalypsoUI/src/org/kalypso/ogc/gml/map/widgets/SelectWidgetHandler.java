@@ -111,7 +111,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         return null;
     }
 
-    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart ); //$NON-NLS-1$
+    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart.getSite().getPage() ); //$NON-NLS-1$
     // Probably not necessary
     job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
     job.schedule();
