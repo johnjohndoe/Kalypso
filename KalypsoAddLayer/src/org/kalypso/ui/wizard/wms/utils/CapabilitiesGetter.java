@@ -37,8 +37,6 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
 
   public CapabilitiesGetter( final URL service, final String providerID )
   {
-    super();
-
     m_service = service;
     m_providerID = providerID;
   }

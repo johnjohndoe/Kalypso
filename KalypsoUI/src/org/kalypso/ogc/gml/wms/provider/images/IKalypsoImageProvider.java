@@ -93,11 +93,11 @@ public interface IKalypsoImageProvider
    * This function will create the image and return it.
    * 
    * @param width
-   *            The requested width.
+   *          The requested width.
    * @param height
-   *            The requested height.
+   *          The requested height.
    * @param bbox
-   *            The requested bounding box.
+   *          The requested bounding box.
    * @return The created image.
    */
   public Image getImage( int width, int height, GM_Envelope bbox ) throws CoreException;

@@ -47,6 +47,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -62,9 +63,9 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException 
   {
-    super( layerName, layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, layerType.getLinktype(), mapModel );
 
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
@@ -117,7 +118,7 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     if( legendIcon != null )
       layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = layer.getLayer();
 
@@ -129,10 +130,14 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
   private void fillLayerList( final List<JAXBElement< ? extends StyledLayerType>> layers, final IMapModell innerMapModel, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
     final IKalypsoTheme[] themes = innerMapModel.getAllThemes();
+    monitor.beginTask( "", themes.length ); //$NON-NLS-1$
 
     int count = 0;
     for( final IKalypsoTheme theme : themes )
-      GisTemplateHelper.addLayer( layers, theme, count++, getFullExtent(), srsName, monitor );
+    {
+      final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, count++, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
+      layers.add( layerElement );
+    }
   }
 
 }

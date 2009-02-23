@@ -110,8 +110,7 @@ public class BufferedTile extends BufferPaintJob
   {
     removeJobChangeListener( m_listener );
 
-    if( result.isOK() )
-      m_layer.applyTile( this );
+    m_layer.applyTile( this, result );
   }
 
 

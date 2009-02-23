@@ -162,9 +162,9 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     }
   };
 
-  public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel )
   {
-    super( name, linktype, mapModel, legendIcon, context, shouldShowChildren );
+    super( name, linktype, mapModel );
   }
 
   protected void doFireRepaintRequested( final GM_Envelope bbox )

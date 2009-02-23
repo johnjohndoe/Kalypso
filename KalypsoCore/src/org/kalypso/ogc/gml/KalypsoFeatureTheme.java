@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -112,9 +111,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   private Image m_featureThemeIcon;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( name, "FeatureTheme", mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, "FeatureTheme", mapModel ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;
