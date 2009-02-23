@@ -1,19 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.ui">
+<schema targetNamespace="org.kalypso.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
-         <meta.schema plugin="org.kalypso.ui" id="kalypsoThemeFactory" name="kalypsoThemeFactory"/>
-      </appInfo>
+      <appinfo>
+         <meta.schema plugin="org.kalypso.ui" id="themeFactory" name="themeFactory"/>
+      </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension-point allows the resgitration of different theme types. Each type of a theme is representated by a theme-factory, that is used to create the themes.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
-            <element ref="themeFactory" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="factory" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -34,72 +39,81 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
-   <element name="themeFactory">
+   <element name="factory">
       <complexType>
-         <attribute name="factory" type="string">
+         <attribute name="type" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The type-name (&apos;linkType&apos; in the .gmt serialization) of this factory. Typenames will be compared ignoring case.
                </documentation>
-               <appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The implementing class of this factory-extension, must implement  org.kalypso.ogc.gml.IKalypsoThemeFactory.
+               </documentation>
+               <appinfo>
                   <meta.attribute kind="java" basedOn=":org.kalypso.ogc.gml.IKalypsoThemeFactory"/>
-               </appInfo>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="label" type="string">
+            <annotation>
+               <documentation>
+                  Human-readable name of the theme-type for use in the user-interface.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

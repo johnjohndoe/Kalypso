@@ -55,24 +55,40 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ThemeFactoryExtension
 {
-  private static final String KALYPSO_THEME_FACTORY_EXTENSION_POINT = "org.kalypso.ui.kalypsoThemeFactory"; //$NON-NLS-1$
+  private static final String KALYPSO_THEME_FACTORY_EXTENSION_POINT = "org.kalypso.ui.themeFactory"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_FACTORY = "factory"; //$NON-NLS-1$
+  private static final String ATTRIBUTE_FACTORY = "class"; //$NON-NLS-1$
 
-  private static Map<String, IKalypsoThemeFactory> FACTORY_MAP;
+  private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
-  public static IKalypsoThemeFactory getThemeFactory( final String linktype )
+  @SuppressWarnings("unused")
+  private static final String ATTRIBUTE_Label = "label"; //$NON-NLS-1$
+
+  private static Map<String, IConfigurationElement> FACTORY_MAP;
+
+  public synchronized static IKalypsoThemeFactory getThemeFactory( final String linktype )
   {
-    if( FACTORY_MAP == null )
+    try
     {
-      init();
+      if( FACTORY_MAP == null )
+        init();
+
+      final IConfigurationElement element = FACTORY_MAP.get( linktype.toLowerCase() );
+      return (IKalypsoThemeFactory) element.createExecutableExtension( ATTRIBUTE_FACTORY );
     }
-    return FACTORY_MAP.get( linktype );
+    catch( final CoreException e )
+    {
+      KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+    }
+
+    return null;
   }
 
+  // Hashes the configuration elements in order to quicker retrieval. Does not create the factories (eclipse says, do it
+  // lazy!)
   private static void init( )
   {
-    FACTORY_MAP = new HashMap<String, IKalypsoThemeFactory>();
+    FACTORY_MAP = new HashMap<String, IConfigurationElement>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( KALYPSO_THEME_FACTORY_EXTENSION_POINT );
@@ -80,19 +96,8 @@ public class ThemeFactoryExtension
 
     for( final IConfigurationElement factoryElement : configurationElements )
     {
-      try
-      {
-        final IKalypsoThemeFactory factory = (IKalypsoThemeFactory) factoryElement.createExecutableExtension( ATTRIBUTE_FACTORY );
-        for( final String linktype : factory.handledLinkTypes() )
-        {
-          FACTORY_MAP.put( linktype, factory );
-        }
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-        KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-      }
+      final String type = factoryElement.getAttribute( ATTRIBUTE_TYPE );
+      FACTORY_MAP.put( type.toLowerCase(), factoryElement );
     }
   }
 
