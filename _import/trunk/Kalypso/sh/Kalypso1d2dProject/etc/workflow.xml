@@ -210,7 +210,7 @@
 
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Postprocessing"
-		context="FenetMap">
+		context="ResultMap">
 		<Help>%Kalypso1D2D_Postprocessing_help</Help>
 		<Name>%Kalypso1D2D_Postprocessing</Name>
 		<Task context="ResultMap"
@@ -393,7 +393,7 @@
 							<con:Parameter name="type"
 								value="themeContext" />
 							<con:Parameter name="input"
-								value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship" />
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
 						</con:ExtensionContext>
 						<con:ExtensionContext id="Context2dElementTheme"
 							parent="FenetMap"
