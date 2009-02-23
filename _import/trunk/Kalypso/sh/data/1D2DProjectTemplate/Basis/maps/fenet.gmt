@@ -6,7 +6,7 @@
             <templ:property name="deleteable">false</templ:property>
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:FE1D2DNode:rule:Node</templ:legendicon>
         </mapv:layer>
-        <mapv:layer visible="true" name="1D-Netzparameter" id="ID_3" featurePath="#fid#root/flowRelationshipMember" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
+        <mapv:layer visible="true" name="1D-Netzparameter" id="ID_3" featurePath="#fid#root/flowRelationshipMember[_FlowRelation1D]" linktype="gml" xlink:type="simple" xlink:href="../models/flowrelations.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
             <templ:legendicon>urn:kalypso:map:theme:swtimage:style:_FlowRelationship:rule:polynome</templ:legendicon>
         </mapv:layer>
