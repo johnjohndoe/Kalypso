@@ -11,10 +11,14 @@
    </aboutInfo>
 
    <configIni use="default" path="/KalypsoBaseProduct/etc/config.ini">
+      <linux>/KalypsoBaseProduct/etc/config.ini</linux>
+      <macosx>/KalypsoBaseProduct/etc/config.ini</macosx>
+      <solaris>/KalypsoBaseProduct/etc/config.ini</solaris>
+      <win32>/KalypsoBaseProduct/etc/config.ini</win32>
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Xmx512m</vmArgs>
+      <vmArgs>-Xmx512m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
