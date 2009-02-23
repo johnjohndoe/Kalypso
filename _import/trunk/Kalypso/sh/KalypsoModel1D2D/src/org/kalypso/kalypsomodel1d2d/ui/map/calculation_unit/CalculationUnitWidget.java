@@ -397,39 +397,6 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
-   */
-  public void middleClicked( final Point p )
-  {
-    if( m_strategy != null )
-    {
-      m_strategy.middleClicked( p );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
-   */
-  public void middlePressed( final Point p )
-  {
-    if( m_strategy != null )
-    {
-      m_strategy.middlePressed( p );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
-   */
-  public void middleReleased( final Point p )
-  {
-    if( m_strategy != null )
-    {
-      m_strategy.middleReleased( p );
-    }
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
   public void moved( final Point p )

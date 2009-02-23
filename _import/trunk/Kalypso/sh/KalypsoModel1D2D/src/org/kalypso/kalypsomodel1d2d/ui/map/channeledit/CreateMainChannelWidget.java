@@ -57,7 +57,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -413,39 +413,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   {
     if( m_delegateWidget != null )
       m_delegateWidget.leftReleased( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
-   */
-  @Override
-  public void middleClicked( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.middleClicked( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
-   */
-  @Override
-  public void middlePressed( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.middlePressed( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
-   */
-  @Override
-  public void middleReleased( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.middleReleased( p );
   }
 
   /**
