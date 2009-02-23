@@ -8,11 +8,11 @@
 	<Name>KalypsoRisk-Workflow</Name>
 	
 	<!-- TASK DEFINITIONS -->
-	<TaskGroup
+	<TaskGroup context="MainMap"
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Preprocessing">
 		<Help>Preprocessing: Modellaufbau</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
-		<TaskGroup
+		<TaskGroup context="MainMap"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__DataLoad">
 			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
 			<Name>Daten laden</Name>
@@ -42,7 +42,7 @@
 				<Name>Bearbeiten von Ü-Rasterdaten</Name>
 			</Task>
 		</TaskGroup>
-		<TaskGroup
+		<TaskGroup context="MainMap"
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
 			<Help><![CDATA[Berechnungsparameter]]></Help>
 			<Name>Berechnungsparameter</Name>
@@ -58,7 +58,7 @@
 			</Task>
 		</TaskGroup>
 	</TaskGroup>
-	<TaskGroup
+	<TaskGroup context="MainMap"
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
 		<Help><![CDATA[Processing: Rasterung und Berechnung]]></Help>
 		<Name>Processing: Rasterung und Berechnung</Name>
@@ -81,7 +81,7 @@
 			<Name>Ausweisung des Hochwasserrisikos</Name>
 		</Task>
 	</TaskGroup>
-	<TaskGroup
+	<TaskGroup context="MainMap"
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
