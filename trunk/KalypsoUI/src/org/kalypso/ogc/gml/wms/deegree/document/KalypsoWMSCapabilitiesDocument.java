@@ -61,37 +61,38 @@ import org.xml.sax.SAXException;
 public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
 {
   /**
-   * Initializes the <code>XMLFragment</code> with the content from the given <code>Reader</code>. Sets the
-   * SystemId, too.
+   * TODO: please document why it was overwritten, this is the most important thing here! <br>
+   * Initializes the <code>XMLFragment</code> with the content from the given <code>Reader</code>. Sets the SystemId,
+   * too.
    * 
    * @param reader
    * @param systemId
-   *            can not be null. This string should represent a URL that is related to the passed reader. If this URL is
-   *            not available or unknown, the string should contain the value of XMLFragment.DEFAULT_URL
+   *          can not be null. This string should represent a URL that is related to the passed reader. If this URL is
+   *          not available or unknown, the string should contain the value of XMLFragment.DEFAULT_URL
    * @throws SAXException
    * @throws IOException
    * @throws NullPointerException
    */
   @Override
-  public void load( Reader reader, String systemId ) throws SAXException, IOException
+  public void load( final Reader reader, final String systemId ) throws SAXException, IOException
   {
-    PushbackReader pbr = new PushbackReader( reader, 1024 );
-    int c = pbr.read();
+    final PushbackReader pbr = new PushbackReader( reader, 1024 );
+    final int c = pbr.read();
     if( c != 65279 && c != 65534 )
     {
       // no BOM! push char back into reader
       pbr.unread( c );
     }
 
-    InputSource source = new InputSource( pbr );
+    final InputSource source = new InputSource( pbr );
     if( systemId == null )
     {
-      throw new NullPointerException( Messages.getString("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument.0") ); //$NON-NLS-1$
+      throw new NullPointerException( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument.0" ) ); //$NON-NLS-1$
     }
     setSystemId( systemId );
-    DocumentBuilder builder = getDocumentBuilder();
+    final DocumentBuilder builder = getDocumentBuilder();
 
-    Document doc = builder.parse( source );
+    final Document doc = builder.parse( source );
     setRootElement( doc.getDocumentElement() );
   }
 
@@ -111,7 +112,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
     DocumentBuilder builder = null;
     try
     {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware( true );
       factory.setExpandEntityReferences( false );
       factory.setIgnoringElementContentWhitespace( false );
@@ -126,7 +127,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
       builder = factory.newDocumentBuilder();
       builder.setEntityResolver( new KalypsoWMSEntityResolver() );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.wms.deegree;
 
 import java.awt.Point;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -113,7 +112,7 @@ public class DeegreeWMSUtilities
       final KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
 
       /* Load the capabilities xml. */
-      doc.load( new InputStreamReader( inputStream ), XMLFragment.DEFAULT_URL );
+      doc.load( inputStream, XMLFragment.DEFAULT_URL );
 
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
