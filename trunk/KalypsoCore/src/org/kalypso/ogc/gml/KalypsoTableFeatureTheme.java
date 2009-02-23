@@ -41,9 +41,7 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.net.URL;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -88,11 +86,11 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
 
   private final String m_featurePath;
 
-  public KalypsoTableFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final URL context, final boolean shouldShowChildren )
+  public KalypsoTableFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager )
   {
     // Because of Assert.isNotNull( mapModel ) in AbstractKalypsoTheme, we need some map model for table theme...
     // super( name, "FeatureTheme", null, null, context, shouldShowChildren ); //$NON-NLS-1$
-    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null ), null, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null ) ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;

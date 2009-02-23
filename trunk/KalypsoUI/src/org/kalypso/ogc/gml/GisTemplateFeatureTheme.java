@@ -160,9 +160,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren )
+  public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
-    super( layerName, layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, layerType.getLinktype(), mapModel );
 
     m_selectionManager = selectionManager;
     final String source = layerType.getHref();
@@ -313,7 +313,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       if( legendIcon != null )
         styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
 
       final List<Style> stylesList = styledLayerType.getStyle();
       for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
@@ -366,6 +366,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
 
           /* Get current property set */
+          final String legendIcon = getLegendIcon();
+          final boolean shouldShowLegendChildren = shouldShowLegendChildren();
           final String[] propertyNames = getPropertyNames();
           final Map<String, String> properties = new HashMap<String, String>();
           for( final String propName : propertyNames )
@@ -374,16 +376,18 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
             properties.put( propName, value );
           }
 
-          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell(), getLegendIcon(), getContext(), shouldShowChildren() );
+          m_theme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
+          /* Put current property set into m_theme */
+          m_theme.setLegendIcon( legendIcon, getContext() );
+          m_theme.setShowLegendChildren( shouldShowLegendChildren );
+          for( final String propName : propertyNames )
+            m_theme.setProperty( propName, properties.get( propName ) );
+
           m_theme.addKalypsoThemeListener( m_themeListener );
           if( !m_theme.getStatus().isOK() )
             status = m_theme.getStatus();
 
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
-
-          /* Put current property set into m_theme */
-          for( final String propName : propertyNames )
-            m_theme.setProperty( propName, properties.get( propName ) );
 
           boolean hasSelectionStyle = false;
           for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
@@ -810,6 +814,54 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendIcon()
+   */
+  @Override
+  public String getLegendIcon( )
+  {
+    if( m_theme != null )
+      m_theme.getLegendIcon();
+
+    return super.getLegendIcon();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#shouldShowLegendChildren()
+   */
+  @Override
+  public boolean shouldShowLegendChildren( )
+  {
+    if( m_theme != null )
+      return m_theme.shouldShowLegendChildren();
+
+    return super.shouldShowLegendChildren();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setShowLegendChildren(boolean)
+   */
+  @Override
+  public void setShowLegendChildren( final boolean showChildren )
+  {
+    if( m_theme != null )
+      m_theme.setShowLegendChildren( showChildren );
+
+    super.setShowLegendChildren( showChildren );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setLegendIcon(java.lang.String, java.net.URL)
+   */
+  @Override
+  public void setLegendIcon( final String legendIcon, final URL context )
+  {
+    super.setLegendIcon( legendIcon, context );
+
+    if( m_theme != null )
+      m_theme.setLegendIcon( legendIcon, context );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
    */
   public void styleChanged( final KalypsoUserStyle source )
@@ -898,4 +950,5 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     fireVisibilityChanged( newVisibility );
   }
+  
 }

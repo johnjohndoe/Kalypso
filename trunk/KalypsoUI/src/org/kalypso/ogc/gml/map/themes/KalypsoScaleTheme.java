@@ -50,7 +50,6 @@ import java.awt.geom.Rectangle2D;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,12 +75,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoScaleTheme extends AbstractKalypsoTheme
 {
-  /**
-   * The constructor.
-   */
-  public KalypsoScaleTheme( final I10nString name, final StyledLayerType layerType, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoScaleTheme( final I10nString name, final StyledLayerType layerType, final String type, final IMapModell mapModel )
   {
-    super( name, type, mapModel, legendIcon, context, shouldShowChildren );
+    super( name, type, mapModel );
 
     configureProperties( layerType );
 

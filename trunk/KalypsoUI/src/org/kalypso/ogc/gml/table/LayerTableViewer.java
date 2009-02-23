@@ -349,7 +349,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -382,7 +382,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell ); //$NON-NLS-1$
       setInput( theme );
 
       final Sort sort = layer.getSort();

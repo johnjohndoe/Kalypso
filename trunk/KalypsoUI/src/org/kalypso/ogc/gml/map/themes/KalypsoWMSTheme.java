@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.themes;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.net.URL;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -113,9 +112,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *          The map modell.
    */
-  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
-    super( themeName, linktype.toUpperCase(), mapModel, legendIcon, context, shouldShowChildren );
+    super( themeName, linktype.toUpperCase(), mapModel );
 
     m_source = source;
     m_provider = imageProvider;

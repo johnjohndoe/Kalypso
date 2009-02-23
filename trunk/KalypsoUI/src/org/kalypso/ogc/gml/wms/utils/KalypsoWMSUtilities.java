@@ -71,22 +71,22 @@ public class KalypsoWMSUtilities
   }
 
   /**
-   * This function should return an image provider vor the given source. It chooses with the PROVIDER attribute and
-   * returns the specific provider. If none could be found using that source of information, an default one ({@link org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider}
-   * will be returned.
+   * This function should return an image provider for the given source. It chooses with the PROVIDER attribute and
+   * returns the specific provider. If none could be found using that source of information, an default one (
+   * {@link org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider} will be returned.
    * 
    * @param themeName
-   *            The name of the theme. Will be used to initialize the image provider.
+   *          The name of the theme. Will be used to initialize the image provider.
    * @param layers
-   *            The layers. Will be used to initialize the image provider.
+   *          The layers. Will be used to initialize the image provider.
    * @param styles
-   *            The styles. Will be used to initialize the image provider.
+   *          The styles. Will be used to initialize the image provider.
    * @param service
-   *            The service. Will be used to initialize the image provider.
+   *          The service. Will be used to initialize the image provider.
    * @param providerID
-   *            The ID of the image provider.
+   *          The ID of the image provider.
    * @param localSRS
-   *            The client coordinate system. Will be used to initialize the image provider.
+   *          The client coordinate system. Will be used to initialize the image provider.
    * @return An image provider. Should never be null.
    */
   public static IKalypsoImageProvider getImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String providerID )

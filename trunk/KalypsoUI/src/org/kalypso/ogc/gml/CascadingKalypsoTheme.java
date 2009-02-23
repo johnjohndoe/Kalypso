@@ -76,7 +76,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 {
   private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
-    public void resourceChanged( IResourceChangeEvent event )
+    public void resourceChanged( final IResourceChangeEvent event )
     {
       handleResourceChanged( event );
     }
@@ -98,9 +98,9 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   private final IFile m_file;
 
-  public CascadingKalypsoTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public CascadingKalypsoTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
   {
-    super( layerName, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.2" ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( layerName, "gmt", mapModel ); //$NON-NLS-1$
 
     m_mapViewRefUrl = layerType.getHref();
 
@@ -183,7 +183,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       if( legendIcon != null )
         styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
 
       GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
     }

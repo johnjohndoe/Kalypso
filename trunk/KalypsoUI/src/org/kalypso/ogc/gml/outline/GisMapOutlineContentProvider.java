@@ -59,13 +59,6 @@ import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 public class GisMapOutlineContentProvider extends WorkbenchContentProvider
 {
   /**
-   * The constructor.
-   */
-  public GisMapOutlineContentProvider( )
-  {
-  }
-
-  /**
    * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
    */
   @Override
@@ -75,7 +68,7 @@ public class GisMapOutlineContentProvider extends WorkbenchContentProvider
     if( element instanceof AbstractKalypsoTheme )
     {
       final AbstractKalypsoTheme theme = (AbstractKalypsoTheme) element;
-      if( theme.shouldShowChildren() == false )
+      if( theme.shouldShowLegendChildren() == false )
         return new Object[] {};
     }
 

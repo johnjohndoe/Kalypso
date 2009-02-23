@@ -45,12 +45,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -61,19 +60,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
-import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gismapview.Gismapview.Translator;
@@ -106,9 +99,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   /**
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
-   *
+   * 
    * @throws CoreException
-   *             if a theme in the {@link Gismapview} cannot be loaded.
+   *           if a theme in the {@link Gismapview} cannot be loaded.
    */
   public void createFromTemplate( final Gismapview gisview ) throws Exception
   {
@@ -151,7 +144,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return translator;
   }
 
-  public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws Exception
+  public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws CoreException
   {
     for( final JAXBElement< ? extends StyledLayerType> layerType : layerList )
     {
@@ -166,7 +159,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_modell.setName( name );
   }
 
-  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws Exception
+  public IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException
   {
     final IKalypsoTheme theme = loadTheme( layer, m_context );
     if( theme != null )
@@ -193,66 +186,30 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_modell.dispose();
   }
 
-  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
+  private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws CoreException
   {
-    final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
     final JAXBElement<String> lg = layerType.getLegendicon();
-    String legendIcon = null;
-    if( lg != null )
-      legendIcon = lg.getValue();
+    final String legendIcon = lg == null ? null : lg.getValue();
 
     final JAXBElement<Boolean> sC = layerType.getShowChildren();
-    boolean showChildren = true;
-    if( sC != null )
-      showChildren = sC.getValue().booleanValue();
+    final boolean showChildren = sC == null ? true : sC.getValue().booleanValue();
 
     final String linktype = layerType.getLinktype();
     final ITranslator translator = getName().getTranslator();
     final I10nString layerName = new I10nString( layerType.getName(), translator );
 
-    if( layerType instanceof CascadingLayer )
-      return new CascadingLayerKalypsoTheme( layerName, (CascadingLayer) layerType, context, m_selectionManager, this, legendIcon, showChildren );
-
     final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
-    if( themeFactory != null )
-      return themeFactory.createTheme( linktype, layerName, layerType, context, this, m_selectionManager );
+    if( themeFactory == null )
+      throw new NotImplementedException( String.format( "Could not load theme '%', linktype unknown: %s", layerName.getValue(), linktype ) );
 
-    if( "wms".equals( linktype ) ) //$NON-NLS-1$
+    final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
+    if( theme instanceof AbstractKalypsoTheme )
     {
-      final String source = layerType.getHref();
-
-      /* Parse the source into properties. */
-      final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-
-      /* Get the provider attribute. */
-      final String layerProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
-      final String styleProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
-      final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
-      final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
-
-      /* Create the image provider. */
-      final String[] layers = layerProp == null ? null : layerProp.split( "," );
-      final String[] styles = styleProp == null ? null : styleProp.split( "," );
-      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
-
-      return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this, legendIcon, context, showChildren );
+      ((AbstractKalypsoTheme) theme).setLegendIcon( legendIcon, context );
+      ((AbstractKalypsoTheme) theme).setShowLegendChildren( showChildren );
     }
 
-    if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
-      return KalypsoPictureTheme.getPictureTheme( layerName, layerType, context, this, legendIcon, showChildren );
-
-    if( "gmt".equals( linktype ) ) //$NON-NLS-1$
-      return new CascadingKalypsoTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
-
-    if( "legend".equals( linktype ) ) //$NON-NLS-1$
-      return new KalypsoLegendTheme( layerName, this, legendIcon, context, showChildren );
-
-    if( "scale".equals( linktype ) ) //$NON-NLS-1$
-      return new KalypsoScaleTheme( layerName, layerType, linktype, this, legendIcon, context, showChildren );
-
-    // TODO: returns handling of gml files - part of else?!? do not assume it, proof it!
-    return new GisTemplateFeatureTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
+    return theme;
   }
 
   /**
@@ -303,10 +260,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
       for( final IKalypsoTheme theme : themes )
       {
-        final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );
+        final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, count++, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+        layerList.add( layerElement );
 
-        if( layer != null )
+        if( layerElement != null )
         {
+          final StyledLayerType layer = layerElement.getValue();
+
           if( m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) )
             layersType.setActive( layer );
 

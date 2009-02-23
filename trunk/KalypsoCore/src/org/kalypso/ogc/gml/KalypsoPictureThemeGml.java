@@ -50,8 +50,11 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -71,30 +74,38 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 {
   private final ICoverageCollection m_coverages;
 
-  public KalypsoPictureThemeGml( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureThemeGml( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell ) throws CoreException
   {
-    super( layerName, layerType, context, modell, legendIcon, shouldShowChildren );
+    super( layerName, layerType, context, modell );
 
-    // TODO: botch... find a better way of loading gml workspace!
-    // maybe it could be treated as normal gm with a special display element?
-    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() ), null );
-    final Feature fRoot = workspace.getRootFeature();
-
-    m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
-    if( m_coverages.size() != 1 )
-      throw new NotImplementedException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeGml.0") ); //$NON-NLS-1$
-
-    for( final ICoverage coverage : m_coverages )
+    try
     {
-      final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
+      // TODO: botch... find a better way of loading gml workspace!
+      // maybe it could be treated as normal gm with a special display element?
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() ), null );
+      final Feature fRoot = workspace.getRootFeature();
 
-      /* recGridDomain */
-      setRectifiedGridDomain( coverage2.getGridDomain() );
+      m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
+      if( m_coverages.size() != 1 )
+        throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
-      // HACK: we assume, that we only have exactly ONE coverage per picture-theme
-      break;
+      for( final ICoverage coverage : m_coverages )
+      {
+        final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
+
+        /* recGridDomain */
+        setRectifiedGridDomain( coverage2.getGridDomain() );
+
+        // HACK: we assume, that we only have exactly ONE coverage per picture-theme
+        break;
+      }
     }
-
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Unable to initialize picture theme", e );
+      throw new CoreException( status );
+    }
   }
 
   /**

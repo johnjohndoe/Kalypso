@@ -47,7 +47,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,9 +160,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   // Default: just a shade of gray for a little contrast
   private final RGB m_backgroundColor = new RGB( 245, 245, 245 );
 
-  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell )
   {
-    super( name, "legend", mapModell, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, "legend", mapModell ); //$NON-NLS-1$
 
     m_legendThemeIcon = null;
 

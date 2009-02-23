@@ -35,14 +35,12 @@ import java.util.logging.Logger;
 
 import javax.media.jai.TiledImage;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -60,18 +58,6 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
 
-  public static IKalypsoTheme getPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
-  {
-    final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    final String system = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
-      return new KalypsoPictureThemeWorldFile( layerName, layerType, context, modell, system, legendGraphic, shouldShowChildren );
-    else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) ) //$NON-NLS-1$
-      return new KalypsoPictureThemeGml( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
-
-    throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureTheme.5" ) + layerType.getLinktype() ); //$NON-NLS-1$
-  }
-
   private TiledImage m_image = null;
 
   private RectifiedGridDomain m_domain;
@@ -80,9 +66,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   private final URL m_context;
 
-  public KalypsoPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell ) 
   {
-    super( layerName, layerType.getLinktype(), modell, legendIcon, context, shouldShowChildren );
+    super( layerName, layerType.getLinktype(), modell );
 
     m_layerType = layerType;
     m_context = context;
@@ -121,7 +107,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     if( legendIcon != null )
       layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
   }
 
   /**

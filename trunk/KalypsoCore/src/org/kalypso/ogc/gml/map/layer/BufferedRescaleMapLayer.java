@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
@@ -216,12 +216,25 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
     m_runningTile = runningTile;
   }
 
-  public void applyTile( final BufferedTile tile )
+  public void applyTile( final BufferedTile tile, final IStatus result )
   {
-    m_tile = tile;
-    m_runningTile = null;
+    if( result.isOK() )
+    {
+      m_tile = tile;
+      m_runningTile = null;
 
-    getMapPanel().invalidateMap();
+      getMapPanel().invalidateMap();
+    }
+    else if( result.matches( IStatus.CANCEL ) )
+      return;
+    else
+    {
+      // TODO: do something with the status, so it gets seen in the outline!
+      // Other idea: paint status into image, when this tile gets painted
+      final Throwable exception = result.getException();
+      if( exception != null )
+        exception.printStackTrace();
+    }
   }
 
 }

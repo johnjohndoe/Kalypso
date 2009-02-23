@@ -46,7 +46,10 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
@@ -64,9 +67,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
-  public KalypsoPictureThemeWorldFile( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureThemeWorldFile( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String system ) throws CoreException
   {
-    super( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
+    super( layerName, layerType, context, modell );
 
     final String href = layerType.getHref();
     if( href == null || !href.contains( "." ) ) //$NON-NLS-1$
@@ -76,30 +79,39 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     if( arrFileName.length != 2 )
       throw new IllegalStateException();
 
-    final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
-
-    if( GridFileVerifier.verify( imageUrl ) )
+    try
     {
-      final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( imageUrl, system );
+      final URL imageUrl = UrlResolverSingleton.resolveUrl( context, arrFileName[0] );
 
-      final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
-      setImage( new TiledImage( image, true ) );
+      if( GridFileVerifier.verify( imageUrl ) )
+      {
+        final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( imageUrl, system );
 
-      // TODO: the image keeps does not release the stream onto the tiff
-      // maybe we must call image.dispose in order to do this?
-      // can we do that here??
-      final int height = getImage().getHeight();
-      final int width = getImage().getWidth();
+        final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
+        setImage( new TiledImage( image, true ) );
 
-      final GM_Point origin = GeometryFactory.createGM_Point( new Double( reader.getOriginCornerX() ), new Double( reader.getOriginCornerY() ), system );
+        // TODO: the image keeps does not release the stream onto the tiff
+        // maybe we must call image.dispose in order to do this?
+        // can we do that here??
+        final int height = getImage().getHeight();
+        final int width = getImage().getWidth();
 
-      final OffsetVector offsetX = new OffsetVector( new Double( reader.getVectorXx() ), new Double( reader.getVectorXy() ) );
-      final OffsetVector offsetY = new OffsetVector( new Double( reader.getVectorYx() ), new Double( reader.getVectorYy() ) );
-      final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
+        final GM_Point origin = GeometryFactory.createGM_Point( new Double( reader.getOriginCornerX() ), new Double( reader.getOriginCornerY() ), system );
 
-      setRectifiedGridDomain( new RectifiedGridDomain( origin, offsetX, offsetY, gridRange ) );
+        final OffsetVector offsetX = new OffsetVector( new Double( reader.getVectorXx() ), new Double( reader.getVectorXy() ) );
+        final OffsetVector offsetY = new OffsetVector( new Double( reader.getVectorYx() ), new Double( reader.getVectorYy() ) );
+        final GridRange gridRange = new GridRange_Impl( new double[] { 0, 0 }, new double[] { width, height } );
 
-      image.dispose();
+        setRectifiedGridDomain( new RectifiedGridDomain( origin, offsetX, offsetY, gridRange ) );
+
+        image.dispose();
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Unable to initialize picture theme", e );
+      throw new CoreException( status );
     }
   }
 }
