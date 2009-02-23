@@ -35,6 +35,9 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -52,7 +55,7 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
  * typename ::= Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden <br>
  * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ segment ::= #fid# <id>| <property>|
  * <property>[ <typename>] featurePath ::= <emptypath>| <segment>/ <segment>]]>
- *
+ * 
  * @author belger
  */
 public class FeaturePath
@@ -107,8 +110,8 @@ public class FeaturePath
    * Gibt das durch den FeaturPath gegebene Feature zurück.
    * </p>
    * <p>
-   * Syntax des FeaturePath: <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der
-   * featureTypeName optional ist
+   * Syntax des FeaturePath: <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName
+   * optional ist
    * </p>
    * <p>
    * Es darf innerhalb des Pfads keine (Feature)Liste vorkommen, nur am Ende
@@ -117,7 +120,7 @@ public class FeaturePath
    * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList zurückgegeben, deren
    * Elemente alle vom angegebenen Typ sind
    * </p>
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeature( final GMLWorkspace workspace )
@@ -191,7 +194,7 @@ public class FeaturePath
     private final boolean m_isId;
 
     /** Path may be filtered with type (Applies only to End of Path) */
-    private final String m_typename;
+    private final QName m_typename;
 
     public Segment( final String segment )
     {
@@ -208,7 +211,7 @@ public class FeaturePath
         if( segment.endsWith( "]" ) )
         {
           final int start = segment.lastIndexOf( '[' );
-          m_typename = segment.substring( start + 1, segment.length() - 1 );
+          m_typename = QName.valueOf( segment.substring( start + 1, segment.length() - 1 ) );
           m_name = segment.substring( 0, start );
         }
         else
@@ -271,21 +274,20 @@ public class FeaturePath
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contextSchema = workspace.getGMLSchema();
-          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, false, true );
-          for( final IFeatureType type : associationFeatureTypes )
+          
+          final String namespaceURI = m_typename.getNamespaceURI();
+          if( namespaceURI != null && !namespaceURI.isEmpty() )
           {
-            final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( type, workspace.getGMLSchema(), true, true );
-            for( final IFeatureType substType : substituts )
-            {
-              if( m_typename.equals( substType.getName() ) )
-                return substType;
-            }
-
-            // TODO: this does not work for filtered pathes, substituion should also
-            // be check upwards
-
-            // if( m_typename.equals( type.getName() ) )
-            // return type;
+            final IFeatureType foundFT = contextSchema.getFeatureType( m_typename );
+            if( foundFT != null && foundFT.getQName().equals( m_typename ) )
+              return foundFT;
+          }
+          
+          final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
+          for( final IFeatureType substType : associationFeatureTypes )
+          {
+            if( QNameUtilities.equalsLocal( m_typename, substType.getQName() ) )
+              return substType;
           }
 
           return null;

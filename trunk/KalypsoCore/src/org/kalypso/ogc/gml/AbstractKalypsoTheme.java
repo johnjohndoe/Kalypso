@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -106,17 +107,18 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    */
-  private final String m_legendIcon;
+  private String m_legendIcon = null;
 
   /**
-   * The context, if the theme is part of a template loaded from a file. May be null.
+   * The context, if the theme is part of a template loaded from a file. May be null. Used to resolve dependend
+   * resources like the legend-icon.
    */
-  private final URL m_context;
+  private URL m_context = null;
 
   /**
    * Stores an icon from an external URL or URN and which can be used for the layer in a legend. May be null.
    */
-  private org.eclipse.swt.graphics.Image m_externIcon;
+  private org.eclipse.swt.graphics.Image m_externIcon = null;
 
   private I10nString m_name;
 
@@ -138,7 +140,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * True, if the theme should show its children in an outline. Otherwise false.
    */
-  private final boolean m_shouldShowChildren;
+  private boolean m_showLegendChildren = true;
 
   /**
    * The constructor.
@@ -156,20 +158,16 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @param shouldShowChildren
    *          True, if the theme should show its children in an outline. Otherwise false.
    */
-  public AbstractKalypsoTheme( final I10nString name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public AbstractKalypsoTheme( final I10nString name, final String type, final IMapModell mapModel )
   {
     Assert.isNotNull( mapModel );
 
     m_name = name;
     m_type = type;
     m_mapModel = mapModel;
-    m_legendIcon = legendIcon;
-    m_context = context;
-    m_shouldShowChildren = shouldShowChildren;
-    m_externIcon = null;
 
     /* Initialize properties */
-    // deleteable defaults to 'true', because this was the old behaviour
+    // deleteable defaults to 'true', because this was the old behavior
     m_properties.put( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( true ) );
   }
 
@@ -651,12 +649,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_type;
   }
 
-// public void invalidate( final GM_Envelope bbox )
-// {
-// if( isVisible() )
-// m_mapModel.invalidate( bbox );
-// }
-
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
    */
@@ -761,6 +753,24 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     return m_legendIcon;
   }
+  
+  public void setLegendIcon( final String legendIcon, final URL context )
+  {
+    if( ObjectUtils.equals( m_legendIcon, legendIcon ) && ObjectUtils.equals( m_context, context ) )
+      return;
+    
+    m_legendIcon = legendIcon;
+    m_context = context;
+
+    /* If the image is disposed; this theme was disposed */
+    if( m_externIcon != null && m_externIcon.isDisposed() )
+    {
+      m_externIcon.dispose();
+      m_externIcon = null;
+    }
+    
+    fireStatusChanged();
+  }
 
   /**
    * This function returns the context.
@@ -778,11 +788,21 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * 
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
-  public boolean shouldShowChildren( )
+  public boolean shouldShowLegendChildren( )
   {
-    return m_shouldShowChildren;
+    return m_showLegendChildren;
   }
 
+  public void setShowLegendChildren( final boolean showChildren )
+  {
+    if( ObjectUtils.equals( m_showLegendChildren, showChildren ) )
+      return;
+
+    m_showLegendChildren = showChildren;
+    
+    fireStatusChanged();
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.ICheckStateProvider#isChecked()
    */
@@ -801,36 +821,4 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return false;
   }
 
-// /**
-// * @see java.lang.Object#equals(java.lang.Object)
-// */
-// @Override
-// public boolean equals( final Object obj )
-// {
-// if( obj instanceof IKalypsoTheme )
-// {
-// final IKalypsoTheme other = (IKalypsoTheme) obj;
-//
-// final EqualsBuilder builder = new EqualsBuilder();
-// builder.append( this.getLabel(), other.getLabel() );
-// builder.append( this.getType(), other.getType() );
-//
-// return builder.isEquals();
-// }
-//
-// return super.equals( obj );
-// }
-//
-// /**
-// * @see java.lang.Object#hashCode()
-// */
-// @Override
-// public int hashCode( )
-// {
-// final HashCodeBuilder builder = new HashCodeBuilder();
-// builder.append( this.getLabel() );
-// builder.append( this.getType() );
-//
-// return builder.toHashCode();
-// }
 }
