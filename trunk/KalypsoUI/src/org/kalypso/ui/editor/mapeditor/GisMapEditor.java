@@ -40,7 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
@@ -69,5 +74,38 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
     }
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPartControl( final Composite parent )
+  {
+    super.createPartControl( parent );
+
+    final IEditorInput input = getEditorInput();
+    if( input instanceof IStorageEditorInput )
+    {
+      try
+      {
+        startLoadJob( ((IStorageEditorInput) input).getStorage() );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  /**
+   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   */
+  @Override
+  public void init( final IEditorSite site, final IEditorInput input )
+  {
+    super.init( site, input );
+
+    initMapPanel( site );
   }
 }
