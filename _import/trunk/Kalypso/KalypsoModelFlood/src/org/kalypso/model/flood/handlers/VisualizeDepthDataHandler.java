@@ -9,7 +9,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -38,7 +38,8 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
 
     /* Get the map */
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+    final IWorkbenchPage activePage = window.getActivePage();
+    final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
@@ -69,9 +70,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
-      final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-
-      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePart );
+      final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage );
       job.schedule();
     }
     catch( final CoreException e )
