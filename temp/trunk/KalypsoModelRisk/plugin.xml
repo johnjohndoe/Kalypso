@@ -53,6 +53,11 @@
               id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
               name="Kalypso RISK Model - Demo Projekt"
               project="true"/>
+        <!-- TODO remove both wizard from plugin.xml
+        	They cannot be used from the File-New menu, so this makes no sense.
+        	However, the wizards are invoked thorugh the eclipses-extension mechanism (from the handler)
+        	so the handlers have to be rewritten first (they should dirdctly instantiate those wozards).
+        -->
 		<wizard
             class="org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard"
             icon="icons/risk_project.gif"
@@ -65,14 +70,7 @@
 	        id="org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard"
 	        name="ImportWaterlevelRaster"
 	        project="false">
-  </wizard>
-  <!--
-  <wizard
-        class="org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler"
-        id="org.kalypso.risk.model.actions.rasterizeLanduse.RasterizationWizard"
-        name="RasterizationWizard">
-  </wizard>
-  -->
+        </wizard>
 	</extension>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
@@ -169,6 +167,7 @@
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
+    <!-- Handlers for workflow.xml, so unknown commandId is ok here. -->
     <handler
           class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
@@ -238,9 +237,12 @@
                   point="org.eclipse.ui.views">
                <view
                      allowMultiple="false"
+                     category="org.kalypso.ui.kalypso"
                      class="org.kalypso.risk.views.RiskStatisticsResultView"
+                     icon="icons/risk_project.gif"
                      id="org.kalypso.risk.views.RiskStatisticsResultView"
-                     name="Risk Statistics View">
+                     name="Risk Statistics View"
+                     restorable="false">
                </view>
             </extension>
             <extension
@@ -250,17 +252,11 @@
                      simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization"
                      typeID="KalypsoRisk_LanduseRasterization">
                </simulation>
-            </extension>
-            <extension
-                  point="org.kalypso.simulation.core.simulation">
                <simulation
                      catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
                      simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation"
                      typeID="KalypsoRisk_SpecificDamageCalculation">
                </simulation>
-            </extension>
-            <extension
-                  point="org.kalypso.simulation.core.simulation">
                <simulation
                      catalogClass="org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog"
                      simulationClass="org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation"
