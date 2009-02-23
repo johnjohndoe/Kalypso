@@ -45,7 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 /**
  * Holds debug-constants in order to produce trace output.
  * <p>
- * Debug constants correspond to entris in <code>.options</code> file.
+ * Debug constants correspond to entries in <code>.options</code> file.
  * </p>
  * 
  * @author Gernot Belger
@@ -53,4 +53,9 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 public class KalypsoUIDebug
 {
   public static Debug FEATUREVIEW_OPERATIONS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/featurecomposite/operations" ); //$NON-NLS-1$
+
+  /**
+   * Output for property testers defined in org.kalypso.ui.
+   */
+  public static Debug PROPERTY_TESTER = new Debug( KalypsoGisPlugin.getDefault(), "/debug/propertytester" ); //$NON-NLS-1$
 }
