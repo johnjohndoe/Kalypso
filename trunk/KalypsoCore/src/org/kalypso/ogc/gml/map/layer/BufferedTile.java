@@ -42,10 +42,6 @@ package org.kalypso.ogc.gml.map.layer;
 
 import java.awt.Graphics;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.jobs.BufferPaintJob;
 import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -59,28 +55,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class BufferedTile extends BufferPaintJob
 {
-  private final IJobChangeListener m_listener = new JobChangeAdapter()
-  {
-    /**
-     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
-     */
-    @Override
-    public void done( final IJobChangeEvent event )
-    {
-      handleJobDone( event.getResult() );
-    }
-  };
-
   private final GeoTransform m_world2screen;
 
-  private final BufferedRescaleMapLayer m_layer;
-
-  public BufferedTile( final IPaintable paintable, final BufferedRescaleMapLayer layer, final GeoTransform world2screen )
+  public BufferedTile( final IPaintable paintable, final GeoTransform world2screen )
   {
     super( paintable );
-    m_layer = layer;
     m_world2screen = world2screen;
-    addJobChangeListener( m_listener );
   }
 
   public GeoTransform getWorld2Screen( )
@@ -105,13 +85,4 @@ public class BufferedTile extends BufferPaintJob
   {
     MapPanelUtilities.paintIntoExtent( g, world2screen, getImage(), m_world2screen.getSourceRect(), null );
   }
-
-  protected void handleJobDone( final IStatus result )
-  {
-    removeJobChangeListener( m_listener );
-
-    m_layer.applyTile( this, result );
-  }
-
-
 }
