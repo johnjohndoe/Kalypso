@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets;
+package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -50,7 +50,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -209,30 +208,6 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
   public void leftReleased( final Point p )
-  {
-    // not implemented by default
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
-   */
-  public void middleClicked( final Point p )
-  {
-    // not implemented by default
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
-   */
-  public void middlePressed( final Point p )
-  {
-    // not implemented by default
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
-   */
-  public void middleReleased( final Point p )
   {
     // not implemented by default
   }

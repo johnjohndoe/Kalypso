@@ -64,7 +64,7 @@ public class ZoomOutHandler extends AbstractHandler implements IHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
-    final GM_Envelope zoomBox = MapPanelUtilities.calcZoomOutBoundingBox( mapPanel );
+    final GM_Envelope zoomBox = MapPanelUtilities.calcZoomInBoundingBox( mapPanel.getBoundingBox(), false );
     MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
 
     return Status.OK_STATUS;

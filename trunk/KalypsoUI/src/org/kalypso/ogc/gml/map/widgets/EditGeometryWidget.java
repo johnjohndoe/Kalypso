@@ -52,6 +52,7 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -177,7 +178,7 @@ public class EditGeometryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
    */
   @Override
-  public void middleClicked( final Point p )
+  public void rightClicked( final Point p )
   {
     final GeoTransform transform = getMapPanel().getProjection();
     final IKalypsoTheme activeTheme = getActiveTheme();

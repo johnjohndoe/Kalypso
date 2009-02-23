@@ -45,6 +45,7 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**

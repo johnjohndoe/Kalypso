@@ -71,22 +71,32 @@ public interface IWidget
 
   public void leftReleased( Point p );
 
-  public void middleClicked( Point p );
-
-  public void middlePressed( Point p );
-
-  public void middleReleased( Point p );
-
   public void doubleClickedLeft( Point p );
 
   public void doubleClickedRight( Point p );
 
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
   public void rightClicked( Point p );
 
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
   public void rightPressed( Point p );
 
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
   public void rightReleased( final Point p );
 
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
   public void clickPopup( final Point p );
 
   // MouseMotions

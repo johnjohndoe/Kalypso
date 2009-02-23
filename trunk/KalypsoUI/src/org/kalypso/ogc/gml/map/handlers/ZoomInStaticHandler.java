@@ -48,9 +48,8 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
@@ -65,24 +64,8 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
-    final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-
-    GM_Envelope wishBBox = null;
-
-    final GM_Position currentMax = currentBBox.getMax();
-    final GM_Position currentMin = currentBBox.getMin();
-
-    final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 5;
-    final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 5;
-    final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 5;
-    final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 5;
-
-    final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-    final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-
-    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, currentBBox.getCoordinateSystem() );
-
-    final GM_Envelope zoomBox = wishBBox;
+    final GM_Envelope zoomBox = MapPanelUtilities.calcZoomInBoundingBox( mapPanel.getBoundingBox(), true );
+    
     MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
 
     return Status.OK_STATUS;

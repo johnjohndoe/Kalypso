@@ -46,20 +46,29 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Der Controller für die MapView
  * 
  * @author vdoemming
  */
-public class WidgetManager implements MouseListener, MouseMotionListener, KeyListener, IWidgetManager
+public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
 {
   private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
 
@@ -77,12 +86,20 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
   private IWidget m_actualWidget = null;
 
+  /** Widget used for middle mouse actions */
+  private final IWidget m_middleWidget = new PanToWidget();
+
+  /** If middle was pressed down; prohibits dragging any other widget */
+  private boolean m_middleDown = false;
+
   public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
     m_commandTarget = commandTarget;
 
     m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
+
+    m_middleWidget.activate( commandTarget, mapPanel );
   }
 
   public void dispose( )
@@ -117,10 +134,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-        break;
+          break;
 
         case MouseEvent.BUTTON2:
-          actualWidget.middleClicked( e.getPoint() );
+          m_middleWidget.leftClicked( e.getPoint() );
           break;
 
         case MouseEvent.BUTTON3:
@@ -130,7 +147,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-        break;
+          break;
 
         default:
           break;
@@ -150,6 +167,12 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   // MouseMotionAdapter:
   public void mouseDragged( final MouseEvent e )
   {
+    if( m_middleDown )
+    {
+      m_middleWidget.dragged( e.getPoint() );
+      return;
+    }
+
     final IWidget actualWidget = getActualWidget();
     if( actualWidget != null )
       actualWidget.dragged( e.getPoint() );
@@ -181,7 +204,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           break;
 
         case MouseEvent.BUTTON2:
-          actualWidget.middlePressed( e.getPoint() );
+          m_middleDown = true;
+          m_middleWidget.leftPressed( e.getPoint() );
           break;
 
         case MouseEvent.BUTTON3:
@@ -211,7 +235,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           break;
 
         case MouseEvent.BUTTON2:
-          actualWidget.middleReleased( e.getPoint() );
+          m_middleWidget.leftReleased( e.getPoint() );
           break;
 
         case MouseEvent.BUTTON3: // Right
@@ -222,6 +246,34 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           break;
       }
     }
+
+    m_middleDown = false;
+  }
+
+  /**
+   * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
+   */
+  @Override
+  public void mouseWheelMoved( final MouseWheelEvent e )
+  {
+    e.consume();
+
+    final int wheelRotation = e.getWheelRotation();
+
+    final boolean in = wheelRotation > 0 ? false : true;
+
+    GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
+      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
+
+    // Also center on current position
+    final GeoTransform transform = m_mapPanel.getProjection();
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( e.getX(), e.getY() );
+    final GM_Position position = transform.getSourcePoint( pixelPos );
+    final GM_Point centerPoint = GeometryFactory.createGM_Point( position, boundingBox.getCoordinateSystem() );
+    final GM_Envelope newExtent = boundingBox.getPaned( centerPoint );
+
+    getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, newExtent ), null );
   }
 
   public void paintWidget( final Graphics g )
@@ -317,4 +369,5 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     if( m_actualWidget != null )
       m_actualWidget.setSelection( selection );
   }
+
 }

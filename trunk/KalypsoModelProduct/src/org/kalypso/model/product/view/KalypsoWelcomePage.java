@@ -219,6 +219,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
       @Override
       public void mouseUp( final MouseEvent e )
       {
+        // TODO: platform dependent; try to find other solution
         final String command = "cmd /C start http://kalypso.sourceforge.net/"; //$NON-NLS-1$
 
         try

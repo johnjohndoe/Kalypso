@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class is a selection widget over all themes.

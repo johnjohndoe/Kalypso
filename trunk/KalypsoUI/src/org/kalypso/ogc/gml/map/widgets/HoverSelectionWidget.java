@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class is a selection widget over all themes.

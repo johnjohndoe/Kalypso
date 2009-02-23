@@ -45,6 +45,7 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
