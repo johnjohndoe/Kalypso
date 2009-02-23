@@ -45,12 +45,11 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypso.ui.KalypsoUIDebug;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -96,6 +95,15 @@ public class ActiveThemeTester extends PropertyTester
 
     final IKalypsoTheme theme = mapModell.getActiveTheme();
 
+    final boolean result = test( theme, property, expectedValue );
+    
+    KalypsoUIDebug.PROPERTY_TESTER.printf( "Testing property '%s' for expectedValue '%s' on theme '%s': %s%n", property, expectedValue, theme, result );
+    
+    return result;
+  }
+
+  private boolean test( final IKalypsoTheme theme, final String property, final Object expectedValue )
+  {
     if( PROPERTY_NOTNULL.equals( property ) )
       return testNotNull( theme );
 
@@ -131,24 +139,15 @@ public class ActiveThemeTester extends PropertyTester
     if( theme == null || expectedValue == null )
       return false;
 
-    // TODO: probably not yet good enough: check also for substitution, etc?
     if( !(theme instanceof IKalypsoFeatureTheme) )
       return false;
 
-    final FeatureList featureList = ((IKalypsoFeatureTheme) theme).getFeatureList();
-    if( featureList == null )
+    final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
+    if( featureType == null )
       return false;
-
-    final IRelationType parentFTP = featureList.getParentFeatureTypeProperty();
-    if( parentFTP == null )
-      return false;
-
-    final IFeatureType targetFeatureType = parentFTP.getTargetFeatureType();
-    if( targetFeatureType == null )
-      return false;
-
+    
     final QName expectedQName = QName.valueOf( expectedValue.toString() );
-    return GMLSchemaUtilities.substitutes( targetFeatureType, expectedQName );
+    return GMLSchemaUtilities.substitutes( featureType, expectedQName );
   }
 
   private boolean testNotNull( final IKalypsoTheme theme )
