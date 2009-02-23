@@ -44,10 +44,8 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -68,8 +66,8 @@ public class NodeOps
 
   public static final IFE1D2DNode findeNodeImpl( final GM_Point point, final FE1D2DDiscretisationModel model )
   {
-    final FeatureList elementList = (FeatureList) model.getElements().getWrappedList();
-    final FeatureList element2DList = new FilteredFeatureList( elementList, IPolyElement.QNAME.getLocalPart(), true );
+    final FeatureList elementList = model.getElements().getWrappedList();
+    final FeatureList element2DList = new FilteredFeatureList( elementList, IPolyElement.QNAME, true );
 
     // 1. Try: look, if the position is within an element
     final List foundElements = element2DList.query( point.getPosition(), null );
@@ -115,7 +113,7 @@ public class NodeOps
   public static boolean hasElevation( final IFE1D2DNode node )
   {
     final GM_Point point = node.getPoint();
-    boolean status = false;
+    final boolean status = false;
     if( point.getCoordinateDimension() <= 2 )
       return false;
     return !Double.isNaN( point.getZ() );
