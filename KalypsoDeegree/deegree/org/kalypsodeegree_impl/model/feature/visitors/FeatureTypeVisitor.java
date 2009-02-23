@@ -35,6 +35,9 @@
  */
 package org.kalypsodeegree_impl.model.feature.visitors;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -51,7 +54,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class FeatureTypeVisitor implements FeatureVisitor
 {
-  private final String m_typename;
+  private final QName m_typename;
 
   /** Falls true, werden auch features acceptiert, welche den angegebenen Typ substituieren */
   private final boolean m_acceptIfSubstituting;
@@ -60,16 +63,21 @@ public class FeatureTypeVisitor implements FeatureVisitor
 
   public FeatureTypeVisitor( final FeatureVisitor visitor, final IFeatureType ft, final boolean acceptIfSubstituting )
   {
-    this( visitor, ft.getQName().getLocalPart(), acceptIfSubstituting );
+    this( visitor, ft.getQName(), acceptIfSubstituting );
   }
 
-  public FeatureTypeVisitor( final FeatureVisitor visitor, final String typeLocalPart, final boolean acceptIfSubstituting )
+  public FeatureTypeVisitor( final FeatureVisitor visitor, final QName typeName, final boolean acceptIfSubstituting )
   {
     m_visitor = visitor;
-    m_typename = typeLocalPart;
+    m_typename = typeName;
     m_acceptIfSubstituting = acceptIfSubstituting;
   }
 
+  public QName getTypename( )
+  {
+    return m_typename;
+  }
+  
   public void setVisitor( final FeatureVisitor visitor )
   {
     m_visitor = visitor;
@@ -92,17 +100,13 @@ public class FeatureTypeVisitor implements FeatureVisitor
       return false;
 
     final IFeatureType featureType = f.getFeatureType();
-    // final FeatureType[] substituts = f.getFeatureType().getSubstituts( m_context, false, true );
-
-    // final String substName = featureType.getNamespace() + ":" + m_typename;
-    // return (m_typename.equals( featureType.getQName() ) || (m_acceptIfSubstituting && substName.equals(
-    // featureType.getSubstitutionGroup() )));
-    if( m_typename.equals( featureType.getName() ) )
+    if( QNameUtilities.equalsLocal( m_typename, featureType.getQName() ) )
       return true;
+
+    // ATTENTION: only one level of substitution.... this is too weak!
     if( m_acceptIfSubstituting )
-    {
-      return m_typename.equals( f.getFeatureType().getSubstitutionGroupFT().getQName().getLocalPart() );
-    }
+      return QNameUtilities.equalsLocal( m_typename, featureType.getSubstitutionGroupFT().getQName() );
+    
     return false;
   }
 }

@@ -41,6 +41,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,10 +69,10 @@ public class FilteredFeatureList implements FeatureList
 
   private final CollectorVisitor m_collector = new CollectorVisitor();
 
-  public FilteredFeatureList( final FeatureList original, final String typeLocalName, final boolean acceptIfSubstituting )
+  public FilteredFeatureList( final FeatureList original, final QName filterQName, final boolean acceptIfSubstituting )
   {
     m_original = original;
-    m_filterVisitor = new FeatureTypeVisitor( null, typeLocalName, acceptIfSubstituting );
+    m_filterVisitor = new FeatureTypeVisitor( null, filterQName, acceptIfSubstituting );
   }
 
   /**
@@ -437,4 +439,5 @@ public class FilteredFeatureList implements FeatureList
       return null;
     return features[0];
   }
+
 }
