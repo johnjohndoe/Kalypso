@@ -158,8 +158,8 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapPanel, IPolyElement.QNAME );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
-    final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default"; //$NON-NLS-1$
-    m_calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.2") ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+    m_calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitWidget.2" ) ), mapModell ); //$NON-NLS-1$
+    m_calcUnitTheme.setLegendIcon( "urn:kalypso:map:theme:swtimage:calculationunittheme:default", null ); //$NON-NLS-1$
     m_calcUnitTheme.setCalculationUnit( m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
     // mapModell.addTheme( calUnitTheme );
     mapModell.insertTheme( m_calcUnitTheme, 0 );

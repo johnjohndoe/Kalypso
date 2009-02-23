@@ -153,10 +153,8 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model ) );
       m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
-      // TODO: ulgy! This also causes a whole map repaint if selection in this widget changes
-      // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
-      final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default"; //$NON-NLS-1$
-      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.2" ) ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget.2" ) ), mapModell ); //$NON-NLS-1$
+      calcUnitTheme.setLegendIcon( "urn:kalypso:map:theme:swtimage:calculationunittheme:default", null ); //$NON-NLS-1$
       calcUnitTheme.setCalculationUnit( m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
       mapModell.insertTheme( calcUnitTheme, 0 );
 

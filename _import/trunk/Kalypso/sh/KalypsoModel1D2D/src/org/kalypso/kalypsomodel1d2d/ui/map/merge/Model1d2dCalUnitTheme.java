@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 
@@ -79,9 +78,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
 
-  public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel )
   {
-    super( name,  Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0") , mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( name, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme.0" ), mapModel ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
