@@ -60,7 +60,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 public class URLGetter implements ICoreRunnableWithProgress
 {
-  public static URLGetter createURLGetter( final URL url, final int timeOut, int retries )
+  public static URLGetter createURLGetter( final URL url, final int timeOut, final int retries )
   {
     try
     {
