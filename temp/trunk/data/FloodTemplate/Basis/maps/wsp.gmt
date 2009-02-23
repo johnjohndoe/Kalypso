@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mapv:gismapview name="Wasserspiegellagen" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <mapv:extent top="1031.9629160488093" srs="EPSG:31467" right="1031.9272908366534" left="1000.0448207171313" bottom="983.2079359691279"/>
     <mapv:layers>

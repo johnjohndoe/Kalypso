@@ -5,12 +5,12 @@
 		<Name>dtmGrid</Name>
 		<UserStyle>
 			<Name>waterdepthUserStyle</Name>
-			<Title>FlieÃŸtiefen-UserStyle</Title>
+			<Title>Fließtiefen-UserStyle</Title>
 			<FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc">
 				<Name>depthGridFeatureTypeStyle</Name>
 				<Rule>
 					<Name>depthGridRule</Name>
-					<Title>FlieÃŸtiefen</Title>
+					<Title>Fließtiefen</Title>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<RasterSymbolizer uom="pixel">
