@@ -46,6 +46,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +109,15 @@ public class DefaultProcess implements IProcess
 
     m_processBuilder = new ProcessBuilder( commandLine );
 
-    m_processBuilder.directory();
+    try
+    {
+      final File workingDirFile = new File(new URI(workingDir.getName().getURI()));
+      m_processBuilder.directory(workingDirFile);
+    }
+    catch( final URISyntaxException e )
+    {
+      throw new IOException("Could not set local working directory.",e);
+    }
   }
 
   /** Final because called from constructor. */
