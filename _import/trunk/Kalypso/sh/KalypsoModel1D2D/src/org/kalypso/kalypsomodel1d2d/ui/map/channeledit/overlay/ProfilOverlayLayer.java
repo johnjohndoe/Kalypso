@@ -112,7 +112,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo drag( Point curserPos, EditInfo dragStartData )
+  public EditInfo drag( final Point curserPos, final EditInfo dragStartData )
   {
     /**
      * get Screen and logical Points
@@ -160,11 +160,11 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
     if( snapPoint != null )
     {
-      Point spScreen = toScreen( snapPoint );
+      final Point spScreen = toScreen( snapPoint );
       snapped.setPoints( new Point[] { new Point( spScreen.x, 10 ), new Point( spScreen.x, top ) } );
       hoverFigure = new IPaintable()
       {
-        public void paint( GC gc )
+        public void paint( final GC gc )
         {
           lineFigure_move.paint( gc );
           snapped.paint( gc );
@@ -172,7 +172,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       };
     }
 
-    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( snapPoint  ), curserPos );
+    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( snapPoint ), curserPos );
   }
 
   /**
@@ -180,7 +180,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final Integer index = (Integer) dragStartData.m_data;
     final IProfil profil = getProfil();
@@ -201,8 +201,8 @@ public class ProfilOverlayLayer extends PointsLineLayer
      */
     if( Math.abs( point.x - fePointScreen.x ) < 5 )
     {
-      //force repaint
-      getEventHandler().fireLayerContentChanged(  this );
+      // force repaint
+      getEventHandler().fireLayerContentChanged( this );
       return;
     }
     /**
@@ -246,7 +246,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       newProfile.getResult().setSortComponents( new IComponent[] { breiteComponent } );
     setProfil( newProfile );
 
-    // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segmetns
+    // TODO: not so nice, use the same profile object for both segments, so that changes goes to both segments
     // directly
     updateProfileForNeighbourSegment();
 
@@ -261,7 +261,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     {
       e.printStackTrace();
     }
-    final SegmentData currentSegment = m_data.getCurrentSegment( m_data.m_selectedSegment );
+    final SegmentData currentSegment = m_data.getSelectedSegment();
     currentSegment.updateProfileIntersection();
     final CreateChannelData.PROF prof = m_data.getCurrentProfile();
     m_data.completationCheck();
@@ -283,20 +283,22 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final IProfil profil = getProfil();
     final IComponent HW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
     final IComponent RW = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    
+
     if( (HW == null) || (RW == null) )
       return ""; //$NON-NLS-1$
     try
     {
-      
-      return String.format( TOOLTIP_FORMAT, new Object[] { RW.getName(),ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT , point ), HW.getName(), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT , point ), HW.getUnit() } );
+
+      return String.format( TOOLTIP_FORMAT, new Object[] { RW.getName(), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point ), HW.getName(),
+          ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point ), HW.getUnit() } );
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       return e.getLocalizedMessage();
     }
 
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
    */
@@ -310,7 +312,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.PointsLineLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
 
@@ -328,7 +330,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
     pl.setPoints( points );
     pl.paint( gc );
 
-    PointFigure pfl = new PointFigure();
+    final PointFigure pfl = new PointFigure();
     pfl.setStyle( getPointStyle() );
     pfl.setPoints( points );
     pfl.paint( gc );
@@ -354,7 +356,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
   @Override
   public String getTitle( )
   {
-    return Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer.1" ); //$NON-NLS-1$
   }
 
   private IProfil createNewProfile( final IRecord profilePoint, final double width, final double heigth, final GM_Point geoPoint )
@@ -414,8 +416,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
     return tmpProfil;
   }
 
- 
-
   /**
    * checks if the intersection points have been moved and updates them in the data class (also for the neighbour
    * segments).
@@ -425,7 +425,6 @@ public class ProfilOverlayLayer extends PointsLineLayer
    * @param oldEndWdith
    *          the width coordinate of the last intersection profile point before user interaction
    */
-  @SuppressWarnings("unchecked")
   private void checkIntersectionPoints( final double oldStartWdith, final double oldEndWdith ) throws Exception
   {
 
@@ -439,11 +438,10 @@ public class ProfilOverlayLayer extends PointsLineLayer
     final CreateChannelData.PROF prof = m_data.getCurrentProfile();
 
     /* get the current segment to set the new intersection point for it */
-    final int currentSegmentNum = m_data.getSelectedSegment();
-    final SegmentData currentSegment = m_data.getCurrentSegment( currentSegmentNum );
+    final SegmentData currentSegment = m_data.getSelectedSegment();
 
     /* get the neighbor segments of the current segment */
-    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegmentNum );
+    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegment );
 
     WIDTHORDER widthorder = null;
     double width = 0;
@@ -478,7 +476,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       currentSegment.setNewIntersectedProfile( profil, prof );
 
       // TODO: we should also update the neighbor segment of the current profile
-      currentSegment.updateProfileIntersection();
+// currentSegment.updateProfileIntersection();
 
       /* update the neighbour segment */
       updateNeighbourSegment( prof, currentSegment, neighbourSegments, widthorder1, width1, point1, widthorder2, width2, point2 );
@@ -498,7 +496,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( profil, prof );
-      currentSegment.updateProfileIntersection();
+// currentSegment.updateProfileIntersection();
 
       /* update the neighbour segment */
       updateNeighbourSegment( point, prof, currentSegment, neighbourSegments, widthorder, width );
@@ -575,7 +573,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
               e.printStackTrace();
             }
           segment.setNewIntersectedProfile( profil, profNeighbour );
-          segment.updateProfileIntersection();
+// segment.updateProfileIntersection();
         }
   }
 
@@ -621,24 +619,20 @@ public class ProfilOverlayLayer extends PointsLineLayer
               e.printStackTrace();
             }
           segment.setNewIntersectedProfile( profil, profNeighbour );
-          // segment.updateProfileIntersection();
         }
   }
 
   /**
-   * updates the profile for the neigboring segment.
-   * 
+   * updates the profile for the neighboring segment.
    */
-  @SuppressWarnings("unchecked")
   private void updateProfileForNeighbourSegment( )
   {
     final IProfil profil = getProfil();
     /* get the current segment to set the new profile for it */
-    final int currentSegmentNum = m_data.getSelectedSegment();
-    final SegmentData currentSegment = m_data.getCurrentSegment( currentSegmentNum );
+    final SegmentData currentSegment = m_data.getSelectedSegment();
 
-    /* get the neighbour segments of the current segment */
-    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegmentNum );
+    /* get the neighbor segments of the current segment */
+    final List<SegmentData> neighbourSegments = m_data.getNeighbourSegments( currentSegment );
     final CreateChannelData.PROF prof = m_data.getCurrentProfile();
 
     /* change prof, because now it is the profile of the other side of the segment */
@@ -649,7 +643,7 @@ public class ProfilOverlayLayer extends PointsLineLayer
       profNeighbour = CreateChannelData.PROF.DOWN;
 
     for( final SegmentData segment : neighbourSegments )
-      // check if the changed profile is in the neighbour segment, if not, do nothing.
+      // check if the changed profile is in the neighbor segment, if not, do nothing.
       if( segment != currentSegment )
         if( segment.getProfilDownOrg().getStation() == profil.getStation() || segment.getProfilUpOrg().getStation() == profil.getStation() )
           segment.setNewIntersectedProfile( profil, profNeighbour );

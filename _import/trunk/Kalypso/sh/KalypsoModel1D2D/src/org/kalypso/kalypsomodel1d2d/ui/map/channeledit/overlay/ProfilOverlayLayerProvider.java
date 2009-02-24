@@ -47,8 +47,6 @@ import org.kalypso.model.wspm.tuhh.ui.chart.ProfilLayerProviderTuhh;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
@@ -84,9 +82,9 @@ public class ProfilOverlayLayerProvider extends ProfilLayerProviderTuhh
    *      org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
   @Override
-  public IProfilChartLayer createLayer( String layerId, ProfilChartView view )
+  public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view )
   {
-    IMapperRegistry mr = view.getChart().getChartModel().getMapperRegistry();
+    final IMapperRegistry mr = view.getChart().getChartModel().getMapperRegistry();
     final CoordinateMapper cmLeft = new CoordinateMapper( mr.getAxis( ProfilChartView.ID_AXIS_DOMAIN ), mr.getAxis( ProfilChartView.ID_AXIS_LEFT ) );
 
     final ProfilOverlayLayer overlay = new ProfilOverlayLayer( view, m_lsp );

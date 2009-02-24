@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
@@ -93,7 +94,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
 
     if( m_data.getMeshStatus() == true )
     {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.ProfileSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return;
     }
 
@@ -116,22 +117,22 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
     for( final Iterator iter = list.iterator(); iter.hasNext(); )
     {
       final Object o = iter.next();
-      
-      final IProfileFeature feature = (IProfileFeature) FeatureHelper.getFeature( workspace, o );
-      final GM_Curve line = feature.getLine();
-      try
+      final Feature feature = FeatureHelper.getFeature( workspace, o );
+
+      if( feature instanceof ProfileFeatureBinding )
       {
-        final LineString jtsLine = (LineString) JTSAdapter.export( line );
-        if( !jtsLine.intersects( rectanglePoly ) )
-          iter.remove();
-      }
-      catch( GM_Exception e )
-      {
-        e.printStackTrace();
-      }
-      catch( NullPointerException e )
-      {
-        e.printStackTrace();
+        final ProfileFeatureBinding profile = (ProfileFeatureBinding) feature;
+        final GM_Curve line = profile.getLine();
+        try
+        {
+          final LineString jtsLine = (LineString) JTSAdapter.export( line );
+          if( !jtsLine.intersects( rectanglePoly ) )
+            iter.remove();
+        }
+        catch( final GM_Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
 
@@ -148,7 +149,7 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       for( int i = 0; i < list.size(); i++ )
       {
         final Object o = list.get( i );
-        final IProfileFeature feature = (IProfileFeature)FeatureHelper.getFeature( workspace, o );
+        final IProfileFeature feature = (IProfileFeature) FeatureHelper.getFeature( workspace, o );
 
         if( selectedProfileSet.contains( feature ) )
           featureToRemove.add( feature );

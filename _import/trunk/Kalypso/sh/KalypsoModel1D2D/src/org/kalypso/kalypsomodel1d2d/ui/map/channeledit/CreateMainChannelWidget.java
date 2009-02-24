@@ -84,7 +84,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   public CreateMainChannelWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -167,11 +167,11 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       /* draw editable bankline */
       if( m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true )
       {
-        m_data.drawBankLine( m_composite.m_currentSegmentNum, 1, g );
+        m_data.drawBankLine( m_composite.getCurrentSegment(), 1, g );
       }
       if( m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true )
       {
-        m_data.drawBankLine( m_composite.m_currentSegmentNum, 2, g );
+        m_data.drawBankLine( m_composite.getCurrentSegment(), 2, g );
       }
       if( m_delegateWidget != null )
         m_delegateWidget.paint( g );
@@ -186,9 +186,11 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   private void drawIntersProfiles( final Graphics g, final Color color )
   {
-    if( m_data.getSelectedSegment() != 0 )
+    if( m_data.getSelectedSegment() != null )
+// if( m_data.getSelectedSegment() != 0 )
     {
-      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+// final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final SegmentData currentSegment = m_data.getSelectedSegment();
       if( currentSegment != null )
         if( currentSegment.complete() == true )
           currentSegment.paintProfile( m_data.getCurrentProfile(), getPanel(), g, color );
@@ -197,9 +199,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   private void drawIntersPoints( final Graphics g, final Color color )
   {
-    if( m_data.getSelectedSegment() != 0 )
+    if( m_data.getSelectedSegment() != null )
     {
-      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final SegmentData currentSegment = m_data.getSelectedSegment();
       if( currentSegment != null )
         if( currentSegment.complete() == true )
           currentSegment.paintIntersectionPoints( getPanel(), g, color, m_data.getCurrentProfile() );
@@ -483,7 +485,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         // check if all needed data is specified
         // m_data.completationCheck();
         if( !m_composite.isDisposed() )
-          m_composite.updateControl( false ); // false means calc all again
+          m_composite.updateControl( false ); // false means calculate all again
       }
     } );
 

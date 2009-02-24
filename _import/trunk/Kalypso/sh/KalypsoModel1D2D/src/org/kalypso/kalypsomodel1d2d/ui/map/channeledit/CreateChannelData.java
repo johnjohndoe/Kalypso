@@ -90,7 +90,6 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -105,7 +104,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * State object for creating main channel widget and composite.
- *
+ * 
  * @author Thomas Jung
  */
 public class CreateChannelData
@@ -154,7 +153,7 @@ public class CreateChannelData
 
   private Coordinate[][] m_meshCoords;
 
-  public int m_selectedSegment;
+  public SegmentData m_selectedSegment;
 
   private CreateChannelData.PROF m_selectedProfile;
 
@@ -263,30 +262,28 @@ public class CreateChannelData
 
   public void initSegments( )
   {
-    final Job job = new Job( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.0") ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.0" ) ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        datacomplete = false;
-
         // there must be at least two selected profiles and one selected bank.
         if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
         {
-          datacomplete = true;
+          /* intersects the banks with the profiles and manages the initial segment creation */
+          intersectBanksWithProfs( monitor ); // initial calculation of the segments by global parameters
+          if( m_segmentList.size() > 0 )
+            m_selectedSegment = m_segmentList.get( 0 );
         }
         else if( m_selectedProfiles.size() <= 1 )
         {
           m_segmentList.clear();
           m_coordList.clear();
+          m_selectedSegment = null;
         }
 
         // final IProgressMonitor monitor = new NullProgressMonitor();
-        if( datacomplete == true )
-          /* intersects the banks with the profiles and manages the initial segment creation */
-          intersectBanksWithProfs( monitor ); // initial calculation of the segments by global parameters
-
         m_widget.update();
 
         return Status.OK_STATUS;
@@ -351,13 +348,11 @@ public class CreateChannelData
     if( m_selectedProfiles.size() <= 1 )
       return null;
 
-    if( m_segmentList.size() <= (getSelectedSegment() - 1) )
+    // TODO: make sure that the initial selection is set.
+    if( getSelectedSegment() == null )
       return null;
 
-    if( getSelectedSegment() == 0 )
-      return null;
-
-    final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
+    final SegmentData segment = m_selectedSegment;
 
     if( segment == null )
       return null;
@@ -383,9 +378,7 @@ public class CreateChannelData
 
     // there must be at least two selected profiles and one selected bank.
     if( m_selectedBanks.size() > 1 && m_selectedProfiles.size() > 1 )
-    {
       datacomplete = true;
-    }
     else if( m_selectedProfiles.size() <= 1 )
     {
       m_segmentList.clear();
@@ -403,9 +396,10 @@ public class CreateChannelData
       final IStatus status = mergeMeshList();
       if( status != Status.OK_STATUS && m_shell != null )
       {
-        MessageDialog.openInformation( m_shell, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.1"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.2") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openInformation( m_shell, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.1" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
+    m_widget.getPanel().repaintMap();
   }
 
   public boolean getMeshStatus( )
@@ -482,7 +476,7 @@ public class CreateChannelData
         /*
          * -the lines have to be oriented (clw or cclw), the order ist top (profile) - left (bank) - bottom (profile) -
          * right (bank) or top - right - bottom - left -the end point of a line must be the same as the start point of
-         * the next line -the lines itselfes must be also oriented all in the same way (clw/cclw)
+         * the next line -the lines itself must be also oriented all in the same way (clw/cclw)
          */
 
         // at the end point of the profile line there should follow the start point of the next line
@@ -497,14 +491,10 @@ public class CreateChannelData
         if( lines == null )
         {
           initSegments();
-          updateSegment( true, i + 1 );
+          completationCheck();
           return;
         }
         // now the two lines are right oriented...
-
-        if( lines == null )
-          return;
-
         final LineString topLine = lines[0];
         final LineString rightLine = lines[1];
         final LineString bottomLine = lines[2];
@@ -550,7 +540,7 @@ public class CreateChannelData
       {
         final Coordinate[][] coordinates = m_coordList.get( i );
         if( numX != coordinates.length )
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.3" ) ); //$NON-NLS-1$
         // coordSegmentPointer = coordYPosPointer;
         // loop over all profile intersections -> coords [x][]
         for( int j = 0; j < coordinates.length; j++ )
@@ -567,8 +557,8 @@ public class CreateChannelData
       }
       if( coordYPosPointer != overallYCoordNum - 1 )
       {
-        System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.4") ); //$NON-NLS-1$
-        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.4" ) ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.5" ) ); //$NON-NLS-1$
       }
 
       m_meshCoords = newCoords;
@@ -578,7 +568,7 @@ public class CreateChannelData
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.6") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.6" ) ); //$NON-NLS-1$
     }
   }
 
@@ -734,7 +724,7 @@ public class CreateChannelData
     {
       // this should actually never happen!!
       error = true;
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.7") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.7" ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -743,7 +733,7 @@ public class CreateChannelData
     final Point startpoint = lineArray[0].getStartPoint();
 
     if( endpoint.distance( startpoint ) > 0.001 || error == true )
-      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.8") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.8" ) ); //$NON-NLS-1$
 
     return lineArray;
   }
@@ -762,7 +752,7 @@ public class CreateChannelData
     if( profileFeatures.length == 0 )
       return;
 
-    monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9"), profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.9" ), profileFeatures.length ); //$NON-NLS-1$
 
     final Feature firstFeature = profileFeatures[0];
     final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( IProfileFeature.QNAME_STATION );
@@ -777,7 +767,7 @@ public class CreateChannelData
       // get the profile line
       final IProfileFeature profile = (IProfileFeature) (profileFeature);
 
-      monitor.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10") + profile.getStation() ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10" ) + profile.getStation() ); //$NON-NLS-1$
 
       if( lastProfile != null )
       {
@@ -824,15 +814,14 @@ public class CreateChannelData
     if( m_numbProfileIntersections != numProfileIntersections )
     {
       m_numbProfileIntersections = numProfileIntersections;
-      // updateSegments( false );
       initSegments();
+      updateSegments( false );
     }
   }
 
   public int getNumProfileIntersections( )
   {
-    final int numProfileIntersections = m_numbProfileIntersections;
-    return numProfileIntersections;
+    return m_numbProfileIntersections;
   }
 
   public void setGlobNumBankIntersections( final int globNumBankIntersections )
@@ -850,6 +839,7 @@ public class CreateChannelData
     return globNumBankIntersections;
   }
 
+  @SuppressWarnings("unchecked")
   private void paintEdges( final Coordinate[][] coords, final Graphics g, final IMapPanel mapPanel ) throws GM_Exception, CoreException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -902,22 +892,22 @@ public class CreateChannelData
     return m_segmentList.size();
   }
 
-  public int getSelectedSegment( )
+  public SegmentData getSelectedSegment( )
   {
     return m_selectedSegment;
   }
 
-  public void setSelectedSegment( final int selectedSegment )
+  public void setSelectedSegment( final int segmentIndex )
   {
-    m_selectedSegment = selectedSegment;
+    m_selectedSegment = m_segmentList.get( segmentIndex );
   }
 
   /**
    * returns the number of bank intersections for the current segment
    */
-  public int getNumBankIntersections( final int segment )
+  public int getNumBankIntersections( final SegmentData segment )
   {
-    return m_segmentList.get( segment - 1 ).getNumBankIntersections();
+    return segment.getNumBankIntersections();
   }
 
   /**
@@ -934,7 +924,6 @@ public class CreateChannelData
    */
   public void updateSegments( final boolean edit )
   {
-
     // loop over all segments
     final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
     for( final SegmentData segment : datas )
@@ -944,11 +933,12 @@ public class CreateChannelData
         // intersect the bankline by the defined number of intersections
         segment.updateBankIntersection();
         segment.updateProfileIntersection();
+
       }
       else if( segment != null & edit == true )
       {
         // commits the done edits
-
+        final int i = 1;
         // segment.updateBank();
         // segment.updateProfile();
       }
@@ -956,47 +946,38 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public GM_Envelope getCurrentSegmentExtend( final int segment )
-  {
-    return m_segmentList.get( segment - 1 ).getSegmentMapExtend();
-  }
-
-  public void drawBankLine( final int segment, final int side, final Graphics g )
+  public void drawBankLine( final SegmentData segment, final int side, final Graphics g )
   {
     final IMapPanel panel = m_widget.getPanel();
-    if( m_segmentList.size() < segment - 1 || m_segmentList.size() == 0 )
+
+    if( segment == null )
       return;
-    m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
+
+    if( m_segmentList.size() == 0 )
+      return;
+
+    segment.paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
   }
 
-  public SegmentData getCurrentSegment( final int segment )
+  public void updateSegment( final boolean edit )
   {
-    if( m_segmentList.size() >= segment )
-      return m_segmentList.get( segment - 1 );
-    else
-      return null;
-
-  }
-
-  public void updateSegment( final boolean edit, final int segmentNumber )
-  {
-    final SegmentData segment = m_segmentList.get( segmentNumber - 1 );
-    if( segment != null & edit == false )
+    if( m_selectedSegment != null )
     {
-      // intersect the bankline by the defined number of intersections
-      segment.updateBankIntersection();
-      segment.updateProfileIntersection();
-    }
-    else if( segment != null & edit == true )
-    {
-      // commits the done edits
-      segment.updateBankIntersection2();
-      segment.updateProfileIntersection();
+      if( edit == false )
+      {
+        // intersect the bankline by the defined number of intersections
+        m_selectedSegment.updateBankIntersection();
+      }
+      else
+      {
+        // commits the done edits
+        m_selectedSegment.updateBankIntersection2();
+      }
 
-      // segment.updateBank();
-      // segment.updateProfile();
+      m_selectedSegment.updateProfileIntersection();
     }
     completationCheck();
+
   }
 
   public final CreateChannelData.PROF getCurrentProfile( )
@@ -1017,39 +998,10 @@ public class CreateChannelData
       m_selectedProfile = PROF.UP;
   }
 
-  public List getNeighbourSegments( final int currentSegmentNum )
-  {
-    final int numOfSegments = m_segmentList.size();
-    final List<SegmentData> neighbours = new LinkedList<SegmentData>();
-    /* check the neighbours */
-    if( currentSegmentNum > 1 & currentSegmentNum < numOfSegments )
-    {
-      // the current segment lies inbetween -> two neighbours
-      neighbours.add( m_segmentList.get( currentSegmentNum - 2 ) ); // neighbour before
-      neighbours.add( m_segmentList.get( currentSegmentNum ) ); // neighbour after
-    }
-    else if( currentSegmentNum > 1 & currentSegmentNum == numOfSegments )
-    {
-      // the current segment is the last segment -> one neighbour
-      neighbours.add( m_segmentList.get( currentSegmentNum - 2 ) );
-
-    }
-    else if( currentSegmentNum == 1 & currentSegmentNum == numOfSegments )
-    {
-      // there is only one segment, no neighbours
-    }
-    else if( currentSegmentNum == 1 & currentSegmentNum < numOfSegments )
-    {
-      // the current segment is the first segment -> one neighbour
-      neighbours.add( m_segmentList.get( currentSegmentNum ) );
-    }
-    return neighbours;
-  }
-
   public CreateChannelData.PROF getCurrentProfilePlace( final double station )
   {
-    final double stationUp = m_segmentList.get( m_selectedSegment - 1 ).getProfilUpOrg().getStation();
-    final double stationDown = m_segmentList.get( m_selectedSegment - 1 ).getProfilDownOrg().getStation();
+    final double stationUp = m_selectedSegment.getProfilUpOrg().getStation();
+    final double stationDown = m_selectedSegment.getProfilDownOrg().getStation();
 
     if( stationUp == station )
       return CreateChannelData.PROF.UP;
@@ -1062,6 +1014,54 @@ public class CreateChannelData
   public void setShell( final Shell shell )
   {
     m_shell = shell;
+  }
+
+  public SegmentData getSegmentAtListPos( final int selection )
+  {
+    if( m_segmentList.size() == 0 )
+      return null;
+
+    if( m_segmentList.size() < selection )
+      System.out.println( "Schlauchgenerator: Falsches Segment" );
+
+    return m_segmentList.get( selection );
+  }
+
+  public List<SegmentData> getNeighbourSegments( final SegmentData segment )
+  {
+    final List<SegmentData> neighbours = new LinkedList<SegmentData>();
+
+    /* check the neighbours */
+    final int currentIndex = m_segmentList.indexOf( segment );
+    final int lastIndex = m_segmentList.size() - 1;
+
+    if( currentIndex > 0 & currentIndex < lastIndex )
+    {
+      // the current segment lies inbetween -> two neighbours
+      neighbours.add( m_segmentList.get( currentIndex - 1 ) ); // neighbour before
+      neighbours.add( m_segmentList.get( currentIndex + 1 ) ); // neighbour after
+    }
+    else if( currentIndex > 0 & currentIndex == lastIndex )
+    {
+      // the current segment is the last segment -> one neighbour
+      neighbours.add( m_segmentList.get( currentIndex - 1 ) );
+
+    }
+    else if( currentIndex == 0 & currentIndex == lastIndex )
+    {
+      // there is only one segment, no neighbours
+    }
+    else if( currentIndex == 0 & currentIndex < lastIndex )
+    {
+      // the current segment is the first segment -> one neighbour
+      neighbours.add( m_segmentList.get( currentIndex + 1 ) );
+    }
+    return neighbours;
+  }
+
+  public int getSelectedSegmentPos( )
+  {
+    return m_segmentList.indexOf( m_selectedSegment );
   }
 
 }

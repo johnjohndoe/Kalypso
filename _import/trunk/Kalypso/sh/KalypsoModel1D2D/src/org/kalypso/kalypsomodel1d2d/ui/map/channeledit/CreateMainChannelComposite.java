@@ -85,11 +85,11 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -142,7 +142,7 @@ public class CreateMainChannelComposite extends Composite
 
   protected boolean m_bankEdit2;
 
-  protected int m_currentSegmentNum;
+// private SegmentData m_currentSegment;
 
   private final FormToolkit m_toolkit;
 
@@ -194,22 +194,22 @@ public class CreateMainChannelComposite extends Composite
 
         /* Create Profile control */
         final Control profileSection = createProfileSelectionSection( contentCompo, profileThemes );
-        GridData gridDataProf = new GridData( SWT.FILL, SWT.CENTER, true, false );
+        final GridData gridDataProf = new GridData( SWT.FILL, SWT.CENTER, true, false );
         profileSection.setLayoutData( gridDataProf );
 
         /* Create Bank control */
         final Control bankSection = createBankSelectionSection( contentCompo, bankThemes );
-        GridData gridDataBank = new GridData( SWT.FILL, SWT.CENTER, true, false );
+        final GridData gridDataBank = new GridData( SWT.FILL, SWT.CENTER, true, false );
         bankSection.setLayoutData( gridDataBank );
 
         /* Create segment switch control */
         final Control segmentSwitchSection = createSegmentSwitchSection( contentCompo );
-        GridData gridDataSegmentSwitch = new GridData( SWT.FILL, SWT.CENTER, true, false );
+        final GridData gridDataSegmentSwitch = new GridData( SWT.FILL, SWT.CENTER, true, false );
         segmentSwitchSection.setLayoutData( gridDataSegmentSwitch );
 
         /* Create profile control */
         final Control profilSection = createProfilSection( contentCompo );
-        GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
+        final GridData gridDataProfileControl = new GridData( SWT.FILL, SWT.FILL, true, true );
         profilSection.setLayoutData( gridDataProfileControl );
 
         /* conversion to model composite */
@@ -219,7 +219,7 @@ public class CreateMainChannelComposite extends Composite
         m_buttonConvertToModel = m_toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
         m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
 
-        PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+        final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
 
         m_buttonConvertToModel.setImage( imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
         m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
@@ -328,7 +328,8 @@ public class CreateMainChannelComposite extends Composite
         if( m_ButtonStateZoom == false )
         {
           m_ButtonStateZoom = true;
-          final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
+
+          final GM_Envelope mapExtend = m_data.getSelectedSegment().getSegmentMapExtend();
           if( mapExtend != null )
           {
             final IMapPanel panel = m_widget.getPanel();
@@ -345,27 +346,19 @@ public class CreateMainChannelComposite extends Composite
       spinnerSegment.setEnabled( true );
       spinnerSegment.setMinimum( 1 );
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
-      if( m_data.getSelectedSegment() == 0 )
-      {
-        m_currentSegmentNum = 1;
-        m_data.setSelectedSegment( 1 );
-      }
+      if( m_data.getSelectedSegment() == null )
+        spinnerSegment.setSelection( 1 );
       else
-        m_currentSegmentNum = m_data.getSelectedSegment();
+        spinnerSegment.setSelection( m_data.getSelectedSegmentPos() + 1 );
 
-      if( m_data.getNumOfSegments() > 0 )
-        spinnerSegment.setSelection( m_data.getSelectedSegment() );
-      else
-        spinnerSegment.setSelection( 0 );
+      /* initial selection */
     }
     else if( m_data.getNumOfSegments() == 1 )
     {
       spinnerSegment.setEnabled( false );
-      spinnerSegment.setMinimum( 0 );
+      spinnerSegment.setMinimum( 1 );
       spinnerSegment.setMaximum( m_data.getNumOfSegments() );
       spinnerSegment.setSelection( 1 );
-      m_currentSegmentNum = 1;
-      m_data.setSelectedSegment( 1 );
     }
     else
       spinnerSegment.setEnabled( false );
@@ -375,11 +368,11 @@ public class CreateMainChannelComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_data.setSelectedSegment( spinnerSegment.getSelection() );
-        m_currentSegmentNum = spinnerSegment.getSelection();
+        m_data.setSelectedSegment( spinnerSegment.getSelection() - 1 );
+
         if( buttonZoomToExtend.getSelection() == true )
         {
-          final GM_Envelope mapExtend = m_data.getCurrentSegmentExtend( spinnerSegment.getSelection() );
+          final GM_Envelope mapExtend = m_data.getSelectedSegment().getSegmentMapExtend();
           if( mapExtend != null )
           {
             final IMapPanel panel = m_widget.getPanel();
@@ -436,7 +429,7 @@ public class CreateMainChannelComposite extends Composite
     spinnerNumIntersSegment.setMaximum( 999 );
     if( m_data.getNumOfSegments() > 0 )
     {
-      spinnerNumIntersSegment.setSelection( m_data.getNumBankIntersections( spinnerSegment.getSelection() ) );
+      spinnerNumIntersSegment.setSelection( m_data.getNumBankIntersections( m_data.getSegmentAtListPos( spinnerSegment.getSelection() - 1 ) ) );
     }
     else
     {
@@ -451,7 +444,7 @@ public class CreateMainChannelComposite extends Composite
       {
         m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
         // just update the selected segment
-        updateSegmentData( false, m_currentSegmentNum );
+        m_data.updateSegment( false );
         if( m_buttonEditBank1.getSelection() == true )
           editButtonUpdateBank1();
         else if( m_buttonEditBank2.getSelection() == true )
@@ -475,7 +468,7 @@ public class CreateMainChannelComposite extends Composite
     m_buttonEditBank1 = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
 
-    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
     m_buttonEditBank1.setImage( editImage );
     m_buttonEditBank1.setSelection( m_bankEdit1 );
@@ -575,7 +568,7 @@ public class CreateMainChannelComposite extends Composite
     m_buttonList.add( chooseFirstBankButton );
     chooseFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
     chooseFirstBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
-    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image selImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.SELECT );
 
     chooseFirstBankButton.setImage( selImage );
@@ -795,7 +788,7 @@ public class CreateMainChannelComposite extends Composite
     chooseProfilesButton.setLayoutData( gridData );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
 
-    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image selImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.SELECT );
 
     chooseProfilesButton.setImage( selImage );
@@ -841,7 +834,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.52"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.53") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ), Messages.getString( "Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
             return;
@@ -892,11 +885,10 @@ public class CreateMainChannelComposite extends Composite
   /**
    * updates the data for a specific segments
    */
-  public void updateSegmentData( final boolean edit, final int segment )
-  {
-    m_data.updateSegment( edit, segment );
-  }
-
+// private void updateSegmentData( final boolean edit, final SegmentData segment )
+// {
+// m_data.updateSegment( edit, segment );
+// }
   /**
    * displays the selected cross sections -> data filling for the profil section
    */
@@ -934,7 +926,7 @@ public class CreateMainChannelComposite extends Composite
         m_data.setCurrentProfile( profPlace );
         // here repaint!!
       }
-      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final SegmentData currentSegment = m_data.getSelectedSegment();
       final ProfilChartView profilChartView = new ProfilChartView();
       final IProfilLayerProvider layerProvider = new ProfilOverlayLayerProvider();
       profilChartView.setProfil( profil );
@@ -980,9 +972,7 @@ public class CreateMainChannelComposite extends Composite
       final int last = mngr.getLayers().length - 1;
       if( zOrder < last )
         mngr.moveLayerToPosition( overlayLayer, last );
-      ChartUtilities.maximize(profilChartView.getChart().getChartModel() );
-      
-      
+
       final ChartComposite chartComposite = profilChartView.getChartComposite();
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT, new DragZoomOutHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN, new DragZoomInHandler( chartComposite ) ) );
@@ -990,6 +980,7 @@ public class CreateMainChannelComposite extends Composite
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT, new DragEditHandler( chartComposite ) ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE, new MaximizeHandler() ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE, new ExportHandler() ) );
+      ChartUtilities.maximize( profilChartView.getChart().getChartModel() );
 
       final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
       {
@@ -1007,7 +998,7 @@ public class CreateMainChannelComposite extends Composite
       };
       action.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14" ) ); //$NON-NLS-1$
 
-      PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+      final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
       final ImageDescriptor changeImage = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.CHANGE );
       action.setImageDescriptor( changeImage );
       manager.add( action );
@@ -1067,7 +1058,7 @@ public class CreateMainChannelComposite extends Composite
       m_bankEdit1 = true;
       m_buttonEditBank2.setSelection( false );
       m_bankEdit2 = false;
-      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final SegmentData currentSegment = m_data.getSelectedSegment();
       try
       {
         final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 1 );
@@ -1094,7 +1085,7 @@ public class CreateMainChannelComposite extends Composite
       m_bankEdit2 = true;
       m_buttonEditBank1.setSelection( false );
       m_bankEdit1 = false;
-      final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
+      final SegmentData currentSegment = m_data.getSelectedSegment();
       try
       {
         final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 2 );
@@ -1132,5 +1123,10 @@ public class CreateMainChannelComposite extends Composite
       resetButtonGuard();
     }
 
+  }
+
+  public SegmentData getCurrentSegment( )
+  {
+    return m_data.getSelectedSegment();
   }
 }

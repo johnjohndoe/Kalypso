@@ -244,7 +244,7 @@ public class SegmentData
   {
     /* get the cropped and intersected profiles & linestrings */
 
-    // DOWNSTREAM
+    // UPSTREAM
     try
     {
       /* crop the profile */
@@ -275,7 +275,7 @@ public class SegmentData
       e.printStackTrace();
     }
 
-    // UPSTREAM
+    // DOWNSTREAM
     try
     {
       /* crop the profile */
@@ -380,11 +380,7 @@ public class SegmentData
       wi = wi + (Double) points[i + 1].getValue( indexBreite ) - (Double) points[i].getValue( indexBreite );
     dZ = dArea / wi;
 
-    // String t = String.format( "Schlauchgenerator: Anpassung der Profilh�hen um: %f ", dZ, " m." );
-    // System.out.println( t );
-
     // start point will not be changed
-
     final IRecord record = profilPointList[0];
     final TupleResult result = record.getOwner();
     final double startBreite = (Double) record.getValue( result.indexOfComponent( breiteComponent ) );
@@ -1253,20 +1249,18 @@ public class SegmentData
       /* get the cropped and intersected profiles & linestrings */
 
       // muss jedes mal nach profile edit aufgerufen werden!
-      // DOWNSTREAM
+      // UPSTREAM
       try
       {
-
         /* crop the profile */
-        // IProfil
         m_upCroppedProfile = createCroppedIProfile( m_upProfile, CreateChannelData.PROF.UP );
 
         /* the cropped profile area is the desired value for the intersected profile area */
         final double areaUpCroppedProfile = ProfilUtil.calcArea( m_upCroppedProfile );
 
         /* intersect the cropped profile */
-        // here not necessary, because the initial intersection was allready done. The intersection here will be
-        // handeled by the user.
+        // here not necessary, because the initial intersection was already done. The intersection here will be
+        // handled by the user.
         // final IProfil tempPreviousIntersProfile = createIntersectedIProfile( m_previousCroppedProfile );
         // LineString
         // m_upProfLineString = createCroppedProfileLineString( m_upProfile, CreateChannelData.PROF.UP );
@@ -1287,7 +1281,7 @@ public class SegmentData
         e.printStackTrace();
       }
 
-      // UPSTREAM
+      // DOWNSTREAM
       try
       {
         /* crop the profile */
@@ -1298,7 +1292,7 @@ public class SegmentData
         final double areaDownCroppedProfile = ProfilUtil.calcArea( m_downCroppedProfile );
 
         /* intersect the cropped profile */
-        // here not necessary, because the initial intersection was allready done. The intersection here will be
+        // here not necessary, because the initial intersection was already done. The intersection here will be
         // handeled by the user.
         // LineString
         // final IProfil tempNextIntersProfile = createIntersectedIProfile( m_nextCroppedProfile );
@@ -1429,7 +1423,7 @@ public class SegmentData
           maxY = coords[k].y;
         if( coords[k].x < minX )
           minX = coords[k].x;
-        if( coords[k].x < minY )
+        if( coords[k].y < minY )
           minY = coords[k].y;
       }
     }

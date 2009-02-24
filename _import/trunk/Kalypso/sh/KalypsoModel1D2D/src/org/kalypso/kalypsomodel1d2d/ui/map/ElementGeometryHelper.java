@@ -243,16 +243,16 @@ public class ElementGeometryHelper
     final IFE1D2DNode[] nodes = new IFE1D2DNode[points.size()];
     for( int i = 0; i < points.size(); i++ )
     {
-      final GM_Point node = points.get( i );
+      final GM_Point point = points.get( i );
 
       // check, if there is already a node at that position
-      final IFE1D2DNode foundNode = discModel.findNode( node, searchDistance );
+      final IFE1D2DNode foundNode = discModel.findNode( point, searchDistance );
 
       if( foundNode == null )
       {
         // create new node
         final FE1D2DNode newNode = FE1D2DNode.createNode( discModel );
-        newNode.setPoint( node );
+        newNode.setPoint( point );
         newNode.setName( "" ); //$NON-NLS-1$
         newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
         final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
@@ -418,6 +418,7 @@ public class ElementGeometryHelper
     // create the nodes
     final List<GM_Point> nodes = new ArrayList<GM_Point>();
 
+    // TODO: handle snapping on neigboring nodes => quadrangles to triangles
     for( int i = 0; i < poses.length - 1; i++ )
       nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], crs ) );
 
