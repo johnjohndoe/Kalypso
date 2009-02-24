@@ -117,15 +117,16 @@ public class NAControlConverter
   {
     final TreeSet<Date> dateWriteSet = new TreeSet<Date>();
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
-    List dateList = (List) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
+    final List< ? > dateList = (List< ? >) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
     if( dateList != null )
     {
-      Iterator iter = dateList.iterator();
+      final Iterator< ? > iter = dateList.iterator();
       while( iter.hasNext() )
       {
-        Feature fe = (Feature) iter.next();
-        Boolean write = (Boolean) fe.getProperty( NaModelConstants.NACONTROL_WRITE_PROP );
-        if( write )
+        final Feature fe = (Feature) iter.next();
+        final Boolean write = (Boolean) fe.getProperty( NaModelConstants.NACONTROL_WRITE_PROP );
+        // by default it is false now, but for backward compatibility check if there is any value
+        if( write != null && write.booleanValue() )
         {
           final Date initialDate = DateUtilities.toDate( (XMLGregorianCalendar) fe.getProperty( NaModelConstants.NACONTROL_INITIALDATE_PROP ) );
           dateWriteSet.add( initialDate );
@@ -220,7 +221,7 @@ public class NAControlConverter
     String system = "we";// "sys";
     String zustand = "nat";
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) );
-    
+
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
 

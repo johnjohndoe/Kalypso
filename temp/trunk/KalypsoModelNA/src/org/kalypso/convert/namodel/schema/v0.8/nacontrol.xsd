@@ -729,7 +729,7 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element name="write" type="boolean">
+					<element name="write" type="boolean" default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>berechnen</label>
