@@ -47,7 +47,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  * <p>
  * Debug constants correspond to entries in <code>.options</code> file.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class KalypsoCoreDebug
@@ -57,4 +57,6 @@ public class KalypsoCoreDebug
   public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" ); //$NON-NLS-1$
 
   public static Debug MAP_PANEL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapPanel" ); //$NON-NLS-1$
+
+  public static Debug GISMAPVIEW_VALIDATE = new Debug( KalypsoCorePlugin.getDefault(), "/debug/validatebinding/gismapview" ); //$NON-NLS-1$
 }

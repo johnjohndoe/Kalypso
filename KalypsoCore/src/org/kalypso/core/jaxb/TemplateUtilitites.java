@@ -58,13 +58,14 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.xml.sax.SAXException;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
- * 
+ *
  * @author Gernot Belger
  */
 public class TemplateUtilitites
@@ -137,7 +138,7 @@ public class TemplateUtilitites
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( KalypsoCoreDebug.GISMAPVIEW_VALIDATE.isEnabled() )
       marshaller.setSchema( TemplateUtilitites.getGismapviewSchema() );
 
     return marshaller;
