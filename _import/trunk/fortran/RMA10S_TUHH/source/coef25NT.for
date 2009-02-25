@@ -55,6 +55,8 @@ CIPK  LAST UPDATED SEP 7 1995
       REAL(KIND=8) :: HS, HM, DUM1
 !-
 
+
+      integer (kind = 4) :: ps, ps_ID
 !EFa aug07, stage-flow-boundaries
       REAL(KIND=8) :: hm1
 !-
@@ -1303,6 +1305,18 @@ CIPK MAR01 SET SIDF=0 FOR DRY CASE
         SIDFT = SIDFF (NN)
         SIDFQQ = SIDFF (NN)
       ENDIF
+      
+!pipesurfaceconnection
+      if (ConnectedElt(nn) /= 0) then
+        findPS: do ps = 1, maxps
+          if (PipeSurfConn(ps)%SurfElt == nn) then
+            PS_ID = ps
+            exit findPS
+          endif
+        enddo findPS
+        sidft = sidft - PipeSurfConn(PS_ID)%flow / tvol (nn)
+      endif
+!pipesurfaceconnection
 
 C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
 

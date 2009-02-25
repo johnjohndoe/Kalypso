@@ -187,8 +187,8 @@ function PipeSurfConnFlow (he_upper, he_lower, ManholeType)
   PipeSurfConnFlow = 0.0d0
   !different manhole types
   if (manholeType == 1) then
-    PS1 = pipeMaximum (he_upper, 2.0, 0.005, 0.65, 0.0d0, 0.0d0)
-    PS2 = weirDuBuat (0.5, he_upper, pi*0.65)
+    PS1 = pipeMaximum (he_upper, 2.0, 0.005, 0.25, 0.0d0, 0.0d0)
+    PS2 = weirDuBuat (0.5, he_upper, pi*0.25)
     PipeSurfConnFlow = min (PS1, PS2)
   endif 
 

@@ -135,6 +135,7 @@ REAL (KIND = 8) :: vel_res(1:3)
 real (kind = 8) :: dvel_res_dt (1:3)
 
 INTEGER :: PolyTest
+integer (kind = 4) :: ps, ps_id
 
 INTEGER :: byparts
 !estifm block-definition
@@ -407,6 +408,20 @@ ENDIF
 !Questionable: Why is there such a confusing name handling with the inflow term?
 !SIDFQQ=SIDF(NN)
 sidft = sidfq
+
+!pipesurfaceconnection
+!Get the exchange flow
+if (ConnectedElt(nn) /= 0) then
+  findPS: do ps = 1, maxps
+    if (PipeSurfConn(ps)%PipeElt == nn) then
+      ps_ID = ps
+      exit findPS
+    endif
+  enddo findPS
+  sidft = sidft + PipeSurfConn(ps_ID)%flow
+  continue
+endif
+!pipesurfaceconnection
 
 !Question: Shouldn't be the form of the other coefs be used, i.e. the derivative form of the bed coordinates
 !bedslope

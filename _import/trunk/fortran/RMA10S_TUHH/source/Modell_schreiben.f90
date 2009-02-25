@@ -432,6 +432,9 @@ write_trans_lines: do i = 1, MaxLT
   WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 3)
 end do write_trans_lines
 
+write_PipeSurfConn: do i = 1, MaxPS
+  write(IKALYPSOFM, 7049) i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%PipeElt
+enddo write_PipeSurfConn
 
 ! Roughness classes:
 write_roughness: DO i = 1, irk
@@ -529,6 +532,8 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7046 FORMAT ('IP', 2i10)
  !nis,jan08: for Calculation units
  7048 format ('CU', 2i10, '(a128)')
+ !nis,feb09: for pipe surface connections
+ 7049 format ('PS', 3i10)
 
 
 
