@@ -72,7 +72,7 @@ public class GridTest extends TestCase
 
     /* Create output workspace and get handle to coverages */
     final File tmpFile = File.createTempFile( "gridTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final GMLWorkspace outputWorkspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, tmpFile.toURL(), null );
+    final GMLWorkspace outputWorkspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, tmpFile.toURI().toURL(), null );
     final ICoverageCollection outputCoverages = (ICoverageCollection) outputWorkspace.getRootFeature().getAdapter( ICoverageCollection.class );
 
     for( final ICoverage inputCoverage : inputCoverages )
@@ -85,7 +85,7 @@ public class GridTest extends TestCase
          * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
          */
         @Override
-        public double getValue( int x, int y ) throws GeoGridException
+        public double getValue( final int x, final int y ) throws GeoGridException
         {
           return 2 * super.getValue( x, y );
         }

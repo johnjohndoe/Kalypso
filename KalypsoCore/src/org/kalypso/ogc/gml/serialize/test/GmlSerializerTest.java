@@ -58,12 +58,12 @@ public class GmlSerializerTest
     final String externalForm = zipResource.toExternalForm();
     final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
 
-    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test%n" );
-    timeLogger.printCurrentInterim( "Step 1: start: " );
+    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" );
+    timeLogger.printCurrentInterim( "%nStep 1: start: " );
     GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
     timeLogger.printCurrentInterim( "Step 1: finished: " );
-    timeLogger.printCurrentInterim( "Step 2: start_ " );
+    timeLogger.printCurrentInterim( "Step 2: start: " );
     GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
     timeLogger.printCurrentInterim( "Step 2: finished: " );
@@ -73,7 +73,7 @@ public class GmlSerializerTest
 /**
  * Test history<br>
  * <br>
- * Before optimisation:<br>
+ * Before optimization:<br>
  * - Step 1: 1m10s<br>
  * - Step 2: 1m4s<br>
  * <br>
@@ -86,5 +86,15 @@ public class GmlSerializerTest
  * GmlContentHandler uses local cache for Schema-lookup:<br>
  * - Step 1: 33s<br>
  * - Step 2: 25s<br>
+ * <br>
+ * <br>
+ * GmlContentHandler Rechner zuhaus: 83s<br>
+ * - Step 1: 49s<br>
+ * - Step 2: 34s<br>
+ * <br>
+ * <br>
+ * GmlContentHandler substring nstead of replace all with local xlinks: 75s<br>
+ * - Step 1: 44s<br>
+ * - Step 2: 30s<br>
  * <br>
  */
