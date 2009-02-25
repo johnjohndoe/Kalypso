@@ -70,12 +70,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * {@link IWidget} that provide the mechanism for edition the geometry of finite element concepts (Node, Edge, elements,
  * and Complex elements) This class decorate the {@link EditGeometryWidget} with the capability to :
  * <ul>
- * <li/>find all feature affected by a geometric change in the edited fe concepts; <li/>invalidate the envelops of the
- * found feature <li/> and fire feature change event holding the affected feature
+ * <li/>find all feature affected by a geometric change in the edited fe concepts;
+ * <li/>invalidate the envelops of the found feature
+ * <li/>and fire feature change event holding the affected feature
  * </ul>
  * This widget rely on the assumption that the map to edit has layer holding feature with the QName
  * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
- *
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  * @author Thomas Jung
@@ -108,7 +109,7 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   public EditFEConceptGeometryWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -261,9 +262,9 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
     String tooltipMsg = ""; //$NON-NLS-1$
     if( m_snappingActive == true )
-      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.3"); //$NON-NLS-1$
+      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.3" ); //$NON-NLS-1$
     else
-      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.4"); //$NON-NLS-1$
+      tooltipMsg = Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget.4" ); //$NON-NLS-1$
 
     m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );

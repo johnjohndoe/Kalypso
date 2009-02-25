@@ -19,6 +19,7 @@ import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.wizards.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -40,29 +41,29 @@ public class PageMain extends WizardPage implements Listener
   /**
    * Constructor for main page
    */
-  public PageMain( DataContainer data )
+  public PageMain( final DataContainer data )
   {
-    this( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.0" ), data ); //$NON-NLS-1$
+    this( "mainPage", data ); //$NON-NLS-1$
   }
 
-  protected PageMain( final String name, DataContainer data )
+  protected PageMain( final String name, final DataContainer data )
   {
     super( name );
     setTitle( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.1" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.2" ) ); //$NON-NLS-1$
-    msg_StatusLine = new Status( IStatus.OK, Messages.getString("org.kalypso.wizards.import1d2d.PageMain.3"), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    msg_StatusLine = new Status( IStatus.OK, Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.3" ), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_data = data;
   }
 
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     // create the composite to hold the widgets
     GridData gd;
-    Composite composite = new Composite( parent, SWT.NULL );
+    final Composite composite = new Composite( parent, SWT.NULL );
 
     // create the desired layout for this wizard page
-    GridLayout gl = new GridLayout();
-    int ncol = 3;
+    final GridLayout gl = new GridLayout();
+    final int ncol = 3;
     gl.numColumns = ncol;
     composite.setLayout( gl );
     composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
@@ -97,14 +98,14 @@ public class PageMain extends WizardPage implements Listener
     m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.wizards.import1d2d.PageMain.7") ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.7" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
       }
@@ -128,10 +129,10 @@ public class PageMain extends WizardPage implements Listener
   /**
    * @see Listener#handleEvent(Event)
    */
-  public void handleEvent( Event event )
+  public void handleEvent( final Event event )
   {
     // Initialize a variable with the no error status
-    Status status = new Status( IStatus.OK, Messages.getString("org.kalypso.wizards.import1d2d.PageMain.3"), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Status status = new Status( IStatus.OK, Messages.getString( "org.kalypso.wizards.import1d2d.PageMain.3" ), 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
     msg_StatusLine = status;
     if( event.widget == btn_inputFileBrowse )
     {
@@ -183,9 +184,9 @@ public class PageMain extends WizardPage implements Listener
     return isTextNonEmpty( txt_InputFile );
   }
 
-  String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
+  String getFilenameFromDialog( final File selectedFile, final String[] filterExtensions, final String path )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     dialog.setFilterExtensions( filterExtensions );
     if( path != null )
       dialog.setFilterPath( path );
@@ -195,8 +196,8 @@ public class PageMain extends WizardPage implements Listener
       dialog.setFilterPath( selectedFile.getParent() );
     }
     dialog.open();
-    String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
     String filePath = null;
     if( fileName != null && fileName != "" && filterPath != null ) //$NON-NLS-1$
     {
@@ -208,7 +209,7 @@ public class PageMain extends WizardPage implements Listener
   /**
    * Applies the status to the status line of a dialog page.
    */
-  private void applyToStatusLine( IStatus status )
+  private void applyToStatusLine( final IStatus status )
   {
     String message = status.getMessage();
     if( message.length() == 0 )
@@ -234,18 +235,18 @@ public class PageMain extends WizardPage implements Listener
     }
   }
 
-  protected boolean isTextNonEmpty( Text t )
+  protected boolean isTextNonEmpty( final Text t )
   {
-    String s = t.getText();
+    final String s = t.getText();
     if( (s != null) && (s.trim().length() > 0) )
       return true;
     return false;
   }
 
-  private void createLine( Composite parent, int ncol )
+  private void createLine( final Composite parent, final int ncol )
   {
-    Label line = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD );
-    GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+    final Label line = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD );
+    final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
     gridData.horizontalSpan = ncol;
     line.setLayoutData( gridData );
   }

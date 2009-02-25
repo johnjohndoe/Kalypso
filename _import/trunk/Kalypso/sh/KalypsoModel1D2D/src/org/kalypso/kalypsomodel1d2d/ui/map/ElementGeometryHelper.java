@@ -256,7 +256,7 @@ public class ElementGeometryHelper
         newNode.setName( "" ); //$NON-NLS-1$
         newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
         final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
-        command.addCommand( addNodeCommand );
+        command.addCommand( addNodeCommand );// TODO: why not put into changes?
         nodes[i] = newNode;
       }
       else
