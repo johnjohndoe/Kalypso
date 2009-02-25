@@ -940,19 +940,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
         // Render asynchronous: no
         // Repaint during rendering: yes
-        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, LAYER_REPAINT_MILLIS );
+        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, true, LAYER_REPAINT_MILLIS );
       }
       else if( theme.getClass().getName().endsWith( "KalypsoWMSTheme" ) )
       {
         // Render asynchronous: yes (own mutex)
         // Repaint during rendering: no
-        newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule() );
+        newLayer = new BufferedRescaleMapLayer( this, theme, new MutexRule(), false );
       }
       else
       {
         // Render asynchronous: no
         // Repaint during rendering: no
-        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex );
+        newLayer = new BufferedRescaleMapLayer( this, theme, m_layerMutex, false );
       }
 
       m_layers.put( theme, newLayer );

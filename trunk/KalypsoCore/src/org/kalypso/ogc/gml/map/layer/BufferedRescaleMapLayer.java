@@ -71,23 +71,29 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
   private final long m_repaintMillis;
 
+  private final boolean m_paintRunningTile;
+
   /**
    * When constructed with this constructed, no repaint happens during painting of the theme.<br>
    * Same as {@link #BufferedRescaleMapLayer(IMapPanel, IKalypsoTheme, ISchedulingRule, Long.MAX_Value)}
    */
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule )
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile )
   {
-    this( panel, theme, rule, Long.MAX_VALUE );
+    this( panel, theme, rule, paintRunningTile, Long.MAX_VALUE );
   }
 
   /**
    * @param rule
    *          {@link ISchedulingRule} set to all jobs used to render this layer.
+   * @param paintRunningTile
+   *          If <code>true</code>, an already scheduled buffer will be painted; else, only finished tiles will be
+   *          drawn.
    */
-  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final long repaintMillis )
+  public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final long repaintMillis )
   {
     super( panel, theme );
     
+    m_paintRunningTile = paintRunningTile;
     m_repaintMillis = repaintMillis;
     m_rule = rule;
   }
@@ -127,10 +133,10 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
       // else, we wait for it to finish; then m_tile will be good
     }
 
-    // If we have a running tile, that already has started
-    if( runningTile != null && runningTile.intersects( world2screen ) && runningTile.getState() == Job.RUNNING )
+    // If we have a running tile, that already has started, paint it if this is requested
+    if( runningTile != null && runningTile.intersects( world2screen ) && runningTile.getState() == Job.RUNNING && m_paintRunningTile )
       runningTile.paint( g, world2screen );
-    // If we have a good tile, paint it
+    // if we have a good tile, paint it
     else if( tile != null && tile.intersects( world2screen ) )
       tile.paint( g, world2screen );
     // only we have no good tile, paint the running tile
