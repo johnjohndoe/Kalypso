@@ -148,17 +148,10 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     }
 
     final QName qname = new QName( uri, localName );
-
-    if( (m_scopeFeature == null && m_scopeProperty == null) || (m_scopeFeature != null && m_scopeProperty instanceof IRelationType) )
+    if( m_scopeFeature == null || m_scopeProperty instanceof IRelationType )
       startFeature( atts, qname );
-    else if( m_scopeFeature != null && m_scopeProperty == null )
-      startProperty( uri, localName, qName, atts, qname );
     else
-    {
-      final String msg = String.format( "GML not well-balanced. Feature scope is: %s\tProperty scope is: %s\tStarting element: %s ", m_scopeFeature, m_scopeProperty, qName );
-      // this really should never happen as sax already checks the well-balancedness
-      throw new SAXException( msg );
-    }
+      startProperty( uri, localName, qName, atts, qname );
   }
 
   private void startProperty( final String uri, final String localName, final String qName, final Attributes atts, final QName qname ) throws SAXException
@@ -266,7 +259,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       // for internal links. This should be changed soon...
       if( href.startsWith( "#" ) )
       {
-        final String refID2 = href.replaceAll( "^#", "" );
+        final String refID2 = href.substring( 1 );
         FeatureHelper.addChild( parentFeature, parentRelation, refID2 );
       }
       else

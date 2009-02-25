@@ -53,9 +53,9 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -138,8 +138,8 @@ public class SpatialIndexTest extends TestCase
     final File fileBase = new File( unzipDir, filename );
 
     if( filename.toLowerCase().endsWith( ".gml" ) ) //$NON-NLS-1$
-      return GmlSerializer.createGMLWorkspace( fileBase.toURL(), null );
+      return GmlSerializer.createGMLWorkspace( fileBase.toURI().toURL(), null );
 
-    return ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+    return ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 }
