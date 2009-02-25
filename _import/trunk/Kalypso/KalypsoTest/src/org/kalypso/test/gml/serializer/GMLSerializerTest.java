@@ -41,7 +41,6 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
@@ -54,25 +53,6 @@ import org.w3c.dom.Document;
  */
 public class GMLSerializerTest extends TestCase
 {
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
-  {
-    // KalypsoTest.init();
-    KalypsoGisPlugin.getDefault();
-  }
-
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
-  @Override
-  protected void tearDown( ) throws Exception
-  {
-    // KalypsoTest.release();
-  }
-
   public void testNAModell( ) throws Exception
   {
     final URL resource = getClass().getResource( "resources/calcCase.gml" );
