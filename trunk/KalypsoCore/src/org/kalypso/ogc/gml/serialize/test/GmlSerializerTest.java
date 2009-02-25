@@ -54,11 +54,11 @@ public class GmlSerializerTest
   @Test
   public void testLoadPerformance( ) throws Exception
   {
-    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
+ final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
     final String externalForm = zipResource.toExternalForm();
     final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
 
-    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" );
+    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test%n" );
     timeLogger.printCurrentInterim( "Step 1: start: " );
     GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
@@ -68,7 +68,6 @@ public class GmlSerializerTest
     timeLogger.takeInterimTime();
     timeLogger.printCurrentInterim( "Step 2: finished: " );
   }
-
 }
 
 /**
@@ -79,8 +78,13 @@ public class GmlSerializerTest
  * - Step 2: 1m4s<br>
  * <br>
  * <br>
- * No modified check at all:<br>
+ * Modification check only after 1 minute:<br>
  * - Step 1: 38s<br>
  * - Step 2: 30s<br>
+ * <br>
+ * <br>
+ * GmlContentHandler uses local cache for Schema-lookup:<br>
+ * - Step 1: 33s<br>
+ * - Step 2: 25s<br>
  * <br>
  */
