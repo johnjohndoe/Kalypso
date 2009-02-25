@@ -51,6 +51,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
 import org.kalypso.afgui.perspective.Perspective;
+import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener;
 
 /**
@@ -121,7 +122,7 @@ public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
 
     /* Add a command listener for the screenshot command of the map. */
     final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" );
+    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" ); //$NON-NLS-1$
     command.addExecutionListener( m_executeListener );
   }
 
@@ -133,7 +134,7 @@ public class KalypsoModelWorkbenchAdvisor extends IDEWorkbenchAdvisor
   {
     /* Remove the execute listener for the srcreenshot command. */
     final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" );
+    final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" ); //$NON-NLS-1$
     command.removeExecutionListener( m_executeListener );
 
     return super.preShutdown();

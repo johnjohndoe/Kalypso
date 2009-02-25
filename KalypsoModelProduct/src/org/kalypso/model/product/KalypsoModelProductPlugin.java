@@ -12,7 +12,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoModelProductPlugin extends AbstractUIPlugin
 {
-  public static final String ALWAYS_SHOW_INTRO_ON_START = "alwaysShowIntroOnStart";
+  public static final String ALWAYS_SHOW_INTRO_ON_START = "alwaysShowIntroOnStart"; //$NON-NLS-1$
 
   // The shared instance.
   private static KalypsoModelProductPlugin plugin;
@@ -86,7 +86,7 @@ public class KalypsoModelProductPlugin extends AbstractUIPlugin
    */
   public static ImageDescriptor getImageDescriptor( final String path )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.product", path );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.product", path ); //$NON-NLS-1$
   }
 
   /**

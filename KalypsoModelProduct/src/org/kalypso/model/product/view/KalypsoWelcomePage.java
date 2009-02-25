@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
+import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.model.product.ui.ModuleEnteringPageComposite;
 import org.kalypso.model.product.ui.WelcomePageIndexComposite;
 
@@ -69,13 +70,13 @@ import org.kalypso.model.product.ui.WelcomePageIndexComposite;
  */
 public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageHandler
 {
-  private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) );
+  private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_FOOTER = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/footer.gif" ) );
+  protected static final Image IMG_FOOTER = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/footer.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_HELP = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/help_browser.gif" ) );
+  protected static final Image IMG_HELP = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/help_browser.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_HOME = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/back.gif" ) );
+  protected static final Image IMG_HOME = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/back.gif" ) ); //$NON-NLS-1$
 
   private Composite m_contentArea;
 
@@ -165,7 +166,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
         helpSystem.displayHelp();
       }
-    }, "Hilfe" );
+    }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.4") ); //$NON-NLS-1$
 
     footer.addContentArea( footerHelpContent );
 
@@ -195,7 +196,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
           setPage( null );
           update();
         }
-      }, "Zurück zur Startseite" );
+      }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.5") ); //$NON-NLS-1$
 
       footer.addContentArea( footerBackContent );
     }
@@ -232,7 +233,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
         }
 
       }
-    }, "Weitere Informationen zu Kalypso" );
+    }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.6") ); //$NON-NLS-1$
 
     footer.addContentArea( footerLogo );
 
