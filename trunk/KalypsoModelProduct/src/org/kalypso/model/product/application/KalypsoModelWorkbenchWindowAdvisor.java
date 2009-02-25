@@ -53,6 +53,7 @@ import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.config.CustomizableIntroPart;
+import org.kalypso.model.product.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -127,7 +128,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
     configurer.setShowProgressIndicator( true );
     configurer.setShowStatusLine( true );
 
-    configurer.setTitle( "Kalypso Simulation Platform" );
+    configurer.setTitle( Messages.getString("org.kalypso.model.product.application.KalypsoModelWorkbenchWindowAdvisor.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -159,7 +160,7 @@ public class KalypsoModelWorkbenchWindowAdvisor extends IDEWorkbenchWindowAdviso
       // always start with the main page
       final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
       if( model != null )
-        model.setCurrentPageId( "rootPage" );
+        model.setCurrentPageId( "rootPage" ); //$NON-NLS-1$
     }
   }
 }

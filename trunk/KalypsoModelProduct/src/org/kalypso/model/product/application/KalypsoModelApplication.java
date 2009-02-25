@@ -56,6 +56,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
+import org.kalypso.model.product.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -73,7 +74,7 @@ public class KalypsoModelApplication implements IApplication
    * If set to true, the normal IDE-menues and toolbar is shown.
    * </p>
    */
-  private static final String SYSPROP_EXPERT_MODE = "kalypso.model.product.expert";
+  private static final String SYSPROP_EXPERT_MODE = "kalypso.model.product.expert"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
@@ -138,10 +139,10 @@ public class KalypsoModelApplication implements IApplication
   {
     // -data @none was specified but an ide requires workspace
     final Location instanceLoc = Platform.getInstanceLocation();
-    final String dialogTitle = "Kalypso Simulation Platform";
+    final String dialogTitle = Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.0"); //$NON-NLS-1$
     if( instanceLoc == null )
     {
-      MessageDialog.openError( shell, dialogTitle, "IDEs need a valid workspace. Restart without the @none option." );
+      MessageDialog.openError( shell, dialogTitle, Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.2") ); //$NON-NLS-1$
       return false;
     }
 
@@ -161,13 +162,13 @@ public class KalypsoModelApplication implements IApplication
         // 2. directory could not be created
         final File workspaceDirectory = new File( instanceLoc.getURL().getFile() );
         if( workspaceDirectory.exists() )
-          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the associated workspace is currently in use by another Kalypso application." );
+          MessageDialog.openError( shell, dialogTitle, Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.3") ); //$NON-NLS-1$
         else
-          MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the specified workspace cannot be created.  The specified workspace directory is either invalid or read-only." );
+          MessageDialog.openError( shell, dialogTitle, Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.4") ); //$NON-NLS-1$
       }
       catch( final IOException e )
       {
-        final String message = "Could not obtain lock for workspace location";
+        final String message = Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.5"); //$NON-NLS-1$
         final IStatus status = StatusUtilities.createErrorStatus( message );
         KalypsoModelProductPlugin.getDefault().getLog().log( status );
         MessageDialog.openError( shell, dialogTitle, message );
@@ -176,7 +177,7 @@ public class KalypsoModelApplication implements IApplication
     }
 
     /* No instance location is set, show error dialog. */
-    MessageDialog.openError( shell, dialogTitle, "Could not launch the product because there is no workspace specified." );
+    MessageDialog.openError( shell, dialogTitle, Messages.getString("org.kalypso.model.product.application.KalypsoModelApplication.6") ); //$NON-NLS-1$
 
     return false;
   }

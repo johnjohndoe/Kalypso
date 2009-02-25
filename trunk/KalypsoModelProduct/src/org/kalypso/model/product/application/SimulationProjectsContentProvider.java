@@ -52,6 +52,7 @@ import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
+import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -89,32 +90,32 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
         
         final String pname = project.getName();
 
-        final Element a = dom.createElement( "a" );
-        a.setAttribute( "id", "projectLinkId_" + pname );
-        a.setAttribute( "class", "link" );
+        final Element a = dom.createElement( "a" ); //$NON-NLS-1$
+        a.setAttribute( "id", "projectLinkId_" + pname ); //$NON-NLS-1$ //$NON-NLS-2$
+        a.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final StringBuffer href = new StringBuffer();
-        href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&class=org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction" );
-        href.append( "&perspectiveId=org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory" );
-        href.append( "&file=/" );
+        href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.contribs.eclipseplatform&class=org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction" ); //$NON-NLS-1$
+        href.append( "&perspectiveId=org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory" ); //$NON-NLS-1$
+        href.append( "&file=/" ); //$NON-NLS-1$
         href.append( pname );
-        href.append( "/modell.gml" );
-        href.append( "&editorId=" );
-        href.append( "org.kalypso.ui.editor.GisEditor" );
+        href.append( "/modell.gml" ); //$NON-NLS-1$
+        href.append( "&editorId=" ); //$NON-NLS-1$
+        href.append( "org.kalypso.ui.editor.GisEditor" ); //$NON-NLS-1$
 
-        a.setAttribute( "href", href.toString() );
+        a.setAttribute( "href", href.toString() ); //$NON-NLS-1$
 
-        final Element img = dom.createElement( "img" );
-        img.setAttribute( "class", "link" );
-        img.setAttribute( "border", "0" );
-        img.setAttribute( "src", "css/link_obj.gif" );
-        img.setAttribute( "alt", pname + " öffnen" );
+        final Element img = dom.createElement( "img" ); //$NON-NLS-1$
+        img.setAttribute( "class", "link" ); //$NON-NLS-1$ //$NON-NLS-2$
+        img.setAttribute( "border", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
+        img.setAttribute( "src", "css/link_obj.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+        img.setAttribute( "alt", pname + Messages.getString("org.kalypso.model.product.application.SimulationProjectsContentProvider.20") ); //$NON-NLS-1$ //$NON-NLS-2$
 
         a.appendChild( img );
         a.appendChild( dom.createTextNode( pname ) );
         parent.appendChild( a );
 
-        final Element br = dom.createElement( "br" );
+        final Element br = dom.createElement( "br" ); //$NON-NLS-1$
         parent.appendChild( br );
       }
       catch( final Exception e )

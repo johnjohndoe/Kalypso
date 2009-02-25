@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
+import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
@@ -166,7 +167,7 @@ public class ModuleEnteringPageComposite extends Composite
   {
     // list of projects
     final ScrolledSection sectionProjects = new ScrolledSection( body, toolkit, ExpandableComposite.TITLE_BAR, true );
-    final Composite bodyProjects = sectionProjects.setup( "Projekte:", new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    final Composite bodyProjects = sectionProjects.setup( Messages.getString("org.kalypso.model.product.ui.ModuleEnteringPageComposite.0"), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
     final GridLayout layout = new GridLayout( 2, true );
     layout.verticalSpacing = layout.marginWidth = 0;
     bodyProjects.setLayout( layout );
@@ -201,7 +202,7 @@ public class ModuleEnteringPageComposite extends Composite
       }
     };
 
-    final CreateProjectComposite projectTemplate = new CreateProjectComposite( "Neues Projekt anlegen", bodyProjects, toolkit, projectDelegate );
+    final CreateProjectComposite projectTemplate = new CreateProjectComposite( Messages.getString("org.kalypso.model.product.ui.ModuleEnteringPageComposite.1"), bodyProjects, toolkit, projectDelegate ); //$NON-NLS-1$
     projectTemplate.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ImportProjectComposite projectImport = new ImportProjectComposite( bodyProjects, toolkit );
@@ -231,12 +232,12 @@ public class ModuleEnteringPageComposite extends Composite
         }
       };
 
-      final CreateProjectComposite demoProject = new CreateProjectComposite( "Demo-Projekt entpacken", bodyProjects, toolkit, demoDelegate );
+      final CreateProjectComposite demoProject = new CreateProjectComposite( Messages.getString("org.kalypso.model.product.ui.ModuleEnteringPageComposite.2"), bodyProjects, toolkit, demoDelegate ); //$NON-NLS-1$
       demoProject.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     }
     else
     {
-      toolkit.createLabel( bodyProjects, "" ); // spacer
+      toolkit.createLabel( bodyProjects, "" ); // spacer //$NON-NLS-1$
     }
 
     if( m_enteringPage.hasImportWizard() )
