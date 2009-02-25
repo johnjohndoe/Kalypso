@@ -27,7 +27,7 @@
               targetID="org.kalypso.model.wspm.ui.view.table.TableView">
            <menu
                  id="tableViewMenu"
-                 label="%menu.label.0">
+                 label="%tableViewMenu">
               <groupMarker name="points"/>
               <separator name="additions"/>
            </menu>
@@ -50,10 +50,10 @@
            <action
                  class="org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate"
                  id="com.bce.profil.eclipse.view.table.propertyedit"
-                 label="%action.label.0"
+                 label="%com.bce.profil.eclipse.view.table.propertyedit"
                  menubarPath="points"
                  style="push"
-                 tooltip="%action.tooltip.1">
+                 tooltip="%com.bce.profil.eclipse.view.table.propertyedit.tooltip">
            </action>
         </viewContribution>
      </extension>
@@ -195,17 +195,19 @@
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%action.label.1"
+               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
                id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               label="%action.label.2">
+               label="%org.kalypso.model.wspm.ui.action.PropertyEditAction"
+               tooltip="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description">
          </action>
          <action
                class="org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate"
                id="org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
-               label="Profile validieren">
+               label="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
+               tooltip="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description">
          </action>
       </objectContribution>
             <objectContribution
@@ -219,8 +221,8 @@
                class="org.kalypso.model.wspm.ui.action.FlipProfileAction"
                icon="icons/obj16/flipProfile.gif"
                id="org.kalypso.model.wspm.ui.action.FlipProfileAction"
-               label="%action.label.3"
-               tooltip="%action.tooltip.2"/>
+               label="%org.kalypso.model.wspm.ui.action.FlipProfileAction"
+               tooltip="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -228,20 +230,20 @@
             objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
          <menu
                id="wspmProfileActions"
-               label="%menu.label.1"/>
+               label="%wspmProfileActions"/>
          <filter
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
          <menu
                id="org.kalypso.model.wspm.ui.menu.export"
-               label="%menu.label.2"
+               label="%org.kalypso.model.wspm.ui.menu.export"
                path="additions">
             <groupMarker name="exports"/>
             <separator name="additions"/>
          </menu>
          <menu
                id="org.kalypso.model.wspm.ui.menu.import"
-               label="%menu.label.3"
+               label="%org.kalypso.model.wspm.ui.menu.import"
                path="additions">
             <groupMarker name="imports"/>
             <separator name="additions"/>
@@ -249,32 +251,32 @@
          <action
                class="org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
                id="KalypsoModelWspmUI.action1"
-               label="%action.label.4"
+               label="%org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
                menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
                style="push"
-               tooltip="%action.tooltip.3"/>
+               tooltip="%org.kalypso.model.wspm.ui.action.ExportProfilePrfAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               label="%action.label.5"
+               label="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
                menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
                style="push"
-               tooltip="%action.tooltip.4"/>
+               tooltip="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
-               label="%action.label.6"
+               label="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
                menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
                style="push"
-               tooltip="%action.tooltip.5"/>
+               tooltip="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-               label="%action.label.7"
+               label="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="%action.tooltip.6"/>
+               tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -286,17 +288,17 @@
 	         <action
 		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
 		               id="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-		               label="Fließzonen erzeugen"
+		               label="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
 		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
 		               style="push"
-		               tooltip="Erzeugt Fließzonen-Begrenzer anhand von Linien-Themen"/>
+		               tooltip="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
                id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-               label="%action.label.8"
+               label="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="%action.tooltip.7"/>
+               tooltip="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
       </objectContribution>
         <objectContribution
               adaptable="true"
@@ -375,20 +377,20 @@
          <pointPropertyCalculator
                class="org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator"
                id="org.calypso.model.wspm.core.util.pointpropertycalculator.addfixvalue"
-               label="Offset"
-               tooltip="alle ausgewählten Profileigenschaften werden um einen festen Wert angehoben">
+               label="%org.calypso.model.wspm.core.util.pointpropertycalculator.addfixvalue"
+               tooltip="%org.calypso.model.wspm.core.util.pointpropertycalculator.addfixvalue.description">
          </pointPropertyCalculator>
          <pointPropertyCalculator
                class="org.kalypso.model.wspm.core.util.pointpropertycalculator.SetFixValueOperator"
                id="org.calypso.model.wspm.core.util.pointpropertycalculator.setfixvalue"
-               label="fester Wert"
-               tooltip="alle ausgewählten Profileigenschaften werden mit diesem Wert überschrieben">
+               label="%org.calypso.model.wspm.core.util.pointpropertycalculator.setfixvalue"
+               tooltip="%org.calypso.model.wspm.core.util.pointpropertycalculator.setfixvalue.description">
          </pointPropertyCalculator>
          <pointPropertyCalculator
                class="org.kalypso.model.wspm.core.util.pointpropertycalculator.AddPercentValueOperator"
                id="org.calypso.model.wspm.core.util.pointpropertycalculator.addpercentvalue"
-               label="Faktor"
-               tooltip="alle ausgewählten Profileigenschaften werden mit diesem Faktor multipliziert">
+               label="%org.calypso.model.wspm.core.util.pointpropertycalculator.addpercentvalue"
+               tooltip="%org.calypso.model.wspm.core.util.pointpropertycalculator.addpercentvalue.description">
          </pointPropertyCalculator>
       </extension>
       <extension
@@ -490,7 +492,7 @@
          <command
                categoryId="org.kalypso.model.wspm.ui.view.legend.category"
                id="org.kalypso.model.wspm.ui.view.legend.addlayer"
-               name="add">
+               name="%org.kalypso.model.wspm.ui.view.legend.addlayer">
          </command>
          <category
                id="org.kalypso.model.wspm.ui.view.legend.category"
@@ -499,7 +501,7 @@
          <command
                categoryId="org.kalypso.model.wspm.ui.view.legend.category"
                id="org.kalypso.model.wspm.ui.view.legend.removelayer"
-               name="remove Chart Layer">
+               name="%org.kalypso.model.wspm.ui.view.legend.removelayer">
          </command>
       </extension>
       <extension

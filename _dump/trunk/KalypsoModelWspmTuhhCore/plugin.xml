@@ -18,32 +18,26 @@
          point="org.kalypso.model.wspm.core.profilePointFilter">
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
-            description="nur Profilpunkte links ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
+            description="%org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"
-            name="Vorland links"/>
+            name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandlinksProfilePointFilter"/>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
-            description="nur Profilpunkte innerhalb der Hauptöffnung innerhalb der Trennflächen)"
+            description="%org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter"
-            name="Flussschlauch">
+            name="%org.kalypso.model.wspm.tuhh.core.profile.FlussschlauchProfilePointFilter">
       </filter>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
-            description="nur Profilpunkte rechts ausserhalb der Hauptöffnung (ausserhalb der Trennflächen)"
+            description="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
-            name="Vorland rechts">
+            name="%org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter">
       </filter>
       <filter
             class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            description="nur Profilpunkte welche in der Tabelle selektiert wurden"
+            description="%org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter.description"
             id="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            name="aus Tabelle">
-      </filter>
-      <filter
-            class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            description="nur Profilpunkte welche in der Tabelle selektiert wurden"
-            id="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
-            name="aus Tabelle">
+            name="%org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter">
       </filter>
    </extension>
    <extension
@@ -57,17 +51,17 @@
          point="org.kalypso.model.wspm.core.profiletype">
       <profiletype
             class="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"
-            description="Profile nach dem 1D-stationären Rechenkern der TUHH (nach Prof. Pasche)"
+            description="%org.kalypso.model.wspm.tuhh.profiletype.description"
             id="org.kalypso.model.wspm.tuhh.profiletype"
-            name="Pasche">
+            name="%org.kalypso.model.wspm.tuhh.profiletype">
       </profiletype>
    </extension>
    <extension
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
             data="etc/projectTemplate.zip"
-            description="Die leere Vorlage für ein WSPM-TUHH Projekt."
-            label="Leere Vorlage"
+            description="%org.kalypso.model.wspm.tuhh.projectTemplate.description"
+            label="%org.kalypso.model.wspm.tuhh.projectTemplate"
             projectName=""
             category="org.kalypso.model.wspm.tuhh.projectTemplate">
       </project>

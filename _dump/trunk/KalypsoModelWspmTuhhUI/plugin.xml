@@ -29,8 +29,8 @@
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="Profil anzeigen"
-               tooltip="Öffnet die Profileeditor Perspektive"/>
+               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
+               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
       </objectContribution>
             <objectContribution
             adaptable="false"
@@ -43,10 +43,10 @@
                class="org.kalypso.model.wspm.tuhh.ui.actions.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-               label="Profile in neuer Karte anzeigen"
+               label="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
+               tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
       </objectContribution>
 
       <objectContribution
@@ -59,17 +59,17 @@
 		         <action
 		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
 		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
-		               label="Fließzonen erzeugen"
+		               label="%org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
 		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
 		               style="push"
-		               tooltip="Erzeugt Fließzonen-Begrenzer anhand von Linien-Themen"/>
+		               tooltip="%org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction.description"/>
            <action
                  class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
                  id="org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
-                 label="Rauheiten zuweisen"
+                 label="%org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
                  menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                  style="push"
-                 tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu.">
+                 tooltip="%org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction.description">
            </action>
             </objectContribution>
    </extension>
@@ -81,8 +81,8 @@
             icon="icons/obj16/wspwin.gif"
             id="org.kalypso.model.wspm.exportwizard.wspwin"
             name="%org.kalypso.model.wspm.exportwizard.wspwin">
-         <description>
-            Exportiert WSP-Modell (TU-HH) als WspWin-Projekt
+            <description>
+            %org.kalypso.model.wspm.exportwizard.wspwin.description
          </description>
       </wizard>
    </extension>
@@ -91,42 +91,42 @@
          point="org.kalypso.model.wspm.core.validatorrule">
       <rule
             class="org.kalypso.model.wspm.tuhh.ui.rules.RuecksprungRule"
-            description="Rücksprung"
+            description="%pasche.ruecksprung"
             id="pasche.ruecksprung"
             type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.TrennerRule"
-              description="Trennflächen"
+              description="%pasche.trenner"
               id="pasche.trenner"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.BrueckeRule"
-              description="Brücke"
+              description="%pasche.bruecke"
               id="pasche.bruecke"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.WehrRule"
-              description="Wehr"
+              description="%pasche.wehr"
               id="pasche.wehr"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.DoppelterPunktRule"
-              description="DoppelterPunkt"
+              description="%pasche.doppelterpunkt"
               id="pasche.doppelterpunkt"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.BewuchsRule"
-              description="Bewuchs"
+              description="%pasche.bewuchs"
               id="pasche.bewuchs"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.RauheitRule"
-              description="Rauheit"
+              description="%pasche.rauheit"
               id="pasche.rauheit"
               type="org.kalypso.model.wspm.tuhh.profiletype"/>
         <rule
               class="org.kalypso.model.wspm.tuhh.ui.rules.DurchlassRule"
-              description="Durchlass"
+              description="%pasche.durchlass"
               id="pasche.durchlass"
               type="org.kalypso.model.wspm.tuhh.profiletype">
         </rule>
@@ -152,7 +152,7 @@
             project="true">
 
          <description>
-            Erzeugt ein neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
+            %org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard.description
          </description>
       </wizard>
       <wizard
@@ -167,7 +167,7 @@
             name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard"
             project="true">
          <description>
-            Importiert ein bestehendes WspWin Projekt als neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
+            %org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard.description
          </description>
       </wizard>
       <wizard
@@ -179,7 +179,7 @@
             hasPages="true"
             icon="icons/obj16/kalypso16.gif"
             id="org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
-            name="TUHH  1D-Water-Surface-Profile-Model Demo-Projekt"
+            name="%org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard"
             project="true">
       </wizard>
    </extension>
@@ -213,9 +213,9 @@
             point="org.kalypso.core.gmlSourceProvider">
          <provider
                class="org.kalypso.model.wspm.tuhh.ui.wizards.WspTinProvider"
-               description="Wasserspiegel-Tins aus Wspm"
+               description="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider.description"
                id="org.kalypso.ui.wizards.results.gmlsource.WspTinProvider"
-               label="Wasserspiegel-Tins">
+               label="%org.kalypso.ui.wizards.results.gmlsource.WspTinProvider">
             <category
                   id="org.kalypso.core.tin.waterlevel">
             </category>
