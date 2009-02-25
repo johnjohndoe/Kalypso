@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="WINDOWS-1252"?>
+<c1d2d:ControlModelGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:swe="http://www.opengis.net/swe" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
+ <c1d2d:controlModelCollection xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase">
+  <c1d2d:ControlModelCollection gml:id="ControlModelCollection12125814299811">
+   <c1d2d:activeModelID xlink:href="#ControlModel121446393945210"/>
+   <c1d2d:controlModelMember>
+    <c1d2d:ControlModel gml:id="ControlModel121455342598510">
+     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit1D2D121455342596917318"/>
+     <c1d2d:Version>0_0_2_6</c1d2d:Version>
+     <c1d2d:VEGETA>true</c1d2d:VEGETA>
+     <c1d2d:BEIENT>true</c1d2d:BEIENT>
+     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
+     <c1d2d:startsim/>
+     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom/>
+     <c1d2d:OMEGA/>
+     <c1d2d:ELEV/>
+     <c1d2d:UNOM>0.5</c1d2d:UNOM>
+     <c1d2d:UDIR/>
+     <c1d2d:HMIN/>
+     <c1d2d:DSET>0.09</c1d2d:DSET>
+     <c1d2d:DSETD>0.1</c1d2d:DSETD>
+     <c1d2d:_steady>true</c1d2d:_steady>
+     <c1d2d:_unsteady>true</c1d2d:_unsteady>
+     <c1d2d:NITI>20</c1d2d:NITI>
+     <c1d2d:NITN>10</c1d2d:NITN>
+     <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
+     <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
+     <c1d2d:CONV_3>0.0010</c1d2d:CONV_3>
+     <c1d2d:IDRPT>1</c1d2d:IDRPT>
+     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+     <c1d2d:AC1>1.5</c1d2d:AC1>
+     <c1d2d:AC2>0.67</c1d2d:AC2>
+     <c1d2d:AC3>0.04</c1d2d:AC3>
+     <c1d2d:_restart>true</c1d2d:_restart>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo121455356617212">
+       <c1d2d:calculationUnitID>CalculationUnit1D2D12144639393734308</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta1214501646719761</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/CalculationUnit1D2D12144639393734308/steady/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:IACCYC>1</c1d2d:IACCYC>
+     <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.5</c1d2d:_steadyBC>
+     <c1d2d:timestepsMember>
+      <c1d2d:TimestepsObservation gml:id="TimestepsObservation121455342598516">
+       <gml:name>Zeitschrittdefinition</gml:name>
+       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition121455358476615">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+        </sweExt:SortedRecordDefinition>
+       </om:resultDefinition>
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2008-06-03T22%3A00%3A00.000Z 0.100
+2 2008-06-03T23%3A00%3A00.000Z 0.100
+3 2008-06-04T00%3A00%3A00.000Z 0.1
+4 2008-06-04T01%3A00%3A00.000Z 0.100
+]]></om:result>
+      </c1d2d:TimestepsObservation>
+     </c1d2d:timestepsMember>
+    </c1d2d:ControlModel>
+   </c1d2d:controlModelMember>
+   <c1d2d:controlModelMember>
+    <c1d2d:ControlModel gml:id="ControlModel121447405594022">
+     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit2D121447405594010843"/>
+     <c1d2d:Version>0_0_2_6</c1d2d:Version>
+     <c1d2d:VEGETA>true</c1d2d:VEGETA>
+     <c1d2d:BEIENT>true</c1d2d:BEIENT>
+     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
+     <c1d2d:startsim/>
+     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom/>
+     <c1d2d:OMEGA/>
+     <c1d2d:ELEV/>
+     <c1d2d:UNOM>0.5</c1d2d:UNOM>
+     <c1d2d:UDIR/>
+     <c1d2d:HMIN/>
+     <c1d2d:DSET>0.09</c1d2d:DSET>
+     <c1d2d:DSETD>0.1</c1d2d:DSETD>
+     <c1d2d:_steady>true</c1d2d:_steady>
+     <c1d2d:_unsteady>false</c1d2d:_unsteady>
+     <c1d2d:NITI>40</c1d2d:NITI>
+     <c1d2d:NITN>50</c1d2d:NITN>
+     <c1d2d:CONV_1>0.05</c1d2d:CONV_1>
+     <c1d2d:CONV_2>0.05</c1d2d:CONV_2>
+     <c1d2d:CONV_3>0.01</c1d2d:CONV_3>
+     <c1d2d:IDRPT>1</c1d2d:IDRPT>
+     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+     <c1d2d:AC1>1.5</c1d2d:AC1>
+     <c1d2d:AC2>0.67</c1d2d:AC2>
+     <c1d2d:AC3>0.04</c1d2d:AC3>
+     <c1d2d:_restart>true</c1d2d:_restart>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo121447946786920">
+       <c1d2d:calculationUnitID>CalculationUnit2D121439979923417593</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta121447388868070</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/CalculationUnit2D121439979923417593/timestep-25.06.2008_05_00_CEST/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:IACCYC>1</c1d2d:IACCYC>
+     <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.5</c1d2d:_steadyBC>
+     <c1d2d:timestepsMember>
+      <c1d2d:TimestepsObservation gml:id="TimestepsObservation121447405594028">
+       <gml:name>Zeitschrittdefinition</gml:name>
+       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition121448597701533">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+        </sweExt:SortedRecordDefinition>
+       </om:resultDefinition>
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2008-06-03T22%3A00%3A00.000Z 0.300
+2 2008-06-03T23%3A00%3A00.000Z 0.300
+3 2008-06-04T00%3A00%3A00.000Z 0.300
+4 2008-06-04T01%3A00%3A00.000Z 0.300
+5 2008-06-04T02%3A00%3A00.000Z 0.300
+6 2008-06-04T03%3A00%3A00.000Z 0.300
+7 2008-06-04T04%3A00%3A00.000Z 0.300
+8 2008-06-04T05%3A00%3A00.000Z 0.300
+9 2008-06-04T06%3A00%3A00.000Z 0.300
+10 2008-06-04T07%3A00%3A00.000Z 0.300
+11 2008-06-04T08%3A00%3A00.000Z 0.300
+12 2008-06-04T09%3A00%3A00.000Z 0.300
+13 2008-06-04T10%3A00%3A00.000Z 0.300
+14 2008-06-04T11%3A00%3A00.000Z 0.300
+15 2008-06-04T12%3A00%3A00.000Z 0.300
+16 2008-06-04T13%3A00%3A00.000Z 0.300
+17 2008-06-04T14%3A00%3A00.000Z 0.300
+18 2008-06-04T15%3A00%3A00.000Z 0.300
+19 2008-06-04T16%3A00%3A00.000Z 0.300
+20 2008-06-04T17%3A00%3A00.000Z 0.300
+21 2008-06-04T18%3A00%3A00.000Z 0.300
+22 2008-06-04T19%3A00%3A00.000Z 0.300
+23 2008-06-04T20%3A00%3A00.000Z 0.300
+24 2008-06-04T21%3A00%3A00.000Z 0.300
+25 2008-06-04T22%3A00%3A00.000Z 0.300
+26 2008-06-04T23%3A00%3A00.000Z 0.300
+27 2008-06-05T00%3A00%3A00.000Z 0.300
+28 2008-06-05T01%3A00%3A00.000Z 0.300
+29 2008-06-05T02%3A00%3A00.000Z 0.300
+30 2008-06-05T03%3A00%3A00.000Z 0.300
+31 2008-06-05T04%3A00%3A00.000Z 0.300
+32 2008-06-05T05%3A00%3A00.000Z 0.300
+33 2008-06-05T06%3A00%3A00.000Z 0.300
+34 2008-06-05T07%3A00%3A00.000Z 0.300
+35 2008-06-05T08%3A00%3A00.000Z 0.300
+36 2008-06-05T09%3A00%3A00.000Z 0.300
+37 2008-06-05T10%3A00%3A00.000Z 0.300
+38 2008-06-05T11%3A00%3A00.000Z 0.300
+39 2008-06-05T12%3A00%3A00.000Z 0.300
+40 2008-06-05T13%3A00%3A00.000Z 0.300
+41 2008-06-05T14%3A00%3A00.000Z 0.300
+42 2008-06-05T15%3A00%3A00.000Z 0.300
+43 2008-06-05T16%3A00%3A00.000Z 0.300
+44 2008-06-05T17%3A00%3A00.000Z 0.300
+45 2008-06-05T18%3A00%3A00.000Z 0.300
+46 2008-06-05T19%3A00%3A00.000Z 0.300
+47 2008-06-05T20%3A00%3A00.000Z 0.300
+48 2008-06-05T21%3A00%3A00.000Z 0.300
+49 2008-06-05T22%3A00%3A00.000Z 0.300
+50 2008-06-05T23%3A00%3A00.000Z 0.300
+51 2008-06-06T00%3A00%3A00.000Z 0.300
+52 2008-06-06T01%3A00%3A00.000Z 0.300
+53 2008-06-06T02%3A00%3A00.000Z 0.300
+54 2008-06-06T03%3A00%3A00.000Z 0.300
+55 2008-06-06T04%3A00%3A00.000Z 0.300
+56 2008-06-06T05%3A00%3A00.000Z 0.300
+57 2008-06-06T06%3A00%3A00.000Z 0.300
+58 2008-06-06T07%3A00%3A00.000Z 0.300
+59 2008-06-06T08%3A00%3A00.000Z 0.300
+60 2008-06-06T09%3A00%3A00.000Z 0.300
+61 2008-06-06T10%3A00%3A00.000Z 0.300
+62 2008-06-06T11%3A00%3A00.000Z 0.300
+63 2008-06-06T12%3A00%3A00.000Z 0.300
+64 2008-06-06T13%3A00%3A00.000Z 0.300
+65 2008-06-06T14%3A00%3A00.000Z 0.300
+66 2008-06-06T15%3A00%3A00.000Z 0.300
+67 2008-06-06T16%3A00%3A00.000Z 0.300
+68 2008-06-06T17%3A00%3A00.000Z 0.300
+69 2008-06-06T18%3A00%3A00.000Z 0.300
+70 2008-06-06T19%3A00%3A00.000Z 0.300
+71 2008-06-06T20%3A00%3A00.000Z 0.300
+72 2008-06-06T21%3A00%3A00.000Z 0.300
+73 2008-06-06T22%3A00%3A00.000Z 0.300
+74 2008-06-06T23%3A00%3A00.000Z 0.300
+75 2008-06-07T00%3A00%3A00.000Z 0.300
+76 2008-06-07T01%3A00%3A00.000Z 0.300
+77 2008-06-07T02%3A00%3A00.000Z 0.300
+78 2008-06-07T03%3A00%3A00.000Z 0.300
+79 2008-06-07T04%3A00%3A00.000Z 0.300
+80 2008-06-07T05%3A00%3A00.000Z 0.300
+81 2008-06-07T06%3A00%3A00.000Z 0.300
+82 2008-06-07T07%3A00%3A00.000Z 0.300
+83 2008-06-07T08%3A00%3A00.000Z 0.300
+84 2008-06-07T09%3A00%3A00.000Z 0.300
+85 2008-06-07T10%3A00%3A00.000Z 0.300
+86 2008-06-07T11%3A00%3A00.000Z 0.300
+87 2008-06-07T12%3A00%3A00.000Z 0.300
+88 2008-06-07T13%3A00%3A00.000Z 0.300
+89 2008-06-07T14%3A00%3A00.000Z 0.300
+90 2008-06-07T15%3A00%3A00.000Z 0.300
+91 2008-06-07T16%3A00%3A00.000Z 0.300
+92 2008-06-07T17%3A00%3A00.000Z 0.300
+93 2008-06-07T18%3A00%3A00.000Z 0.300
+94 2008-06-07T19%3A00%3A00.000Z 0.300
+95 2008-06-07T20%3A00%3A00.000Z 0.300
+96 2008-06-07T21%3A00%3A00.000Z 0.300
+97 2008-06-07T22%3A00%3A00.000Z 0.300
+98 2008-06-07T23%3A00%3A00.000Z 0.300
+99 2008-06-08T00%3A00%3A00.000Z 0.300
+100 2008-06-08T01%3A00%3A00.000Z 0.300
+101 2008-06-08T02%3A00%3A00.000Z 0.300
+102 2008-06-08T03%3A00%3A00.000Z 0.300
+103 2008-06-08T04%3A00%3A00.000Z 0.300
+104 2008-06-08T05%3A00%3A00.000Z 0.300
+105 2008-06-08T06%3A00%3A00.000Z 0.300
+106 2008-06-08T07%3A00%3A00.000Z 0.300
+107 2008-06-08T08%3A00%3A00.000Z 0.300
+108 2008-06-08T09%3A00%3A00.000Z 0.300
+109 2008-06-08T10%3A00%3A00.000Z 0.300
+110 2008-06-08T11%3A00%3A00.000Z 0.300
+111 2008-06-08T12%3A00%3A00.000Z 0.300
+112 2008-06-08T13%3A00%3A00.000Z 0.300
+113 2008-06-08T14%3A00%3A00.000Z 0.300
+114 2008-06-08T15%3A00%3A00.000Z 0.300
+115 2008-06-08T16%3A00%3A00.000Z 0.300
+116 2008-06-08T17%3A00%3A00.000Z 0.300
+117 2008-06-08T18%3A00%3A00.000Z 0.300
+118 2008-06-08T19%3A00%3A00.000Z 0.300
+119 2008-06-08T20%3A00%3A00.000Z 0.300
+120 2008-06-08T21%3A00%3A00.000Z 0.300
+121 2008-06-08T22%3A00%3A00.000Z 0.300
+122 2008-06-08T23%3A00%3A00.000Z 0.300
+123 2008-06-09T00%3A00%3A00.000Z 0.300
+124 2008-06-09T01%3A00%3A00.000Z 0.300
+125 2008-06-09T02%3A00%3A00.000Z 0.300
+126 2008-06-09T03%3A00%3A00.000Z 0.300
+127 2008-06-09T04%3A00%3A00.000Z 0.300
+128 2008-06-09T05%3A00%3A00.000Z 0.300
+129 2008-06-09T06%3A00%3A00.000Z 0.300
+130 2008-06-09T07%3A00%3A00.000Z 0.300
+131 2008-06-09T08%3A00%3A00.000Z 0.300
+132 2008-06-09T09%3A00%3A00.000Z 0.300
+133 2008-06-09T10%3A00%3A00.000Z 0.300
+134 2008-06-09T11%3A00%3A00.000Z 0.300
+135 2008-06-09T12%3A00%3A00.000Z 0.300
+136 2008-06-09T13%3A00%3A00.000Z 0.300
+137 2008-06-09T14%3A00%3A00.000Z 0.300
+138 2008-06-09T15%3A00%3A00.000Z 0.300
+139 2008-06-09T16%3A00%3A00.000Z 0.300
+140 2008-06-09T17%3A00%3A00.000Z 0.300
+141 2008-06-09T18%3A00%3A00.000Z 0.300
+142 2008-06-09T19%3A00%3A00.000Z 0.300
+143 2008-06-09T20%3A00%3A00.000Z 0.300
+144 2008-06-09T21%3A00%3A00.000Z 0.300
+145 2008-06-09T22%3A00%3A00.000Z 0.300
+]]></om:result>
+      </c1d2d:TimestepsObservation>
+     </c1d2d:timestepsMember>
+    </c1d2d:ControlModel>
+   </c1d2d:controlModelMember>
+   <c1d2d:controlModelMember>
+    <c1d2d:ControlModel gml:id="ControlModel121446393945210">
+     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit1D2D12144639393734308"/>
+     <c1d2d:Version>1_0_3_absolute</c1d2d:Version>
+     <c1d2d:VEGETA>true</c1d2d:VEGETA>
+     <c1d2d:BEIENT>true</c1d2d:BEIENT>
+     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
+     <c1d2d:startsim/>
+     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom/>
+     <c1d2d:OMEGA/>
+     <c1d2d:ELEV/>
+     <c1d2d:UNOM>0.5</c1d2d:UNOM>
+     <c1d2d:UDIR/>
+     <c1d2d:HMIN/>
+     <c1d2d:DSET>0.09</c1d2d:DSET>
+     <c1d2d:DSETD>0.1</c1d2d:DSETD>
+     <c1d2d:_steady>true</c1d2d:_steady>
+     <c1d2d:_unsteady>false</c1d2d:_unsteady>
+     <c1d2d:NITI>20</c1d2d:NITI>
+     <c1d2d:NITN>20</c1d2d:NITN>
+     <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
+     <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
+     <c1d2d:CONV_3>0.01</c1d2d:CONV_3>
+     <c1d2d:IDRPT>1</c1d2d:IDRPT>
+     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+     <c1d2d:AC1>1.5</c1d2d:AC1>
+     <c1d2d:AC2>0.67</c1d2d:AC2>
+     <c1d2d:AC3>0.04</c1d2d:AC3>
+     <c1d2d:_restart>true</c1d2d:_restart>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo122037167741539">
+       <c1d2d:calculationUnitID>CalculationUnit1D12125830336860</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta1212746459707322</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/CalculationUnit1D12125830336860/steady/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo122037167741540">
+       <c1d2d:calculationUnitID>CalculationUnit2D121447405594010843</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta121448650633584</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/CalculationUnit2D121447405594010843/steady/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:IACCYC>1</c1d2d:IACCYC>
+     <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.2</c1d2d:_steadyBC>
+     <c1d2d:timestepsMember>
+      <c1d2d:TimestepsObservation gml:id="TimestepsObservation121446393945215">
+       <gml:name>Zeitschrittdefinition</gml:name>
+       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition121448776834127">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+        </sweExt:SortedRecordDefinition>
+       </om:resultDefinition>
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2008-06-03T22%3A00%3A00.000Z 0.300
+2 2008-06-03T23%3A00%3A00.000Z 0.300
+3 2008-06-04T00%3A00%3A00.000Z 0.300
+4 2008-06-04T01%3A00%3A00.000Z 0.300
+5 2008-06-04T02%3A00%3A00.000Z 0.300
+6 2008-06-04T03%3A00%3A00.000Z 0.300
+7 2008-06-04T04%3A00%3A00.000Z 0.300
+8 2008-06-04T05%3A00%3A00.000Z 0.300
+9 2008-06-04T06%3A00%3A00.000Z 0.300
+10 2008-06-04T07%3A00%3A00.000Z 0.300
+11 2008-06-04T08%3A00%3A00.000Z 0.300
+12 2008-06-04T09%3A00%3A00.000Z 0.300
+13 2008-06-04T10%3A00%3A00.000Z 0.300
+14 2008-06-04T11%3A00%3A00.000Z 0.300
+15 2008-06-04T12%3A00%3A00.000Z 0.300
+16 2008-06-04T13%3A00%3A00.000Z 0.300
+17 2008-06-04T14%3A00%3A00.000Z 0.300
+18 2008-06-04T15%3A00%3A00.000Z 0.300
+19 2008-06-04T16%3A00%3A00.000Z 0.300
+20 2008-06-04T17%3A00%3A00.000Z 0.300
+21 2008-06-04T18%3A00%3A00.000Z 0.300
+22 2008-06-04T19%3A00%3A00.000Z 0.300
+23 2008-06-04T20%3A00%3A00.000Z 0.300
+24 2008-06-04T21%3A00%3A00.000Z 0.300
+25 2008-06-04T22%3A00%3A00.000Z 0.300
+26 2008-06-04T23%3A00%3A00.000Z 0.300
+27 2008-06-05T00%3A00%3A00.000Z 0.300
+28 2008-06-05T01%3A00%3A00.000Z 0.300
+29 2008-06-05T02%3A00%3A00.000Z 0.300
+30 2008-06-05T03%3A00%3A00.000Z 0.300
+31 2008-06-05T04%3A00%3A00.000Z 0.300
+32 2008-06-05T05%3A00%3A00.000Z 0.300
+33 2008-06-05T06%3A00%3A00.000Z 0.300
+34 2008-06-05T07%3A00%3A00.000Z 0.300
+35 2008-06-05T08%3A00%3A00.000Z 0.300
+36 2008-06-05T09%3A00%3A00.000Z 0.300
+37 2008-06-05T10%3A00%3A00.000Z 0.300
+38 2008-06-05T11%3A00%3A00.000Z 0.300
+39 2008-06-05T12%3A00%3A00.000Z 0.300
+40 2008-06-05T13%3A00%3A00.000Z 0.300
+41 2008-06-05T14%3A00%3A00.000Z 0.300
+42 2008-06-05T15%3A00%3A00.000Z 0.300
+43 2008-06-05T16%3A00%3A00.000Z 0.300
+44 2008-06-05T17%3A00%3A00.000Z 0.300
+45 2008-06-05T18%3A00%3A00.000Z 0.300
+46 2008-06-05T19%3A00%3A00.000Z 0.300
+47 2008-06-05T20%3A00%3A00.000Z 0.300
+48 2008-06-05T21%3A00%3A00.000Z 0.300
+49 2008-06-05T22%3A00%3A00.000Z 0.300
+50 2008-06-05T23%3A00%3A00.000Z 0.300
+51 2008-06-06T00%3A00%3A00.000Z 0.300
+52 2008-06-06T01%3A00%3A00.000Z 0.300
+53 2008-06-06T02%3A00%3A00.000Z 0.300
+54 2008-06-06T03%3A00%3A00.000Z 0.300
+55 2008-06-06T04%3A00%3A00.000Z 0.300
+56 2008-06-06T05%3A00%3A00.000Z 0.300
+57 2008-06-06T06%3A00%3A00.000Z 0.300
+58 2008-06-06T07%3A00%3A00.000Z 0.300
+59 2008-06-06T08%3A00%3A00.000Z 0.300
+60 2008-06-06T09%3A00%3A00.000Z 0.300
+61 2008-06-06T10%3A00%3A00.000Z 0.300
+62 2008-06-06T11%3A00%3A00.000Z 0.300
+63 2008-06-06T12%3A00%3A00.000Z 0.300
+64 2008-06-06T13%3A00%3A00.000Z 0.300
+65 2008-06-06T14%3A00%3A00.000Z 0.300
+66 2008-06-06T15%3A00%3A00.000Z 0.300
+67 2008-06-06T16%3A00%3A00.000Z 0.300
+68 2008-06-06T17%3A00%3A00.000Z 0.300
+69 2008-06-06T18%3A00%3A00.000Z 0.300
+70 2008-06-06T19%3A00%3A00.000Z 0.300
+71 2008-06-06T20%3A00%3A00.000Z 0.300
+72 2008-06-06T21%3A00%3A00.000Z 0.300
+73 2008-06-06T22%3A00%3A00.000Z 0.300
+74 2008-06-06T23%3A00%3A00.000Z 0.300
+75 2008-06-07T00%3A00%3A00.000Z 0.300
+76 2008-06-07T01%3A00%3A00.000Z 0.300
+77 2008-06-07T02%3A00%3A00.000Z 0.300
+78 2008-06-07T03%3A00%3A00.000Z 0.300
+79 2008-06-07T04%3A00%3A00.000Z 0.300
+80 2008-06-07T05%3A00%3A00.000Z 0.300
+81 2008-06-07T06%3A00%3A00.000Z 0.300
+82 2008-06-07T07%3A00%3A00.000Z 0.300
+83 2008-06-07T08%3A00%3A00.000Z 0.300
+84 2008-06-07T09%3A00%3A00.000Z 0.300
+85 2008-06-07T10%3A00%3A00.000Z 0.300
+86 2008-06-07T11%3A00%3A00.000Z 0.300
+87 2008-06-07T12%3A00%3A00.000Z 0.300
+88 2008-06-07T13%3A00%3A00.000Z 0.300
+89 2008-06-07T14%3A00%3A00.000Z 0.300
+90 2008-06-07T15%3A00%3A00.000Z 0.300
+91 2008-06-07T16%3A00%3A00.000Z 0.300
+92 2008-06-07T17%3A00%3A00.000Z 0.300
+93 2008-06-07T18%3A00%3A00.000Z 0.300
+94 2008-06-07T19%3A00%3A00.000Z 0.300
+95 2008-06-07T20%3A00%3A00.000Z 0.300
+96 2008-06-07T21%3A00%3A00.000Z 0.300
+97 2008-06-07T22%3A00%3A00.000Z 0.300
+98 2008-06-07T23%3A00%3A00.000Z 0.300
+99 2008-06-08T00%3A00%3A00.000Z 0.300
+100 2008-06-08T01%3A00%3A00.000Z 0.300
+101 2008-06-08T02%3A00%3A00.000Z 0.300
+102 2008-06-08T03%3A00%3A00.000Z 0.300
+103 2008-06-08T04%3A00%3A00.000Z 0.300
+104 2008-06-08T05%3A00%3A00.000Z 0.300
+105 2008-06-08T06%3A00%3A00.000Z 0.300
+106 2008-06-08T07%3A00%3A00.000Z 0.300
+107 2008-06-08T08%3A00%3A00.000Z 0.300
+108 2008-06-08T09%3A00%3A00.000Z 0.300
+109 2008-06-08T10%3A00%3A00.000Z 0.300
+110 2008-06-08T11%3A00%3A00.000Z 0.300
+111 2008-06-08T12%3A00%3A00.000Z 0.300
+112 2008-06-08T13%3A00%3A00.000Z 0.300
+113 2008-06-08T14%3A00%3A00.000Z 0.300
+114 2008-06-08T15%3A00%3A00.000Z 0.300
+115 2008-06-08T16%3A00%3A00.000Z 0.300
+116 2008-06-08T17%3A00%3A00.000Z 0.300
+117 2008-06-08T18%3A00%3A00.000Z 0.300
+118 2008-06-08T19%3A00%3A00.000Z 0.300
+119 2008-06-08T20%3A00%3A00.000Z 0.300
+120 2008-06-08T21%3A00%3A00.000Z 0.300
+121 2008-06-08T22%3A00%3A00.000Z 0.300
+122 2008-06-08T23%3A00%3A00.000Z 0.300
+123 2008-06-09T00%3A00%3A00.000Z 0.300
+124 2008-06-09T01%3A00%3A00.000Z 0.300
+125 2008-06-09T02%3A00%3A00.000Z 0.300
+126 2008-06-09T03%3A00%3A00.000Z 0.300
+127 2008-06-09T04%3A00%3A00.000Z 0.300
+128 2008-06-09T05%3A00%3A00.000Z 0.300
+129 2008-06-09T06%3A00%3A00.000Z 0.300
+130 2008-06-09T07%3A00%3A00.000Z 0.300
+131 2008-06-09T08%3A00%3A00.000Z 0.300
+132 2008-06-09T09%3A00%3A00.000Z 0.300
+133 2008-06-09T10%3A00%3A00.000Z 0.300
+134 2008-06-09T11%3A00%3A00.000Z 0.300
+135 2008-06-09T12%3A00%3A00.000Z 0.300
+136 2008-06-09T13%3A00%3A00.000Z 0.300
+137 2008-06-09T14%3A00%3A00.000Z 0.300
+138 2008-06-09T15%3A00%3A00.000Z 0.300
+139 2008-06-09T16%3A00%3A00.000Z 0.300
+140 2008-06-09T17%3A00%3A00.000Z 0.300
+141 2008-06-09T18%3A00%3A00.000Z 0.300
+142 2008-06-09T19%3A00%3A00.000Z 0.300
+143 2008-06-09T20%3A00%3A00.000Z 0.300
+144 2008-06-09T21%3A00%3A00.000Z 0.300
+145 2008-06-09T22%3A00%3A00.000Z 0.300
+]]></om:result>
+      </c1d2d:TimestepsObservation>
+     </c1d2d:timestepsMember>
+    </c1d2d:ControlModel>
+   </c1d2d:controlModelMember>
+   <c1d2d:controlModelMember>
+    <c1d2d:ControlModel gml:id="ControlModel12143997993122">
+     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit2D121439979923417593"/>
+     <c1d2d:Version>1_1_0alpha2</c1d2d:Version>
+     <c1d2d:VEGETA>true</c1d2d:VEGETA>
+     <c1d2d:BEIENT>true</c1d2d:BEIENT>
+     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
+     <c1d2d:startsim/>
+     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom/>
+     <c1d2d:OMEGA/>
+     <c1d2d:ELEV>367.0</c1d2d:ELEV>
+     <c1d2d:UNOM>0.5</c1d2d:UNOM>
+     <c1d2d:UDIR/>
+     <c1d2d:HMIN/>
+     <c1d2d:DSET>0.09</c1d2d:DSET>
+     <c1d2d:DSETD>0.1</c1d2d:DSETD>
+     <c1d2d:_steady>true</c1d2d:_steady>
+     <c1d2d:_unsteady>true</c1d2d:_unsteady>
+     <c1d2d:NITI>50</c1d2d:NITI>
+     <c1d2d:NITN>20</c1d2d:NITN>
+     <c1d2d:CONV_1>0.05</c1d2d:CONV_1>
+     <c1d2d:CONV_2>0.05</c1d2d:CONV_2>
+     <c1d2d:CONV_3>0.01</c1d2d:CONV_3>
+     <c1d2d:IDRPT>1</c1d2d:IDRPT>
+     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+     <c1d2d:AC1>1.5</c1d2d:AC1>
+     <c1d2d:AC2>0.67</c1d2d:AC2>
+     <c1d2d:AC3>0.04</c1d2d:AC3>
+     <c1d2d:_restart>true</c1d2d:_restart>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo121447349925834">
+       <c1d2d:calculationUnitID>CalculationUnit2D121439979923417593</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta121440229167121</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/CalculationUnit2D121439979923417593/steady/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:IACCYC>6</c1d2d:IACCYC>
+     <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.1</c1d2d:_steadyBC>
+     <c1d2d:timestepsMember>
+      <c1d2d:TimestepsObservation gml:id="TimestepsObservation12143997993124">
+       <gml:name>Zeitschrittdefinition</gml:name>
+       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition12144732264687">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+        </sweExt:SortedRecordDefinition>
+       </om:resultDefinition>
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2008-06-24T22%3A00%3A00.000Z 0.1
+2 2008-06-24T23%3A00%3A00.000Z 0.300
+3 2008-06-25T00%3A00%3A00.000Z 0.300
+4 2008-06-25T01%3A00%3A00.000Z 0.300
+5 2008-06-25T02%3A00%3A00.000Z 0.300
+6 2008-06-25T03%3A00%3A00.000Z 0.300
+]]></om:result>
+      </c1d2d:TimestepsObservation>
+     </c1d2d:timestepsMember>
+    </c1d2d:ControlModel>
+   </c1d2d:controlModelMember>
+   <c1d2d:controlModelMember>
+    <c1d2d:ControlModel gml:id="ControlModel12125830338111">
+     <wb1d2d:calculationUnit xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xlink:href="discretisation.gml#CalculationUnit1D12125830336860"/>
+     <c1d2d:Version>1_0_3_absolute</c1d2d:Version>
+     <c1d2d:VEGETA>true</c1d2d:VEGETA>
+     <c1d2d:BEIENT>true</c1d2d:BEIENT>
+     <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
+     <c1d2d:startsim/>
+     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
+     <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom/>
+     <c1d2d:OMEGA>59.0</c1d2d:OMEGA>
+     <c1d2d:ELEV/>
+     <c1d2d:UNOM>0.5</c1d2d:UNOM>
+     <c1d2d:UDIR/>
+     <c1d2d:HMIN/>
+     <c1d2d:DSET>0.01</c1d2d:DSET>
+     <c1d2d:DSETD>0.02</c1d2d:DSETD>
+     <c1d2d:_steady>true</c1d2d:_steady>
+     <c1d2d:_unsteady>true</c1d2d:_unsteady>
+     <c1d2d:NITI>80</c1d2d:NITI>
+     <c1d2d:NITN>40</c1d2d:NITN>
+     <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
+     <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
+     <c1d2d:CONV_3>0.0010</c1d2d:CONV_3>
+     <c1d2d:IDRPT>1</c1d2d:IDRPT>
+     <c1d2d:DRFACT>0.05</c1d2d:DRFACT>
+     <c1d2d:AC1>1.5</c1d2d:AC1>
+     <c1d2d:AC2>0.67</c1d2d:AC2>
+     <c1d2d:AC3>0.04</c1d2d:AC3>
+     <c1d2d:_restart>true</c1d2d:_restart>
+     <c1d2d:restartInfoMember>
+      <c1d2d:RestartInfo gml:id="RestartInfo122036976455741">
+       <c1d2d:calculationUnitID>restart1dStationary1212583531082</c1d2d:calculationUnitID>
+       <c1d2d:stepResultMetaID>StepResultMeta12127360649530</c1d2d:stepResultMetaID>
+       <c1d2d:filePath>results/restart1dStationary1212583531082/250/results.gml</c1d2d:filePath>
+      </c1d2d:RestartInfo>
+     </c1d2d:restartInfoMember>
+     <c1d2d:IACCYC>1</c1d2d:IACCYC>
+     <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.1</c1d2d:_steadyBC>
+     <c1d2d:timestepsMember>
+      <c1d2d:TimestepsObservation gml:id="TimestepsObservation12125830338730">
+       <gml:name>Zeitschrittdefinition</gml:name>
+       <om:resultDefinition xmlns:om="http://www.opengis.net/om">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition121273614010511">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
+        </sweExt:SortedRecordDefinition>
+       </om:resultDefinition>
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[1 2008-06-03T23%3A00%3A00.000Z 0.100
+2 2008-06-04T00%3A00%3A00.000Z 0.100
+3 2008-06-04T01%3A00%3A00.000Z 0.100
+4 2008-06-04T02%3A00%3A00.000Z 0.100
+5 2008-06-04T03%3A00%3A00.000Z 0.100
+6 2008-06-04T04%3A00%3A00.000Z 0.100
+7 2008-06-04T05%3A00%3A00.000Z 0.100
+8 2008-06-04T06%3A00%3A00.000Z 0.100
+9 2008-06-04T07%3A00%3A00.000Z 0.100
+10 2008-06-04T08%3A00%3A00.000Z 0.100
+11 2008-06-04T09%3A00%3A00.000Z 0.100
+12 2008-06-04T10%3A00%3A00.000Z 0.100
+13 2008-06-04T11%3A00%3A00.000Z 0.100
+14 2008-06-04T12%3A00%3A00.000Z 0.100
+15 2008-06-04T13%3A00%3A00.000Z 0.100
+16 2008-06-04T14%3A00%3A00.000Z 0.100
+17 2008-06-04T15%3A00%3A00.000Z 0.100
+18 2008-06-04T16%3A00%3A00.000Z 0.100
+19 2008-06-04T17%3A00%3A00.000Z 0.100
+20 2008-06-04T18%3A00%3A00.000Z 0.100
+21 2008-06-04T19%3A00%3A00.000Z 0.100
+22 2008-06-04T20%3A00%3A00.000Z 0.100
+23 2008-06-04T21%3A00%3A00.000Z 0.100
+24 2008-06-04T22%3A00%3A00.000Z 0.100
+25 2008-06-04T23%3A00%3A00.000Z 0.100
+26 2008-06-05T00%3A00%3A00.000Z 0.100
+27 2008-06-05T01%3A00%3A00.000Z 0.100
+28 2008-06-05T02%3A00%3A00.000Z 0.100
+29 2008-06-05T03%3A00%3A00.000Z 0.100
+30 2008-06-05T04%3A00%3A00.000Z 0.100
+31 2008-06-05T05%3A00%3A00.000Z 0.100
+32 2008-06-05T06%3A00%3A00.000Z 0.100
+33 2008-06-05T07%3A00%3A00.000Z 0.100
+34 2008-06-05T08%3A00%3A00.000Z 0.100
+35 2008-06-05T09%3A00%3A00.000Z 0.100
+36 2008-06-05T10%3A00%3A00.000Z 0.100
+37 2008-06-05T11%3A00%3A00.000Z 0.100
+38 2008-06-05T12%3A00%3A00.000Z 0.100
+39 2008-06-05T13%3A00%3A00.000Z 0.100
+40 2008-06-05T14%3A00%3A00.000Z 0.100
+41 2008-06-05T15%3A00%3A00.000Z 0.100
+42 2008-06-05T16%3A00%3A00.000Z 0.100
+43 2008-06-05T17%3A00%3A00.000Z 0.100
+44 2008-06-05T18%3A00%3A00.000Z 0.100
+45 2008-06-05T19%3A00%3A00.000Z 0.100
+46 2008-06-05T20%3A00%3A00.000Z 0.100
+47 2008-06-05T21%3A00%3A00.000Z 0.100
+48 2008-06-05T22%3A00%3A00.000Z 0.100
+49 2008-06-05T23%3A00%3A00.000Z 0.100
+50 2008-06-06T00%3A00%3A00.000Z 0.100
+51 2008-06-06T01%3A00%3A00.000Z 0.100
+52 2008-06-06T02%3A00%3A00.000Z 0.100
+53 2008-06-06T03%3A00%3A00.000Z 0.100
+54 2008-06-06T04%3A00%3A00.000Z 0.100
+55 2008-06-06T05%3A00%3A00.000Z 0.100
+56 2008-06-06T06%3A00%3A00.000Z 0.100
+57 2008-06-06T07%3A00%3A00.000Z 0.100
+58 2008-06-06T08%3A00%3A00.000Z 0.100
+59 2008-06-06T09%3A00%3A00.000Z 0.100
+60 2008-06-06T10%3A00%3A00.000Z 0.100
+61 2008-06-06T11%3A00%3A00.000Z 0.100
+62 2008-06-06T12%3A00%3A00.000Z 0.100
+63 2008-06-06T13%3A00%3A00.000Z 0.100
+64 2008-06-06T14%3A00%3A00.000Z 0.100
+65 2008-06-06T15%3A00%3A00.000Z 0.100
+66 2008-06-06T16%3A00%3A00.000Z 0.100
+67 2008-06-06T17%3A00%3A00.000Z 0.100
+68 2008-06-06T18%3A00%3A00.000Z 0.100
+69 2008-06-06T19%3A00%3A00.000Z 0.100
+70 2008-06-06T20%3A00%3A00.000Z 0.100
+71 2008-06-06T21%3A00%3A00.000Z 0.100
+72 2008-06-06T22%3A00%3A00.000Z 0.100
+73 2008-06-06T23%3A00%3A00.000Z 0.100
+74 2008-06-07T00%3A00%3A00.000Z 0.100
+75 2008-06-07T01%3A00%3A00.000Z 0.100
+76 2008-06-07T02%3A00%3A00.000Z 0.100
+77 2008-06-07T03%3A00%3A00.000Z 0.100
+78 2008-06-07T04%3A00%3A00.000Z 0.100
+79 2008-06-07T05%3A00%3A00.000Z 0.100
+80 2008-06-07T06%3A00%3A00.000Z 0.100
+81 2008-06-07T07%3A00%3A00.000Z 0.100
+82 2008-06-07T08%3A00%3A00.000Z 0.100
+83 2008-06-07T09%3A00%3A00.000Z 0.100
+84 2008-06-07T10%3A00%3A00.000Z 0.100
+85 2008-06-07T11%3A00%3A00.000Z 0.100
+86 2008-06-07T12%3A00%3A00.000Z 0.100
+87 2008-06-07T13%3A00%3A00.000Z 0.100
+88 2008-06-07T14%3A00%3A00.000Z 0.100
+89 2008-06-07T15%3A00%3A00.000Z 0.100
+90 2008-06-07T16%3A00%3A00.000Z 0.100
+91 2008-06-07T17%3A00%3A00.000Z 0.100
+92 2008-06-07T18%3A00%3A00.000Z 0.100
+93 2008-06-07T19%3A00%3A00.000Z 0.100
+94 2008-06-07T20%3A00%3A00.000Z 0.100
+95 2008-06-07T21%3A00%3A00.000Z 0.100
+96 2008-06-07T22%3A00%3A00.000Z 0.100
+97 2008-06-07T23%3A00%3A00.000Z 0.100
+98 2008-06-08T00%3A00%3A00.000Z 0.100
+99 2008-06-08T01%3A00%3A00.000Z 0.100
+100 2008-06-08T02%3A00%3A00.000Z 0.100
+101 2008-06-08T03%3A00%3A00.000Z 0.100
+102 2008-06-08T04%3A00%3A00.000Z 0.100
+103 2008-06-08T05%3A00%3A00.000Z 0.100
+104 2008-06-08T06%3A00%3A00.000Z 0.100
+105 2008-06-08T07%3A00%3A00.000Z 0.100
+106 2008-06-08T08%3A00%3A00.000Z 0.100
+107 2008-06-08T09%3A00%3A00.000Z 0.100
+108 2008-06-08T10%3A00%3A00.000Z 0.100
+109 2008-06-08T11%3A00%3A00.000Z 0.100
+110 2008-06-08T12%3A00%3A00.000Z 0.100
+111 2008-06-08T13%3A00%3A00.000Z 0.100
+112 2008-06-08T14%3A00%3A00.000Z 0.100
+113 2008-06-08T15%3A00%3A00.000Z 0.100
+114 2008-06-08T16%3A00%3A00.000Z 0.100
+115 2008-06-08T17%3A00%3A00.000Z 0.100
+116 2008-06-08T18%3A00%3A00.000Z 0.100
+117 2008-06-08T19%3A00%3A00.000Z 0.100
+118 2008-06-08T20%3A00%3A00.000Z 0.100
+119 2008-06-08T21%3A00%3A00.000Z 0.100
+120 2008-06-08T22%3A00%3A00.000Z 0.100
+121 2008-06-08T23%3A00%3A00.000Z 0.100
+122 2008-06-09T00%3A00%3A00.000Z 0.100
+123 2008-06-09T01%3A00%3A00.000Z 0.100
+124 2008-06-09T02%3A00%3A00.000Z 0.100
+125 2008-06-09T03%3A00%3A00.000Z 0.100
+126 2008-06-09T04%3A00%3A00.000Z 0.100
+127 2008-06-09T05%3A00%3A00.000Z 0.100
+128 2008-06-09T06%3A00%3A00.000Z 0.100
+129 2008-06-09T07%3A00%3A00.000Z 0.100
+130 2008-06-09T08%3A00%3A00.000Z 0.100
+131 2008-06-09T09%3A00%3A00.000Z 0.100
+132 2008-06-09T10%3A00%3A00.000Z 0.100
+133 2008-06-09T11%3A00%3A00.000Z 0.100
+134 2008-06-09T12%3A00%3A00.000Z 0.100
+135 2008-06-09T13%3A00%3A00.000Z 0.100
+136 2008-06-09T14%3A00%3A00.000Z 0.100
+137 2008-06-09T15%3A00%3A00.000Z 0.100
+138 2008-06-09T16%3A00%3A00.000Z 0.100
+139 2008-06-09T17%3A00%3A00.000Z 0.100
+140 2008-06-09T18%3A00%3A00.000Z 0.100
+141 2008-06-09T19%3A00%3A00.000Z 0.100
+142 2008-06-09T20%3A00%3A00.000Z 0.100
+143 2008-06-09T21%3A00%3A00.000Z 0.100
+144 2008-06-09T22%3A00%3A00.000Z 0.100
+]]></om:result>
+      </c1d2d:TimestepsObservation>
+     </c1d2d:timestepsMember>
+    </c1d2d:ControlModel>
+   </c1d2d:controlModelMember>
+  </c1d2d:ControlModelCollection>
+ </c1d2d:controlModelCollection>
+</c1d2d:ControlModelGroup>
