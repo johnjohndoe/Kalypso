@@ -99,7 +99,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   /**
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
-   * 
+   *
    * @throws CoreException
    *           if a theme in the {@link Gismapview} cannot be loaded.
    */
@@ -213,7 +213,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   }
 
   /**
-   * Create the gismapview object from the curretn state of the model.
+   * Create the gismapview object from the current state of the model.
    */
   public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor ) throws CoreException
   {
@@ -261,10 +261,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       for( final IKalypsoTheme theme : themes )
       {
         final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, count++, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
-        layerList.add( layerElement );
-
         if( layerElement != null )
         {
+          layerList.add( layerElement );
+
           final StyledLayerType layer = layerElement.getValue();
 
           if( m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) )
@@ -314,6 +314,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
     catch( final Throwable e )
     {
+      e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.11" ) ) ); //$NON-NLS-1$
     }
     finally

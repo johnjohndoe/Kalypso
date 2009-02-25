@@ -46,7 +46,6 @@ import java.net.URL;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -105,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- * 
+ *
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
@@ -217,6 +216,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           case IResourceDelta.REMOVED:
             // Unhook from that file; else we still try to save it even if it is already deleted
             setFile( null );
+
+            // TODO: maybe also unhook the map? Should be an option for the map, if we watn to release automatically and
+            // set the map-modell to null
+            // or to hold the map in memory.
+
             return;
         }
 
@@ -315,7 +319,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * The method starts a (user-)job, which loads the map.
    * </p>
    * .
-   * 
+   *
    * @param waitFor
    *          <code>true</code> if this method should return when the job has finished, if <code>false</code> returns
    *          immediately
@@ -362,13 +366,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       /* "Loading map..." */
       showBusy( true );
-      
+
       synchronized( this )
       {
         if( m_mapPanel != null )
-        {
-          m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) );
-        }//$NON-NLS-1$;
+          m_mapPanel.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.1" ), null ) ); //$NON-NLS-1$
 
         final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
         monitor.worked( 1 );
@@ -404,9 +406,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setFile( null );
 
       if( m_mapPanel != null )
-      {
-        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) );
-      }//$NON-NLS-1$;
+        m_mapPanel.setStatus( new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { status }, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.2" ), null ) ); //$NON-NLS-1$
 
       throw new CoreException( status );
     }
@@ -509,15 +509,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final String partName;
     if( m_mapModell == null )
     {
-      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" );
+      partName = Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ); //$NON-NLS-1$
     }
     else
     {
       partName = m_mapModell.getLabel( m_mapModell );
     }
     setCustomName( partName );
-//
-// final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+
+    // final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
 // if( !workbench.isClosing() )
 // {
 // workbench.getDisplay().asyncExec( new Runnable()
@@ -632,17 +632,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     m_file = file;
     if( m_file != null )
-    {
-      try
-      {
-        m_file.refreshLocal( IResource.DEPTH_ONE, null );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
       m_file.getWorkspace().addResourceChangeListener( m_resourceChangeListener );
-    }
   }
 
   public IFile getFile( )

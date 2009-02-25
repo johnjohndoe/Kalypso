@@ -114,7 +114,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- * 
+ *
  * @author Belger
  */
 public class GisTemplateHelper
@@ -257,7 +257,7 @@ public class GisTemplateHelper
   /**
    * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
    * value ersetzt. Funktioniert nur zeilenweise, d.h.
-   * 
+   *
    * @param file
    * @param replaceProps
    * @return Gistableview
@@ -327,7 +327,7 @@ public class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   * 
+   *
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
@@ -542,9 +542,14 @@ public class GisTemplateHelper
 
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
     }
+    else
+    {
+      // Return null for unknown themes, else we produce invalid XML
+      return null;
+    }
 
     monitor.done();
-    
+
     return TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
   }
 
