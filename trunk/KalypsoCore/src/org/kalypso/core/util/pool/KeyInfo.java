@@ -224,7 +224,6 @@ public final class KeyInfo extends Job implements ILoaderListener
     {
       m_loader.save( m_key.getLocation(), m_key.getContext(), monitor, m_object );
       setDirty( false );
-      schedule();
     }
   }
 
@@ -293,4 +292,5 @@ public final class KeyInfo extends Job implements ILoaderListener
       e.printStackTrace();
     }
   }
+
 }

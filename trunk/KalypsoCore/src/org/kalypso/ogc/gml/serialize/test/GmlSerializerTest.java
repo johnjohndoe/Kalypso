@@ -54,7 +54,7 @@ public class GmlSerializerTest
   @Test
   public void testLoadPerformance( ) throws Exception
   {
- final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
+    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
     final String externalForm = zipResource.toExternalForm();
     final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
 
