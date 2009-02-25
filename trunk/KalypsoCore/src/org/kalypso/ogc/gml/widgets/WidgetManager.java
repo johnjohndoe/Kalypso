@@ -57,11 +57,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Der Controller für die MapView
@@ -191,16 +187,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mousePressed( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if( actualWidget == null )
-      return;
-    if( e.isPopupTrigger() )
+    if( e.isPopupTrigger() && actualWidget != null )
       actualWidget.clickPopup( e.getPoint() );
     else
     {
       switch( e.getButton() )
       {
         case MouseEvent.BUTTON1:
-          actualWidget.leftPressed( e.getPoint() );
+          if( actualWidget != null )
+            actualWidget.leftPressed( e.getPoint() );
           break;
 
         case MouseEvent.BUTTON2:
@@ -209,7 +204,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           break;
 
         case MouseEvent.BUTTON3:
-          actualWidget.rightPressed( e.getPoint() );
+          if( actualWidget != null )
+            actualWidget.rightPressed( e.getPoint() );
           break;
 
         default:
@@ -221,17 +217,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseReleased( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if( getActualWidget() == null )
-      return;
-
-    if( e.isPopupTrigger() )
+    if( e.isPopupTrigger() && getActualWidget() != null )
       actualWidget.clickPopup( e.getPoint() );
     else
     {
       switch( e.getButton() )
       {
         case MouseEvent.BUTTON1: // Left
-          actualWidget.leftReleased( e.getPoint() );
+          if( getActualWidget() != null )
+            actualWidget.leftReleased( e.getPoint() );
           break;
 
         case MouseEvent.BUTTON2:
@@ -239,7 +233,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           break;
 
         case MouseEvent.BUTTON3: // Right
-          actualWidget.rightReleased( e.getPoint() );
+          if( getActualWidget() != null )
+            actualWidget.rightReleased( e.getPoint() );
           break;
 
         default:
@@ -266,14 +261,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     for( int i = 0; i < Math.abs( wheelRotation ); i++ )
       boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
 
-    // Also center on current position
-    final GeoTransform transform = m_mapPanel.getProjection();
-    final GM_Position pixelPos = GeometryFactory.createGM_Position( e.getX(), e.getY() );
-    final GM_Position position = transform.getSourcePoint( pixelPos );
-    final GM_Point centerPoint = GeometryFactory.createGM_Point( position, boundingBox.getCoordinateSystem() );
-    final GM_Envelope newExtent = boundingBox.getPaned( centerPoint );
-
-    getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, newExtent ), null );
+    getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
   }
 
   public void paintWidget( final Graphics g )
