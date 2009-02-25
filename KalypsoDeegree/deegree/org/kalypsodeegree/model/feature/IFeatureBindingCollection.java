@@ -47,7 +47,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
- * {@link FWCls}
+ * {@link FWCls} <br>
+ * TODO: move everyhting into FeatureList
  * 
  * @author Gernot Belger
  * @author Dirk Kuch
