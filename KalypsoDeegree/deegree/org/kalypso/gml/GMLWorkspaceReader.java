@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.kalypso.contribs.org.xml.sax.IndentingContentHandler;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -86,11 +85,7 @@ public class GMLWorkspaceReader implements XMLReader
     final ContentHandler handler = getContentHandler();
     final GMLWorkspace workspace = ((GMLWorkspaceInputSource) input).getGMLWorkspace();
 
-    // Bit of a hack: wrap content handler in order to support indentation
-    final IndentingContentHandler indentHandler = new IndentingContentHandler( handler, 1 );
-    setContentHandler( indentHandler );
-
-    final GMLSAXFactory factory = new GMLSAXFactory( this );
+    final GMLSAXFactory factory = new GMLSAXFactory( this, workspace.getGMLSchema().getGMLVersion() );
 
     handler.startDocument();
     factory.process( workspace );

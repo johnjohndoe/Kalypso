@@ -107,7 +107,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- *
+ * 
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -152,7 +152,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   *
+   * 
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -203,8 +203,11 @@ public final class GmlSerializer
       final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+      transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" );
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
       // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
+      // TODO put new QName( NS.OM, "result" ) here instead inside the GMLSaxFactory
+      // Problem: must now know the prefix of NS.OM
       transformer.transform( source, result );
     }
     catch( final Exception e )
@@ -212,15 +215,16 @@ public final class GmlSerializer
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
     }
   }
+
   /**
    * @param idMap
-   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
   {
     try
     {
-      final XMLReader reader = new GMLWorkspaceReader(  );
+      final XMLReader reader = new GMLWorkspaceReader();
       reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
 
@@ -236,6 +240,7 @@ public final class GmlSerializer
       final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+      transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" );
       transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
       // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       transformer.transform( source, result );
@@ -245,7 +250,6 @@ public final class GmlSerializer
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
     }
   }
-
 
   /**
    * Reads a {@link GMLWorkspace} from the contents of an {@link URL}.
@@ -343,6 +347,9 @@ public final class GmlSerializer
     return createGMLWorkspace( new InputSource( inputStream ), schemaURLHint, null, factory );
   }
 
+  /**
+   * Creates an (empty) gml file, containing only one root feature of a given type.
+   */
   public static void createGmlFile( final IFeatureType rootFeatureType, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException
   {
     try
@@ -424,7 +431,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -441,7 +448,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   *
+   * 
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -464,6 +471,7 @@ public final class GmlSerializer
     /* Refresh the file. */
     file.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
   }
+
   /**
    * serializes a workspace into a zipfile
    */

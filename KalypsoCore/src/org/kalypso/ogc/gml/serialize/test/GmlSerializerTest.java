@@ -40,18 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize.test;
 
+import java.io.File;
 import java.net.URL;
 
 import org.junit.Test;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
  */
 public class GmlSerializerTest
 {
-  @Test
+  /**
+   * Test history<br>
+   * <br>
+   * Before optimization:<br>
+   * - Step 1: 1m10s<br>
+   * - Step 2: 1m4s<br>
+   * <br>
+   * <br>
+   * Modification check only after 1 minute:<br>
+   * - Step 1: 38s<br>
+   * - Step 2: 30s<br>
+   * <br>
+   * <br>
+   * GmlContentHandler uses local cache for Schema-lookup:<br>
+   * - Step 1: 33s<br>
+   * - Step 2: 25s<br>
+   * <br>
+   * <br>
+   * GmlContentHandler Rechner zuhaus: 83s<br>
+   * - Step 1: 49s<br>
+   * - Step 2: 34s<br>
+   * <br>
+   * <br>
+   * GmlContentHandler substring nstead of replace all with local xlinks: 75s<br>
+   * - Step 1: 44s<br>
+   * - Step 2: 30s<br>
+   * <br>
+   */
+// @Test
   public void testLoadPerformance( ) throws Exception
   {
     final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
@@ -68,33 +98,39 @@ public class GmlSerializerTest
     timeLogger.takeInterimTime();
     timeLogger.printCurrentInterim( "Step 2: finished: " );
   }
-}
 
-/**
- * Test history<br>
- * <br>
- * Before optimization:<br>
- * - Step 1: 1m10s<br>
- * - Step 2: 1m4s<br>
- * <br>
- * <br>
- * Modification check only after 1 minute:<br>
- * - Step 1: 38s<br>
- * - Step 2: 30s<br>
- * <br>
- * <br>
- * GmlContentHandler uses local cache for Schema-lookup:<br>
- * - Step 1: 33s<br>
- * - Step 2: 25s<br>
- * <br>
- * <br>
- * GmlContentHandler Rechner zuhaus: 83s<br>
- * - Step 1: 49s<br>
- * - Step 2: 34s<br>
- * <br>
- * <br>
- * GmlContentHandler substring nstead of replace all with local xlinks: 75s<br>
- * - Step 1: 44s<br>
- * - Step 2: 30s<br>
- * <br>
- */
+  /**
+   * Test history<br>
+   * <br>
+   * Before optimization: 17.5s<br>
+   * Before optimization: 16.5s<br>
+   */
+  @Test
+  public void testSavePerformance( ) throws Exception
+  {
+// final URL zipResource = getClass().getResource( "resources/dgm2m.zip" );
+// final String externalForm = zipResource.toExternalForm();
+// final URL gmlUrl = new URL( "jar:" + externalForm + "!/dgm2m.gml" );
+    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
+    final String externalForm = zipResource.toExternalForm();
+    final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
+// final File outFile = File.createTempFile( "gmlSaveTest", ".gml" );
+    final File outFile = new File( "/tmp/gernot.gml" );
+
+    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" );
+    timeLogger.printCurrentInterim( "Loading: " );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlUrl, null );
+    timeLogger.takeInterimTime();
+    timeLogger.printCurrentInterim( "Loading finished: " );
+    System.out.println( "Saving to file: " + outFile.getAbsolutePath() );
+    timeLogger.printCurrentInterim( "Saving 1: " );
+    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" );
+    timeLogger.takeInterimTime();
+    timeLogger.printCurrentInterim( "Saving 1: finished: " );
+    timeLogger.printCurrentInterim( "Saving 2: " );
+    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" );
+    timeLogger.takeInterimTime();
+    timeLogger.printCurrentInterim( "Saving 2: finished: " );
+  }
+
+}
