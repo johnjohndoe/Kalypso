@@ -1549,5 +1549,18 @@ public class FeatureHelper
 
     return result;
   }
+  
+  public static Feature[] getFeaturess( final Object object )
+  {
+    if( object == null )
+      return new Feature[] {};
+    if( object instanceof Feature )
+      return new Feature[] { (Feature) object };
+    else if( object instanceof FeatureList )
+      return ((FeatureList) object).toFeatures();
+    else
+      throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
+  }
+
 
 }
