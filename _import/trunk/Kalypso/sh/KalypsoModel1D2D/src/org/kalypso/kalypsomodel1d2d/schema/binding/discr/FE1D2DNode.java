@@ -3,9 +3,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -16,7 +13,6 @@ import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * The default implementation of {@link IFE1D2DNode} based on {@link AbstractFeatureBinder} to bind wb1d2d:Node elements
@@ -58,31 +54,6 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
     m_containers.addSecondaryWrapper( IElement1D.class );
   }
 
-  /**
-   * This constructor creates {@link FE1D2DNode} based on a wb1d2d:Node feature which is created as child of the given
-   * parent feaure and linked to it by the property of the type specified by the argument propQName.
-   *
-   * @param parentFeature
-   *            the parent feature for the new wbr:Roughness class
-   * @param propQName
-   *            the Q-name of the linking property type
-   * @throws IllegalArgumentException
-   *             if workspace is null or the roughness collection is not part of the workspace
-   */
-  public FE1D2DNode( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
-  {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) );
-  }
-
-  // TODO implements this constructor
-  /**
-   * Creates a feature with this gml id. This
-   */
-  public FE1D2DNode( final Feature parentFeature, final QName propQName, final String gmlID )
-  {
-    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
-  }
-
   public GM_Point getPoint( )
   {
     return (GM_Point) getFeature().getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
@@ -91,7 +62,8 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public void setPoint( final GM_Point point )
   {
     if( point.getCoordinateSystem() == null )
-      point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
+      throw new IllegalStateException();
+    
     getFeature().setProperty( IFE1D2DNode.WB1D2D_PROP_POINT, point );
   }
 

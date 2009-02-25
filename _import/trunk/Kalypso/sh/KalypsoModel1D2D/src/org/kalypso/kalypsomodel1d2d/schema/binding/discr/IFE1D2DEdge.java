@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -66,29 +65,12 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
   public final static QName WB1D2D_PROP_DIRECTEDNODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
 
   /**
-   * To get the computed geometry of this edge as curve
-   * 
-   * @return a {@link GM_Curve} representing the edge geometry
-   */
-  public GM_Curve getCurve( );
-
-  /**
    * Adds the a container to this edge. edge container are typically finite elements.
    * 
    * @param containerID
    *            the id of the container
    */
   public void addContainer( String containerID );
-
-  /**
-   * Remove the given element as container of this edge
-   * 
-   * @param containerToRemove
-   *            the element to be removed as container
-   * @return true if the given element has been removed, false otherwise
-   * 
-   */
-  public boolean removeContainerAsRef( CT containerToRemove );
 
   /**
    * To get the edge node at the given index
@@ -105,8 +87,6 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @see #getNodes()
    */
   public IFE1D2DNode getNode( int index ) throws IndexOutOfBoundsException;
-
-  public void setNode( int index, IFE1D2DNode node ) throws IndexOutOfBoundsException;
 
   /**
    * Add a node to this edge.
@@ -140,8 +120,6 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    */
   public GM_Point getMiddleNodePoint( );
 
-  public void recalculateMiddleNodePosition( );
-
   /**
    * Sets the middle node of this edge
    * 
@@ -166,10 +144,6 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    * @see #getNode(int)
    */
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
-
-  public IFE1D2DElement getLeftElement( );
-
-  public IFE1D2DElement getRightElement( );
 
   /**
    * An edge is inside the net if:

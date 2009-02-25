@@ -3,20 +3,14 @@
  */
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -59,7 +53,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     }
     else
     {
-
       // just wrapped the existing one
       m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class, IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
     }
@@ -73,7 +66,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     }
     else
     {
-
       // just wrapped the existing one
       m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DNode.class, IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
     }
@@ -96,52 +88,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   }
 
-  /**
-   * This constructor creates {@link FE1D2DNode} based on a wb1d2d:FE1D2DNode feature which is created as child of the
-   * given parent feaure and linked to it by the property of the type specified by the argument propQName.
-   *
-   * @param parentFeature
-   *            the parent feature for the new wbr:Roughness class
-   * @param propQName
-   *            the Q-name of the linking property type
-   * @throws IllegalArgumentException
-   *             if workspace is null or the roughness collection is not part of the workspace
-   */
-  public FE1D2DEdge( final Feature parentFeature, final QName propQName ) throws IllegalArgumentException
-  {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, IFE1D2DEdge.QNAME ) );
-  }
-
-  public FE1D2DEdge( final Feature parentFeature, final QName propQName, final String gmlID )
-  {
-    this( FeatureHelper.createFeatureWithId( IFE1D2DEdge.QNAME, parentFeature, propQName, gmlID ) );
-  }
-
-  /**
-   * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
-   */
-  public FE1D2DNode[] getNodesAsArray( )
-  {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final List nodeList = (List) feature.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
-
-    final FE1D2DNode[] nodes = new FE1D2DNode[nodeList.size()];
-    for( int i = 0; i < nodes.length; i++ )
-    {
-      /*
-       * Accessing the list via index is ok here, because we should never have edges with more than 2 nodes.
-       */
-      final String ref = (String) nodeList.get( i );
-      if( ref == null )
-        nodes[i] = null;
-      else
-        nodes[i] = new FE1D2DNode( workspace.getFeature( ref ) );
-    }
-
-    return nodes;
-  }
-
+ 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEEdge#getNodes()
    */
@@ -225,37 +172,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     return getFeature().getId();
   }
 
-  public GM_Curve getCurve( )
-  {
-    return (GM_Curve) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM );
-  }
-
-  public void setCurve( final GM_Curve curve )
-  {
-    if( curve == null )
-    {
-      return;
-    }
-    // TODO allow prop setting vor this
-    getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_GEOM, curve );
-  }
-
-  public void resetGeometry( )
-  {
-    try
-    {
-    // Obscure! The geometry gets recaluclated in any case, if accessed.
-    // So this makes no sense...
-    // TODO: we should change this class to the new feature framework,
-    // so the function property is no more needed. Then look at this again...
-      setCurve( recalculateEgdeGeometry() );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#addContainer(java.lang.String)
    */
@@ -274,38 +190,11 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#removeContainerAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
-   */
-  public boolean removeContainerAsRef( final IFE1D2DElement containerToRemove )
-  {
-    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
-    final String id = containerToRemove.getGmlID();
-    final FeatureList wrappedList = m_containers.getWrappedList();
-    boolean hasBeenRemoved = false;
-    while( wrappedList.remove( id ) )
-    {
-      hasBeenRemoved = true;
-    }
-
-    return hasBeenRemoved;
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DEdge#getNode(int)
    */
   public IFE1D2DNode getNode( final int index ) throws IndexOutOfBoundsException
   {
     return m_nodes.get( index );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#setNode(int,
-   *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
-   */
-  public void setNode( final int index, final IFE1D2DNode node ) throws IndexOutOfBoundsException
-  {
-    m_nodes.getWrappedList().set( index, node.getGmlID() );
-    // m_nodes.set( index, node );
   }
 
   /**
@@ -363,47 +252,6 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public IFeatureWrapperCollection<IFE1D2DElement> getAdjacentElements( )
   {
     return getContainers();
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
-   */
-  public IFE1D2DElement getLeftElement( )
-  {
-    return getContainers().get( 0 );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getRightElement()
-   */
-  public IFE1D2DElement getRightElement( )
-  {
-    return getContainers().get( 1 );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#recalculateMiddleNodePosition()
-   */
-  public void recalculateMiddleNodePosition( )
-  {
-    if( m_nodes.size() > 1 )
-    {
-      if( getFeature().getProperty( IFE1D2DEdge.WB1D2D_PROP_MIDDLE_NODE ) != null )
-      {
-        final GM_Point pointN1 = m_nodes.get( 0 ).getPoint();
-        final GM_Point pointN2 = m_nodes.get( 1 ).getPoint();
-        final int coordinateDimension = Math.min( pointN1.getCoordinateDimension(), pointN2.getCoordinateDimension() );
-        final double x = (pointN1.getX() + pointN2.getX()) / 2;
-        final double y = (pointN1.getY() + pointN2.getY()) / 2;
-        if( coordinateDimension > 2 )
-        {
-          final double z = (pointN1.getZ() + pointN2.getZ()) / 2;
-          getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, z, pointN1.getCoordinateSystem() ) );
-        }
-        else
-          getMiddleNode().setPoint( GeometryFactory.createGM_Point( x, y, pointN1.getCoordinateSystem() ) );
-      }
-    }
   }
 
   /**

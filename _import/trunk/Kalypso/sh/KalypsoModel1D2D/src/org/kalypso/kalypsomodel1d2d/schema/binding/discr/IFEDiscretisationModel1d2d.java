@@ -166,10 +166,4 @@ public interface IFEDiscretisationModel1d2d extends IModel
    *            the element type
    */
   public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
-
-  /**
-   * Replaces the old node with the new one. Old node will be deleted.
-   */
-  public void replaceNode( final IFE1D2DNode oldNode, final IFE1D2DNode newNode );
-
 }

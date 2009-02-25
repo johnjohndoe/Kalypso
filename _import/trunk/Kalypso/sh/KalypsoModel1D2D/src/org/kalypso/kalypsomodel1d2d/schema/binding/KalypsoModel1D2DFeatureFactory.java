@@ -24,7 +24,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -39,7 +38,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
@@ -212,22 +210,13 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final IFeatureType featureType = feature.getFeatureType();
-        if( Kalypso1D2DSchemaConstants.WB1D2D_F_MIDDLE_NODE.equals( featureType.getQName() ) )
-        {
-          return new FEMiddleNode( feature );
-        }
-        else if( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureType.getQName() ) )
-        {
+        if( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureType.getQName() ) )
           return new FE1D2DNode( feature );
-        }
-        else
-        {
-          return null;
-        }
+
+        return null;
       }
     };
     cMap.put( IFE1D2DNode.class, cTor );
-    cMap.put( IFEMiddleNode.class, cTor );
 
     // IFE1D2DEdge
     cTor = new AdapterConstructor()

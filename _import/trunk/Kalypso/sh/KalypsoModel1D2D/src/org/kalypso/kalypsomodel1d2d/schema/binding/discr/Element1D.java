@@ -48,7 +48,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -66,7 +65,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     this( featureToBind, IElement1D.QNAME, (Class<CT>) IFE1D2DComplexElement.class/* IRiverChannel1D.class */);
   }
 
-  public Element1D( final Feature featureToBind, QName featureQName, Class<CT> complexElementClass )
+  public Element1D( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass )
   {
     super( featureToBind, featureQName, complexElementClass );
   }
@@ -90,7 +89,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
    */
   public void setEdge( final IFE1D2DEdge edge )
   {
-    IFE1D2DEdge oldEdge = getEdge();
+    final IFE1D2DEdge oldEdge = getEdge();
     final String gmlID = getGmlID();
     if( oldEdge != null )
     {
@@ -111,7 +110,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       feature.setProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
 
       final IFeatureWrapperCollection containers = edge.getContainers();
-      FeatureList wrappedList = containers.getWrappedList();
+      final FeatureList wrappedList = containers.getWrappedList();
       // TODO: only add if not already present.
       // May the containers contain me twice?
 
@@ -128,6 +127,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
    */
+  @Override
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public List<IFE1D2DNode> getNodes( )
   {
@@ -143,8 +143,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-    // return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
-    ET edge = getEdge();
+    final ET edge = getEdge();
     if( edge == null )
     {
       return null;
@@ -162,7 +161,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     if( crs == null )
       crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-    GM_Position positions[] = new GM_Position[SIZE];
+    final GM_Position positions[] = new GM_Position[SIZE];
     GM_Point point;
 
     for( int i = 0; i < SIZE; i++ )
@@ -172,11 +171,6 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
     }
 
     return GeometryFactory.createGM_Curve( positions, crs );
-  }
-
-  public GM_Curve getGeometry( )
-  {
-    return getProperty( QNAME_PROP_GEOMETRY, GM_Curve.class );
   }
 
   /**
@@ -225,7 +219,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
    */
-  public void setRoughnessClsID( String value )
+  public void setRoughnessClsID( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
   }
@@ -257,7 +251,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
    */
-  public void setRoughnessStyle( String value )
+  public void setRoughnessStyle( final String value )
   {
     getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }

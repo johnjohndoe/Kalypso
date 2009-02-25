@@ -4,14 +4,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
@@ -26,11 +24,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends AbstractFeatureBinder implements IFE1D2DElement<CT, ET>
 {
   private final IFeatureWrapperCollection<CT> containers;
-
-  public FE1D2DElement( final Feature featureToBind )
-  {
-    this( featureToBind, FE1D2DElement.QNAME, (Class<CT>) IFE1D2DComplexElement.class );
-  }
 
   public FE1D2DElement( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass )
   {
@@ -57,31 +50,6 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
       // just wrapped the existing one
       containers = new FeatureWrapperCollection<CT>( featureToBind, complexElementClass, IFE1D2DElement.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
-  }
-
-  /**
-   * This constructor creates {@link FE1D2D_2DElement} based on a feature which is created as child of the given parent
-   * feaure and linked to it by the property of the type specified by the argument propQName. The Type of the feature is
-   * also specified by the given element. This constructor is typicaly used to construct feature like
-   * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
-   *
-   * @param parentFeature
-   *            the parent feature for the new wbr:Roughness class
-   * @param propQName
-   *            the Q-name of the linking property type
-   * @param newFeatureQName
-   *            the Q-Name denoting the type of the new feature
-   * @throws IllegalArgumentException
-   *             if workspace is null or the roughness collection is not part of the workspace
-   */
-  public FE1D2DElement( final Feature parentFeature, final QName propQName, final QName newFeatureQName ) throws IllegalArgumentException
-  {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, newFeatureQName ) );
-  }
-
-  public FE1D2DElement( final Feature parentFeature, final QName propQName, final String gmlID )
-  {
-    this( FeatureHelper.createFeatureWithId( FE1D2DElement.QNAME, parentFeature, propQName, gmlID ) );
   }
 
   /**

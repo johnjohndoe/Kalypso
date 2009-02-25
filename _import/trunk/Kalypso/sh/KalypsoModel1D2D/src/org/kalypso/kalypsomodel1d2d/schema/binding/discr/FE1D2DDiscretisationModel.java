@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -335,32 +334,5 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
   public IFeatureWrapperCollection<IFELine> getContinuityLines( )
   {
     return m_continuityLines;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d#replaceNode(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode,
-   *      org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode)
-   */
-  public void replaceNode( final IFE1D2DNode oldNode, final IFE1D2DNode newNode )
-  {
-    final IFeatureWrapperCollection<IFeatureWrapper2> oldNodecontainers = oldNode.getContainers();
-    final IFeatureWrapperCollection<IFeatureWrapper2> newNodecontainers = newNode.getContainers();
-    for( final IFeatureWrapper2 oldNodecontainer : oldNodecontainers )
-    {
-      newNodecontainers.addRef( oldNodecontainer );
-      if( oldNodecontainer instanceof IFE1D2DEdge )
-      {
-        final IFE1D2DEdge edge = (IFE1D2DEdge) oldNodecontainer;
-        if( edge.getNode( 0 ).equals( oldNode ) )
-          edge.setNode( 0, newNode );
-        if( edge.getNode( 1 ).equals( oldNode ) )
-          edge.setNode( 1, newNode );
-      }
-      oldNodecontainer.getFeature().invalidEnvelope();
-    }
-    oldNodecontainers.clear();
-    m_nodes.removeAllRefs( oldNode );
-    m_nodes.remove( oldNode.getFeature() );
-    // m_nodes.getWrappedList().remove( oldNode.getWrappedFeature() );
   }
 }

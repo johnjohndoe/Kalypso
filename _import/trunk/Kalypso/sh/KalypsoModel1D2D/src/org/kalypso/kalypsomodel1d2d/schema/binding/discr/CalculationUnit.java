@@ -50,7 +50,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -102,11 +101,6 @@ public class CalculationUnit extends AbstractFeatureBinder implements ICalculati
   {
     Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     return elements.addRef( element );
-  }
-
-  public boolean addFlowRelationAsRef( final IFlowRelationship element )
-  {
-    return addElementAsRef( (IFENetItem) element );
   }
 
   /**

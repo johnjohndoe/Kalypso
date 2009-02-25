@@ -5,15 +5,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -21,7 +18,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * TODO: also make interface for this element
@@ -96,61 +92,11 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   }
 
   /**
-   * This constructor creates {@link FE1D2D_2DElement} based on a feature which is created as child of the given parent
-   * feaure and linked to it by the property of the type specified by the argument propQName. The Type of the feature is
-   * also specified by the given element. This constructor is typicaly used to construct feature like
-   * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
-   *
-   * @param parentFeature
-   *            the parent feature for the new wbr:Roughness class
-   * @param propQName
-   *            the Q-name of the linking property type
-   * @param newFeatureQName
-   *            the Q-Name denoting the type of the new feature
-   * @throws IllegalArgumentException
-   *             if workspace is null or the roughness collection is not part of the workspace
-   */
-  public PolyElement( final Feature parentFeature, final QName propQName, final QName newFeatureQName ) throws IllegalArgumentException
-  {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, newFeatureQName ) );
-  }
-
-  public PolyElement( final Feature parentFeature, final QName propQName, final String gmlID )
-  {
-    this( FeatureHelper.createFeatureWithId( IPolyElement.QNAME, parentFeature, propQName, gmlID ) );
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D#getGeometry()
    */
   public GM_Surface<GM_SurfacePatch> getGeometry( )
   {
     return getProperty( QNAME_PROP_GEOMETRY, GM_Surface.class );
-  }
-
-  /**
-   * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
-   */
-  public FE1D2DEdge[] getEdgesAsArray( )
-  {
-    final Feature feature = getFeature();
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final List edgeList = (List) feature.getProperty( FE1D2DElement.WB1D2D_PROP_DIRECTEDEDGE );
-
-    final FE1D2DEdge[] edges = new FE1D2DEdge[edgeList.size()];
-    for( int i = 0; i < edges.length; i++ )
-    {
-      /*
-       * Accessing the list via index is ok here, because we should never have edges with more than 2 nodes.
-       */
-      final String ref = (String) edgeList.get( i );
-      if( ref == null )
-        edges[i] = null;
-      else
-        edges[i] = new FE1D2DEdge( workspace.getFeature( ref ) );
-    }
-
-    return edges;
   }
 
   @Override
@@ -300,11 +246,6 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
     buf.append( ']' );
     buf.append( getFeature().getId() );
     return buf.toString();
-  }
-
-  public GM_Surface getSurface( )
-  {
-    return (GM_Surface) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_GEOM );
   }
 
   /**
