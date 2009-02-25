@@ -806,6 +806,10 @@ CIPK MAR01
         PipeSurfConn(i)%SurfElt = 0
         PipeSurfConn(i)%pipeElt = 0
         PipeSurfConn(i)%flow = 0.0d0
+        PipeSurfConn(i)%DflowWRTv_upper = 0.0d0
+        PipeSurfConn(i)%DflowWRTh_upper = 0.0d0
+        PipeSurfConn(i)%DflowWRTv_lower = 0.0d0
+        PipeSurfConn(i)%DflowWRTh_lower = 0.0d0
       enddo
       allocate (ConnectedElt (1:MaxE))
       do i = 1, maxe
