@@ -42,6 +42,7 @@ import javax.xml.namespace.QName;
 
 import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -58,10 +59,11 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * @author doemming implementation of ogc feature that supports different cardinalities of properties, but not "unbound"
- *         cardinalities (use FeatureCollections for unbound cardinalities)
+ * Implementation of ogc feature
+ * 
+ * @author doemming
  */
-public class Feature_Impl extends AbstractFeature
+public class Feature_Impl extends PlatformObject implements Feature
 {
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 

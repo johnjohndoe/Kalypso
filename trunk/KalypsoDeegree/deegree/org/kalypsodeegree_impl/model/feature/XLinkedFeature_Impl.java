@@ -40,6 +40,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.deegree.model.spatialschema.GeometryException;
+import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -62,7 +63,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class XLinkedFeature_Impl extends AbstractFeature
+public class XLinkedFeature_Impl extends PlatformObject implements Feature
 {
   private final Feature m_parentFeature;
 
@@ -230,7 +231,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
     {
       return getBoundedBy();
     }
-    catch( GeometryException e )
+    catch( final GeometryException e )
     {
       e.printStackTrace();
 
@@ -468,7 +469,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
    */
-  public void setFeatureType( IFeatureType ft )
+  public void setFeatureType( final IFeatureType ft )
   {
     m_featureType = ft;
   }
@@ -476,7 +477,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
   /**
    * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
    */
-  public void setId( String fid )
+  public void setId( final String fid )
   {
     m_featureId = fid;
   }
@@ -518,7 +519,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public GM_Object getLocation( )
   {
-    Object property = getFeature().getProperty( NamedFeatureHelper.GML_LOCATION );
+    final Object property = getFeature().getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
       return (GM_Object) property;
 
