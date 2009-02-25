@@ -91,13 +91,16 @@ public class GMLSAXFactory
 
   private final String x_linkElementQname;
 
+  private final String m_gmlVersion;
+
   /**
    * @param idMap
    *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
-  public GMLSAXFactory( final XMLReader xmlReader ) throws SAXException
+  public GMLSAXFactory( final XMLReader xmlReader, final String gmlVersion ) throws SAXException
   {
     m_xmlReader = xmlReader;
+    m_gmlVersion = gmlVersion;
 
     // Initialise after handler is set
     m_xlinkQN = getPrefixedQName( new QName( NS.XLINK, "href" ) );
@@ -210,13 +213,13 @@ public class GMLSAXFactory
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
     {
-      // Virtual properties are properties which does not get serialised...
+      // Virtual properties are properties which do not get serialized...
       if( pt.isVirtual() )
         continue;
 
       // REMARK: this only works for sequences of the property!
       // If the content of (i.e. the element itself has the maxOccurs > 1 this will not
-      // work. In order to support this, we need a FeatureProperty object as value object (as in deeree2)
+      // work. In order to support this, we need a FeatureProperty object as value object (as in deegree2)
       final Object value = feature.getProperty( pt );
       if( pt.isList() )
       {
@@ -275,7 +278,7 @@ public class GMLSAXFactory
         processFeature( (Feature) propertyValue, new AttributesImpl() );
     }
     else if( pt instanceof IValuePropertyType )
-      processValueType( feature, (IValuePropertyType) pt, propertyValue, prefixedQName );
+      processValueType( (IValuePropertyType) pt, propertyValue, prefixedQName );
     else
       throw new UnsupportedOperationException();
 
@@ -324,7 +327,7 @@ public class GMLSAXFactory
     }
   }
 
-  private void processValueType( final Feature feature, final IValuePropertyType pt, final Object propertyValue, final QName prefixedQName ) throws SAXException
+  private void processValueType( final IValuePropertyType pt, final Object propertyValue, final QName prefixedQName ) throws SAXException
   {
     final IMarshallingTypeHandler th = pt.getTypeHandler();
 
@@ -336,14 +339,15 @@ public class GMLSAXFactory
         // FIXME: this is the right place to write CDATA stuff, but of course now it is a wild hack
         // to look for a specific value. This must of course be decided in a more general way.
         // Maybe we register extensions for specific qnames?
-        // TODO: also, it should be only done for String, i.e. in the XxsdBaseTypeHandlerString
-        final LexicalHandler lexicalHandler = (LexicalHandler) m_xmlReader.getProperty( "http://xml.org/sax/properties/lexical-handler" );
-        if( prefixedQName.equals( new QName( NS.OM, "result" ) ) )
+        // TODO: also, it should be only done for String, i.e. in the XsdBaseTypeHandlerString
+        final boolean doCData = prefixedQName.equals( new QName( NS.OM, "result" ) );
+        final LexicalHandler lexicalHandler = doCData ? (LexicalHandler) m_xmlReader.getProperty( "http://xml.org/sax/properties/lexical-handler" ) : null;
+        if( doCData )
           lexicalHandler.startCDATA();
 
         m_xmlReader.getContentHandler().characters( xmlString.toCharArray(), 0, xmlString.length() );
 
-        if( prefixedQName.equals( new QName( NS.OM, "result" ) ) )
+        if( doCData )
           lexicalHandler.endCDATA();
       }
 
@@ -352,11 +356,9 @@ public class GMLSAXFactory
 
     if( propertyValue != null )
     {
-      final IGMLSchema gmlSchema = feature.getWorkspace().getGMLSchema();
-      final String version = gmlSchema.getGMLVersion();
       try
       {
-        th.marshal( propertyValue, m_xmlReader, null, version );
+        th.marshal( propertyValue, m_xmlReader, null, m_gmlVersion );
       }
       catch( final Exception e )
       {
