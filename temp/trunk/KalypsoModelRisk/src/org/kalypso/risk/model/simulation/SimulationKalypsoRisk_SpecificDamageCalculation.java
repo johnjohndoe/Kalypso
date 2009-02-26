@@ -135,19 +135,20 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
       throw new SimulationException( Messages.getString( org.kalypso.risk.Messages.getString( "RiskCalcSpecificDamageRunnable.0" ) ) ); //$NON-NLS-1$
 
-    for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() )
-    {
-      final Integer returnPeriod = collection.getReturnPeriod();
-      if( returnPeriod == null || returnPeriod <= 0 )
-        throw new SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$
-    }
+    /*
+     * As the default value is 1, this is cannot happen any more
+     * 
+     * for( final IAnnualCoverageCollection collection : rasterModel.getWaterlevelCoverageCollection() ) { final Integer
+     * returnPeriod = collection.getReturnPeriod(); if( returnPeriod == null || returnPeriod <= 0 ) throw new
+     * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
+     */
 
     monitor.setMessage( Messages.getString( "DamagePotentialCalculationHandler.9" ) ); //$NON-NLS-1$
     try
     {
       /* clear existing data */
       specificDamageCoverageCollection.clear();
-      for( ILanduseClass landuseClass : landuseClassesList )
+      for( final ILanduseClass landuseClass : landuseClassesList )
         landuseClass.clearStatisticEntries();
 
       /* loop over all waterdepths */

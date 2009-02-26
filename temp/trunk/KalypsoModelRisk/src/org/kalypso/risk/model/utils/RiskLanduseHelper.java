@@ -57,7 +57,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
@@ -95,6 +94,12 @@ public class RiskLanduseHelper
         landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
         landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
         landuseClass.setDescription( Messages.getString( "RiskLanduseHelper.0" ) ); //$NON-NLS-1$
+        final IAssetValueClass suggestedAssetValueClass = controlModel.getSuggestedAssetValueClass( landuseClass.getName() );
+        if( suggestedAssetValueClass != null )
+          landuseClass.setAssetValue( suggestedAssetValueClass );
+        final IDamageFunction suggestedDamageFunction = controlModel.getSuggestedDamageFunction( landuseClass.getName() );
+        if( suggestedDamageFunction != null )
+          landuseClass.setDamageFunction( suggestedDamageFunction );
       }
     }
   }
@@ -139,7 +144,7 @@ public class RiskLanduseHelper
             final int b = Integer.parseInt( matcher.group( 3 ), 16 );
             return new RGB( r, g, b );
           }
-          // If color format is not correct, return random color, or throw an exception?
+          // TODO: If color format is not correct, return random color, or throw an exception?
           return getRandomColor();
         }
       }
@@ -160,7 +165,7 @@ public class RiskLanduseHelper
     {
       final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
       final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
-      final URL url = scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL(); //$NON-NLS-1$ //$NON-NLS-2$
+      final URL url = new URL( scenarioFolder.getLocation().append( "/models/RasterizationControlModel.gml" ).toPortableString() );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
       final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );

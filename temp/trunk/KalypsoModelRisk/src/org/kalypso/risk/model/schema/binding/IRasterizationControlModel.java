@@ -67,6 +67,16 @@ public interface IRasterizationControlModel extends IModel
   public boolean containsLanduseClass( final String landuseClassName );
 
   public int getNextAvailableLanduseClassOrdinalNumber( );
+  
+  /**
+   * Returns the best-match IDamageFunction based on name similarity with the given string (small Levenshtein distance or substring), or null if cannot decide
+   */
+  public IDamageFunction getSuggestedDamageFunction(final String name);
+  
+  /**
+   * Returns the best-match IAssetValueClass based on name similarity with the given string (small Levenshtein distance or substring), or null if cannot decide
+   */
+  public IAssetValueClass getSuggestedAssetValueClass(final String name);
 
   /**
    * The list of GmlIDs of the landuse classes with the given name (because there is no guarantee that landuse name is

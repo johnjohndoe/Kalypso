@@ -71,7 +71,6 @@ import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.risk.Messages;
-import org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -148,7 +147,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   {
     monitor.setMessage( Messages.getString( "RiskZonesCalculationHandler.7" ) ); //$NON-NLS-1$
 
-    if( rasterModel.getSpecificDamageCoverageCollection().size() < 2 )
+    if( rasterModel.getSpecificDamageCoverageCollection().isEmpty() )
       throw new SimulationException( Messages.getString( "RiskZonesCalculationHandler.6" ) ); //$NON-NLS-1$
 
     try

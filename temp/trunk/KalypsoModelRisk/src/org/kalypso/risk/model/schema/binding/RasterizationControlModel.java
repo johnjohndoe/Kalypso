@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.xmlbeans.impl.common.Levenshtein;
 import org.kalypso.afgui.model.UnversionedModel;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.observation.IObservation;
@@ -188,5 +189,63 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   public Feature getStatisticObsFeature( )
   {
     return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+  }
+
+  /**
+   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedAssetValueClass(java.lang.String)
+   */
+  public IAssetValueClass getSuggestedAssetValueClass( final String name )
+  {
+    int minLevenshteinDistance = Integer.MAX_VALUE;
+    IAssetValueClass mostSimilarByLevenshtein = null;
+    IAssetValueClass mostSimilarBySubstring = null;
+    for( final IAssetValueClass assetValueClass : m_assetValueClasses )
+    {
+      final String className = assetValueClass.getName();
+      if( name.equalsIgnoreCase( className ) )
+        return assetValueClass;
+      final int levenshteinDistance = Levenshtein.distance( name, className );
+      if( levenshteinDistance < minLevenshteinDistance )
+      {
+        minLevenshteinDistance = levenshteinDistance;
+        mostSimilarByLevenshtein = assetValueClass;
+      }
+      if( name.indexOf( className ) > -1 || className.indexOf( name ) > -1 )
+        mostSimilarBySubstring = assetValueClass;
+    }
+    if( mostSimilarBySubstring != null )
+      return mostSimilarBySubstring;
+    if( minLevenshteinDistance < 3 )
+      return mostSimilarByLevenshtein;
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getSuggestedDamageFunction(java.lang.String)
+   */
+  public IDamageFunction getSuggestedDamageFunction( final String name )
+  {
+    int minLevenshteinDistance = Integer.MAX_VALUE;
+    IDamageFunction mostSimilarByLevenshtein = null;
+    IDamageFunction mostSimilarBySubstring = null;
+    for( final IDamageFunction damageFunction : m_damageFunctions )
+    {
+      final String className = damageFunction.getName();
+      if( name.equalsIgnoreCase( className ) )
+        return damageFunction;
+      final int levenshteinDistance = Levenshtein.distance( name, className );
+      if( levenshteinDistance < minLevenshteinDistance )
+      {
+        minLevenshteinDistance = levenshteinDistance;
+        mostSimilarByLevenshtein = damageFunction;
+      }
+      if( name.indexOf( className ) > -1 || className.indexOf( name ) > -1 )
+        mostSimilarBySubstring = damageFunction;
+    }
+    if( mostSimilarBySubstring != null )
+      return mostSimilarBySubstring;
+    if( minLevenshteinDistance < 3 )
+      return mostSimilarByLevenshtein;
+    return null;
   }
 }

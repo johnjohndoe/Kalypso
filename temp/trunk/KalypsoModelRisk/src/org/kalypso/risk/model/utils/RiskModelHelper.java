@@ -312,6 +312,10 @@ public class RiskModelHelper
    */
   public static double calcAverageAnnualDamageValue( final double[] damages, final double[] probabilities )
   {
+    /* support for single flood event (no annuality) */
+    if( probabilities.length == 1 && damages.length > 0 )
+      return damages[0];
+
     /* average annual damage value (jährlicher Schadenserwartungswert) [€/m²/a] */
     double result = 0.0;
 

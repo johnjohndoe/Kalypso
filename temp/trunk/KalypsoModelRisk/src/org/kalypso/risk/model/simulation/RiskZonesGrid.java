@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.risk.model.actions.riskZonesCalculation;
+package org.kalypso.risk.model.simulation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -144,7 +144,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     {
       /* we need a sorted list of the annual coverage collections */
       final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
-      for( IAnnualCoverageCollection cov : m_annualCoverageCollection )
+      for( final IAnnualCoverageCollection cov : m_annualCoverageCollection )
         covMap.put( cov.getReturnPeriod().doubleValue(), cov );
 
       final Collection<IAnnualCoverageCollection> collections = covMap.values();

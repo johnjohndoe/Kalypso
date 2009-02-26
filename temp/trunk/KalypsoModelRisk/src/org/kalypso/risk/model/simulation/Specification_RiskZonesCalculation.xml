@@ -4,9 +4,7 @@
 	<input id="RASTER_MODEL" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
     <input id="VECTOR_MODEL" path="models/VectorDataModel.gml" relativeToCalcCase="true"/>
 	<input id="INPUT_RASTER_FOLDER" path="models/raster/input" relativeToCalcCase="true"/>
-	<!-- 
 	<input id="OUTPUT_RASTER_FOLDER" path="models/raster/output" relativeToCalcCase="true"/>
-	 -->
 	<output id="RASTER_MODEL" path="models/RasterDataModel.gml" relativeToCalcCase="true"/>
 	<output id="OUTPUT_RASTER_FOLDER" path="models/raster/output" relativeToCalcCase="true"/>
 </modelspec>

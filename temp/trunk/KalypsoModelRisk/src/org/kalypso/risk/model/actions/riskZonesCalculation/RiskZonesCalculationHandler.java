@@ -58,7 +58,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
           {
             status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoRiskModelspecHelper.getModeldata( SIMULATION_KALYPSORISK_TYPEID.RISK_ZONES_CALCULATION ) );
           }
-          catch( final CoreException e )
+          catch( final Exception e )
           {
             ErrorDialog.openError( shell, Messages.getString( "RiskZonesCalculationHandler.5" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
             return Status.CANCEL_STATUS;
