@@ -18,4 +18,6 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.contribs.ogc31;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.model.flood.extension,org.kalypso.model.flood.core
+Export-Package: org.kalypso.model.flood.binding,
+ org.kalypso.model.flood.core,
+ org.kalypso.model.flood.extension
