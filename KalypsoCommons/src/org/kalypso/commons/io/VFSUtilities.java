@@ -45,6 +45,10 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,19 +62,33 @@ import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileUtil;
 import org.apache.commons.vfs.UserAuthenticator;
 import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.VFSProviderExtension;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.Debug;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 
 /**
- * Helpfull functions when dealing with VFS.
+ * Helpful functions when dealing with VFS. <br>
+ * When working with VFS be aware that calling {@link #getManager()} will return a singleton global manager (the default
+ * static manager from {@link VFS}). <br>
+ * Call {@link #getNewManager()} when you want to have your private manager. This will ensure that you can close any
+ * file systems and the connections made when you are finished. Call {@link StandardFileSystemManager#close()} when you
+ * don't need the manager anymore. <br>
+ * When calling {@link FileObject#getContent()} you should also call {@link FileObject#close()} eventually. Otherwise
+ * the resources might never be disposed.
  * 
- * @author Holger Albert
+ * @author Holger Albert, Stefan Kurzbach
  */
 public class VFSUtilities
 {
@@ -80,6 +98,8 @@ public class VFSUtilities
 
   private static final FileSystemOptions THE_HTTPS_OPTIONS = new FileSystemOptions();
 
+  private static final String EXTENSION_POINT_ID = "org.apache.commons.vfs.provider";
+
   /**
    * The constructor.
    */
@@ -88,32 +108,88 @@ public class VFSUtilities
   }
 
   /**
-   * This function returns a single FileSystemManager with support for webdav.
-   * 
-   * @return The FileSystemManager.
+   * This function returns a singleton FileSystemManager. Do not close this manager or any file systems it manages.
    */
   public static FileSystemManager getManager( ) throws FileSystemException
   {
     final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
 
+    configureManager( fsManager );
+
+    return fsManager;
+  }
+
+  /**
+   * This function returns a new private StandardFileSystemManager. It is the caller's responsibility to close the
+   * manager and release any resources associated with its file systems.
+   */
+  public static StandardFileSystemManager getNewManager( ) throws FileSystemException
+  {
+    // create new file system manager
+    final StandardFileSystemManager fsManager = new StandardFileSystemManager();
+
+    fsManager.setConfiguration( VFSUtilities.class.getResource( "vfs-providers.xml" ) );
+    fsManager.init();
+
+    configureManager( fsManager );
+
+    return fsManager;
+  }
+
+  /**
+   * Configures a DefaultFileSystemManager with support for webdav and registered providers.
+   */
+  private static void configureManager( final DefaultFileSystemManager fsManager ) throws FileSystemException
+  {
     final String[] schemes = fsManager.getSchemes();
+    final List<String> schemeList = Arrays.asList( schemes );
 
-    boolean found = false;
-    for( int i = 0; i < schemes.length; i++ )
-    {
-      if( schemes[i].equals( "webdav" ) )
-      {
-        found = true;
-      }
-    }
-
-    if( found == false )
+    // maybe add webdav
+    if( !schemeList.contains( "webdav" ) )
     {
       Debug.println( "Adding webdav file provider ..." );
       fsManager.addProvider( "webdav", new WebdavFileProvider() );
     }
 
-    return fsManager;
+    final Map<String, IConfigurationElement> providerLocations = readExtensions();
+    for( final Map.Entry<String, IConfigurationElement> entry : providerLocations.entrySet() )
+    {
+      final IConfigurationElement element = entry.getValue();
+
+      final String scheme = element.getAttribute( "scheme" );
+      if( !schemeList.contains( scheme ) )
+      {
+        try
+        {
+          final VFSProviderExtension provider = (VFSProviderExtension) element.createExecutableExtension( "class" );
+          fsManager.addProvider( scheme, provider.getProvider() );
+          provider.init( fsManager );
+        }
+        catch( final CoreException e )
+        {
+          throw new FileSystemException( "Could not register provider for scheme " + scheme, e );
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns the registered providers for Apache Commons VFS
+   */
+  private static Map<String, IConfigurationElement> readExtensions( )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXTENSION_POINT_ID );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    final Map<String, IConfigurationElement> providerLocations = new HashMap<String, IConfigurationElement>( configurationElements.length );
+
+    for( final IConfigurationElement element : configurationElements )
+    {
+      final String bundleName = element.getContributor().getName();
+      providerLocations.put( bundleName, element );
+    }
+    return providerLocations;
   }
 
   /**
@@ -203,6 +279,7 @@ public class VFSUtilities
           /* Copy file. */
           Debug.println( "Copy file '" + source.getName() + " to '" + destinationFile.getName() + "' ..." );
           FileUtil.copyContent( source, destinationFile );
+          source.close();
         }
 
         /* End copying of this file, because it was a success. */
@@ -376,10 +453,8 @@ public class VFSUtilities
    *          relative files.
    * @return The file object.
    */
-  public static FileObject checkProxyFor( final String absoluteFile ) throws FileSystemException, MalformedURLException
+  public static FileObject checkProxyFor( final String absoluteFile, final FileSystemManager fsManager ) throws FileSystemException, MalformedURLException
   {
-    final FileSystemManager fsManager = getManager();
-
     final Proxy proxy = ProxyUtilities.getProxy();
     Debug.println( "Should use proxy: " + String.valueOf( proxy.useProxy() ) );
 
@@ -447,6 +522,20 @@ public class VFSUtilities
     }
 
     return fsManager.resolveFile( absoluteFile );
+  }
+
+  /**
+   * This function will check the string for protocol, and if neccessary applys an proxy object to it.
+   * 
+   * @param absoluteFile
+   *          The absolute file path to the file. It should be absolute, because this function was not testet against
+   *          relative files.
+   * @return The file object.
+   */
+  public static FileObject checkProxyFor( final String absoluteFile ) throws FileSystemException, MalformedURLException
+  {
+    final FileSystemManager fsManager = getManager();
+    return checkProxyFor( absoluteFile, fsManager );
   }
 
   /**
