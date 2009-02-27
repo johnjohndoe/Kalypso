@@ -134,8 +134,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public ImportObservationSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.1" ) ); //$NON-NLS-1$
-    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Description" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationSelectionWizardPage.Title" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
     m_adapter = createNativeAdapters();

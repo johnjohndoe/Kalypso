@@ -115,7 +115,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
     m_mapPanel = mapPanel;
-    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.2") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.Title") ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }

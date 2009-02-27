@@ -149,7 +149,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       m_selection = new StructuredSelection( selectedResources );
     }
 
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.1" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.Title" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
     // REMARK: each time this wizard is opened, the central repository is configured.
