@@ -129,22 +129,13 @@ public class GsiFtpFileObject extends AbstractFileObject
    */
   private void doGetChildren( ) throws IOException
   {
-// if (children != null) {
-// return;
-// }
-
     final GridFTPClient client = getClient();
     try
     {
-      /** required to perform multiple requests **/
-      // active mode
-      // client.setLocalPassive();
-      // client.setActive();
-      // passive mode
       client.setPassive();
       client.setLocalActive();
       client.setType( Session.TYPE_ASCII );
-      final Vector<FileInfo> tmpChildren = getTheKidies( client );
+      final Vector<FileInfo> tmpChildren = getTheKiddies( client );
 
       if( tmpChildren == null || tmpChildren.size() == 0 )
       {
@@ -185,10 +176,8 @@ public class GsiFtpFileObject extends AbstractFileObject
     }
   }
 
-  // this function code is pretty much from the globus toolkit
-  // had to do a replace on
   @SuppressWarnings("unchecked")
-  private Vector<FileInfo> getTheKidies( final GridFTPClient client ) throws ServerException, IOException, ClientException
+  private Vector<FileInfo> getTheKiddies( final GridFTPClient client ) throws ServerException, IOException, ClientException
   {
     final Vector<FileInfo> fileList = new Vector<FileInfo>();
     final Vector<MlsxEntry> mlsds = client.mlsd( getName().getPath() );
@@ -506,7 +495,7 @@ public class GsiFtpFileObject extends AbstractFileObject
     ((GsiFtpFileSystem) getFileSystem()).putClient( client );
   }
 
-  private GridFTPClient getClient( ) throws FileSystemException
+  private GridFTPClient getClient( )
   {
     return ((GsiFtpFileSystem) getFileSystem()).getClient();
   }

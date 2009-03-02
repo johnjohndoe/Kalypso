@@ -40,20 +40,18 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.apache.commons.vfs.provider.gsiftp;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystem;
-import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.provider.AbstractFileSystem;
 import org.apache.commons.vfs.provider.GenericFileName;
 import org.globus.ftp.GridFTPClient;
-import org.globus.ftp.exception.ServerException;
 
 /**
  * Represents the files on an SFTP server.
@@ -63,12 +61,13 @@ import org.globus.ftp.exception.ServerException;
  */
 public class GsiFtpFileSystem extends AbstractFileSystem implements FileSystem
 {
-  // An idle client
-  private GridFTPClient idleClient;
+  // The client to use for every file system request
+  private GridFTPClient m_client;
 
-  private final Object idleClientSync = new Object();
+  // lock on the client
+  private final Semaphore idleClientSync = new Semaphore( 1 );
 
-  // File system attribute
+  // File system attributes
   private Map<String, Object> attribs = new HashMap<String, Object>();
 
   /**
@@ -79,8 +78,7 @@ public class GsiFtpFileSystem extends AbstractFileSystem implements FileSystem
   protected GsiFtpFileSystem( final GenericFileName rootName, final GridFTPClient ftpClient, final FileSystemOptions fileSystemOptions )
   {
     super( rootName, null, fileSystemOptions );
-
-    idleClient = ftpClient;
+    m_client = ftpClient;
   }
 
   /**
@@ -90,10 +88,13 @@ public class GsiFtpFileSystem extends AbstractFileSystem implements FileSystem
   protected void doCloseCommunicationLink( )
   {
     // Clean up the connection
-    if( idleClient != null )
+    try
     {
-      closeConnection( idleClient );
-      idleClient = null;
+      m_client.close();
+    }
+    catch( final Exception e )
+    {
+      // gobble
     }
   }
 
@@ -108,43 +109,19 @@ public class GsiFtpFileSystem extends AbstractFileSystem implements FileSystem
   }
 
   /**
-   * Cleans up the connection to the server.
+   * Creates an FTP client to use.
    */
-  private void closeConnection( final GridFTPClient client )
+  public GridFTPClient getClient( )
   {
     try
     {
-      client.close();
+      idleClientSync.acquire();
     }
-    catch( final ServerException e )
+    catch( final InterruptedException e )
     {
       e.printStackTrace();
     }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * Creates an FTP client to use.
-   */
-  public GridFTPClient getClient( ) throws FileSystemException
-  {
-    synchronized( idleClientSync )
-    {
-      if( idleClient == null )
-      {
-        final GenericFileName rootName = (GenericFileName) getRoot().getName();
-        return GsiFtpClientFactory.createConnection( rootName.getHostName(), rootName.getPort(), getFileSystemOptions() );
-      }
-      else
-      {
-        final GridFTPClient client = idleClient;
-        idleClient = null;
-        return client;
-      }
-    }
+    return m_client;
   }
 
   /**
@@ -152,19 +129,13 @@ public class GsiFtpFileSystem extends AbstractFileSystem implements FileSystem
    */
   public void putClient( final GridFTPClient client )
   {
-    synchronized( idleClientSync )
+    if( m_client != client )
     {
-      if( idleClient == null )
-      {
-        // Hang on to client for later
-        idleClient = client;
-      }
-      else
-      {
-        // Close the client
-        closeConnection( client );
-      }
+      // TODO: what to do?
+      System.out.println( "Bad client" );
+      return;
     }
+    idleClientSync.release();
   }
 
   /**

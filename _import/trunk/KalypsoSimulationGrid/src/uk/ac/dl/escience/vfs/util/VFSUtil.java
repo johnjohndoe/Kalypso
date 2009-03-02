@@ -21,6 +21,7 @@ import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.provider.gsiftp.GsiFtpClientFactory;
 import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileObject;
 import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileSystem;
 import org.globus.ftp.GridFTPClient;
@@ -131,15 +132,59 @@ public class VFSUtil
     // If two gsiftp uris and electing to do third party transfer
     if( doThirdPartyTransferForTwoGridFtpFileObjects && srcFo.getName().getScheme().equalsIgnoreCase( "gridftp" ) && destFo.getName().getScheme().equalsIgnoreCase( "gridftp" ) )
     {
+      final GsiFtpFileSystem srcFS = (GsiFtpFileSystem) srcFo.getFileSystem();
+      final GsiFtpFileSystem destFS = (GsiFtpFileSystem) destFo.getFileSystem();
+      GridFTPClient srcClient = null;
+      GridFTPClient destClient = null;
+      // create a new GridFTPUtil as this class is not stateless !
+      GridFTPUtil gridftpUtil = new GridFTPUtil();
       try
       {
-        GridFTPUtil util = setupGridFtpThridPartyTransfer( srcFo, destFo, listener );
-        doGridFtpThridPartyTransfer( util, srcFo, destFo, false );
+        srcClient = srcFS.getClient();
+        gridftpUtil.setSourceClient( srcClient );
+        gridftpUtil.setMarkerListener( listener );
+        if( srcFS == destFS )
+        {
+          // need to create new client to same host
+          destClient = GsiFtpClientFactory.createConnection( srcClient.getHost(), srcClient.getPort(), null );
+          gridftpUtil.setDestClient( destClient );
+          doGridFtpThridPartyTransfer( gridftpUtil, srcFo, destFo, false );
+          destClient.close();
+        }
+        else
+        {
+          destClient = destFS.getClient();
+          try
+          {
+            gridftpUtil.setDestClient( destClient );
+            doGridFtpThridPartyTransfer( gridftpUtil, srcFo, destFo, false );
+          }
+          finally
+          {
+            if( destClient != null )
+              destFS.putClient( destClient );
+          }
+        }
       }
-      catch( Exception ex )
+      catch( final IOException e )
       {
-        throw new IOException( "Error on gridftp third party transfer", ex );
+        throw e;
       }
+      catch( final Exception e )
+      {
+        throw new IOException( "Problem with 3rd-party transfer.", e );
+      }
+      finally
+      {
+        if( srcClient != null )
+          srcFS.putClient( srcClient );
+      }
+
+      // Need to manually refresh the content here after the copy because
+      // are not using the vfs approach which would normally cause re resolveFile
+      final GsiFtpFileObject destGridFtpFO = (GsiFtpFileObject) destFo;
+      destGridFtpFO.getInfo( true );
+
       return;
     }
 
@@ -184,57 +229,11 @@ public class VFSUtil
     }
   }
 
-  /**
-   * Performs a more efficient 3rd party file transfer between two gridftp resources (taking advantage of gridftp
-   * parallel and striped transfers) rather than buffering byte streams as in copy.
-   * 
-   * @param srcFO
-   * @param destFO
-   * @throws java.io.IOException
-   * @throws java.lang.Exception
-   */
-  static public GridFTPUtil setupGridFtpThridPartyTransfer( FileObject srcFO, FileObject destFO, MarkerListener listener ) throws IOException, Exception
+  public static void doGridFtpThridPartyTransfer( GridFTPUtil gridftpUtil, FileObject srcFO, FileObject destFO, boolean append ) throws Exception
   {
 
-    log.debug( "setupGridFtpThridPartyTransfer()" );
-
-    // create a new GridFTPUtil as this class is not stateless !
-    GridFTPUtil gridftpUtil = new GridFTPUtil();
-    GsiFtpFileSystem srcFS = (GsiFtpFileSystem) srcFO.getFileSystem();
-    synchronized( srcFS )
-    {
-      GridFTPClient srcClient = srcFS.getClient();
-      gridftpUtil.setSourceClient( srcClient );
-    }
-    GsiFtpFileSystem destFS = (GsiFtpFileSystem) destFO.getFileSystem();
-    synchronized( destFS )
-    {
-      GridFTPClient destClient = destFS.getClient();
-      gridftpUtil.setDestClient( destClient );
-    }
-    gridftpUtil.setMarkerListener( listener );
-    return gridftpUtil;
-  }
-
-  static public void doGridFtpThridPartyTransfer( GridFTPUtil gridftpUtil, FileObject srcFO, FileObject destFO, boolean append ) throws IOException, Exception
-  {
-
-    GridFTPClient srcClient = gridftpUtil.getSourceClient();
-    GridFTPClient destClient = gridftpUtil.getDestinationClient();
-
-    if( srcClient == null )
-    {
-      GsiFtpFileSystem srcFS = (GsiFtpFileSystem) srcFO.getFileSystem();
-      log.debug( "Source client null - need to call getClient" );
-      srcClient = srcFS.getClient();
-    }
-
-    if( destClient == null )
-    {
-      GsiFtpFileSystem destFS = (GsiFtpFileSystem) destFO.getFileSystem();
-      log.debug( "destination client null - need to call getClient" );
-      destClient = destFS.getClient();
-    }
+    final GridFTPClient srcClient = gridftpUtil.getSourceClient();
+    final GridFTPClient destClient = gridftpUtil.getDestinationClient();
 
     if( srcFO.getType().equals( FileType.FILE ) )
     {
@@ -279,12 +278,6 @@ public class VFSUtil
     {
       throw new IOException( "cannot copy from path of type " + srcFO.getType() + " to another path of type " + destFO.getType() );
     }
-
-    // Need to manually refresh the content here after the copy because
-    // are not using the vfs approach which would normally cause re resolveFile
-    GsiFtpFileObject destGridFtpFO = (GsiFtpFileObject) destFO;
-    destGridFtpFO.getInfo( true );
-
   }
 
   /**

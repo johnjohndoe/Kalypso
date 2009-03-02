@@ -45,28 +45,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.security.auth.Subject;
-
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystem;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.Selectors;
+import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.ietf.jgss.GSSCredential;
+import org.kalypso.commons.Debug;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
@@ -86,15 +89,27 @@ import de.unihannover.rvs.gdi.jobsubmit.interfaces.GDIObserverSubject;
  * 
  * @author Stefan Kurzbach
  */
-public class SimpleGridProcess implements IProcess, GDIObserver
+public class StagingGridProcess implements IProcess, GDIObserver
 {
-  private final FileObject m_workingDir;
+  private static final String GRIDFTP_SERVER_ROOT = "gridftp://" + GridProcessFactory.GRID_SERVER_URL;
+
+  private static final String SANDBOX_DIR_REPLACEMENT = "/$SANDBOXDIR/";
+
+  private static final int TOTAL_WORK = 10;
+
+  private final File m_workingDir;
 
   private final URL m_exeUrl;
+
+  private final List<URI> m_inputs = new ArrayList<URI>();
+
+  private final List<String> m_outputs = new ArrayList<String>();
 
   private final List<String> m_commandLine = new ArrayList<String>();
 
   private GDIJob m_job = GDIJobFactory.createGDIJob( GDIJobFactory.defaultGDIJob );
+
+  private final String m_sandboxRoot = "gaja3d-" + System.currentTimeMillis();
 
   private final Map<String, String> m_environment = new HashMap<String, String>();
 
@@ -112,7 +127,7 @@ public class SimpleGridProcess implements IProcess, GDIObserver
    * @param exeUrl
    * @param commandlineArgs
    */
-  public SimpleGridProcess( final FileObject workingDir, final URL exeUrl, final String... commandlineArgs )
+  public StagingGridProcess( final File workingDir, final URL exeUrl, final String... commandlineArgs )
   {
     Assert.isNotNull( workingDir );
     Assert.isNotNull( exeUrl );
@@ -158,6 +173,16 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     m_timeout = timeout;
   }
 
+  public void addInput( final URI input )
+  {
+    m_inputs.add( input );
+  }
+
+  public void addOutput( final String output )
+  {
+    m_outputs.add( output );
+  }
+
   /**
    * @see org.kalypso.commons.process.IProcess#startProcess(java.io.OutputStream, java.io.OutputStream,
    *      java.io.InputStream, org.kalypso.contribs.java.lang.ICancelable)
@@ -165,60 +190,64 @@ public class SimpleGridProcess implements IProcess, GDIObserver
   @Override
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws ProcessTimeoutException, IOException
   {
-    final FileSystemManager manager = VFSUtilities.getManager();
-
-    // stage-in the exe to remote place
     // try to convert bundle resouce url to local file url
     final String exeUrlName = FileLocator.toFileURL( m_exeUrl ).toString();
-    final FileObject exeFile = manager.resolveFile( exeUrlName );
-    final File localExeFile = exeFile.getFileSystem().replicateFile( exeFile, Selectors.SELECT_SELF );
-    final String exeBaseName = FileUtilities.nameFromPath( exeUrlName );
-    final List<GDIFileTransfer> stageInFiles = new ArrayList<GDIFileTransfer>();
-    stageInFiles.add( new GDIFileTransfer( localExeFile.toURI().toString(), m_workingDir.resolveFile( exeBaseName ).getName().getURI() ));
-    
-    // initialize simulation monitor if not set
-    // TODO check monitor
-    m_monitor = SubMonitor.convert( m_monitor, String.format( "Running grid process for executable %s in directoy %s.", exeUrlName, m_workingDir.getName().getFriendlyURI() ), 10 );
 
-    
+    // initialize simulation monitor if not set
+    m_monitor = SubMonitor.convert( m_monitor, String.format( "Running grid process for executable %s in directoy %s.", exeUrlName, m_workingDir.getAbsolutePath() ), TOTAL_WORK );
+
+    // get manager that can handle gsiftp connections
+    final FileSystemManager manager = VFSUtilities.getManager();
+
+    // stage-in 3 files: all zipped input files, the executable and the
+    // run-script
+    final ArrayList<GDIFileTransfer> stageInFiles = new ArrayList<GDIFileTransfer>();
+    for( final URI externalInput : m_inputs )
+    {
+      // try to convert bundle resouce url to local file
+      final String externalForm = getUriAsString( externalInput );
+      final String inputBaseName = FileUtilities.nameFromPath( externalForm );
+      stageInFiles.add( new GDIFileTransfer( externalForm, GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + inputBaseName ) );
+    }
+
+    // stage-in the exe to remote place
+    final String exeBaseName = FileUtilities.nameFromPath( exeUrlName );
+    stageInFiles.add( new GDIFileTransfer( exeUrlName, GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + exeBaseName ) );
+
     /* configure and submit grid job */
 
     // logging output
-    final String stdOutFileName = exeBaseName + ".out";
-    final String stdErrFileName = exeBaseName + ".err";
-    final Path rootWorkingPath = new Path(m_workingDir.getName().getRootURI());
-    final String targetHostName = rootWorkingPath.lastSegment();
-// final String targetHostName = GridProcessFactory.GRID_SERVER_URL;
+    final String stdOutFileName = "stdout";
+    final String stdErrFileName = "stderr";
+    addOutput( stdOutFileName );
+    addOutput( stdErrFileName );
 
-    final String queue = "dgitest"; // for hannover
-    final String factory = "PBS"; // for hannover
-
-    // final String factory = "SGE" // for kaiserslautern
-
-    final String sandBoxDir = m_workingDir.getName().getBaseName();
-    
-    // use current security credential for grid submission
-    final Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
-    final Set creds = currentSubject.getPrivateCredentials();
-    GSSCredential credential = null; 
-    if( creds.size() >= 1 )
-      credential = (GSSCredential) creds.iterator().next();
-    
     final GDIJobProperties props = new GDIJobProperties();
-    props.addPreference( "gdi.targethostname", targetHostName );
+    props.addPreference( "gdi.targethostname", GridProcessFactory.GRID_SERVER_URL );
     props.addPreference( "gdi.executable", "./" + exeBaseName );
     props.addPreference( "gdi.arguments", m_commandLine );
     props.addPreference( "gdi.stdout", stdOutFileName );
     props.addPreference( "gdi.stderr", stdErrFileName );
     props.addPreference( "gdi.filestagein", stageInFiles );
-    props.addPreference( "gdi.factory", factory );
-    props.addPreference( "gdi.queue", queue );
-    props.addPreference( "gdi.sandboxdir", sandBoxDir );
+
+    // no stage-out, we will handle it ourselves
+// final ArrayList<GDIFileTransfer> loggingStageOut = new ArrayList<GDIFileTransfer>();
+// final URI localStdOutURI = stdOutFile.toURI();
+// final URI localStdErrURI = stdErrFile.toURI();
+// loggingStageOut.add( new GDIFileTransfer( GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + stdOutFileName,
+    // localStdOutURI.toASCIIString() ) );
+// loggingStageOut.add( new GDIFileTransfer( GRIDFTP_SERVER_ROOT + SANDBOX_DIR_REPLACEMENT + stdErrFileName,
+    // localStdErrURI.toASCIIString() ) );
+// props.addPreference( "gdi.filestageout", loggingStageOut );
+    props.addPreference( "gdi.factory", "PBS" ); // for hannover
+    props.addPreference( "gdi.queue", "dgitest" ); // for hannover
+// props.addPreference( "gdi.queue", "SGE" ); // for kaiserslautern
+
+    props.addPreference( "gdi.sandboxdir", m_sandboxRoot );
     props.addPreference( "gdi.environment", m_environment );
-    props.addPreference( "gdi.credential", credential );
     m_job.setProps( props );
 
-    m_monitor.subTask( String.format( "Submitting grid job to server %s.", targetHostName ) );
+    m_monitor.subTask( String.format( "Submitting grid job to server %s.", GridProcessFactory.GRID_SERVER_URL ) );
 
     final PrintWriter stdPrinter = new PrintWriter( stdOut );
     final PrintWriter errPrinter = new PrintWriter( stdErr );
@@ -226,8 +255,12 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     // register observer
     ((GDIObserverSubject) m_job).registerObserver( this );
     int returnCode = Status.ERROR;
+    FileObject homeDir = null;
     try
     {
+      // find home directory on server, this may fail if no credentials are provided
+      homeDir = getServerHomeDir( manager );
+      final FileObject localWorking = manager.toFileObject( m_workingDir );
       m_job.submit();
 
       final long startTime = System.currentTimeMillis();
@@ -252,6 +285,9 @@ public class SimpleGridProcess implements IProcess, GDIObserver
             sleep();
             break;
           case FINISHED:
+            // update local directory
+            stageOutAndCleanUp( homeDir, localWorking );
+            localWorking.refresh();
             returnCode = IStatus.OK;
           case FAILED:
             break finished;
@@ -269,6 +305,11 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     }
     finally
     {
+      // close connections to grid ftp server so vfs references can be
+      // cleaned up
+      if( homeDir != null )
+        manager.closeFileSystem( homeDir.getFileSystem() );
+
       // clean up job in case of an error
       // this will have no effect if job has finished successfully
       if( m_job != null && m_job.getStatus() == GDIState.RUNNING )
@@ -298,6 +339,66 @@ public class SimpleGridProcess implements IProcess, GDIObserver
     {
       e.printStackTrace();
     }
+  }
+
+  private String getUriAsString( final URI uri )
+  {
+    try
+    {
+      final URL url = FileLocator.toFileURL( uri.toURL() );
+      return url.toExternalForm();
+    }
+    catch( final IOException e )
+    {
+      return uri.toString();
+    }
+  }
+
+  private FileObject getServerHomeDir( final FileSystemManager manager ) throws FileSystemException
+  {
+    final FileObject remoteRoot = manager.resolveFile( GRIDFTP_SERVER_ROOT );
+    final FileSystem fileSystem = remoteRoot.getFileSystem();
+    final String homeDirString = (String) fileSystem.getAttribute( GsiFtpFileProvider.ATTR_HOME_DIR );
+    final FileObject homeDir = remoteRoot.resolveFile( homeDirString );
+    return homeDir;
+  }
+
+  private void stageOutAndCleanUp( final FileObject homeDir, final FileObject localWorking ) throws IOException
+  {
+    final FileObject remoteWorking = homeDir.resolveFile( m_sandboxRoot );
+    remoteWorking.refresh();
+
+    final FileObject[] children = remoteWorking.getChildren();
+    nextChild: for( FileObject child : children )
+    {
+      final FileName childName = child.getName();
+      final String baseName = childName.getBaseName();
+      for( final String output : m_outputs )
+      {
+        if( FilenameUtils.wildcardMatch( baseName, output ) )
+        {
+          final FileObject destination = localWorking.resolveFile( baseName );
+          if( FileType.FILE.equals( child.getType() ) )
+          {
+            /* Copy ... */
+            VFSUtilities.copyFileTo( child, destination, true );
+          }
+          else if( FileType.FOLDER.equals( child.getType() ) )
+          {
+            /* Copy ... */
+            Debug.println( "Copy directory " + childName + " to " + destination.getName() + " ..." );
+            VFSUtilities.copyDirectoryToDirectory( child, destination, true );
+          }
+          else
+          {
+            Debug.println( "Could not determine the file type ..." );
+          }
+          continue nextChild;
+        }
+      }
+    }
+
+    remoteWorking.delete( Selectors.SELECT_ALL );
   }
 
   /*

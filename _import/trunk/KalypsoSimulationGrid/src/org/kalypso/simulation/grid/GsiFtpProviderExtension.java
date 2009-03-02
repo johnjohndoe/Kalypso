@@ -83,32 +83,7 @@ public class GsiFtpProviderExtension implements VFSProviderExtension
   @Override
   public void init( final FileSystemManager manager )
   {
-    try
-    {
-      final CoGProperties properties = CoGProperties.getDefault();
-      final String proxyFile = properties.getProxyFile();
-      final FileSystemOptions opts = new FileSystemOptions();
-      final OpenSSLKey key = new BouncyCastleOpenSSLKey( proxyFile );
-      final PrivateKey userKey = key.getPrivateKey();
-      final X509Certificate[] userCerts = CertUtil.loadCertificates( proxyFile );
-      final GlobusCredential proxy = new GlobusCredential( userKey, userCerts );
-      final GSSCredential credential = new GlobusGSSCredentialImpl( proxy, GSSCredential.INITIATE_AND_ACCEPT );
-
-      final GsiFtpFileSystemConfigBuilder fileSystemConfigBuilder = (GsiFtpFileSystemConfigBuilder) manager.getFileSystemConfigBuilder( "gridftp" );
-      fileSystemConfigBuilder.setCredential( credential, opts );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final GeneralSecurityException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final GSSException e )
-    {
-      e.printStackTrace();
-    }
+	  // nothing to do
   }
 
 }
