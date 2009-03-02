@@ -26,9 +26,12 @@ import org.apache.axis.types.URI.MalformedURIException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
+import org.globus.axis.gsi.GSIConstants;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.encoding.ObjectSerializer;
 import org.globus.wsrf.encoding.SerializationException;
+import org.globus.wsrf.impl.security.authorization.HostAuthorization;
+import org.globus.wsrf.impl.security.authorization.SelfAuthorization;
 import org.globus.wsrf.security.Constants;
 import org.kalypso.gaja3d.service.Gaja3DServiceAddressingLocator;
 import org.kalypso.gaja3d.service.factory.Gaja3DResourceFactoryServiceAddressingLocator;
@@ -68,7 +71,9 @@ import org.xml.sax.InputSource;
  */
 public class Client {
 
-	private static final String SERVICE_FACTORY_URI = "http://127.0.0.1:8080/services/Gaja3dResourceFactoryService";
+//	private static final String SERVICE_FACTORY_URI = "http://gdi-kalypso1.gridlab.uni-hannover.de:8080/services/Gaja3dResourceFactoryService";
+	 private static final String SERVICE_FACTORY_URI =
+	 "http://localhost:8080/services/Gaja3dResourceFactoryService";
 
 	private static final String EPR_FILENAME = "test.epr";
 	private static final boolean SAVE_EPR = false;
@@ -97,6 +102,8 @@ public class Client {
 				.getResource("log4j.properties"));
 
 		final EndpointReferenceType instanceEPR;
+
+		long last = System.currentTimeMillis();
 
 		if (USE_SAVED_EPR) {
 			try {
@@ -128,7 +135,7 @@ public class Client {
 			}
 
 			// set security
-			setSecurity((Stub) gaja3dFactory);
+			setCreateResourceSecurity((Stub) gaja3dFactory);
 
 			// create instance
 			final CreateResource request = new CreateResource();
@@ -143,42 +150,73 @@ public class Client {
 
 		// retrieve instance
 		final Gaja3DServiceAddressingLocator instanceLocator = new Gaja3DServiceAddressingLocator();
-		final Gaja3DPortType gaja3d = instanceLocator
+		Gaja3DPortType gaja3d = instanceLocator
 				.getGaja3dPortTypePort(instanceEPR);
+
 		logger.debug("Retrieved service instance.");
+		long now = System.currentTimeMillis();
+		logger.info("Time used: " + (now - last));
+		last = now;
 
 		try {
-			// set security and timeout
-			setSecurity((Stub) gaja3d);
-			((Stub) gaja3d).setTimeout(60 * 1000 * 60);
 
 			// call GetCapabilities
 			// final Capabilities capabilities = callGetCapabilities(gaja3d);
 			// call DescribeProcess for all offered processes
 			// callDescribeProcess(gaja3d, capabilities);
 
+			gaja3d = instanceLocator.getGaja3dPortTypePort(instanceEPR);
+
+			// set security and timeout
+			final Stub stub = (Stub) gaja3d;
+			stub.setTimeout(60 * 1000 * 60);
+			stub._setProperty(Constants.GSI_SEC_CONV, Constants.ENCRYPTION);
+			stub._setProperty(Constants.AUTHORIZATION, SelfAuthorization
+					.getInstance());
+//			stub._setProperty(Constants.AUTHORIZATION, HostAuthorization
+//					.getInstance());
+			stub._setProperty(GSIConstants.GSI_MODE,
+					GSIConstants.GSI_MODE_FULL_DELEG);
+
 			// set Boundary RP
 			final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
 			gaja3d.setResourceProperties(setResourcePropertiesRequest);
 			logger.debug("Finished setting boundaries.");
+
+			now = System.currentTimeMillis();
+			logger.info("Time used: " + (now - last));
+			last = now;
 
 			// call Execute_createGrid
 			final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
 			gaja3d.execute_createGrid(execute_createGrid);
 			logger.debug("Finished creating grid.");
 
-			// call Execute_detectBreaklines
-			final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
-			gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-			logger.debug("Finished detecting breaklines.");
+			now = System.currentTimeMillis();
+			logger.info("Time used: " + (now - last));
+			last = now;
 
-			// call Execute_createTin
-			final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
-			gaja3d.execute_createTin(createTinParameters);
-			logger.debug("Finished creating tin.");
+			//
+			// // call Execute_detectBreaklines
+			// final DetectBreaklinesParametersType detectBreaklinesParameters =
+			// buildExecuteDetectBreaklines();
+			// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+			// logger.debug("Finished detecting breaklines.");
+			//
+			// // call Execute_createTin
+			// final CreateTinParametersType createTinParameters =
+			// buildExecuteCreateTin();
+			// gaja3d.execute_createTin(createTinParameters);
+			// logger.debug("Finished creating tin.");
 
 			printResourceProperties(gaja3d);
 
+			now = System.currentTimeMillis();
+			logger.info("Time used: " + (now - last));
+			last = now;
+		} catch (final Exception e) {
+			e.printStackTrace();
+			logger.error(e);
 		} finally {
 			if (!SAVE_EPR) {
 				// call Destroy
@@ -371,17 +409,17 @@ public class Client {
 		return capabilities;
 	}
 
-	private static void setSecurity(final Stub stub) {
-		final String secDescFile = Client.class.getResource(
-				"client_security_descriptor.xml").getFile();
-		// stub._setProperty(Constants.GSI_SEC_CONV,
-		// Constants.ENCRYPTION);
-		// stub._setProperty(Constants.AUTHORIZATION, NoAuthorization
-		// .getInstance());
-
-		stub._setProperty(Constants.CLIENT_DESCRIPTOR_FILE, secDescFile);
-		// stub._setProperty(GSIConstants.GSI_MODE,
-		// GSIConstants.GSI_MODE_FULL_DELEG);
+	private static void setCreateResourceSecurity(final Stub stub) {
+		// final String secDescFile = Client.class.getResource(
+		// "client_security_descriptor.xml").getFile();
+		// stub._setProperty(Constants.CLIENT_DESCRIPTOR_FILE, secDescFile);
+		stub._setProperty(Constants.GSI_SEC_CONV, Constants.ENCRYPTION);
+		 stub._setProperty(Constants.AUTHORIZATION, SelfAuthorization
+		 .getInstance());
+//		stub._setProperty(Constants.AUTHORIZATION, HostAuthorization
+//				.getInstance());
+		stub._setProperty(GSIConstants.GSI_MODE,
+				GSIConstants.GSI_MODE_FULL_DELEG);
 	}
 
 	// private static Execute buildExecute() {
