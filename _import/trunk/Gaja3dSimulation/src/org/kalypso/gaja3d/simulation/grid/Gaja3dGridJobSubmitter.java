@@ -61,7 +61,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystem;
-import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
@@ -220,10 +221,12 @@ public class Gaja3dGridJobSubmitter
     OutputStream stdErr = null;
 
     int returnCode = IStatus.ERROR;
+    StandardFileSystemManager manager = null;
+    FileObject workingDir = null;
     try
     {
       // create working dir (sandbox)
-      final FileSystemManager manager = VFSUtilities.getManager();
+      manager = VFSUtilities.getNewManager();
       final String sandboxRoot = tmpdir.getName();
       final String serverRoot = "gridftp://gramd1.gridlab.uni-hannover.de";
 
@@ -233,7 +236,7 @@ public class Gaja3dGridJobSubmitter
       final FileObject homeDir = remoteRoot.resolveFile( homeDirString );
 
       // create working dir if non-existent
-      final FileObject workingDir = homeDir.resolveFile( sandboxRoot );
+      workingDir = homeDir.resolveFile( sandboxRoot );
       workingDir.createFolder();
 
       // create process handle
@@ -286,7 +289,6 @@ public class Gaja3dGridJobSubmitter
       {
         final FileObject inputFile = manager.resolveFile( getUriAsString( einput ) );
         VFSUtil.copy( inputFile, workingDir, null, true );
-        // VFSUtilities.copy( inputFile, workingDir );
       }
 
       // start process
@@ -315,6 +317,23 @@ public class Gaja3dGridJobSubmitter
       // close streams
       IOUtils.closeQuietly( stdOut );
       IOUtils.closeQuietly( stdErr );
+      if( workingDir != null )
+      {
+        try
+        {
+          workingDir.close();
+        }
+        catch( final FileSystemException e )
+        {
+          // gobble
+        }
+      }
+
+      if( manager != null )
+      {
+        manager.close();
+      }
+
     }
 
     // process failure handling
