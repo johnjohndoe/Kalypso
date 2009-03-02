@@ -15,6 +15,8 @@ import org.apache.axis.types.URI.MalformedURIException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.globus.wsrf.RemoveCallback;
+import org.globus.wsrf.ResourceException;
 import org.globus.wsrf.ResourceIdentifier;
 import org.globus.wsrf.ResourceLifetime;
 import org.globus.wsrf.ResourceProperties;
@@ -57,7 +59,7 @@ import org.kalypso.gaja3d.service.stubs.SmoothFilterMethod;
 import org.osgi.framework.Bundle;
 
 public class Gaja3dResource implements SecureResource, ResourceIdentifier,
-		ResourceProperties, ResourceLifetime, TopicListAccessor {
+		ResourceProperties, ResourceLifetime, TopicListAccessor, RemoveCallback {
 
 	/* Resource key. This uniquely identifies this resource. */
 	private Object key;
@@ -447,6 +449,11 @@ public class Gaja3dResource implements SecureResource, ResourceIdentifier,
 	/* Required by interface SecureResource */
 	public ResourceSecurityDescriptor getSecurityDescriptor() {
 		return config.getSecurityDescriptor();
+	}
+	
+	/* Required by interface RemoveCallback */
+	public void remove() throws ResourceException {
+		
 	}
 
 	/* Private methods */
