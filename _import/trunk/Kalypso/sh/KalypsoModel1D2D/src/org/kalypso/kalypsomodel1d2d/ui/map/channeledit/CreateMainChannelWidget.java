@@ -165,14 +165,8 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         m_data.paintAllSegments( g, mapPanel );
 
       /* draw editable bankline */
-      if( m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true )
-      {
-        m_data.drawBankLine( m_composite.getCurrentSegment(), 1, g );
-      }
-      if( m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true )
-      {
-        m_data.drawBankLine( m_composite.getCurrentSegment(), 2, g );
-      }
+      if( (m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true) || (m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true) )
+        m_data.drawBankLine( m_composite.getCurrentSegment(), g );
       if( m_delegateWidget != null )
         m_delegateWidget.paint( g );
     }

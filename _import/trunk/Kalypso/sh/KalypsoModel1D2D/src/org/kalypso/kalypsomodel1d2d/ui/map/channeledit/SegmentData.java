@@ -1090,7 +1090,7 @@ public class SegmentData
 
     for( int i = 0; i < line.getNumPoints(); i++ )
     {
-      final int pointRectWidth = 8;
+      final int pointRectWidth = 6;
       final int halfRectWidth = pointRectWidth / 2;
 
       final double x = line.getPointN( i ).getCoordinate().x;
@@ -1440,33 +1440,22 @@ public class SegmentData
   /**
    * the editable bank linestring is painted
    */
-  public void paintBankLineLineString( final IMapPanel panel, final Graphics g, final int side, final Color color )
+  public void paintBankLineLineString( final IMapPanel panel, final Graphics g, final Color color )
   {
     // paint the line
-    if( side == 1 )
-      try
-      {
-        paintLineString( getBankLeftInters(), g, panel, color );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    else if( side == 2 )
-      try
-      {
-        paintLineString( getBankRightInters(), g, panel, color );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+    try
+    {
+      paintLineString( getBankLeftInters(), g, panel, color );
+      paintLineString( getBankRightInters(), g, panel, color );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
     // paint the nodes
-    if( side == 1 )
-      paintLineStringPoints( getBankLeftInters(), g, panel, color );
-    else if( side == 2 )
-      paintLineStringPoints( getBankRightInters(), g, panel, color );
+    paintLineStringPoints( getBankLeftInters(), g, panel, color );
+    paintLineStringPoints( getBankRightInters(), g, panel, color );
 
   }
 
@@ -1482,11 +1471,7 @@ public class SegmentData
     final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
     Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
     defaultstroke = symb.getStroke();
-    // float[] dArray = new float[3];
-    // dArray[0] = 6;
-    // dArray[1] = 3;
     stroke.setWidth( 3 );
-    // stroke.setDashArray( dArray );
     stroke.setStroke( color );
     symb.setStroke( stroke );
 

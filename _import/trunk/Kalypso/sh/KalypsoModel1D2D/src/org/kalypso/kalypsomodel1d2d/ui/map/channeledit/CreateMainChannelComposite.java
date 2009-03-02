@@ -90,10 +90,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConst
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
@@ -104,7 +101,6 @@ import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.mapmodel.KalypsoFeatureThemeHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -703,7 +699,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.50"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.51") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.50" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.51" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
             return;
@@ -1059,16 +1055,8 @@ public class CreateMainChannelComposite extends Composite
       m_buttonEditBank2.setSelection( false );
       m_bankEdit2 = false;
       final SegmentData currentSegment = m_data.getSelectedSegment();
-      try
-      {
-        final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 1 );
-        m_widget.setDelegate( widget );
-
-      }
-      catch( final GM_Exception e1 )
-      {
-        e1.printStackTrace();
-      }
+      final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, m_widget.getPanel() );
+      m_widget.setDelegate( widget );
     }
     else
     {
@@ -1086,15 +1074,9 @@ public class CreateMainChannelComposite extends Composite
       m_buttonEditBank1.setSelection( false );
       m_bankEdit1 = false;
       final SegmentData currentSegment = m_data.getSelectedSegment();
-      try
-      {
-        final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 2 );
-        m_widget.setDelegate( widget );
-      }
-      catch( final GM_Exception e1 )
-      {
-        e1.printStackTrace();
-      }
+
+      final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, m_widget.getPanel() );
+      m_widget.setDelegate( widget );
     }
     else
     {
@@ -1122,7 +1104,6 @@ public class CreateMainChannelComposite extends Composite
       m_data.resetSelectedProfiles();
       resetButtonGuard();
     }
-
   }
 
   public SegmentData getCurrentSegment( )

@@ -45,64 +45,76 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * Helper class that provides the snapping mechanism for editing finite elements:
+ * TODO: move this class to GM_Tools<br>
+ * Helper class that provides the snapping mechanism for {@link GM_Point}s
  * <ul>
- * <li>Snapping to the nearest node in the snapping radius is the default behavior.
+ * <li>Snapping to the nearest point in the snapping radius is the default behavior.
  * <li>Snapping will not occur if SHIFT button is pressed during the operation.
  * </ul>
  * 
- * @author Dejan Antanaskovic
- * @author Gernot Belger
+ * @author Thomas Jung
  */
-public class PointSnapper
+public class GM_PointSnapper
 {
   /** Snapping radius in screen-pixels. */
   public static final int SNAPPING_RADIUS = 20;
 
-  private final IFEDiscretisationModel1d2d m_discModel;
-
   private boolean m_snappingActive = true;
 
-  @SuppressWarnings("unchecked")
-  private IFE1D2DNode m_snapNode = null;
+  private GM_Point m_snapPoint = null;
 
   private final IMapPanel m_mapPanel;
 
-  public PointSnapper( final IFEDiscretisationModel1d2d discModel, final IMapPanel mapPanel )
-  {
-    Assert.isNotNull( mapPanel );
-    Assert.isNotNull( discModel );
+  private final GM_Position[] m_positions;
 
-    m_discModel = discModel;
-    m_mapPanel = mapPanel;
+  private final String m_crs;
+
+  public GM_PointSnapper( final GM_Position[] positions, final IMapPanel panel, final String crs )
+  {
+    Assert.isNotNull( panel );
+    Assert.isNotNull( positions );
+
+    m_crs = crs;
+    m_positions = positions;
+    m_mapPanel = panel;
+
   }
 
   /**
    * Move the mouse to the given position and try to snap the point.
    * 
-   * @return The snapped node, or <code>null</code> if none was found.
+   * @return The snapped point, or <code>null</code> if none was found.
    */
-  @SuppressWarnings("unchecked")
-  public IFE1D2DNode moved( final GM_Point p )
+  public GM_Point moved( final GM_Point p )
   {
-    m_snapNode = null;
+    m_snapPoint = null;
 
     if( m_snappingActive )
     {
       final double snapRadius = MapUtilities.calculateWorldDistance( m_mapPanel, p, SNAPPING_RADIUS );
-      m_snapNode = m_discModel.findNode( p, snapRadius );
+      m_snapPoint = findNode( p, snapRadius );
 
-      return m_snapNode;
+      return m_snapPoint;
     }
 
+    return null;
+  }
+
+  // TODO: implement better search! This is just for testing!
+  private GM_Point findNode( final GM_Point p, final double snapRadius )
+  {
+    for( int i = 0; i < m_positions.length; i++ )
+    {
+      if( p.getPosition().getDistance( m_positions[i] ) < snapRadius )
+        return GeometryFactory.createGM_Point( m_positions[i], m_crs );
+    }
     return null;
   }
 
@@ -112,9 +124,9 @@ public class PointSnapper
    */
   public void paint( final Graphics g )
   {
-    if( m_snapNode != null )
+    if( m_snapPoint != null )
     {
-      final Point point = MapUtilities.retransform( m_mapPanel, m_snapNode.getPoint() );
+      final Point point = MapUtilities.retransform( m_mapPanel, m_snapPoint );
 
       final int snapRadius = SNAPPING_RADIUS / 2;
 
@@ -123,7 +135,7 @@ public class PointSnapper
 
       final Color color = g.getColor();
 
-      Color preViewColor = new Color( 50, 50, 255 );
+      final Color preViewColor = new Color( 50, 50, 255 );
       g.setColor( preViewColor );
 
       g.drawRect( lowX, lowY, SNAPPING_RADIUS, SNAPPING_RADIUS );
@@ -131,10 +143,9 @@ public class PointSnapper
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public IFE1D2DNode getSnapNode( )
+  public GM_Point getSnapPoint( )
   {
-    return m_snapNode;
+    return m_snapPoint;
   }
 
   public void activate( final boolean isActive )

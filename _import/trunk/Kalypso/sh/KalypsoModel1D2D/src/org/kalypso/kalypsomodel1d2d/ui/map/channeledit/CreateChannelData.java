@@ -933,7 +933,6 @@ public class CreateChannelData
         // intersect the bankline by the defined number of intersections
         segment.updateBankIntersection();
         segment.updateProfileIntersection();
-
       }
       else if( segment != null & edit == true )
       {
@@ -946,17 +945,14 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public void drawBankLine( final SegmentData segment, final int side, final Graphics g )
+  public void drawBankLine( final SegmentData segment, final Graphics g )
   {
     final IMapPanel panel = m_widget.getPanel();
 
-    if( segment == null )
+    if( segment == null || m_segmentList.size() == 0 )
       return;
 
-    if( m_segmentList.size() == 0 )
-      return;
-
-    segment.paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
+    segment.paintBankLineLineString( panel, g, new Color( 20, 20, 255 ) );
   }
 
   public void updateSegment( final boolean edit )
