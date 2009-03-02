@@ -1,4 +1,6 @@
       module BLK10MOD
+      
+      use ManholeDefinitions
 
       !some general strings
       !--------------------
@@ -260,14 +262,16 @@
       
       !pipe surface connections
       !------------------------
+
       type PipeSurfaceConnection
         integer (kind = 4) :: SurfElt
         integer (kind = 4) :: pipeElt
         real (kind = 8) :: flow
         real (kind = 8) :: DflowWRTv_upper, DflowWRTv_lower
         real (kind = 8) :: DflowWRTh_upper, DflowWRTh_lower
-        
+        type (pipeManhole) :: manholeDef
       end type
+
       type (PipeSurfaceConnection), allocatable, 
      +                              dimension (:) :: PipeSurfConn
       integer (kind = 4), allocatable, dimension (:) :: ConnectedElt

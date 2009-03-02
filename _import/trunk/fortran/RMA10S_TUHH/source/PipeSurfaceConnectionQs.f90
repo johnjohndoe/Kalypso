@@ -1,37 +1,50 @@
 subroutine PipeSurfaceConnectionQs 
 
-  use blk10mod, only: maxps, PipeSurfConn
+  use blk10mod, only: maxps, PipeSurfConn, ncorn, area
   use globalConstants
+  use manholeDefinitions
   
   implicit none
   
   
-  integer (kind = 4) :: i, manholeType
+  integer (kind = 4) :: i
   
-  real (kind = 8) :: heSurface, hePipe
   real (kind = 8) :: PipeSurfConnFlow
   real (kind = 8) :: flow
-  real (kind = 8) :: AvgEnergyLevelElt
-  !heSurface     averaged energy elevation of surface element
-  !hePipe        averaged energy elevation in pipe
+  real (kind = 8) :: AvgKinEnergyLevelElt, AvgBottomLevelElt, AvgPiezoLevelElt
+  integer (kind = 4) :: EltType, LocalElementType
   
-  !initializations
-  heSurface = 0.0d0
-  hePipe = 0.0d0
+  type (energyLevel) :: heSurface, hePipe
   
+
   do i = 1, maxps
   
+    EltType = LocalElementType (ncorn (PipeSurfConn(i)%SurfElt))
+    
+    write(*,*) area(PipeSurfConn(i)%SurfElt)
+    write(*,*) area(PipeSurfConn(i)%PipeElt)
+    continue
+    
     !get the average energy elevations in the middle of an element
-    heSurface = AvgEnergyLevelElt (PipeSurfConn(i)%SurfElt)
-    hePipe = AvgEnergyLevelElt (PipeSurfConn(i)%PipeElt)
+    heSurface%bedLevel = AvgBottomLevelElt (PipeSurfConn(i)%SurfElt, Elttype)
+    heSurface%veloHead = AvgKinEnergyLevelElt (PipeSurfConn(i)%SurfElt, Elttype)
+    heSurface%pressHead = max (AvgPiezoLevelElt (PipeSurfConn(i)%SurfElt, Elttype) - heSurface%bedLevel, 0.0d0)
+    heSurface%total = heSurface%veloHead + heSurface%bedLevel + heSurface%pressHead
+    heSurface%specific = heSurface%veloHead + heSurface%pressHead
+!
+    EltType = LocalElementType (ncorn (PipeSurfConn(i)%PipeElt))
+    hePipe%bedLevel = AvgBottomLevelElt (PipeSurfConn(i)%PipeElt, Elttype)
+    hePipe%veloHead = AvgKinEnergyLevelElt (PipeSurfConn(i)%PipeElt, Elttype)
+    hePipe%pressHead = max (AvgPiezoLevelElt (PipeSurfConn(i)%PipeElt, Elttype) - hePipe%bedLevel, 0.0d0)
+    hePipe%total = hePipe%veloHead + hePipe%bedLevel + hePipe%pressHead
+    hePipe%specific = hePipe%veloHead + hePipe%pressHead
     
     !Calculate flow from surface to pipe
-    ManholeType = 1
-    PipeSurfConn(i)%flow = PipeSurfConnFlow (heSurface, hePipe, ManholeType)
-    PipeSurfConn(i)%DflowWRTv_upper = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface - 0.01**2/(2*grav), hePipe, ManholeType))/ 0.01
-    PipeSurfConn(i)%DflowWRTh_upper = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface - 0.01, hePipe, ManholeType))/ 0.01
-    PipeSurfConn(i)%DflowWRTv_lower = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface, hePipe - 0.01**2/(2*grav), ManholeType))/ 0.01
-    PipeSurfConn(i)%DflowWRTh_lower = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface, hePipe - 0.01, ManholeType))/ 0.01
+    PipeSurfConn(i)%flow = PipeSurfConnFlow (heSurface, hePipe, PipeSurfConn(i)%manholeDef)
+!    PipeSurfConn(i)%DflowWRTv_upper = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface - 0.01**2/(2*grav), hePipe, PipeSurfConn(i)%manholeDef))/ 0.01
+!    PipeSurfConn(i)%DflowWRTh_upper = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface - 0.01, hePipe, PipeSurfConn(i)%manholeDef))/ 0.01
+!    PipeSurfConn(i)%DflowWRTv_lower = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface, hePipe - 0.01**2/(2*grav), PipeSurfConn(i)%manholeDef))/ 0.01
+!    PipeSurfConn(i)%DflowWRTh_lower = (PipeSurfConn(i)%flow - PipeSurfConnFlow (heSurface, hePipe - 0.01, PipeSurfConn(i)%manholeDef))/ 0.01
     
    
   enddo
@@ -151,21 +164,13 @@ function AvgEnergyLevelElt (FEElt) result (hEnergy)
   real (kind = 8) :: hEnergy
   real (kind = 8) :: AvgPiezoLevelElt, AvgBottomLevelElt, SpezPiezo
   real (kind = 8) :: AvgKinEnergyLevelElt, kinEnergy
-  integer (kind = 4) :: FEElt, Elttype
+  integer (kind = 4) :: FEElt, Elttype, LocalElementType
   
   hEnergy = 0.0d0
   SpezPiezo = 0.0d0
   kinEnergy = 0.0d0
   
-  !Define the element type for the proper weighting function assessment
-  if (ncorn (FEElt) > 6) then
-    Elttype = 1
-  elseif (ncorn (FEElt) > 5) then
-    Elttype = 2
-  !1D
-  else
-    Elttype = 0
-  endif
+  Elttype = LocalElementType (ncorn(FEElt))
   
   SpezPiezo = max (AvgPiezoLevelElt (FEElt, Elttype) - AvgBottomLevelElt (FEElt, Elttype), 0.0d0)
   kinEnergy = AvgKinEnergyLevelElt (FEElt, Elttype)
@@ -175,72 +180,143 @@ function AvgEnergyLevelElt (FEElt) result (hEnergy)
   
 end function
 
-function PipeSurfConnFlow (he_upper, he_lower, ManholeType)
+!calculate flow through pipe surface connection
+!----------------------------------------------
+function PipeSurfConnFlow (he_upper, he_lower, manh) result (flow)
+  use manholeDefinitions
   use globalConstants
   implicit none
-  real (kind = 8) :: PipeSurfConnFlow, PS1, PS2
+
+  real (kind = 8) :: flow, PS1, PS2
   real (kind = 8) :: pipeMaximum, weirDuBuat
-  real (kind = 8), intent (in) :: he_upper, he_lower
-  integer (kind = 4), intent (in) :: ManholeType
-  
-  
-  PipeSurfConnFlow = 0.0d0
-  !different manhole types
-  if (manholeType == 1) then
-    PS1 = pipeMaximum (he_upper, 2.0, 0.005, 0.25, 0.0d0, 0.0d0)
-    PS2 = weirDuBuat (0.5, he_upper, pi*0.25)
-    PipeSurfConnFlow = min (PS1, PS2)
-  endif 
+  real (kind = 8) :: InflowLoss, OutflowLoss
+  real (kind = 8) :: mueCorr
 
-  return
-end function
-
-
-function xn1D (node, xi)
-  implicit none
-  real (kind = 8) :: xn1D
-  real (kind = 8) :: xi
-  integer (kind = 4) :: node
+  type (energyLevel), intent (in) :: he_upper, he_lower
+  !manhole
+  type (pipeManhole), intent (in) :: manh
+  !locals
+  real (kind = 8) :: lambda, cole
   
-  if (node == 1) then
-    XN1D = (1.-xi)*(1.-2.*xi)
-  elseif (node == 2) then
-    XN1D = (1.-xi)*4.*xi
-  elseif (node == 3) then
-    XN1D = (2.*xi-1.)*xi
+  !cycle on equal energy elevations
+  !--------------------------------
+  if (he_upper%total == he_lower%total) then
+    flow = 0.0d0
+    return
   endif
   
-  return
-end function
-
-
-function weirDuBuat (mue, he_ue, width) result (flow)
-
-  use globalConstants
-  
-  real (kind = 8) :: flow
-  real (kind = 8), intent (in) :: mue, he_ue, width
-  
+  !initializations
+  !---------------
   flow = 0.0d0
+  InflowLoss = 0.0d0
+  OutflowLoss = 0.0d0
+  mueCorr = 0.0d0
   
-  flow = width * mue * 2.0/3.0 * (2.0 * grav)**0.5 * (he_ue**3.0)**0.5
+  !get pipe's flow resistance lambda
+  !---------------------------------
+  lambda = cole (0.0d0, manh%diameter / 4, manh%ks)
+  
+  !determine loss direction
+  !------------------------
+  if (he_upper%total > he_lower%total) then
+    InflowLoss = manh%ZetaInflowUpper
+    OutflowLoss = manh%ZetaOutflowLower
+  else
+    InflowLoss = manh%ZetaOutflowLower
+    OutflowLoss = manh%ZetaOutflowUpper
+  endif
+  
+  
+  !determinie maximum discharge through manhole via energy balance
+  !---------------------------------------------------------------
+  PS1 = pipeMaximum (he_upper%total, he_lower%total, he_upper%bedLevel, manh%length, lambda, manh%diameter, InflowLoss, OutflowLoss)
+  
+  if (he_upper%total < he_lower%total) then
+    flow = PS1 * -1
+  else
+  
+    !Calculate mue correction
+    !------------------------
+    if (he_lower%total >= he_upper%bedLevel) then
+      mueCorr = sqrt (1-((he_lower%total - he_upper%bedLevel)/ he_upper%specific)**16)
+    else
+      mueCorr = 1.0d0
+    endif
+  
+    !get theoretical flow from surface to pipe
+    !-----------------------------------------  
+    PS2 = weirDuBuat (manh%mue, mueCorr, he_upper%specific, manh%diameter*pi/4)
+    flow = min (PS1, PS2)
+  endif
+
   return
 end function
 
-function pipeMaximum (he_upper, length, lambda, diameter, hLoss_inflow, hLoss_outflow) result (maxFlow)
+!maximum pipe flow due to energy balance
+!-----------------
+function pipeMaximum (he_upper, he_lower, SurfElt, length, lambda, diameter, hLoss_in, hLoss_out) result (maxFlow)
   
   use globalConstants
   implicit none
   
   real (kind = 8) :: maxFlow
-  real (kind = 8), intent (in) :: he_upper, length, lambda, diameter, hLoss_inflow, hLoss_outflow
+  real (kind = 8), intent (in) :: he_upper, he_lower, SurfElt, length, lambda, diameter, hLoss_in, hLoss_out
+  real (kind = 8) :: he_in, he_out
+  
+  if (he_upper > he_lower) then
+    he_in = he_upper
+    he_out = max (he_lower, SurfElt - length)
+  else
+    he_in = he_lower
+    he_out = he_upper
+  endif
   
   maxFlow = 0.0d0
   
-  maxFlow = sqrt(2.0 * grav / (1.0 + length * lambda / diameter) * (length + he_upper - hLoss_inflow - hLoss_outflow))
+  maxFlow = sqrt (2.0 * grav * (he_in - he_out) / (lambda * length / diameter + hLoss_in + hLoss_out))
   maxFlow = maxFlow * (pi * diameter**2 / 4)
   
   return
 end function
+
+
+!normal pipe type
+!----------------
+function weirDuBuat (mue, mueCorr, he_ue, crestLength) result (flow)
+
+  use globalConstants
+  
+  real (kind = 8) :: flow
+  real (kind = 8), intent (in) :: mue, mueCorr, he_ue, crestLength
+  
+  flow = 0.0d0
+  
+  flow = crestLength * mue * mueCorr * 2.0/3.0 * (2.0 * grav)**0.5 * (he_ue**3.0)**0.5
+  return
+end function
+
+
+
+!local Element Type Definition
+!Normally a global type specifier should be invoked!
+function LocalElementType(numberOfCornerNodes) result (Elttype)
+  !function definition
+  integer (kind = 4) :: Elttype
+  !dummy arguments
+  integer (kind = 4), intent (in) :: numberOfCornerNodes
+  
+  !Define the element type for the proper weighting function assessment
+  if (numberOfCornerNodes > 6) then
+    Elttype = 1
+  elseif (numberOfCornerNodes > 5) then
+    Elttype = 2
+  !1D
+  else
+    Elttype = 0
+  endif
+end function
+  
+  
+
 
   

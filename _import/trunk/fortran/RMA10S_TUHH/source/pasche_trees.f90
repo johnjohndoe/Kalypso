@@ -140,7 +140,7 @@ all_elements: do i = 1, ne
     end if
 
     NikuradseRoughness = cniku(i)
-    CALL cole (lambda_s, mvxvy(i), mh(i), NikuradseRoughness , i)
+    lambda_s = cole (mvxvy(i), mh(i), NikuradseRoughness)
 
     if (mslope(i) > 0.000001) then
 

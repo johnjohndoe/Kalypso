@@ -507,10 +507,6 @@ C-
 C-
 C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 C-
-cipk jan98
-      AREA(NN)=0.
-CIPK APR01
-	TVOL(NN)=0.
 
 
 cipk nov99 revise for collapsing from 3-d
@@ -553,7 +549,23 @@ CIPK MAY04 RESET ELEMENT INFLOW
         SIDFQ=0.
       ENDIF
       SIDFQQ=SIDF(NN)
+      
+!pipesurfaceconnection
+!      if (ConnectedElt(nn) /= 0) then
+!        findPS: do ps = 1, maxps
+!          if (PipeSurfConn(ps)%SurfElt == nn) then
+!            PS_ID = ps
+!            exit findPS
+!          endif
+!        enddo findPS
+!        sidft = - PipeSurfConn(PS_ID)%flow / area (nn)
+!      endif
+!pipesurfaceconnection
 
+cipk jan98
+      AREA(NN)=0.
+CIPK APR01
+	TVOL(NN)=0.
 
 !--------------------------------
 !GAUSS LOOP GAUSS LOOP GAUSS LOOP
@@ -1299,24 +1311,12 @@ CIPK AUG06 ADD QIN
 
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
       IF (H + AZER > ABED) THEN
-        SIDFT = SIDFQ + SIDFF (NN)
+        SIDFT = sidft + SIDFQ + SIDFF (NN)
         SIDFQQ = SIDFQQ + SIDFF (NN)
       ELSE
-        SIDFT = SIDFF (NN)
+        SIDFT = sidft + SIDFF (NN)
         SIDFQQ = SIDFF (NN)
       ENDIF
-      
-!pipesurfaceconnection
-      if (ConnectedElt(nn) /= 0) then
-        findPS: do ps = 1, maxps
-          if (PipeSurfConn(ps)%SurfElt == nn) then
-            PS_ID = ps
-            exit findPS
-          endif
-        enddo findPS
-        sidft = sidft - PipeSurfConn(PS_ID)%flow / tvol (nn)
-      endif
-!pipesurfaceconnection
 
 C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
 

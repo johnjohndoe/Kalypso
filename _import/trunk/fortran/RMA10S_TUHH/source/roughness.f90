@@ -54,7 +54,9 @@ IMPLICIT none
 
 ! Calling variables
 REAL (kind = 8), INTENT(OUT)                   :: lambda
-REAL (kind = 8), INTENT(OUT)                   :: lambdasand, lambdawald, lambdabedform
+REAL (kind = 8), INTENT(OUT)                   :: lambdasand
+real (kind = 8) :: cole
+real (kind = 8), intent(out)                   :: lambdawald, lambdabedform
 INTEGER, INTENT(IN)                            :: morph, nn, mel
 REAL, INTENT(IN)                               :: vecq
 real (kind = 8), INTENT(IN)                    :: ks, a, dp
@@ -85,7 +87,9 @@ IF (h < dset) then
   RETURN
 ENDIF
 
-CALL cole (lambdasand, vecq, h, ks, nn)
+!function to calculate lambda due to equivalent sand roughness ks
+lambdasand = cole (vecq, h, ks)
+
 !hint: h is in case of 1D used as the hydraulic radius
 
 if (approxdim == 2) then
@@ -116,7 +120,7 @@ END SUBROUTINE darcy
 
 
 !---------------------------------------------------------------------------------------------
-SUBROUTINE cole (lambda, vecq, h, ks, nn)
+function cole (vecq, rhy, ks) result (lambda)
 !                                                                       
 ! Calculation of DARCY-WEISBACH coefficient LAMBDA using the
 ! COLEBROOK-WHITE formular with the equivelent sand roughness ks.
@@ -125,15 +129,15 @@ SUBROUTINE cole (lambda, vecq, h, ks, nn)
 
 implicit none
 
-! Calling variables
-REAL (kind = 8), INTENT(OUT) :: lambda ! calculated roughness coefficient
+!function result
+REAL (kind = 8) :: lambda
+
+!input parameters
 REAL (kind = 8), INTENT(IN)  :: ks     ! ks-value
 REAL, INTENT(IN)             :: vecq   ! velocity
-REAL(KIND=8), INTENT(IN)     :: h      ! flow depth, hydraulic radius
-!-
-INTEGER, INTENT(IN) 	        :: nn     ! active element
+REAL(KIND=8), INTENT(IN)     :: rhy      ! flow depth, hydraulic radius
 
-! Local variables
+!Local variables
 REAL 			                     :: re, lalt, dhy
 
 ! kinematic viskosity at 10 C
@@ -157,8 +161,17 @@ REAL, PARAMETER  :: f_g = 2.51
 REAL, PARAMETER  :: f_r = 3.71
 INTEGER 	 :: i
 
+!initializations
+lambda = 0.0d0
 lalt = 10.0**6  	! initial lambda
-dhy  = 4.0 * h   	! hydraulic diameter
+dhy  = 4.0 * rhy  ! hydraulic diameter
+
+
+!prevent division by zero
+if (ks == 0.0d0) return 
+
+!formula by COLEBROOK/WHITE under consideration of the hydraulic smooth term wrt to Reynolds-number
+lambda = 1/ ( -2.03 * log10 (ks / (dhy * f_r))) ** 2.0
 
 !WP Reynolds number
 !WP ---------------
@@ -166,43 +179,34 @@ dhy  = 4.0 * h   	! hydraulic diameter
 !WP in natural rivers. It only happens in case of very small velocities or
 !WP very shallow water. But than the influence is negligible.
 !WP (RE < 2000 may lead to inconvergence behaviour!)
-re = vecq * dhy / nue
-IF (re .lt. 2000.0) re = 2000.0
+if (vecq > 0.0d0) then 
+  re = vecq * dhy / nue
+  IF (re .lt. 2000.0) re = 2000.0
 
-! Calculation of initial lambda value (DVWK 220) without Reynolds number
-!lambda = ( - 2.03 * log10 (ks / (dhy * 3.71) ) ) **2
-lambda = ( - 2.03 * log10 (ks / (dhy * f_r) ) ) ** 2.0
 
-IF (lambda .eq. 0.0) lambda = 0.0001
-lambda = 1.0 / lambda
+  iteration_lambda: do i = 1, 30
 
-i = 0
+    if ( ABS((lambda/lalt)-1.0) .LE. 0.0001 ) EXIT iteration_lambda
+    IF (i == 30) then
+      !no convergence after 30 iterations
+      lambda = 0.05
+      EXIT iteration_lambda
+    ENDIF
 
-iteration_lambda: do
+    lalt = lambda
+    !formula by COLEBROOK/WHITE under consideratio of the hydraulic smooth term wrt to Reynolds-number
+    lambda = ( -2.03 * log10 (f_g / (re * lalt**0.5) + ks / (dhy * f_r) ) ) ** 2.0
 
-  if ( ABS((lambda/lalt)-1.0) .LE. 0.0001 ) EXIT iteration_lambda
-  IF (i .gt. 30) then
-    ! no convergence after 30 iterations
-    !WRITE (14,1000) nn, lambda, lalt, h, vecq, re, dhy, ks
-    !stop
-    lambda = 0.05
-    EXIT iteration_lambda
-  ENDIF
+    IF (lambda .eq. 0.0) lambda = 0.0001
+    lambda = 1.0 / lambda
+    !nis,oct08: Restrict lambda to be maximum 1000.0
+    if (lambda > 0.0) lambda = min (lambda, 1000.0)
 
-  i = i + 1
+  end do iteration_lambda
+endif
+  
 
-  lalt = lambda
-  ! formular by COLEBROOK/WHITE
-  !lambda = ( - 2.03 * log10 (5.8 / (re * lalt**0.5) + ks / (dhy * 3.71) ) ) ** 2.0
-  lambda = ( - 2.03 * log10 (f_g / (re * lalt**0.5) + ks / (dhy * f_r) ) ) ** 2.0
-
-  IF (lambda .eq. 0.0) lambda = 0.0001
-  lambda = 1.0 / lambda
-  !nis,oct08: Restrict lambda to be maximum 1000.0
-  if (lambda > 0.0) lambda = min (lambda, 1000.0)
-  !-
-
-end do iteration_lambda
+return
 
 
 1000 format (/1X,'No convergence in Element No. ', I5, ' after 20 iterations'/ &
@@ -217,7 +221,8 @@ end do iteration_lambda
 1001 format (1X, 'It. Nr. ', I3, '  lambda: ', F15.7, ' lalt: ', F15.7)
 1002 format (1X, 'Element: ', I6, '  lambda_anf: ', F15.7)
 
-END SUBROUTINE cole                           
+
+END function cole                           
                                                                         
                                                                         
                                                                         

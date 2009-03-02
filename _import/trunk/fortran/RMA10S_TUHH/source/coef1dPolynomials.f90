@@ -418,7 +418,9 @@ if (ConnectedElt(nn) /= 0) then
       exit findPS
     endif
   enddo findPS
-  sidft = sidft + PipeSurfConn(ps_ID)%flow
+  if (tel /= 0.0d0) then
+    sidft = sidft + PipeSurfConn(ps_ID)%flow/ tel
+  endif
   continue
 endif
 !pipesurfaceconnection
