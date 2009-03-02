@@ -40,14 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.local;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -62,90 +66,19 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
  */
 public class LocalProjectHandler extends AbstractProjectHandler implements ILocalProject, IPreferenceChangeListener
 {
-  private final IProject m_project;
+  protected final IProject m_project;
 
   private final LocalWorkspaceModel m_model;
 
   private IRemoteProjectPreferences m_preferences = null;
-
-  private final IResourceChangeListener m_changeListener;
 
   public LocalProjectHandler( final IProject project, final LocalWorkspaceModel localWorkspaceModel )
   {
     m_project = project;
     m_model = localWorkspaceModel;
 
-    // FIXME: too have, one listener per project... too much business if we have lots of projects...
-    // Every project in the workspace gets this listener....!
-    m_changeListener = new IResourceChangeListener()
-    {
-      @Override
-      public void resourceChanged( final IResourceChangeEvent event )
-      {
-        if( IResourceChangeEvent.POST_CHANGE != event.getType() )
-        {
-          return;
-        }
-
-        final IResourceDelta delta = event.getDelta();
-        final IResourceDelta[] children = delta.getAffectedChildren();
-        for( final IResourceDelta child : children )
-        {
-          final IResource resource = child.getResource();
-          if( !(resource instanceof IProject) )
-          {
-            continue;
-          }
-
-          if( !containsRelevantChanges( child ) )
-          {
-            continue;
-          }
-
-          final IProject p = (IProject) resource;
-          if( getProject().equals( p ) )
-          {
-            try
-            {
-              try
-              {
-                // FIXME: with this call, every(!) project automatically gets the remote-nature...
-                // this is not allowed!
-                final IRemoteProjectPreferences remotePreferences = getRemotePreferences();
-                if( remotePreferences != null )
-                  remotePreferences.setModified( true );
-                break;
-              }
-              catch( final IllegalStateException e )
-              {
-              }
-
-            }
-            catch( final CoreException e )
-            {
-              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-            }
-          }
-        }
-      }
-
-      private boolean containsRelevantChanges( final IResourceDelta delta )
-      {
-        final IResourceDelta[] children = delta.getAffectedChildren();
-        for( final IResourceDelta child : children )
-        {
-          final IResource resource = child.getResource();
-          final String name = resource.getName();
-          if( !".settings".equalsIgnoreCase( name ) )
-          {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
-    m_project.getWorkspace().addResourceChangeListener( m_changeListener );
-
+    final WorkspaceResourceManager manager = WorkspaceResourceManager.getInstance();
+    manager.add( this );
   }
 
   /**
@@ -154,7 +87,8 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   @Override
   public void dispose( )
   {
-    m_project.getWorkspace().removeResourceChangeListener( m_changeListener );
+    final WorkspaceResourceManager manager = WorkspaceResourceManager.getInstance();
+    manager.remove( this );
   }
 
   /**
@@ -165,29 +99,48 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   {
     if( m_preferences == null )
     {
-      // FIXEM: sue m_project.isNatureEnabled( natureId );
-      final IProjectNature nature = m_project.getNature( RemoteProjectNature.NATURE_ID );
-      if( nature == null )
+      if( !m_project.isNatureEnabled( RemoteProjectNature.NATURE_ID ) )
       {
-        // FIXME: does not work! setDescription always throws an exception, m_preferences stays forver null ->
-        // consolole output 'The resource tree is locked for modifications.'
-        //
-// final IProjectDescription description = m_project.getDescription();
-// final String[] natureIds = description.getNatureIds();
-// ArrayUtils.add( natureIds, RemoteProjectNature.NATURE_ID );
-//
-// description.setNatureIds( natureIds );
-// m_project.setDescription( description, new NullProgressMonitor() );
+
+        final WorkspaceJob job = new WorkspaceJob( "Assigning project nature" )
+        {
+
+          @Override
+          public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
+          {
+            final IProjectDescription description = m_project.getDescription();
+            final String[] natureIds = description.getNatureIds();
+            ArrayUtils.add( natureIds, RemoteProjectNature.NATURE_ID );
+
+            description.setNatureIds( natureIds );
+            m_project.setDescription( description, new NullProgressMonitor() );
+
+            return Status.OK_STATUS;
+          }
+        };
+
+        job.schedule();
+
+        int count = 0;
+        while( job.getState() != Job.NONE && count < 100 )
+        {
+          try
+          {
+            Thread.sleep( 200 );
+            count += 1;
+          }
+          catch( final InterruptedException e )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          }
+        }
       }
 
-      final RemoteProjectNature myNature = (RemoteProjectNature) nature;
+      final RemoteProjectNature myNature = (RemoteProjectNature) m_project.getNature( RemoteProjectNature.NATURE_ID );
       if( myNature == null )
-      {
         return null;
-      }
 
       m_preferences = myNature.getRemotePreferences( m_project, this );
-
     }
 
     return m_preferences;
@@ -258,4 +211,41 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
     return m_model;
   }
 
+  /**
+   * @see org.kalypso.project.database.client.core.model.AbstractProjectHandler#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IProject )
+    {
+      final IProject other = (IProject) obj;
+
+      return this.m_project.equals( other );
+    }
+    else if( obj instanceof ILocalProject )
+    {
+      final ILocalProject other = (ILocalProject) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( this.getProject(), other.getProject() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.AbstractProjectHandler#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( m_project );
+    builder.append( getName() );
+
+    return builder.toHashCode();
+  }
 }
