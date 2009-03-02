@@ -75,8 +75,6 @@ public class Gaja3dService {
 	 */
 	public Capabilities getCapabilities(final GetCapabilitiesType parameters)
 			throws RemoteException {
-		SecurityManager.getManager().setServiceOwnerFromContext();
-
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("getCapabilities", resource);
 
