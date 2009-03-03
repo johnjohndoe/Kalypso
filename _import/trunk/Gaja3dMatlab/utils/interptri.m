@@ -53,7 +53,7 @@ zi = zeros(zisiz) * NaN;
 % x = x - minx;
 % y = y - miny;
 
-ti = tsearch(x(:), y(:), tri, xi(:), yi(:)); % find triangle associated with each data point
+ti = tsearch(x(:), y(:), cast(tri,'double'), xi(:), yi(:)); % find triangle associated with each data point
 %tinan = isnan(ti);  % True for xi, yi outside the convex hull
 %ti(tinan)=tsearch(x(:), y(:), tri, xi(tinan), yi(tinan)); % try again
 tinan = isnan(ti);
