@@ -3,8 +3,9 @@ C     LAST UPDATE JAN 13 2008 modernize structure of subroutine and add for inte
 CIPK  LAST UPDATE JAN 13 2003 ADD MOMENTUM
       SUBROUTINE LNFLO (N, SF_in, QQAL, NEST, LN, ELINX, ELINY)
 
-      USE BLK10MOD
-      USE BLK11MOD
+      USE BLK10MOD,
+     #  only: sidf, sidq, einx, einy, imat, ncorn, tvol, tvolc,
+     +        nedep, neref
       SAVE
 
       !passed ones
