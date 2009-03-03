@@ -805,7 +805,8 @@ CIPK MAR01
       do i = 1, maxps
         PipeSurfConn(i)%SurfElt = 0
         PipeSurfConn(i)%pipeElt = 0
-        PipeSurfConn(i)%flow = 0.0d0
+        PipeSurfConn(i)%PipeFlow = 0.0d0
+        PipeSurfConn(i)%SurfFlow = 0.0d0
         PipeSurfConn(i)%DflowWRTv_upper = 0.0d0
         PipeSurfConn(i)%DflowWRTh_upper = 0.0d0
         PipeSurfConn(i)%DflowWRTv_lower = 0.0d0
