@@ -172,7 +172,8 @@ classdef Shape
                    tmp_dir = tempname;
                    filenames = unzip(filename, tmp_dir);
                    allShapes = cell(size(filenames));
-                   for i=1:numel(filenames)
+                   fileOrder = sortcellchar(filenames);
+                   for i=fileOrder'
                        shp = org.kalypso.gaja3d.matlab.Shape.fromFile(filenames{i}, constructorCallback);
                        if(~all(size(shp) == [1,1]) || ~shp.jtsGeometry.isEmpty())
                            % add only non-empty shapes
