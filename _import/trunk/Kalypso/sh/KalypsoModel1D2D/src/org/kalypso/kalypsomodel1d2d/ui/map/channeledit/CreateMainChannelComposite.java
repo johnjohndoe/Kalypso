@@ -134,17 +134,16 @@ public class CreateMainChannelComposite extends Composite
 
   private Button m_buttonConvertToModel;
 
-  protected boolean m_bankEdit1;
-
-  protected boolean m_bankEdit2;
-
-// private SegmentData m_currentSegment;
-
   private final FormToolkit m_toolkit;
 
-  Button m_buttonEditBank1;
+  Button m_buttonEditBank;
 
-  Button m_buttonEditBank2;
+  private boolean m_bankEdit;
+
+  public boolean isBankEdit( )
+  {
+    return m_bankEdit;
+  }
 
   public CreateMainChannelComposite( final Composite parent, final FormToolkit toolkit, final int style, final CreateChannelData data, final CreateMainChannelWidget widget )
   {
@@ -239,18 +238,12 @@ public class CreateMainChannelComposite extends Composite
 
     updateControl( true );
 
-    if( m_bankEdit1 == true )
+    if( m_bankEdit == true )
     {
-      m_buttonEditBank1.setSelection( true );
-      m_buttonEditBank2.setSelection( false );
-      editButtonUpdateBank1();
+      m_buttonEditBank.setSelection( true );
+      editButtonUpdateBank();
     }
-    else if( m_bankEdit2 == true )
-    {
-      m_buttonEditBank1.setSelection( false );
-      m_buttonEditBank2.setSelection( true );
-      editButtonUpdateBank2();
-    }
+
   }
 
   /**
@@ -373,17 +366,15 @@ public class CreateMainChannelComposite extends Composite
           {
             final IMapPanel panel = m_widget.getPanel();
             panel.setBoundingBox( mapExtend );
-            if( m_buttonEditBank1.getSelection() == true )
-              editButtonUpdateBank1();
-            else if( m_buttonEditBank2.getSelection() == true )
-              editButtonUpdateBank2();
+            if( m_buttonEditBank.getSelection() == true )
+              editButtonUpdateBank();
+
             panel.repaintMap();
           }
         }
-        if( m_buttonEditBank1.getSelection() == true )
-          editButtonUpdateBank1();
-        else if( m_buttonEditBank2.getSelection() == true )
-          editButtonUpdateBank2();
+        if( m_buttonEditBank.getSelection() == true )
+          editButtonUpdateBank();
+
         updateControl( true );
       }
     } );
@@ -441,10 +432,9 @@ public class CreateMainChannelComposite extends Composite
         m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
         // just update the selected segment
         m_data.updateSegment( false );
-        if( m_buttonEditBank1.getSelection() == true )
-          editButtonUpdateBank1();
-        else if( m_buttonEditBank2.getSelection() == true )
-          editButtonUpdateBank2();
+        if( m_buttonEditBank.getSelection() == true )
+          editButtonUpdateBank();
+
         m_widget.getPanel().repaintMap();
       }
     } );
@@ -457,46 +447,23 @@ public class CreateMainChannelComposite extends Composite
     gridDataSegmBanks.horizontalSpan = 1;
     compSegmBanks1.setLayoutData( gridDataSegmBanks );
 
-    final Label labelBankline1 = new Label( compSegmBanks1, SWT.NULL );
-    labelBankline1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
+    final Label labelBankline = new Label( compSegmBanks1, SWT.NULL );
+    labelBankline.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.8" ) ); //$NON-NLS-1$
 
     /* edit button for bankline 1 */
-    m_buttonEditBank1 = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE ); //$NON-NLS-1$
-    m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
+    m_buttonEditBank = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE ); //$NON-NLS-1$
+    m_buttonEditBank.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
 
     final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
     final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
-    m_buttonEditBank1.setImage( editImage );
-    m_buttonEditBank1.setSelection( m_bankEdit1 );
-    m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
+    m_buttonEditBank.setImage( editImage );
+    m_buttonEditBank.setSelection( m_bankEdit );
+    m_buttonEditBank.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        editButtonUpdateBank1();
-        resetButtonGuard();
-        m_widget.getPanel().repaintMap();
-      }
-    } );
-
-    final Composite compSegmBanks2 = new Composite( groupSegment, SWT.NULL );
-    compSegmBanks2.setLayout( gridLayoutSegmBanks );
-    compSegmBanks2.setLayoutData( gridDataSegmBanks );
-
-    final Label labelBankline2 = new Label( compSegmBanks2, SWT.NULL );
-    labelBankline2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.12" ) ); //$NON-NLS-1$
-
-    /* edit button for bankline 2 */
-    m_buttonEditBank2 = m_toolkit.createButton( compSegmBanks2, "", SWT.TOGGLE ); //$NON-NLS-1$
-    m_buttonEditBank2.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.13" ) ); //$NON-NLS-1$
-    m_buttonEditBank2.setImage( editImage );
-    m_buttonEditBank2.setSelection( m_bankEdit2 );
-    m_buttonEditBank2.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        editButtonUpdateBank2();
+        editButtonUpdateBank();
         resetButtonGuard();
         m_widget.getPanel().repaintMap();
       }
@@ -1047,40 +1014,18 @@ public class CreateMainChannelComposite extends Composite
     }
   }
 
-  void editButtonUpdateBank1( )
+  void editButtonUpdateBank( )
   {
-    if( m_buttonEditBank1.getSelection() == true )
+    if( m_buttonEditBank.getSelection() == true )
     {
-      m_bankEdit1 = true;
-      m_buttonEditBank2.setSelection( false );
-      m_bankEdit2 = false;
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-      final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, m_widget.getPanel() );
+      m_bankEdit = true;
+
+      final DragBankLineWidget widget = new DragBankLineWidget( m_data, m_widget.getPanel() );
       m_widget.setDelegate( widget );
     }
     else
     {
-      m_bankEdit1 = false;
-      m_widget.setDelegate( null );
-    }
-    updateData( true );
-  }
-
-  void editButtonUpdateBank2( )
-  {
-    if( m_buttonEditBank2.getSelection() == true )
-    {
-      m_bankEdit2 = true;
-      m_buttonEditBank1.setSelection( false );
-      m_bankEdit1 = false;
-      final SegmentData currentSegment = m_data.getSelectedSegment();
-
-      final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, m_widget.getPanel() );
-      m_widget.setDelegate( widget );
-    }
-    else
-    {
-      m_bankEdit2 = false;
+      m_bankEdit = false;
       m_widget.setDelegate( null );
     }
     updateData( true );

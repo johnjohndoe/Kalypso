@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class GM_PointSnapper
 {
   /** Snapping radius in screen-pixels. */
-  public static final int SNAPPING_RADIUS = 20;
+  public static final int SNAPPING_RADIUS = 14;
 
   private boolean m_snappingActive = true;
 

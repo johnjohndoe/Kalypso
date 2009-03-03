@@ -165,14 +165,13 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
         m_data.paintAllSegments( g, mapPanel );
 
       /* draw editable bankline */
-      if( (m_composite.m_bankEdit1 == true && m_data.getMeshStatus() == true) || (m_composite.m_bankEdit2 == true && m_data.getMeshStatus() == true) )
-        m_data.drawBankLine( m_composite.getCurrentSegment(), g );
+      if( (m_composite.isBankEdit() == true && m_data.getMeshStatus() == true) )
+        m_data.drawBankLines( g );
       if( m_delegateWidget != null )
         m_delegateWidget.paint( g );
     }
     catch( final CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -181,9 +180,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   private void drawIntersProfiles( final Graphics g, final Color color )
   {
     if( m_data.getSelectedSegment() != null )
-// if( m_data.getSelectedSegment() != 0 )
     {
-// final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       final SegmentData currentSegment = m_data.getSelectedSegment();
       if( currentSegment != null )
         if( currentSegment.complete() == true )
@@ -282,17 +279,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   /**
    * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
-   */
-  @Override
-  public void clickPopup( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.clickPopup( p );
-  }
-
-  /**
-   * @param p
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
@@ -326,7 +312,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
     final IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
-
   }
 
   /**
@@ -420,39 +405,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   {
     if( m_delegateWidget != null )
       m_delegateWidget.moved( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
-   */
-  @Override
-  public void rightClicked( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.rightClicked( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
-   */
-  @Override
-  public void rightPressed( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.rightPressed( p );
-  }
-
-  /**
-   * @param p
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
-   */
-  @Override
-  public void rightReleased( final Point p )
-  {
-    if( m_delegateWidget != null )
-      m_delegateWidget.rightReleased( p );
   }
 
   /**

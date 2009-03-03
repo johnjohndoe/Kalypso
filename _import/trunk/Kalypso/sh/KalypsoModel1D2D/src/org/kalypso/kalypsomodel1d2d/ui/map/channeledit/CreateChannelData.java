@@ -84,6 +84,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.LineThemePredicater;
 import org.kalypso.ui.editor.actions.FeatureComparator;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -92,6 +93,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -158,6 +160,8 @@ public class CreateChannelData
   private CreateChannelData.PROF m_selectedProfile;
 
   private Shell m_shell;
+
+  private final Map<GM_Position, SegmentData> m_segmentMap = new HashMap<GM_Position, SegmentData>();
 
   public CreateChannelData( final CreateMainChannelWidget widget )
   {
@@ -422,6 +426,7 @@ public class CreateChannelData
 
     final TempGrid tempGrid = new TempGrid();
     tempGrid.importMesh( importingGridPoints );
+    tempGrid.setCoodinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     final double searchDistance = 0.1;
     final IStatus status = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, searchDistance );
 
@@ -448,6 +453,7 @@ public class CreateChannelData
         try
         {
           points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
+          points1D[j].setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         }
         catch( final GM_Exception e )
         {
@@ -945,14 +951,17 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public void drawBankLine( final SegmentData segment, final Graphics g )
+  public void drawBankLines( final Graphics g )
   {
     final IMapPanel panel = m_widget.getPanel();
 
-    if( segment == null || m_segmentList.size() == 0 )
-      return;
+    for( final SegmentData segment : m_segmentList )
+    {
+      if( segment == null || m_segmentList.size() == 0 )
+        continue;
 
-    segment.paintBankLineLineString( panel, g, new Color( 20, 20, 255 ) );
+      segment.paintBankLineLineString( panel, g, new Color( 20, 20, 255 ) );
+    }
   }
 
   public void updateSegment( final boolean edit )
@@ -1058,6 +1067,47 @@ public class CreateChannelData
   public int getSelectedSegmentPos( )
   {
     return m_segmentList.indexOf( m_selectedSegment );
+  }
+
+  public GM_Position[] getAllSegmentPosses( )
+  {
+    final List<GM_Position> posList = new ArrayList<GM_Position>();
+
+    for( final SegmentData segment : m_segmentList )
+    {
+      final List<GM_Position> segmentPosses = getSegmentPosses( segment );
+
+      posList.addAll( segmentPosses );
+    }
+    return posList.toArray( new GM_Position[posList.size()] );
+  }
+
+  public List<GM_Position> getSegmentPosses( final SegmentData segment )
+  {
+    final List<GM_Position> positionList = new ArrayList<GM_Position>();
+
+    final Coordinate[] bankLeftInters = segment.getBankLeftInters().getCoordinates();
+    final Coordinate[] bankRightInters = segment.getBankRightInters().getCoordinates();
+    for( int i = 1; i < bankRightInters.length - 1; i++ )
+    {
+      final GM_Position pos = JTSAdapter.wrap( bankRightInters[i] );
+      m_segmentMap.put( pos, segment );
+      positionList.add( pos );
+    }
+
+    for( int i = 1; i < bankLeftInters.length - 1; i++ )
+    {
+      final GM_Position pos = JTSAdapter.wrap( bankLeftInters[i] );
+      m_segmentMap.put( pos, segment );
+      positionList.add( pos );
+    }
+
+    return positionList;
+  }
+
+  public SegmentData getSegmentAtPosition( final GM_Position position )
+  {
+    return m_segmentMap.get( position );
   }
 
 }

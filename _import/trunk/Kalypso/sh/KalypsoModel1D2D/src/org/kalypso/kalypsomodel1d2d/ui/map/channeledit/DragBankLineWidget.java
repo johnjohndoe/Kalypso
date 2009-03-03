@@ -73,11 +73,10 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * @author jung
+ * @author Thomas Jung
  */
 public class DragBankLineWidget extends AbstractWidget
 {
@@ -114,7 +113,7 @@ public class DragBankLineWidget extends AbstractWidget
   /**
    * The current segment.
    */
-  private final SegmentData m_currentSegment;
+  private SegmentData m_currentSegment;
 
   private final CreateChannelData m_data;
 
@@ -122,19 +121,19 @@ public class DragBankLineWidget extends AbstractWidget
 
   private GM_PointSnapper m_pointSnapper;
 
-  private Point m_currentMapPoint;
+// private Point m_currentMapPoint;
 
   private GM_Point m_snapPoint;
 
   private final IMapPanel m_mapPanel;
 
-  public DragBankLineWidget( final CreateChannelData channeldata, final SegmentData currentSegment, final IMapPanel mapPanel )
+  public DragBankLineWidget( final CreateChannelData channeldata, final IMapPanel mapPanel )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DragBankLineWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_mapPanel = mapPanel;
 
     m_data = channeldata;
-    m_currentSegment = currentSegment;
+    m_currentSegment = m_data.getSelectedSegment();
     m_newCurve = null;
     m_handles = null;
     m_radius = 10;
@@ -147,30 +146,16 @@ public class DragBankLineWidget extends AbstractWidget
 
     /* Create a new list for the handles. */
     m_handles = new ArrayList<IHandle>();
-
-    /* Collect all handles from the handle provider. */
-// m_handles.addAll( collectHandles() );
-// m_handles.remove( 0 );
-// m_handles.remove( m_handles.size() - 1 );
   }
 
   private void setPointSnapper( final String crs )
   {
-    final List<GM_Position> positionList = new ArrayList<GM_Position>();
+    final GM_Position[] posses = m_data.getAllSegmentPosses();
 
-    final Coordinate[] bankLeftInters = m_currentSegment.getBankLeftInters().getCoordinates();
-    final Coordinate[] bankRightInters = m_currentSegment.getBankRightInters().getCoordinates();
-    for( int i = 1; i < bankRightInters.length - 1; i++ )
-    {
-      positionList.add( JTSAdapter.wrap( bankRightInters[i] ) );
-    }
-
-    for( int i = 1; i < bankLeftInters.length - 1; i++ )
-    {
-      positionList.add( JTSAdapter.wrap( bankLeftInters[i] ) );
-    }
-
-    m_pointSnapper = new GM_PointSnapper( positionList.toArray( new GM_Position[positionList.size()] ), m_mapPanel, crs );
+// final List<GM_Position> positionList = m_data.getSegmentPosses( m_currentSegment );
+// m_pointSnapper = new GM_PointSnapper( positionList.toArray( new GM_Position[positionList.size()] ), m_mapPanel, crs
+    // );
+    m_pointSnapper = new GM_PointSnapper( posses, m_mapPanel, crs );
   }
 
   /**
@@ -180,10 +165,6 @@ public class DragBankLineWidget extends AbstractWidget
   public void moved( final Point p )
   {
     final Object newPoint = checkNewPoint( p );
-    if( newPoint instanceof GM_Point )
-      m_currentMapPoint = MapUtilities.retransform( getMapPanel(), (GM_Point) newPoint );
-    else
-      m_currentMapPoint = p;
 
     if( newPoint == null )
       getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
@@ -215,16 +196,19 @@ public class DragBankLineWidget extends AbstractWidget
 
     final Object newNode = m_snapPoint == null ? currentPoint : m_snapPoint;
 
-    // TODO: identify bankline, set bankline
     if( newNode instanceof GM_Point )
     {
       try
       {
-        if( m_currentSegment.getBankLeftInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
-          m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankLeftInters() );
-        else if( m_currentSegment.getBankRightInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
-          m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankRightInters() );
-
+        final SegmentData segment = m_data.getSegmentAtPosition( ((GM_Point) newNode).getPosition() );
+        if( segment != null )
+        {
+          m_currentSegment = segment;
+          if( m_currentSegment.getBankLeftInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
+            m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankLeftInters() );
+          else if( m_currentSegment.getBankRightInters().contains( JTSAdapter.export( (GM_Point) newNode ) ) )
+            m_bankline = (GM_Curve) JTSAdapter.wrap( m_currentSegment.getBankRightInters() );
+        }
         if( m_bankline != null )
         {
           /* Create a new list for the handles. */
@@ -288,11 +272,6 @@ public class DragBankLineWidget extends AbstractWidget
   @Override
   public void dragged( final Point p )
   {
-    if( m_pointSnapper.getSnapPoint() != null )
-    {
-
-    }
-
     if( m_handles == null )
     {
       // TODO: check if this repaint is really necessary
@@ -415,7 +394,6 @@ public class DragBankLineWidget extends AbstractWidget
       return;
 
     // TODO: maybe it would be nice if the user is shown an arrow from the old point to the new dragged point.
-
     final GM_Position[] positions = new GM_Position[m_handles.size() + 2]; // number of handles plus start and end
     // point
     int i = 0;
