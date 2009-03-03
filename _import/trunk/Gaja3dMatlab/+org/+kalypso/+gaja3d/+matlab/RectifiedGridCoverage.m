@@ -13,8 +13,8 @@ classdef RectifiedGridCoverage < handle
        dx = 1;
        dy = 1;
        smoothFilter = []; % no smooth
-       edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.DEFAULT;
-       featureDetector = org.kalypso.gaja3d.matlab.FeatureDetector.DEFAULT;
+       edgeFilter;
+       featureDetector;
    end % public properties (observable)
    
    properties (SetAccess = private)
@@ -96,6 +96,8 @@ classdef RectifiedGridCoverage < handle
         function this = RectifiedGridCoverage(varargin)
             % add property listener
             % it will recalculate smoothed, slope and breakpoints
+            this.edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.DEFAULT;
+            this.featureDetector = org.kalypso.gaja3d.matlab.FeatureDetector.DEFAULT;
             this.addlistener({'Z', 'dx', 'dy', 'smoothFilter', 'edgeFilter', 'featureDetector'},...
                 'PostSet', @(src,evnt)this.objectChanged(src,evnt));
             if(nargin == 0)
