@@ -20,8 +20,6 @@ classdef Polygon < org.kalypso.gaja3d.matlab.Shape
                this.jtsGeometry = Shape.geomFactory.createPolygon([], []);
            elseif(nargin == 1)
                switch class(varargin{1})
-                   case 'com.vividsolutions.jts.geom.LinearRing'
-                       exteriorRing = varargin{1};
                    case 'com.vividsolutions.jts.geom.Polygon'
                        polygon = varargin{1};
                        this.jtsGeometry = polygon;
