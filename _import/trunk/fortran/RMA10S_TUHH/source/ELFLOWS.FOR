@@ -195,6 +195,16 @@ CIPK DEC97 END ADDITION
           ioerror = 0
           READ (DLIN, 5029, iostat = ioerror)
      +          N, LN, NEST, SF, QQAL, LABL, ELINR, ELINT
+          !meaning of input
+          !n      element ID
+          !ln     layer number to apply inflow (0 means all layers)
+          !nest   0 -> value is specific load
+          !       1 -> value is total load (has to be divided by the area of the element
+          !qqal   concentrations (salinity, temperature, sediment)
+          !labl   0 -> take given value
+          !       1 -> read from time series file
+          !elinr  inflow velocity
+          !elint  angle of inflow velocity, measured in rad
      
           write(*,*) ioerror
           write(*,*) n, ln, nest, sf, qqal, labl, elinr, elint
