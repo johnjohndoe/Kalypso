@@ -47,7 +47,7 @@ classdef Gaja3D < handle
             else
                 this.demTin = org.kalypso.gaja3d.matlab.TriangulatedSurface(varargin{:});
             end
-            this.demGrid = org.kalypso.gaja3d.matlab.RectifiedGridCoverage.EMPTY;
+            this.demGrid = [];
         end 
 
         % set demGrid, revert breaklines
@@ -77,7 +77,8 @@ classdef Gaja3D < handle
                     end
                 end
             elseif(nargin == 2 && isempty(varargin{1}))
-                this.breaklines = cell(0);
+                noBreaklines = cell(size(this.tiles));
+                this.breaklines = noBreaklines;
             end
             this.breaklinesMerged = org.kalypso.gaja3d.matlab.Curve.EMPTY;
             this.modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
@@ -93,7 +94,7 @@ classdef Gaja3D < handle
                 this.boundaries = org.kalypso.gaja3d.matlab.Polygon(varargin{:});
             end
             this.tiles = 1:numel(this.boundaries);
-            this.demTin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
+            this.demTin = [];
         end
     end
    
