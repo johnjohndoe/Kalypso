@@ -409,22 +409,6 @@ ENDIF
 !SIDFQQ=SIDF(NN)
 sidft = sidfq
 
-!pipesurfaceconnection
-!Get the exchange flow
-if (ConnectedElt(nn) /= 0) then
-  findPS: do ps = 1, maxps
-    if (PipeSurfConn(ps)%PipeElt == nn) then
-      ps_ID = ps
-      exit findPS
-    endif
-  enddo findPS
-  if (tel /= 0.0d0) then
-    sidft = sidft + PipeSurfConn(ps_ID)%flow/ tel
-  endif
-  continue
-endif
-!pipesurfaceconnection
-
 !Question: Shouldn't be the form of the other coefs be used, i.e. the derivative form of the bed coordinates
 !bedslope
 if (kmx(n1) == 0.0 .and. kmx(n3) == 0.0) then
