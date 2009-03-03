@@ -276,7 +276,7 @@ public class Control1D2DConverter
 
       if( ks == null )
       {
-        final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7" ) + rClass.getName();//$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.7" ), rClass.getName() );//$NON-NLS-1$
         throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
@@ -331,7 +331,7 @@ public class Control1D2DConverter
         if( nodeID == 0 )
         {
           final GM_Point position = node.getPoint();
-          final String msg = Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.11"); //$NON-NLS-1$
+          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.11" ); //$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
           throw new CoreException( status );
         }
@@ -436,7 +436,7 @@ public class Control1D2DConverter
         }
         if( m_controlModel.getIaccyc() > stepCount )
         {
-          final String errMsg = stepCount + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12") + m_controlModel.getIaccyc() + Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.13"); //$NON-NLS-1$ //$NON-NLS-2$
+          final String errMsg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.12" ), stepCount, m_controlModel.getIaccyc() ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( errMsg ) );
         }
       }
@@ -479,7 +479,7 @@ public class Control1D2DConverter
       // (this will happen on summertime to wintertime transition)
       if( timeStepInterval == 0 )
       {
-        formatter.format( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.14") ); //$NON-NLS-1$
+        formatter.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.14" ) ); //$NON-NLS-1$
         return;
       }
 
@@ -524,7 +524,7 @@ public class Control1D2DConverter
           break;
 
         default:
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ) + kind;//$NON-NLS-1$
+          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.43" ), kind );//$NON-NLS-1$
           throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
       }
 
@@ -703,7 +703,7 @@ public class Control1D2DConverter
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )
-        formatter.format( "%nBC%6s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.31") ); //$NON-NLS-1$ //$NON-NLS-2$
+        formatter.format( "%nBC%6s", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter.31" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       formatter.format( "%5d010", buffVal ); //$NON-NLS-1$
     }

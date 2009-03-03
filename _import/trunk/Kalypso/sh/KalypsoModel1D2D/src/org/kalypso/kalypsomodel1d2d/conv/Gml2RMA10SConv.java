@@ -343,14 +343,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( element1D_ID == -1 || node1D_ID == -1 )
     {
       final GM_Object location = transitionElement.getLocation();
-      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.6"); //$NON-NLS-1$
+      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.6" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
       throw new CoreException( status );
     }
     if( line2D_ID == -1 )
     {
       final GM_Object location = transitionElement.getLocation();
-      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.7"); //$NON-NLS-1$
+      final String message = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.7" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
       throw new CoreException( status );
     }
@@ -525,7 +525,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( Double.isNaN( z ) )
       {
         final GM_Point position = node.getPoint();
-        final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.9"); //$NON-NLS-1$
+        final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.9" ); //$NON-NLS-1$
         final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
         throw new CoreException( status );
       }
@@ -546,7 +546,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), searchDistance, flowRelationTypes );
         if( relationship == null )
         {
-          final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.12"); //$NON-NLS-1$
+          final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.12" ); //$NON-NLS-1$
           final GM_Object location = node.getPoint();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -580,7 +580,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
           {
-            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.13"); //$NON-NLS-1$
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.13" ); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
@@ -594,7 +594,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
           if( polyRunoff == null )
           {
-            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.16"); //$NON-NLS-1$
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.16" ); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
@@ -609,7 +609,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
           if( polyAlpha == null )
           {
-            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.19"); //$NON-NLS-1$
+            final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.19" ); //$NON-NLS-1$
             final GM_Object location = node.getPoint();
             final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
             throw new CoreException( status );
@@ -624,7 +624,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         else
         {
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" ) + relationship;//$NON-NLS-1$
+          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.26" ), relationship );//$NON-NLS-1$
           final GM_Object location = node.getLocation();
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
           throw new CoreException( status );
@@ -638,13 +638,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
   /**
    * @param formatter
    * @param nodeID
-   *            the id of the node
+   *          the id of the node
    * @param point
-   *            the geo point of the node
+   *          the geo point of the node
    * @param station
-   *            the station of the node (only for 1d nodes, else null)
+   *          the station of the node (only for 1d nodes, else null)
    * @param isMidside
-   *            flag, if the node is a midside node (for writing the restart file)
+   *          flag, if the node is a midside node (for writing the restart file)
    */
   private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station, final boolean isMidside ) throws IOException
   {
@@ -709,7 +709,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     if( elementsInBBox.size() == 0 )
     {
-      final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25"); //$NON-NLS-1$
+      final String msg = org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.25" ); //$NON-NLS-1$
       final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
       throw new CoreException( status );
     }
@@ -751,7 +751,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           // TODO: give hint what 1D-element is was?
-          final String msg = Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" ) + element1D.getGmlID();//$NON-NLS-1$
+          final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.43" ), element1D.getGmlID() );//$NON-NLS-1$
           final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
           throw new CoreException( status );
         }
@@ -866,7 +866,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // data
       if( !isMidside )
       {
-        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.30"), point, null ); //$NON-NLS-1$
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.30" ), point, null ); //$NON-NLS-1$
       }
       return;
     }
@@ -980,7 +980,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // TODO: use default zone instead.
     // Right now it is set to '0' which means the element is deactivated for the simulation
-    final String msg = String.format( org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString("org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31"), element.getGmlID() ); //$NON-NLS-1$
+    final String msg = String.format( org.kalypso.kalypsomodel1d2d.conv.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv.31" ), element.getGmlID() ); //$NON-NLS-1$
 
     final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
     final GM_Point point = node.getPoint();

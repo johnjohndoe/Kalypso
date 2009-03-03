@@ -125,7 +125,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     m_caseDataProvider = caseDataProvider;
     m_parentWizard = parentWizard;
 
-    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0") + resultManager.getControlModel().getCalculationUnit().getName() ); //$NON-NLS-1$
+    setTitle( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0"), resultManager.getControlModel().getCalculationUnit().getName() )); //$NON-NLS-1$
 
     if( m_unitFolder.exists() )
       setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.1"), WARNING ); //$NON-NLS-1$

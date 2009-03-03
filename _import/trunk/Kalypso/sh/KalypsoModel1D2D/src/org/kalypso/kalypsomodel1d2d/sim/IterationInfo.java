@@ -342,11 +342,11 @@ public class IterationInfo
         ObservationFeatureFactory.toFeature( m_obs, obsFeature );
         GmlSerializer.serializeWorkspace( obsFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
 
-        status = StatusUtilities.createStatus( IStatus.OK, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.18" ) + obsName + Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.19" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+        status = StatusUtilities.createStatus( IStatus.OK, String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.18" ), obsName ), null ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Throwable e )
       {
-        status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20" ) + obsName, e ); //$NON-NLS-1$
+        status = StatusUtilities.createStatus( IStatus.ERROR, String.format(Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20" ), obsName), e ); //$NON-NLS-1$
       }
     }
 

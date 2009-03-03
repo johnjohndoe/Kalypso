@@ -283,7 +283,7 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" ) + m_inputFile.getName() + ") : " ); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.printCurrentInterim( String.format(Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" ), m_inputFile.getName())); //$NON-NLS-1$
 
       conv.parse( is );
 
