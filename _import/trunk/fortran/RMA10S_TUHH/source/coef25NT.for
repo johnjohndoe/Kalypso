@@ -549,18 +549,6 @@ CIPK MAY04 RESET ELEMENT INFLOW
         SIDFQ=0.
       ENDIF
       SIDFQQ=SIDF(NN)
-      
-!pipesurfaceconnection
-!      if (ConnectedElt(nn) /= 0) then
-!        findPS: do ps = 1, maxps
-!          if (PipeSurfConn(ps)%SurfElt == nn) then
-!            PS_ID = ps
-!            exit findPS
-!          endif
-!        enddo findPS
-!        sidft = - PipeSurfConn(PS_ID)%flow / area (nn)
-!      endif
-!pipesurfaceconnection
 
 cipk jan98
       AREA(NN)=0.
@@ -1311,7 +1299,7 @@ CIPK AUG06 ADD QIN
 
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
       IF (H + AZER > ABED) THEN
-        SIDFT = sidft + SIDFQ + SIDFF (NN)
+        SIDFT = SIDFQ + SIDFF (NN)
         SIDFQQ = SIDFQQ + SIDFF (NN)
       ELSE
         SIDFT = sidft + SIDFF (NN)
