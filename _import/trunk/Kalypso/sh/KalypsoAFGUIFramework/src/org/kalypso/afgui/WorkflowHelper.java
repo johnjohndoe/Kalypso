@@ -79,15 +79,11 @@ public class WorkflowHelper
   public static List<ITask> getWorkflowTasks( final IProject project ) throws CoreException
   {
     if( project == null )
-    {
       return null;
-    }
 
     final IWorkflow workflow = getWorkflow( project );
     if( workflow == null )
-    {
       return null;
-    }
 
     return workflow.getTasks();
   }
@@ -103,16 +99,12 @@ public class WorkflowHelper
   public static IWorkflow getWorkflow( final IProject project ) throws CoreException
   {
     if( project == null )
-    {
       return null;
-    }
 
     /* Get the workflow. */
     final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( project );
     if( workflowNature == null )
-    {
       return null;
-    }
 
     return workflowNature.getCurrentWorklist();
   }
@@ -129,9 +121,7 @@ public class WorkflowHelper
   {
     final IWorkflow workflow = getWorkflow( workflow_id );
     if( workflow == null )
-    {
       return null;
-    }
 
     return workflow.getTasks();
   }
@@ -160,9 +150,7 @@ public class WorkflowHelper
   public static ITask getDefaultTask( final IWorkflow workflow )
   {
     if( workflow == null )
-    {
       return null;
-    }
 
     return workflow.getDefaultTask();
   }
@@ -220,18 +208,14 @@ public class WorkflowHelper
 
         /* If it is contained in the current task group, return it. */
         if( taskGroup.getTasks().contains( taskToFind ) )
-        {
           return taskGroup;
-        }
 
         /* Otherwise, find the task in the task groups of this task group. */
         final ITaskGroup foundTaskGroup = findTaskGroup( taskGroup.getTasks(), taskToFind );
 
         /* If found, return it. */
         if( foundTaskGroup != null )
-        {
           return foundTaskGroup;
-        }
 
         /* If not, check the next task of the current list. */
         continue;
@@ -251,9 +235,7 @@ public class WorkflowHelper
   public static ITask findTask( final List<ITask> tasks, final String uri )
   {
     if( tasks == null || tasks.size() == 0 || uri == null )
-    {
       return null;
-    }
 
     for( int i = 0; i < tasks.size(); i++ )
     {
@@ -265,17 +247,13 @@ public class WorkflowHelper
 
         final ITask foundTask = findTask( taskGroup.getTasks(), uri );
         if( foundTask != null )
-        {
           return foundTask;
-        }
 
         continue;
       }
 
       if( task.getURI().equals( uri ) )
-      {
         return task;
-      }
 
       continue;
     }
