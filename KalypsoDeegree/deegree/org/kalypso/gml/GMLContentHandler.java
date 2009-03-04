@@ -48,12 +48,16 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -64,6 +68,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -79,7 +84,7 @@ import org.xml.sax.XMLReader;
  * hierarchy from it.<br>
  * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
  * property-values to their corresponding {@link IMarshallingTypeHandler}s.
- *
+ * 
  * @author Andreas von Doemming
  */
 public class GMLContentHandler extends DelegateContentHandler implements UnmarshallResultEater
@@ -119,7 +124,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     m_xmlReader = xmlReader;
     m_context = context;
     if( schemaLocations != null )
+    {
       m_schemaLocations.putAll( schemaLocations );
+    }
 
     m_parentHandler = m_xmlReader.getContentHandler();
   }
@@ -149,9 +156,13 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
     final QName qname = new QName( uri, localName );
     if( m_scopeFeature == null || m_scopeProperty instanceof IRelationType )
+    {
       startFeature( atts, qname );
+    }
     else
+    {
       startProperty( uri, localName, qName, atts, qname );
+    }
   }
 
   private void startProperty( final String uri, final String localName, final String qName, final Attributes atts, final QName qname ) throws SAXException
@@ -173,17 +184,21 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       final IValuePropertyType vpt = (IValuePropertyType) pt;
       if( vpt.getTypeHandler() instanceof ISimpleMarshallingTypeHandler )
+      {
         m_simpleContent = new StringBuffer();
+      }
       else
+      {
         startValueProperty( uri, localName, qName, atts, vpt );
+      }
     }
-    else if( pt instanceof IRelationType )// its a relation
-      startXLinkedFeature( atts, feature, (IRelationType) pt );
-    else
+    else if( pt instanceof IRelationType )
     {
+      startXLinkedFeature( atts, feature, (IRelationType) pt );
+    }
+    else
       /* Should never happen. either its a value or a relation. */
       throw new SAXException( "Unknown IPropertyType instance: " + pt );
-    }
   }
 
   private void startValueProperty( final String uri, final String localName, final String qName, final Attributes atts, final IValuePropertyType vpt ) throws SAXException
@@ -230,12 +245,14 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
     try
     {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final URL locationHint = m_schemaLocations.get( namespace );
-      final GMLSchema schema = schemaCatalog.getSchema( namespace, m_version, locationHint );
+      final GMLSchema schema = loadSchema( namespace );
+      if( schema == null )
+        throw new SAXParseException( "Unknown schema for namespace: " + namespace, getLocator() );
 
       if( m_version == null )
+      {
         m_version = schema.getGMLVersion();
+      }
 
       m_localSchemaCache.put( namespace, schema );
 
@@ -246,6 +263,38 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       final Exception targetException = (Exception) e.getTargetException();
       targetException.printStackTrace();
       throw new SAXParseException( "Unknown schema for namespace: " + namespace, getLocator(), targetException );
+    }
+  }
+
+  private GMLSchema loadSchema( final String namespace ) throws InvocationTargetException
+  {
+    final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    final URL locationHint = m_schemaLocations.get( namespace );
+
+    // HACK: we switch the default here to be 3.1.1; probably breaks KalypsoHydrologie.... please verify
+    // Reason: this is needed in order to load GML from WFS: WFS is always GML3
+    final String version = m_version == null ? "3.1.1" : m_version;
+
+    try
+    {
+      final GMLSchema schema = schemaCatalog.getSchema( namespace, version, null );
+      if( locationHint == null || schema != null )
+        return schema;
+    }
+    catch( final InvocationTargetException ite )
+    {
+      // Log it, so it's not forgotten
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to load schema from catalog: " + namespace, null );
+      KalypsoDeegreePlugin.getDefault().getLog().log( status );
+    }
+
+    try
+    {
+      return GMLSchemaFactory.createGMLSchema( version, locationHint );
+    }
+    catch( final GMLSchemaException e )
+    {
+      throw new InvocationTargetException( e );
     }
   }
 
@@ -297,7 +346,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
 
     final Feature childFE = FeatureFactory.createFeature( m_scopeFeature, (IRelationType) m_scopeProperty, fid, featureType, false );
     if( m_scopeFeature != null )
+    {
       FeatureHelper.addChild( m_scopeFeature, (IRelationType) m_scopeProperty, childFE );
+    }
 
     m_scopeFeature = childFE;
 
@@ -336,7 +387,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
       final Feature parent = m_scopeFeature.getOwner();
       /* If the root gets closed we know the result feature. */
       if( parent == null )
+      {
         m_rootFeature = m_scopeFeature;
+      }
 
       m_scopeFeature = parent;
       setDelegate( null );
@@ -358,9 +411,13 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   public void characters( final char[] ch, final int start, final int length ) throws SAXException
   {
     if( m_simpleContent == null )
+    {
       super.characters( ch, start, length );
+    }
     else
+    {
       m_simpleContent.append( ch, start, length );
+    }
   }
 
   /**
@@ -370,7 +427,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
   public void ignorableWhitespace( final char[] ch, final int start, final int len )
   {
     if( m_simpleContent != null )
+    {
       m_simpleContent.append( ch, start, len );
+    }
   }
 
   public Feature getRootFeature( ) throws GMLException
@@ -424,9 +483,13 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     {
       final Object value = simpleHandler.convertToJavaValue( simpleString );
       if( m_scopeProperty.isList() )
+      {
         ((List) m_scopeFeature.getProperty( m_scopeProperty )).add( value );
+      }
       else
+      {
         m_scopeFeature.setProperty( m_scopeProperty, value );
+      }
     }
     catch( final Exception e )
     {
@@ -465,7 +528,9 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
         list.add( value );
       }
       else
+      {
         m_scopeFeature.setProperty( m_scopeProperty, value );
+      }
     }
     finally
     {

@@ -46,12 +46,15 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.org.xml.sax.DelegateContentHandler;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -72,7 +75,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * All the rest of parsing is delegated to the {@link GMLContentHandler} content handler.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class GMLDocumentContentHandler extends DelegateContentHandler
@@ -120,7 +123,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
       /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
       if( m_schemaLocationHint != null )
+      {
         namespaces.put( uri, m_schemaLocationHint );
+      }
 
       setDelegate( new GMLContentHandler( m_xmlReader, m_context, namespaces ) );
     }
@@ -162,7 +167,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
           // make sure that all dependent schemas are loaded
           final GMLSchema additionalSchema = loadGMLSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
           if( gmlSchema != null )
+          {
             gmlSchema.addAdditionalSchema( additionalSchema );
+          }
         }
       }
     }
@@ -188,36 +195,39 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
       // 2. try : from uri + schemalocation attributes
       if( schema == null )
       {
-        final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, context );
-        final URL schemaLocation = namespaces.get( uri );
-
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        schema = schemaCatalog.getSchema( uri, gmlVersion, schemaLocation );
+        schema = schemaCatalog.getSchema( uri, gmlVersion, null );
       }
     }
-    catch( final Exception e )
+    catch( final InvocationTargetException e )
     {
       /* Log it, because the following SaxException eats the inner exception */
-      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to load schema from catalog: " + uri, null );
+      KalypsoDeegreePlugin.getDefault().getLog().log( status );
+
       if( schema == null )
+      {
         schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
             + ") (schemaLocation was " + schemaLocationString + "): ", e ) );
+      }
     }
 
-    // 3. try
+    // 3. try: if we have a schemaLocation, load from there bt: do not put into cache!
     if( schema == null )
     {
-      try
+      final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, context );
+      final URL schemaLocation = namespaces.get( uri );
+      if( schemaLocation != null )
       {
-        final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        schema = schemaCatalog.getSchema( uri.toString(), (String) null );
-      }
-      catch( final Exception e )
-      {
-        /* Log it, because the following SaxException eats the innner exception */
-        KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
-            + ") (schemaLocation was " + schemaLocationString + ")", e ) );
+        try
+        {
+          schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
+        }
+        catch( final GMLSchemaException e )
+        {
+          final String msg = String.format( "Could not load schema (namespace=%s) from it's schemaLocation: %s", uri, schemaLocation );
+          throw new SAXException( msg, e );
+        }
       }
     }
 
