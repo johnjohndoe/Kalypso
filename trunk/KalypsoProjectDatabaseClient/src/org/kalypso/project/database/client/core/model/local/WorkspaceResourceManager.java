@@ -48,6 +48,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
@@ -65,6 +66,64 @@ public class WorkspaceResourceManager
 
   private WorkspaceResourceManager( )
   {
+    final IResourceChangeListener changeListener = new IResourceChangeListener()
+    {
+      @Override
+      public void resourceChanged( final IResourceChangeEvent event )
+      {
+        if( IResourceChangeEvent.POST_CHANGE != event.getType() )
+          return;
+
+        final IResourceDelta delta = event.getDelta();
+        final IResourceDelta[] children = delta.getAffectedChildren();
+        for( final IResourceDelta child : children )
+        {
+          final IResource resource = child.getResource();
+          if( !(resource instanceof IProject) )
+          {
+            continue;
+          }
+
+          if( !containsRelevantChanges( child ) )
+          {
+            continue;
+          }
+
+          final IProject p = (IProject) resource;
+
+          final ILocalProject[] projects = getProjects();
+          for( final ILocalProject project : projects )
+          {
+            if( project.equals( p ) )
+            {
+              try
+              {
+                try
+                {
+                  // FIXME: with this call, every(!) project automatically gets the remote-nature...
+                  // this is not allowed!
+                  final IRemoteProjectPreferences remotePreferences = project.getRemotePreferences();
+                  if( remotePreferences != null )
+                  {
+                    remotePreferences.setModified( true );
+                  }
+                  break;
+                }
+                catch( final IllegalStateException e )
+                {
+                }
+              }
+              catch( final CoreException e )
+              {
+                KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+              }
+            }
+          }
+        }
+      }
+    };
+
+    ResourcesPlugin.getWorkspace().addResourceChangeListener( changeListener );
   }
 
   public static WorkspaceResourceManager getInstance( )
@@ -77,75 +136,18 @@ public class WorkspaceResourceManager
     return m_manager;
   }
 
-  private final IResourceChangeListener m_changeListener = new IResourceChangeListener()
+  protected boolean containsRelevantChanges( final IResourceDelta delta )
   {
-    @Override
-    public void resourceChanged( final IResourceChangeEvent event )
+    final IResourceDelta[] children = delta.getAffectedChildren();
+    for( final IResourceDelta child : children )
     {
-      if( IResourceChangeEvent.POST_CHANGE != event.getType() )
-        return;
-
-      final IResourceDelta delta = event.getDelta();
-      final IResourceDelta[] children = delta.getAffectedChildren();
-      for( final IResourceDelta child : children )
-      {
-        final IResource resource = child.getResource();
-        if( !(resource instanceof IProject) )
-        {
-          continue;
-        }
-
-        if( !containsRelevantChanges( child ) )
-        {
-          continue;
-        }
-
-        final IProject p = (IProject) resource;
-
-        final ILocalProject[] projects = getProjects();
-        for( final ILocalProject project : projects )
-        {
-          if( project.equals( p ) )
-          {
-            try
-            {
-              try
-              {
-                // FIXME: with this call, every(!) project automatically gets the remote-nature...
-                // this is not allowed!
-                final IRemoteProjectPreferences remotePreferences = project.getRemotePreferences();
-                if( remotePreferences != null )
-                {
-                  remotePreferences.setModified( true );
-                }
-                break;
-              }
-              catch( final IllegalStateException e )
-              {
-              }
-            }
-            catch( final CoreException e )
-            {
-              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-            }
-          }
-        }
-      }
+      final IResource resource = child.getResource();
+      final String name = resource.getName();
+      if( !".settings".equalsIgnoreCase( name ) )
+        return true;
     }
-
-    private boolean containsRelevantChanges( final IResourceDelta delta )
-    {
-      final IResourceDelta[] children = delta.getAffectedChildren();
-      for( final IResourceDelta child : children )
-      {
-        final IResource resource = child.getResource();
-        final String name = resource.getName();
-        if( !".settings".equalsIgnoreCase( name ) )
-          return true;
-      }
-      return false;
-    }
-  };
+    return false;
+  }
 
   protected ILocalProject[] getProjects( )
   {
