@@ -1,10 +1,10 @@
 package org.kalypso.ogc.wfs;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -19,10 +19,8 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.model.filterencoding.capabilities.Operator;
@@ -39,12 +37,13 @@ import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -52,7 +51,7 @@ import org.xml.sax.SAXException;
 
 /**
  * An WebFeatureServiceClient. Implements the basic operations to access an OGC-WebFeatureService.
- *
+ * 
  * @author Gernot Belger
  */
 public class WFSClient
@@ -103,6 +102,8 @@ public class WFSClient
 
   /** All Feature types supported by this WFS. */
   private final Map<QName, WFSFeatureType> m_featureTypes = new HashMap<QName, WFSFeatureType>();
+
+  private final Map<WFSFeatureType, IFeatureType> m_schemaHash = new HashMap<WFSFeatureType, IFeatureType>();
 
   public WFSClient( final URL wfsURL )
   {
@@ -179,7 +180,9 @@ public class WFSClient
         throw new IllegalArgumentException( "WFS-URL contains wrong service parameter: " + serviceName );
     }
     else
+    {
       params.put( URL_PARAM_SERVICE, URL_PARAM_SERVICE_DEFAULT );
+    }
 
     /* VERSION */
     if( params.containsKey( URL_PARAM_VERSION ) )
@@ -189,7 +192,9 @@ public class WFSClient
         throw new IllegalArgumentException( "WFS-URL contains unsupported version parameter: " + version );
     }
     else
+    {
       params.put( URL_PARAM_VERSION, URL_PARAM_VERSION_DEFAULT );
+    }
 
     /* REQUEST */
     if( params.containsKey( URL_PARAM_REQUEST ) )
@@ -199,7 +204,9 @@ public class WFSClient
         throw new IllegalArgumentException( "WFS-URL contains already another request parameter: " + request );
     }
     else
+    {
       params.put( URL_PARAM_REQUEST, OPERATION_GET_CAPABILITIES );
+    }
 
     return UrlUtilities.addQuery( wfsURL, params );
   }
@@ -214,26 +221,16 @@ public class WFSClient
     return m_featureTypes.get( name );
   }
 
-  // TODO: configure with general eclipse settings (proxy etc.)
   private static HttpClient createHttpClient( final URL url )
   {
-    final HttpClient httpClient = new HttpClient();
+    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 60000, url, 3 );
 
-    final HttpClientParams clientPars = new HttpClientParams();
-    clientPars.setConnectionManagerTimeout( 60000 );
-
-    httpClient.setParams( clientPars );
-
-    // TODO: would like to use that one, but deegree links against another version of HttpClient,
-    // so this will lead to an linkage-error
-// WebUtils.enableProxyUsage( httpClient, url );
-
-    return httpClient;
+    return client;
   }
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   *
+   * 
    * @return All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
@@ -242,19 +239,27 @@ public class WFSClient
 
     final SpatialOperator[] spatialOperators = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getSpatialOperators();
     for( final SpatialOperator spatialOperator : spatialOperators )
+    {
       operators.add( spatialOperator.getName() );
+    }
 
     final QualifiedName[] geometryOperands = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getGeometryOperands();
     for( final QualifiedName qualifiedName : geometryOperands )
+    {
       operators.add( qualifiedName.getLocalName() );
+    }
 
     final Operator[] arithmeticOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getArithmeticOperators();
     for( final Operator operator : arithmeticOperators )
+    {
       operators.add( operator.getName() );
+    }
 
     final Operator[] comparisonOperators = m_wfsCapabilities.getFilterCapabilities().getScalarCapabilities().getComparisonOperators();
     for( final Operator operator : comparisonOperators )
+    {
       operators.add( operator.getName() );
+    }
 
     return operators.toArray( new String[] {} );
   }
@@ -333,7 +338,9 @@ public class WFSClient
 
     final Map<String, String> params = UrlUtilities.parseQuery( describeUrl );
     if( !params.containsKey( URL_PARAM_SERVICE ) )
+    {
       params.put( URL_PARAM_SERVICE, URL_PARAM_SERVICE_DEFAULT );
+    }
 
     params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
     params.put( URL_PARAM_REQUEST, OPERATION_DESCRIBE_FEATURE_TYPE );
@@ -388,37 +395,35 @@ public class WFSClient
 
       /* Create getFeature URL */
       final WFSFeatureType featureType = getFeatureType( name );
-      final URL getUrl = findPostOperationURL( WFSClient.OPERATION_GET_FEATURE );
-      if( getUrl == null )
-      {
-        final String msg = String.format( "WFS does not support HTTP-GET for '%s'", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
-        throw new IllegalStateException( msg );
-      }
+// final URL getUrl = findPostOperationURL( WFSClient.OPERATION_GET_FEATURE );
+// if( getUrl == null )
+// {
+// final String msg = String.format( "WFS does not support HTTP-GET for '%s'", WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE
+      // );
+// throw new IllegalStateException( msg );
+// }
 
       final QualifiedName qname = featureType.getName();
 
-      final Map<String, String> params = UrlUtilities.parseQuery( getUrl );
-      if( !params.containsKey( URL_PARAM_SERVICE ) )
-        params.put( URL_PARAM_SERVICE, URL_PARAM_SERVICE_DEFAULT );
+      final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
+// }
 
-      params.put( URL_PARAM_SERVICE, m_wfsCapabilities.getVersion() );
-      params.put( URL_PARAM_REQUEST, OPERATION_DESCRIBE_FEATURE_TYPE );
+      params.put( URL_PARAM_SERVICE, "WFS" );
+      params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
+      params.put( URL_PARAM_REQUEST, OPERATION_GET_FEATURE );
       params.put( PARAM_DESCRIBE_FEATURE_TYPE_FORMAT, PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT );
       params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, qname.getNamespace().toString() );
       params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, qname.getLocalName() );
 
-      /* Create Post XML */
-      final StringBuffer sb = new StringBuffer();
-      final Formatter formatter = new Formatter( sb );
-      formatGetFeatureRequestPOST( formatter, name, filter, maxFeatures );
-      formatter.close();
-
       /* Post the request */
-      final PostMethod postMethod = new PostMethod( getUrl.toURI().toString() );
-      final RequestEntity requestEntity = new StringRequestEntity( sb.toString(), "text/xml", "UTF-8" );
-      postMethod.setRequestEntity( requestEntity );
+      final URL url = getGetUrl( name, params );
+      final GetMethod getMethod = new GetMethod( url.toURI().toString() );
 
-      final int statusCode = m_httpClient.executeMethod( postMethod );
+// final PostMethod postMethod = new PostMethod( getUrl.toURI().toString() );
+// final RequestEntity requestEntity = new StringRequestEntity( sb.toString(), "text/xml", "UTF-8" );
+// postMethod.setRequestEntity( requestEntity );
+
+      final int statusCode = m_httpClient.executeMethod( getMethod );
       if( statusCode != 200 )
       {
         // REMARK: with OGC-Services, it's always 200, even on error...
@@ -426,7 +431,10 @@ public class WFSClient
         throw new HttpException( "Connection error: " + statusCode );
       }
 
-      inputStream = new BufferedInputStream( postMethod.getResponseBodyAsStream() );
+      final String responseBodyAsString = getMethod.getResponseBodyAsString();
+      FileUtils.writeStringToFile( new File( "C:\\temp\\blubb.gml" ), responseBodyAsString, "UTF-8" );
+
+      inputStream = new BufferedInputStream( getMethod.getResponseBodyAsStream() );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, null, null );
       inputStream.close();
@@ -476,6 +484,26 @@ public class WFSClient
     }
   }
 
+  public URL getGetUrl( final QName name, final Map<String, String> params ) throws MalformedURLException
+  {
+    final WFSFeatureType featureType = getFeatureType( name );
+    final URL describeUrl = findGetOperationURL( WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
+    if( describeUrl == null )
+      throw new IllegalStateException( "WFS does not support GET for " + WFSClient.OPERATION_DESCRIBE_FEATURE_TYPE );
+
+    final QualifiedName qname = featureType.getName();
+
+    final String namespaceUri = qname.getNamespace().toString();
+    final String prefix = qname.getPrefix();
+    final String namespaceValue = String.format( "xmlns(%s=%s)", prefix, namespaceUri );
+    params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, namespaceValue );
+
+    final String typenameValue = String.format( "%s:%s", prefix, qname.getLocalName() );
+    params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, typenameValue );
+
+    return UrlUtilities.addQuery( describeUrl, params );
+  }
+
   /**
    * This function writes a GetFeature request XML into a given {@link Formatter}.<br>
    */
@@ -486,25 +514,37 @@ public class WFSClient
 
     final String version = m_wfsCapabilities.getVersion();
     if( version != null && version.length() > 0 )
+    {
       formater.format( " version=\"" + version + "\" " ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 //    formater.format( " xmlns:gml=\"http://www.opengis.net/gml\" " ); //$NON-NLS-1$
     formater.format( " xmlns:wfs=\"http://www.opengis.net/wfs\"" ); //$NON-NLS-1$
 //    formater.format( " xmlns:ogc=\"http://www.opengis.net/ogc\"" ); //$NON-NLS-1$
     if( maxFeatures != null )
+    {
       formater.format( " maxFeatures=\"%d\"", maxFeatures ); //$NON-NLS-1$
+    }
     formater.format( " >%n" ); //$NON-NLS-1$
 
     final String namespaceURI = ftQName.getNamespaceURI();
     final String localPart = ftQName.getLocalPart();
-    if( version == null ) // deegree1 gazetteer
+    if( version == null )
+    {
       formater.format( "<wfs:Query typeName=\"%s\">%n", localPart ); //$NON-NLS-1$
+    }
     else if( namespaceURI != null && namespaceURI.length() > 0 )
+    {
       formater.format( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
     else
+    {
       formater.format( "<wfs:Query typeName=\"%s\">%n", localPart ); //$NON-NLS-1$
+    }
 
     if( filter != null && filter.length() > 0 )
+    {
       formater.format( "%s%n", filter ); //$NON-NLS-1$
+    }
 
     formater.format( "</wfs:Query>%n" ); //$NON-NLS-1$
     formater.format( "</wfs:GetFeature>%n" ); //$NON-NLS-1$
@@ -514,18 +554,21 @@ public class WFSClient
   {
     try
     {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      if( m_schemaHash.containsKey( type ) )
+        return m_schemaHash.get( type );
 
       final QualifiedName name = type.getName();
       final QName qname = new QName( name.getNamespace().toString(), name.getLocalName() );
       final URL schemaLocation = operationDescribeFeatureType( qname );
 
-      final GMLSchema schema = schemaCatalog.getSchema( qname.getNamespaceURI(), "3.1.1", schemaLocation );
+      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", schemaLocation );
       final IFeatureType featureType = schema.getFeatureType( qname );
+
+      m_schemaHash.put( type, featureType );
 
       return featureType;
     }
-    catch( final InvocationTargetException e )
+    catch( final GMLSchemaException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
