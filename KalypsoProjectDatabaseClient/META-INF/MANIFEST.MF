@@ -15,6 +15,7 @@ Require-Bundle: org.kalypso.afgui;bundle-version="0.0.0";visibility:=reexport,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.project.database.client,
+ org.kalypso.project.database.client.core,
  org.kalypso.project.database.client.core.model.interfaces,
  org.kalypso.project.database.client.core.utils,
  org.kalypso.project.database.client.ui.project.database,

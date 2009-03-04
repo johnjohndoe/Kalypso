@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
@@ -255,9 +256,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   public IStatus getRemoteConnectionState( )
   {
     if( m_remote != null )
-    {
       return m_remote.getRemoteConnectionState();
-    }
 
     return StatusUtilities.createWarningStatus( "Laufzeiteinstellung verhindert Behandlung von Remote-Projekten" );
   }
@@ -274,5 +273,21 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     {
       listener.projectModelChanged();
     }
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#findProject(org.eclipse.core.resources.IProject)
+   */
+  @Override
+  public IProjectHandler findProject( final IProject project )
+  {
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler handler : projects )
+    {
+      if( handler.equals( project ) )
+        return handler;
+    }
+
+    return null;
   }
 }

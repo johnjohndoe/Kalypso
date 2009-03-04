@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.extension.IProjectDatabaseFilter;
 import org.kalypso.afgui.extension.IProjectHandler;
@@ -47,7 +48,7 @@ import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsList
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IProjectDatabaseModel
 {
@@ -64,4 +65,9 @@ public interface IProjectDatabaseModel
   public IProjectHandler[] getProjects( );
 
   public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter );
+
+  /**
+   * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
+   */
+  public IProjectHandler findProject( IProject project );
 }
