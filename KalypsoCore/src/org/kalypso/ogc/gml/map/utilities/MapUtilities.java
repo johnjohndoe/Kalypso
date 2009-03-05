@@ -244,6 +244,24 @@ public class MapUtilities
   }
 
   /**
+   * This method transforms the GM_Point to an AWT-Point.
+   * 
+   * @param mapPanel
+   *          The MapPanel of the map.
+   * @param p
+   *          The GM_Point.
+   */
+  public static Point retransform( final IMapPanel mapPanel, final GM_Position position )
+  {
+    final GeoTransform projection = mapPanel.getProjection();
+
+    final double x = position.getX();
+    final double y = position.getY();
+
+    return new Point( (int) projection.getDestX( x ), (int) projection.getDestY( y ) );
+  }
+
+  /**
    * This function transforms a distance in pixel to the world distance.
    * 
    * @param mapPanel
