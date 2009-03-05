@@ -380,7 +380,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
         if( node == null )
         {
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14") + station ) ); //$NON-NLS-1$
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( String.format(Messages.getString("org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.14"), station ))); //$NON-NLS-1$
           flowRel = null;
         }
         else if( buildingObs != null )
@@ -649,7 +649,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
         node.setDescription( desc );
 
         if( point == null )
-          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
+          throw new CoreException( StatusUtilities.createErrorStatus( String.format(Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard.19" ), station )) ); //$NON-NLS-1$
 
         node.setPoint( point );
       }

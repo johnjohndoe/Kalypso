@@ -109,8 +109,8 @@ public class ImportTrippleWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImportImport.TrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_ProfilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImportImport.TrippelWizard.3" ) ); //$NON-NLS-1$
+    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_ProfilePage.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.3" ) ); //$NON-NLS-1$
 
     addPage( m_ProfilePage );
   }
