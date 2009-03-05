@@ -90,7 +90,7 @@ public class WorkspaceResourceManager
           }
 
           final IProject p = (IProject) resource;
-
+          // FIXME: this is still aplied to projects that have nothing to do with the project database!
           final ILocalProject[] projects = getProjects();
           for( final ILocalProject project : projects )
           {
