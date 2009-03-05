@@ -50,29 +50,24 @@ import javax.xml.namespace.QName;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
- *
+ * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class CalculationUnit1D2D extends CalculationUnit implements ICalculationUnit1D2D
 {
   private final IFeatureWrapperCollection<ICalculationUnit> m_subCalculationUnits;
 
-  private final IFeatureWrapperCollection<IFENetItem> m_elements;
-
   private final List<IFENetItem> m_virtualElements;
 
   private Set<String> m_virtualMemberIDs;
-
-  private final Feature m_featureToBind;
 
   private final QName m_qnameToBind;
 
@@ -86,13 +81,9 @@ public class CalculationUnit1D2D extends CalculationUnit implements ICalculation
   public CalculationUnit1D2D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final QName subUnitPropQName, final Class<IFENetItem> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
-    m_featureToBind = featureToBind;
     m_qnameToBind = qnameToBind;
     m_subUnitPropQName = subUnitPropQName;
-    m_subCalculationUnits = Util.get( m_featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
-    m_elements = new FeatureWrapperCollection( m_featureToBind, IFE1D2DElement.class, IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-    ((FeatureWrapperCollection) m_elements).addSecondaryWrapper( IFELine.class );
-    m_elements.clear();
+    m_subCalculationUnits = Util.get( featureToBind, m_qnameToBind, m_subUnitPropQName, ICalculationUnit.class, true );
     m_virtualElements = new ArrayList<IFENetItem>();
     for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
       m_virtualElements.addAll( calculationUnit.getElements() );
