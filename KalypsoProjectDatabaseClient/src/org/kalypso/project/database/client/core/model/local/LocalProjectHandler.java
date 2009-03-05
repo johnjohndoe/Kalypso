@@ -118,9 +118,11 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
             return Status.OK_STATUS;
           }
         };
-
-        job.schedule();
-
+// FIXME
+//        job.schedule();
+        // TODO: use job.join instead!
+// FIXME: sometimes called from ui thread blocking everything for some time...
+        // encountered in 1df2d when switching from fenet to result map
         int count = 0;
         while( job.getState() != Job.NONE && count < 100 )
         {
