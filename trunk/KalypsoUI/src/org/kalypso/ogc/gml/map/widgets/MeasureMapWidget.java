@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This tool measures distances or areas on the map.
- * 
+ *
  * @author Gernot Belger
  */
 public class MeasureMapWidget extends AbstractWidget
@@ -224,10 +224,10 @@ public class MeasureMapWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     try
     {
