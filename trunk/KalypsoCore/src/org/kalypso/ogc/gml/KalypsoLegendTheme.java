@@ -141,6 +141,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
       }
       catch( final CoreException e )
       {
+        if( !e.getStatus().matches( IStatus.CANCEL ) )
+          e.printStackTrace();
+
         return e.getStatus();
       }
     }
