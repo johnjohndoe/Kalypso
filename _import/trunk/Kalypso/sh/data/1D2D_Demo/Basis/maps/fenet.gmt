@@ -5,7 +5,7 @@
         <class xmlns="">org.kalypso.kalypso1d2d.pjt:org.kalypso.kalypso1d2d.pjt.i18n.Messages</class>
     </mapv:translator>
     <mapv:layers>
-        <mapv:layer visible="true" name="Demo Strang" featurePath="#fid#root/flowRelationshipMember[_FlowRelation1D]" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="platform:/resource//1D2D_Demo/Basis/models/terrain.gml" xlink:type="simple">
+        <mapv:layer visible="true" name="Demo Strang" featurePath="#fid#root/flowRelationshipMember[_FlowRelation1D]" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../models/terrain.gml" xlink:type="simple">
             <templ:showChildren>true</templ:showChildren>
             <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
