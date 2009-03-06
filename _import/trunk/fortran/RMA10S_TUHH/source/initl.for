@@ -817,6 +817,8 @@ CIPK MAR01
         ConnectedElt(i) = 0
       enddo
       
+      allocate (StorageElts (1: MaxStorageElts))
+      
 
 !nis,nov06: allocating the 1D-2D-Transition-line-Factor array and initialization of that (at the beginning no scaling)
 !           in the coefs subroutines this factor is generally applied!

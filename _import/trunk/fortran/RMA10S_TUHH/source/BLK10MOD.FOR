@@ -1,6 +1,7 @@
       module BLK10MOD
       
       use ManholeDefinitions
+      use StorageElt
 
       !some general strings
       !--------------------
@@ -129,6 +130,7 @@
       !model dimension parameters
       !--------------------------
       integer (kind = 4) :: maxP, maxE, maxA, maxT, maxLT, maxps, ncl
+      integer (kind = 4) :: MaxStorageElts
       integer (kind = 4) :: np, ne, lp, le
       integer (kind = 4) :: npm, nem
       integer (kind = 4) :: nmat
@@ -246,10 +248,17 @@
       !-------------------------------
       integer (kind = 4) :: line (50, 350)
       integer (kind = 4) :: lmt (50)
+      !continuity line result values
+      !-----------------------------
+      real (kind = 8) :: Q_old (50) = 0.0d0
+      real (kind = 8) :: Q_current (50) = 0.0d0
       !meaning of the variables
       !------------------------
       !line    continuity line definition; stores all the nodes 
       !lmt     number of nodes within continuity line
+      !Q_old   discharge of prior time step
+      !Q_current
+      !        discharge of current time step
 
       !dimension transition data
       !-------------------------
@@ -276,6 +285,8 @@
       type (PipeSurfaceConnection), allocatable, 
      +                              dimension (:) :: PipeSurfConn
       integer (kind = 4), allocatable, dimension (:) :: ConnectedElt
+      
+      type (StorageElement), allocatable, dimension (:) :: StorageElts
 
       !input control parameters - elevations
       !-------------------------------------

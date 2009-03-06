@@ -6,7 +6,7 @@
 subroutine GETGEO1
 
 use BLK10MOD, only: &
-&   maxp, maxe, maxa, maxlt, maxps, &
+&   maxp, maxe, maxa, maxlt, maxps, maxStorageElts, &
 &   maxpolya, maxpolyb, maxpolyq, &
 &   ifile
 !meaning of the used variables
@@ -33,7 +33,7 @@ use parakalyps, only: &
 implicit none
 
 !NiS,mar06: adding declaration of hand-over-parameters between subroutines
-integer :: n, m, a, LT, PA, PQ, PB, ps
+integer :: n, m, a, LT, PA, PQ, PB, ps, mse
 
 !initialisations of the mesh size parameters
 !-------------------------------------------
@@ -60,16 +60,17 @@ pa = 0
 pq = 0
 pb = 0
 ps = 0
+mse = 0
 
 !call the model reading subroutine to examine the size of the geometry
-call RDKALYPS (N, M, A, PA, PQ, PB, LT, ps, 1)
+call RDKALYPS (N, M, A, PA, PQ, PB, LT, ps, mse, 1)
 
 !bring model input file to the beginning for next read
 rewind IFILE
 
 !some informational output
 write(*,*)' back from rdkalypso'
-write(*,*)' N,M,A,PA,PQ,PB,LT,PS = ',N,', ',M,', ',A,', ',PA, ', ', PQ,', ', PB,', ', LT, ', ', ps
+write(*,*)' N,M,A,PA,PQ,PB,LT,PS = ',N,', ',M,', ',A,', ',PA, ', ', PQ,', ', PB,', ', LT, ', ', ps, ', ', mse
 
 
 !ERROR - SUSPICIOUSLY LARGE NODE NUMBER OR ELEMENT NUMBER DETECTED
@@ -96,6 +97,8 @@ MAXP = MAXP + NodesToIntPol + NodesToIntPol
 MaxLT = LT
 !pipe surface connections
 maxps = ps
+!storage elements
+maxStorageElts = mse
 !maximum number of polynomial splitting at any node
 MaxPolyA = PA
 MaxPolyQ = PQ

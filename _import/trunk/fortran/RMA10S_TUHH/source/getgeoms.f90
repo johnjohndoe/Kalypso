@@ -145,7 +145,7 @@ save
 !local variables
 !---------------
 !NiS,jul06: Consistent data types for passing parameters
-integer :: n, m, a, lt, dummy1, dummy2, dummy3, dummy4
+integer :: n, m, a, lt, dummy1, dummy2, dummy3, dummy4, dummy5
 integer (kind = 4) :: k, i, j
 integer (kind = 4) :: na, n1, n2, n3
 integer (kind = 4) :: immt, translength
@@ -213,7 +213,7 @@ WRITE(*,*)' MaxE= ', MAXE
 !read the geometry from the file
 !-------------------------------
 !TODO: Why is there a check, whether the geometry file is present?
-if (ifile /= 0) call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, dummy4, 0)
+if (ifile /= 0) call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, dummy4, dummy5, 0)
 
 !write read continuity lines to the output file (*.out)
 !------------------------------------------------------

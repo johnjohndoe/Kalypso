@@ -595,6 +595,8 @@ C-
         ENDIF
 CIPK JUL01
         TOTAL(J) = SUMX - SUMY
+        Q_current (j) = Total(j)
+        
 cipk apr01
 CIPK JUL01
         IF(TOTAL(J) .NE. 0.) THEN

@@ -21,7 +21,8 @@ USE BLK10MOD, only: &
 &  delt, altm, alphasn, alpha, &
 &  sidff, &
 &  mxsedlay, &
-&  itransit, ndep, nref, dfct
+&  itransit, ndep, nref, dfct, &
+&  Q_old, Q_current
 !meaning of the variables
 !------------------------
 !niti                   number of steady state iterations
@@ -739,8 +740,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 !CIPK AUG95 ADD A CALL TO UPDATE MET VALUES
 !cipk oct02 move heatex to use projections for heat budget
 !C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
-
-
+  
   !get wave data, only required, if desired
   !----------------------------
   if ((lsand > 0 .or. lbed > 0) .and. iwvin > 0) call getwave
@@ -944,6 +944,12 @@ DynamicTimestepCycle: do n = 1, ncyc
 !----------------------------------------------------------------
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
+
+  !remember old discharges at lines
+  do i = 1, 50
+    Q_old (i) = Q_current (i)
+  enddo
+
 
   !Iterate transient calculation
   !-----------------------------

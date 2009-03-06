@@ -1,4 +1,4 @@
-SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, KSWIT)
+SUBROUTINE RDKALYPS(nodecnt, elcnt, arccnt, PolySplitCountA, PolySplitCountQ, PolySplitCountB, TLcnt, psConn, maxSE, KSWIT)
 !nis,feb07: Allow for counting the midside nodes of FFF elements
 !
 ! This Subroutine reads the model data to run FE-net-data in Kalypso-2D-format
@@ -43,6 +43,7 @@ use blk10mod , only: &
 &   cord, ao, &
 &   line, lmt, &
 &   translines, PipeSurfConn, ConnectedElt, &
+&   StorageElts, &
 &   vel, vold, vdot, vdoto, &
 &   iyrr, tett
 !meaning of the variables
@@ -179,7 +180,7 @@ implicit none
 integer (kind = 4), intent (in) :: kswit
 !output variables
 !-----------------
-integer (kind = 4), intent (out) :: nodecnt, elcnt, arccnt, tlcnt, psConn
+integer (kind = 4), intent (out) :: nodecnt, elcnt, arccnt, tlcnt, psConn, maxSE
 integer (kind = 4), intent (out) :: polysplitcounta, polysplitcountq, polysplitcountb
 !meaning of the variables
 !------------------------
@@ -192,6 +193,7 @@ integer (kind = 4), intent (out) :: polysplitcounta, polysplitcountq, polysplitc
 !arccnt           maximum necessary ID number of the arcs
 !tlcnt            maximum necessary ID number of the 1D/2D line-2-element transition constructs
 !psConn           maximum necessary ID number of pipe surface connections
+!maxSE            maximum necessary ID number of storage elements
 !polysplitcounta  maximum number of intersections for the A(h) polynomial
 !polysplitcountq  maximum number of intersections for the Q(h) (Schluesselkurve) polynomial
 !polysplitcountb  maximum number of intersections for the alpha/beta(h) polynomial
@@ -330,6 +332,7 @@ arccnt  = 0
 elcnt   = 0
 TLcnt   = 0
 psConn  = 0
+maxSE   = 0
 PolySplitCountA = 0
 PolySplitCountQ = 0
 PolySplitCountB = 0
@@ -622,14 +625,25 @@ reading: do
     ELSEIF (linie(1:2) == 'PS') then
       if (kswit == 1) then
         read (linie, '(a2,i10)') id_local, i
-        if (i>psConn) psConn = i
+        if (i > psConn) psConn = i
       else
         write(*,*) psconn
-        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn%SurfElt, PipeSurfConn%pipeElt
-        ConnectedElt (PipeSurfConn%SurfElt) = PipeSurfConn%pipeElt
-        ConnectedElt (PipeSurfConn%pipeElt) = PipeSurfConn%SurfElt
+        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%pipeElt
+        ConnectedElt (PipeSurfConn(i)%SurfElt) = PipeSurfConn(i)%pipeElt
+        ConnectedElt (PipeSurfConn(i)%pipeElt) = PipeSurfConn(i)%SurfElt
       endif
+    
+    ELSEIF (linie(1:2) == 'SE') then
+      if (kswit == 1) then
+        read (linie, '(a2,i10)') id_local, i
+        if (i > maxSE) maxSE= i
+      else
+        read (linie, '(a2,2i10)') id_local, i, StorageElts(i).ContinuityLineID
+      endif
+    
     endif
+    
+    
 
   ELSEIF (KSWIT == 2) THEN
 
