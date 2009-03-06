@@ -8,7 +8,6 @@
 	xmlns:wsrpw="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceProperties-1.2-draft-01.wsdl"
 	xmlns:wsrlw="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceLifetime-1.2-draft-01.wsdl" 
 	xmlns:wsdlpp="http://www.globus.org/namespaces/2004/10/WSDLPreprocessor"
-	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing"
 	xmlns:wsntw="http://docs.oasis-open.org/wsn/2004/06/wsn-WS-BaseNotification-1.2-draft-01.wsdl"
 	xmlns:wsbf="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd"
 	xmlns:wsbfw="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.wsdl"
@@ -41,21 +40,39 @@
 	xmlns:ows="http://www.opengeospatial.net/ows"
 	xmlns:wps="http://www.opengeospatial.net/wps"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/03/addressing"
+	xmlns:wsrl="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceLifetime-1.2-draft-01.xsd" 
 	xmlns:wsbf="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd">
    
 <!-- IMPORTS -->
+<import namespace="http://schemas.xmlsoap.org/ws/2004/03/addressing" location="../ws/addressing/WS-Addressing.xsd" />
 <xsd:import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd" schemaLocation="../wsrf/faults/WS-BaseFaults.xsd" />
+<xsd:import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-ResourceLifetime-1.2-draft-01.xsd" schemaLocation="../wsrf/lifetime/WS-ResourceLifetime.xsd" />
 <xsd:import namespace="http://www.opengeospatial.net/wps" schemaLocation="wps/0.4.0/wpsAll.xsd"/>
 <xsd:include schemaLocation="wpsExecute_gaja3d_0.4.xsd"/>
       
 <!-- RESOURCE PROPERTIES -->
 
-<xsd:element name="Gaja3dResourceProperties" type="tns:Gaja3dResourcePropertiesType"/>
-<xsd:complexType name="Gaja3dResourcePropertiesType">
-	<xsd:sequence>
-		<xsd:element ref="tns:_Gaja3dResourceProperty" minOccurs="0" maxOccurs="unbounded"/>
-	</xsd:sequence>
-</xsd:complexType>
+<xsd:element name="Gaja3dResourceProperties">
+	<xsd:complexType>
+		<xsd:sequence>
+			<xsd:element ref="tns:Boundary" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:Breaklines" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:DemGrid" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:DemPoints" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:DistanceTolerance" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:EdgeFilter" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:FeatureDetector" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:GridX" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:GridY" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:MaxArea" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:MinAngle" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:ModelTin" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:SmoothFilter" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="GramEndpointReference" type="wsa:EndpointReferenceType" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:element>
 
 </xsd:schema>
 </types>

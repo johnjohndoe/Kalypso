@@ -76,7 +76,7 @@ public class Client {
 	 "http://localhost:8080/services/Gaja3dResourceFactoryService";
 
 	private static final String EPR_FILENAME = "test.epr";
-	private static final boolean SAVE_EPR = false;
+	private static final boolean SAVE_EPR = true;
 	private static final boolean USE_SAVED_EPR = false;
 
 	public static final String BOUNDARY_FILENAME = "resources/boundary1.zip";

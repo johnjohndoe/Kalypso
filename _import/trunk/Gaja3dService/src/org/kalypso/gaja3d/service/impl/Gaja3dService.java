@@ -18,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 import org.globus.gsi.jaas.JaasSubject;
 import org.globus.wsrf.Resource;
 import org.globus.wsrf.ResourceContext;
-import org.globus.wsrf.container.Activator;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.security.SecurityManager;
 import org.kalypso.gaja3d.service.stubs.Breaklines;
@@ -38,34 +37,27 @@ import org.kalypso.gaja3d.service.stubs.MaxArea;
 import org.kalypso.gaja3d.service.stubs.MinAngle;
 import org.kalypso.gaja3d.service.stubs.ModelTin;
 import org.kalypso.gaja3d.service.stubs.SmoothFilter;
+import org.kalypso.service.wps.client.WPSRequest;
 import org.kalypso.service.wps.utils.WPSUtilities;
 import org.xml.sax.InputSource;
 
 public class Gaja3dService {
 
+	private static final Log LOGGER = LogFactory.getLog(Gaja3dService.class
+			.getName());
+
 	/**
-	 * System property must specify the WPS to delegate to
-	 */
-	private static final String WPS_URL = System
-			.getProperty("org.kalypso.service.wps.service");
-
-	private Log logger = LogFactory.getLog(Activator.class.getName());
-
-	/*
-	 * Private method that gets a reference to the resource specified in the
-	 * endpoint reference.
+	 * Gets a reference to the resource specified in the endpoint reference.
 	 */
 	private Gaja3dResource getResource() throws RemoteException {
 		Object resource = null;
 		try {
 			resource = ResourceContext.getResourceContext().getResource();
 		} catch (final Exception e) {
-			throw new RemoteException("", e);
+			throw new RemoteException("Could not find Gaja3d resource.", e);
 		}
 		return (Gaja3dResource) resource;
 	}
-
-	/* Implementation of service operations */
 
 	/**
 	 * This standard web method is automatically generated to give a full
@@ -87,7 +79,7 @@ public class Gaja3dService {
 
 			// call service
 			final String responseString = WPSUtilities.send(requestString,
-					WPS_URL);
+					WPSRequest.SYSTEM_PROP_WPS_ENDPOINT);
 
 			// create response
 			final InputSource is = new InputSource(new StringReader(
@@ -96,7 +88,7 @@ public class Gaja3dService {
 					.deserialize(is, Capabilities.class);
 			return capabilities;
 		} catch (final Exception e) {
-			throw new RemoteException("", e);
+			throw new RemoteException("Could not get capabilities.", e);
 		}
 	}
 
@@ -120,7 +112,7 @@ public class Gaja3dService {
 
 			// call service
 			final String responseString = WPSUtilities.send(requestString,
-					WPS_URL);
+					WPSRequest.SYSTEM_PROP_WPS_ENDPOINT);
 
 			// create response
 			final InputSource is = new InputSource(new StringReader(
@@ -129,7 +121,7 @@ public class Gaja3dService {
 					.deserialize(is, ProcessDescriptions.class);
 			return processDescriptions;
 		} catch (final Exception e) {
-			throw new RemoteException("", e);
+			throw new RemoteException("Could not get process descriptions.", e);
 		}
 	}
 
@@ -151,7 +143,7 @@ public class Gaja3dService {
 
 			// call service
 			final String responseString = WPSUtilities.send(requestString,
-					WPS_URL);
+					WPSRequest.SYSTEM_PROP_WPS_ENDPOINT);
 
 			// create response
 			final InputSource is = new InputSource(new StringReader(
@@ -160,7 +152,7 @@ public class Gaja3dService {
 					.deserialize(is, ExecuteResponseType.class);
 			return executeResponse;
 		} catch (final Exception e) {
-			throw new RemoteException("", e);
+			throw new RemoteException("Problem during execution", e);
 		}
 	}
 
@@ -261,7 +253,7 @@ public class Gaja3dService {
 	 * @throws java.rmi.RemoteException
 	 */
 	public org.kalypso.gaja3d.service.stubs.CreateTinResponseType execute_createTin(
-			org.kalypso.gaja3d.service.stubs.CreateTinParametersType parameters)
+			final org.kalypso.gaja3d.service.stubs.CreateTinParametersType parameters)
 			throws RemoteException {
 		final Gaja3dResource resource = getResource();
 		logSecurityInfo("execute_createTin", resource);
@@ -300,46 +292,46 @@ public class Gaja3dService {
 		return createTinResponseType;
 	}
 
-	public void logSecurityInfo(final String methodName, final Resource resource) {
-		Subject subject;
-		logger.debug("SECURITY INFO FOR METHOD '" + methodName + "'");
+	private void logSecurityInfo(final String methodName,
+			final Resource resource) {
+		LOGGER.debug("SECURITY INFO FOR METHOD '" + methodName + "'");
 
 		// Print out the caller
-		String identity = SecurityManager.getManager().getCaller();
-		logger.debug("The caller is:" + identity);
+		final String identity = SecurityManager.getManager().getCaller();
+		LOGGER.debug("The caller is:" + identity);
 
 		// Print out the invocation subject
-		subject = JaasSubject.getCurrentSubject();
-		logger.debug("INVOCATION SUBJECT");
-		logger.debug(subject == null ? "NULL" : subject.toString());
+		Subject subject = JaasSubject.getCurrentSubject();
+		LOGGER.debug("INVOCATION SUBJECT");
+		LOGGER.debug(subject == null ? "NULL" : subject.toString());
 
 		try {
 			// Print out service subject
-			logger.debug("SERVICE SUBJECT");
+			LOGGER.debug("SERVICE SUBJECT");
 			subject = SecurityManager.getManager().getServiceSubject();
-			logger.debug(subject == null ? "NULL" : subject.toString());
-		} catch (Exception e) {
-			logger.debug("Unable to obtain service subject");
+			LOGGER.debug(subject == null ? "NULL" : subject.toString());
+		} catch (final Exception e) {
+			LOGGER.debug("Unable to obtain service subject");
 		}
 
 		try {
 			// Print out system subject
-			logger.debug("SYSTEM SUBJECT");
+			LOGGER.debug("SYSTEM SUBJECT");
 			subject = SecurityManager.getManager().getSystemSubject();
-			logger.debug(subject == null ? "NULL" : subject.toString());
-		} catch (Exception e) {
-			logger.debug("Unable to obtain system subject");
+			LOGGER.debug(subject == null ? "NULL" : subject.toString());
+		} catch (final Exception e) {
+			LOGGER.debug("Unable to obtain system subject");
 		}
 
-		logger.debug("RESOURCE SUBJECT");
+		LOGGER.debug("RESOURCE SUBJECT");
 		if (resource == null) {
-			logger.debug("No resource");
+			LOGGER.debug("No resource");
 		} else {
 			try {
 				subject = SecurityManager.getManager().getSubject(resource);
-				logger.debug(subject == null ? "NULL" : subject.toString());
-			} catch (Exception e) {
-				logger.debug("Unable to obtain resource subject");
+				LOGGER.debug(subject == null ? "NULL" : subject.toString());
+			} catch (final Exception e) {
+				LOGGER.debug("Unable to obtain resource subject");
 			}
 		}
 	}

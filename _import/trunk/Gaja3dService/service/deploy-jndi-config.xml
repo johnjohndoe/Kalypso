@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jndiConfig xmlns="http://wsrf.globus.org/jndi/config">
 
-<!-- Instance service -->
+	<!-- Instance service -->
 	<service name="Gaja3dService">
 		<resource name="home"
 			type="org.kalypso.gaja3d.service.impl.Gaja3dResourceHome">
@@ -13,7 +13,7 @@
 				</parameter>
 				<parameter>
 					<name>resourceKeyType</name>
-					<value>java.lang.Integer</value>
+					<value>java.lang.String</value>
 				</parameter>
 				<parameter>
 					<name>resourceKeyName</name>
@@ -23,14 +23,35 @@
 				</parameter>
 				<parameter>
 					<name>factory</name>
-					<value>org.globus.wsrf.jndi.BeanFactory
+					<value>
+						org.globus.wsrf.jndi.BeanFactory
 					</value>
+				</parameter>
+				<parameter>
+					<name>cacheLocation</name>
+					<value>
+						java:comp/env/services/Gaja3dService/cache
+					</value>
+				</parameter>
+			</resourceParams>
+		</resource>
+		<resource name="cache" type="org.globus.wsrf.utils.cache.LRUCache">
+			<resourceParams>
+				<parameter>
+					<name>factory</name>
+					<value>
+						org.globus.wsrf.jndi.BeanFactory
+					</value>
+				</parameter>
+				<parameter>
+					<name>timeout</name>
+					<value>120000</value>
 				</parameter>
 			</resourceParams>
 		</resource>
 	</service>
 
-<!-- Factory service -->
+	<!-- Factory service -->
 	<service name="Gaja3dResourceFactoryService">
 		<resourceLink name="home"
 			target="java:comp/env/services/Gaja3dService/home" />

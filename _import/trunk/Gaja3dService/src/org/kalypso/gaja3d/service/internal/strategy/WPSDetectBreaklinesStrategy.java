@@ -51,18 +51,14 @@ import java.util.Map;
 import net.opengeospatial.wps.IOValueType.ComplexValueReference;
 
 import org.apache.axis.AxisFault;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.kalypso.gaja3d.simulation.DetectBreaklinesSimulation;
 import org.kalypso.service.wps.client.WPSRequest;
 
 /**
- * This strategy calls a (possibly local) WPS to start the simulation
+ * This strategy calls a local WPS to start the simulation
  * 
  * @author kurzbach
  */
@@ -77,22 +73,6 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 
 	public URI detectBreaklines(final URI boundaryLocation,
 			final URI demGridLocation) throws RemoteException {
-		IFolder calcCaseFolder;
-		try {
-			/* Create folder for simulation */
-			final IProject project = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(DetectBreaklinesSimulation.ID);
-			if (!project.exists())
-				project.create(null);
-			if (!project.isOpen())
-				project.open(null);
-			calcCaseFolder = project.getFolder(new Path("simulation"));
-			if (!calcCaseFolder.exists())
-				calcCaseFolder.create(true, true, null);
-		} catch (final CoreException e) {
-			throw AxisFault.makeFault(e);
-		}
-
 		final Map<String, Object> inputs = new HashMap<String, Object>();
 		inputs.put(DetectBreaklinesSimulation.INPUT_BOUNDARY, boundaryLocation);
 		inputs.put(DetectBreaklinesSimulation.INPUT_DEM_GRID, demGridLocation);

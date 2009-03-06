@@ -24,6 +24,9 @@ public interface Gaja3dQNames {
 	public static final QName RP_MIN_ANGLE = new QName(NS, "MinAngle");
 	public static final QName RP_MAX_AREA = new QName(NS, "MaxArea");
 
+	public static final QName RP_GRAM_ENDPOINT_REFERENCE = new QName("",
+			"GramEndpointReference");
+
 	public static final QName RESOURCE_PROPERTIES = new QName(NS,
 			"Gaja3dResourceProperties");
 	public static final QName RESOURCE_REFERENCE = new QName(NS,
@@ -32,6 +35,7 @@ public interface Gaja3dQNames {
 	public static final QName[] ALL_RPS = new QName[] { RP_BOUNDARY,
 			RP_DEM_POINTS, RP_DEM_GRID, RP_BREAKLINES, RP_MODEL_TIN, RP_GRID_X,
 			RP_GRID_Y, RP_EDGE_FILTER, RP_SMOOTH_FILTER, RP_FEATURE_DETECTOR,
-			RP_DISTANCE_TOLERANCE, RP_MIN_ANGLE, RP_MAX_AREA };
+			RP_DISTANCE_TOLERANCE, RP_MIN_ANGLE, RP_MAX_AREA,
+			RP_GRAM_ENDPOINT_REFERENCE };
 
 }
