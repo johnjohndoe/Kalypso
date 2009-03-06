@@ -75,7 +75,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
@@ -212,14 +212,14 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final URL zipURl = m_templateProjectPage.getSelectedProject().getData();
     final IProject project = getNewProject();
-    // final String newName = project.getName();
+    final String newName = project.getName();
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( project.getWorkspace().getRoot() )
     {
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt", 80 );
+        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt - ", 90 );
         try
         {
           // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
@@ -230,13 +230,20 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
           ZipUtilities.unzip( zipURl, project.getLocation().toFile() );
           ProgressUtilities.worked( progress, 40 );
           project.open( progress.newChild( 10 ) );
-          // IMPORTANT: As the project was already open before, we need to refresh here, else
+
+          // IMPORTANT: As the project was already open once before, we need to refresh here, else
           // not all resources are up-to-date
           project.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 10 ) );
 
-          /* validate and configure all natures of this project */
+          /* Re-set name to new name, as un-zipping probably did change the internal name */
           final IProjectDescription description = project.getDescription();
+          description.setName( newName );
+          // HACK: in order to enforce the change, we also change the comment a bit, else
+          // the description does not recognise any change and the .project file does not get written
+          description.setComment( description.getComment() + " " ); //$NON-NLS-1$
+          project.setDescription( description, IResource.FORCE | IResource.AVOID_NATURE_CONFIG, progress.newChild( 10 ) );
 
+          /* validate and configure all natures of this project. */
           final String[] natureIds = description.getNatureIds();
           final IStatus validateNatureSetStatus = project.getWorkspace().validateNatureSet( natureIds );
           if( !validateNatureSetStatus.isOK() )
