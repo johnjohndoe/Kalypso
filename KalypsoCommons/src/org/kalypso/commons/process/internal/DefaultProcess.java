@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.FileObject;
@@ -111,7 +112,9 @@ public class DefaultProcess implements IProcess
 
     try
     {
-      final File workingDirFile = new File(new URI(workingDir.getName().getURI()));
+      final String uri = workingDir.getName().getURI();
+      final String encodedUri = URIUtil.encodePath( uri );
+      final File workingDirFile = new File(new URI(encodedUri));
       m_processBuilder.directory(workingDirFile);
     }
     catch( final URISyntaxException e )
@@ -136,7 +139,7 @@ public class DefaultProcess implements IProcess
 // final File exeFile = new File( workingDir, name );
 
     // try to convert bundle resouce url to local file url
-    final String exeUrlName = FileLocator.toFileURL( m_exeUrl ).toString();
+    final String exeUrlName = FileLocator.toFileURL( exeUrl ).toString();
     final FileObject exeFile = manager.resolveFile( exeUrlName );
     VFSUtilities.copyFileTo( exeFile, workingDir );
 
