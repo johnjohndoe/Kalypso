@@ -169,7 +169,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
    */
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
-    if( selected )
+    if( selected || m_image == null)
       return;
 
     try
