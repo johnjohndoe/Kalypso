@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
+import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -56,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- * 
+ *
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
@@ -92,7 +93,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   public BufferedRescaleMapLayer( final IMapPanel panel, final IKalypsoTheme theme, final ISchedulingRule rule, final boolean paintRunningTile, final long repaintMillis )
   {
     super( panel, theme );
-    
+
     m_paintRunningTile = paintRunningTile;
     m_repaintMillis = repaintMillis;
     m_rule = rule;
@@ -224,17 +225,26 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
   public void applyTile( final BufferedTile tile, final IStatus result )
   {
-    if( result.isOK() )
+    // Ignore cancel, can happen any time, i.e. the extent changes
+    if( result.matches( IStatus.CANCEL ) )
+      return;
+
+    // REMARK: this is not nice, but at the moment the only way to show the status to the user.
+    // It would be better, to keep an extra status on the layer, but this is not recognized by the outline
+    // This is a hint, that we need extra-tree elements for the outline, could be combined with this layer stuff.
+    // TODO: we also have a clash with any status already existing on the theme...
+    final IKalypsoTheme theme = getTheme();
+    if( theme instanceof AbstractKalypsoTheme )
+      ((AbstractKalypsoTheme) theme).setStatus( result );
+
+    m_tile = tile;
+    m_runningTile = null;
+    getMapPanel().invalidateMap();
+
+    if( !result.isOK() )
     {
-      m_tile = tile;
       m_runningTile = null;
 
-      getMapPanel().invalidateMap();
-    }
-    else if( result.matches( IStatus.CANCEL ) )
-      return;
-    else
-    {
       // TODO: do something with the status, so it gets seen in the outline!
       // Other idea: paint status into image, when this tile gets painted
       final Throwable exception = result.getException();

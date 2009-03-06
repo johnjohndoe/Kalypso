@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.utilities;
 
@@ -85,7 +85,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for map operations.
- * 
+ *
  * @author Holger Albert
  */
 public class MapUtilities
@@ -96,7 +96,7 @@ public class MapUtilities
 
   /**
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -120,7 +120,7 @@ public class MapUtilities
 
   /**
    * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param point
@@ -151,7 +151,7 @@ public class MapUtilities
         final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
-         * 
+         *
          * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
@@ -167,7 +167,7 @@ public class MapUtilities
         final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
-         * 
+         *
          * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
@@ -183,7 +183,7 @@ public class MapUtilities
         final GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
         /**
          * has no crs! see
-         * 
+         *
          * @link{JTSAdapter
          */
         myPoint.setCoordinateSystem( point.getCoordinateSystem() );
@@ -197,7 +197,7 @@ public class MapUtilities
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -227,7 +227,7 @@ public class MapUtilities
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -263,7 +263,7 @@ public class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param reference
@@ -283,7 +283,7 @@ public class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param distancePx
@@ -300,7 +300,7 @@ public class MapUtilities
 
   /**
    * This function sets the map scale, if different from the given map panel.
-   * 
+   *
    * @param scale
    *          The new map scale.
    */
@@ -346,7 +346,7 @@ public class MapUtilities
 
   /**
    * This function exports the legend of the given themes to a file. It seems that it has to be run in an UI-Thread.
-   * 
+   *
    * @param themes
    *          The themes to export.
    * @param file
@@ -410,7 +410,7 @@ public class MapUtilities
 
   /**
    * This function exports the legend of the given themes as swt image. Has to run in an UI-Thread. (TODO change this!)<br>
-   * 
+   *
    * @param themes
    *          The themes to export.
    * @param device
@@ -446,19 +446,26 @@ public class MapUtilities
     {
       progress.subTask( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.2" ) + theme.getName() + Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      /* Get the legend. */
-      final Image legend = theme.getLegendGraphic( font );
-      if( legend != null )
+      try
       {
-        legends.add( legend );
+        /* Get the legend. */
+        final Image legend = theme.getLegendGraphic( font );
+        if( legend != null )
+          legends.add( legend );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+
+        // FIXME: we cannot throw an exception here, else the whole legend fails if only one theme
+        // has an problem.
+        // Solutions:
+        // - do not allow theme to throw CoreException on 'getLegendGraphics' instead produce error icon+message
+        // - or, produce an error image here
       }
 
       ProgressUtilities.worked( progress, 100 );
     }
-
-    /* No legends there. Perhaps no theme did provide a legend. */
-    if( legends.size() == 0 )
-      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.4" ) ) ); //$NON-NLS-1$
 
     /* Calculate the size. */
     int width = 0;

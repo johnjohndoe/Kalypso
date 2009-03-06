@@ -86,7 +86,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * <p>
  * Implements common features to all KalypsoTheme's
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
@@ -144,7 +144,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the theme.
    * @param type
@@ -272,7 +272,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Fire the given event to my registered listeners.<br>
-   * 
+   *
    * @param invalidExtent
    *          The extent that is no more valid; <code>null</code> indicating that the complete theme should be
    *          repainted.
@@ -301,7 +301,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Returns the type of the theme by default. Override if needed.
-   * 
+   *
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
   public String getTypeContext( )
@@ -336,7 +336,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the icon set in the style (StyledLayerType), if any.<br>
    * This may be icons with a relative path or icons, which are defined via some URNs.<br>
-   * 
+   *
    * @return If an user icon or URN is defined, this icon will be returned.<br>
    *         If not, it checks the number of styles and rules.<br>
    *         If only one style and rule exists, there is a generated icon returned, representing the first rule.<br>
@@ -448,7 +448,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the resolved URL for the legend icon or null, if none could be created.
-   * 
+   *
    * @return The resolved URL for the legend icon or null, if none could be created.
    */
   private URL getLegendIconURL( )
@@ -493,7 +493,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * <strong>Note:</strong><br>
    * <br>
    * This has only an effect, if the user does not define an URL or URN and the theme has more then one style or rule.
-   * 
+   *
    * @return The default image descriptor.
    */
   protected ImageDescriptor getDefaultIcon( )
@@ -695,6 +695,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   public void setStatus( final IStatus status )
   {
+    // Do not fire change if status did not change really; else we may get endless loop
+    if( ObjectUtils.equals( status.getSeverity(), m_status.getSeverity() ) && ObjectUtils.equals( status.getMessage(), m_status.getMessage() ) )
+      return;
+
     m_status = status;
 
     fireStatusChanged();
@@ -746,19 +750,19 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the URL or URN defined by the user for an icon, which should be displayed in a legend or an
    * outline.
-   * 
+   *
    * @return The URL or URN string. May be null.
    */
   public String getLegendIcon( )
   {
     return m_legendIcon;
   }
-  
+
   public void setLegendIcon( final String legendIcon, final URL context )
   {
     if( ObjectUtils.equals( m_legendIcon, legendIcon ) && ObjectUtils.equals( m_context, context ) )
       return;
-    
+
     m_legendIcon = legendIcon;
     m_context = context;
 
@@ -768,13 +772,13 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       m_externIcon.dispose();
       m_externIcon = null;
     }
-    
+
     fireStatusChanged();
   }
 
   /**
    * This function returns the context.
-   * 
+   *
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
   protected URL getContext( )
@@ -785,7 +789,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns true, if the theme allows showing its children in an outline. Otherwise, it will return
    * false.
-   * 
+   *
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
   public boolean shouldShowLegendChildren( )
@@ -799,10 +803,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       return;
 
     m_showLegendChildren = showChildren;
-    
+
     fireStatusChanged();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.ICheckStateProvider#isChecked()
    */
