@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 
 /**
  * The this label provider modifies some labels for handling themes, that have only one style.
- * 
+ *
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
@@ -67,10 +67,10 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
 
   /**
    * The constructor.
-   * 
+   *
    * @param showStyle
-   *            If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
-   *            styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
+   *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
+   *          styles of a theme, this is not necessary, because their level will be displayed in the outline then.
    */
   public GisMapOutlineLabelProvider( final boolean showStyle, final boolean showActive )
   {
