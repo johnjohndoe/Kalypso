@@ -88,74 +88,10 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="corrSealing" default="1.0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Faktor Versiegelung</label>
-								<tooltip>Korrekturfaktor Versiegelungsgrad [-]</tooltip>
-								<description>Korrekturfaktor Versiegelungsgrad [-]</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Coefficient sealing rate</label>
-								<tooltip>Correction coefficient of sealing rate [-]</tooltip>
-								<description>Correction coefficient of sealing rate [-]</description>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="double">
-								<minInclusive value="0.0"/>
-								<maxInclusive value="10.0"/>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="drainageType" type="string" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Entwaesserung</label>
-								<tooltip>Entwaesserungsart (besielt/unbesielt)</tooltip>
-								<description>Untergliederung der in besielte und unbesielte Flaechen (wird zur Zeit noch nicht im Modell verwendet)</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Drainage</label>
-								<tooltip>Type of drainage (sealed/unsealed)</tooltip>
-								<description>Subdivision of the selaed and unsealed areas (still not used in the model at present )</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="m_perkm" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>max. Perkolationsrate</label>
-								<tooltip>maximale Perkolationsrate [m/s]</tooltip>
-								<description>maximale Perkolationsrate [m/s]</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Max. percolation rate</label>
-								<tooltip>Maximal percolation rate [m/s]</tooltip>
-								<description>Maximal percolation rate [m/s]</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="m_f1gws" default="1.0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zuflussanteil GW</label>
-								<tooltip>Zuflussanteil Grundwasser [-] (= 0-1)</tooltip>
-								<description>Zuflussanteil Grundwasser [-] (= 0-1)</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Inflow rate GW</label>
-								<tooltip>Inflow rate of groundwater [-] (= 0-1)</tooltip>
-								<description>Inflow rate of groundwater  [-] (= 0-1)</description>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="double">
-								<minInclusive value="0.0"/>
-								<maxInclusive value="1.0"/>
-							</restriction>
-						</simpleType>
-					</element>
+					<element ref="hyd:corrSealing"/>
+					<element ref="hyd:drainageType" minOccurs="0"/>
+					<element ref="hyd:m_perkm"/>
+					<element ref="hyd:m_f1gws"/>
 					<element name="hydType" type="hyd:hydTypeEnumerationType" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
@@ -174,6 +110,78 @@
 			</extension>
 		</complexContent>
 	</complexType>
+
+	<element name="corrSealing" default="1.0">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Faktor Versiegelung</label>
+				<tooltip>Korrekturfaktor Versiegelungsgrad [-]</tooltip>
+				<description>Korrekturfaktor Versiegelungsgrad [-]</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Coefficient sealing rate</label>
+				<tooltip>Correction coefficient of sealing rate [-]</tooltip>
+				<description>Correction coefficient of sealing rate [-]</description>
+			</documentation>
+		</annotation>
+		<simpleType>
+			<restriction base="double">
+				<minInclusive value="0.0"/>
+				<maxInclusive value="10.0"/>
+			</restriction>
+		</simpleType>
+	</element>
+	<element name="drainageType" type="string">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Entwaesserung</label>
+				<tooltip>Entwaesserungsart (besielt/unbesielt)</tooltip>
+				<description>Untergliederung der in besielte und unbesielte Flaechen (wird zur Zeit noch nicht im Modell verwendet)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Drainage</label>
+				<tooltip>Type of drainage (sealed/unsealed)</tooltip>
+				<description>Subdivision of the selaed and unsealed areas (still not used in the model at present )</description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="m_perkm" type="double">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>max. Perkolationsrate</label>
+				<tooltip>maximale Perkolationsrate [m/s]</tooltip>
+				<description>maximale Perkolationsrate [m/s]</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Max. percolation rate</label>
+				<tooltip>Maximal percolation rate [m/s]</tooltip>
+				<description>Maximal percolation rate [m/s]</description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<element name="m_f1gws" default="1.0">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Zuflussanteil GW</label>
+				<tooltip>Zuflussanteil Grundwasser [-] (= 0-1)</tooltip>
+				<description>Zuflussanteil Grundwasser [-] (= 0-1)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Inflow rate GW</label>
+				<tooltip>Inflow rate of groundwater [-] (= 0-1)</tooltip>
+				<description>Inflow rate of groundwater  [-] (= 0-1)</description>
+			</documentation>
+		</annotation>
+		<simpleType>
+			<restriction base="double">
+				<minInclusive value="0.0"/>
+				<maxInclusive value="1.0"/>
+			</restriction>
+		</simpleType>
+	</element>
+
 	<simpleType name="hydTypeEnumerationType">
 		<restriction base="string">
 			<enumeration value="Bodenspeicher"/>
@@ -181,4 +189,5 @@
 			<enumeration value="Dachbegruenung"/>
 		</restriction>
 	</simpleType>
+	
 </schema>

@@ -121,4 +121,15 @@
               name="FeatureAssociationFunctionProperty">
         </function>
      </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.LanduseCollection"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}LanduseCollection">
+        </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.Landuse"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse">
+        </feature>
+     </extension>
 </plugin>

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
@@ -67,6 +67,14 @@ public interface NaModelConstants
   public static final String NS_INIVALUES = "http://www.tuhh.de/initialValues";
 
   public static final String NS_NAFORTRANLOG = "http://www.tuhh.de/NAFortranLog";
+
+  public static final String NS_NALANDUSE = "http://sourceforge.kalypso.org/schemata/hydrology/landuse";
+
+  public static final String NS_NAPEDOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/pedologie";
+
+  public static final String NS_NAGEOLOGIE = "http://sourceforge.kalypso.org/schemata/hydrology/geologie";
+
+  public static final String NS_NASUDS = "http://sourceforge.kalypso.org/schemata/hydrology/suds";
 
   /** server client bean constants */
   // input
@@ -511,4 +519,6 @@ public interface NaModelConstants
   public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" );
 
   public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" );
+
+
 }
