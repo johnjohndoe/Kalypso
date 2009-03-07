@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -77,7 +77,7 @@ public class FeatureFactory
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
    * IFeatureType.
-   * 
+   *
    * @param id
    *          unique id of the <CODE>Feature</CODE>
    * @param featureType
@@ -88,10 +88,9 @@ public class FeatureFactory
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
-    // / TODO: but the feature into the workspace!
-    ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    Feature feature = factory.getFeature( parent, parentRelation, featureType, id, properties );
-    return feature;
+    // / TODO: put the feature into the workspace!
+    final ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
+    return factory.getFeature( parent, parentRelation, featureType, id, properties );
   }
 
   /**
@@ -104,7 +103,7 @@ public class FeatureFactory
 
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
-   * 
+   *
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
@@ -114,8 +113,8 @@ public class FeatureFactory
   {
     final IPropertyType[] ftp = featureType.getProperties();
 
-    ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
-    Feature feature = factory.getFeature( parent, parentRelation, featureType, id, new Object[ftp.length] );
+    final ExtendedFeatureFactory factory = ExtendedFeatureFactory.getInstance();
+    final Feature feature = factory.getFeature( parent, parentRelation, featureType, id, new Object[ftp.length] );
 
     // TODO: shouldn't we move this to the Feature_Impl constructor?
     for( final IPropertyType pt : ftp )

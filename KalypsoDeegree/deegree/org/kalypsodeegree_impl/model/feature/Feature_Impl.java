@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Implementation of ogc feature
- * 
+ *
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -127,7 +127,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   * 
+   *
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -542,7 +542,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   * 
+   *
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
@@ -567,5 +567,21 @@ public class Feature_Impl extends PlatformObject implements Feature
     {
       throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
     }
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    /*
+     * Small performance tweak and also works for new directly instantiated features when not registered with adapter
+     * stuff.
+     */
+    if( adapter.isInstance( this ) )
+      return this;
+
+    return super.getAdapter( adapter );
   }
 }
