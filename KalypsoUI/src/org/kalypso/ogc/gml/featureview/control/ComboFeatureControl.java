@@ -77,7 +77,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor
  * <p>
  * Today only properties with String type are supported.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -253,7 +253,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     m_comboViewer.refresh();
 
     for( final Object value : m_entries.keySet() )
-    {
+    {// TODO
       if( value.equals( currentFeatureValue ) || (value == NULL_LINK && currentFeatureValue == null) )
       {
         m_comboViewer.setSelection( new StructuredSelection( value ), true );
@@ -301,36 +301,57 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     final IDocumentReference[] refs = rt.getDocumentReferences();
     for( final IDocumentReference ref : refs )
+      collectFromDocument( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, ref );
+
+    /* Special case: if we already have a link, we may guess the referenced document */
+    final Object value = parentFeature.getProperty( rt );
+    if( value instanceof XLinkedFeature_Impl )
     {
-      final String uri = ref.getReference();
-      final GMLWorkspace workspace;
-      if( ref == IDocumentReference.SELF_REFERENCE )
-        workspace = localWorkspace;
-      else
-        workspace = localWorkspace.getLinkedWorkspace( uri );
-
-      if( workspace == null )
-        return new Feature[] {};
-
-      final CollectorVisitor collectorVisitor = new CollectorVisitor();
-      final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
-
-      workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-      final Feature[] features = collectorVisitor.getResults( true );
-      for( final Feature feature : features )
-      {
-        if( workspace == localWorkspace )
-          foundFeatures.add( feature );
-        else
-        {
-          final String href = uri + "#" + feature.getId(); //$NON-NLS-1$
-          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-          foundFeatures.add( linkedFeature );
-        }
-      }
+      final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) value;
+      final String href = xlink.getHref();
+      final int indexOfHref = href.indexOf( '#' );
+      final String uri = indexOfHref == -1 ? null : href.substring( 0, indexOfHref );
+      final Feature linkedFeature = xlink.getFeature();
+      if( linkedFeature != null && uri != null )
+        collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, linkedFeature.getWorkspace() );
     }
 
     return foundFeatures.toArray( new Feature[foundFeatures.size()] );
+  }
+
+  private static void collectFromDocument( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt, final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final IDocumentReference ref )
+  {
+    final String uri = ref.getReference();
+    final GMLWorkspace workspace;
+    if( ref == IDocumentReference.SELF_REFERENCE )
+      workspace = localWorkspace;
+    else
+      workspace = localWorkspace.getLinkedWorkspace( uri );
+
+    collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, workspace );
+  }
+
+  private static void collectFromWorkspace( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt, final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final String uri, final GMLWorkspace workspace )
+  {
+    if( workspace == null )
+      return;
+
+    final CollectorVisitor collectorVisitor = new CollectorVisitor();
+    final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
+
+    workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+    final Feature[] features = collectorVisitor.getResults( true );
+    for( final Feature feature : features )
+    {
+      if( workspace == localWorkspace )
+        foundFeatures.add( feature );
+      else
+      {
+        final String href = uri + "#" + feature.getId(); //$NON-NLS-1$
+        final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        foundFeatures.add( linkedFeature );
+      }
+    }
   }
 }
