@@ -322,7 +322,7 @@ public class GMLSAXFactory
     // TODO: exception type?
     catch( final Exception e )
     {
-      final String msg = String.format( "Could not convert value '%s' for property '%s'", pt.getQName() );
+      final String msg = String.format( "Could not convert value '%s' for property '%s'", propertyValue, pt.getQName() );
       throw new SAXException( msg, e );
     }
   }
