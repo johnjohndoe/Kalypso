@@ -167,6 +167,15 @@ public class MeasureMapWidget extends AbstractWidget
   }
 
   /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
+  @Override
+  public void dragged( final Point p )
+  {
+    moved( p );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */
   @Override
