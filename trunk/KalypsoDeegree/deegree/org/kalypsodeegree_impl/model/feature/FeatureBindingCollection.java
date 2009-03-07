@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  * Class representing the wbGml:RangeSetFeature element. The feature contained in the range set need to be adaptable
  * into a {@link RangeSetCls} object
- * 
+ *
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -91,7 +91,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   * 
+   *
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -530,8 +530,8 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
-   *      boolean, javax.xml.namespace.QName)
+   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
+   *      javax.xml.namespace.QName, boolean)
    */
   public List<FWCls> query( final GM_Surface selectionSurface, final QName qname, final boolean containedOnly )
   {
@@ -544,7 +544,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-
         try
         {
           final Object property = feature.getProperty( qname );
@@ -554,22 +553,18 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
             if( containedOnly )
             {
               if( selectionSurface.contains( gmo ) )
-              {
                 selFW.add( feature );
-              }
             }
             else
             {
               if( selectionSurface.intersects( gmo ) )
-              {
                 selFW.add( feature );
-              }
             }
           }
         }
         catch( final Exception e )
         {
-
+          e.printStackTrace();
         }
       }
     }
@@ -578,9 +573,8 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
+   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-
   public List<FWCls> query( final GM_Envelope envelope )
   {
     final List selectedFeature = getFeatureList().query( envelope, null );
