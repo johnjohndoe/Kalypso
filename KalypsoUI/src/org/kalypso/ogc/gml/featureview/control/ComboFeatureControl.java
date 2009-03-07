@@ -252,13 +252,13 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     m_comboViewer.refresh();
 
-    for( final Object value : m_entries.keySet() )
-    {// TODO
-      if( value.equals( currentFeatureValue ) || (value == NULL_LINK && currentFeatureValue == null) )
-      {
-        m_comboViewer.setSelection( new StructuredSelection( value ), true );
-        break;
-      }
+    if( currentFeatureValue == null && m_entries.containsKey( NULL_LINK ) )
+      m_comboViewer.setSelection( new StructuredSelection( NULL_LINK ), true );
+    else
+    {
+      final String entry = m_entries.get( currentFeatureValue );
+      if( entry != null )
+        m_comboViewer.setSelection( new StructuredSelection( currentFeatureValue ), true );
     }
   }
 
