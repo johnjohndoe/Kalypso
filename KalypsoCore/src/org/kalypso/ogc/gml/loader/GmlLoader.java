@@ -56,17 +56,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.util.pool.IModelAdaptor;
@@ -122,38 +125,29 @@ public class GmlLoader extends AbstractLoader
   @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
-    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
-    final List<IStatus> resultList = new ArrayList<IStatus>();
-
     try
     {
-      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.1" ), 1000 ); //$NON-NLS-1$
-
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
+      final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", source ); //$NON-NLS-1$
+      final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 1000 );
 
+      /* Initialise */
+      final List<IStatus> resultList = new ArrayList<IStatus>();
+      final TimeLogger perfLogger = KalypsoCoreDebug.PERF_SERIALIZE_GML.isEnabled() ? new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.2" ) ) : null; //$NON-NLS-1$
       final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
+      ProgressUtilities.worked( moni, 10 );
 
-      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory );
+      /* Loading GML */
+      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory, moni.newChild( 700, SubMonitor.SUPPRESS_BEGINTASK ) );
+// final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, factory );
+      ProgressUtilities.worked( moni, 0 );
 
-      CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
-
-      workspace.addCommandManagerListener( m_commandManagerListener );
-
-      TimeLogger perfLogger = null;
-      if( doTrace )
-      {
-        perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.2" ) ); //$NON-NLS-1$
-      }
-
+      /* Transforming to Kalypso CRS */
+      moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.3" ) ); //$NON-NLS-1$
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.3" ) ); //$NON-NLS-1$
-      workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-      final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
-      if( gmlFile != null )
-      {
-        addResource( gmlFile, workspace );
-      }
+      final TransformVisitor transformVisitor = new TransformVisitor( targetCRS );
+      gmlWorkspace.accept( transformVisitor, gmlWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      ProgressUtilities.worked( moni, 200 );
 
       if( perfLogger != null )
       {
@@ -161,31 +155,16 @@ public class GmlLoader extends AbstractLoader
         perfLogger.printCurrentTotal( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.4" ) ); //$NON-NLS-1$
       }
 
-      final Feature rootFeature = workspace.getRootFeature();
-      final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName().toString() );
+      /* Adapting if necessary */
+      moni.subTask( "checking backwards compability..." );
+      final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
+      final GMLWorkspace adaptedWorkspace = adaptWorkspace( source, context, moni.newChild( 80 ), resultList, gmlWorkspace, gmlFile );
 
-      for( final IModelAdaptor modelAdaptor : modelAdaptors )
-      {
-        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.5" ) ); //$NON-NLS-1$
-        workspace = modelAdaptor.adapt( workspace );
-        resultList.add( modelAdaptor.getResult() );
-      }
-
-      if( workspace.isDirty() )
-      {
-        // some adaptation occured, so directly save workspace
-        // but create a backup (.bak) of old workspace
-        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.6" ) ); //$NON-NLS-1$
-
-        if( gmlFile != null )
-        {
-          final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" ); //$NON-NLS-1$
-          backup( gmlFile, backupPath, monitor, 0, resultList );
-        }
-
-        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.8" ) ); //$NON-NLS-1$
-        save( source, context, monitor, workspace );
-      }
+      /* Hook for Loader stuff */
+      final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
+      workspace.addCommandManagerListener( m_commandManagerListener );
+      if( gmlFile != null )
+        addResource( gmlFile, workspace );
 
       setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
@@ -203,10 +182,40 @@ public class GmlLoader extends AbstractLoader
       setStatus( StatusUtilities.statusFromThrowable( e ) );
       throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + e.toString(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    finally
+  }
+
+  private GMLWorkspace adaptWorkspace( final String source, final URL context, final IProgressMonitor monitor, final List<IStatus> resultList, GMLWorkspace workspace, final IResource gmlFile ) throws LoaderException, CoreException
+  {
+    final Feature rootFeature = workspace.getRootFeature();
+    final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName() );
+
+    final SubMonitor moni = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.5" ), 5 + modelAdaptors.length ); //$NON-NLS-1$
+
+    for( final IModelAdaptor modelAdaptor : modelAdaptors )
     {
-      monitor.done();
+      workspace = modelAdaptor.adapt( workspace, moni.newChild( 1 ) );
+      resultList.add( modelAdaptor.getResult() );
+      ProgressUtilities.worked( moni, 0 );
     }
+
+    final MultiStatus adaptStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, resultList.toArray( new IStatus[resultList.size()] ), "", null );
+
+    if( !adaptStatus.isOK() )
+    {
+      // some adaptation occurred, so directly save workspace
+      // but create a backup (.bak) of old workspace
+      moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.6" ) ); //$NON-NLS-1$
+
+      if( gmlFile != null )
+      {
+        final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" ); //$NON-NLS-1$
+        backup( gmlFile, backupPath, moni.newChild( 2, SubMonitor.SUPPRESS_SETTASKNAME ), 0, resultList );
+      }
+
+      moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.8" ) ); //$NON-NLS-1$
+      save( source, context, moni.newChild( 3, SubMonitor.SUPPRESS_SETTASKNAME ), workspace );
+    }
+    return workspace;
   }
 
   private void backup( final IResource gmlFile, final IPath backupPath, final IProgressMonitor monitor, final int count, final List<IStatus> resultList )

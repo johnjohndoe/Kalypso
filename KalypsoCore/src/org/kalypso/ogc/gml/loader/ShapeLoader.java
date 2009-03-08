@@ -51,9 +51,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -135,11 +137,12 @@ public class ShapeLoader extends AbstractLoader
         shpSource = location;
       }
 
-      IResource shpResource = null;
-      IResource dbfResource = null;
-      IResource shxResource = null;
+      final String taskMsg = Messages.format( "org.kalypso.ogc.gml.loader.GmlLoader.1", shpSource ); //$NON-NLS-1$
+      final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 100 );
+      ProgressUtilities.worked( moni, 1 );
 
       final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
+
 
       final URL shpURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shp" ); //$NON-NLS-1$
       final URL dbfURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".dbf" ); //$NON-NLS-1$
@@ -147,6 +150,9 @@ public class ShapeLoader extends AbstractLoader
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       final File sourceFile;
+      IResource shpResource = null;
+      IResource dbfResource = null;
+      IResource shxResource = null;
       final IPath resource = ResourceUtilities.findPathFromURL( sourceURL );
       if( resource != null )
       {
@@ -162,6 +168,8 @@ public class ShapeLoader extends AbstractLoader
       }
       else
       {
+        moni.subTask( "Downloading to local file system" );
+
         /* If everything else fails, we copy the resources to local files */
         sourceFile = File.createTempFile( "shapeLocalizedFiled", "" ); //$NON-NLS-1$ //$NON-NLS-2$
         final String sourceFilePath = sourceFile.getAbsolutePath();
@@ -179,21 +187,26 @@ public class ShapeLoader extends AbstractLoader
         FileUtils.copyURLToFile( dbfURL, dbfFile );
         FileUtils.copyURLToFile( shxURL, shxFile );
       }
+      ProgressUtilities.worked( moni, 9 );
 
       if( sourceFile == null )
         throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.10" ) + shpSource ); //$NON-NLS-1$
 
-      // Workspace laden
+      /* Loading Shape */
       final String sourceCrs = sourceSrs;
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
+      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
       workspace.addCommandManagerListener( m_commandManagerListener );
 
       try
       {
+        /* Transforming to Kalypso CRS */
+        moni.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.3" ) ); //$NON-NLS-1$
+        ProgressUtilities.worked( moni, 1 ); // check cancel
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+        ProgressUtilities.worked( moni, 18 ); // check cancel
       }
       catch( final Throwable e1 )
       {

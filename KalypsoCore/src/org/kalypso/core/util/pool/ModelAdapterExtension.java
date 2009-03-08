@@ -43,6 +43,8 @@ package org.kalypso.core.util.pool;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -52,7 +54,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Helper class to read and cache
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class ModelAdapterExtension
@@ -63,10 +65,9 @@ public class ModelAdapterExtension
 
   private static final String ATTRIBUTE_FEATURE_TYPE = "featureType"; //$NON-NLS-1$
 
-  public static IModelAdaptor[] getModelAdaptor( final String featureType )
+  public static IModelAdaptor[] getModelAdaptor( final QName featureType )
   {
-    final IModelAdaptor[] map = getModelAdaptorList( featureType );
-    return map;
+    return getModelAdaptorList( featureType.toString() );
   }
 
   private static IModelAdaptor[] getModelAdaptorList( final String featureType )

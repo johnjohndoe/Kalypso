@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core.util.pool;
 
@@ -57,7 +57,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor. Defaults ignoreExceptions to false.
-   * 
+   *
    * @param type
    *          type of object to load
    * @param source
@@ -72,7 +72,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor.
-   * 
+   *
    * @param type
    *          type of object to load
    * @param source
@@ -123,7 +123,7 @@ public class PoolableObjectType implements IPoolableObjectType
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( !( obj instanceof IPoolableObjectType ) )
       return false;
@@ -155,6 +155,6 @@ public class PoolableObjectType implements IPoolableObjectType
   @Override
   public String toString( )
   {
-    return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= " + getContext(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return "Location=" + getLocation() + " Type=" + getType() + " Context= " + getContext(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

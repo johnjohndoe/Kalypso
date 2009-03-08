@@ -49,7 +49,11 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -63,19 +67,19 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.StandardShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
  * Helper-Klasse zum lesen und schreiben von GML TODO: Problem: reading/writing a shape will change the precision/size
  * of the columns!
- * 
+ *
  * @author gernot
  */
 public class ShapeSerializer
@@ -131,7 +135,7 @@ public class ShapeSerializer
   /**
    * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
    * sondern nur die über ein vorher festgelegt Mapping.
-   * 
+   *
    * @param features
    *          Properties dieser Features werden geschrieben.
    * @param mapping
@@ -218,7 +222,7 @@ public class ShapeSerializer
   /**
    * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
    * sondern nur die über ein vorher festgelegt Mapping.
-   * 
+   *
    * @param features
    *          Properties dieser Features werden geschrieben.
    * @param mapping
@@ -250,7 +254,7 @@ public class ShapeSerializer
       if( qname == ShapeSerializer.QNAME_GMLID )
       {
         /* If it is the pseudo gml-id qname, create a string-property */
-        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
+        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( XmlTypes.XS_STRING );
         ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
       }
       else
@@ -347,7 +351,7 @@ public class ShapeSerializer
 
   /**
    * Creates to feature type for the root feature of a shape-file-based workspace.
-   * 
+   *
    * @param childFeatureType
    *          The feature type for the children (i.e. the shape-objects) of the root.
    * @return A newly created feature suitable for the root of a workspace. It has the following properties:
@@ -360,8 +364,8 @@ public class ShapeSerializer
   public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING ); //$NON-NLS-1$
-    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT ); //$NON-NLS-1$
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
+    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH, 1, 1, false );
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
@@ -372,8 +376,19 @@ public class ShapeSerializer
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
+  /**
+   * Same as {@link #deserialize(String, String, new NullProgressMonitor())}
+   */
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
   {
+    return deserialize( fileBase, sourceCrs, new NullProgressMonitor() );
+  }
+
+  public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
+  {
+    final String taskName = String.format( "Loading <%s>.shp", fileBase );
+    final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
+
     ShapeFile sf = null;
 
     try
@@ -387,17 +402,24 @@ public class ShapeSerializer
 
       final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
 
-      // die shape-api liefert stets WGS84 als Koordinatensystem, daher
-      // Anpassung hier:
       final int count = sf.getRecordNum();
+
+      moni.setWorkRemaining( count );
+      final IFeatureType membersFT = listRelation.getTargetFeatureType();
+      final IPropertyType geomProperty = membersFT.getProperty( "GEOM" );
       for( int i = 0; i < count; i++ )
       {
+        if( i % 100 == 0 )
+          moni.subTask( String.format( "%d / %d", i, count ) );
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
-        GMLUtilities.setCrs( fe, sourceCrs );
-        if( fe != null )
-        {
-          workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
-        }
+        final Object geom = fe.getProperty( geomProperty );
+        if( geom != null )
+          ((GM_Object) geom).setCoordinateSystem( sourceCrs );
+
+        workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
+
+        if( i % 100 == 0 )
+          ProgressUtilities.worked( moni, 1 );
       }
 
       return workspace;
@@ -419,6 +441,8 @@ public class ShapeSerializer
           throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.20" ), e ); //$NON-NLS-1$
         }
       }
+
+      moni.done();
     }
   }
 
