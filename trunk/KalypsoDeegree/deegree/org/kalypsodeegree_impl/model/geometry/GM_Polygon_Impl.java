@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 /**
  * default implementierung of the GM_Polygon interface from package jago.model.
  * ------------------------------------------------------------
- * 
+ *
  * @version 11.6.2001
  * @author Andreas Poth
  */
@@ -67,7 +67,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
   /**
    * Creates a new GM_Polygon_Impl object.
-   * 
+   *
    * @param interpolation
    * @param exteriorRing
    * @param interiorRings
@@ -96,7 +96,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
   /**
    * The operation "boundary" shall return the boundary of this GM_SurfacePatch represented as a collection of GM_Curves
-   * organized as a GM_SurfaceBoundary, consisting of GM_Curve instances along the boundary of the aggregate GM_Surface,
+   * organised as a GM_SurfaceBoundary, consisting of GM_Curve instances along the boundary of the aggregate GM_Surface,
    * and interior to the GM_Surface where GM_SurfacePatches are adjacent.
    */
   public GM_SurfaceBoundary getBoundary( )
@@ -106,7 +106,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *            object to compare to
    */
@@ -144,7 +144,6 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   @Override
   public Object clone( )
   {
-    // kuch
     final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
 
     final GM_Position[][] interiorRings = getInteriorRings();
@@ -158,7 +157,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     try
     {
       int value = GM_SurfaceInterpolation.NONE;
-      GM_SurfaceInterpolation interpolation = getInterpolation();
+      final GM_SurfaceInterpolation interpolation = getInterpolation();
       if( interpolation != null )
         value = interpolation.getValue();
 
@@ -169,7 +168,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
       e.printStackTrace();
     }
 
-    throw (new IllegalStateException());
+    throw new IllegalStateException();
   }
 
   /**
@@ -212,26 +211,18 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
    */
   private boolean intersectsMultiObject( final GM_Aggregate mprim ) throws Exception
   {
-    boolean inter = false;
-
     final int cnt = mprim.getSize();
-
     for( int i = 0; i < cnt; i++ )
     {
       if( intersects( mprim.getObjectAt( i ) ) )
-      {
-        inter = true;
-        break;
-      }
+        return true;
     }
 
-    return inter;
+    return false;
   }
 
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
-   * <p>
-   * </p>
    */
   public boolean contains( final GM_Object gmo )
   {
@@ -302,7 +293,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 

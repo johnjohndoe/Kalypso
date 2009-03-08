@@ -45,18 +45,16 @@ import org.kalypsodeegree_impl.model.geometry.GM_Object_Impl;
  */
 public class GMLUtilities
 {
-  public static void setCrs( Feature fe, String srcCS )
+  public static void setCrs( final Feature fe, final String srcCS )
   {
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
-    for( int i = 0; i < ftp.length; i++ )
+    for( final IPropertyType element : ftp )
     {
-      Object prop = fe.getProperty( ftp[i].getQName() );
+      final Object prop = fe.getProperty( element.getQName() );
       if( prop != null && prop instanceof Feature )
         setCrs( (Feature) prop, srcCS );
       else if( prop != null && prop instanceof GM_Object )
-      {
         ((GM_Object_Impl) prop).setCoordinateSystem( srcCS );
-      }
     }
   }
 
@@ -64,17 +62,17 @@ public class GMLUtilities
    * ueperprueft die koordinatensysteme der geometrien, fall null, dann wird das defaultCoordinatessystem angenommen
    * (gesetzt).
    */
-  public static void checkCrs( Feature fe, String defaultCS )
+  public static void checkCrs( final Feature fe, final String defaultCS )
   {
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
-    for( int i = 0; i < ftp.length; i++ )
+    for( final IPropertyType element : ftp )
     {
-      Object prop = fe.getProperty( ftp[i].getQName() );
+      final Object prop = fe.getProperty( element.getQName() );
       if( prop != null && prop instanceof Feature )
         checkCrs( (Feature) prop, defaultCS );
       else if( prop != null && prop instanceof GM_Object )
       {
-        GM_Object_Impl gmlProp = (GM_Object_Impl) prop;
+        final GM_Object_Impl gmlProp = (GM_Object_Impl) prop;
         if( gmlProp.getCoordinateSystem() == null )
           gmlProp.setCoordinateSystem( defaultCS );
       }

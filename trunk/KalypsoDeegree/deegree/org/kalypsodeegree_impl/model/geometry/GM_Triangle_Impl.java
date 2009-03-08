@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -92,7 +92,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   {
     return PLANAR_INTERPOLATION;
   }
-  
+
   /**
    * @see org.kalypsodeegree_impl.model.geometry.GM_SurfacePatch_Impl#calculateParam()
    */
@@ -114,7 +114,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   public double getValue( final GM_Point location )
   {
     final GM_Position position = location.getPosition();
-    // TODO: transform into own crs if necessairy
+    // TODO: transform into own crs if necessary
     return getValue( position );
   }
 
@@ -144,7 +144,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   /**
    * Overwritten for better performance. <BR>
    * TODO: this method does not recognize, if the positions lies on an edge or a corner of the triangle.
-   * 
+   *
    * @see org.kalypsodeegree.model.geometry.GM_Triangle#contains(org.kalypsodeegree.model.geometry.GM_Position)
    */
   public boolean contains2( final GM_Position position )
@@ -199,7 +199,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
