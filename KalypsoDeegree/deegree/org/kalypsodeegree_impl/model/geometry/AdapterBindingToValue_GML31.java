@@ -88,7 +88,7 @@ import org.w3c.dom.Node;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
- * 
+ *
  * @author doemming
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
@@ -448,7 +448,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       while( coordinatesTokenizer.hasMoreTokens() )
       {
         final String coordinate = coordinatesTokenizer.nextToken();
-        pos[i] = Double.parseDouble( coordinate.replace( decimal, "." ) );
+        pos[i] = Double.parseDouble( coordinate.replace( decimal, "." ) ); // FIXME: possible performance problem
         i++;
       }
       result.add( GeometryFactory.createGM_Position( pos ) );

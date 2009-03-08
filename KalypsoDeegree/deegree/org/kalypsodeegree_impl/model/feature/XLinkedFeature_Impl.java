@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * <p>
  * Cannot be used as workspace root.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class XLinkedFeature_Impl extends PlatformObject implements Feature
@@ -98,29 +98,21 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     m_show = show;
     m_actuate = actuate;
 
-    if( !href.contains( "#" ) )
+    final int indexOf = href.indexOf( '#' );
+    if( indexOf == -1 || indexOf == href.length() - 1 )
     {
       m_uri = null;
       m_featureId = null;
     }
-    else if( href.startsWith( "#" ) )
+    else if( indexOf == 0 )
     {
       m_uri = null;
       m_featureId = href.substring( 1 );
     }
     else
     {
-      final String[] hrefParts = href.split( "#" );
-      if( hrefParts.length == 2 )
-      {
-        m_uri = hrefParts[0];
-        m_featureId = hrefParts[1];
-      }
-      else
-      {
-        m_uri = null;
-        m_featureId = null;
-      }
+      m_uri = href.substring( 0, indexOf );
+      m_featureId = href.substring( indexOf + 1 );
     }
 
     if( m_parentFeature == null )
@@ -192,7 +184,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
   /**
    * format of name if "namespace:name" or just "name" - both will work
-   * 
+   *
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -287,7 +279,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
   /**
    * Returns the workspace of the linked feature.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
   public GMLWorkspace getWorkspace( )
