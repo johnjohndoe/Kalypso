@@ -295,12 +295,14 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_selectionManager.removeSelectionListener( m_globalSelectionChangedListener );
     m_treeViewer.removePostSelectionChangedListener( m_treeSelectionChangedListener );
     m_treeViewer.removeDoubleClickListener( m_doubleClickListener );
+
+    m_workspace = null;
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public void onModellChange( final ModellEvent modellEvent )
   {
     fireModellEvent( modellEvent );

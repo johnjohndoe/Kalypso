@@ -54,6 +54,7 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -73,6 +74,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -80,12 +82,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.GMLException;
@@ -107,7 +111,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- * 
+ *
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -152,7 +156,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   * 
+   *
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -252,38 +256,81 @@ public final class GmlSerializer
   }
 
   /**
-   * Reads a {@link GMLWorkspace} from the contents of an {@link URL}.
+   * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
-    InputStream stream = null;
-    BufferedInputStream bis = null;
+    return createGMLWorkspace( gmlURL, factory, null );
+  }
+
+  /**
+   * Reads a {@link GMLWorkspace} from the contents of an {@link URL}.
+   */
+  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
+  {
+    InputStream is = null;
+    InputStream urlStream = null;
     try
     {
-      bis = new BufferedInputStream( gmlURL.openStream() );
+      urlStream = gmlURL.openStream();
+
+      InputStream bis;
+      if( monitor == null )
+        bis = new BufferedInputStream( urlStream );
+      else
+      {
+        final long contentLength = getContentLength( gmlURL );
+        final String tskMsg = String.format( "Reading <%s>", gmlURL );
+        monitor.beginTask( tskMsg, (int) contentLength );
+        bis = new ProgressInputStream( urlStream, contentLength, monitor );
+      }
 
       if( gmlURL.toExternalForm().endsWith( ".gz" ) )
-        stream = new GZIPInputStream( bis );
+        is = new GZIPInputStream( bis );
       else
-        stream = bis;
-      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( stream ), null, gmlURL, factory );
-      stream.close();
+        is = bis;
+
+      final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, gmlURL, factory );
+      is.close();
       return workspace;
+    }
+    catch( final IOException e )
+    {
+      // Handle cancel of progress monitor: ProgressInputStreams throws IOException with a CoreException as cause
+      if( e == ProgressInputStream.CANCEL_EXCEPTION )
+        throw new CoreException( Status.CANCEL_STATUS );
+
+      throw e;
     }
     finally
     {
-      IOUtils.closeQuietly( stream );
+      IOUtils.closeQuietly( is );
       // also close <code>bis</code> separately, as GZipInputStream throws exception in constructor
-      IOUtils.closeQuietly( bis );
+      IOUtils.closeQuietly( urlStream );
+      if( monitor != null )
+        monitor.done();
     }
+  }
+
+  private static long getContentLength( final URL url ) throws IOException
+  {
+    final File file = FileUtils.toFile( url );
+    if( file != null )
+      return file.length();
+
+    final File platformFile = ResourceUtilities.findJavaFileFromURL( url );
+    if( platformFile != null )
+      return platformFile.length();
+
+    final URLConnection connection = url.openConnection();
+    final int contentLength = connection.getContentLength();
+    return contentLength;
   }
 
   public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
   {
-    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
-
     TimeLogger perfLogger = null;
-    if( doTrace )
+    if( KalypsoCoreDebug.PERF_SERIALIZE_GML.isEnabled() )
       perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.7" ) ); //$NON-NLS-1$
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
@@ -292,13 +339,12 @@ public final class GmlSerializer
     saxFac.setNamespaceAware( true );
 
     final SAXParser saxParser = saxFac.newSAXParser();
-    // make namespace-prefxes visible to content handler
+    // make namespace-prefixes visible to content handler
     // used to allow necessary schemas from gml document
     final XMLReader xmlReader = saxParser.getXMLReader();
     xmlReader.setFeature( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
 
     // TODO: also set an error handler here
-    // TODO: use progress-monitors to show progress and let the user cancel parsing
 
     final GMLorExceptionContentHandler exceptionHandler = new GMLorExceptionContentHandler( xmlReader, schemaLocationHint, context, providerFactory );
     xmlReader.setContentHandler( exceptionHandler );
@@ -431,7 +477,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   * 
+   *
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -448,7 +494,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   * 
+   *
    * @param workspace
    *          The workspace to save.
    * @param file
@@ -475,6 +521,7 @@ public final class GmlSerializer
   /**
    * serializes a workspace into a zipfile
    */
+  // TODO: grrr, do not use fixed CP1252 here!!! And do not use writers as well
   public static void serializeWorkspaceToZipFile( final File gmlZipResultFile, final GMLWorkspace resultWorkspace, final String zipEntryName ) throws FileNotFoundException
   {
     final ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( gmlZipResultFile ) ) );
@@ -482,7 +529,6 @@ public final class GmlSerializer
     {
       final ZipEntry newEntry = new ZipEntry( zipEntryName );
       zos.putNextEntry( newEntry );
-      // TODO: grrr, do not use fixed CP1252 here!!! And do not use writers as well
       final OutputStreamWriter gmlWriter = new OutputStreamWriter( zos, "CP1252" );
 
       serializeWorkspace( gmlWriter, resultWorkspace, "CP1252", new HashMap<String, String>() );

@@ -166,8 +166,8 @@ public final class KeyInfo extends Job implements ILoaderListener
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    Object o = null;
-    IStatus status = null;
+    final Object o;
+    final IStatus status;
     synchronized( this )
     {
       status = loadObject( monitor );
@@ -195,6 +195,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       {
         if( DO_LOG )
           LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.4" ) + m_key ); //$NON-NLS-1$
+
         m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
       catch( final Throwable e )
