@@ -16,6 +16,11 @@
             id="commons.local"
             label="Local Translator">
       </translator>
+      <translator
+            class="org.kalypso.commons.i18n.MsgGetStringTranslator"
+            id="commons.msgGetString"
+            label="Message GetString Translator">
+      </translator>
    </extension>
    <extension
          point="org.kalypso.commons.process">
