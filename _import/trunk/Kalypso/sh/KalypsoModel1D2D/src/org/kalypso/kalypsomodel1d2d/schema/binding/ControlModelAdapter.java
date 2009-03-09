@@ -64,6 +64,8 @@ public class ControlModelAdapter implements IModelAdaptor
     final QName qnameProp2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
     final IRelationType controlModelCollectionPropertyType = (IRelationType) controlModelGroup.getFeatureType().getProperty( qnameProp1 );
     final Feature controlModelCollection = (Feature) controlModelGroup.getProperty( controlModelCollectionPropertyType );
+    if( controlModelCollection == null )
+      return Status.OK_STATUS;
 
     // set version
     final IPropertyType versionProperty = controlModelGroup.getFeatureType().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_VERSION );
