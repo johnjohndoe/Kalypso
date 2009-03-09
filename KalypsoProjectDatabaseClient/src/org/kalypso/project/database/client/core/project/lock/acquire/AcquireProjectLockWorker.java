@@ -49,6 +49,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ITranscendenceProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
 /**
@@ -74,14 +75,14 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
   {
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     final String ticket = service.acquireProjectEditLock( m_handler.getUniqueName() );
-    if( ticket == null || "".equals( ticket.trim() ) )
+    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
     {
-      StatusUtilities.createErrorStatus( String.format( "Acquiring project locked for project \"%s\" failed", m_handler.getName() ) );
+      StatusUtilities.createErrorStatus( String.format( Messages.getString("org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.1"), m_handler.getName() ) ); //$NON-NLS-1$
     }
 
     if( !(m_handler instanceof ITranscendenceProject) )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "Resolving RemoteProjectNature of project \"%s\" failed.", m_handler.getName() ) ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.getString("org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2"), m_handler.getName() ) ) ); //$NON-NLS-1$
     }
 
     m_handler.getRemotePreferences().setEditTicket( ticket );

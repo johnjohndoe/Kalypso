@@ -72,9 +72,9 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
  */
 public class CreateProjectComposite extends Composite
 {
-  public static Image IMG_ADD_PROJECT = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/add_project.gif" ) );
+  public static Image IMG_ADD_PROJECT = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/add_project.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_EXTRACT_DEMO = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/extract_demo.gif" ) );
+  public static Image IMG_EXTRACT_DEMO = new Image( null, CreateProjectComposite.class.getResourceAsStream( "icons/extract_demo.gif" ) ); //$NON-NLS-1$
 
   private final FormToolkit m_toolkit;
 

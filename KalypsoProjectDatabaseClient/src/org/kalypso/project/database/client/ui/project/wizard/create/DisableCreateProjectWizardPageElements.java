@@ -83,7 +83,7 @@ public class DisableCreateProjectWizardPageElements
     final Composite subChildOne = (Composite) children[0];
     final Control[] subChildrenOne = subChildOne.getChildren();
     final Text projectName = (Text) subChildrenOne[1];
-    projectName.setText( "" );
+    projectName.setText( "" ); //$NON-NLS-1$
 
     /* workspace location */
     final Composite subChildTwo = (Composite) children[1];

@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.AbstractProjectHandler;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
@@ -102,7 +103,7 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
       if( !m_project.isNatureEnabled( RemoteProjectNature.NATURE_ID ) )
       {
 
-        final WorkspaceJob job = new WorkspaceJob( "Assigning project nature" )
+        final WorkspaceJob job = new WorkspaceJob( Messages.getString("org.kalypso.project.database.client.core.model.local.LocalProjectHandler.0") ) //$NON-NLS-1$
         {
 
           @Override

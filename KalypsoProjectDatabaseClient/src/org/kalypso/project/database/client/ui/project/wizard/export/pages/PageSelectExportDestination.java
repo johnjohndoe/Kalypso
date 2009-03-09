@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -69,8 +70,8 @@ public class PageSelectExportDestination extends WizardPage
   {
     super( "pageSelectExportDestination" ); //$NON-NLS-1$
 
-    setTitle( "Exportiere Projekt" );
-    setDescription( "Definieren Sie das Ziel-Archiv des Exports" );
+    setTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.1") ); //$NON-NLS-1$
   }
 
   private IPath browse( )
@@ -117,7 +118,7 @@ public class PageSelectExportDestination extends WizardPage
     final Group group = new Group( container, SWT.NONE );
     group.setLayout( new GridLayout( 2, false ) );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    group.setText( "Ziel" );
+    group.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.2") ); //$NON-NLS-1$
 
     final Text text = new Text( group, SWT.BORDER );
     text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -144,7 +145,7 @@ public class PageSelectExportDestination extends WizardPage
 
     /* propose export target */
     final String javaTmpDir = FrameworkProperties.getProperty( FileUtilities.JAVA_IO_TMPDIR );
-    final String target = String.format( "%sexport.zip", javaTmpDir );
+    final String target = String.format( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.3"), javaTmpDir ); //$NON-NLS-1$
     m_sFile = target;
     text.setText( target );
 
@@ -173,7 +174,7 @@ public class PageSelectExportDestination extends WizardPage
   {
     if( m_sFile == null || "".equals( m_sFile.trim() ) ) //$NON-NLS-1$
     {
-      setErrorMessage( "Export-Ziel fehlt" );
+      setErrorMessage( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.4") ); //$NON-NLS-1$
       setMessage( null );
 
       setPageComplete( false );
@@ -183,7 +184,7 @@ public class PageSelectExportDestination extends WizardPage
     final File file = getSelectedFile();
     if( file.exists() )
     {
-      setErrorMessage( "Zieldatei existiert bereits" );
+      setErrorMessage( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.export.pages.PageSelectExportDestination.5") ); //$NON-NLS-1$
       setMessage( null );
 
       setPageComplete( false );

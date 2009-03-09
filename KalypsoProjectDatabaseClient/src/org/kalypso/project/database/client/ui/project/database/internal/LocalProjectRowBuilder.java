@@ -61,6 +61,7 @@ import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
@@ -68,9 +69,9 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
  */
 public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
 {
-  public static Image IMG_LOCAL_COMMIT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) );
+  public static Image IMG_LOCAL_COMMIT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local_commit.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) );
+  public static Image IMG_LOCAL_COMMIT_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/local_commit_disabled.gif" ) ); //$NON-NLS-1$
 
   public LocalProjectRowBuilder( final ILocalProject local, final IKalypsoProjectOpenAction action, final IProjectDatabaseUiLocker locker )
   {
@@ -101,7 +102,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
     final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
     lnk.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     lnk.setImage( IMG_LOCAL_PROJECT );
-    lnk.setToolTipText( String.format( "Öffne Projekt: %s", project.getName() ) );
+    lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.2"), project.getName() ) ); //$NON-NLS-1$
     lnk.setText( project.getName() );
 
     addProjectOpenListener( lnk );
@@ -150,7 +151,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
   protected void getCommitLink( final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkCommit = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkCommit.setToolTipText( String.format( "Übtrage Projekt \"%s\" in Modelldaten-Basis.", getLocalProject().getName() ) );
+    lnkCommit.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.3"), getLocalProject().getName() ) ); //$NON-NLS-1$
 
     if( ProjectDatabaseServerUtils.isServerOnline() )
     {
@@ -173,7 +174,7 @@ public class LocalProjectRowBuilder extends AbstractLocalProjectRowBuilder
             final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
             if( shell != null && !shell.isDisposed() )
             {
-              ErrorDialog.openError( shell, "Fehler", "übertragen des Projektes ist fehlgeschlagen.", status );
+              ErrorDialog.openError( shell, Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.4"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.LocalProjectRowBuilder.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           finally

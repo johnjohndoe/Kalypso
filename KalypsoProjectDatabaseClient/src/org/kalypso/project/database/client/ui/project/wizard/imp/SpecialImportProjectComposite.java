@@ -59,7 +59,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
  */
 public class SpecialImportProjectComposite extends Composite
 {
-  public static Image IMG_IMPORT = new Image( null, SpecialImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) );
+  public static Image IMG_IMPORT = new Image( null, SpecialImportProjectComposite.class.getResourceAsStream( "icons/project_import.gif" ) ); //$NON-NLS-1$
 
   private final FormToolkit m_toolkit;
 

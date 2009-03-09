@@ -55,6 +55,7 @@ import org.kalypso.afgui.wizards.NewProjectWizard;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -75,10 +76,10 @@ public class WizardCreateProject extends NewProjectWizard
    */
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures )
   {
-    super( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), true );
+    super( new ProjectTemplatePage( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.0"), "", templates ), true ); //$NON-NLS-1$ //$NON-NLS-2$
     m_natures = natures;
 
-    setWindowTitle( "Neues Projekt erzeugen" );
+    setWindowTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.2") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -88,7 +89,7 @@ public class WizardCreateProject extends NewProjectWizard
 
     m_natures = natures;
 
-    setWindowTitle( "Neues Projekt erzeugen" );
+    setWindowTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.3") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -111,7 +112,7 @@ public class WizardCreateProject extends NewProjectWizard
       @Override
       protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "aktualisiere Projekt", 1 );
+        monitor.beginTask( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.4"), 1 ); //$NON-NLS-1$
         KalypsoGisPlugin.getDefault();
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
@@ -134,14 +135,14 @@ public class WizardCreateProject extends NewProjectWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, operation );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Anlegen des Projektes fehlgeschlagen.", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject.5"), status ); //$NON-NLS-1$
 
     return status.isOK();
   }
 
   public ProjectTemplate getSelectedTemplate( )
   {
-    final ProjectTemplatePage page = (ProjectTemplatePage) getPage( "projectTemplatePage" );
+    final ProjectTemplatePage page = (ProjectTemplatePage) getPage( "projectTemplatePage" ); //$NON-NLS-1$
     return page.getSelectedProject();
   }
 

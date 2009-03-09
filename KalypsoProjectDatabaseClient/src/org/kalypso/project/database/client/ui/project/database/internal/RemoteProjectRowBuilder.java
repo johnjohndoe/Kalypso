@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -66,13 +67,13 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
 {
-  public static Image IMG_IMPORT_REMOTE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) );
+  public static Image IMG_IMPORT_REMOTE = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_IMPORT_REMOTE_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote_disabled.gif" ) );
+  public static Image IMG_IMPORT_REMOTE_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/import_remote_disabled.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_REMOTE_PROJECT_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote_locked.gif" ) );
+  public static Image IMG_REMOTE_PROJECT_LOCKED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote_locked.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_REMOTE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) );
+  public static Image IMG_REMOTE_PROJECT = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/remote.gif" ) ); //$NON-NLS-1$
 
   protected final IRemoteProject m_remote;
 
@@ -99,12 +100,12 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
     if( m_remote.getBean().isProjectLockedForEditing() )
     {
       lnk.setImage( IMG_REMOTE_PROJECT_LOCKED );
-      lnk.setToolTipText( String.format( "Projekt: \"%s\" befindet sich aktuell in Bearbeitung.", m_remote.getName() ) );
+      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder.4"), m_remote.getName() ) ); //$NON-NLS-1$
     }
     else
     {
       lnk.setImage( IMG_REMOTE_PROJECT );
-      lnk.setToolTipText( String.format( "Projekt: %s", m_remote.getName() ) );
+      lnk.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder.5"), m_remote.getName() ) ); //$NON-NLS-1$
     }
 
     lnk.setUnderlined( false );
@@ -128,7 +129,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
   protected void getImportLink( final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkImport = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkImport.setToolTipText( String.format( "Importiere Projekt: %s", m_remote.getName() ) );
+    lnkImport.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectRowBuilder.6"), m_remote.getName() ) ); //$NON-NLS-1$
 
     if( ProjectDatabaseServerUtils.isServerOnline() )
     {
@@ -147,7 +148,7 @@ public class RemoteProjectRowBuilder extends AbstractProjectRowBuilder
 
             /* sort beans */
             final KalypsoProjectBean bean = m_remote.getBean();
-            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() );
+            final ProjectTemplate template = new ProjectTemplate( String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
 
             final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
             mapping.put( template, bean );

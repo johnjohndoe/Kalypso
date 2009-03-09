@@ -60,6 +60,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.afgui.extension.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.export.WizardProjectExport;
 import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialog;
 
@@ -68,13 +69,13 @@ import org.kalypso.project.database.client.ui.project.wizard.info.LocalInfoDialo
  */
 public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowBuilder
 {
-  public static Image IMG_LOCAL_PROJECT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) );
+  public static Image IMG_LOCAL_PROJECT = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/local.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_EXPORT_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) );
+  public static Image IMG_EXPORT_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/export_local.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_REMOTE_INFO = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+  public static Image IMG_REMOTE_INFO = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_DELETE_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) );
+  public static Image IMG_DELETE_LOCAL = new Image( null, AbstractLocalProjectRowBuilder.class.getResourceAsStream( "icons/delete_local.gif" ) ); //$NON-NLS-1$
 
   private final ILocalProject m_local;
 
@@ -99,13 +100,13 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        new UIJob( "" )
+        new UIJob( "" ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )
           {
             final Properties properties = new Properties();
-            properties.setProperty( "project", getLocalProject().getProject().getName() );
+            properties.setProperty( "project", getLocalProject().getProject().getName() ); //$NON-NLS-1$
 
             return getOpenAction().open( properties );
           }
@@ -117,7 +118,7 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
   protected void getLocalInfoLink( final Composite body, final FormToolkit toolkit )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", getLocalProject().getName() ) );
+    lnkInfo.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.AbstractLocalProjectRowBuilder.6"), getLocalProject().getName() ) ); //$NON-NLS-1$
 
     lnkInfo.setImage( IMG_REMOTE_INFO );
 
@@ -149,7 +150,7 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
   {
     final ImageHyperlink lnkExport = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkExport.setImage( IMG_EXPORT_LOCAL );
-    lnkExport.setToolTipText( String.format( "Exportiere Projekt: %s", getLocalProject().getName() ) );
+    lnkExport.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.AbstractLocalProjectRowBuilder.7"), getLocalProject().getName() ) ); //$NON-NLS-1$
 
     lnkExport.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -181,7 +182,7 @@ public abstract class AbstractLocalProjectRowBuilder extends AbstractProjectRowB
   {
     final ImageHyperlink lnkDelete = toolkit.createImageHyperlink( body, SWT.NONE );
     lnkDelete.setImage( IMG_DELETE_LOCAL );
-    lnkDelete.setToolTipText( String.format( "Lösche Projekt: %s", getLocalProject().getName() ) );
+    lnkDelete.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.AbstractLocalProjectRowBuilder.8"), getLocalProject().getName() ) ); //$NON-NLS-1$
 
     lnkDelete.addHyperlinkListener( new HyperlinkAdapter()
     {
