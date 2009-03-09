@@ -55,6 +55,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 
 /**
@@ -94,7 +95,7 @@ public class ActivateWorkflowProjectIntroAction implements IIntroAction
     {
       final Shell activeShell = workbench.getDisplay().getActiveShell();
       final IStatus status = e.getStatus();
-      ErrorDialog.openError( activeShell, Messages.getString( "Open1D2DProjectIntroAction.1" ), Messages.getString( "Open1D2DProjectIntroAction.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction.1" ), Messages.getString( "org.kalypso.afgui.application.ActivateWorkflowProjectIntroAction.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
     }
   }

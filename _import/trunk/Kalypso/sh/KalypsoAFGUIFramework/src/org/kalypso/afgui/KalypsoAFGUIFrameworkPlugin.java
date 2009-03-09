@@ -24,6 +24,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.extension.IKalypsoModule;
 import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
@@ -50,7 +51,7 @@ import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
-  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.afgui.kalypsoModule";
+  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.afgui.kalypsoModule"; //$NON-NLS-1$
 
   private static List<IKalypsoModule> KALYPSO_MODULES = null;
 
@@ -269,7 +270,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {
-      final UIJob job = new UIJob( "Öffne Szenario: " + nature.getProject().getName() + " - " + caze.getName() )
+      final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin.1") + nature.getProject().getName() + " - " + caze.getName() ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -302,7 +303,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         {
           final String pluginid = element.getContributor().getName();
           final Bundle bundle = Platform.getBundle( pluginid );
-          final Class< ? extends IKalypsoModule> featureClass = bundle.loadClass( element.getAttribute( "module" ) );
+          final Class< ? extends IKalypsoModule> featureClass = bundle.loadClass( element.getAttribute( "module" ) ); //$NON-NLS-1$
           final Constructor< ? extends IKalypsoModule> constructor = featureClass.getConstructor();
 
           final IKalypsoModule instance = constructor.newInstance();

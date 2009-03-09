@@ -144,7 +144,7 @@ public class Util
       if( caseDataProvider instanceof ICommandPoster )
         return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass );
       else
-        throw new RuntimeException( Messages.getString( "Util.0" ) ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.0" ) ); //$NON-NLS-1$
     }
     catch( final Throwable th )
     {
@@ -165,7 +165,7 @@ public class Util
       if( caseDataProvider instanceof ICommandPoster )
         ((ICommandPoster) caseDataProvider).postCommand( modelClass, command );
       else
-        throw new RuntimeException( Messages.getString( "Util.1" ) ); //$NON-NLS-1$
+        throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.1" ) ); //$NON-NLS-1$
     }
     catch( final Throwable th )
     {
@@ -222,7 +222,7 @@ public class Util
     }
     catch( final Exception e )
     {
-      throw new RuntimeException( Messages.getString( "Util.2" ) + modelClass, e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.2" ) + modelClass, e ); //$NON-NLS-1$
     }
   }
 
@@ -281,7 +281,7 @@ public class Util
   {
     if( feature == null || typeQname == null )
     {
-      throw new IllegalArgumentException( Messages.getString( "Util.3" ) + "\tfeature=" + feature + "\ttypeQname=" + typeQname ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.model.Util.3" ) + "\tfeature=" + feature + "\ttypeQname=" + typeQname ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     return typeQname.equals( feature.getFeatureType().getQName() );
@@ -299,8 +299,8 @@ public class Util
    */
   public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName ) throws IllegalArgumentException
   {
-    Assert.isNotNull( propQName, Messages.getString( "Util.15" ) ); //$NON-NLS-1$
-    Assert.isNotNull( parentFeature, Messages.getString( "Util.16" ) ); //$NON-NLS-1$
+    Assert.isNotNull( propQName, Messages.getString( "org.kalypso.afgui.model.Util.15" ) ); //$NON-NLS-1$
+    Assert.isNotNull( parentFeature, Messages.getString( "org.kalypso.afgui.model.Util.16" ) ); //$NON-NLS-1$
 
     try
     {
@@ -323,14 +323,14 @@ public class Util
     }
     catch( final GMLSchemaException ex )
     {
-      throw new IllegalArgumentException( Messages.getString( "Util.17" ) + propQName + Messages.getString( "Util.18" ) + featureQName, ex ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.model.Util.17" ) + propQName + Messages.getString( "org.kalypso.afgui.model.Util.18" ) + featureQName, ex ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, final Object[] featureProperties, final QName[] featurePropQNames ) throws IllegalArgumentException
   {
-    Assert.isNotNull( propQName, Messages.getString( "Util.19" ) ); //$NON-NLS-1$
-    Assert.isNotNull( parentFeature, Messages.getString( "Util.20" ) ); //$NON-NLS-1$
+    Assert.isNotNull( propQName, Messages.getString( "org.kalypso.afgui.model.Util.19" ) ); //$NON-NLS-1$
+    Assert.isNotNull( parentFeature, Messages.getString( "org.kalypso.afgui.model.Util.20" ) ); //$NON-NLS-1$
 
     try
     {
@@ -358,7 +358,7 @@ public class Util
     }
     catch( final GMLSchemaException ex )
     {
-      throw new IllegalArgumentException( Messages.getString( "Util.21" ) + propQName + Messages.getString( "Util.22" ) + featureQName, ex ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.model.Util.21" ) + propQName + Messages.getString( "org.kalypso.afgui.model.Util.22" ) + featureQName, ex ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -381,8 +381,8 @@ public class Util
    */
   public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, final String featureID ) throws IllegalArgumentException
   {
-    Assert.isNotNull( propQName, Messages.getString( "Util.23" ) ); //$NON-NLS-1$
-    Assert.isNotNull( parentFeature, Messages.getString( "Util.24" ) ); //$NON-NLS-1$
+    Assert.isNotNull( propQName, Messages.getString( "org.kalypso.afgui.model.Util.23" ) ); //$NON-NLS-1$
+    Assert.isNotNull( parentFeature, Messages.getString( "org.kalypso.afgui.model.Util.24" ) ); //$NON-NLS-1$
     Assert.isTrue( featureID != null && !featureID.isEmpty() );
 
     // try
@@ -392,7 +392,7 @@ public class Util
     final IPropertyType propertyType = featureType.getProperty( propQName );
     if( !(propertyType instanceof IRelationType) )
     {
-      throw new RuntimeException( Messages.getString( "Util.25" ) ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.25" ) ); //$NON-NLS-1$
     }
     return FeatureFactory.createFeature( parentFeature, (IRelationType) propertyType,// parentRelation,
     featureID, featureType, true,// initializeWithDefaults,
@@ -431,10 +431,10 @@ public class Util
    */
   public static final <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> get( final Feature feature, final QName featureQName, final QName listPropQName, final Class<T> bindingInterface, final boolean doCreate )
   {
-    Assert.isNotNull( feature, Messages.getString( "Util.26" ) ); //$NON-NLS-1$
-    Assert.isNotNull( featureQName, Messages.getString( "Util.27" ) ); //$NON-NLS-1$
-    Assert.isNotNull( listPropQName, Messages.getString( "Util.28" ) ); //$NON-NLS-1$
-    Assert.isNotNull( bindingInterface, Messages.getString( "Util.29" ) ); //$NON-NLS-1$
+    Assert.isNotNull( feature, Messages.getString( "org.kalypso.afgui.model.Util.26" ) ); //$NON-NLS-1$
+    Assert.isNotNull( featureQName, Messages.getString( "org.kalypso.afgui.model.Util.27" ) ); //$NON-NLS-1$
+    Assert.isNotNull( listPropQName, Messages.getString( "org.kalypso.afgui.model.Util.28" ) ); //$NON-NLS-1$
+    Assert.isNotNull( bindingInterface, Messages.getString( "org.kalypso.afgui.model.Util.29" ) ); //$NON-NLS-1$
 
     final Object prop = feature.getProperty( listPropQName );
 

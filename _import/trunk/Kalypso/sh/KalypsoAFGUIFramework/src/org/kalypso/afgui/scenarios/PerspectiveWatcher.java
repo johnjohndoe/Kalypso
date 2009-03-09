@@ -12,6 +12,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.views.WorkflowView;
 
@@ -36,7 +37,7 @@ public class PerspectiveWatcher
    */
   public static void cleanPerspective( final IWorkbench workbench, final Collection<String> partsToKeep )
   {
-    final UIJob job = new UIJob( Messages.getString( "PerspectiveWatcher.0" ) ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.scenarios.PerspectiveWatcher.0" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -81,7 +82,7 @@ public class PerspectiveWatcher
           return true;
         else if( SCENARIO_VIEW_ID.equals( viewId ) )
           return true;
-        else if( reference.getPartName().equals( "Welcome" ) )
+        else if( reference.getPartName().equals( Messages.getString("org.kalypso.afgui.scenarios.PerspectiveWatcher.1") ) ) //$NON-NLS-1$
           return true;
         else
           return false;

@@ -78,7 +78,7 @@ public class NewProjectHandler extends AbstractHandler implements IHandler
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final NewWizard wizard = new NewWizard();
 
-    wizard.setCategoryId( "org.kalypso.ui.newwizards.kalypso" );
+    wizard.setCategoryId( "org.kalypso.ui.newwizards.kalypso" ); //$NON-NLS-1$
     wizard.setProjectsOnly( true );
     final IStructuredSelection selectionToPass;
     if( selection instanceof IStructuredSelection )

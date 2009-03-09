@@ -23,6 +23,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -49,7 +50,7 @@ public class MapViewInputContextHandler extends AbstractHandler
   {
     m_url = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
 
-    Assert.isNotNull( m_url, "Parameter 'input' not set for mapViewInputContext" );
+    Assert.isNotNull( m_url, Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -62,7 +63,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* project absolute location */
-    if( m_url.startsWith( "project://" ) )
+    if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
     {
       final String url = m_url.substring( 10 );
       final IProject project = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getProject();
@@ -70,7 +71,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       iMap = project.getFile( url );
     }
     /* base scenario relative location */
-    else if( m_url.startsWith( "base://" ) )
+    else if( m_url.startsWith( "base://" ) ) //$NON-NLS-1$
     {
       try
       {
@@ -83,7 +84,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       }
       catch( final CoreException e )
       {
-        throw new ExecutionException( "Konnte Szenario nicht auflösen." );
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.3") ); //$NON-NLS-1$
       }
     }
     /* current scenario relative location */
@@ -93,11 +94,11 @@ public class MapViewInputContextHandler extends AbstractHandler
       final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
       if( folder == null )
       {
-        throw new ExecutionException( "Kein Szenario aktiv oder Szenarioordner nicht gefunden." );
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.4") ); //$NON-NLS-1$
       }
       else if( m_url == null )
       {
-        throw new ExecutionException( "Keine Kartenvorlage angegeben." );
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.5") ); //$NON-NLS-1$
       }
 
       // find file in active scenario folder
@@ -111,7 +112,7 @@ public class MapViewInputContextHandler extends AbstractHandler
 
     if( view == null || !(view instanceof MapView) )
     {
-      throw new ExecutionException( "Es wurde keine geöffnete Karte gefunden." );
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.6") ); //$NON-NLS-1$
     }
     else
     {

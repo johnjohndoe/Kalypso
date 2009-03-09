@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -89,7 +90,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
     final Scenario newScenario = of.createScenario();
     try
     {
-      newScenario.setURI( parentScenario.getURI() + "/" + URLEncoder.encode( name, "UTF-8" ) );
+      newScenario.setURI( parentScenario.getURI() + "/" + URLEncoder.encode( name, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final UnsupportedEncodingException e )
     {
@@ -157,7 +158,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
 
       persist( null );
 
-      new UIJob( "" )
+      new UIJob( "" ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -174,7 +175,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
-      throw new CoreException( StatusUtilities.createErrorStatus( "Cloning of scenario failed", e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.afgui.scenarios.ScenarioManager.3"), e ) ); //$NON-NLS-1$
     }
 
   }
@@ -191,12 +192,12 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
     }
     try
     {
-      monitor.beginTask( Messages.getString( "ScenarioManager.4" ), 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.4" ), 100 ); //$NON-NLS-1$
       final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
       // only remove if no derived scenarios
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ScenarioManager.5" ) ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.5" ) ) ); //$NON-NLS-1$
       }
       final IScenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )

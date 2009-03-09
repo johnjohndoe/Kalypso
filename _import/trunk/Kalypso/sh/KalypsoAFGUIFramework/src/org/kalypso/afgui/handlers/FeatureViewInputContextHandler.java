@@ -21,6 +21,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -47,9 +48,9 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class FeatureViewInputContextHandler extends AbstractHandler
 {
-  private static final String PARAM_GML = "gml";
+  private static final String PARAM_GML = "gml"; //$NON-NLS-1$
 
-  private static final String PARAM_VIEW_TITLE = "viewTitle";
+  private static final String PARAM_VIEW_TITLE = "viewTitle"; //$NON-NLS-1$
 
   private final String m_featureViewInput;
 
@@ -66,7 +67,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
     m_gmlPath = properties.getProperty( PARAM_GML, null );
     m_viewTitle = properties.getProperty( PARAM_VIEW_TITLE, null );
 
-    Assert.isTrue( m_featureViewInput != null || m_gmlPath != null, "Parameter 'input' not set for featureViewInputContext" );
+    Assert.isTrue( m_featureViewInput != null || m_gmlPath != null, Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -92,16 +93,16 @@ public class FeatureViewInputContextHandler extends AbstractHandler
     final IViewPart view = page == null ? null : page.findView( FeatureTemplateView.ID );
 
     if( !(view instanceof FeatureTemplateView) )
-      throw new ExecutionException( "FeatureTemplateView not found. Must be open in order to execute this context." );
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.3") ); //$NON-NLS-1$
 
     final String gmlPath = m_gmlPath;
     if( file == null && gmlPath == null )
-      throw new ExecutionException( "Unable to find .gft file: " + m_featureViewInput );
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.4") + m_featureViewInput ); //$NON-NLS-1$
 
     final FeatureTemplateView featureView = (FeatureTemplateView) view;
     final String viewTitle = m_viewTitle;
 
-    final UIJob job = new UIJob( "FeatureView wird geöffnet" )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.5") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( IProgressMonitor monitor )
@@ -115,11 +116,11 @@ public class FeatureViewInputContextHandler extends AbstractHandler
           {
             // if we have a gmlPath we create a pseudo template here
             template = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplate();
-            template.setName( "Feature View" );
+            template.setName( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.6") ); //$NON-NLS-1$
             Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
             layer.setHref( gmlPath );
-            layer.setLinktype( "gml" );
-            layer.setFeaturePath( "#fid#root" ); // always use root feature; maybe get from parameter some day
+            layer.setLinktype( "gml" ); //$NON-NLS-1$
+            layer.setFeaturePath( "#fid#root" ); // always use root feature; maybe get from parameter some day //$NON-NLS-1$
             template.setLayer( layer );
             urlContext = ResourceUtilities.createURL( szenarioFolder );
           }

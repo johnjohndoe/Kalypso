@@ -27,7 +27,7 @@ public class Perspective implements IPerspectiveFactory
   // REMARK: see #ID
   public final static String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView"; //$NON-NLS-1$
 
-  public final static String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView";
+  public final static String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"; //$NON-NLS-1$
 
   public void createInitialLayout( final IPageLayout layout )
   {

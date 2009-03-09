@@ -20,14 +20,14 @@
             class="org.kalypso.afgui.views.WorkflowView"
             icon="icons/nuvola_select/loop.png"
             id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"
-            name="Aktivitäten">
+            name="%org.kalypso.kalypso1d2d.pjt.views.WorklistView.name">
       </view>
       <view
             allowMultiple="false"
             class="org.eclipse.ui.navigator.CommonNavigator"
             icon="icons/scenario_view.gif"
             id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"
-            name="Szenarien">
+            name="%org.kalypso.kalypso1d2d.pjt.views.ScenarioView.name">
       </view>
    </extension>
    <extension
@@ -54,7 +54,7 @@
             contentProvider="org.kalypso.afgui.views.ScenarioContentProvider"
             id="org.kalypso.afgui.content.scenarios"
             labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
-            name="Szenario"
+            name="%org.kalypso.afgui.content.scenarios.name"
             priority="highest"
             providesSaveables="false">
          <enablement>
@@ -74,7 +74,7 @@
       <commonFilter
             activeByDefault="true"
             id="org.kalypso.afgui.filters.noresources"
-            name="Ressourcen ausblenden">
+            name="%org.kalypso.afgui.filters.noresources.name">
          <filterExpression>
             <not>
                <or>
@@ -93,9 +93,9 @@
       </commonFilter>
       <commonFilter
             activeByDefault="true"
-            description="Nur Projekte mit Szenarien anzeigen"
+            description="%org.kalypso.afgui.filters.scenarioprojects.description"
             id="org.kalypso.afgui.filters.scenarioprojects"
-            name="Nur Projekte mit Szenarien anzeigen">
+            name="%org.kalypso.afgui.filters.scenarioprojects.name">
          <filterExpression>
             <and>
                <instanceof
@@ -155,21 +155,21 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="de.renew.workflow.tasks.category"
-            description="Neues Projekt anlegen"
+            description="%org.kalypso.afgui.command.newproject.description"
             id="org.kalypso.afgui.command.newproject"
-            name="Projekt neu">
+            name="%org.kalypso.afgui.command.newproject.name">
       </command>
       <command
             categoryId="de.renew.workflow.tasks.category"
-            description="Ein neues Szenario hinzufügen"
+            description="%http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario.description"
             id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
-            name="Szenario hinzufügen">
+            name="%http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario.name">
       </command>
       <command
             categoryId="de.renew.workflow.tasks.category"
-            description="Das gewählte Szenario aktivieren"
+            description="%http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario.description"
             id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
-            name="Szenario aktivieren">
+            name="%http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario.name">
       </command>
    </extension>
    <extension
@@ -285,7 +285,7 @@
             class="org.kalypso.afgui.perspective.Perspective"
             icon="icons/kalypsoWorkflow.png"
             id="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
-            name="Kalypso Workflow">
+            name="%org.kalypso.kalypso1d2d.pjt.perspective.Perspective.name">
       </perspective>      
    </extension>
  <extension
@@ -293,7 +293,7 @@
     <decorator
           icon="icons/scenario_small.png"
           id="org.kalypso.scenarios.scenarioNatureDecorator"
-          label="Szenario-Projekt"
+          label="%org.kalypso.scenarios.scenarioNatureDecorator.label"
           lightweight="true"
           location="TOP_RIGHT"
           state="true">

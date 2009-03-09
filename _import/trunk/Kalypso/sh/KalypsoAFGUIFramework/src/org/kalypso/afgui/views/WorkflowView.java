@@ -13,6 +13,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
@@ -71,14 +72,14 @@ public class WorkflowView extends ViewPart
     final String contentDescription;
     if( scenario == null || newProject == null )
     {
-      contentDescription = "Kein Szenario aktiv.";
+      contentDescription = Messages.getString("org.kalypso.afgui.views.WorkflowView.0"); //$NON-NLS-1$
     }
     else
     {
-      contentDescription = "Aktives Szenario: " + projectName;
+      contentDescription = Messages.getString("org.kalypso.afgui.views.WorkflowView.1") + projectName; //$NON-NLS-1$
     }
 
-    final UIJob job = new UIJob( "Update Content Description" )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.views.WorkflowView.2") ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override

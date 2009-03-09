@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
@@ -131,8 +132,8 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     final IStatus result = m_taskExecutor.execute( task );
     // TODO: error handling should be done by the task executor!; why isn't there a job?
     final Shell shell = m_treeViewer.getControl().getShell();
-    final String title = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.2" );//$NON-NLS-1$
-    final String message = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.3" ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.afgui.views.WorkflowControl.2" );//$NON-NLS-1$
+    final String message = Messages.getString( "org.kalypso.afgui.views.WorkflowControl.3" ); //$NON-NLS-1$
     if( !result.isOK() )
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( result );
@@ -187,7 +188,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
       return;
     }
 
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

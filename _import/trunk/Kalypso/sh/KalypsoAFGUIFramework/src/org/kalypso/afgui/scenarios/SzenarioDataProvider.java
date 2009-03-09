@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.ICommand;
@@ -137,7 +138,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             public void run( )
             {
               final Shell activeShell = display.getActiveShell();
-              ErrorDialog.openError( activeShell, "GML wurde geladen.", "Meldungen:", status );
+              ErrorDialog.openError( activeShell, Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.0"), Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           } );
         }
@@ -202,8 +203,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     {
       final IProject project = scenario.getProject();
       final ProjectScope projectScope = new ProjectScope( project );
-      final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" );
-      m_dataSetScope = afguiNode == null ? null : afguiNode.get( "dataSetScope", null );
+      final IEclipsePreferences afguiNode = projectScope.getNode( "org.kalypso.afgui" ); //$NON-NLS-1$
+      m_dataSetScope = afguiNode == null ? null : afguiNode.get( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.3"), null ); //$NON-NLS-1$
     }
 
     m_scenario = (IScenario) scenario;
@@ -213,7 +214,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       return;
 
     final String dataSetScope = m_dataSetScope;
-    final Job job = new Job( "Initalisiere Daten für das aktuelle Szenario." )
+    final Job job = new Job( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.4") ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -265,7 +266,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
             }
           }
         }
-        return StatusUtilities.createStatus( statusList, "Beim Initialisieren der Szenariodaten sind Probleme aufgetreten." );
+        return StatusUtilities.createStatus( statusList, Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.5") ); //$NON-NLS-1$
       }
 
       private IFolder resolveFolder( final IScenario scene, final String gmlLocation ) throws CoreException
@@ -403,7 +404,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       final URL szenarioURL = ResourceUtilities.createURL( szenarioFolder );
-      return new PoolableObjectType( "gml", gmlLocation, szenarioURL );
+      return new PoolableObjectType( "gml", gmlLocation, szenarioURL ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
@@ -547,7 +548,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public void saveModel( final String id, final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.14" ) + id + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.14" ) + id + Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final KeyPoolListener keyPoolListener;
     synchronized( m_keyMap )
@@ -558,7 +559,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     try
     {
       if( keyPoolListener == null )
-        throw new IllegalArgumentException( "Unknown model: " + id );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.afgui.scenarios.SzenarioDataProvider.7") + id ); //$NON-NLS-1$
 
       final IPoolableObjectType key = keyPoolListener.getKey();
       if( key != null )
@@ -587,7 +588,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public void saveModel( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
     try
     {
       for( final String id : m_keyMap.keySet() )
@@ -619,7 +620,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( m_dataSetScope );
 
     if( locationMap == null || !locationMap.containsKey( id ) )
-      throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 

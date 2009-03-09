@@ -65,6 +65,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.extension.INewProjectWizard;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
@@ -154,7 +155,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     // the project name later before the next page is created, this works however only once :-(
 
     // HACK: special case: the resource page: will lead to NPE if not created
-    final IWizardPage page = getPage( "basicReferenceProjectPage" );
+    final IWizardPage page = getPage( "basicReferenceProjectPage" ); //$NON-NLS-1$
     if( page != null )
       page.createControl( pageContainer );
   }
@@ -166,7 +167,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       final ProjectTemplate demoProject = m_templateProjectPage.getSelectedProject();
       // TODO: Does work only the first time :-( ,see above createPageControls
 
-      final WizardNewProjectCreationPage createProjectPage = (WizardNewProjectCreationPage) getPage( "basicNewProjectPage" );
+      final WizardNewProjectCreationPage createProjectPage = (WizardNewProjectCreationPage) getPage( "basicNewProjectPage" ); //$NON-NLS-1$
       createProjectPage.setInitialProjectName( demoProject.getProjectName() );
     }
   }
@@ -219,7 +220,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
       {
-        final SubMonitor progress = SubMonitor.convert( monitor, "Projektstruktur wird erzeugt - ", 90 );
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.2"), 90 ); //$NON-NLS-1$
         try
         {
           // REMARK: we unpack into a closed project here (not using unzip(URL, IFolder)), as else
@@ -289,7 +290,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( getShell(), "Projekt Neu", "Fehler beim Erzeugen des Projekts", resultStatus );
+    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.3"), Messages.getString("org.kalypso.afgui.wizards.NewProjectWizard.4"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // REMARK: we always return here, because the BasicNewProjectWizard does not allow to create a project twice
     // So the wizard must be closed now

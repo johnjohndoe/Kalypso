@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IDerivedScenarioCopyFilter;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
@@ -66,7 +67,7 @@ import de.renew.workflow.connector.cases.ICase;
  */
 public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
 {
-  public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature";
+  public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature"; //$NON-NLS-1$
 
   IDerivedScenarioCopyFilter m_filter = new IDerivedScenarioCopyFilter()
   {
@@ -204,7 +205,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final IStatus status = e.getStatus();
-        ErrorDialog.openError( activeShell, "Problem", "Konnte Szenariodaten nicht kopieren.", status );
+        ErrorDialog.openError( activeShell, Messages.getString("org.kalypso.afgui.ScenarioHandlingProjectNature.1"), Messages.getString("org.kalypso.afgui.ScenarioHandlingProjectNature.2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }

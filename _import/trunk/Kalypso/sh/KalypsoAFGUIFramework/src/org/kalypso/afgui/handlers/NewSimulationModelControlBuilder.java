@@ -25,7 +25,7 @@ import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-
+import org.kalypso.afgui.i18n.Messages;
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
@@ -35,13 +35,13 @@ import de.renew.workflow.connector.context.ActiveWorkContext;
 public class NewSimulationModelControlBuilder
 {
 
-  final static String NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString( "NewSimulationModelControlBuilder.0" ); //$NON-NLS-1$
+  final static String NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.0" ); //$NON-NLS-1$
 
-  final static String ALLREADY_EXISTS = Messages.getString( "NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
+  final static String ALLREADY_EXISTS = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
 
   final static Logger logger = Logger.getLogger( NewSimulationModelControlBuilder.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui.handlers.org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
 
   static
   {
@@ -100,20 +100,20 @@ public class NewSimulationModelControlBuilder
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label newModelNameLabel = new Label( panel, SWT.NONE );
-    newModelNameLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.3" ) ); //$NON-NLS-1$
+    newModelNameLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.3" ) ); //$NON-NLS-1$
     newModelTFE = new Text( panel, SWT.BORDER );
     newModelTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     newModelTFE.addKeyListener( keyListener );
 
     final Label parentLabel = new Label( panel, SWT.NONE );
-    parentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
+    parentLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
     parentTFE = new Text( panel, SWT.BORDER );
     parentTFE.setEditable( false );
     parentTFE.setText( getParentDataName() );
     parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Label commentLabel = new Label( panel, SWT.NONE );
-    commentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.5" ) ); //$NON-NLS-1$
+    commentLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.5" ) ); //$NON-NLS-1$
     commentText = new Text( panel, SWT.BORDER | SWT.WRAP | SWT.MULTI );
     final GridData gd = new GridData( GridData.FILL_BOTH );
     gd.verticalSpan = 10;
@@ -127,7 +127,7 @@ public class NewSimulationModelControlBuilder
   {
     if( m_scenario == null )
     {
-      return Messages.getString( "NewSimulationModelControlBuilder.6" ); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.6" ); //$NON-NLS-1$
     }
     return m_scenario.getName();
   }
@@ -185,8 +185,8 @@ public class NewSimulationModelControlBuilder
 
   public static void startWizard( final Shell shell, final IScenario scenario, final IProject project )
   {
-    logger.info( Messages.getString( "NewSimulationModelControlBuilder.10" ) ); //$NON-NLS-1$
-    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( Messages.getString( "NewSimulationModelControlBuilder.11" ), scenario ); //$NON-NLS-1$
+    logger.info( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.10" ) ); //$NON-NLS-1$
+    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.11" ), scenario ); //$NON-NLS-1$
 
     final Wizard iWizard = new Wizard()
     {
@@ -208,7 +208,7 @@ public class NewSimulationModelControlBuilder
     iWizard.addPage( wpage );
     // wpage.setTitle("spage");
     final WizardDialog wd = new WizardDialog( shell, iWizard );
-    wd.setTitle( Messages.getString( "NewSimulationModelControlBuilder.13" ) ); //$NON-NLS-1$
+    wd.setTitle( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.13" ) ); //$NON-NLS-1$
     // wd.setMessage("Neue Simulationsmodell");
     // wd.setBlockOnOpen(true);
     final int decision = wd.open();
@@ -239,13 +239,13 @@ public class NewSimulationModelControlBuilder
       catch( final CoreException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( shell, Messages.getString( "NewSimulationModelControlBuilder.15" ), Messages.getString( "NewSimulationModelControlBuilder.16" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.15" ), Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.16" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }
     else
     {
-      logger.info( Messages.getString( "NewSimulationModelControlBuilder.17" ) + decision ); //$NON-NLS-1$
+      logger.info( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.17" ) + decision ); //$NON-NLS-1$
     }
   }
 }

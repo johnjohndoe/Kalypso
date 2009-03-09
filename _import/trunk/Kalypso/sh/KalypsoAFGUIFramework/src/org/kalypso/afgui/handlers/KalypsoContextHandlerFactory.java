@@ -45,6 +45,7 @@ import java.util.Properties;
 
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.afgui.i18n.Messages;
 
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.ExtensionContext;
@@ -79,10 +80,10 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
       properties.put( parameter.getName(), parameter.getValue() );
 
     final String type = properties.getProperty( PARAM_TYPE, null );
-    Assert.isNotNull( type, "'type' parameter not set for extension-context" );
+    Assert.isNotNull( type, Messages.getString("org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.0") ); //$NON-NLS-1$
 
     final IHandler handler = createHander( type, properties );
-    Assert.isNotNull( handler, "Could not instantiate extension-context: " + type );
+    Assert.isNotNull( handler, Messages.getString("org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.1") + type ); //$NON-NLS-1$
     return handler;
   }
 

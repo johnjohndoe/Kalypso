@@ -20,7 +20,7 @@ import org.kalypso.ogc.gml.mapmodel.ActivateThemeJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
-
+import org.kalypso.afgui.i18n.Messages;
 /**
  * Activates a given theme in the current map view.
  * 
@@ -36,7 +36,7 @@ public class ThemeContextHandler extends AbstractHandler
   {
     m_featureType = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
 
-    Assert.isNotNull( m_featureType, "Parameter 'input' not set for themeContext" );
+    Assert.isNotNull( m_featureType, Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -71,7 +71,7 @@ public class ThemeContextHandler extends AbstractHandler
       final MapView mapView = (MapView) view;
       final IMapPanel mapPanel = mapView.getMapPanel();
 
-      MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Thema aktivieren", "Warten auf Karte gescheitert" );
+      MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.1"), Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.2") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IMapModell mapModell = mapPanel.getMapModell();
 
@@ -79,7 +79,7 @@ public class ThemeContextHandler extends AbstractHandler
         return Status.CANCEL_STATUS;
 
       final String featureType = m_featureType;
-      m_activateThemeJob = new ActivateThemeJob( mapModell, Messages.getString( "ThemeContextHandler.3" ), featureType );
+      m_activateThemeJob = new ActivateThemeJob( mapModell, Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.3" ), featureType ); //$NON-NLS-1$
       m_activateThemeJob.setRule( mapView.getSchedulingRule().getActivateLayerSchedulingRule() );
       m_activateThemeJob.setUser( true );
       m_activateThemeJob.schedule();

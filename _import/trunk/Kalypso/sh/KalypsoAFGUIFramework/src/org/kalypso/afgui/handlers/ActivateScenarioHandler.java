@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -47,7 +48,7 @@ public class ActivateScenarioHandler extends AbstractHandler
         {
           final Shell shell = HandlerUtil.getActiveShellChecked( event );
           final IStatus status = e.getStatus();
-          ErrorDialog.openError( shell, Messages.getString( "ActivateScenarioHandler.0" ), Messages.getString( "ActivateScenarioHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( shell, Messages.getString( "org.kalypso.afgui.handlers.ActivateScenarioHandler.0" ), Messages.getString( "org.kalypso.afgui.handlers.ActivateScenarioHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
           plugin.getLog().log( status );
         }
       }
