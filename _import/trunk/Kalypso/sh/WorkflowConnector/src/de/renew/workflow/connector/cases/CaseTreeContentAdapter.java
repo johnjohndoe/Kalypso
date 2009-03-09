@@ -41,6 +41,7 @@
 package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -136,9 +137,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       return adapter.getLabel( project );
     }
     else if( o instanceof ICase )
-    {
       return ((ICase) o).getName();
-    }
     return null;
   }
 
@@ -163,9 +162,19 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       {
         final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
         final IEvaluationContext currentState = handlerService.getCurrentState();
+
         final String activeCaseURI = (String) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_URI_NAME );
-        if( caze.getURI().equals( activeCaseURI ) )
-          return m_activeFont;
+        final IFolder activeCaseFolder = (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
+        try
+        {
+          if( caze.getURI().equals( activeCaseURI ) && caze.getFolder().equals( activeCaseFolder ) )
+            return m_activeFont;
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
     return null;
