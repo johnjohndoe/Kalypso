@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -111,9 +112,13 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     final Object o = m_object;
     if( o != null )
+    {
       l.objectLoaded( m_key, o, Status.OK_STATUS );
+    }
     else if( getState() == Job.NONE )
+    {
       schedule();
+    }
   }
 
   public boolean removeListener( final IPoolListener l )
@@ -132,7 +137,9 @@ public final class KeyInfo extends Job implements ILoaderListener
       if( m_object == object )
       {
         if( DO_LOG )
+        {
           LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
+        }
 
         m_loader.release( m_object );
         m_object = null;
@@ -141,11 +148,15 @@ public final class KeyInfo extends Job implements ILoaderListener
         // ansonsten einfach neu laden, dann werden die listener ja auch
         // informiert
         if( bCannotReload )
+        {
           oldObject = object;
+        }
         else
         {
           if( getState() == Job.NONE )
+          {
             schedule();
+          }
         }
       }
     }
@@ -156,7 +167,9 @@ public final class KeyInfo extends Job implements ILoaderListener
       // so we cannot iterate over m_listeners
       final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
       for( final IPoolListener element : ls )
+      {
         element.objectInvalid( m_key, oldObject );
+      }
     }
   }
 
@@ -178,7 +191,9 @@ public final class KeyInfo extends Job implements ILoaderListener
     // so we cannot iterate over m_listeners
     final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
     for( final IPoolListener element : ls )
+    {
       element.objectLoaded( m_key, o, status );
+    }
 
     return status;
   }
@@ -194,7 +209,9 @@ public final class KeyInfo extends Job implements ILoaderListener
       try
       {
         if( DO_LOG )
+        {
           LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.4" ) + m_key ); //$NON-NLS-1$
+        }
 
         m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
@@ -206,6 +223,15 @@ public final class KeyInfo extends Job implements ILoaderListener
 
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
+
+        final Throwable cause = e.getCause();
+        if( cause instanceof CoreException )
+        {
+          final CoreException core = (CoreException) cause;
+          final IStatus status = core.getStatus();
+          if( status.matches( IStatus.CANCEL ) )
+            return status;
+        }
 
         return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
       }
@@ -234,9 +260,13 @@ public final class KeyInfo extends Job implements ILoaderListener
     final StringBuffer b = new StringBuffer();
     b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.6" ) ); //$NON-NLS-1$
     if( m_object != null )
+    {
       b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.7" ) + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
     else
+    {
       b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.9" ) ); //$NON-NLS-1$
+    }
     b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.10" ) + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.12" ) + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.14" ) + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -275,7 +305,9 @@ public final class KeyInfo extends Job implements ILoaderListener
     // TRICKY: objectInvalid may add/remove PoolListener for this key,
     // so we cannot iterate over m_listeners
     for( final IPoolListener element : ls )
+    {
       element.dirtyChanged( m_key, isDirty );
+    }
   }
 
   public void reload( )

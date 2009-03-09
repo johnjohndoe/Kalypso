@@ -82,7 +82,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -111,7 +110,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben.
- *
+ * 
  * @author Gernot Belger
  */
 public final class GmlSerializer
@@ -141,9 +140,13 @@ public final class GmlSerializer
 
       // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
       if( gmlFile.getName().endsWith( ".gz" ) )
+      {
         os = new GZIPOutputStream( bs );
+      }
       else
+      {
         os = bs;
+      }
 
       GmlSerializer.serializeWorkspace( os, gmlWorkspace, encoding );
       os.close();
@@ -156,7 +159,7 @@ public final class GmlSerializer
 
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
-   *
+   * 
    * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
    *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
@@ -178,7 +181,9 @@ public final class GmlSerializer
     finally
     {
       if( closeWriter )
+      {
         IOUtils.closeQuietly( writer );
+      }
     }
   }
 
@@ -276,7 +281,9 @@ public final class GmlSerializer
 
       InputStream bis;
       if( monitor == null )
+      {
         bis = new BufferedInputStream( urlStream );
+      }
       else
       {
         final long contentLength = getContentLength( gmlURL );
@@ -286,9 +293,13 @@ public final class GmlSerializer
       }
 
       if( gmlURL.toExternalForm().endsWith( ".gz" ) )
+      {
         is = new GZIPInputStream( bis );
+      }
       else
+      {
         is = bis;
+      }
 
       final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, gmlURL, factory );
       is.close();
@@ -298,7 +309,7 @@ public final class GmlSerializer
     {
       // Handle cancel of progress monitor: ProgressInputStreams throws IOException with a CoreException as cause
       if( e == ProgressInputStream.CANCEL_EXCEPTION )
-        throw new CoreException( Status.CANCEL_STATUS );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, "Canceled - Serializing of GML Workspace", e ) );
 
       throw e;
     }
@@ -308,7 +319,9 @@ public final class GmlSerializer
       // also close <code>bis</code> separately, as GZipInputStream throws exception in constructor
       IOUtils.closeQuietly( urlStream );
       if( monitor != null )
+      {
         monitor.done();
+      }
     }
   }
 
@@ -331,7 +344,9 @@ public final class GmlSerializer
   {
     TimeLogger perfLogger = null;
     if( KalypsoCoreDebug.PERF_SERIALIZE_GML.isEnabled() )
+    {
       perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.7" ) ); //$NON-NLS-1$
+    }
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
@@ -371,9 +386,13 @@ public final class GmlSerializer
       bis = new BufferedInputStream( new FileInputStream( file ) );
 
       if( file.getName().endsWith( ".gz" ) )
+      {
         is = new GZIPInputStream( bis );
+      }
       else
+      {
         is = bis;
+      }
 
       final GMLWorkspace workspace = createGMLWorkspace( is, null, factory );
       is.close();
@@ -477,7 +496,7 @@ public final class GmlSerializer
 
   /**
    * This function loads a workspace from a {@link IFile}.
-   *
+   * 
    * @param file
    *          The file of the workspace.
    * @return The workspace of the file.
@@ -494,7 +513,7 @@ public final class GmlSerializer
   /**
    * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
    * create. It will be used by this function.
-   *
+   * 
    * @param workspace
    *          The workspace to save.
    * @param file
