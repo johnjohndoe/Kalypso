@@ -60,6 +60,7 @@ import org.kalypso.project.database.client.core.model.remote.RemoteProjectHandle
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.transcendence.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -258,7 +259,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     if( m_remote != null )
       return m_remote.getRemoteConnectionState();
 
-    return StatusUtilities.createWarningStatus( "Laufzeiteinstellung verhindert Behandlung von Remote-Projekten" );
+    return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0") ); //$NON-NLS-1$
   }
 
   /**

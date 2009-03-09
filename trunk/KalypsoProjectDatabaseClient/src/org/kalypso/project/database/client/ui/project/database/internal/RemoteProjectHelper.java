@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.create.DisableCreateProjectWizardPageElements;
 import org.kalypso.project.database.client.ui.project.wizard.create.WizardCreateProject;
 import org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog;
@@ -78,16 +79,16 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class RemoteProjectHelper
 {
-  public static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) );
+  public static Image IMG_REMOTE_INFO_DISABLED = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote_disabled.gif" ) ); //$NON-NLS-1$
 
-  public static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) );
+  public static Image IMG_REMOTE_INFO = new Image( null, AbstractProjectRowBuilder.class.getResourceAsStream( "icons/info_remote.gif" ) ); //$NON-NLS-1$
 
   public static IProject importRemoteProject( final ProjectTemplate[] templates, final Map<ProjectTemplate, KalypsoProjectBean> mapping )
   {
     final WizardCreateProject wizard;
     if( templates.length == 1 )
     {
-      final ProjectTemplatePage page = new ProjectTemplatePage( "Projekt-Download", "Wählen Sie eine Version des Projektes, welches Sie aus der Projektdatenbank herunterladen möchten.", new ProjectTemplate[] { templates[0] } );
+      final ProjectTemplatePage page = new ProjectTemplatePage( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectHelper.2"), Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectHelper.3"), new ProjectTemplate[] { templates[0] } ); //$NON-NLS-1$ //$NON-NLS-2$
       wizard = new WizardCreateProject( page, new String[] {} );
     }
     else
@@ -155,7 +156,7 @@ public class RemoteProjectHelper
   protected static void getRemoteInfoLink( final IRemoteProject remote, final Composite body, final FormToolkit toolkit, final IProjectDatabaseUiLocker locker )
   {
     final ImageHyperlink lnkInfo = toolkit.createImageHyperlink( body, SWT.NONE );
-    lnkInfo.setToolTipText( String.format( "Projekthistorie: %s", remote.getName() ) );
+    lnkInfo.setToolTipText( String.format( Messages.getString("org.kalypso.project.database.client.ui.project.database.internal.RemoteProjectHelper.4"), remote.getName() ) ); //$NON-NLS-1$
 
     if( ProjectDatabaseServerUtils.isServerOnline() )
     {

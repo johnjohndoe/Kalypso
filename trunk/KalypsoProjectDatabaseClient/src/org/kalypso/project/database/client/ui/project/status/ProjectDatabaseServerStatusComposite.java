@@ -56,6 +56,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.util.swt.StatusDialog;
 
 /**
@@ -65,11 +66,11 @@ import org.kalypso.util.swt.StatusDialog;
  */
 public class ProjectDatabaseServerStatusComposite extends Composite implements IRemoteProjectsListener
 {
-  private static final Image IMG_SERVER_WAITING = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_refresh.gif" ) );
+  private static final Image IMG_SERVER_WAITING = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_refresh.gif" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_SERVER_OK = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_okay.gif" ) );
+  private static final Image IMG_SERVER_OK = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_okay.gif" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_SERVER_ERROR = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_error.gif" ) );
+  private static final Image IMG_SERVER_ERROR = new Image( null, ProjectDatabaseServerStatusComposite.class.getResourceAsStream( "icons/server_error.gif" ) ); //$NON-NLS-1$
 
   private final FormToolkit m_toolkit;
 
@@ -113,18 +114,18 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
 
     if( connectionState != null && connectionState.getSeverity() == IStatus.OK )
     {
-      img.setText( "Server Status: online" );
+      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.0") ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_OK );
 
     }
     else if( connectionState.getSeverity() == IStatus.WARNING )
     {
-      img.setText( "Server Status: aktualisiere" );
+      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.4") ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_WAITING );
     }
     else
     {
-      img.setText( "Server Status: offline" );
+      img.setText( Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.5") ); //$NON-NLS-1$
       img.setImage( IMG_SERVER_ERROR );
     }
 
@@ -138,7 +139,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
         @Override
         public void linkActivated( final HyperlinkEvent e1 )
         {
-          final StatusDialog dialog = new StatusDialog( img.getShell(), connectionState, "Verbindungsstatus" );
+          final StatusDialog dialog = new StatusDialog( img.getShell(), connectionState, Messages.getString("org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite.6") ); //$NON-NLS-1$
           dialog.open();
         }
       } );
@@ -154,7 +155,7 @@ public class ProjectDatabaseServerStatusComposite extends Composite implements I
   @Override
   public void remoteConnectionChanged( final IStatus connectionState )
   {
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

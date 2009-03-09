@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -57,14 +58,14 @@ public class PageCommitInformations extends WizardPage
 {
   protected String m_sFile;
 
-  protected String m_changes = "";
+  protected String m_changes = ""; //$NON-NLS-1$
 
   public PageCommitInformations( )
   {
     super( "pageCommitInformations" ); //$NON-NLS-1$
 
-    setTitle( "Projektaktualisierung" );
-    setDescription( "Beschreiben Sie die Änderungen, die am Projekt durchgeführt wurden." );
+    setTitle( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -79,7 +80,7 @@ public class PageCommitInformations extends WizardPage
     final Group group = new Group( container, SWT.NONE );
     group.setLayout( new GridLayout() );
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    group.setText( "Änderungen" );
+    group.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.commit.pages.PageCommitInformations.3") ); //$NON-NLS-1$
 
     final Text changes = new Text( group, SWT.MULTI | SWT.WRAP | SWT.BORDER );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );

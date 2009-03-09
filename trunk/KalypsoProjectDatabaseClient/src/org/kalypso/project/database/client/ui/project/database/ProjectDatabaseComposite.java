@@ -174,7 +174,7 @@ public class ProjectDatabaseComposite extends Composite implements IProjectDatab
 
     if( m_updateJob == null )
     {
-      m_updateJob = new UIJob( "" )
+      m_updateJob = new UIJob( "" ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

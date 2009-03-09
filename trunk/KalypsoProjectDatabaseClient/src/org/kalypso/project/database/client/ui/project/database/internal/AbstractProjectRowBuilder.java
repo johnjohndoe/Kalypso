@@ -77,7 +77,7 @@ public abstract class AbstractProjectRowBuilder implements IProjectRowBuilder
   protected void getSpacer( final Composite parent, final FormToolkit toolkit )
   {
     final ImageHyperlink lnk = toolkit.createImageHyperlink( parent, SWT.NONE );
-    lnk.setText( "" );
+    lnk.setText( "" ); //$NON-NLS-1$
     final GridData data = new GridData( GridData.FILL, GridData.FILL, false, false );
     data.minimumWidth = data.widthHint = 18;
     lnk.setLayoutData( data );

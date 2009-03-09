@@ -58,6 +58,7 @@ import org.kalypso.project.database.client.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.core.project.export.ProjectExportHandler;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
@@ -83,8 +84,8 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) );
-    final File src = new File( urlTempDir, "update.zip" );
+    final File urlTempDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
+    final File src = new File( urlTempDir, "update.zip" ); //$NON-NLS-1$
 
     try
     {
@@ -94,7 +95,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
       if( !status.isOK() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( "Creating archive of project failed." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2") ) ); //$NON-NLS-1$
       }
 
       final FileSystemManager manager = VFSUtilities.getManager();
@@ -108,7 +109,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_WRITEABLE_PATH );
         }
 
-      }, "update.zip" );
+      }, "update.zip" ); //$NON-NLS-1$
 
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
@@ -121,7 +122,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           return System.getProperty( IProjectDataBaseClientConstant.CLIENT_READABLE_PATH );
         }
 
-      }, "update.zip" );
+      }, "update.zip" ); //$NON-NLS-1$
 
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
       final IProjectNature nature = project.getNature( RemoteProjectNature.NATURE_ID );
