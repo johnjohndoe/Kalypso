@@ -36,6 +36,7 @@ import org.globus.wsrf.impl.SimpleTopicList;
 import org.globus.wsrf.impl.security.descriptor.ResourceSecurityConfig;
 import org.globus.wsrf.impl.security.descriptor.ResourceSecurityDescriptor;
 import org.globus.wsrf.security.SecureResource;
+import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.CreateTinStrategy;
@@ -43,15 +44,16 @@ import org.kalypso.gaja3d.service.internal.strategy.DetectBreaklinesStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSCreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.WPSDetectBreaklinesStrategy;
+import org.kalypso.gaja3d.service.stubs.Boundary;
 import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.DemGrid;
+import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DistanceTolerance;
 import org.kalypso.gaja3d.service.stubs.EdgeFilter;
 import org.kalypso.gaja3d.service.stubs.EdgeFilterMethod;
 import org.kalypso.gaja3d.service.stubs.FeatureDetector;
 import org.kalypso.gaja3d.service.stubs.FeatureDetectorMethod;
 import org.kalypso.gaja3d.service.stubs.Gaja3DResourceProperties;
-import org.kalypso.gaja3d.service.stubs.Gaja3DResourcePropertyLinkType;
 import org.kalypso.gaja3d.service.stubs.GridX;
 import org.kalypso.gaja3d.service.stubs.GridY;
 import org.kalypso.gaja3d.service.stubs.Identifier;
@@ -185,135 +187,141 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 	}
 
 	/* accessors for resource properties */
-	public Gaja3DResourcePropertyLinkType getBoundary() {
-		return (Gaja3DResourcePropertyLinkType) getRPinternal(Gaja3dQNames.RP_BOUNDARY);
+	public Boundary[] getBoundaries() {
+		return Arrays.castArray((Object[]) getRPinternal(
+				Gaja3dQNames.RP_BOUNDARY, false), new Boundary[0]);
 	}
 
-	public void setBoundary(final Gaja3DResourcePropertyLinkType boundary) {
+	public void setBoundaries(final Boundary... boundary) {
 		setDemPoints(null);
 		final QName qName = Gaja3dQNames.RP_BOUNDARY;
-		setRPinternal(boundary, qName);
+		setRPinternal(qName, false, (Object[]) boundary);
 	}
 
-	public Gaja3DResourcePropertyLinkType getDemPoints() {
-		return (Gaja3DResourcePropertyLinkType) getRPinternal(Gaja3dQNames.RP_DEM_POINTS);
+	public DemPoints getDemPoints() {
+		return (DemPoints) getRPinternal(Gaja3dQNames.RP_DEM_POINTS, true);
 	}
 
-	public void setDemPoints(final Gaja3DResourcePropertyLinkType demPoints) {
-		setDemGrid(null);
+	public void setDemPoints(final DemPoints demPoints) {
+		setDemGrid(new DemGrid[0]);
 		final QName qName = Gaja3dQNames.RP_DEM_POINTS;
-		setRPinternal(demPoints, qName);
+		setRPinternal(qName, true, demPoints);
 	}
 
-	public DemGrid getDemGrid() {
-		return (DemGrid) getRPinternal(Gaja3dQNames.RP_DEM_GRID);
+	public DemGrid[] getDemGrid() {
+		return Arrays.castArray((Object[]) getRPinternal(
+				Gaja3dQNames.RP_DEM_GRID, false), new DemGrid[0]);
 	}
 
-	public void setDemGrid(final DemGrid demGrid) {
-		setBreaklines(null);
+	public void setDemGrid(final DemGrid... demGrid) {
+		setBreaklines(new Breaklines[0]);
 		final QName qName = Gaja3dQNames.RP_DEM_GRID;
-		setRPinternal(demGrid, qName);
+		setRPinternal(qName, false, (Object[]) demGrid);
 	}
 
-	public Breaklines getBreaklines() {
-		return (Breaklines) getRPinternal(Gaja3dQNames.RP_BREAKLINES);
+	public Breaklines[] getBreaklines() {
+		return Arrays.castArray((Object[]) getRPinternal(
+				Gaja3dQNames.RP_BREAKLINES, false), new Breaklines[0]);
 	}
 
-	public void setBreaklines(final Breaklines breaklines) {
+	public void setBreaklines(final Breaklines... breaklines) {
 		setModelTin(null);
 		final QName qName = Gaja3dQNames.RP_BREAKLINES;
-		setRPinternal(breaklines, qName);
+		setRPinternal(qName, false, (Object[]) breaklines);
 	}
 
 	public ModelTin getModelTin() {
-		return (ModelTin) getRPinternal(Gaja3dQNames.RP_MODEL_TIN);
+		return (ModelTin) getRPinternal(Gaja3dQNames.RP_MODEL_TIN, true);
 	}
 
 	public void setModelTin(final ModelTin modelTin) {
 		final QName qName = Gaja3dQNames.RP_MODEL_TIN;
-		setRPinternal(modelTin, qName);
+		setRPinternal(qName, true, modelTin);
 	}
 
 	public GridX getGridX() {
-		return (GridX) getRPinternal(Gaja3dQNames.RP_GRID_X);
+		return (GridX) getRPinternal(Gaja3dQNames.RP_GRID_X, true);
 	}
 
 	public void setGridX(final GridX gridX) {
 		final QName qName = Gaja3dQNames.RP_GRID_X;
-		setRPinternal(gridX, qName);
+		setRPinternal(qName, true, gridX);
 	}
 
 	public GridY getGridY() {
-		return (GridY) getRPinternal(Gaja3dQNames.RP_GRID_Y);
+		return (GridY) getRPinternal(Gaja3dQNames.RP_GRID_Y, true);
 	}
 
 	public void setGridY(final GridY gridY) {
 		final QName qName = Gaja3dQNames.RP_GRID_Y;
-		setRPinternal(gridY, qName);
+		setRPinternal(qName, true, gridY);
 	}
 
 	public MinAngle getMinAngle() {
-		return (MinAngle) getRPinternal(Gaja3dQNames.RP_MIN_ANGLE);
+		return (MinAngle) getRPinternal(Gaja3dQNames.RP_MIN_ANGLE, true);
 	}
 
 	public void setMinAngle(final MinAngle minAngle) {
 		final QName qName = Gaja3dQNames.RP_MIN_ANGLE;
-		setRPinternal(minAngle, qName);
+		setRPinternal(qName, true, minAngle);
 	}
 
 	public MaxArea getMaxArea() {
-		return (MaxArea) getRPinternal(Gaja3dQNames.RP_MAX_AREA);
+		return (MaxArea) getRPinternal(Gaja3dQNames.RP_MAX_AREA, true);
 	}
 
 	public void setMaxArea(final MaxArea maxArea) {
 		final QName qName = Gaja3dQNames.RP_MAX_AREA;
-		setRPinternal(maxArea, qName);
+		setRPinternal(qName, true, maxArea);
 	}
 
 	public EdgeFilter getEdgeFilter() {
-		return (EdgeFilter) getRPinternal(Gaja3dQNames.RP_EDGE_FILTER);
+		return (EdgeFilter) getRPinternal(Gaja3dQNames.RP_EDGE_FILTER, true);
 	}
 
 	public void setEdgeFilter(final EdgeFilter edgeFilter) {
 		final QName qName = Gaja3dQNames.RP_EDGE_FILTER;
-		setRPinternal(edgeFilter, qName);
+		setRPinternal(qName, true, edgeFilter);
 	}
 
 	public SmoothFilter getSmoothFilter() {
-		return (SmoothFilter) getRPinternal(Gaja3dQNames.RP_SMOOTH_FILTER);
+		return (SmoothFilter) getRPinternal(Gaja3dQNames.RP_SMOOTH_FILTER, true);
 	}
 
 	public void setSmoothFilter(final SmoothFilter smoothFilter) {
 		final QName qName = Gaja3dQNames.RP_SMOOTH_FILTER;
-		setRPinternal(smoothFilter, qName);
+		setRPinternal(qName, true, smoothFilter);
 	}
 
 	public FeatureDetector getFeatureDetector() {
-		return (FeatureDetector) getRPinternal(Gaja3dQNames.RP_FEATURE_DETECTOR);
+		return (FeatureDetector) getRPinternal(
+				Gaja3dQNames.RP_FEATURE_DETECTOR, true);
 	}
 
 	public void setFeatureDetector(final FeatureDetector featureDetector) {
 		final QName qName = Gaja3dQNames.RP_FEATURE_DETECTOR;
-		setRPinternal(featureDetector, qName);
+		setRPinternal(qName, true, featureDetector);
 	}
 
 	public DistanceTolerance getDistanceTolerance() {
-		return (DistanceTolerance) getRPinternal(Gaja3dQNames.RP_DISTANCE_TOLERANCE);
+		return (DistanceTolerance) getRPinternal(
+				Gaja3dQNames.RP_DISTANCE_TOLERANCE, true);
 	}
 
 	public void setDistanceTolerance(final DistanceTolerance distanceTolerance) {
 		final QName qName = Gaja3dQNames.RP_DISTANCE_TOLERANCE;
-		setRPinternal(distanceTolerance, qName);
+		setRPinternal(qName, true, distanceTolerance);
 	}
 
 	public EndpointReference getGramEndpointReference() {
-		return (EndpointReference) getRPinternal(Gaja3dQNames.RP_GRAM_ENDPOINT_REFERENCE);
+		return (EndpointReference) getRPinternal(
+				Gaja3dQNames.RP_GRAM_ENDPOINT_REFERENCE, true);
 	}
 
 	public void setGramEndpointReference(
 			final EndpointReference endpointReference) {
 		final QName qName = Gaja3dQNames.RP_GRAM_ENDPOINT_REFERENCE;
-		setRPinternal(endpointReference, qName);
+		setRPinternal(qName, true, endpointReference);
 	}
 
 	/* Implementations of 3D Terrain Discretization Service methods */
@@ -325,58 +333,67 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			LOGGER.error("Thread was interrupted before tin creation.");
 		}
 
-		final DemGrid demGrid = new DemGrid();
+		// required
+		final Boundary[] boundaries = getBoundaries();
+		if (boundaries.length == 0) {
+			throw new AxisFault("A boundary is required for grid creation.");
+		}
+		final DemGrid[] demGrids = new DemGrid[boundaries.length];
+		
 		try {
-			// required
-			final Gaja3DResourcePropertyLinkType boundary = getBoundary();
-			if (boundary == null) {
-				throw new AxisFault("A boundary is required for grid creation.");
+
+			for (int i = 0; i < boundaries.length; i++) {
+				final DemGrid demGrid = new DemGrid();
+
+				final Boundary boundary = boundaries[i];
+				final URI boundaryURI = boundary.getHref();
+				final java.net.URI boundaryLocation = new java.net.URI(
+						boundaryURI.toString());
+
+				// required
+				final DemPoints demPoints = getDemPoints();
+				if (demPoints == null) {
+					throw new AxisFault(
+							"A point cloud is required for grid creation.");
+				}
+				final URI demPointsURI = demPoints.getHref();
+				final java.net.URI demPointsLocation = new java.net.URI(
+						demPointsURI.toString());
+
+				// required
+				final GridX gridX = getGridX();
+				if (gridX == null) {
+					throw new AxisFault(
+							"Grid resolution (X) is required for grid creation.");
+				}
+				final double dx = gridX.getDx();
+
+				// required
+				final GridY gridY = getGridY();
+				if (gridY == null) {
+					throw new AxisFault(
+							"Grid resolution (Y) is required for grid creation.");
+				}
+				final double dy = gridY.getDy();
+
+				// do the actual work sequentially
+				final java.net.URI demGridLocation = m_createGridStrategy
+						.createGrid(boundaryLocation, demPointsLocation, dx, dy);
+
+				demGrid.setIdentifier(CodeTypeUtil.fillCodeType(
+						new Identifier(), Gaja3dQNames.RP_DEM_GRID));
+				demGrid.setHref(new URI(demGridLocation.toString()));
+
+				demGrids[i] = demGrid;
 			}
-			final URI boundaryURI = boundary.getHref();
-			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
-					.toString());
-
-			// required
-			final Gaja3DResourcePropertyLinkType demPoints = getDemPoints();
-			if (demPoints == null) {
-				throw new AxisFault(
-						"A point cloud is required for grid creation.");
-			}
-			final URI demPointsURI = demPoints.getHref();
-			final java.net.URI demPointsLocation = new java.net.URI(
-					demPointsURI.toString());
-
-			// required
-			final GridX gridX = getGridX();
-			if (gridX == null) {
-				throw new AxisFault(
-						"Grid resolution (X) is required for grid creation.");
-			}
-			final double dx = gridX.getDx();
-
-			// required
-			final GridY gridY = getGridY();
-			if (gridY == null) {
-				throw new AxisFault(
-						"Grid resolution (Y) is required for grid creation.");
-			}
-			final double dy = gridY.getDy();
-
-			// do the actual work
-			final java.net.URI demGridLocation = m_createGridStrategy
-					.createGrid(boundaryLocation, demPointsLocation, dx, dy);
-
-			demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_DEM_GRID));
-			demGrid.setHref(new URI(demGridLocation.toString()));
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
 		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		} finally {
 			m_lock.release();
-			setDemGrid(demGrid);
 		}
+		setDemGrid(demGrids);
 	}
 
 	public void detectBreaklines() throws RemoteException {
@@ -386,75 +403,87 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			LOGGER.error("Thread was interrupted before tin creation.");
 		}
 
-		final Breaklines breaklines = new Breaklines();
+		// required
+		final Boundary[] boundaries = getBoundaries();
+		if (boundaries.length == 0) {
+			throw new AxisFault(
+					"A boundary is required for breakline detection.");
+		}
+		
+		// required
+		final DemGrid[] demGrids = getDemGrid();
+		if (demGrids.length != boundaries.length) {
+			throw new AxisFault(
+					"A grid is required for each boundary for breakline detection.");
+		}
+		
+		final Breaklines[] breaklinesSet = new Breaklines[boundaries.length];
+
 		try {
-			// optional
-			final EdgeFilter edgeFilter = getEdgeFilter();
-			if (edgeFilter != null) {
-				final EdgeFilterMethod method = edgeFilter.getMethod();
-				final String edgeMethod = method.getValue();
-				m_detectBreaklinesStrategy.setEdgeMethod(edgeMethod);
+			for (int i = 0; i < boundaries.length; i++) {
+				final Boundary boundary = boundaries[i];
+				final DemGrid demGrid = demGrids[i];
+
+				final Breaklines breaklines = new Breaklines();
+
+				// optional
+				final EdgeFilter edgeFilter = getEdgeFilter();
+				if (edgeFilter != null) {
+					final EdgeFilterMethod method = edgeFilter.getMethod();
+					final String edgeMethod = method.getValue();
+					m_detectBreaklinesStrategy.setEdgeMethod(edgeMethod);
+				}
+
+				// optional
+				final SmoothFilter smoothFilter = getSmoothFilter();
+				if (smoothFilter != null) {
+					final SmoothFilterMethod method = smoothFilter.getMethod();
+					final String smoothMethod = method.getValue();
+					final int smooth = smoothFilter.getSmooth();
+					m_detectBreaklinesStrategy.setSmoothMethod(smoothMethod);
+					m_detectBreaklinesStrategy.setSmooth(smooth);
+				}
+
+				// optional
+				final FeatureDetector featureDetector = getFeatureDetector();
+				if (featureDetector != null) {
+					final FeatureDetectorMethod method = featureDetector
+							.getMethod();
+					final String featureMethod = method.getValue();
+					final double lowThresh = featureDetector.getLowThresh();
+					final double highThresh = featureDetector.getHighThresh();
+					m_detectBreaklinesStrategy.setFeatureMethod(featureMethod);
+					m_detectBreaklinesStrategy.setLowThresh(lowThresh);
+					m_detectBreaklinesStrategy.setHighThresh(highThresh);
+				}
+
+				// optional
+				final DistanceTolerance distanceToleranceParameter = getDistanceTolerance();
+				if (distanceToleranceParameter != null) {
+					final double distanceTolerance = distanceToleranceParameter
+							.getTolerance();
+					m_detectBreaklinesStrategy
+							.setDistanceTolerance(distanceTolerance);
+				}
+
+				final URI boundaryURI = boundary.getHref();
+				final java.net.URI boundaryLocation = new java.net.URI(
+						boundaryURI.toString());
+
+				final URI demGridURI = demGrid.getHref();
+				final java.net.URI demGridLocation = new java.net.URI(
+						demGridURI.toString());
+
+				// do the actual work
+				final java.net.URI breaklinesLocation = m_detectBreaklinesStrategy
+						.detectBreaklines(boundaryLocation, demGridLocation);
+
+				breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
+						new Identifier(), Gaja3dQNames.RP_BREAKLINES));
+				breaklines.setHref(new URI(breaklinesLocation.toString()));
+
+				breaklinesSet[i] = breaklines;
 			}
-
-			// optional
-			final SmoothFilter smoothFilter = getSmoothFilter();
-			if (smoothFilter != null) {
-				final SmoothFilterMethod method = smoothFilter.getMethod();
-				final String smoothMethod = method.getValue();
-				final int smooth = smoothFilter.getSmooth();
-				m_detectBreaklinesStrategy.setSmoothMethod(smoothMethod);
-				m_detectBreaklinesStrategy.setSmooth(smooth);
-			}
-
-			// optional
-			final FeatureDetector featureDetector = getFeatureDetector();
-			if (featureDetector != null) {
-				final FeatureDetectorMethod method = featureDetector
-						.getMethod();
-				final String featureMethod = method.getValue();
-				final double lowThresh = featureDetector.getLowThresh();
-				final double highThresh = featureDetector.getHighThresh();
-				m_detectBreaklinesStrategy.setFeatureMethod(featureMethod);
-				m_detectBreaklinesStrategy.setLowThresh(lowThresh);
-				m_detectBreaklinesStrategy.setHighThresh(highThresh);
-			}
-
-			// optional
-			final DistanceTolerance distanceToleranceParameter = getDistanceTolerance();
-			if (distanceToleranceParameter != null) {
-				final double distanceTolerance = distanceToleranceParameter
-						.getTolerance();
-				m_detectBreaklinesStrategy
-						.setDistanceTolerance(distanceTolerance);
-			}
-
-			// required
-			final Gaja3DResourcePropertyLinkType boundary = getBoundary();
-			if (boundary == null) {
-				throw new AxisFault(
-						"A boundary is required for breakline detection.");
-			}
-			final URI boundaryURI = boundary.getHref();
-			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
-					.toString());
-
-			// required
-			final Gaja3DResourcePropertyLinkType demGrid = getDemGrid();
-			if (demGrid == null) {
-				throw new AxisFault(
-						"A grid is required for breakline detection.");
-			}
-			final URI demGridURI = demGrid.getHref();
-			final java.net.URI demGridLocation = new java.net.URI(demGridURI
-					.toString());
-
-			// do the actual work
-			final java.net.URI breaklinesLocation = m_detectBreaklinesStrategy
-					.detectBreaklines(boundaryLocation, demGridLocation);
-
-			breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
-					new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-			breaklines.setHref(new URI(breaklinesLocation.toString()));
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
 		} catch (final IOException e) {
@@ -463,8 +492,8 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			throw AxisFault.makeFault(e);
 		} finally {
 			m_lock.release();
-			setBreaklines(breaklines);
 		}
+		setBreaklines(breaklinesSet);
 	}
 
 	public void createTin() throws RemoteException {
@@ -475,7 +504,15 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 		}
 
 		final ModelTin modelTin = new ModelTin();
+		
 		try {
+			// required
+			final Boundary[] boundaries = getBoundaries();
+			if (boundaries.length == 0) {
+				throw new AxisFault(
+						"At least one boundary is required for tin creation.");
+			}
+			
 			// optional
 			final MaxArea maxArea = getMaxArea();
 			if (maxArea != null) {
@@ -491,28 +528,22 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			}
 
 			// optional
-			final Gaja3DResourcePropertyLinkType demGrid = getDemGrid();
-			if (demGrid != null) {
-				final URI demGridURI = demGrid.getHref();
+			final DemGrid[] demGrid = getDemGrid();
+			if (demGrid.length > 0) {
+				final URI demGridURI = demGrid[0].getHref();
 				final java.net.URI demGridLocation = new java.net.URI(
 						demGridURI.toString());
 				m_createTinStrategy.setDemGridLocation(demGridLocation);
 			}
 
-			// required
-			final Gaja3DResourcePropertyLinkType boundary = getBoundary();
-			if (boundary == null) {
-				throw new AxisFault(
-						"At least one boundary is required for tin creation.");
-			}
-			final URI boundaryURI = boundary.getHref();
+			final URI boundaryURI = boundaries[0].getHref();
 			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
 					.toString());
 
 			// optional
-			final Gaja3DResourcePropertyLinkType breaklines = getBreaklines();
-			if (breaklines != null) {
-				final URI breaklinesURI = breaklines.getHref();
+			final Breaklines[] breaklines = getBreaklines();
+			if (breaklines.length > 0) {
+				final URI breaklinesURI = breaklines[0].getHref();
 				final java.net.URI breaklinesLocation = new java.net.URI(
 						breaklinesURI.toString());
 				m_createTinStrategy.setBreaklinesLocation(breaklinesLocation);
@@ -530,8 +561,8 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			throw AxisFault.makeFault(e);
 		} finally {
 			m_lock.release();
-			setModelTin(modelTin);
 		}
+		setModelTin(modelTin);
 	}
 
 	/* Required by interface TopicListAccessor */
@@ -576,19 +607,21 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 	}
 
 	/* Private methods */
-	private Object getRPinternal(final QName qName) {
+	private Object getRPinternal(final QName qName, final boolean isSimple) {
 		final ResourceProperty property = m_resourceProperties.get(qName);
-		if ((property == null) || property.isEmpty()) {
-			return null;
+		if (isSimple) {
+			return property.get(0);
 		}
-		final Object object = property.get(0);
-		if (object == null) {
-			return null;
+
+		final Object[] list = new Object[property.size()];
+		for (int i = 0; i < property.size(); i++) {
+			list[i] = property.get(i);
 		}
-		return object;
+		return list;
 	}
 
-	private void setRPinternal(final Object newValue, final QName qName) {
+	private void setRPinternal(final QName qName, final boolean isSimple,
+			final Object... newValue) {
 		try {
 			m_lock.acquire();
 		} catch (final InterruptedException e) {
@@ -599,15 +632,15 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 
 		try {
 			final ResourceProperty property = m_resourceProperties.get(qName);
-			final Object oldValue = property.get(0);
-			if ((oldValue == null && newValue == null)
-					|| (oldValue != null && newValue != null && oldValue
-							.equals(newValue))) {
-				// equal
-				return;
-			}
+			property.clear();
 			setDirty(true);
-			property.set(0, newValue);
+			if (isSimple)
+				property.set(0, newValue[0]);
+			else {
+				for (final Object object : newValue) {
+					property.add(object);
+				}
+			}
 			store();
 		} catch (final ResourceException e) {
 			LOGGER.error("Could not store resource.", e);

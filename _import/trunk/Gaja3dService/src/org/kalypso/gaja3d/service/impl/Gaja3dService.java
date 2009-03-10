@@ -20,17 +20,18 @@ import org.globus.wsrf.Resource;
 import org.globus.wsrf.ResourceContext;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.security.SecurityManager;
+import org.kalypso.gaja3d.service.stubs.Boundary;
 import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateGridResponseType;
 import org.kalypso.gaja3d.service.stubs.CreateTinResponseType;
 import org.kalypso.gaja3d.service.stubs.DemGrid;
+import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesParametersType;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesResponseType;
 import org.kalypso.gaja3d.service.stubs.DistanceTolerance;
 import org.kalypso.gaja3d.service.stubs.EdgeFilter;
 import org.kalypso.gaja3d.service.stubs.FeatureDetector;
-import org.kalypso.gaja3d.service.stubs.Gaja3DResourcePropertyLinkType;
 import org.kalypso.gaja3d.service.stubs.GridX;
 import org.kalypso.gaja3d.service.stubs.GridY;
 import org.kalypso.gaja3d.service.stubs.MaxArea;
@@ -167,14 +168,12 @@ public class Gaja3dService {
 		logSecurityInfo("execute_createGrid", resource);
 
 		// required
-		final Gaja3DResourcePropertyLinkType boundary = parameters
-				.getBoundary();
+		final Boundary[] boundary = parameters.getBoundary();
 		if (boundary != null)
-			resource.setBoundary(boundary);
+			resource.setBoundaries(boundary);
 
 		// required
-		final Gaja3DResourcePropertyLinkType demPoints = parameters
-				.getDemPoints();
+		final DemPoints demPoints = parameters.getDemPoints();
 		if (demPoints != null)
 			resource.setDemPoints(demPoints);
 
@@ -191,7 +190,7 @@ public class Gaja3dService {
 		resource.createGrid();
 
 		final CreateGridResponseType createGridResponseType = new CreateGridResponseType();
-		final DemGrid demGrid = resource.getDemGrid();
+		final DemGrid[] demGrid = resource.getDemGrid();
 		createGridResponseType.setDemGrid(demGrid);
 		return createGridResponseType;
 	}
@@ -208,13 +207,12 @@ public class Gaja3dService {
 		logSecurityInfo("execute_detectBreaklines", resource);
 
 		// required
-		final Gaja3DResourcePropertyLinkType boundary = parameters
-				.getBoundary();
+		final Boundary[] boundary = parameters.getBoundary();
 		if (boundary != null)
-			resource.setBoundary(boundary);
+			resource.setBoundaries(boundary);
 
 		// required
-		final DemGrid demGrid = parameters.getDemGrid();
+		final DemGrid[] demGrid = parameters.getDemGrid();
 		if (demGrid != null)
 			resource.setDemGrid(demGrid);
 
@@ -242,7 +240,7 @@ public class Gaja3dService {
 		resource.detectBreaklines();
 
 		final DetectBreaklinesResponseType detectBreaklinesResponseType = new DetectBreaklinesResponseType();
-		final Breaklines breaklines = resource.getBreaklines();
+		final Breaklines[] breaklines = resource.getBreaklines();
 		detectBreaklinesResponseType.setBreaklines(breaklines);
 		return detectBreaklinesResponseType;
 	}
@@ -259,18 +257,17 @@ public class Gaja3dService {
 		logSecurityInfo("execute_createTin", resource);
 
 		// required
-		final Gaja3DResourcePropertyLinkType boundary = parameters
-				.getBoundary();
+		final Boundary[] boundary = parameters.getBoundary();
 		if (boundary != null)
-			resource.setBoundary(boundary);
+			resource.setBoundaries(boundary);
 
 		// optional
-		final DemGrid demGrid = parameters.getDemGrid();
+		final DemGrid[] demGrid = parameters.getDemGrid();
 		if (demGrid != null)
 			resource.setDemGrid(demGrid);
 
 		// required
-		final Breaklines breaklines = parameters.getBreaklines();
+		final Breaklines[] breaklines = parameters.getBreaklines();
 		if (breaklines != null)
 			resource.setBreaklines(breaklines);
 
