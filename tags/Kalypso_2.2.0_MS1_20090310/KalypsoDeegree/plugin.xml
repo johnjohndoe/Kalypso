@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="functionProperty" name="functionProperty" schema="schema/functionProperty.exsd"/>
+   <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
+   <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
+   <extension-point id="functionExpression" name="functionExpression" schema="schema/functionExpression.exsd"/>
+   <extension-point id="featureBinding" name="featureBinding" schema="schema/featureBinding.exsd"/>
+
+     <extension
+         id="org.kalypso.deegree.catalog"
+         name="UrlCatalog"
+         point="org.kalypso.contribs.java.urlCatalog">
+        <catalog
+              class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC"
+              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
+            id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>
+      <catalog
+            class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping"
+            id="org.kalypso.deegree.catalog.urlCatalogUpdateOpservatsionMapping"/>
+   </extension>
+     <extension
+           point="org.kalypso.deegree.functionProperty">
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.ConstantFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.const"
+              name="Constant"/>
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.CopyFeaturePropertyFunction"
+              id="org.kalypso.gml.functionProperty.copyProperty"
+              name="Copy Feature Property Function"/>
+        <function
+              class="org.kalypsodeegree_impl.model.feature.function.DontInvalidGeomFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
+              name="Do not invalidate Geometry"/>
+         <function
+              class="org.kalypsodeegree_impl.model.feature.function.ValuesEqualsFeaturePropertyFunction"
+              id="org.kalypso.gmlschema.functionProperty.valueEquals"
+              name="Value Equals"/>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ConstantIfNullFeaturePropertyFunction"
+               id="org.kalypso.gmlschema.functionProperty.constIfNull"
+               name="Constant if Null"/>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ConstantDoubleIfNullFeaturePropertyFunction"
+               id="org.kalypso.gmlschema.functionProperty.constDoubleIfNull"
+               name="Constant Double if Null"/>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.GetPolygoneArea"
+               id="org.kalypso.gmlschema.functionProperty.getPolygoneArea"
+               name="Get Polygone Area">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Multiply"
+               id="org.kalypso.gmlschema.functionProperty.multiply"
+               name="Multiply">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Difference"
+               id="org.kalypso.gmlschema.functionProperty.difference"
+               name="Difference">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ConnectGeometryCenterPointsByLine"
+               id="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
+               name="Connect Two Geometry Center Points By Line">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.GetLineLength"
+               id="org.kalypso.gmlschema.functionProperty.getLineLength"
+               name="Get Line Length">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.LineBufferAsPolygon"
+               id="org.kalypso.gmlschema.functionProperty.lineBufferAsPolygon"
+               name="Line Buffer as Polygon">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ListSizePropertyFunction"
+               id="org.kalypsodeegree_impl.model.feature.function.ListSizePropertyFunction"
+               name="List Size">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Addition"
+               id="org.kalypso.gmlschema.functionProperty.addition"
+               name="Addition">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.gml.schema.function.RectifiedGridCoverageBoundaryFunctionProperty"
+               id="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
+               name="RectifiedGridCoverage-Boundary">
+         </function>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureRule">
+        <rule
+              class="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              description="This rule validates, if the feature fullfils the restrictions of its gml application schema."
+              id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
+              name="Schema restrictions Rule"/>
+     </extension>
+
+   <extension
+         id="org.kalypso.deegree.featureCommonsAdapterFactory"
+         name="Kalypso Deegree Commons Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypsodeegree_impl.gml.binding.FeatureCommonsAdapterFactory">
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D"/>
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverage">
+         </adapter>
+      </factory>
+      
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
+            label="FeatureType-Name"
+            name="org.kalypso.deeegree.functionExpression.featureTypeName">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression"
+            label="ListPropert toString"
+            name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListSizeExpression"
+            label="List-Size Expression"
+            name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
+      </function>
+   </extension>
+   <extension
+         point="org.kalypso.gmlschema.typeHandlers">
+      <typeHandler
+            factory="org.kalypso.ogc.sensor.deegree.ObservationTypeHandlerFactory">
+      </typeHandler>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.kalypso.preferences.KalypsoDeegreePreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.kalypso.gmlschema.virtualProperty">
+      <virtualProperty
+            allowSubstitution="true"
+            feature="{http://www.opengis.net/gml}RectifiedGridCoverage"
+            function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
+            isList="false"
+            qname="{virtual}rasterGridDomainBoundary"
+            value="{http://www.opengis.net/gml}Polygon">
+      </virtualProperty>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            class="org.kalypso.preferences.KalypsoDeegreePreferencePage"
+            id="org.kalypso.deegree.preferences.KalypsoDeegreePreferencePage"
+            name="Koordinaten-Systeme">
+      </page>
+   </extension>
+
+</plugin>

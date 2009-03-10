@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+
+        Copyright (c) 2008 by
+
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+
+        Kalypso is free software: you can redistribute it and/or modify it under the terms
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software
+        Foundation, either version 3 of the License, or (at your option) any later version.
+
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:swe="http://www.opengis.net/swe"
+	xmlns:sweExt="org.kalypso.swe.ext"
+	targetNamespace="org.kalypso.swe.ext" elementFormDefault="qualified"
+	version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+		<documentation>
+			Extensions of Kalypso for the http://www.opengis.net/swe
+			namespace.
+		</documentation>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.opengis.net/swe" />
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<element name="SortedRecordDefinition"
+		type="sweExt:SortedRecordDefinitionType"
+		substitutionGroup="swe:RecordDefinition" />
+
+	<complexType name="SortedRecordDefinitionType">
+		<annotation>
+			<documentation>
+				Extension of RecordDefinitionType which adds an
+				additional list of components, by which the result
+				should be sorted.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="swe:RecordDefinitionType">
+				<sequence>
+					<element name="sortedComponent"
+						type="swe:SWE_RecordSchemaPropertyType" maxOccurs="unbounded" />
+					<element name="ordinalNumberComponent"
+						type="swe:SWE_RecordSchemaPropertyType">
+						<annotation>
+							<documentation>
+								Column that contains ordinal number(s)
+								of the observation records. If set,
+								values of this column will be renumbered
+								automatically on any tuple result set
+								change.
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>
