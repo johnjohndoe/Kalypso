@@ -88,7 +88,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
- *
+ * 
  * @author Belger
  */
 public class GmlLoader extends AbstractLoader
@@ -164,12 +164,15 @@ public class GmlLoader extends AbstractLoader
       final CommandableWorkspace workspace = new CommandableWorkspace( adaptedWorkspace );
       workspace.addCommandManagerListener( m_commandManagerListener );
       if( gmlFile != null )
+      {
         addResource( gmlFile, workspace );
+      }
 
       setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
       return workspace;
     }
+    // TODO: special handle cancel-coreException!
     catch( final LoaderException le )
     {
       le.printStackTrace();
@@ -287,9 +290,7 @@ public class GmlLoader extends AbstractLoader
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
-      {
         throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.16" ) + gmlURL ); //$NON-NLS-1$
-      }
     }
     catch( final MalformedURLException e )
     {
