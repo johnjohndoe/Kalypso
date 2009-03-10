@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         id="KalypsoUIRRMPopupManu"
+         name="KalypsoUIRRMPopupManu"
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="KalypsoUIRRM.kmContribution"
+            objectClass="org.kalypsodeegree.model.feature.Feature">
+         <filter
+               name="featureType"
+               value="http://www.tuhh.de/kalypsoNA#KMChannel"/>
+         <action
+               class="org.kalypso.ui.rrm.action.KMUpdateAction"
+               icon="icons/kmStrang.gif"
+               id="KalypsoUIRRM.updateKMParameter"
+               label="%KalypsoUIRRM.updateKMParameter.label"
+               style="push"
+               tooltip="%KalypsoUIRRM.updateKMParameter.tooltip"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.kalypso.core.catalogContribution">
+      <catalogContribution
+            class="org.kalypso.ui.styles.RRMFeatureTypeStyleCatalogContribution"
+            name="RRM-Style-Catalog"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.rrm"
+            class="org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard"
+            hasPages="true"
+            icon="icons/kmStrang.gif"
+            id="org.kalypso.ui.rrm.wizards.NewProjectImportAsciiWizard"
+            name="NA-Model Projekt aus Ascii File Projekt"
+            project="true"/>
+   </extension>
+   <extension
+         point="org.kalypso.afgui.kalypsoModule">
+    <module
+            module="org.kalypso.ui.rrm.extension.KalypsoModuleRRM">
+      </module>
+   </extension>
+</plugin>
