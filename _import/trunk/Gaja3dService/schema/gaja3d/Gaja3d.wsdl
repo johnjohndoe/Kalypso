@@ -56,9 +56,9 @@
 <xsd:element name="Gaja3dResourceProperties">
 	<xsd:complexType>
 		<xsd:sequence>
-			<xsd:element ref="tns:Boundary" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="tns:Breaklines" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="tns:DemGrid" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="tns:Boundary" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="tns:Breaklines" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="tns:DemGrid" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="tns:DemPoints" minOccurs="0" maxOccurs="1"/>
 			<xsd:element ref="tns:DistanceTolerance" minOccurs="0" maxOccurs="1"/>
 			<xsd:element ref="tns:EdgeFilter" minOccurs="0" maxOccurs="1"/>

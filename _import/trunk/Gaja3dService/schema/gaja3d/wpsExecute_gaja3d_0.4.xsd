@@ -255,7 +255,7 @@
 	============================================================-->
 <complexType name="CreateGridParametersType">
 	<sequence>
-		<element ref="tns:Boundary" minOccurs="0" />
+		<element ref="tns:Boundary" minOccurs="0" maxOccurs="unbounded"/>
 		<element ref="tns:DemPoints" minOccurs="0" />
 		<element ref="tns:GridX" minOccurs="0" />
 		<element ref="tns:GridY" minOccurs="0" />
@@ -263,14 +263,14 @@
 </complexType>
 <complexType name="CreateGridResponseType">
 	<sequence>
-		<element ref="tns:DemGrid" />
+		<element ref="tns:DemGrid" maxOccurs="unbounded"/>
 	</sequence>
 </complexType>
 
 <complexType name="DetectBreaklinesParametersType">
 	<sequence>
-		<element ref="tns:Boundary" minOccurs="0" />
-		<element ref="tns:DemGrid" minOccurs="0" />
+		<element ref="tns:Boundary" minOccurs="0" maxOccurs="unbounded"/>
+		<element ref="tns:DemGrid" minOccurs="0" maxOccurs="unbounded"/>
 		<element ref="tns:EdgeFilter" minOccurs="0" />
 		<element ref="tns:SmoothFilter" minOccurs="0" />
 		<element ref="tns:FeatureDetector" minOccurs="0" />
@@ -279,17 +279,17 @@
 </complexType>
 <complexType name="DetectBreaklinesResponseType">
 	<sequence>
-		<element ref="tns:Breaklines" />
+		<element ref="tns:Breaklines" maxOccurs="unbounded"/>
 	</sequence>
 </complexType>
 
 <complexType name="CreateTinParametersType">
 	<sequence>
-		<element ref="tns:Boundary" minOccurs="0" />
-		<element ref="tns:Breaklines" minOccurs="0" />
+		<element ref="tns:Boundary" minOccurs="0" maxOccurs="unbounded"/>
+		<element ref="tns:Breaklines" minOccurs="0" maxOccurs="unbounded" />
+		<element ref="tns:DemGrid" minOccurs="0" maxOccurs="unbounded" />
 		<element ref="tns:MinAngle" minOccurs="0" />
 		<element ref="tns:MaxArea" minOccurs="0" />
-		<element ref="tns:DemGrid" minOccurs="0" />
 	</sequence>
 </complexType>
 <complexType name="CreateTinResponseType">
