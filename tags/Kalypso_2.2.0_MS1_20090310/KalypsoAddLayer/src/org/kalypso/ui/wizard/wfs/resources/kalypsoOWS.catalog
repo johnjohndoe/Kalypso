@@ -1,0 +1,7 @@
+wfs=http://bsu-uio:8081/deegreewfs/wfs
+wfs=http://bsu-uio:8083/deegree2/ogcwebservice 
+wfs=http://134.28.77.120/flowswms/wfs
+wfs=http://www.refractions.net:8080/geoserver/wfs
+wfs=http://212.23.140.234/xplanung/ogcwebservice
+wfs=http://134.28.67.65/wfsconnector/com.esri.wfs.Esrimap/polit_feature
+wms=http://134.28.67.65/wmsconnector/com.esri.wms.Esrimap
