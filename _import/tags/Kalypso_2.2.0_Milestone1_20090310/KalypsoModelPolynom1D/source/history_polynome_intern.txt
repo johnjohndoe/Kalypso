@@ -1,0 +1,74 @@
+----------------------------------------------------------------------------------------------------
+History zur Polynome.exe: 
+-------------------------
+
+Beschreibung
+(08.02.2008):
+--------------------------
+Die Polynom.exe dient zur Erstellung von drei beschreibenden Funktionen über
+die jeweilige Wassertiefe je Profil. Dabei werden die Variablen Abfluss Q, 
+benetzte Fläche A und Impulsstrombeiwert a jeweils als Funktion der Wassertiefe H 
+beschrieben. Ausgangpunkt stellt eine stationäre Berechnung in mindestens einem 
+Profil oder einem Gewässerstrangs unter der Vorgabe eines Abflussintervalls 
+(Qmin bis Qmax). Aus dieser Berechnung ergeben sich so die Stützstellen je 
+Funktion und je Profil. 
+
+--> Aktuelle Beschriebung siehe Dokumentation
+
+
+Grundlegende Eingangsdaten je Profil für die Polynomgenerierung:
+(08.02.2008):
+--------------------------
+Neben der eigentlichen Anwendung Polynom.exe ist eine Steuerdatei steuerpoly.ini und 
+die Eingangsdaten aus der Datei Q_LangSchnitt.txt erforderlich. In der sogenannten 
+Q_LangSchnitt.txt, die in der Steuerdatei auch mit einem anderen Namen geöffnet
+werden kann, müssen alle Eingangsdaten im richtigen Format vorliegen:
+- Profil-km bzw. Fließ-km (keine interpolierten Profile: Q_LangSchnitt.txt
+- Tiefster Sohlpunkt je Profil im Flussschlauch mit (x, y, z): Q_LangSchnitt.txt
+- Bordvoller Wasserstand [mNN]: Q_LangSchnitt.txt
+- Abflussintervall: Qmin bis Qmax à maximaler Gültigkeitsbereich: Q_LangSchnitt.txt
+- Wasserspiegel je Abfluss Q (je Profil): Q_LangSchnitt.txt
+- Durchströmte Fläche je Abfluss Q (je Profil): Q_LangSchnitt.txt
+- Impulsstrombeiwert je Abfluss Q (je Profil): Q_LangSchnitt.txt
+- Grad N der gewünschten Polynome: steuerpoly.ini
+
+--> Aktuelle Einstellungsmöglichkeiten siehe Dokumentation
+
+----------------------------------------------------------------------------------------------------
+
+
+
+Version 0.2.6  (31.01.2008)
+-----------------------------
+1.)   Entfernen eines Bugs in der automatischen Steigungserkennung fuer den alpha (impuls-
+      strombeiwert). Das Abgrenzungskriterium war falsch.
+							
+							          Monika Donner, 07.02.2008
+
+
+
+Version 0.2.7  (19.02.2008)
+-----------------------------
+1.)   Entfernen einer Abfrage beim Lesen des Längsschnittes, die zum Abbrauch des Lesens führte 
+      bei Veränderung des Abflusses innerhalb des Längsschnittes. Änderung ist erforderlich 
+      für die Erzeugung der Polynome an Durchlässen 
+							
+							          Monika Donner, 19.02.2008
+
+
+Version 0.2.8  (30.05.2008)
+-----------------------------
+1.)   Ausgabe der TiefeMin und TiefeMax in der Polynome.txt Datei von F7.3 auf F9.3 korrigiert.
+      Entspricht nun dem Einlese Format aus der Q_Langschnitt.
+
+2.)   Die Größe der maximal einlesbaren Datenzeilen aus Q_Langschnitt wurden auf 10.000 Werte 
+      hochgesetzt. Maximal sind Werte für 1000 Profile oder 1000 Abflüsse auswertbar.
+      
+							          Monika Donner, 30.05.2008
+
+Version 0.2.9  (12.06.2008)
+-----------------------------
+1.)   Die Größe der maximal einlesbaren Datenzeilen aus Q_Langschnitt wurden auf 100.000 Werte 
+      hochgesetzt. Da die Grenze in WSPM bei 1000 Profile UND 100 Abflüsse liegt.
+      
+							          Monika Donner, 12.06.2008
