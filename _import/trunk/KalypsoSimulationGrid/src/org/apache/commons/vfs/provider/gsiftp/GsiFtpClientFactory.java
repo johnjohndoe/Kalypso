@@ -49,7 +49,9 @@ import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.globus.ftp.GridFTPClient;
 import org.globus.ftp.exception.ServerException;
+import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
 
 /**
  * Create a GridFtpClient instance
@@ -74,27 +76,35 @@ public class GsiFtpClientFactory
     {
       GSSCredential credential = null;
       final GridFTPClient client = new GridFTPClient( hostname, port );
-      
+
       // first search for credential in fileSystemOptions
       if( fileSystemOptions != null )
       {
         final GsiFtpFileSystemConfigBuilder configBuilder = GsiFtpFileSystemConfigBuilder.getInstance();
         credential = configBuilder.getCredential( fileSystemOptions );
       }
-      
+
       // then search in current security context
       if( credential == null )
       {
-        final Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
-        final Set<Object> creds = currentSubject.getPrivateCredentials();
-        if( creds.size() >= 1 )
+        Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
+        if( currentSubject != null )
         {
-          credential = (GSSCredential) creds.iterator().next();
+          final Set<Object> creds = currentSubject.getPrivateCredentials();
+          if( creds.size() >= 1 )
+          {
+            credential = (GSSCredential) creds.iterator().next();
+          }
         }
       }
+      
       // Authenticate w/ user credentials defines in
       // $HOME/.globus/cog.properties
-      // client.authenticate(null);
+      if( credential == null )
+      {
+        ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager.getInstance();
+        credential = manager.createCredential( GSSCredential.INITIATE_AND_ACCEPT );
+      }
       client.authenticate( credential );
       return client;
     }
@@ -105,6 +115,10 @@ public class GsiFtpClientFactory
     catch( final IOException e1 )
     {
       throw new FileSystemException( e1 );
+    }
+    catch( final GSSException e )
+    {
+      throw new FileSystemException( e );
     }
   }
 }
