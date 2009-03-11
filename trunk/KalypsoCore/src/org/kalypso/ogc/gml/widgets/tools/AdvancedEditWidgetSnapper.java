@@ -56,7 +56,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class AdvancedEditWidgetSnapper
 {
@@ -74,7 +74,8 @@ public class AdvancedEditWidgetSnapper
         final Polygon polygon = (Polygon) geometry;
         final LineString ring = polygon.getExteriorRing();
 
-        for( int i = 0; i < ring.getNumPoints(); i++ )
+        // ignore last point - in a linear ring first and last point are always the same!
+        for( int i = 0; i < ring.getNumPoints() - 1; i++ )
         {
           final Point point = ring.getPointN( i );
 

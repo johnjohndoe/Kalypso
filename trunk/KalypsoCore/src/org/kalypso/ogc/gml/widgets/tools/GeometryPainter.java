@@ -48,7 +48,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -59,7 +61,6 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
@@ -158,7 +159,6 @@ public class GeometryPainter
       awtPoints.add( awt );
     }
 
-    final GeometryFactory factory = new GeometryFactory();
 
     final Color original = g.getColor();
     g.setColor( color );
@@ -174,4 +174,50 @@ public class GeometryPainter
     g.setColor( original );
   }
 
+  public static void drawPolygons( final IMapPanel mapPanel, final Graphics g, final Polygon[] polygons, final Color border, final Color fill )
+  {
+    for( final Polygon polygon : polygons )
+    {
+      drawPolygon( mapPanel, g, polygon, border, fill );
+    }
+  }
+
+  private static void drawPolygon( final IMapPanel mapPanel, final Graphics g, final Polygon polygon, final Color border, final Color fill )
+  {
+    final LineString ring = polygon.getExteriorRing();
+    int[] x = new int[] {};
+    int[] y = new int[] {};
+    for( int i = 0; i < ring.getNumPoints(); i++ )
+    {
+
+      try
+      {
+        final Point p = ring.getPointN( i );
+        final GM_Point gmp = (GM_Point) JTSAdapter.wrap( p );
+
+        final java.awt.Point awt = MapUtilities.retransform( mapPanel, gmp );
+        x = ArrayUtils.add( x, awt.x );
+        y = ArrayUtils.add( y, awt.y );
+      }
+      catch( final GM_Exception e )
+      {
+        KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    Assert.isTrue( x.length == y.length );
+
+    final java.awt.Polygon poly = new java.awt.Polygon( x, y, x.length );
+
+    final Color original = g.getColor();
+
+    g.setColor( fill );
+    g.fillPolygon( poly );
+
+    g.setColor( border );
+    g.drawPolygon( poly );
+
+    g.setColor( original );
+    
+  }
 }

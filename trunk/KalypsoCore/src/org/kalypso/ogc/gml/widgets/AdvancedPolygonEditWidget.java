@@ -75,8 +75,9 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget
 {
+  private static final Color POLYGON_FILL = new Color( 0xa3, 0xc3, 0xc9, 80 );
 
-  private static final Color UPDATE_GEOMETRY = new Color( 0x58, 0xff, 0x88 );
+  private static final Color POLYGON_BORDER = new Color( 255, 255, 255 );
 
   private static final IPointHighLighter VERTEX = new IPointHighLighter()
   {
@@ -204,6 +205,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget
 
   private void displayUpdateGeometry( final Graphics g, final Map<Feature, ISnappedPoint[]> map, final Point vector )
   {
+    final Set<Polygon> results = new HashSet<Polygon>();
+
     final Set<Entry<Feature, ISnappedPoint[]>> entries = map.entrySet();
     for( final Entry<Feature, ISnappedPoint[]> entry : entries )
     {
@@ -219,23 +222,11 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget
 
         final LineString ring = polygon.getExteriorRing();
         final int indexCurrent = AdvancedEditWidgetHelper.getIndexOfPoint( ring, point.getPoint(), DIRECTION.eForward );
-        final Point current = ring.getPointN( indexCurrent );
+       
+        final Point moved = point.getMovedPoint( vector );
 
-        final int indexPrevious = AdvancedEditWidgetHelper.resolveNeighbor( ring, current, indexCurrent, DIRECTION.eBackward );
-        final int indexNext = AdvancedEditWidgetHelper.resolveNeighbor( ring, current, indexCurrent, DIRECTION.eForward );
-
-        final Point previous = ring.getPointN( indexPrevious );
-        final Point next = ring.getPointN( indexNext );
-
-        final Point[] myPoints = new Point[] { previous, point.getMovedPoint( vector ), next };
-        try
-        {
-          GeometryPainter.drawLineString( getMapPanel(), g, myPoints, UPDATE_GEOMETRY );
-        }
-        catch( final GM_Exception e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+        final Polygon result = AdvancedEditWidgetHelper.resolveResultPolygon( polygon, indexCurrent, moved );
+        results.add( result );
       }
       else if( geometry instanceof Polygon && points.length > 1 )
       {
@@ -250,31 +241,14 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget
         final int indexPrevious = AdvancedEditWidgetHelper.resolveNeighbor( ring, ring.getPointN( indexFirst ), indexFirst, DIRECTION.eBackward );
         final int indexNext = AdvancedEditWidgetHelper.resolveNeighbor( ring, ring.getPointN( indexLast ), indexLast, DIRECTION.eForward );
 
-        final Point previous = ring.getPointN( indexPrevious );
-        final Point next = ring.getPointN( indexNext );
-
-        final Set<Point> myPoints = new LinkedHashSet<Point>();
-        myPoints.add( previous );
-        for( final ISnappedPoint point : points )
-        {
-          myPoints.add( point.getMovedPoint( vector ) );
-        }
-        myPoints.add( next );
-
-        try
-        {
-          GeometryPainter.drawLineString( getMapPanel(), g, myPoints.toArray( new Point[] {} ), UPDATE_GEOMETRY );
-        }
-        catch( final GM_Exception e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+        final Polygon result = AdvancedEditWidgetHelper.resolveResultPolygon( polygon, indexPrevious, indexNext, vector );
+        results.add( result );
       }
       else
         throw new NotImplementedException();
-
     }
 
+    GeometryPainter.drawPolygons( getMapPanel(), g, results.toArray( new Polygon[] {} ), POLYGON_BORDER, POLYGON_FILL );
   }
 
   private Map<Feature, ISnappedPoint[]> resolveSnappedPoints( )
