@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
@@ -53,6 +53,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.ImageProvider;
@@ -60,14 +61,14 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
- *  
+ *
  */
 public class EditSymbolizerPanel
 {
 
   private Composite composite = null;
 
-  private EventListenerList listenerList = new EventListenerList();
+  private final EventListenerList listenerList = new EventListenerList();
 
   public final static int REM_SYMB = 0;
 
@@ -85,12 +86,13 @@ public class EditSymbolizerPanel
 
   private Label moveForwardSymbolizerButton = null;
 
-  public EditSymbolizerPanel( Composite parent, int m_size )
+  public EditSymbolizerPanel( final Composite parent, final int m_size )
   {
     setCanDelete( m_size );
     composite = new Composite( parent, SWT.NULL );
-    FormLayout compositeLayout = new FormLayout();
-    GridData compositeData = new GridData();
+    final FormLayout compositeLayout = new FormLayout();
+    final GridData compositeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    compositeData.horizontalSpan = ((GridLayout) parent.getLayout()).numColumns;
     compositeData.widthHint = 230;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -101,7 +103,7 @@ public class EditSymbolizerPanel
     init();
   }
 
-  public void addPanelListener( PanelListener pl )
+  public void addPanelListener( final PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
@@ -112,7 +114,7 @@ public class EditSymbolizerPanel
     removeSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
     if( getCanDelete() == 0 )
       removeSymbolizerButton.setEnabled( false );
-    FormData removeSymbolizerButtonData = new FormData();
+    final FormData removeSymbolizerButtonData = new FormData();
     removeSymbolizerButtonData.height = 18;
     removeSymbolizerButtonData.width = 18;
     removeSymbolizerButtonData.left = new FormAttachment( 250, 1000, 0 );
@@ -121,18 +123,18 @@ public class EditSymbolizerPanel
     removeSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_REMOVE_SYMBOLIZER );
     removeSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( REM_SYMB );
         fire();
       }
 
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
       // nothing
       }
@@ -143,7 +145,7 @@ public class EditSymbolizerPanel
     moveBackwardSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_BACKWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveBackwardSymbolizerButton.setEnabled( false );
-    FormData moveBackwardSymbolizerButtonData = new FormData();
+    final FormData moveBackwardSymbolizerButtonData = new FormData();
     moveBackwardSymbolizerButtonData.height = 18;
     moveBackwardSymbolizerButtonData.width = 18;
     moveBackwardSymbolizerButtonData.left = new FormAttachment( 500, 1000, 0 );
@@ -152,18 +154,18 @@ public class EditSymbolizerPanel
     moveBackwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_BACKWARD );
     moveBackwardSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( BAK_SYMB );
         fire();
       }
 
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
       // nothing
       }
@@ -174,7 +176,7 @@ public class EditSymbolizerPanel
     moveForwardSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_FORWARD.createImage() );
     if( getCanDelete() <= 1 )
       moveForwardSymbolizerButton.setEnabled( false );
-    FormData moveForwardSymbolizerButtonData = new FormData();
+    final FormData moveForwardSymbolizerButtonData = new FormData();
     moveForwardSymbolizerButtonData.height = 18;
     moveForwardSymbolizerButtonData.width = 18;
     moveForwardSymbolizerButtonData.left = new FormAttachment( 750, 1000, 0 );
@@ -183,18 +185,18 @@ public class EditSymbolizerPanel
     moveForwardSymbolizerButton.setToolTipText( MessageBundle.STYLE_EDITOR_FORWARD );
     moveForwardSymbolizerButton.addMouseListener( new MouseListener()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         setCurrentAction( FOR_SYMB );
         fire();
       }
 
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
       // nothing
       }
@@ -202,7 +204,7 @@ public class EditSymbolizerPanel
     } );
   }
 
-  public void update( int symbolizerNumber )
+  public void update( final int symbolizerNumber )
   {
     setCanDelete( symbolizerNumber );
     if( getCanDelete() == 0 )
@@ -226,12 +228,12 @@ public class EditSymbolizerPanel
 
   protected void fire()
   {
-    Object[] listeners = listenerList.getListenerList();
+    final Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        PanelEvent event = new PanelEvent( this );
+        final PanelEvent event = new PanelEvent( this );
         ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
@@ -242,7 +244,7 @@ public class EditSymbolizerPanel
     return canDelete;
   }
 
-  public void setCanDelete( int m_canDelete )
+  public void setCanDelete( final int m_canDelete )
   {
     this.canDelete = m_canDelete;
   }
@@ -252,7 +254,7 @@ public class EditSymbolizerPanel
     return currentAction;
   }
 
-  public void setCurrentAction( int m_currentAction )
+  public void setCurrentAction( final int m_currentAction )
   {
     this.currentAction = m_currentAction;
   }

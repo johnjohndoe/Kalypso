@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,29 +36,36 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.util.EventObject;
 
+import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
+
 /**
- * @author F.Lindemann
- *  
+ * @author F. Lindemann
  */
+@SuppressWarnings("hiding")
 public class PanelEvent extends EventObject
 {
+  public final EventType eventType;
+  public final Object param;
 
-  /**
-   * @param arg0
-   */
-  public PanelEvent( Object arg0 )
+  public PanelEvent( final Object source )
   {
-    super( arg0 );
+    this( source, null, null );
   }
 
+  public PanelEvent( final Object source, final EventType eventType, final Object param )
+  {
+    super( source );
+    this.eventType = eventType;
+    this.param = param;
+  }
 }

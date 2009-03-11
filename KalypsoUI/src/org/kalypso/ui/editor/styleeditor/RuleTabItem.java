@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor;
 
@@ -48,22 +48,23 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
-import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
-import org.kalypso.ui.editor.styleeditor.panels.LegendLabel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
+import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -73,97 +74,107 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class RuleTabItem
 {
-  private int counter = 0;
-
-  private TabFolder m_ruleTabFolder = null;
-
-  private int m_focusedRuleItem = -1;
-
-  private int focusedSymbolizerItem = -1;
+  private final TabFolder m_ruleTabFolder;
 
   private final KalypsoUserStyle m_userStyle;
 
+  private int m_focusedRuleItem = -1;
+
+  private int m_focusedSymbolizerItem = -1;
+
   final IFeatureType m_featureType;
 
-  public RuleTabItem( final TabFolder ruleTabFolder, final KalypsoUserStyle userStyle, final IFeatureType featureType )
+  private final FormToolkit m_toolkit;
+
+  public RuleTabItem( final FormToolkit toolkit, final TabFolder ruleTabFolder, final KalypsoUserStyle userStyle, final IFeatureType featureType )
   {
+    m_toolkit = toolkit;
     m_ruleTabFolder = ruleTabFolder;
     m_userStyle = userStyle;
     m_featureType = featureType;
   }
 
-  public void drawRule( final Rule rule, final int i )
+  public void drawRule( final Rule rule, final int someIndex )
   {
-    final TabItem tabItem = new TabItem( getRuleTabFolder(), SWT.NULL );
-    final Composite composite = new Composite( getRuleTabFolder(), SWT.NULL );
-    final GridLayout compositeLayout = new GridLayout();
-    composite.setSize( 270, 400 );
+    final TabItem tabItem = new TabItem( m_ruleTabFolder, SWT.NULL );
+    final Composite composite = m_toolkit.createComposite( m_ruleTabFolder );
+    final GridLayout compositeLayout = new GridLayout( 3, false );
     composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 5;
     compositeLayout.marginHeight = 5;
-    composite.layout();
     tabItem.setControl( composite );
-    String ruleName;
+
+    final String ruleName;
     if( rule.getTitle() != null )
       ruleName = rule.getTitle();
     else if( rule.getName() != null )
       ruleName = rule.getName();
     else
-    {
-      ruleName = MessageBundle.STYLE_EDITOR_RULE + (++counter);
-      rule.setTitle( ruleName );
-    }
+      ruleName = MessageBundle.STYLE_EDITOR_RULE + someIndex;
+
+    // Do not allow empty rule
+    rule.setTitle( ruleName );
     tabItem.setText( ruleName );
 
-    final TabFolder symbolizerTabFolder;
+    final TextInputPanel rowBuilder = new TextInputPanel( m_toolkit, composite );
 
-    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle() );
-    titleInputPanel.addPanelListener( new PanelListener()
+    /* Text Panel for Rule-Titel */
+    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, rule.getTitle(), new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      @Override
+      public String textModified( final String newValue )
       {
-        final String title = ((TextInputPanel) event.getSource()).getLabelText();
-        if( title == null || title.trim().length() == 0 )
+        if( newValue == null || newValue.trim().length() == 0 )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
-          titleInputPanel.setInputText( rule.getTitle() );
+          return rule.getTitle();
         }
-        else
-        {
-          rule.setTitle( title );
-          tabItem.setText( title );
-          getUserStyle().fireStyleChanged();
-        }
-        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+
+        rule.setTitle( newValue );
+        tabItem.setText( newValue );
+        getUserStyle().fireStyleChanged();
+
+        return null;
       }
     } );
 
-    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator() );
-    minDenominatorPanel.addPanelListener( new PanelListener()
+    /* Text Panel for Rule-Abstract */
+    rowBuilder.createTextRow( "Beschreibung", rule.getAbstract(), new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      /**
+       * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
+       */
+      @Override
+      public String textModified( final String newValue )
       {
-        final double min = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        rule.setAbstract( newValue );
+        getUserStyle().fireStyleChanged();
+        return null;
+      }
+    } );
+
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, rule.getMinScaleDenominator(), new ModifyListener()
+    {
+      @Override
+      public String textModified( final String newValue )
+      {
+        final double min = new Double( newValue );
         final double max = rule.getMaxScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
-          minDenominatorPanel.setDenominator( rule.getMinScaleDenominator() );
+          return "" + rule.getMinScaleDenominator();
         }
-        else
-        {
-          rule.setMinScaleDenominator( min );
-          final Symbolizer symbolizers[] = rule.getSymbolizers();
-          for( final Symbolizer element : symbolizers )
-          {
-            element.setMinScaleDenominator( min );
-          }
-          getUserStyle().fireStyleChanged();
-        }
-        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+
+        rule.setMinScaleDenominator( min );
+        final Symbolizer symbolizers[] = rule.getSymbolizers();
+        for( final Symbolizer element : symbolizers )
+          element.setMinScaleDenominator( min );
+        getUserStyle().fireStyleChanged();
+        return null;
       }
     } );
 
@@ -178,46 +189,45 @@ public class RuleTabItem
       else
         rule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
-    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator() );
-    maxDenominatorPanel.addPanelListener( new PanelListener()
+
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, rule.getMaxScaleDenominator(), new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      @Override
+      public String textModified( final String newValue )
       {
-        double max = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        double max = new Double( newValue );
         final double min = rule.getMinScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
-          maxDenominatorPanel.setDenominator( rule.getMaxScaleDenominator() );
+          return "" + rule.getMaxScaleDenominator();
         }
-        else
-        {
-          // add a minimum to max in order to be a little bit larger than the
-          // current scale and
-          // to keep the current view -> otherwise the rule would automatically
-          // exculde this configuration
-          max += 0.01;
-          rule.setMaxScaleDenominator( max );
-          final Symbolizer symbolizers[] = rule.getSymbolizers();
-          for( final Symbolizer element : symbolizers )
-          {
-            element.setMaxScaleDenominator( max );
-          }
-          getUserStyle().fireStyleChanged();
-        }
-        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+
+        // add a minimum to max in order to be a little bit larger than the
+        // current scale and
+        // to keep the current view -> otherwise the rule would automatically
+        // Exclude this configuration
+        max += 0.01;
+        rule.setMaxScaleDenominator( max );
+        final Symbolizer symbolizers[] = rule.getSymbolizers();
+        for( final Symbolizer element : symbolizers )
+          element.setMaxScaleDenominator( max );
+        getUserStyle().fireStyleChanged();
+        return null;
       }
     } );
 
-    final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
+// new LegendLabel( composite, m_userStyle, someIndex );
 
+    final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( composite, MessageBundle.STYLE_EDITOR_SYMBOLIZER, m_featureType );
     final EditSymbolizerPanel editSymbolizerPanel = new EditSymbolizerPanel( composite, rule.getSymbolizers().length );
 
-    new LegendLabel( composite, m_userStyle, i );
-
-    symbolizerTabFolder = new TabFolder( composite, SWT.NULL );
+    final TabFolder symbolizerTabFolder = new TabFolder( composite, SWT.NULL );
+    final GridData tabData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    tabData.horizontalSpan = ((GridLayout) composite.getLayout()).numColumns;
+    symbolizerTabFolder.setLayoutData( tabData );
 
     editSymbolizerPanel.addPanelListener( new PanelListener()
     {
@@ -359,8 +369,8 @@ public class RuleTabItem
 
     if( rule.getSymbolizers().length == 0 )
       symbolizerTabFolder.setVisible( false );
-    if( m_focusedRuleItem == i && focusedSymbolizerItem != -1 )
-      symbolizerTabFolder.setSelection( focusedSymbolizerItem );
+    if( m_focusedRuleItem == someIndex && m_focusedSymbolizerItem != -1 )
+      symbolizerTabFolder.setSelection( m_focusedSymbolizerItem );
 
     composite.pack( true );
   }
@@ -378,15 +388,14 @@ public class RuleTabItem
     if( rule.getSymbolizers().length == 0 )
     {
       // add dummy invisilbe placeholder
-      new SymbolizerTabItemBuilder( symbolizerTabFolder, null, m_userStyle, m_featureType );
+      new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, null, m_userStyle, m_featureType );
       symbolizerTabFolder.setVisible( false );
     }
     else
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
-      {
-        new SymbolizerTabItemBuilder( symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle, m_featureType );
-      }
+        new SymbolizerTabItemBuilder( m_toolkit, symbolizerTabFolder, rule.getSymbolizers()[j], m_userStyle, m_featureType );
+
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 287 );
       symbolizerTabFolder.setVisible( true );
@@ -408,8 +417,8 @@ public class RuleTabItem
     m_focusedRuleItem = focusedRuleItem;
   }
 
-  public void setFocusedSymbolizerItem( final int m_focusedSymbolizerItem )
+  public void setFocusedSymbolizerItem( final int focusedSymbolizerItem1 )
   {
-    this.focusedSymbolizerItem = m_focusedSymbolizerItem;
+    m_focusedSymbolizerItem = focusedSymbolizerItem1;
   }
 }

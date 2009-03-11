@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 26.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.symbolizerLayouts;
 
@@ -50,6 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -65,6 +66,7 @@ import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.SliderPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextLabelComboPanel;
+import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Font;
@@ -85,10 +87,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 {
-
   private final IFeatureType m_featureTyped;
-
-  private TextInputPanel labelTextInput = null;
 
   private TextLabelComboPanel textLabelComboPanel = null;
 
@@ -112,9 +111,12 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
 
   public final static int GM_OBJECT = 6;
 
-  public TextSymbolizerLayout( final Composite comp, final Symbolizer symb, final KalypsoUserStyle style, final IFeatureType featureType )
+  private final FormToolkit m_toolkit;
+
+  public TextSymbolizerLayout( final FormToolkit toolkit, final Composite comp, final Symbolizer symb, final KalypsoUserStyle style, final IFeatureType featureType )
   {
     super( comp, symb, style );
+    m_toolkit = toolkit;
     m_featureTyped = featureType;
   }
 
@@ -160,9 +162,10 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         }
       }
     }
-    textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL, m_featureTyped, labelTextCombo );
-    labelTextInput = new TextInputPanel( fontGroup, MessageBundle.STYLE_EDITOR_OR_TEXT, labelTextField );
 
+    final TextInputPanel rowBuilder = new TextInputPanel( m_toolkit, fontGroup );
+
+    textLabelComboPanel = new TextLabelComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_LABEL, m_featureTyped, labelTextCombo );
     textLabelComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( final PanelEvent event )
@@ -171,18 +174,22 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         final PropertyName propName = new PropertyName( ftpString );
         final Expression exp[] = { propName };
         textSymbolizer.setLabel( StyleFactory.createParameterValueType( exp ) );
-        getLabelTextInput().reset();
         userStyle.fireStyleChanged();
       }
     } );
-    labelTextInput.addPanelListener( new PanelListener()
+
+    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_OR_TEXT, labelTextField, new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      /**
+       * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
+       */
+      @Override
+      public String textModified( final String newValue )
       {
-        final String labelText = ((TextInputPanel) event.getSource()).getLabelText();
-        textSymbolizer.setLabel( StyleFactory.createParameterValueType( labelText ) );
+        textSymbolizer.setLabel( StyleFactory.createParameterValueType( newValue ) );
         getTextLabelComboPanel().reset();
         userStyle.fireStyleChanged();
+        return null;
       }
     } );
 
@@ -352,16 +359,6 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
         return GM_OBJECT;
     }
     return NO_GEOMETRY;
-  }
-
-  public TextInputPanel getLabelTextInput( )
-  {
-    return labelTextInput;
-  }
-
-  public void setLabelTextInput( final TextInputPanel m_labelTextInput )
-  {
-    this.labelTextInput = m_labelTextInput;
   }
 
   public LabelPlacement getLabelPlacement( )

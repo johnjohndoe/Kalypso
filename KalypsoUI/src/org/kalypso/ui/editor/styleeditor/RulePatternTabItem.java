@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.07.2004
@@ -44,24 +44,26 @@
 package org.kalypso.ui.editor.styleeditor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
 import org.kalypso.ui.editor.styleeditor.panels.AddSymbolizerPanel;
-import org.kalypso.ui.editor.styleeditor.panels.DenominatorInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.RulePatternInputPanel;
 import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
+import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 import org.kalypso.ui.editor.styleeditor.rulePattern.RuleFilterCollection;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -100,8 +102,11 @@ public class RulePatternTabItem
 
   private String[] numericFeatureTypePropertylist = null;
 
-  public RulePatternTabItem( final TabFolder m_ruleTabFolder, final KalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final ArrayList m_numericFeatureTypePropertylist )
+  private final FormToolkit m_toolkit;
+
+  public RulePatternTabItem( final FormToolkit toolkit, final TabFolder m_ruleTabFolder, final KalypsoUserStyle m_userStyle, final IFeatureType m_featureType, final RuleFilterCollection m_rulePatternCollection, final List<IPropertyType> m_numericFeatureTypePropertylist )
   {
+    m_toolkit = toolkit;
     this.ruleTabFolder = m_ruleTabFolder;
     setUserStyle( m_userStyle );
     setFeatureType( m_featureType );
@@ -153,13 +158,17 @@ public class RulePatternTabItem
     final TabFolder symbolizerTabFolder;
     RulePatternInputPanel rulePatternInputPanel = null;
 
-    final TextInputPanel titleInputPanel = new TextInputPanel( composite, MessageBundle.STYLE_EDITOR_TITLE, rulePatternName );
-    titleInputPanel.addPanelListener( new PanelListener()
+    final TextInputPanel rowBuilder = new TextInputPanel( m_toolkit, composite );
+
+    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, rulePatternName, new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      /**
+       * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
+       */
+      @Override
+      public String textModified( final String newValue )
       {
-        final String name = ((TextInputPanel) event.getSource()).getLabelText();
-        if( name == null || name.trim().length() == 0 )
+        if( newValue == null || newValue.trim().length() == 0 )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
           errorDialog.showError();
@@ -168,43 +177,43 @@ public class RulePatternTabItem
         {
           for( int counter6 = 0; counter6 < ruleCollection.size(); counter6++ )
           {
-            ruleCollection.get( counter6 ).setTitle( name );
+            ruleCollection.get( counter6 ).setTitle( newValue );
           }
           getUserStyle().fireStyleChanged();
         }
-        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + name ); //$NON-NLS-1$
+        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + newValue ); //$NON-NLS-1$
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+
+        return null;
       }
     } );
 
-    final DenominatorInputPanel minDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom );
-    minDenominatorPanel.addPanelListener( new PanelListener()
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom, new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      @Override
+      public String textModified( final String newValue )
       {
-        final double min = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        final double min = new Double( newValue );
         final double max = tmpRule.getMaxScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
           errorDialog.showError();
-          minDenominatorPanel.setDenominator( tmpRule.getMinScaleDenominator() );
+          return "" + tmpRule.getMinScaleDenominator();
         }
-        else
+
+        for( int i = 0; i < ruleCollection.size(); i++ )
         {
-          for( int counter7 = 0; counter7 < ruleCollection.size(); counter7++ )
+          ruleCollection.get( i ).setMinScaleDenominator( min );
+          final Symbolizer symbolizers[] = ruleCollection.get( i ).getSymbolizers();
+          for( final Symbolizer element : symbolizers )
           {
-            ruleCollection.get( counter7 ).setMinScaleDenominator( min );
-            final Symbolizer symbolizers[] = ruleCollection.get( counter7 ).getSymbolizers();
-            for( final Symbolizer element : symbolizers )
-            {
-              element.setMinScaleDenominator( min );
-            }
+            element.setMinScaleDenominator( min );
           }
-          getUserStyle().fireStyleChanged();
         }
-        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+        getUserStyle().fireStyleChanged();
+        return null;
       }
     } );
 
@@ -219,39 +228,38 @@ public class RulePatternTabItem
       else
         tmpRule.setMaxScaleDenominator( Double.MAX_VALUE );
     }
-    final DenominatorInputPanel maxDenominatorPanel = new DenominatorInputPanel( composite, MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom );
-    maxDenominatorPanel.addPanelListener( new PanelListener()
+
+    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom, new ModifyListener()
     {
-      public void valueChanged( final PanelEvent event )
+      @Override
+      public String textModified( final String newValue )
       {
-        double max = ((DenominatorInputPanel) event.getSource()).getDenominator();
+        double max = new Double( newValue );
         final double min = tmpRule.getMinScaleDenominator();
         // verify that min<=max
         if( min > max )
         {
           final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
           errorDialog.showError();
-          maxDenominatorPanel.setDenominator( tmpRule.getMaxScaleDenominator() );
+          return "" + tmpRule.getMaxScaleDenominator();
         }
-        else
+
+        // add a minimum to max in order to be a little bit larger than the
+        // current scale and
+        // to keep the current view -> otherwise the rule would automatically
+        // exculde this configuration
+        max += 0.01;
+        for( int counter8 = 0; counter8 < ruleCollection.size(); counter8++ )
         {
-          // add a minimum to max in order to be a little bit larger than the
-          // current scale and
-          // to keep the current view -> otherwise the rule would automatically
-          // exculde this configuration
-          max += 0.01;
-          for( int counter8 = 0; counter8 < ruleCollection.size(); counter8++ )
+          ruleCollection.get( counter8 ).setMaxScaleDenominator( max );
+          final Symbolizer symbolizers[] = ruleCollection.get( counter8 ).getSymbolizers();
+          for( final Symbolizer element : symbolizers )
           {
-            ruleCollection.get( counter8 ).setMaxScaleDenominator( max );
-            final Symbolizer symbolizers[] = ruleCollection.get( counter8 ).getSymbolizers();
-            for( final Symbolizer element : symbolizers )
-            {
-              element.setMaxScaleDenominator( max );
-            }
+            element.setMaxScaleDenominator( max );
           }
-          getUserStyle().fireStyleChanged();
         }
-        setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+        getUserStyle().fireStyleChanged();
+        return null;
       }
     } );
 
@@ -645,11 +653,11 @@ public class RulePatternTabItem
     return numericFeatureTypePropertylist;
   }
 
-  public void setNumericFeatureTypePropertylist( final ArrayList m_numericFeatureTypePropertylist )
+  public void setNumericFeatureTypePropertylist( final List<IPropertyType> m_numericFeatureTypePropertylist )
   {
     final String[] tmpList = new String[m_numericFeatureTypePropertylist.size()];
     for( int i = 0; i < m_numericFeatureTypePropertylist.size(); i++ )
-      tmpList[i] = ((IPropertyType) m_numericFeatureTypePropertylist.get( i )).getName();
+      tmpList[i] = (m_numericFeatureTypePropertylist.get( i )).getName();
     this.numericFeatureTypePropertylist = tmpList;
   }
 

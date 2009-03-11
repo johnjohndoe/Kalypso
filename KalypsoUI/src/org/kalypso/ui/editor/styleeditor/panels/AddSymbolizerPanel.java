@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 15.07.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.panels;
 
@@ -59,6 +59,7 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -103,8 +104,9 @@ public class AddSymbolizerPanel
     m_composite = new Composite( parent, SWT.NULL );
     m_isSimpleRule = true;
     final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    final GridData compositeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     compositeData.widthHint = 230;
+    compositeData.horizontalSpan = ((GridLayout) parent.getLayout()).numColumns;
     m_composite.setLayoutData( compositeData );
     m_composite.setLayout( compositeLayout );
     compositeLayout.marginWidth = 0;
