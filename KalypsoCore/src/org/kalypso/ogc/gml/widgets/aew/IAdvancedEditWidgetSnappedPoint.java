@@ -40,23 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets.aew;
 
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypsodeegree.model.geometry.GM_Point;
-
 import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
  */
-public interface IAdvancedEditWidget
+public interface IAdvancedEditWidgetSnappedPoint extends IAdvancedEditWidgetPoint
 {
-  GM_Point getCurrentGmPoint( );
-
-  IMapPanel getIMapPanel( );
-
-  Point getOriginPoint( );
-
-  IAdvancedEditWidgetSnappedPoint[] getSnappedPointsAtOrigin( );
-  
-  boolean isLeftMouseButtonPressed( );
-}
+  Point getMovedPoint( Point vector );
+} 

@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
-import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -82,7 +81,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     {
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
 
-      final ISnappedPoint[] snappedPoints;
+      final IAdvancedEditWidgetSnappedPoint[] snappedPoints;
 
       if( getWidget().isLeftMouseButtonPressed() )
       {
@@ -105,7 +104,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
       if( !ArrayUtils.isEmpty( snappedPoints ) )
       {
         final Set<Point> snapped = new LinkedHashSet<Point>();
-        for( final ISnappedPoint p : snappedPoints )
+        for( final IAdvancedEditWidgetSnappedPoint p : snappedPoints )
         {
           snapped.add( p.getPoint() );
         }
@@ -117,16 +116,16 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
       if( getWidget().getOriginPoint() != null )
       {
         final Point vector = JTSUtilities.getVector( getWidget().getOriginPoint(), jtsPoint );
-        final Map<Feature, ISnappedPoint[]> snapped = resolveSnappedPoints();
+        final Map<Feature, IAdvancedEditWidgetSnappedPoint[]> snapped = resolveSnappedPoints();
 
         /* highlight moved snap points */
         final Set<Point> moved = new HashSet<Point>();
 
-        final Set<Entry<Feature, ISnappedPoint[]>> entrySet = snapped.entrySet();
-        for( final Entry<Feature, ISnappedPoint[]> entry : entrySet )
+        final Set<Entry<Feature, IAdvancedEditWidgetSnappedPoint[]>> entrySet = snapped.entrySet();
+        for( final Entry<Feature, IAdvancedEditWidgetSnappedPoint[]> entry : entrySet )
         {
-          final ISnappedPoint[] points = entry.getValue();
-          for( final ISnappedPoint p : points )
+          final IAdvancedEditWidgetSnappedPoint[] points = entry.getValue();
+          for( final IAdvancedEditWidgetSnappedPoint p : points )
           {
             moved.add( p.getMovedPoint( vector ) );
           }
@@ -146,22 +145,22 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
 
   }
 
-  private Map<Feature, ISnappedPoint[]> resolveSnappedPoints( )
+  private Map<Feature, IAdvancedEditWidgetSnappedPoint[]> resolveSnappedPoints( )
   {
-    final Map<Feature, ISnappedPoint[]> map = new HashMap<Feature, ISnappedPoint[]>();
+    final Map<Feature, IAdvancedEditWidgetSnappedPoint[]> map = new HashMap<Feature, IAdvancedEditWidgetSnappedPoint[]>();
 
-    for( final ISnappedPoint point : getWidget().getSnappedPointsAtOrigin() )
+    for( final IAdvancedEditWidgetSnappedPoint point : getWidget().getSnappedPointsAtOrigin() )
     {
       final Feature feature = point.getFeature();
 
-      final ISnappedPoint[] points = map.get( feature );
+      final IAdvancedEditWidgetSnappedPoint[] points = map.get( feature );
       if( points == null )
       {
-        map.put( feature, new ISnappedPoint[] { point } );
+        map.put( feature, new IAdvancedEditWidgetSnappedPoint[] { point } );
       }
       else
       {
-        map.put( feature, (ISnappedPoint[]) ArrayUtils.add( points, point ) );
+        map.put( feature, (IAdvancedEditWidgetSnappedPoint[]) ArrayUtils.add( points, point ) );
       }
     }
 

@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Graphics;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -78,38 +80,70 @@ public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelega
   @Override
   public void paint( final Graphics g )
   {
-    
+
     final GM_Point gmp = m_widget.getCurrentGmPoint();
     if( gmp == null )
       return;
-    
-    
+
     try
     {
       // highligth existing points
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
-       
+
       final Feature[] features = m_provider.query( gmp, getRange() );
       if( ArrayUtils.isEmpty( features ) )
         return;
-      
-      /* find snap points */
+
+      /* find existing points */
       final Map<Geometry, Feature> mapGeometries = m_provider.resolveJtsGeometries( features );
       GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), mapGeometries.keySet().toArray( new Geometry[] {} ), VERTEX );
 
-      
+      /* find underlying geometry */
+      final IAdvancedEditWidgetGeometry underlying = findUnderlyingGeometry( mapGeometries, jtsPoint );
+
     }
-    catch( final GM_Exception e ) 
+    catch( final GM_Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+
+  }
+
+  private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
+  {
+    final Set<Entry<Geometry, Feature>> entries= geometries.entrySet();
+    for( final Entry<Geometry, Feature> entry : entries )
+    {
+      if( !entry.getKey().intersection( point ).isEmpty() )
+      return new IAdvancedEditWidgetGeometry(){
+
+        @Override
+        public Point getBasePoint( )
+        {
+        return point;
+        }
+
+        @Override
+        public Feature getFeature( )
+        {
+         return entry.getValue();
+        }
+
+        @Override
+        public Geometry getUnderlyingGeometry( )
+        {
+        return entry.getKey();
+        }};
+    }
     
+    
+    return null;
   }
 
   private double getRange( )
   {
     final IMapPanel mapPanel = m_widget.getIMapPanel();
-    return mapPanel.getCurrentScale();
+    return mapPanel.getCurrentScale() * 4;
   }
 
 }

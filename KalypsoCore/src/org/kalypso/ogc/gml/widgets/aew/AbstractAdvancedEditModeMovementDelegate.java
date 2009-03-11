@@ -50,7 +50,6 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.gml.widgets.aew.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
-import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -90,22 +89,22 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     return m_provider;
   }
 
-  protected void displayUpdateGeometry( final Graphics g, final Map<Feature, ISnappedPoint[]> map, final Point vector )
+  protected void displayUpdateGeometry( final Graphics g, final Map<Feature, IAdvancedEditWidgetSnappedPoint[]> map, final Point vector )
   {
     final Set<Polygon> results = new HashSet<Polygon>();
 
-    final Set<Entry<Feature, ISnappedPoint[]>> entries = map.entrySet();
-    for( final Entry<Feature, ISnappedPoint[]> entry : entries )
+    final Set<Entry<Feature, IAdvancedEditWidgetSnappedPoint[]>> entries = map.entrySet();
+    for( final Entry<Feature, IAdvancedEditWidgetSnappedPoint[]> entry : entries )
     {
       final Feature feature = entry.getKey();
 
       final Geometry geometry = m_provider.resolveJtsGeometry( feature );
-      final ISnappedPoint[] points = entry.getValue();
+      final IAdvancedEditWidgetSnappedPoint[] points = entry.getValue();
 
       if( geometry instanceof Polygon && points.length == 1 )
       {
         final Polygon polygon = (Polygon) geometry;
-        final ISnappedPoint point = points[0];
+        final IAdvancedEditWidgetSnappedPoint point = points[0];
 
         final LineString ring = polygon.getExteriorRing();
         final int indexCurrent = AdvancedEditWidgetHelper.getIndexOfPoint( ring, point.getPoint(), DIRECTION.eForward );
@@ -118,8 +117,8 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
       else if( geometry instanceof Polygon && points.length > 1 )
       {
         final Polygon polygon = (Polygon) geometry;
-        final ISnappedPoint firstPoint = points[0];
-        final ISnappedPoint lastPoint = points[points.length - 1];
+        final IAdvancedEditWidgetSnappedPoint firstPoint = points[0];
+        final IAdvancedEditWidgetSnappedPoint lastPoint = points[points.length - 1];
 
         final LineString ring = polygon.getExteriorRing();
         final int indexFirst = AdvancedEditWidgetHelper.getIndexOfPoint( ring, firstPoint.getPoint(), DIRECTION.eForward );
@@ -183,7 +182,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     return range;
   }
 
-  public ISnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
+  public IAdvancedEditWidgetSnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
   {
     return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getWidget().getOriginPoint(), getRange() );
   }
