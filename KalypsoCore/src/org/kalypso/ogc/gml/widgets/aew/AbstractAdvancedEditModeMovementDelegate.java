@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -48,10 +48,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.ogc.gml.widgets.tools.AdvancedEditWidgetHelper;
+import org.kalypso.ogc.gml.widgets.aew.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
 import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
-import org.kalypso.ogc.gml.widgets.tools.AdvancedEditWidgetHelper.DIRECTION;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Geometry;

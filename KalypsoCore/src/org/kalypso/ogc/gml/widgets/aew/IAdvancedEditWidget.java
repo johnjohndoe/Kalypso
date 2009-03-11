@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
@@ -53,9 +53,11 @@ public interface IAdvancedEditWidget
 {
   GM_Point getCurrentGmPoint( );
 
-   IMapPanel getIMapPanel( );
+  IMapPanel getIMapPanel( );
 
   Point getOriginPoint( );
 
   ISnappedPoint[] getSnappedPointsAtOrigin( );
+  
+  boolean isLeftMouseButtonPressed( );
 }

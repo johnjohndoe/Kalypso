@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Graphics;
 import java.util.HashMap;
@@ -51,7 +51,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.ogc.gml.widgets.tools.AdvancedEditWidgetSnapper;
 import org.kalypso.ogc.gml.widgets.tools.GeometryPainter;
 import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,21 +76,30 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
     final GM_Point gmp = getWidget().getCurrentGmPoint();
     if( gmp == null )
       return;
-
     try
     {
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
+      
+      final ISnappedPoint[] snappedPoints;
+      
+      if( getWidget().isLeftMouseButtonPressed() )
+      {
+        snappedPoints = filterSnapPoints( getWidget().getSnappedPointsAtOrigin() );
+      }
+      else
+      {
+        final Feature[] features = getProvider().query( gmp, 20 );
+        if( ArrayUtils.isEmpty( features ) )
+          return;
 
-      final Feature[] features = getProvider().query( gmp, 20 );
-      if( ArrayUtils.isEmpty( features ) )
-        return;
+        // highlight detected feature points
+        final Map<Geometry, Feature> mapGeometries = getProvider().resolveJtsGeometries( features );
+        GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), mapGeometries.keySet().toArray( new Geometry[] {} ), VERTEX );
 
-      // highlight detected feature points
-      final Map<Geometry, Feature> mapGeometries = getProvider().resolveJtsGeometries( features );
-      GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), mapGeometries.keySet().toArray( new Geometry[] {} ), VERTEX );
+        // find snap points
+        snappedPoints = filterSnapPoints( AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, jtsPoint, getRange() ) );
+      }
 
-      // find snap points
-      final ISnappedPoint[] snappedPoints = filterSnapPoints( AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, jtsPoint, getRange() ) );
       if( !ArrayUtils.isEmpty( snappedPoints ) )
       {
         final Set<Point> snapped = new LinkedHashSet<Point>();
