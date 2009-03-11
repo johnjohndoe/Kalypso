@@ -40,32 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 22.07.2004
- * 
+ *
  * TODO To change the template for this generated file go to Window - Preferences - Java - Code Style - Code Templates
  */
 package org.kalypso.ogc.gml;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
-import org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.Rule;
 
-public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider, ICustomDrawHandler
+public class UserStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
   private final KalypsoUserStyle m_style;
 
-  private final IKalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_parent;
 
-  /**
-   * @param theme
-   * @param style
-   */
-  public ThemeStyleTreeObject( final IKalypsoFeatureTheme theme, final KalypsoUserStyle style )
+  public UserStyleTreeObject( final IKalypsoFeatureTheme theme, final KalypsoUserStyle style )
   {
-    m_theme = theme;
+    m_parent = theme;
     m_style = style;
   }
 
@@ -74,9 +67,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     return m_style;
   }
 
-  public IKalypsoFeatureTheme getTheme( )
+  public IKalypsoFeatureTheme getParent( )
   {
-    return m_theme;
+    return m_parent;
   }
 
   @Override
@@ -102,19 +95,12 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( o != this )
       throw new IllegalStateException();
 
-    // TODO: is this right, always taking the first one?
     final FeatureTypeStyle[] styles = m_style.getFeatureTypeStyles();
-    final Rule[] rules;
-    if( styles.length > 0 )
-      rules = m_style.getFeatureTypeStyles()[0].getRules();
-    else
-      rules = new Rule[0];
+    final FeatureTypeStyleTreeObject[] treeObjects = new FeatureTypeStyleTreeObject[styles.length];
+    for( int i = 0; i < styles.length; i++ )
+      treeObjects[i] = new FeatureTypeStyleTreeObject( this, styles[i] );
 
-    final RuleTreeObject[] result = new RuleTreeObject[rules.length];
-    for( int i = 0; i < rules.length; i++ )
-      result[i] = new RuleTreeObject( rules[i], this );
-
-    return result;
+    return treeObjects;
   }
 
   /**
@@ -123,9 +109,7 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public ImageDescriptor getImageDescriptor( final Object object )
   {
     if( object != this )
-    {
       throw new IllegalStateException();
-    }
 
     final Object[] children = getChildren( this );
     if( children.length > 0 && children[0] instanceof IWorkbenchAdapter )
@@ -142,9 +126,7 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public String getLabel( final Object o )
   {
     if( o != this )
-    {
       throw new IllegalStateException();
-    }
 
     final KalypsoUserStyle userStyle = getStyle();
 
@@ -157,11 +139,9 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public Object getParent( final Object o )
   {
     if( o != this )
-    {
       throw new IllegalStateException();
-    }
 
-    return getTheme();
+    return getParent();
   }
 
   /**
@@ -170,40 +150,8 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public String getTooltip( final Object element )
   {
     if( element != this )
-    {
       throw new IllegalStateException();
-    }
 
     return getStyle().getAbstract();
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#measureItem(org.eclipse.swt.widgets.Event)
-   */
-  public void measureItem( final Event event )
-  {
-// final Composite c = (Composite) event.widget;
-// final int orgHeight = event.height;
-// final int fontHeight = event.gc.getFontMetrics().getHeight();
-//
-// final int lineCount = 1 + getChildren( this ).length;
-//
-// event.height = orgHeight * lineCount;
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#eraseItem(org.eclipse.swt.widgets.Event)
-   */
-  public void eraseItem( final Event event )
-  {
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.swt.events.ICustomDrawHandler#paintItem(org.eclipse.swt.widgets.Event)
-   */
-  public void paintItem( final Event event )
-  {
-    // TODO Auto-generated method stub
-
   }
 }

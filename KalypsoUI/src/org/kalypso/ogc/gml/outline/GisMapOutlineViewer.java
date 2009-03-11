@@ -49,13 +49,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -72,17 +68,15 @@ import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
+public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 {
-  private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
+  private final ITreeContentProvider m_contentProvider;
 
   private final GisMapOutlineLabelProvider m_labelProvider;
 
@@ -94,7 +88,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
   /**
    * The constructor.
-   * 
+   *
    * @param commandTarget
    *          The command target.
    * @param mapModel
@@ -112,6 +106,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
     final boolean showActive = true;
 
     m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
+    m_contentProvider = new GisMapOutlineContentProvider( m_labelProvider );
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
   }
@@ -147,15 +142,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
           final ICommand command = new EnableThemeCommand( theme, event.getChecked() );
           postCommand( command, null );
         }
-      }
-    } );
-
-    m_viewer.getTree().addTreeListener( new TreeAdapter()
-    {
-      @Override
-      public void treeExpanded( final TreeEvent e )
-      {
-        resetCheckState( e.data );
       }
     } );
 
@@ -208,26 +194,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
       }
     } );
 
-    m_viewer.addTreeListener( new ITreeViewerListener()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse.jface.viewers.TreeExpansionEvent)
-       */
-      public void treeCollapsed( final TreeExpansionEvent event )
-      {
-      }
-
-      /**
-       * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse.jface.viewers.TreeExpansionEvent)
-       */
-      public void treeExpanded( final TreeExpansionEvent event )
-      {
-        resetCheckState( m_mapModel );
-      }
-    } );
-
     m_viewer.setInput( m_mapModel );
-    resetCheckState( m_mapModel );
   }
 
   /**
@@ -244,13 +211,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
    */
   public void setMapModel( final IMapModell model )
   {
-    if( m_mapModel != null )
-      m_mapModel.removeMapModelListener( this );
-
     m_mapModel = model;
-
-    if( m_mapModel != null )
-      m_mapModel.addMapModelListener( this );
 
     final CheckboxTreeViewer viewer = m_viewer;
     if( viewer != null && !viewer.getControl().isDisposed() )
@@ -260,47 +221,12 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
         public void run( )
         {
           if( !viewer.getControl().isDisposed() )
-          {
             viewer.setInput( model );
-            resetCheckState( model );
-          }
         }
       } );
     }
   }
 
-// protected void resetCheckState( final IMapModell model )
-// {
-// final IKalypsoTheme[] visibleThemes;
-// if( model == null )
-// visibleThemes = new IKalypsoTheme[] {};
-// else
-// {
-// // TODO: get this from the content provider instead
-// final IKalypsoThemePredicate predicate = new ThemeVisiblePredicate();
-// final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-// model.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-// visibleThemes = visitor.getFoundThemes();
-// }
-//
-// m_viewer.setCheckedElements( visibleThemes );
-// }
-
-  protected void resetCheckState( final Object object )
-  {
-    if( object == null )
-      return;
-
-    final boolean checked = m_labelProvider.isChecked( object );
-    final boolean grayed = m_labelProvider.isGrayed( object );
-
-    m_viewer.setGrayed( object, grayed );
-    m_viewer.setChecked( object, grayed || checked );
-
-    final Object[] children = m_contentProvider.getChildren( object );
-    for( final Object child : children )
-      resetCheckState( child );
-  }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
@@ -344,7 +270,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
   /**
    * Adds a listener for double-clicks in this viewer. Has no effect if an identical listener is already registered.
-   * 
+   *
    * @param listener
    *          a double-click listener
    */
@@ -355,7 +281,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
   /**
    * Removes the given double-click listener from this viewer. Has no affect if an identical listener is not registered.
-   * 
+   *
    * @param listener
    *          a double-click listener
    */
@@ -378,148 +304,5 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
   public void setCommandTarget( final JobExclusiveCommandTarget commandTarget )
   {
     m_commandTarget = commandTarget;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-   */
-  public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
-  {
-    final GisMapOutlineLabelProvider labelProvider = m_labelProvider;
-    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
-    {
-      m_viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( previouslyActive != null && nowActive != null )
-            labelProvider.elementsChanged( previouslyActive, nowActive );
-          else if( previouslyActive != null )
-            labelProvider.elementsChanged( previouslyActive );
-          else if( nowActive != null )
-            labelProvider.elementsChanged( nowActive );
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
-  public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
-  {
-    final IMapModell mapModel = m_mapModel;
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-          {
-            viewer.refresh();
-            resetCheckState( mapModel );
-          }
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
-  public void themeOrderChanged( final IMapModell source )
-  {
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-            viewer.refresh();
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-   */
-  public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
-  {
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-            viewer.remove( theme );
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-   */
-  public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
-  {
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-            viewer.setChecked( theme, visibility );
-        }
-      } );
-    }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellListener#contextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
-  public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellListener#repaintRequested(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void repaintRequested( final IMapModell source, final GM_Envelope bbox )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellListener#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
-  public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
-  {
-    final CheckboxTreeViewer viewer = m_viewer;
-    if( viewer != null && !viewer.getControl().isDisposed() )
-    {
-      viewer.getControl().getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          if( !viewer.getControl().isDisposed() )
-            viewer.refresh( theme );
-        }
-      } );
-    }
   }
 }

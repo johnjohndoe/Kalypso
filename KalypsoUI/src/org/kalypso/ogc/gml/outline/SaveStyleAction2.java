@@ -74,7 +74,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.ThemeStyleTreeObject;
+import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.xml.XMLTools;
@@ -98,12 +98,12 @@ public class SaveStyleAction2 implements IActionDelegate
     {
       final IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
       final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-      if( o instanceof ThemeStyleTreeObject )
+      if( o instanceof UserStyleTreeObject )
       {
-        final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
+        final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
         if( theme instanceof IKalypsoFeatureTheme )
         {
-          final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+          final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
           saveUserStyle( kalypsoStyle, PlatformUI.getWorkbench().getDisplay().getActiveShell() );
         }
       }
@@ -195,7 +195,7 @@ public class SaveStyleAction2 implements IActionDelegate
     boolean bEnable = false;
     final IStructuredSelection s = (IStructuredSelection) selection;
 
-    if( s.getFirstElement() instanceof ThemeStyleTreeObject )
+    if( s.getFirstElement() instanceof UserStyleTreeObject )
       bEnable = true;
 
     action.setEnabled( bEnable );

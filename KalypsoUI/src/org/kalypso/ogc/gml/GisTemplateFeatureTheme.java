@@ -174,8 +174,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       final StyledLayerType mapLayerType = (StyledLayerType) layerType;
       setType( type.toUpperCase() );
-      final List<Style> stylesList = mapLayerType.getStyle();
 
+      final List<Style> stylesList = mapLayerType.getStyle();
       for( final Style style : stylesList )
       {
         final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( style.getLinktype(), style.getHref(), context );
@@ -950,5 +950,5 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     fireVisibilityChanged( newVisibility );
   }
-  
+
 }

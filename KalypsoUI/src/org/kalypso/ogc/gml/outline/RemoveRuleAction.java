@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -47,8 +47,10 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.ogc.gml.FeatureTypeStyleTreeObject;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ogc.gml.RuleTreeObject;
+import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
@@ -71,8 +73,10 @@ public class RemoveRuleAction implements IActionDelegate
       if( o instanceof RuleTreeObject )
       {
         final RuleTreeObject obj = (RuleTreeObject) o;
-        final KalypsoUserStyle userStyle = obj.getStyle();
-        userStyle.getFeatureTypeStyles()[0].removeRule( obj.getRule() );
+        final FeatureTypeStyleTreeObject ftStyle = obj.getParent();
+        ftStyle.getStyle().removeRule( obj.getRule() );
+        final UserStyleTreeObject userStyleNode = ftStyle.getParent();
+        final KalypsoUserStyle userStyle = userStyleNode.getStyle();
         userStyle.fireStyleChanged();
 
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -83,7 +87,7 @@ public class RemoveRuleAction implements IActionDelegate
           if( part != null )
           {
             part.setSelectionChangedProvider( viewer );
-            part.initStyleEditor( userStyle, obj.getTheme() );
+            part.setStyle( userStyle, userStyleNode.getParent() );
           }
         }
         catch( final PartInitException e )
