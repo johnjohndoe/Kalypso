@@ -55,7 +55,7 @@ import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * Wrapped UserStyle to provide fireModellEvent Method
- * 
+ *
  * @author bce
  */
 public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdapter
@@ -196,7 +196,7 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
     if( o != this )
       throw new IllegalStateException();
 
-    /* If present, the title is the user-firendly label. */
+    /* If present, the title is the user-friendly label. */
     if( getTitle() != null )
       return getTitle();
 

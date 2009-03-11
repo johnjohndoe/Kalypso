@@ -166,7 +166,7 @@
 		<objectContribution adaptable="false" objectClass="org.eclipse.core.resources.IFile" id="org.kalypso.objectclass.zmlFile">
 			<action enablesFor="1" label="%org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.label" icon="icons/util/filter.gif" class="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution" menubarPath="extensions" id="org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution" />
 		</objectContribution>
-		<objectContribution adaptable="false" objectClass="org.kalypso.ogc.gml.ThemeStyleTreeObject" id="org.kalypso.objectclass.style.save">
+		<objectContribution adaptable="false" objectClass="org.kalypso.ogc.gml.UserStyleTreeObject" id="org.kalypso.objectclass.style.save">
 			<action label="%org.kalypso.ogc.gml.outline.SaveStyleAction2.label" tooltip="%org.kalypso.ogc.gml.outline.SaveStyleAction2.tooltip" icon="icons/map/save_edit.gif" class="org.kalypso.ogc.gml.outline.SaveStyleAction2" menubarPath="org.kalypso.objectclass.style.menu/styleops" id="org.kalypso.ogc.gml.outline.SaveStyleAction2" />
 			<menu label="%menu.label.2" id="org.kalypso.objectclass.style.menu">
 				<separator name="styleops" />

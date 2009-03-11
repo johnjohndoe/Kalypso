@@ -298,6 +298,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final UserStylePainter styleDisplayMap = new UserStylePainter( style, m_selectionManager );
     m_styleMap.put( style, styleDisplayMap );
     style.addStyleListener( this );
+
+    fireStatusChanged();
   }
 
   public void removeStyle( final KalypsoUserStyle style )
@@ -336,7 +338,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         // we MUST first determine if we have to restyle at all that is, if this modell event
         // did change any features belonging to me
 
-        // optimize: i think it is faster to restyle all than to find and
+        // Optimise: i think it is faster to restyle all than to find and
         // exchange so many display elements
         if( features.length > m_featureList.size() / 5 )
           setDirty();
@@ -509,21 +511,20 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       throw new IllegalStateException();
 
     final UserStyle[] styles = getStyles();
-    if( styles != null )
-    {
-      final List<ThemeStyleTreeObject> treeObjects = new ArrayList<ThemeStyleTreeObject>( styles.length );
-      for( final UserStyle style : styles )
-      {
-        final KalypsoUserStyle kus = (KalypsoUserStyle) style;
-        // We do not show selection-styles
-        if( !kus.isUsedForSelection() )
-          treeObjects.add( new ThemeStyleTreeObject( this, kus ) );
-      }
+    if( styles == null )
+      return super.getChildren( o );
 
-      return treeObjects.toArray( new ThemeStyleTreeObject[treeObjects.size()] );
+    final List<UserStyleTreeObject> treeObjects = new ArrayList<UserStyleTreeObject>( styles.length );
+    for( final UserStyle style : styles )
+    {
+      final KalypsoUserStyle kus = (KalypsoUserStyle) style;
+      // We do not show selection-styles
+      // TODO: optinally...
+      if( !kus.isUsedForSelection() )
+        treeObjects.add( new UserStyleTreeObject( this, kus ) );
     }
 
-    return super.getChildren( o );
+    return treeObjects.toArray( new UserStyleTreeObject[treeObjects.size()] );
   }
 
   /**

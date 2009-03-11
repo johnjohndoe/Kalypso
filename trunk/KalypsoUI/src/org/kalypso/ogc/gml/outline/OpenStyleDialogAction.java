@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -46,10 +46,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.ogc.gml.FeatureTypeStyleTreeObject;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ogc.gml.ThemeStyleTreeObject;
+import org.kalypso.ogc.gml.RuleTreeObject;
+import org.kalypso.ogc.gml.UserStyleTreeObject;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 
@@ -80,18 +82,18 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
         part.setSelectionChangedProvider( viewer );
 
       // if UserStyle selected path that on to styleeditor
-      if( o instanceof ThemeStyleTreeObject )
+      if( o instanceof UserStyleTreeObject )
       {
-        final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
+        final IKalypsoTheme theme = ((UserStyleTreeObject) o).getParent();
         if( part != null && theme instanceof IKalypsoFeatureTheme )
         {
-          final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
-          part.initStyleEditor( kalypsoStyle, (IKalypsoFeatureTheme) theme );
+          final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) o).getStyle();
+          part.setStyle( kalypsoStyle, (IKalypsoFeatureTheme) theme );
           return;
         }
         else
         {
-          part.initStyleEditor( null, null );
+          part.setStyle( null, null );
           return;
         }
       }
@@ -100,25 +102,25 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
       {
         if( !(o instanceof IKalypsoFeatureTheme) )
         {
-          part.initStyleEditor( null, null );
+          part.setStyle( null, null );
           return;
         }
 
-        IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
-        Object[] children = theme.getChildren( theme );
-        if( !(children instanceof ThemeStyleTreeObject[]) || children.length == 0 )
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) o;
+        final Object[] children = theme.getChildren( theme );
+        if( !(children instanceof UserStyleTreeObject[]) || children.length == 0 )
         {
-          part.initStyleEditor( null, null );
+          part.setStyle( null, null );
           return;
         }
 
         /* TODO: It always edits the first of a theme (perhaps the style editor could edit all of them simultaniously?). */
-        KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) children[0]).getStyle();
-        part.initStyleEditor( kalypsoStyle, theme );
+        final KalypsoUserStyle kalypsoStyle = ((UserStyleTreeObject) children[0]).getStyle();
+        part.setStyle( kalypsoStyle, theme );
         return;
       }
 
-      part.initStyleEditor( null, null );
+      part.setStyle( null, null );
       return;
     }
     catch( final Exception e )
@@ -140,8 +142,9 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
     if( selection instanceof IStructuredSelection )
     {
       final IStructuredSelection s = (IStructuredSelection) selection;
-      Object firstElement = s.getFirstElement();
-      if( firstElement instanceof ThemeStyleTreeObject || firstElement instanceof IKalypsoTheme )
+      final Object firstElement = s.getFirstElement();
+      // TODO: introduce common interface to identify selectable elements
+      if( firstElement instanceof UserStyleTreeObject || firstElement instanceof IKalypsoTheme || firstElement instanceof FeatureTypeStyleTreeObject || firstElement instanceof RuleTreeObject )
         bEnable = true;
       action.setEnabled( bEnable );
     }
