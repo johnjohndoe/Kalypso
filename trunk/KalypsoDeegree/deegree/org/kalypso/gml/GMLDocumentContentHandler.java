@@ -42,6 +42,7 @@ package org.kalypso.gml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -56,6 +57,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,7 +77,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * All the rest of parsing is delegated to the {@link GMLContentHandler} content handler.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class GMLDocumentContentHandler extends DelegateContentHandler
@@ -93,6 +95,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
   private final XMLReader m_xmlReader;
 
   private String m_schemaLocationString = null;
+
+  /** Schema of root feature */
+  private IGMLSchema m_rootSchema;
 
   public GMLDocumentContentHandler( final XMLReader xmlReader, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory providerFactory )
   {
@@ -116,18 +121,14 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
       // first element may have schema-location
       m_schemaLocationString = getSchemaLocation( atts );
 
-      // SK
-      // TODO: schemaLocation string should be used for every schema loaded from this context; not only for namespaces
-      // defined at the root level
-      initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context );
+      final Map<String, IGMLSchema> preFetchedSchemas = new HashMap<String, IGMLSchema>();
+      m_rootSchema = initGmlSchema( uri, atts, m_schemaLocationString, m_schemaLocationHint, m_context, preFetchedSchemas );
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( m_schemaLocationString, m_context );
       /* If a localtionHint is given, this precedes any schemaLocation in the GML-File */
       if( m_schemaLocationHint != null )
-      {
         namespaces.put( uri, m_schemaLocationHint );
-      }
 
-      setDelegate( new GMLContentHandler( m_xmlReader, m_context, namespaces ) );
+      setDelegate( new GMLContentHandler( m_xmlReader, m_context, namespaces, preFetchedSchemas ) );
     }
 
     super.startElement( uri, localName, qName, atts );
@@ -135,16 +136,19 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
 
   /**
    * Loads the main application schema and also all (via xmlns) references schemas.
-   * <p>
-   * TODO: move into helper class.
-   * </p>
+   *
+   * @param foundSchemas
+   *          All schema loaded in this method are stored into that map (namespace -> schema). These schemas will be
+   *          given to the GMLContentHandler, so he will not need to load it again.
    */
-  private static GMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString, final URL locationHint, final URL context ) throws SAXException
+  private static IGMLSchema initGmlSchema( final String uri, final Attributes atts, final String schemaLocationString, final URL locationHint, final URL context, final Map<String, IGMLSchema> foundSchemas ) throws SAXException
   {
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
     final GMLSchema gmlSchema = loadGMLSchema( uri, null, schemaLocationString, locationHint, context );
     final String version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
+    if( gmlSchema != null )
+      foundSchemas.put( uri, gmlSchema );
 
     // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
     // the main schema.
@@ -169,6 +173,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
           if( gmlSchema != null )
           {
             gmlSchema.addAdditionalSchema( additionalSchema );
+            foundSchemas.put( xmlnsUri, gmlSchema );
           }
         }
       }
@@ -192,7 +197,8 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
 
     try
     {
-      // 2. try : from uri + schemalocation attributes
+      // 2. try : from schema cache: we only use uri here, so locally loaded schemas will not be stored in the cache.
+      // This is necessary for WFS
       if( schema == null )
       {
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
@@ -240,12 +246,6 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
         throw new SAXException( schemaNotFoundExceptions );
     }
 
-    if( !schemaNotFoundExceptions.isEmpty() )
-    {
-      System.out.println( "warning: errors occured with schemalocation" );
-      schemaNotFoundExceptions.printStackTrace();
-    }
-
     return schema;
   }
 
@@ -266,21 +266,9 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
 
   public GMLWorkspace getWorkspace( ) throws GMLException
   {
-    try
-    {
-      final GMLContentHandler delegate = (GMLContentHandler) getDelegate();
-      final Feature rootFeature = delegate.getRootFeature();
-
-      /* At this point the schema is in the catalog, as it was put there during gml-parsing */
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final GMLSchema rootSchema = schemaCatalog.getSchema( rootFeature.getFeatureType().getQName().getNamespaceURI(), (String) null );
-
-      return FeatureFactory.createGMLWorkspace( rootSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
-    }
-    catch( final InvocationTargetException e )
-    {
-      throw new GMLException( e.getTargetException() );
-    }
+    final GMLContentHandler delegate = (GMLContentHandler) getDelegate();
+    final Feature rootFeature = delegate.getRootFeature();
+    return FeatureFactory.createGMLWorkspace( m_rootSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
   }
 
 }
