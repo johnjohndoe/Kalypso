@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -89,7 +89,7 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * merges two GM_Envelops and returns the minimum envelope containing both.
-   * 
+   *
    * @return merged envelope
    */
   GM_Envelope getMerged( GM_Envelope envelope );
@@ -107,16 +107,26 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * This function returns the coordinate system, the coordinates of the contained positions are in.
-   * 
+   *
    * @return The coordinate system.
    */
   public String getCoordinateSystem( );
 
   /**
    * This function sets the coordinate system, the coordinates of the contained positions are in.
-   * 
+   *
    * @param coordinateSystem
    *            The coordinate system.
    */
   public void setCoordinateSystem( String coordinateSystem );
+
+  /**
+   * Checks if this point is completly equal to the submitted geometry
+   * 
+   * @param exact
+   *          If <code>false</code>, the positions are compardd by {@link GM_Position#equals(Object, false)}
+   * @see GM_Position#equals(Object, boolean)
+   */
+  public boolean equals( final Object other, final boolean exact );
+
 }

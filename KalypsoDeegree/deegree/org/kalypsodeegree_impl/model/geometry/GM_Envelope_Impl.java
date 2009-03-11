@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -48,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * <P>
  * ------------------------------------------------------------
  * </P>
- * 
+ *
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  * @author Markus Bedel href="mailto:bedel@giub.uni-bonn.de"
  * @version $Id$
@@ -79,7 +80,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
   /**
    * Creates a new GM_Envelope_Impl object.
-   * 
+   *
    * @param min
    *            The min position.
    * @param max
@@ -272,7 +273,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * returns a new GM_Envelope object representing the intersection of this GM_Envelope with the specified GM_Envelope. *
    * Note: If there is no intersection at all GM_Envelope will be null.
-   * 
+   *
    * @param bb
    *            the GM_Envelope to be intersected with this GM_Envelope
    * @return the largest GM_Envelope contained in both the specified GM_Envelope and in this GM_Envelope.
@@ -314,20 +315,27 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   @Override
   public boolean equals( final Object other )
   {
+    return equals( other, false );
+  }
+
+  /**
+   * Checks if this point is completly equal to the submitted geometry
+   *
+   * @param exact
+   *          If <code>false</code>, the positions are compared by {@link GM_Position#equals(Object, false)}
+   * @see GM_Position#equals(Object, boolean)
+   */
+  public boolean equals( final Object other, final boolean exact )
+  {
     if( (other == null) || !(other instanceof GM_Envelope_Impl) )
       return false;
 
-    GM_Envelope otherEnvelope = (GM_Envelope) other;
+    final GM_Envelope otherEnvelope = (GM_Envelope) other;
 
-    /* Is one of the coordinate systems null? */
-    if( (m_coordinateSystem == null && otherEnvelope.getCoordinateSystem() != null) || (m_coordinateSystem != null && otherEnvelope.getCoordinateSystem() == null) )
+    if( !ObjectUtils.equals( m_coordinateSystem, otherEnvelope.getCoordinateSystem() ) )
       return false;
 
-    /* Now, either both or none are null. */
-    if( m_coordinateSystem != null && !m_coordinateSystem.equals( otherEnvelope.getCoordinateSystem() ) )
-      return false;
-
-    return (m_min.equals( otherEnvelope.getMin() ) && m_max.equals( otherEnvelope.getMax() ));
+    return m_min.equals( otherEnvelope.getMin(), exact ) && m_max.equals( otherEnvelope.getMax(), exact );
   }
 
   public GM_Envelope getBuffer( final double b )
@@ -341,7 +349,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   {
     if( pos == null )
       return this;
-    
+
     final double minx = Math.min( m_min.getX(), pos.getX() );
     final double miny = Math.min( m_min.getY(), pos.getY() );
     final double maxx = Math.max( m_max.getX(), pos.getX() );
@@ -359,7 +367,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   {
     if( envelope == null )
       return this;
-    
+
     final double minx = Math.min( m_min.getX(), envelope.getMin().getX() );
     final double miny = Math.min( m_min.getY(), envelope.getMin().getY() );
     final double maxx = Math.max( m_max.getX(), envelope.getMax().getX() );
@@ -405,7 +413,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Envelope#setCoordinateSystem(java.lang.String)
    */
-  public void setCoordinateSystem( String coordinateSystem )
+  public void setCoordinateSystem( final String coordinateSystem )
   {
     m_coordinateSystem = coordinateSystem;
   }
