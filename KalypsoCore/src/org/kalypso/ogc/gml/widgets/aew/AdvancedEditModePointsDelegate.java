@@ -111,32 +111,32 @@ public class AdvancedEditModePointsDelegate implements IAdvancedEditWidgetDelega
 
   private IAdvancedEditWidgetGeometry findUnderlyingGeometry( final Map<Geometry, Feature> geometries, final Point point )
   {
-    final Set<Entry<Geometry, Feature>> entries= geometries.entrySet();
+    final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
     for( final Entry<Geometry, Feature> entry : entries )
     {
       if( !entry.getKey().intersection( point ).isEmpty() )
-      return new IAdvancedEditWidgetGeometry(){
-
-        @Override
-        public Point getBasePoint( )
+        return new IAdvancedEditWidgetGeometry()
         {
-        return point;
-        }
+          @Override
+          public Point getBasePoint( )
+          {
+            return point;
+          }
 
-        @Override
-        public Feature getFeature( )
-        {
-         return entry.getValue();
-        }
+          @Override
+          public Feature getFeature( )
+          {
+            return entry.getValue();
+          }
 
-        @Override
-        public Geometry getUnderlyingGeometry( )
-        {
-        return entry.getKey();
-        }};
+          @Override
+          public Geometry getUnderlyingGeometry( )
+          {
+            return entry.getKey();
+          }
+        };
     }
-    
-    
+
     return null;
   }
 
