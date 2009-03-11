@@ -49,7 +49,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
-import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -82,7 +81,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   
   private Point m_originPoint = null;
 
-  private ISnappedPoint[] m_snappedPointsAtOrigin = null;
+  private IAdvancedEditWidgetSnappedPoint[] m_snappedPointsAtOrigin = null;
 
   private final IAdvancedEditWidgetDataProvider m_provider;
 
@@ -201,7 +200,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
    * @see org.kalypso.ogc.gml.widgets.IAdvancedEditWidget#getSnappedPointsAtOrigin()
    */
   @Override
-  public ISnappedPoint[] getSnappedPointsAtOrigin( )
+  public IAdvancedEditWidgetSnappedPoint[] getSnappedPointsAtOrigin( )
   {
     return m_snappedPointsAtOrigin;
   }

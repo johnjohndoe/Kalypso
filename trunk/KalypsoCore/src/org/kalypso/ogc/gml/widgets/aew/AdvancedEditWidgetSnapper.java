@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -62,9 +61,9 @@ import com.vividsolutions.jts.geom.Polygon;
 public class AdvancedEditWidgetSnapper
 {
 
-  public static ISnappedPoint[] findSnapPoints( final Map<Geometry, Feature> geometries, final Point base, final double range )
+  public static IAdvancedEditWidgetSnappedPoint[] findSnapPoints( final Map<Geometry, Feature> geometries, final Point base, final double range )
   {
-    final Set<ISnappedPoint> myPoints = new LinkedHashSet<ISnappedPoint>();
+    final Set<IAdvancedEditWidgetSnappedPoint> myPoints = new LinkedHashSet<IAdvancedEditWidgetSnappedPoint>();
 
     final Set<Entry<Geometry, Feature>> entries = geometries.entrySet();
     for( final Entry<Geometry, Feature> entry : entries )
@@ -82,7 +81,7 @@ public class AdvancedEditWidgetSnapper
 
           if( point.distance( base ) <= range )
           {
-            myPoints.add( new ISnappedPoint()
+            myPoints.add( new IAdvancedEditWidgetSnappedPoint()
             {
               @Override
               public Feature getFeature( )
@@ -114,7 +113,7 @@ public class AdvancedEditWidgetSnapper
         throw new NotImplementedException();
     }
 
-    return myPoints.toArray( new ISnappedPoint[] {} );
+    return myPoints.toArray( new IAdvancedEditWidgetSnappedPoint[] {} );
   }
 
 }
