@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,181 +36,183 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
-import javax.swing.event.EventListenerList;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
+import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class TextInputPanel
 {
+  private final Composite m_parent;
 
-  private Composite composite = null;
+  private final FormToolkit m_toolkit;
 
-  private String labelText = null;
+  private final int m_parentColumns;
 
-  private Text text = null;
-
-  private EventListenerList listenerList = new EventListenerList();
-
-  private String label = null;
-
-  public TextInputPanel( Composite parent, String m_label, String m_text )
+  public static interface ModifyListener
   {
-    setLabel( m_label );
-    setLabelText( m_text );
-    composite = new Composite( parent, SWT.NULL );
-    FormLayout compositeLayout = new FormLayout();
-    GridData compositeData = new GridData();
-    compositeData.widthHint = 195;
-    composite.setLayoutData( compositeData );
-    composite.setLayout( compositeLayout );
-    compositeLayout.marginWidth = 0;
-    compositeLayout.marginHeight = 0;
-    compositeLayout.spacing = 0;
-    composite.layout();
-    init();
+    String textModified( final String newValue );
   }
 
-  public void addPanelListener( PanelListener pl )
+  public TextInputPanel( final FormToolkit toolkit, final Composite parent )
   {
-    listenerList.add( PanelListener.class, pl );
+    m_toolkit = toolkit;
+    m_parent = parent;
+    final GridLayout layout = (GridLayout) parent.getLayout();
+    m_parentColumns = layout.numColumns;
   }
 
-  private void init()
+  public void createTextRow( final String label, final String text, final ModifyListener listener )
   {
-    text = new Text( composite, SWT.BORDER );
-    text.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
+    final Label urlLabel = m_toolkit.createLabel( m_parent, label );
+    urlLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
-    FormData textData = new FormData();
-    textData.height = 10;
-    textData.width = 90;
-    textData.left = new FormAttachment( 340, 1000, 0 );
-    textData.top = new FormAttachment( 10, 1000, 0 );
-    text.setLayoutData( textData );
-    if( labelText != null )
-      text.setText( labelText );
+    final Text textControl = m_toolkit.createText( m_parent, text );
+    final GridData textData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    textData.horizontalSpan = m_parentColumns - 1;
+    textControl.setLayoutData( textData );
 
-    Label okButton = new Label( composite, SWT.PUSH );
-    okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
-    FormData okButtonData = new FormData();
-    okButtonData.height = 15;
-    okButtonData.width = 22;
-    okButtonData.left = new FormAttachment( 890, 1000, 0 );
-    okButtonData.top = new FormAttachment( 100, 1000, 0 );
-    okButton.setLayoutData( okButtonData );
-    okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
+    configureListeners( listener, textControl );
+  }
 
-    okButton.addMouseListener( new MouseListener()
+  public void createDenominatorRow( final String label, final double value, final ModifyListener listener )
+  {
+    final Label labelControl = m_toolkit.createLabel( m_parent, label );
+    labelControl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+
+    final Text textControl = m_toolkit.createText( m_parent, "" + value ); //$NON-NLS-1$
+    final GridData textData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    textData.horizontalSpan = m_parentColumns - 2;
+    textControl.setLayoutData( textData );
+
+    final Button getCurrentScaleButton = m_toolkit.createButton( m_parent, "", SWT.PUSH | SWT.FLAT );
+    getCurrentScaleButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    getCurrentScaleButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE.createImage() );
+    getCurrentScaleButton.setToolTipText( MessageBundle.STYLE_EDITOR_SCALE );
+    getCurrentScaleButton.addSelectionListener( new SelectionAdapter()
     {
-      public void mouseDoubleClick( MouseEvent e )
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        setLabelText( getText().getText() );
-        fire();
+        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        final IEditorPart editor = window.getActivePage().getActiveEditor();
+        if( editor instanceof GisMapEditor )
+        {
+          // TODO: get from current context instead!
+          final GisMapEditor gisMapEditor = (GisMapEditor) editor;
+          final double currentScale = gisMapEditor.getMapPanel().getCurrentScale();
+          final String newText = String.format( Locale.PRC, "%.2f", currentScale );//$NON-NLS-1$
+          textControl.setText( newText );
+          final String reset = listener.textModified( newText );
+          if( reset != null )
+            textControl.setText( reset );
+        }
       }
-
-      public void mouseDown( MouseEvent e )
-      {
-        mouseDoubleClick( e );
-      }
-
-      public void mouseUp( MouseEvent e )
-      {
-      // nothing
-      }
-
     } );
 
-    Label urlLabel = new Label( composite, SWT.NULL );
-    FormData urlLabelData = new FormData();
-    urlLabelData.height = 15;
-    urlLabelData.width = 242;
-    urlLabelData.left = new FormAttachment( 0, 1000, 0 );
-    urlLabelData.top = new FormAttachment( 100, 1000, 0 );
-    urlLabel.setLayoutData( urlLabelData );
-    urlLabel.setText( label );
+    configureListeners( listener, textControl );
   }
 
-  public String getLabelText()
+// MessageBundle.STYLE_EDITOR_LEGEND
+  void createLegendRow( final String label, final KalypsoUserStyle userStyle )
   {
-    return labelText;
-  }
+    final Label labelControl = m_toolkit.createLabel( m_parent, label, SWT.NULL );
+    labelControl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
-  public void setInputText( String textInput )
-  {
-    labelText = textInput;
-    text.setText( textInput );
-  }
+    final Label legendLabel = m_toolkit.createLabel( m_parent, null );
+    labelControl.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
-  // sets the inputField to a default state
-  public void reset()
-  {
-    text.setText( "" ); //$NON-NLS-1$
-  }
+    final LegendLabel legendControl = new LegendLabel( legendLabel, userStyle, 0 );
 
-  protected void fire()
-  {
-    Object[] listeners = listenerList.getListenerList();
-    for( int i = listeners.length - 2; i >= 0; i -= 2 )
+    final IKalypsoUserStyleListener styleListener = new IKalypsoUserStyleListener()
     {
-      if( listeners[i] == PanelListener.class )
+      @Override
+      public void styleChanged( final KalypsoUserStyle source )
       {
-        PanelEvent event = new PanelEvent( this );
-        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
+        // TODO Auto-generated method stub
+        legendControl.updateLegendImage();
       }
-    }
+    };
+    userStyle.addStyleListener( styleListener );
+
+    labelControl.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        userStyle.removeStyleListener( styleListener );
+      }
+    } );
   }
 
-  public Composite getComposite()
+  private void configureListeners( final ModifyListener listener, final Text textControl )
   {
-    return composite;
+    textControl.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetDefaultSelected( final SelectionEvent e )
+      {
+        final String reset = listener.textModified( textControl.getText() );
+        if( reset != null )
+          textControl.setText( reset );
+      }
+    } );
+
+    textControl.addFocusListener( new FocusAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+       */
+      @Override
+      public void focusLost( final FocusEvent e )
+      {
+        final String reset = listener.textModified( textControl.getText() );
+        if( reset != null )
+          textControl.setText( reset );
+      }
+    } );
+
+// textControl.addModifyListener( new org.eclipse.swt.events.ModifyListener()
+// {
+// @Override
+// public void modifyText( final ModifyEvent e )
+// {
+// listener.textModified( textControl.getText() );
+// }
+// } );
   }
 
-  public void setComposite( Composite m_composite )
-  {
-    this.composite = m_composite;
-  }
-
-  public String getLabel()
-  {
-    return label;
-  }
-
-  public void setLabel( String m_label )
-  {
-    this.label = m_label;
-  }
-
-  public Text getText()
-  {
-    return text;
-  }
-
-  public void setText( Text m_text )
-  {
-    this.text = m_text;
-  }
-
-  public void setLabelText( String m_labelText )
-  {
-    this.labelText = m_labelText;
-  }
 }

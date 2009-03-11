@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
@@ -47,9 +47,7 @@ import org.kalypso.i18n.Messages;
  */
 public class MessageBundle
 {
-  public final static String STYLE_EDITOR_NO_STYLE_FOR_EDITOR = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.0"); //$NON-NLS-1$
-
-  public final static String STYLE_EDITOR_EDITOR_TITLE = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.1"); //$NON-NLS-1$
+  public final static String STYLE_EDITOR_NO_STYLE_FOR_EDITOR = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.0" ); //$NON-NLS-1$
 
   public final static String STYLE_EDITOR_STYLE = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.2"); //$NON-NLS-1$
 
@@ -226,7 +224,7 @@ public class MessageBundle
   public static final String STYLE_EDITOR_FILTER_FEATURE_ID = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.88"); //$NON-NLS-1$
 
   public static final String STYLE_EDITOR_PROPERTY = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.89"); //$NON-NLS-1$
-  
+
   public static final String STYLE_EDITOR_GEOM_PROPERTY = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.90"); //$NON-NLS-1$
 
   public static final String STYLE_EDITOR_FILTER_VALUE = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.91"); //$NON-NLS-1$
@@ -258,7 +256,7 @@ public class MessageBundle
   public static final String STYLE_EDITOR_FILTER_SPATIAL = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.104"); //$NON-NLS-1$
 
   public static final String STYLE_EDITOR_GEOMETRY_IN_MAP = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.105"); //$NON-NLS-1$
-  
+
   public static final String STYLE_EDITOR_CHOOSE_EXTERNAL_GEOMETRY = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.106"); //$NON-NLS-1$
 
   public static final String STYLE_GET_GEOMETRY = Messages.getString("org.kalypso.ui.editor.styleeditor.MessageBundle.107"); //$NON-NLS-1$

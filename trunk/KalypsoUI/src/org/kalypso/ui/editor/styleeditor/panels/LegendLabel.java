@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.panels;
 
@@ -45,21 +45,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.ogc.gml.IKalypsoUserStyleListener;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
-import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.graphics.legend.LegendElement;
 import org.kalypsodeegree.graphics.legend.LegendElementCollection;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -72,69 +62,35 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 /**
  * @author F.Lindemann
  */
-public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
+public class LegendLabel
 {
-  private Label label = null;
+  private final Label m_label;
 
-  private KalypsoUserStyle userStyle = null;
+  private final KalypsoUserStyle m_userStyle;
 
-  private int ruleIndex = -1;
+  private int m_ruleIndex = -1;
 
-  private Composite composite = null;
-
-  public LegendLabel( final Composite parent, final KalypsoUserStyle m_userStyle )
+  public LegendLabel( final Label legendLabel, final KalypsoUserStyle userStyle, final int ruleIndex )
   {
-    new LegendLabel( parent, m_userStyle, -1 );
+    m_ruleIndex = ruleIndex;
+    m_label = legendLabel;
+    m_userStyle = userStyle;
+
+    updateLegendImage();
   }
 
-  public LegendLabel( final Composite parent, final KalypsoUserStyle m_userStyle, final int i )
-  {
-    composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
-    compositeData.widthHint = 180;
-    composite.setLayoutData( compositeData );
-    composite.setLayout( compositeLayout );
-    compositeLayout.marginWidth = 0;
-    compositeLayout.marginHeight = 0;
-    compositeLayout.spacing = 0;
-    composite.layout();
-
-    final Label legendLabel = new Label( composite, SWT.NULL );
-    final FormData legendLabelData = new FormData();
-    legendLabelData.height = 15;
-    legendLabelData.width = 46;
-    legendLabelData.left = new FormAttachment( 0, 1000, 0 );
-    legendLabelData.top = new FormAttachment( 150, 1000, 0 );
-    legendLabel.setLayoutData( legendLabelData );
-    legendLabel.setText( MessageBundle.STYLE_EDITOR_LEGEND );
-
-    setLabel( new Label( composite, SWT.NULL ) );
-    final FormData labelData = new FormData();
-    labelData.left = new FormAttachment( 340, 1000, 0 );
-    labelData.top = new FormAttachment( 0, 1000, 0 );
-    labelData.width = 41;
-    getLabel().setLayoutData( labelData );
-
-    setRuleIndex( i );
-    setUserStyle( m_userStyle );
-    getLabel().addDisposeListener( this );
-    setLegendImage( getLabel(), m_userStyle );
-    m_userStyle.addStyleListener( this );
-  }
-
-  private void setLegendImage( final Label m_label, final UserStyle m_userStyle )
+  public void updateLegendImage( )
   {
     final LegendFactory factory = new LegendFactory();
     try
     {
       LegendElement le = null;
 
-      if( ruleIndex != -1 && ruleIndex < m_userStyle.getFeatureTypeStyles()[0].getRules().length )
+      if( m_ruleIndex != -1 && m_ruleIndex < m_userStyle.getFeatureTypeStyles()[0].getRules().length )
       {
         // NECESSARY IF TO SHOW STYLE OF ONLY ONE RULE
         final FeatureTypeStyle_Impl fts = new FeatureTypeStyle_Impl();
-        final Rule rule = m_userStyle.getFeatureTypeStyles()[0].getRules()[ruleIndex];
+        final Rule rule = m_userStyle.getFeatureTypeStyles()[0].getRules()[m_ruleIndex];
         final Rule m_rules[] = { rule };
         fts.setRules( m_rules );
         final FeatureTypeStyle_Impl[] ftStyles = { fts };
@@ -164,57 +120,15 @@ public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
       g.drawImage( bi, 0, 0, Color.WHITE, null );
 
       // TODO Is the swt image disposed somewhere?
-      ImageData img = ImageConverter.convertToSWT( outbi );
-      Image swtImage = ImageDescriptor.createFromImageData( img ).createImage();
+      final ImageData img = ImageConverter.convertToSWT( outbi );
+      final Image swtImage = ImageDescriptor.createFromImageData( img ).createImage();
 
+      // TODO: image not disposed!
       m_label.setImage( swtImage );
     }
     catch( final Exception e1 )
     {
       e1.printStackTrace();
     }
-  }
-
-  public void widgetDisposed( final DisposeEvent e )
-  {
-    getUserStyle().removeStyleListener( this );
-  }
-
-  public Label getLabel( )
-  {
-    return label;
-  }
-
-  public void setLabel( final Label m_label )
-  {
-    this.label = m_label;
-  }
-
-  public int getRuleIndex( )
-  {
-    return ruleIndex;
-  }
-
-  public void setRuleIndex( final int m_ruleIndex )
-  {
-    this.ruleIndex = m_ruleIndex;
-  }
-
-  public KalypsoUserStyle getUserStyle( )
-  {
-    return userStyle;
-  }
-
-  public void setUserStyle( final KalypsoUserStyle m_userStyle )
-  {
-    this.userStyle = m_userStyle;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoUserStyleListener#styleChanged(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
-  public void styleChanged( final KalypsoUserStyle source )
-  {
-    setLegendImage( getLabel(), source );
   }
 }
