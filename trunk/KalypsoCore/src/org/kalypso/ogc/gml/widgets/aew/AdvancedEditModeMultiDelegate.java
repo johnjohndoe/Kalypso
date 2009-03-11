@@ -67,9 +67,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovementDelegate
 {
-
-
-
   public AdvancedEditModeMultiDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
     super( widget, provider );
@@ -103,8 +100,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
 
         snappedPoints = AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, jtsPoint, getRange() );
       }
-      
-     
+
       /* highlight snap points */
       if( !ArrayUtils.isEmpty( snappedPoints ) )
       {
@@ -150,10 +146,6 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
 
   }
 
-
-
- 
-
   private Map<Feature, ISnappedPoint[]> resolveSnappedPoints( )
   {
     final Map<Feature, ISnappedPoint[]> map = new HashMap<Feature, ISnappedPoint[]>();
@@ -176,8 +168,4 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
     return map;
   }
 
-  public ISnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
-  {
-    return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getWidget().getOriginPoint(), getRange() );
-  }
 }
