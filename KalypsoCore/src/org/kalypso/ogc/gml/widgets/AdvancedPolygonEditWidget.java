@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -63,14 +64,17 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 { 
   private enum EDIT_MODE
   {
-    eMulti,
-    eSingle;
+    eInsertPoint,
+    eSingle,
+    eMulti;
   }
 
-  private final EDIT_MODE m_mode = EDIT_MODE.eMulti;
+  private EDIT_MODE m_mode = EDIT_MODE.eMulti;
 
   private final AdvancedEditModeMultiDelegate m_multi;
 
+  private final AdvancedEditModeSingleDelegate m_single;
+  
   private Point m_originPoint = null;
 
   private ISnappedPoint[] m_snappedPointsAtOrigin = null;
@@ -83,6 +87,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     m_provider = provider;
 
     m_multi = new AdvancedEditModeMultiDelegate( this, provider );
+    m_single = new AdvancedEditModeSingleDelegate( this, provider );
   }
 
   /**
@@ -97,6 +102,16 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     {
       m_multi.paint( g );
     }
+    else if( EDIT_MODE.eSingle.equals( m_mode ) )
+    {
+      m_single.paint( g );
+    }
+    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
+    {
+    
+    }
+    
+    
   }
 
   /**
@@ -148,6 +163,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
       return "Editiermodus: Gemeinsames verschieben";
     else if( EDIT_MODE.eSingle.equals( m_mode ) )
       return "Editiermodus: Einzelnes verschieben";
+    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
+      return "Editiermodus: Punkte einfügen / entfernen";
     
     return null;
   }
@@ -177,5 +194,40 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   public IMapPanel getIMapPanel( )
   {
     return getMapPanel();
+  }
+  
+  /**
+   * Escape Key pressed? -> reset / deactivate widget
+   * 
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    final int keyCode = e.getKeyCode();
+    if( KeyEvent.VK_SPACE == keyCode )
+    {
+      switchMode();
+    }
+
+    super.keyPressed( e );
+  }
+
+  private void switchMode( )
+  {
+    if( EDIT_MODE.eMulti.equals( m_mode ) )
+    {
+      m_mode = EDIT_MODE.eSingle;
+    }
+    else if( EDIT_MODE.eSingle.equals( m_mode ) )
+    {
+      m_mode = EDIT_MODE.eInsertPoint;
+    }
+    else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
+    {
+      m_mode = EDIT_MODE.eMulti;
+    }
+     
+    getMapPanel().repaintMap();
   }
 }

@@ -46,7 +46,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -66,22 +65,19 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * @author Dirk Kuch
  */
-public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovementDelegate
+public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMovementDelegate
 {
-
-
-
-  public AdvancedEditModeMultiDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
+  public AdvancedEditModeSingleDelegate( final IAdvancedEditWidget widget, final IAdvancedEditWidgetDataProvider provider )
   {
     super( widget, provider );
   }
 
   public void paint( final Graphics g )
   {
-
     final GM_Point gmp = getWidget().getCurrentGmPoint();
     if( gmp == null )
       return;
+
     try
     {
       final Point jtsPoint = (Point) JTSAdapter.export( gmp );
@@ -95,7 +91,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
       GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), mapGeometries.keySet().toArray( new Geometry[] {} ), VERTEX );
 
       // find snap points
-      final ISnappedPoint[] snappedPoints = AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, jtsPoint, getRange() );
+      final ISnappedPoint[] snappedPoints = filterSnapPoints( AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, jtsPoint, getRange() ) );
       if( !ArrayUtils.isEmpty( snappedPoints ) )
       {
         final Set<Point> snapped = new LinkedHashSet<Point>();
@@ -105,69 +101,61 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
         }
 
         GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), snapped.toArray( new Geometry[] {} ), SNAP );
-      }
 
-      // drag & drop symbolization
-      if( getWidget().getOriginPoint() != null )
-      {
-        final Point vector = JTSUtilities.getVector( getWidget().getOriginPoint(), jtsPoint );
-        final Map<Feature, ISnappedPoint[]> snapped = resolveSnappedPoints();
-
-        /* highlight moved snap points */
-        final Set<Point> moved = new HashSet<Point>();
-
-        final Set<Entry<Feature, ISnappedPoint[]>> entrySet = snapped.entrySet();
-        for( final Entry<Feature, ISnappedPoint[]> entry : entrySet )
+        // drag & drop symbolization
+        if( getWidget().getOriginPoint() != null )
         {
-          final ISnappedPoint[] points = entry.getValue();
-          for( final ISnappedPoint p : points )
+          final Point vector = JTSUtilities.getVector( getWidget().getOriginPoint(), jtsPoint );
+
+          /* highlight moved snap points */
+          final Set<Point> moved = new HashSet<Point>();
+
+          for( final ISnappedPoint p : snappedPoints )
           {
             moved.add( p.getMovedPoint( vector ) );
           }
+
+          GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), moved.toArray( new Geometry[] {} ), MOVED_SNAP_POINT );
+
+          /* display new geometry */
+          if( !ArrayUtils.isEmpty( snappedPoints ) )
+          {
+            final Map<Feature, ISnappedPoint[]> map = new HashMap<Feature, ISnappedPoint[]>();
+            map.put( snappedPoints[0].getFeature(), snappedPoints );
+
+            displayUpdateGeometry( g, map, vector );
+          }
         }
-
-        GeometryPainter.highlightPoints( g, getWidget().getIMapPanel(), moved.toArray( new Geometry[] {} ), MOVED_SNAP_POINT );
-
-        /* display new geometry */
-        displayUpdateGeometry( g, snapped, vector );
       }
-
     }
     catch( final GM_Exception e )
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-
   }
 
-
-
- 
-
-  private Map<Feature, ISnappedPoint[]> resolveSnappedPoints( )
+  /**
+   * snap points of one feature
+   */
+  private ISnappedPoint[] filterSnapPoints( final ISnappedPoint[] points )
   {
-    final Map<Feature, ISnappedPoint[]> map = new HashMap<Feature, ISnappedPoint[]>();
+    Feature base = null;
+    final Set<ISnappedPoint> mySnapPoints = new HashSet<ISnappedPoint>();
 
-    for( final ISnappedPoint point : getWidget().getSnappedPointsAtOrigin() )
+    for( final ISnappedPoint point : points )
     {
-      final Feature feature = point.getFeature();
-
-      final ISnappedPoint[] points = map.get( feature );
-      if( points == null )
+      if( base == null )
       {
-        map.put( feature, new ISnappedPoint[] { point } );
+        base = point.getFeature();
       }
-      else
+
+      if( base == point.getFeature() )
       {
-        map.put( feature, (ISnappedPoint[]) ArrayUtils.add( points, point ) );
+        mySnapPoints.add( point );
       }
     }
 
-    return map;
+    return mySnapPoints.toArray( new ISnappedPoint[] {} );
   }
 
-  public ISnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
-  {
-    return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getWidget().getOriginPoint(), getRange() );
-  }
 }
