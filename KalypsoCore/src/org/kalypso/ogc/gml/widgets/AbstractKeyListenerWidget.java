@@ -147,12 +147,12 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     }
   }
 
-  protected Point getCurrentPoint( )
+  public Point getCurrentPoint( )
   {
     return m_currentPoint;
   }
 
-  protected GM_Point getCurrentGmPoint( )
+  public GM_Point getCurrentGmPoint( )
   {
     final Point current = getCurrentPoint();
     if( current != null )
