@@ -41,11 +41,13 @@
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
@@ -69,18 +71,25 @@ public class DeleteFeatureCommand implements ICommand
 
   final List<RemoveBrokenLinksCommand> m_removeBrokenLinksCommands = new ArrayList<RemoveBrokenLinksCommand>();
 
-  private Feature[] m_featuresToDelete;
+  private final Feature[] m_featuresToDelete;
 
   public DeleteFeatureCommand( final Feature featureToDelete )
   {
     m_featuresToDelete = new Feature[] { featureToDelete };
   }
 
+  public DeleteFeatureCommand( final Feature[] featuresToDelete )
+  {
+    m_featuresToDelete = featuresToDelete;
+  }
+
   public DeleteFeatureCommand( final EasyFeatureWrapper[] wrappers )
   {
     m_featuresToDelete = new Feature[wrappers.length];
     for( int i = 0; i < wrappers.length; i++ )
+    {
       m_featuresToDelete[i] = wrappers[i].getFeature();
+    }
   }
 
   /**
@@ -121,7 +130,9 @@ public class DeleteFeatureCommand implements ICommand
       final IRelationType rt = featureToAdd.getParentRelation();
 
       if( workspace.contains( featureToAdd ) )
+      {
         continue;
+      }
 
       if( rt.isList() )
       {
@@ -129,11 +140,15 @@ public class DeleteFeatureCommand implements ICommand
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
       else
+      {
         workspace.addFeatureAsComposition( parentFeature, rt, 0, featureToAdd );
+      }
 
       // collect infos for event
       if( !parentMap.containsKey( parentFeature ) )
+      {
         parentMap.put( parentFeature, new ArrayList<Feature>() );
+      }
 
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToAdd );
@@ -150,7 +165,9 @@ public class DeleteFeatureCommand implements ICommand
     }
 
     for( final ICommand command : m_removeBrokenLinksCommands )
+    {
       command.undo();
+    }
   }
 
   /**
@@ -173,30 +190,52 @@ public class DeleteFeatureCommand implements ICommand
     for( final Feature featureToRemove : m_featuresToDelete )
     {
       final GMLWorkspace workspace = featureToRemove.getWorkspace();
-      touchedWorkspaces.add( workspace );
-      final Feature parentFeature = featureToRemove.getParent();
-      final IRelationType rt = featureToRemove.getParentRelation();
-      if( !workspace.contains( featureToRemove ) )
-        continue; // was already removed
 
-      if( rt.isList() )
+      final Feature parentFeature = featureToRemove.getOwner();
+      final IRelationType parentRelationType = featureToRemove.getParentRelation();
+
+      if( !workspace.contains( featureToRemove ) )
       {
-        final Object prop = parentFeature.getProperty( rt );
-        final List< ? > list = (List< ? >) prop;
+        continue; // was already removed
+      }
+
+      touchedWorkspaces.add( workspace );
+
+      // Remember indices for undo
+      if( parentRelationType.isList() )
+      {
+        final List< ? > list = (List< ? >) parentFeature.getProperty( parentRelationType );
         m_listIndexMap.put( featureToRemove, new Integer( list.indexOf( featureToRemove ) ) );
       }
       // remove the feature
-      workspace.removeLinkedAsCompositionFeature( parentFeature, rt, featureToRemove );
+      workspace.removeLinkedAsCompositionFeature( parentFeature, parentRelationType, featureToRemove );
 
       // collect infos for event
       if( !parentMap.containsKey( parentFeature ) )
+      {
         parentMap.put( parentFeature, new ArrayList<Feature>() );
+      }
 
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToRemove );
     }
 
-    /* fire modell events */
+    final Map<GMLWorkspace, Collection<Feature>> changedLinkFeatures = new HashMap<GMLWorkspace, Collection<Feature>>();
+    for( final GMLWorkspace workspace : touchedWorkspaces )
+    {
+      final FindLinksFeatureVisitor visitor = new FindLinksFeatureVisitor( workspace );
+      workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+      final Map<GMLWorkspace, Collection<Feature>> changedFeatures = visitor.getChangedFeatures();
+      changedLinkFeatures.putAll( changedFeatures );
+    }
+
+    for( final ICommand command : m_removeBrokenLinksCommands )
+    {
+      command.process();
+    }
+
+    /* fire events for deletion */
     for( final Map.Entry<Feature, List<Feature>> entry : parentMap.entrySet() )
     {
       final Feature parentFeature = entry.getKey();
@@ -206,14 +245,15 @@ public class DeleteFeatureCommand implements ICommand
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, children, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
     }
 
-    for( final GMLWorkspace workspace : touchedWorkspaces )
+    /* fire events for removed links */
+    final Set<Entry<GMLWorkspace, Collection<Feature>>> entrySet = changedLinkFeatures.entrySet();
+    for( final Entry<GMLWorkspace, Collection<Feature>> entry : entrySet )
     {
-      final FeatureVisitor visitor = new FindLinksFeatureVisitor( workspace );
-      workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+      final GMLWorkspace workspace = entry.getKey();
+      final Collection<Feature> value = entry.getValue();
+      final Feature[] features = value.toArray( new Feature[value.size()] );
+      workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, features ) );
     }
-
-    for( final ICommand command : m_removeBrokenLinksCommands )
-      command.process();
   }
 
   /**
@@ -221,6 +261,8 @@ public class DeleteFeatureCommand implements ICommand
    */
   private final class FindLinksFeatureVisitor implements FeatureVisitor
   {
+    private final Map<GMLWorkspace, Collection<Feature>> m_changedFeatures = new HashMap<GMLWorkspace, Collection<Feature>>();
+
     private final GMLWorkspace m_workspace;
 
     public FindLinksFeatureVisitor( final GMLWorkspace workspace )
@@ -228,6 +270,22 @@ public class DeleteFeatureCommand implements ICommand
       m_workspace = workspace;
     }
 
+    public Map<GMLWorkspace, Collection<Feature>> getChangedFeatures( )
+    {
+      return m_changedFeatures;
+    }
+
+    private void addChangedFeature( final Feature feature )
+    {
+      final GMLWorkspace ws = feature.getWorkspace();
+      if( !m_changedFeatures.containsKey( ws ) )
+      {
+        m_changedFeatures.put( ws, new HashSet<Feature>() );
+      }
+
+      m_changedFeatures.get( ws ).add( feature );
+    }
+    
     // checks all properties for broken links
     /**
      * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
@@ -248,7 +306,10 @@ public class DeleteFeatureCommand implements ICommand
             for( int k = propList.size() - 1; k >= 0; k-- )
             {
               if( m_workspace.isBrokenLink( f, linkftp, k ) )
+              {
                 m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, (String) propList.get( k ), k ) );
+                addChangedFeature( f );
+              }
             }
           }
           else
@@ -257,6 +318,7 @@ public class DeleteFeatureCommand implements ICommand
             {
               final String childID = (String) f.getProperty( linkftp );
               m_removeBrokenLinksCommands.add( new RemoveBrokenLinksCommand( m_workspace, f, linkftp, childID, 1 ) );
+              addChangedFeature( f );
             }
           }
         }
@@ -301,7 +363,7 @@ public class DeleteFeatureCommand implements ICommand
     {
       m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_ftp, m_childID );
 
-      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
+// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
     }
 
     /**
@@ -319,7 +381,7 @@ public class DeleteFeatureCommand implements ICommand
     {
       m_workspace.addFeatureAsAggregation( m_parentFeature, m_ftp, m_pos, m_childID );
 
-      m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
+// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
     }
 
     /**
