@@ -40,10 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.widgets.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.NotImplementedException;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Dirk Kuch
@@ -121,5 +128,86 @@ public class AdvancedEditWidgetHelper
     }
 
     throw new NotImplementedException();
+  }
+
+  public static Polygon resolveResultPolygon( final Polygon polygon, final int indexCurrent, final Point moved )
+  {
+    final GeometryFactory factory = new GeometryFactory( polygon.getPrecisionModel(), polygon.getSRID() );
+    final List<Coordinate> myCoordinates = new ArrayList<Coordinate>();
+
+    final LineString ring = polygon.getExteriorRing();
+
+    for( int i = 0; i < ring.getCoordinates().length; i++ )
+    {
+      if( i == indexCurrent )
+      {
+        myCoordinates.add( moved.getCoordinate() );
+      }
+      else if( i == ring.getNumPoints() - 1 )
+      {
+        myCoordinates.add( myCoordinates.get( 0 ) );
+      }
+      else
+      {
+        myCoordinates.add( ring.getCoordinateN( i ) );
+      }
+    }
+
+    final LinearRing resultRing = factory.createLinearRing( myCoordinates.toArray( new Coordinate[] {} ) );
+    return factory.createPolygon( resultRing, new LinearRing[] {} );
+  }
+
+  public static Polygon resolveResultPolygon( final Polygon polygon, final int indexPrevious, final int indexNext, final Point vector )
+  {
+    final GeometryFactory factory = new GeometryFactory( polygon.getPrecisionModel(), polygon.getSRID() );
+    final List<Coordinate> myCoordinates = new ArrayList<Coordinate>();
+
+    final LineString ring = polygon.getExteriorRing();
+
+    if( indexPrevious < indexNext )
+    {
+      for( int i = 0; i < ring.getNumPoints(); i++ )
+      {
+        if( i > indexPrevious && i < indexNext )
+        {
+          final Coordinate c = ring.getCoordinateN( i );
+          final Coordinate moved = new Coordinate( c.x - vector.getX(), c.y - vector.getY() );
+
+          myCoordinates.add( moved );
+        }
+        else if( indexPrevious == 0 && i == ring.getNumPoints() - 1 )
+        {
+          myCoordinates.add( myCoordinates.get( 0 ) );
+        }
+        else
+        {
+          myCoordinates.add( ring.getCoordinateN( i ) );
+        }
+      }
+    }
+    else
+    {
+      for( int i = 0; i < ring.getNumPoints(); i++ )
+      {
+        if( i > indexPrevious || i < indexNext )
+        {
+          final Coordinate c = ring.getCoordinateN( i );
+          final Coordinate moved = new Coordinate( c.x - vector.getX(), c.y - vector.getY() );
+
+          myCoordinates.add( moved );
+        }
+        else if( i == ring.getNumPoints() - 1 )
+        {
+          myCoordinates.add( myCoordinates.get( 0 ) );
+        }
+        else
+        {
+          myCoordinates.add( ring.getCoordinateN( i ) );
+        }
+      }
+    }
+
+    final LinearRing resultRing = factory.createLinearRing( myCoordinates.toArray( new Coordinate[] {} ) );
+    return factory.createPolygon( resultRing, new LinearRing[] {} );
   }
 }
