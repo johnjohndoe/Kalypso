@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.exceptions.TransformationException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.TransformUtilities;
@@ -49,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version
  * @author Andreas Poth
  *         <p>
@@ -73,11 +72,11 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   /**
    * constructor
-   * 
+   *
    * @param x
-   *            x-value of the point
+   *          x-value of the point
    * @param y
-   *            y-value of the point
+   *          y-value of the point
    */
   GM_Position_Impl( final double x, final double y )
   {
@@ -86,13 +85,13 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   /**
    * constructor
-   * 
+   *
    * @param x
-   *            x-value of the point
+   *          x-value of the point
    * @param y
-   *            y-value of the point
+   *          y-value of the point
    * @param z
-   *            z-value of the point
+   *          z-value of the point
    */
   GM_Position_Impl( final double x, final double y, final double z )
   {
@@ -171,27 +170,32 @@ class GM_Position_Impl implements GM_Position, Serializable
   @Override
   public boolean equals( final Object other )
   {
-    boolean eq = true;
-    final double[] other_ = ((GM_Position) other).getAsArray();
+    if( other instanceof GM_Position )
+      return equals( (GM_Position) other, false );
+
+    return false;
+  }
+
+  /**
+   * compares if all field of other are equal to the corresponding fields of this position
+   */
+  public boolean equals( final GM_Position other, final boolean exact )
+  {
+    final double[] other_ = other.getAsArray();
 
     if( other_.length != m_point.length )
+      return false;
+
+    // REMARK: still strange... depends on coordinate system as well. Map should not zoom deeper than this value...
+    final double mute = exact ? Double.MIN_NORMAL : MUTE;
+
+    for( int i = 0; i < m_point.length; i++ )
     {
-      eq = false;
+      if( Math.abs( m_point[i] - other_[i] ) > mute )
+        return false;
     }
 
-    if( eq )
-    {
-      for( int i = 0; i < m_point.length; i++ )
-      {
-        if( Math.abs( m_point[i] - other_[i] ) > MUTE )
-        {
-          eq = false;
-          break;
-        }
-      }
-    }
-
-    return eq;
+    return true;
   }
 
   @Override
@@ -234,7 +238,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Position#transform(org.deegree.crs.transformations.CRSTransformation)
    */
-  public GM_Position transform( final CRSTransformation trans ) throws TransformationException
+  public GM_Position transform( final CRSTransformation trans )
   {
     return TransformUtilities.transform( this, trans );
   }
