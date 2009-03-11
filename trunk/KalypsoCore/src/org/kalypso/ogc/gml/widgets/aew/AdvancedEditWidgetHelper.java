@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets.tools;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import java.util.ArrayList;
 import java.util.List;

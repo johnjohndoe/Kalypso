@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets.tools;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;

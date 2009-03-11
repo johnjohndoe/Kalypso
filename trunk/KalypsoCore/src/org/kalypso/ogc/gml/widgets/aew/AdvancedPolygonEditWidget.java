@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.widgets.aew;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -48,6 +48,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
 import org.kalypso.ogc.gml.widgets.tools.ISnappedPoint;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -69,6 +70,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     eMulti;
   }
 
+  private boolean m_leftMouseButtonPressed = false;
+  
   private EDIT_MODE m_mode = EDIT_MODE.eMulti;
 
   private final AdvancedEditModeMultiDelegate m_multi;
@@ -124,6 +127,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     if( gmp == null )
       return;
 
+    m_leftMouseButtonPressed = true;
+    
     try
     {
       m_originPoint = (Point) JTSAdapter.export( gmp );
@@ -149,6 +154,8 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public void leftReleased( final java.awt.Point p )
   {
+    m_leftMouseButtonPressed = false;
+    
     m_originPoint = null;
     m_snappedPointsAtOrigin = null;
   }
@@ -229,5 +236,14 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
     }
      
     getMapPanel().repaintMap();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IAdvancedEditWidget#isLeftMouseButtonPressed()
+   */
+  @Override
+  public boolean isLeftMouseButtonPressed( )
+  {
+    return m_leftMouseButtonPressed;
   }
 }
