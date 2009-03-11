@@ -46,8 +46,7 @@ import java.awt.Graphics;
 import org.kalypso.ogc.gml.widgets.tools.IPointHighLighter;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public interface IAdvancedEditWidgetDelegate
 {

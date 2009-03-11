@@ -74,9 +74,11 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   
   private EDIT_MODE m_mode = EDIT_MODE.eMulti;
 
-  private final AdvancedEditModeMultiDelegate m_multi;
+  private final AdvancedEditModeMultiDelegate m_delegateMulti;
 
-  private final AdvancedEditModeSingleDelegate m_single;
+  private final AdvancedEditModeSingleDelegate m_delegateSingle;
+  
+  private final AdvancedEditModePointsDelegate m_delegatePoints;
   
   private Point m_originPoint = null;
 
@@ -85,12 +87,13 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   private final IAdvancedEditWidgetDataProvider m_provider;
 
   public AdvancedPolygonEditWidget( final IAdvancedEditWidgetDataProvider provider )
-  {
+  { 
     super( "Editiere städtebauliche Elemente" );
     m_provider = provider;
 
-    m_multi = new AdvancedEditModeMultiDelegate( this, provider );
-    m_single = new AdvancedEditModeSingleDelegate( this, provider );
+    m_delegateMulti = new AdvancedEditModeMultiDelegate( this, provider );
+    m_delegateSingle = new AdvancedEditModeSingleDelegate( this, provider );
+    m_delegatePoints = new AdvancedEditModePointsDelegate( this, provider );
   }
 
   /**
@@ -103,15 +106,15 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
     if( EDIT_MODE.eMulti.equals( m_mode ) )
     {
-      m_multi.paint( g );
+      m_delegateMulti.paint( g );
     }
     else if( EDIT_MODE.eSingle.equals( m_mode ) )
     {
-      m_single.paint( g );
+      m_delegateSingle.paint( g );
     }
     else if( EDIT_MODE.eInsertPoint.equals( m_mode ) )
     {
-    
+      m_delegatePoints.paint( g );
     }
     
     
@@ -140,7 +143,16 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
       // highlight detected feature points
       final Map<Geometry, Feature> mapGeometries = m_provider.resolveJtsGeometries( features );
 
-      m_snappedPointsAtOrigin = m_multi.resolveSnapPoints( mapGeometries );
+      if( EDIT_MODE.eMulti.equals( m_mode ) )
+      {
+        m_snappedPointsAtOrigin = m_delegateMulti.resolveSnapPoints( mapGeometries );
+      }
+      else if( EDIT_MODE.eSingle.equals( m_mode ) ) 
+      {
+        m_snappedPointsAtOrigin = m_delegateSingle.resolveSnapPoints( mapGeometries );
+      } 
+       
+      
     }
     catch( final GM_Exception e )
     {

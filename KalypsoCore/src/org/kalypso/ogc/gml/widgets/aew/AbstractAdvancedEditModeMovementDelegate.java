@@ -183,4 +183,9 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     return range;
   }
 
+  public ISnappedPoint[] resolveSnapPoints( final Map<Geometry, Feature> mapGeometries )
+  {
+    return AdvancedEditWidgetSnapper.findSnapPoints( mapGeometries, getWidget().getOriginPoint(), getRange() );
+  }
+
 }
