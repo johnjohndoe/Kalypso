@@ -50,11 +50,11 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 
 /**
- * 
+ *
  * Holds the data (except the GisTemplateMapModell), that is needed for the addThemeCommand.
- * 
+ *
  * @author Thomas Jung
- * 
+ *
  */
 public class ResultAddLayerCommandData
 {
@@ -101,15 +101,13 @@ public class ResultAddLayerCommandData
     m_scenarioFolder = scenarioFolder;
     m_type = type;
 
-    if( m_sldFile != null )
-      updateStyleLocation();
+    updateStyleLocation();
   }
 
   public void setSldFile( final IFile sldFile )
   {
     m_sldFile = sldFile;
-    if( m_sldFile != null )
-      updateStyleLocation();
+    updateStyleLocation();
   }
 
   private void updateStyleLocation( )
@@ -120,8 +118,10 @@ public class ResultAddLayerCommandData
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
-    m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+    if( m_sldFile == null )
+      m_styleLocation = ""; //$NON-NLS-1$
+    else
+      m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public String getThemeName( )
@@ -181,7 +181,6 @@ public class ResultAddLayerCommandData
     m_styleType = styleType;
     m_type = type;
 
-    // if( m_sldFile != null )
     updateStyleLocation();
   }
 
