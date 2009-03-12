@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:ogc:gml:kalypso:dict:core" ns0:base="urn:ogc:gml:kalypso:dict:"
-    xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-
-    <!-- Component Dictionary -->
-    <catalog:public publicId="urn:ogc:gml:kalypso:dict:phenomenon:dont:know"
-        uri="dict_phenomenon.gml"/>
-
-</catalog:catalog>
