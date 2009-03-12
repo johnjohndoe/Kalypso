@@ -110,9 +110,10 @@ public class FloodModelHelper
   }
 
   /**
-   * removes all wsp themes in the cascading "wasserspiegellagen" theme
+   * removes wsp themes in the cascading "wasserspiegellagen" theme; only coverages referenced by the entries of
+   * eventsToRemove array will be removed; if eventsToRemove is null, all wsp themes will be removed
    */
-  public static void removeWspTheme( final AbstractCascadingLayerTheme wspTheme )
+  public static void removeWspThemes( final AbstractCascadingLayerTheme wspTheme, final IRunoffEvent[] eventsToRemove )
   {
     final IKalypsoTheme[] themes = wspTheme.getAllThemes();
 
@@ -122,10 +123,30 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        final QName name = featureList.getParentFeatureTypeProperty().getQName();
-        if( name.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) )
+        if( eventsToRemove != null )
         {
-          wspTheme.removeTheme( theme );
+          for( final IRunoffEvent runoffEvent : eventsToRemove )
+          {
+            Feature parentFeature = featureList.getParentFeature();
+            while( parentFeature != null )
+            {
+              if( runoffEvent.getGmlID().equals( parentFeature.getId() ) )
+              {
+                wspTheme.removeTheme( theme );
+                break;
+              }
+              parentFeature = parentFeature.getOwner();
+            }
+          }
+        }
+        else
+        {
+          // TODO: this is dangerous, because it is possible that other features have property with the same name!
+          final QName name = featureList.getParentFeatureTypeProperty().getQName();
+          if( name.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) )
+          {
+            wspTheme.removeTheme( theme );
+          }
         }
       }
     }
@@ -220,7 +241,7 @@ public class FloodModelHelper
    * 
    * @param shell
    * @param events
-   *            the RunoffEvents
+   *          the RunoffEvents
    * 
    * @return a array of selected {@link IRunoffEvent}
    */
@@ -235,13 +256,19 @@ public class FloodModelHelper
       public String getText( Object element )
       {
         final IRunoffEvent event = (IRunoffEvent) element;
-        ICoverageCollection resultCoverages = event.getResultCoverages();
-        if( resultCoverages.size() > 0 )
+        final ICoverageCollection resultCoverages = event.getResultCoverages();
+        if( resultCoverages != null && resultCoverages.size() > 0 )
         {
           return event.getName() + " (Ergebnisse vorhanden)";
         }
         else
-          return event.getName();
+        {
+          final String name = event.getName();
+          if( name == null || name.length() == 0 )
+            return "[" + event.getGmlID() + "]";
+          else
+            return name;
+        }
       }
     };
 

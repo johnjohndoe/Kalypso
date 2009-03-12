@@ -167,9 +167,8 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       MessageDialog.openInformation( shell, "Flood-Modeller", "Keine Ereignisse prozessiert." );
       return;
     }
-    // remove themes
-    // TODO: only remove event coverages
-    FloodModelHelper.removeWspTheme( wspTheme );
+    // remove themes (processed coverages only)
+    FloodModelHelper.removeWspThemes( wspTheme, eventsToProcess );
 
     for( final IRunoffEvent runoffEvent : model.getEvents() )
       runoffEvent.setMarkedForProcessing( false );
