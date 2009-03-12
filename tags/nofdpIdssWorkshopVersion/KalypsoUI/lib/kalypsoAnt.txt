@@ -1,2 +1,0 @@
-the kalypsoAnt.jar must not occur in the classpath !!
-It is assigned to the extensionpoint.
