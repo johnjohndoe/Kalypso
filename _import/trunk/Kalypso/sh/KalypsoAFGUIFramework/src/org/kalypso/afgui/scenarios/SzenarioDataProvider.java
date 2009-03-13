@@ -105,6 +105,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      */
     public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
+      System.out.println( "Object invalid: " + key );
     }
 
     /**
@@ -112,7 +113,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
      *      java.lang.Object, org.eclipse.core.runtime.IStatus)
      */
     public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-    {
+    { 
       if( newValue instanceof GMLWorkspace )
       {
         final GMLWorkspace workspace = (GMLWorkspace) newValue;
