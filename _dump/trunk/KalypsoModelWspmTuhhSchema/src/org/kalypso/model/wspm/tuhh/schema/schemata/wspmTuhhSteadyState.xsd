@@ -1,30 +1,25 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- This file is part of Kalypso
-	
-	Copyright (c) 2008 by
-	
-	Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
-	Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
-	(Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
-	
-	Kalypso is free software: you can redistribute it and/or modify it under the terms  
-	of the GNU Lesser General Public License (LGPL) as published by the Free Software 
-	Foundation, either version 3 of the License, or (at your option) any later version.
-	
-	Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
-	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-	
-	You should have received a copy of the GNU Lesser General Public
-	License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
--->
-<schema targetNamespace="org.kalypso.model.wspm.tuhh"
-	xmlns:tuhh="org.kalypso.model.wspm.tuhh"
-	xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	xmlns:wspmProf="org.kalypso.model.wspmprofile"
-	xmlns:runoff="org.kalypso.model.wspmrunoff"
-	xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om"
+	<!--
+		This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende
+		Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers),
+		http://www.bjoernsen.de Technische Universität Hamburg-Harburg,
+		Institut für Wasserbau, Hamburg, Germany (Technical University
+		Hamburg-Harburg, Institute of River and Coastal Engineering),
+		http://www.tu-harburg.de/wb/ Kalypso is free software: you can
+		redistribute it and/or modify it under the terms of the GNU Lesser
+		General Public License (LGPL) as published by the Free Software
+		Foundation, either version 3 of the License, or (at your option) any
+		later version. Kalypso is distributed in the hope that it will be
+		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+		Lesser General Public License for more details. You should have
+		received a copy of the GNU Lesser General Public License along with
+		Kalypso. If not, see <http://www.gnu.org/licenses/>.
+	-->
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
+	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:wspmProf="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
 	version="0.1">
 	<annotation>
@@ -44,13 +39,12 @@
 		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
 	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
 	<include schemaLocation="wspmTuhhQintervallResults.xsd" />
-	<!-- 
+	<!--
 		_________________________________________________________________________________________
 		ELEMENTS
 		_________________________________________________________________________________________
 	-->
-	<element name="CalculationWspmTuhhSteadyState"
-		type="tuhh:CalculationWspmTuhhSteadyStateType"
+	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
@@ -58,11 +52,13 @@
 				<name>Berechnungsvariante - stationär (TU-HH)</name>
 				<label>
 					${listProperty:http://www.opengis.net/gml#name;0;-Name
-					nicht gesetzt-}
+					nicht
+					gesetzt-}
 				</label>
 				<tooltip>
 					${property:http://www.opengis.net/gml#name;0;-Name
-					nicht gesetzt-}
+					nicht
+					gesetzt-}
 				</tooltip>
 				<description>
 					<![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]>
@@ -90,16 +86,13 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>
-					Berechnungsvariante - stationär (TU-HH) - konstantes
-					Reibungsgefälle
+					<![CDATA[Berechnungsvariante - stationär (TU-HH) - konstantes Reibungsgefälle]]>
 				</name>
 				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-Name
-					nicht gesetzt-}
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]>
 				</label>
 				<tooltip>
-					${property:http://www.opengis.net/gml#name;0;-Name
-					nicht gesetzt-}
+					<![CDATA[${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]>
 				</tooltip>
 				<description>
 					<![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]>
@@ -107,15 +100,13 @@
 			</documentation>
 			<documentation xml:lang="en">
 				<name>
-					Calculation case - steady (TU-HH)- constant XXXX???
+					<![CDATA[Calculation case - steady (TU-HH)- constant XXXX???]]>
 				</name>
 				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-no
-					name-}
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
 				</label>
 				<tooltip>
-					${property:http://www.opengis.net/gml#name;0;-no
-					name-}
+					<![CDATA[${property:http://www.opengis.net/gml#name;0;-no name-}]]>
 				</tooltip>
 				<description>
 					<![CDATA[${property:http://www.opengis.net/gml#description;-no description-}]]>
@@ -140,8 +131,7 @@
 			</documentation>
 			<documentation xml:lang="en">
 				<name>
-					Lower boundary condition (1. profile) - steady
-					(TU-HH)
+					<![CDATA[Lower boundary condition (1. profile) - steady (TU-HH)]]>
 				</name>
 				<label>Lower boundary condition (at 1. profile)</label>
 				<tooltip>
@@ -174,8 +164,7 @@
 	</element>
 	<!--
 	-->
-	<element name="WaterlevelParameter"
-		type="tuhh:WaterlevelParameterType"
+	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -194,8 +183,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="ReachWspmTuhhSteadyState"
-		type="tuhh:ReachWspmTuhhSteadyStateType"
+	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
 		substitutionGroup="wspm:AbstractReach">
 		<annotation>
 			<documentation xml:lang="de">
@@ -230,38 +218,32 @@
 	</element>
 	<!-- 
 	-->
-	<!--element name="influentReachSegmentWspmTuhhSteadyStateMember"
+	<!--
+		element name="influentReachSegmentWspmTuhhSteadyStateMember"
 		type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
-		substitutionGroup="wspm:reachSegmentMember">
-		<annotation>
-		<documentation xml:lang="de">
-		<label>Zufluss-Strangsegmente</label>
+		substitutionGroup="wspm:reachSegmentMember"> <annotation>
+		<documentation xml:lang="de"> <label>Zufluss-Strangsegmente</label>
 		<tooltip>Zufluss-Strangsegmente</tooltip>
-		<description>Zufluss-Strangsegmente</description>
-		</documentation>
-		<documentation xml:lang="en">
-		<label>Influent string segments</label>
-		<tooltip>Influent string segments</tooltip>
-		<description>Influent string segments</description>
-		</documentation>
-		</annotation>
-		</element-->
+		<description>Zufluss-Strangsegmente</description> </documentation>
+		<documentation xml:lang="en"> <label>Influent string segments</label>
+		<tooltip>Influent string segments</tooltip> <description>Influent
+		string segments</description> </documentation> </annotation> </element
+	-->
 	<!-- TODO Überflüssig?, kann eventuell weg. -->
-	<!--element name="InfluentReachSegmentWspmTuhhSteadyState" type="wspm:InfluentReachSegmentType"
-		substitutionGroup="wspm:AbstractReachSegment">
-		<annotation>
-		<documentation xml:lang="de">
-		<name>Zufluss-Strangsegment - stationär (TU-HH)</name>
+	<!--
+		element name="InfluentReachSegmentWspmTuhhSteadyState"
+		type="wspm:InfluentReachSegmentType"
+		substitutionGroup="wspm:AbstractReachSegment"> <annotation>
+		<documentation xml:lang="de"> <name>Zufluss-Strangsegment - stationär
+		(TU-HH)</name>
 		<label>huhu???influentReachSegmentWspmTuhhSteadyState</label>
 		<tooltip>???tooltip</tooltip>
-		<description>???description</description>
-		</documentation>
-		</annotation>
-		</element-->
+		<description>???description</description> </documentation>
+		</annotation> </element
+	-->
 	<!-- 
 	-->
-	<element name="ProfileReachSegmentWspmTuhhSteadyState"
-		type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
+	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
 		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -298,8 +280,8 @@
 	</element>
 	<!-- 
 	-->
-	<element name="SubReachDefinition"
-		type="tuhh:subReachDefinitionType" substitutionGroup="gml:_Feature">
+	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Berechnungsabschnitt - stationär (TU-HH)</name>
@@ -339,10 +321,10 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 		_________________________________________________________________________________________
 		TYPES
-		_________________________________________________________________________________________	
+		_________________________________________________________________________________________
 	-->
 	<complexType name="CalculationWspmTuhhSteadyStateType">
 		<complexContent>
@@ -354,25 +336,21 @@
 							<documentation xml:lang="de">
 								<label>Berechnungsart</label>
 								<tooltip>
-									Auswahl der Berechnungsart
-									(Wasserspiegellagenberechnung o.
-									Bordvollberechnung)
+									<![CDATA[Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)]]>
 								</tooltip>
 								<description>
-									Auswahl der Berechnungsart
-									(Wasserspiegellagenberechnung o.
-									Bordvollberechnung)
+									<![CDATA[Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)]]>
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Type of calculation</label>
 								<tooltip>
-									Choose type of calculation (water
-									surface or bank-full)
+									<![CDATA[Choose type of calculation (water surface or bank-full)]]>
 								</tooltip>
 								<description>
 									Choose type of calculation (water
-									surface or bank-full)
+									surface or
+									bank-full)
 								</description>
 							</documentation>
 						</annotation>
@@ -393,12 +371,10 @@
 										</documentation>
 										<documentation xml:lang="en">
 											<label>
-												Water surface
-												calculation
+												<![CDATA[Water surface calculation]]>
 											</label>
 											<tooltip>
-												Water surface
-												calculation
+												<![CDATA[Water surface calculation]]>
 											</tooltip>
 											<description>
 												Water surface
@@ -462,25 +438,23 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reachWspmTuhhSteadyStateMember"
-						type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
+					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
 								<tooltip>
-									Auswahl des Gewässerstrangs, für den
-									die Berechnung durchgeführt wird.
+									<![CDATA[Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.]]>
 								</tooltip>
 								<description>
 									Auswahl des Gewässerstrangs, für den
-									die Berechnung durchgeführt wird.
+									die Berechnung
+									durchgeführt wird.
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>River string</label>
 								<tooltip>
-									Selection of river string included
-									in calculation.
+									<![CDATA[Selection of river string included	in calculation.]]>
 								</tooltip>
 								<description>
 									Selection of river string included
@@ -489,30 +463,30 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="subReachDefinitionMember"
-						type="tuhh:subReachDefinitionPropertyType">
+					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnungsabschnitt</label>
 								<tooltip>Berechnungsabschnitt</tooltip>
-								<description>
-									Berechnungsabschnitt
-								</description>
+								<description>Berechnungsabschnitt</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Calculation segment</label>
 								<tooltip>Calculation segment</tooltip>
-								<description>
-									Calculation segment
-								</description>
+								<description>Calculation segment</description>
 							</documentation>
 						</annotation>
 					</element>
 					<!-- TODO: not used at this moment -->
-					<!--element ref="wspm:roughnessDefinitionCollectionMember" minOccurs="0"/-->
-					<!--element ref="wspm:vegetationDefinitionCollectionMember" minOccurs="0"/-->
-					<element name="waterlevelParameterMember"
-						type="tuhh:WaterlevelParameterPropertyType">
+					<!--
+						element ref="wspm:roughnessDefinitionCollectionMember"
+						minOccurs="0"/
+					-->
+					<!--
+						element ref="wspm:vegetationDefinitionCollectionMember"
+						minOccurs="0"/
+					-->
+					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Numerische Parameter</label>
@@ -530,8 +504,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="startConditionMember"
-						type="tuhh:StartConditionPropertyType">
+					<element name="startConditionMember" type="tuhh:StartConditionPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -546,23 +519,19 @@
 							</documentation>
 							<documentation xml:lang="en">
 								<label>
-									Lower boundary condition (1.
-									profile)
+									<![CDATA[Lower boundary condition (1. Profile)]]>
 								</label>
 								<tooltip>
-									Lower boundary condition (1.
-									profile)
+									<![CDATA[Lower boundary condition (1. Profile)]]>
 								</tooltip>
 								<description>
-									Lower boundary condition (1.
-									profile)
+									<![CDATA[Lower boundary condition (1. Profile)]]>
 								</description>
 							</documentation>
 						</annotation>
 					</element>
 					<!-- TODO force it to be one of the water body's runOffEvents? -->
-					<element name="runOffEventMember"
-						type="runoff:RunOffEventLinkPropertyType">
+					<element name="runOffEventMember" type="runoff:RunOffEventLinkPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussereignis</label>
@@ -584,32 +553,29 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="runOffIntervalMember"
-						type="tuhh:RunOffIntervalPropertyType">
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussintervall</label>
 								<tooltip>
-									Definition eines Abflussintervalls
-									(nur bei Bordvollrechnung und
-									Kalinin-Miljukov)
+									<![CDATA[Definition eines Abflussintervalls	(nur bei Bordvollrechnung und Kalinin-Miljukov)]]>
 								</tooltip>
 								<description>
 									Definition eines Abflussintervalls
-									(nur bei Bordvollrechnung und
+									(nur bei
+									Bordvollrechnung und
 									Kalinin-Miljukov)
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Discharge interval</label>
 								<tooltip>
-									Definition of discharge interval
-									(only for bank-full and
-									Kalinin-Miljukov calculations)
+									<![CDATA[Definition of discharge interval (only for bank-full and Kalinin-Miljukov calculations)]]>
 								</tooltip>
 								<description>
 									Definition of discharge interval
-									(only for bank-full and
+									(only for bank-full
+									and
 									Kalinin-Miljukov calculations)
 								</description>
 							</documentation>
@@ -623,25 +589,23 @@
 		<complexContent>
 			<extension base="wspm:AbstractCalculationType">
 				<sequence>
-					<element name="reachWspmTuhhSteadyStateMember"
-						type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
+					<element name="reachWspmTuhhSteadyStateMember" type="tuhh:ReachWspmTuhhSteadyStatePropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrang</label>
 								<tooltip>
-									Auswahl des Gewässerstrangs, für den
-									die Berechnung durchgeführt wird.
+									<![CDATA[Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird.]]>
 								</tooltip>
 								<description>
 									Auswahl des Gewässerstrangs, für den
-									die Berechnung durchgeführt wird.
+									die Berechnung
+									durchgeführt wird.
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>River string</label>
 								<tooltip>
-									Selection of river string included
-									in calculation.
+									<![CDATA[Selection of river string included	in calculation.]]>
 								</tooltip>
 								<description>
 									Selection of river string included
@@ -650,8 +614,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="subReachDefinitionMember"
-						type="tuhh:subReachDefinitionPropertyType">
+					<element name="subReachDefinitionMember" type="tuhh:subReachDefinitionPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berechnungsabschnitt</label>
@@ -669,8 +632,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="waterlevelParameterMember"
-						type="tuhh:WaterlevelParameterPropertyType">
+					<element name="waterlevelParameterMember" type="tuhh:WaterlevelParameterPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Numerische Parameter</label>
@@ -689,39 +651,35 @@
 						</annotation>
 					</element>
 					<element ref="tuhh:bottomSlope" />
-					<element name="runOffIntervalMember"
-						type="tuhh:RunOffIntervalPropertyType">
+					<element name="runOffIntervalMember" type="tuhh:RunOffIntervalPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Abflussintervall</label>
 								<tooltip>
-									Definition eines Abflussintervalls
-									(nur bei Bordvollrechnung und
-									Kalinin-Miljukov)
+									<![CDATA[Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)]]>
 								</tooltip>
 								<description>
 									Definition eines Abflussintervalls
-									(nur bei Bordvollrechnung und
+									(nur bei
+									Bordvollrechnung und
 									Kalinin-Miljukov)
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Discharge interval</label>
 								<tooltip>
-									Definition of discharge interval
-									(only for bank-full and
-									Kalinin-Miljukov calculations)
+									<![CDATA[Definition of discharge interval (only for bank-full and Kalinin-Miljukov calculations)]]>
 								</tooltip>
 								<description>
 									Definition of discharge interval
-									(only for bank-full and
+									(only for bank-full
+									and
 									Kalinin-Miljukov calculations)
 								</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="calcPolynomesMember"
-						type="tuhh:CalcPolynomesPropertyType">
+					<element name="calcPolynomesMember" type="tuhh:CalcPolynomesPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Polynomerzeugung</label>
@@ -745,23 +703,23 @@
 			<documentation xml:lang="de">
 				<label>Fließgesetz</label>
 				<tooltip>
-					Auswahl des anzuwendenden Fließgesetzes
-					(Darcy-Weißbach o. Manning-Strickler)
+					<![CDATA[Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)]]>
 				</tooltip>
 				<description>
 					Auswahl des anzuwendenden Fließgesetzes
-					(Darcy-Weißbach o. Manning-Strickler)
+					(Darcy-Weißbach
+					o. Manning-Strickler)
 				</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<label>Fluid model</label>
 				<tooltip>
-					Selection of flow resistance model (Darcy-Weißbach
-					or Manning-Strickler)
+					<![CDATA[Selection of flow resistance model (Darcy-Weißbach	or Manning-Strickler)]]>
 				</tooltip>
 				<description>
 					Selection of flow resistance model (Darcy-Weißbach
-					or Manning-Strickler)
+					or
+					Manning-Strickler)
 				</description>
 			</documentation>
 		</annotation>
@@ -859,36 +817,34 @@
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="kind"
-						default="CRITICAL_WATER_DEPTH">
+					<element name="kind" default="CRITICAL_WATER_DEPTH">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Art</label>
 								<tooltip>
-									Auswahl der Randbedingung am ersten
-									Profil (Unterlauf)
+									<![CDATA[Auswahl der Randbedingung am ersten Profil (Unterlauf)]]>
 								</tooltip>
 								<description>
 									Auswahl der Randbedingung am ersten
-									Profil (Unterlauf)
+									Profil
+									(Unterlauf)
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Type</label>
 								<tooltip>
-									Selection of boundary condition for
-									first profile (lower reaches)
+									<![CDATA[Selection of boundary condition for first profile (lower reaches)]]>
 								</tooltip>
 								<description>
 									Selection of boundary condition for
-									first profile (lower reaches)
+									first profile
+									(lower reaches)
 								</description>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration
-									value="CRITICAL_WATER_DEPTH">
+								<enumeration value="CRITICAL_WATER_DEPTH">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>Grenztiefe</label>
@@ -939,17 +895,14 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration
-									value="UNIFORM_BOTTOM_SLOPE">
+								<enumeration value="UNIFORM_BOTTOM_SLOPE">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>
-												stationär-gleichförmiges
-												Gefälle
+												<![CDATA[stationär-gleichförmiges Gefälle]]>
 											</label>
 											<tooltip>
-												stationär-gleichförmiges
-												Gefälle
+												<![CDATA[stationär-gleichförmiges Gefälle]]>
 											</tooltip>
 											<description>
 												<![CDATA[ Untere Randbedingung (1.Profil): stationär-gleichförmiges Gefälle ]]>
@@ -996,8 +949,7 @@
 			<documentation xml:lang="de">
 				<label>stationär-gleichförmiges Gefälle</label>
 				<tooltip>
-					Sohlgefälle (absolut!) am ersten Profil (Unterlauf),
-					abhängig von der Art der Randbedingung
+					<![CDATA[Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung]]>
 				</tooltip>
 				<description>
 					Sohlgefälle (absolut!) am ersten Profil (Unterlauf),
@@ -1007,13 +959,12 @@
 			<documentation xml:lang="en">
 				<label>Steady-uniform slope</label>
 				<tooltip>
-					Slope of river bed (absolute!) at first profile
-					(lower reaches), depending on type of boundary
-					condition
+					<![CDATA[Slope of river bed (absolute!) at first profile (lower reaches), depending on type of boundary	condition]]>
 				</tooltip>
 				<description>
 					Slope of river bed (absolute!) at first profile
-					(lower reaches), depending on type of boundary
+					(lower
+					reaches), depending on type of boundary
 					condition
 				</description>
 			</documentation>
@@ -1150,29 +1101,23 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="trippleIt" type="boolean"
-						default="false">
+					<element name="trippleIt" type="boolean" default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Generelle Dreiteilung</label>
 								<tooltip>
-									Falls aktiviert, werden die Polynome
-									für alle Parameter dreigeteilt,
-									sonst nur für alpha.
+									<![CDATA[Falls aktiviert, werden die Polynome für alle Parameter dreigeteilt, sonst nur für alpha.]]>
 								</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Triple Polynomes</label>
 								<tooltip>
-									If active, all parameters get
-									tripled polynomes, else onyl the
-									alpha values are tripled.
+									<![CDATA[If active, all parameters get tripled polynomes, else onyl the alpha values are tripled.]]>
 								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="trippleMode" default="bordvoll"
-						nillable="false">
+					<element name="trippleMode" default="bordvoll" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Art der Dreiteilung</label>
@@ -1192,10 +1137,7 @@
 												Bordvollpunkte
 											</label>
 											<tooltip>
-												Dreiteilung wird anhand
-												der Lage der
-												Bordvollpunkte je Profil
-												ermittelt.
+												<![CDATA[Dreiteilung wird anhand der Lage der Bordvollpunkte je Profil ermittelt.]]>
 											</tooltip>
 										</documentation>
 										<documentation xml:lang="en">
@@ -1203,9 +1145,7 @@
 												!Bordvollpunkte!
 											</label>
 											<tooltip>
-												!Dreiteilung anhand der
-												Lage der Bordvollpunkte
-												je Profil!
+												<![CDATA[Dreiteilung wird anhand der Lage der Bordvollpunkte je Profil ermittelt.]]>
 											</tooltip>
 										</documentation>
 									</annotation>
@@ -1233,9 +1173,11 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Steigungswechsel Abfluss</label>
-								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn Dreiteilung = Steigungswechsel. 
+								<tooltip>
+								<![CDATA[Wert wird nur berücksichtigt, wenn Dreiteilung = Steigungswechsel.
 Ansatz des Q-Polynoms2 sobald die Veränderung der Steigung um den Faktor 2 und größer.
-Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
+Zulässiger Wertebereich: [1,002, 100[]]>
+								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -1250,7 +1192,7 @@ Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Steigungswechsel Fläche</label>
-								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn Dreiteilung = Steigungswechsel. 
+								<tooltip><![CDATA[Wert wird nur berücksichtigt, wenn Dreiteilung = Steigungswechsel.
 Ansatz des A-Polynoms2 sobald die Veränderung der Steigung um den Faktor 2 und größer.
 Zulässiger Wertebereich: [1,002, 100[]]></tooltip>
 							</documentation>
@@ -1297,14 +1239,14 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="ignoreOutlier" type="boolean"
-						default="false">
+					<element name="ignoreOutlier" type="boolean" default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Ausreisser ignorieren</label>
 								<tooltip>
 									Ausreisser (=Rücksprünge) bei der
-									Polynomerstellung ignorieren.
+									Polynomerstellung
+									ignorieren.
 								</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
@@ -1321,15 +1263,13 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="de">
 								<label>maximaler Impulsbeiwert</label>
 								<tooltip>
-									Maximaler Impulsbeiwert, limitiert
-									die Berechnung der Alpha-Polynome.
+									<![CDATA[Maximaler Impulsbeiwert, limitiert	die Berechnung der Alpha-Polynome.]]>
 								</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Max. Impulse</label>
 								<tooltip>
-									Max. Impulse, limits the calculation
-									of the alpha-polynomes.
+									<![CDATA[Max. Impulse, limits the calculation of the alpha-polynomes.]]>
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -1368,7 +1308,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-							<enumeration value="_2_1_4_1">
+								<enumeration value="_2_1_4_1">
 									<annotation>
 										<documentation xml:lang="de">
 											<label><![CDATA[2.1.4.1 (07.11.2008)]]></label>
@@ -1446,21 +1386,19 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="de">
 								<label>Iterationsgenauigkeit</label>
 								<tooltip>
-									Iterationsmethodik bei der
-									WSP-Berechnung (Standard=einfache
-									Iteration)
+									<![CDATA[Iterationsmethodik bei der WSP-Berechnung (Standard=einfache Iteration)]]>
 								</tooltip>
 								<description>
 									Iterationsmethodik bei der
-									WSP-Berechnung (Standard=einfache
+									WSP-Berechnung
+									(Standard=einfache
 									Iteration)
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Iteration precision</label>
 								<tooltip>
-									Iteration method for WSP calculation
-									(standard=simple iteration)
+									<![CDATA[Iteration method for WSP calculation (standard=simple iteration)]]>
 								</tooltip>
 								<description>
 									Iteration method for WSP calculation
@@ -1502,12 +1440,10 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 									<annotation>
 										<documentation xml:lang="de">
 											<label>
-												genaue Berechnung durch
-												Einschlussintervall
+												<![CDATA[genaue Berechnung durch Einschlussintervall]]>
 											</label>
 											<tooltip>
-												genaue Berechnung durch
-												Einschlussintervall
+												<![CDATA[genaue Berechnung durch Einschlussintervall]]>
 											</tooltip>
 											<description>
 												Iterationsgenauigkeit:
@@ -1517,12 +1453,10 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 										<documentation xml:lang="en">
 											<label>
-												Exact calculation using
-												inclusion interval
+												<![CDATA[Exact calculation using inclusion interval]]>
 											</label>
 											<tooltip>
-												Exact calculation using
-												inclusion interval
+												<![CDATA[Exact calculation using inclusion interval]]>
 											</tooltip>
 											<description>
 												Iteration precision:
@@ -1535,15 +1469,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="verzoegerungsverlust"
-						default="BJOERNSEN">
+					<element name="verzoegerungsverlust" default="BJOERNSEN">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Verzögerungsverlust</label>
 								<tooltip>
-									Berechnungsweise des
-									Verzögerungsverlustes
-									(Standard=DVWK)
+									<![CDATA[Berechnungsweise des Verzögerungsverlustes (Standard=DVWK)]]>
 								</tooltip>
 								<description>
 									Berechnungsweise des
@@ -1554,8 +1485,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="en">
 								<label>Delay attrition</label>
 								<tooltip>
-									Type of delay attrition
-									(standard=DVWK)
+									<![CDATA[Type of delay attrition (standard=DVWK)]]>
 								</tooltip>
 								<description>
 									Type of delay attrition
@@ -1581,12 +1511,10 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 										<documentation xml:lang="en">
 											<label>
-												according to DVWK (beta
-												= 0.67)
+												<![CDATA[according to DVWK (beta = 0.67)]]>
 											</label>
 											<tooltip>
-												according to DVWK (beta
-												= 0.67)
+												<![CDATA[according to DVWK (beta = 0.67)]]>
 											</tooltip>
 											<description>
 												Delay attrition
@@ -1600,12 +1528,10 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 									<annotation>
 										<documentation xml:lang="de">
 											<label>
-												nach Björnsen (beta =
-												0.5)
+												<![CDATA[nach Björnsen (beta = 0.5)]]>
 											</label>
 											<tooltip>
-												nach Björnsen (beta =
-												0.5)
+												<![CDATA[nach Björnsen (beta = 0.5)]]>
 											</tooltip>
 											<description>
 												Verzögerungsverlust nach
@@ -1614,12 +1540,10 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 										<documentation xml:lang="en">
 											<label>
-												according to Björnsen
-												(beta = 0.5)
+												<![CDATA[according to Björnsen (beta = 0.5)]]>
 											</label>
 											<tooltip>
-												according to Björnsen
-												(beta = 0.5)
+												<![CDATA[according to Björnsen (beta = 0.5)]]>
 											</tooltip>
 											<description>
 												Delay attrition
@@ -1656,16 +1580,14 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="reibungsverlust"
-						default="TRAPEZ_FORMULA">
+					<element name="reibungsverlust" default="TRAPEZ_FORMULA">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
 									Berechnung von Reibungsverlusten
 								</label>
 								<tooltip>
-									Berechnung des Reibungsverlustes
-									(Standard=Trapezformel)
+									<![CDATA[Berechnung des Reibungsverlustes (Standard=Trapezformel)]]>
 								</tooltip>
 								<description>
 									Berechnung des Reibungsverlustes
@@ -1677,8 +1599,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 									Calculation of friction attrition
 								</label>
 								<tooltip>
-									Calculation of friction attrition
-									(standard=trapezoidal)
+									<![CDATA[Calculation of friction attrition (standard=trapezoidal)]]>
 								</tooltip>
 								<description>
 									Calculation of friction attrition
@@ -1718,17 +1639,14 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration
-									value="GEOMETRIC_FORMULA">
+								<enumeration value="GEOMETRIC_FORMULA">
 									<annotation>
 										<documentation xml:lang="de">
 											<label>
-												durch geometrische
-												Mittelung
+												<![CDATA[durch geometrische	Mittelung]]>
 											</label>
 											<tooltip>
-												durch geometrische
-												Mittelung
+												<![CDATA[durch geometrische	Mittelung]]>
 											</tooltip>
 											<description>
 												Berechnung von
@@ -1754,8 +1672,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="specialOptionsMember"
-						type="tuhh:specialOptionsPropertyType">
+					<element name="specialOptionsMember" type="tuhh:specialOptionsPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zusatzoptionen</label>
@@ -1770,7 +1687,8 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 								<tooltip>Additional options</tooltip>
 								<description>
 									Additional options (calculation of
-									building structures)
+									building
+									structures)
 								</description>
 							</documentation>
 						</annotation>
@@ -1799,8 +1717,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspm:AbstractReachType">
 				<sequence>
-					<element name="waterBodyLinkMember"
-						type="wspm:WaterBodyLinkPropertyType">
+					<element name="waterBodyLinkMember" type="wspm:WaterBodyLinkPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässer</label>
@@ -1820,12 +1737,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="waterAxis"
-						type="gml:LineStringPropertyType">
+					<element name="waterAxis" type="gml:LineStringPropertyType">
 						<annotation>
 							<appinfo>
 								This property is backuped by the
-								observation (profileMember) itself.
+								observation
+								(profileMember) itself.
 							</appinfo>
 							<documentation xml:lang="de">
 								<label>Gewässerachse</label>
@@ -1869,13 +1786,13 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="markerMember"
-						type="tuhh:ProfileMarkerPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
+					<element name="markerMember" type="tuhh:ProfileMarkerPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation>
 								This list of markers is generated from
-								the profile-segments.
+								the
+								profile-segments.
 							</documentation>
 						</annotation>
 					</element>
@@ -1883,8 +1800,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 			</extension>
 		</complexContent>
 	</complexType>
-	<complexType
-		name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
+	<complexType name="ProfileReachSegmentWspmTuhhSteadyStatePropertyType">
 		<sequence>
 			<element ref="tuhh:ProfileReachSegmentWspmTuhhSteadyState" />
 		</sequence>
@@ -1931,41 +1847,39 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="station"
-						type="wspmcommon:stationDouble">
+					<element name="station" type="wspmcommon:stationDouble">
 						<annotation>
 							<appinfo>
 								This property is backuped by the
-								observation (profileMember) itself.
+								observation
+								(profileMember) itself.
 							</appinfo>
 							<documentation xml:lang="de">
 								<label>Station [km]</label>
 								<tooltip>
-									Stelle im Gewässerstrang, an dem das
-									unten selektierte Profil platziert
-									wird.
+									<![CDATA[Stelle im Gewässerstrang, an dem das unten selektierte	Profil platziert wird.]]>
 								</tooltip>
 								<description>
 									Stelle im Gewässerstrang, an dem das
-									unten selektierte Profil platziert
+									unten
+									selektierte Profil platziert
 									wird.
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Station [km]</label>
 								<tooltip>
-									Station in string, where the profile
-									selected below will be placed.
+									<![CDATA[Station in string, where the profile selected below will be placed.]]>
 								</tooltip>
 								<description>
 									Station in string, where the profile
-									selected below will be placed.
+									selected below
+									will be placed.
 								</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profileMember"
-						type="wspm:ProfileLinkPropertyType">
+					<element name="profileMember" type="wspm:ProfileLinkPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Profil</label>
@@ -1987,12 +1901,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="profileLocation"
-						type="gml:LineStringPropertyType">
+					<element name="profileLocation" type="gml:LineStringPropertyType">
 						<annotation>
 							<appinfo>
 								This property is backed by
-								profileMember, more explicit by the
+								profileMember, more explicit
+								by the
 								referenced profile-observation.
 							</appinfo>
 							<documentation xml:lang="de">
@@ -2009,36 +1923,23 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<!-- Distances are commented out, because they are not yet (?)
-						used by the tuhh steady-state flow model -->
 					<!--
-						<element name="distanceL" type="double">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>???distanceL</label>
-						<tooltip>???tooltip</tooltip>
-						<description>Abstand UW??? linkes Vorland</description>
-						</documentation>
-						</annotation>
-						</element>
-						<element name="distanceM" type="double">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>???distanceM</label>
-						<tooltip>???tooltip</tooltip>
-						<description>Abstand UW??? Hauptöffnung</description>
-						</documentation>
-						</annotation>
-						</element>
-						<element name="distanceR" type="double">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>???distanceR</label>
-						<tooltip>???tooltip</tooltip>
-						<description>Abstand UW??? rechtes Vorland</description>
-						</documentation>
-						</annotation>
-						</element>
+						Distances are commented out, because they are not yet (?) used by
+						the tuhh steady-state flow model
+					-->
+					<!--
+						<element name="distanceL" type="double"> <annotation>
+						<documentation xml:lang="de"> <label>???distanceL</label>
+						<tooltip>???tooltip</tooltip> <description>Abstand UW??? linkes
+						Vorland</description> </documentation> </annotation> </element>
+						<element name="distanceM" type="double"> <annotation>
+						<documentation xml:lang="de"> <label>???distanceM</label>
+						<tooltip>???tooltip</tooltip> <description>Abstand UW???
+						Hauptöffnung</description> </documentation> </annotation>
+						</element> <element name="distanceR" type="double"> <annotation>
+						<documentation xml:lang="de"> <label>???distanceR</label>
+						<tooltip>???tooltip</tooltip> <description>Abstand UW??? rechtes
+						Vorland</description> </documentation> </annotation> </element>
 					-->
 				</sequence>
 			</extension>
@@ -2055,15 +1956,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="startStation"
-						type="wspmcommon:stationDouble">
+					<element name="startStation" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangsstation</label>
 								<tooltip>
-									Anfangsstation (Unterlauf), Wert
-									unabhänigig von der
-									Profilstationierung!
+									<![CDATA[Anfangsstation (Unterlauf), Wert unabhänigig von der Profilstationierung!]]>
 								</tooltip>
 								<description>
 									Anfangsstation (Unterlauf), Wert
@@ -2074,25 +1972,22 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="en">
 								<label>Initial station</label>
 								<tooltip>
-									Initial station (lower reach), value
-									depending on profile stationing!
+									<![CDATA[Initial station (lower reach), value depending on	profile stationing!]]>
 								</tooltip>
 								<description>
 									Initial station (lower reach), value
-									depending on profile stationing!
+									depending on
+									profile stationing!
 								</description>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="endStation"
-						type="wspmcommon:stationDouble">
+					<element name="endStation" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Endstation</label>
 								<tooltip>
-									Endstation (Oberlauf), Wert
-									unabhänigig von der
-									Profilstationierung!
+									<![CDATA[Endstation (Oberlauf), Wert unabhänigig von der Profilstationierung!]]>
 								</tooltip>
 								<description>
 									Endstation (Oberlauf), Wert
@@ -2103,12 +1998,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="en">
 								<label>Final station</label>
 								<tooltip>
-									Final station (upper reach), value
-									depending on profile stationing!
+									<![CDATA[Final station (upper reach), value depending on profile stationing!]]>
 								</tooltip>
 								<description>
 									Final station (upper reach), value
-									depending on profile stationing!
+									depending on
+									profile stationing!
 								</description>
 							</documentation>
 						</annotation>
@@ -2128,8 +2023,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="doCalcBridges" type="boolean"
-						default="true">
+					<element name="doCalcBridges" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Brücken mit berechnen</label>
@@ -2139,8 +2033,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							<documentation xml:lang="en">
 								<label>Include bridges</label>
 								<tooltip>
-									if activated, bridges and outlets
-									are included in calculation.
+									<![CDATA[if activated, bridges and outlets are included in calculation.]]>
 								</tooltip>
 								<description>
 									Bridges and outlets are included in
@@ -2149,25 +2042,23 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="doCalcBarrages" type="boolean"
-						default="true">
+					<element name="doCalcBarrages" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wehre mit berechnen</label>
 								<tooltip>
-									falls aktiv, werden Wehre bei der
-									Berechnung berücksichtigt.
+									<![CDATA[falls aktiv, werden Wehre bei der Berechnung berücksichtigt.]]>
 								</tooltip>
 								<description>
 									falls aktiv, werden Wehre bei der
-									Berechnung berücksichtigt.
+									Berechnung
+									berücksichtigt.
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Include weirs</label>
 								<tooltip>
-									if activated, weirs are included in
-									calculation.
+									<![CDATA[if activated, weirs are included in calculation.]]>
 								</tooltip>
 								<description>
 									Weirs are included in calculation.
@@ -2175,25 +2066,23 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="useExtremeRoughness" type="boolean"
-						default="true">
+					<element name="useExtremeRoughness" type="boolean" default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
 									Extreme Rauhigkeit berücksichtigen
 								</label>
 								<tooltip>
-									falls aktiv, wird bei geringen
-									Wassertiefen der Ansatz für extreme
-									Rauheiten verwendet.
+									<![CDATA[falls aktiv, wird bei geringen Wassertiefen der Ansatz für extreme Rauheiten verwendet.]]>
 								</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>
-									if activated, the method of 'extreme
-									roughness' will be used for small
-									waterdepths
+								<![CDATA[use extreme roughnes]]>
 								</label>
+								<tooltip>
+									<![CDATA[if activated, the method of 'extreme roughness' will be used for small waterdepths]]>
+								</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -2234,8 +2123,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 				<sequence>
 					<!-- Reference to component dict? -->
 					<element name="type" type="string" />
-					<element name="location"
-						type="gml:PointPropertyType" />
+					<element name="location" type="gml:PointPropertyType" />
 				</sequence>
 			</extension>
 		</complexContent>

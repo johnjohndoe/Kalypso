@@ -5,12 +5,12 @@
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
-	<gft:label text="Art                               " visible="true" tooltip="Auswahl der Randbedingung am ersten Profil (Unterlauf)"
+	<gft:label property="tuhh:kind"  visible="true"
 		style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:combo property="tuhh:kind" tooltip="Auswahl der Randbedingung am ersten Profil (Unterlauf)"
+	<gft:combo property="tuhh:kind" 
 		style="SWT.DROP_DOWN | SWT.READ_ONLY">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:combo>
@@ -21,8 +21,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label text="Anfangswasserspiegel" 
-		tooltip="Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+	<gft:label property="tuhh:waterlevel"
 		style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:PropertyIsEqualTo>
@@ -43,8 +42,7 @@
 		</gft:gridData>
 	</gft:label>
 	<gft:text editable="true" property="tuhh:waterlevel"
-		tooltip="Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der	Randbedingung"
-		style="SWT.BORDER">
+			style="SWT.BORDER">
 		<gft:visibleOperation>
 			<ogc:PropertyIsEqualTo>
 				<ogc:Literal>WATERLEVEL</ogc:Literal>
@@ -100,8 +98,7 @@
 		</gft:gridData>
 	</gft:validatorlabel>
 
-	<gft:label text="stationär-gleichförmiges Gefälle" visible="true"
-		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+	<gft:label property="tuhh:bottomSlope"
 		style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:PropertyIsEqualTo>
@@ -122,7 +119,6 @@
 		</gft:gridData>			
 	</gft:label>
 	<gft:text editable="true" property="tuhh:bottomSlope"
-		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
 		style="SWT.BORDER">
 		<gft:visibleOperation>
 			<ogc:PropertyIsEqualTo>
