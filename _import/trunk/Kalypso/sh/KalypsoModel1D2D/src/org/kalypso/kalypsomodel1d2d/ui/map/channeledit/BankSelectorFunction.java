@@ -89,11 +89,11 @@ public class BankSelectorFunction implements IRectangleMapFunction
    *      org.eclipse.swt.graphics.Rectangle)
    */
   @SuppressWarnings("unchecked")
-  public void execute( IMapPanel mapPanel, Rectangle rectangle )
+  public void execute( final IMapPanel mapPanel, final Rectangle rectangle )
   {
     if( m_data.getMeshStatus() == true )
     {
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return;
     }
 
@@ -114,8 +114,6 @@ public class BankSelectorFunction implements IRectangleMapFunction
     final FeatureList featureList = bankTheme.getFeatureList();
     final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
-    final Feature[] selectedBanks = m_data.getSelectedBanks( m_side );
-    final Set<Feature> selectedBankSet = new HashSet<Feature>( Arrays.asList( selectedBanks ) );
     final List list = featureList.query( envelope, null );
     final Polygon rectanglePoly = JTSUtilities.convertGMEnvelopeToPolygon( envelope, new GeometryFactory() );
 
@@ -133,12 +131,12 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
         if( multiline == null )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.2"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.2" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
         if( multiline.getSize() > 1 )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.4"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.4" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
 
@@ -149,7 +147,7 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final GM_Curve curve = (GM_Curve) geometry;
         if( curve == null )
         {
-          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.6"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+          SWT_AWT_Utilities.showSwtMessageBoxInformation( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.6" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.BankSelectorFunction.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return;
         }
         line = curve;
@@ -167,10 +165,13 @@ public class BankSelectorFunction implements IRectangleMapFunction
 
     }
 
+    final GM_Curve bankline = m_data.getBanklineForSide( m_side );
+    final Set<GM_Curve> selectedBankSet = new HashSet<GM_Curve>( Arrays.asList( bankline ) );
+
     if( list.size() == 0 )
     {
       // empty selection: remove selection
-      m_data.removeSelectedBanks( selectedBanks );
+      m_data.removeBank( bankline );
     }
     else
     {
@@ -179,11 +180,35 @@ public class BankSelectorFunction implements IRectangleMapFunction
         final Object o = list.get( i );
         final Feature feature = FeatureHelper.getFeature( workspace, o );
 
-        if( selectedBankSet.contains( feature ) )
-          m_data.removeSelectedBanks( new Feature[] { feature } );
+        final GM_Curve bankCurve = getCurveFromBanklineFeature( feature );
+        if( bankCurve == null )
+          return;
+
+        if( selectedBankSet.contains( bankCurve ) )
+          m_data.removeBank( bankCurve );
         else
-          m_data.addSelectedBanks( new Feature[] { feature }, m_side );
+          m_data.setBankline( bankCurve, m_side );
       }
     }
+  }
+
+  private GM_Curve getCurveFromBanklineFeature( final Feature feature )
+  {
+    final GM_Object geometry = feature.getDefaultGeometryProperty();
+
+    GM_Curve bankCurve = null;
+
+    if( geometry instanceof GM_MultiCurve )
+    {
+      final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
+      if( multiline.getSize() > 1 )
+        return null;
+      bankCurve = multiline.getCurveAt( 0 );
+    }
+    else if( geometry instanceof GM_Curve )
+    {
+      bankCurve = (GM_Curve) geometry;
+    }
+    return bankCurve;
   }
 }

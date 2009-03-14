@@ -123,6 +123,8 @@ public class ProfileSelectorFunction implements IRectangleMapFunction
       {
         final ProfileFeatureBinding profile = (ProfileFeatureBinding) feature;
         final GM_Curve line = profile.getLine();
+        if( line == null )
+          return;
         try
         {
           final LineString jtsLine = (LineString) JTSAdapter.export( line );

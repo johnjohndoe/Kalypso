@@ -480,7 +480,7 @@ public class CreateMainChannelComposite extends Composite
   {
     final Section bankSection = m_toolkit.createSection( parent, Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     final Composite sectionClient = m_toolkit.createComposite( bankSection, SWT.NONE );
-    sectionClient.setLayout( new GridLayout( 2, false ) );
+    sectionClient.setLayout( new GridLayout( 3, false ) );
     bankSection.setClient( sectionClient );
     bankSection.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.16" ) ); //$NON-NLS-1$
     bankSection.setExpanded( true );
@@ -556,12 +556,32 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     /* Button for the first bank drawing */
-    // final Button drawFirstBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // m_buttonList.add( drawFirstBankButton );
-    // drawFirstBankButton.setText( Messages.getString(
-    // "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.22" ) ); //$NON-NLS-1$
-    //
-    // drawFirstBankButton.setVisible( false );
+    final Button drawFirstBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
+    m_buttonList.add( drawFirstBankButton );
+
+    drawFirstBankButton.setVisible( true );
+    drawFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
+    drawFirstBankButton.setImage( editImage );
+    drawFirstBankButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( drawFirstBankButton.getSelection() )
+        {
+          buttonGuard( drawFirstBankButton );
+          final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" );
+          m_widget.setDelegate( drawBankWidget );
+        }
+        else
+        {
+          m_widget.setDelegate( null );
+        }
+      }
+    } );
+
     /* ComboBox for the second bank line theme selection */
     final ComboViewer combviewerBank2 = new ComboViewer( sectionClient, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_toolkit.adapt( combviewerBank2.getControl(), true, false );
@@ -629,12 +649,31 @@ public class CreateMainChannelComposite extends Composite
     } );
 
     /* Button for the second bank drawing */
-    // final Button drawSecondBankButton = new Button( sectionClient, SWT.TOGGLE );
-    // m_buttonList.add( drawSecondBankButton );
-    // drawSecondBankButton.setText( Messages.getString(
-    // "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.27" ) ); //$NON-NLS-1$
-    //
-    // drawSecondBankButton.setVisible( false );
+    final Button drawSecondBankButton = m_toolkit.createButton( sectionClient, "", SWT.TOGGLE ); //$NON-NLS-1$
+    m_buttonList.add( drawSecondBankButton );
+
+    drawSecondBankButton.setVisible( true );
+    drawSecondBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
+    drawSecondBankButton.setImage( editImage );
+    drawSecondBankButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( drawSecondBankButton.getSelection() )
+        {
+          buttonGuard( drawSecondBankButton );
+          final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" );
+          m_widget.setDelegate( drawBankWidget );
+        }
+        else
+        {
+          m_widget.setDelegate( null );
+        }
+      }
+    } );
+
     final Label bankLabel = new Label( sectionClient, SWT.NULL );
     bankLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.28" ) ); //$NON-NLS-1$
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );

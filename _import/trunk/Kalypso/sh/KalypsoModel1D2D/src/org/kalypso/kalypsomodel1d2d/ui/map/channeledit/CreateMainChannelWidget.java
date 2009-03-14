@@ -65,8 +65,6 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
@@ -201,43 +199,31 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
 
   private void paintBanks( final Graphics g, final CreateChannelData.SIDE side, final Color color ) throws CoreException
   {
-    final Feature[] selectedBanks = m_data.getSelectedBanks( side );
-    for( final Feature feature : selectedBanks )
-    {
-      GM_Curve line = null;
-      final GM_Object geometry = feature.getDefaultGeometryProperty();
 
-      if( geometry instanceof GM_MultiCurve )
-      {
-        final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
-        if( multiline.getSize() > 1 )
-          return;
-        line = multiline.getCurveAt( 0 );
-      }
-      else if( geometry instanceof GM_Curve )
-      {
-        line = (GM_Curve) geometry;
-      }
+    final GM_Curve curve = m_data.getBanklineForSide( side );
 
-      if( line == null )
-        return;
+    if( curve == null )
+      return;
 
-      final LineSymbolizer symb = new LineSymbolizer_Impl();
-      final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
 
-      Stroke defaultstroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+    final LineSymbolizer symb = new LineSymbolizer_Impl();
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
-      defaultstroke = symb.getStroke();
+    Stroke defaultstroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
-      stroke.setWidth( 1 );
-      stroke.setStroke( color );
-      symb.setStroke( stroke );
+    defaultstroke = symb.getStroke();
 
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, line, symb );
-      de.paint( g, getMapPanel().getProjection(), new NullProgressMonitor() );
+    stroke.setWidth( 1 );
+    stroke.setStroke( color );
+    symb.setStroke( stroke );
 
-      symb.setStroke( defaultstroke );
-    }
+    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+    de.paint( g, mapPanel.getProjection(), new NullProgressMonitor() );
+
+    symb.setStroke( defaultstroke );
   }
 
   private LineSymbolizer getProfilLineSymbolizer( final Color color )

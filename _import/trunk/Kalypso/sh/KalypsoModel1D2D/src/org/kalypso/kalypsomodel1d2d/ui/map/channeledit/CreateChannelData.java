@@ -141,7 +141,7 @@ public class CreateChannelData
 
   private int m_numbProfileIntersections = 6;
 
-  private final Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
+  private final Map<GM_Curve, SIDE> m_selectedBanks = new HashMap<GM_Curve, SIDE>();
 
   private final CreateMainChannelWidget m_widget;
 
@@ -303,41 +303,26 @@ public class CreateChannelData
     return m_selectedProfiles.toArray( new IProfileFeature[m_selectedProfiles.size()] );
   }
 
-  /**
-   * @param side
-   *          false: left, true: right
-   */
-  public void addSelectedBanks( final Feature[] bankFeatures, final SIDE side )
+  public GM_Curve getBanklineForSide( final SIDE side )
   {
-    for( final Feature feature : bankFeatures )
-      m_selectedBanks.put( feature, side );
-
-    initSegments();
-  }
-
-  public Feature[] getSelectedBanks( final SIDE side )
-  {
-    final List<Feature> result = new ArrayList<Feature>();
-
-    for( final Map.Entry<Feature, SIDE> entry : m_selectedBanks.entrySet() )
+    for( final Map.Entry<GM_Curve, SIDE> entry : m_selectedBanks.entrySet() )
     {
-      final Feature bankFeature = entry.getKey();
+      final GM_Curve bankCurve = entry.getKey();
       final SIDE value = entry.getValue();
       if( value == side )
-        result.add( bankFeature );
+        return bankCurve;
     }
 
-    return result.toArray( new Feature[result.size()] );
+    return null;
   }
 
-  public void removeSelectedBanks( final Feature[] bankFeatures )
+  public void removeBank( final GM_Curve curve )
   {
-    for( final Feature feature : bankFeatures )
-      m_selectedBanks.remove( feature );
+    m_selectedBanks.remove( curve );
 
     m_widget.update();
 
-    m_selectedBanks.keySet().removeAll( Arrays.asList( bankFeatures ) );
+    m_selectedBanks.keySet().remove( curve );
 
     initSegments();
   }
@@ -745,8 +730,8 @@ public class CreateChannelData
   }
 
   /**
-   * all selected banks will be intersected by the selected profiles Input: all selected banks and profiles Output:
-   * intersected banks as linestrings (including the intersection point)
+   * all selected banks will be intersected by the selected profiles <br>
+   * Input: all selected banks and profiles Output: intersected banks as linestrings (including the intersection point)
    */
   private void intersectBanksWithProfs( final IProgressMonitor monitor )
   {
@@ -775,8 +760,12 @@ public class CreateChannelData
 
       monitor.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.10" ) + profile.getStation() ); //$NON-NLS-1$
 
+      if( !checkIntersection( profile ) )
+        continue;
+
       if( lastProfile != null )
       {
+
         // working on the segment
         final int numBankIntersections = getGlobNumBankIntersections();
         final SegmentData segment = new SegmentData( this, profile, lastProfile, m_selectedBanks, numBankIntersections );
@@ -797,6 +786,23 @@ public class CreateChannelData
 
       monitor.worked( 1 );
     }
+  }
+
+  private boolean checkIntersection( final IProfileFeature profile )
+  {
+    boolean check = true;
+
+    final Set<GM_Curve> curves = m_selectedBanks.keySet();
+
+    for( final GM_Curve curve : curves )
+    {
+      if( !curve.intersects( profile.getLine() ) )
+      {
+        check = false;
+        break;
+      }
+    }
+    return check;
   }
 
   public void paintAllSegments( final Graphics g, final IMapPanel mapPanel )
@@ -1064,25 +1070,36 @@ public class CreateChannelData
     return neighbours;
   }
 
+  /**
+   * Returns the list position of the selected {@link SegmentData}.
+   */
   public int getSelectedSegmentPos( )
   {
     return m_segmentList.indexOf( m_selectedSegment );
   }
 
+  /**
+   * returns the {@link GM_Position}s of already intersected banklines for aall {@link SegmentData}s.<BR>
+   * The start and end points of the banklines will be neglected.
+   */
   public GM_Position[] getAllSegmentPosses( )
   {
     final List<GM_Position> posList = new ArrayList<GM_Position>();
 
     for( final SegmentData segment : m_segmentList )
     {
-      final List<GM_Position> segmentPosses = getSegmentPosses( segment );
+      final List<GM_Position> segmentPosses = getIntersectedBanklinePossesForSegment( segment );
 
       posList.addAll( segmentPosses );
     }
     return posList.toArray( new GM_Position[posList.size()] );
   }
 
-  public List<GM_Position> getSegmentPosses( final SegmentData segment )
+  /**
+   * returns the {@link GM_Position}s of already intersected banklines for a given {@link SegmentData}.<BR>
+   * The start and end points of the banklines will be neglected.
+   */
+  public List<GM_Position> getIntersectedBanklinePossesForSegment( final SegmentData segment )
   {
     final List<GM_Position> positionList = new ArrayList<GM_Position>();
 
@@ -1105,9 +1122,70 @@ public class CreateChannelData
     return positionList;
   }
 
+  /**
+   * returns the {@link SegmentData} at a given {@link GM_Position}
+   */
   public SegmentData getSegmentAtPosition( final GM_Position position )
   {
     return m_segmentMap.get( position );
+  }
+
+  /**
+   * sets the bankline for a given side.<BR>
+   * Before the new line is set the already existing bankline gets deleted as we allow only one line per side.
+   * 
+   * @param curve
+   *          the bankline
+   * @param side
+   *          the side of the bankline
+   */
+  public void setBankline( final GM_Curve curve, final SIDE side )
+  {
+    /*
+     * clear all existing banklines of the current side, because we allow only one bankline to be drawn for each side
+     */
+
+    final Set<GM_Curve> keySet = m_selectedBanks.keySet();
+
+    final GM_Curve[] curves = keySet.toArray( new GM_Curve[keySet.size()] );
+    for( final GM_Curve curve2 : curves )
+    {
+      if( m_selectedBanks.get( curve2 ).equals( side ) )
+        m_selectedBanks.remove( curve2 );
+    }
+
+    // set the new bankline
+    m_selectedBanks.put( curve, side );
+
+    initSegments();
+  }
+
+  /**
+   * returns the two original bankline curves as {@link GM_Position}s
+   */
+  public GM_Position[] getBanklinePoses( final SIDE m_side )
+  {
+    final GM_Curve bank = getBanklineForSide( m_side );
+
+    final List<GM_Position> posList = new ArrayList<GM_Position>();
+
+    try
+    {
+      if( bank != null )
+      {
+
+        final GM_Position[] leftPositions = bank.getAsLineString().getPositions();
+        for( final GM_Position position : leftPositions )
+          posList.add( position );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    return posList.toArray( new GM_Position[posList.size()] );
   }
 
 }

@@ -60,7 +60,11 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Mark;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -69,7 +73,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -151,10 +157,6 @@ public class DragBankLineWidget extends AbstractWidget
   private void setPointSnapper( final String crs )
   {
     final GM_Position[] posses = m_data.getAllSegmentPosses();
-
-// final List<GM_Position> positionList = m_data.getSegmentPosses( m_currentSegment );
-// m_pointSnapper = new GM_PointSnapper( positionList.toArray( new GM_Position[positionList.size()] ), m_mapPanel, crs
-    // );
     m_pointSnapper = new GM_PointSnapper( posses, m_mapPanel, crs );
   }
 
@@ -167,9 +169,9 @@ public class DragBankLineWidget extends AbstractWidget
     final Object newPoint = checkNewPoint( p );
 
     if( newPoint == null )
-      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR ) );
+      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
     else
-      getMapPanel().setCursor( Cursor.getDefaultCursor() );
+      getMapPanel().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
 
     if( p == null )
       return;
@@ -194,7 +196,7 @@ public class DragBankLineWidget extends AbstractWidget
     if( m_snappingActive )
       m_snapPoint = m_pointSnapper == null ? null : m_pointSnapper.moved( currentPoint );
 
-    final Object newNode = m_snapPoint == null ? currentPoint : m_snapPoint;
+    final Object newNode = m_snapPoint == null ? null : m_snapPoint;
 
     if( newNode instanceof GM_Point )
     {
@@ -393,7 +395,6 @@ public class DragBankLineWidget extends AbstractWidget
     if( m_handles == null || m_bankline == null )
       return;
 
-    // TODO: maybe it would be nice if the user is shown an arrow from the old point to the new dragged point.
     final GM_Position[] positions = new GM_Position[m_handles.size() + 2]; // number of handles plus start and end
     // point
     int i = 0;
@@ -443,6 +444,19 @@ public class DragBankLineWidget extends AbstractWidget
 
       // Set the Stroke back to default
       symb.setStroke( defaultstroke );
+
+      // paint points
+      final List<GM_Point> points = MainChannelHelper.getPointsFromCurve( curve );
+      final PointSymbolizer pointSymb = new PointSymbolizer_Impl();
+
+      final Fill fill = StyleFactory.createFill( color );
+      final Mark mark = StyleFactory.createMark( "square", fill, stroke );
+      final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
+
+      pointSymb.setGraphic( graphic );
+      final DisplayElement de2 = DisplayElementFactory.buildPointDisplayElement( null, points, pointSymb );
+      if( de2 != null )
+        de2.paint( g, m_mapPanel.getProjection(), new NullProgressMonitor() );
 
       m_newCurve = curve;
     }

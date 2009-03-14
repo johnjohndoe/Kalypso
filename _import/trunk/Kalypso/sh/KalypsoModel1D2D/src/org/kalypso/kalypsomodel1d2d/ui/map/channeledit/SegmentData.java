@@ -47,11 +47,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
+import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -73,13 +75,10 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
@@ -128,7 +127,7 @@ public class SegmentData
   private int m_numBankIntersections;
 
   // original data
-  private final Map<Feature, CreateChannelData.SIDE> m_bankLines;
+  private final Map<GM_Curve, SIDE> m_bankLines;
 
   private final IProfileFeature m_upProfile;
 
@@ -151,12 +150,12 @@ public class SegmentData
 
   private double m_areaDownIntersProfile;
 
-  public SegmentData( final CreateChannelData channelData, final IProfileFeature upProfile, final IProfileFeature downProfile, final Map<Feature, CreateChannelData.SIDE> bankLines, final int numBankIntersections )
+  public SegmentData( final CreateChannelData channelData, final IProfileFeature upProfile, final IProfileFeature downProfile, final Map<GM_Curve, SIDE> banks, final int numBankIntersections )
   {
     m_channelData = channelData;
     m_upProfile = upProfile;
     m_DownProfile = downProfile;
-    m_bankLines = bankLines;
+    m_bankLines = banks;
 
     m_upProfLineString = convertProfilesToLineStrings( upProfile );
     m_downProfLineString = convertProfilesToLineStrings( downProfile );
@@ -840,29 +839,14 @@ public class SegmentData
    */
   private void intersectOrigBanks( )
   {
-    for( final Map.Entry<Feature, CreateChannelData.SIDE> bankEntry : m_bankLines.entrySet() )
+    for( final Entry<GM_Curve, SIDE> bankEntry : m_bankLines.entrySet() )
     {
       final List<Point> intersPointList = new ArrayList<Point>();
 
       /* convert current bankLine in Curve */
-      final Feature bankFeature = bankEntry.getKey();
+      final GM_Curve bankCurve = bankEntry.getKey();
       final CreateChannelData.SIDE side = bankEntry.getValue();
 
-      final GM_Object geometry = bankFeature.getDefaultGeometryProperty();
-
-      GM_Curve bankCurve = null;
-
-      if( geometry instanceof GM_MultiCurve )
-      {
-        final GM_MultiCurve multiline = (GM_MultiCurve) geometry;
-        if( multiline.getSize() > 1 )
-          return;
-        bankCurve = multiline.getCurveAt( 0 );
-      }
-      else if( geometry instanceof GM_Curve )
-      {
-        bankCurve = (GM_Curve) geometry;
-      }
       /* convert bank curve into LineString */
       try
       {
@@ -1090,7 +1074,7 @@ public class SegmentData
 
     for( int i = 0; i < line.getNumPoints(); i++ )
     {
-      final int pointRectWidth = 6;
+      final int pointRectWidth = 5;
       final int halfRectWidth = pointRectWidth / 2;
 
       final double x = line.getPointN( i ).getCoordinate().x;
@@ -1471,7 +1455,7 @@ public class SegmentData
     final GM_Curve Curve = (GM_Curve) JTSAdapter.wrap( line );
     Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
     defaultstroke = symb.getStroke();
-    stroke.setWidth( 3 );
+    stroke.setWidth( 2 );
     stroke.setStroke( color );
     symb.setStroke( stroke );
 
