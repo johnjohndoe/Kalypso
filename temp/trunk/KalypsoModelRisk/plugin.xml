@@ -112,19 +112,16 @@
     <dataSet
           id="org.kalypso.risk">
        <scenarioDatum
-             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              id="org.kalypso.risk.model.schema.binding.IVectorDataModel"
              modelPath="models/VectorDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
-             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              id="org.kalypso.risk.model.schema.binding.IRasterDataModel"
              modelPath="models/RasterDataModel.gml">
        </scenarioDatum>
        <scenarioDatum
-             bundle="org.kalypso.risk"
              classKey="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              id="org.kalypso.risk.model.schema.binding.IRasterizationControlModel"
              modelPath="models/RasterizationControlModel.gml">
@@ -133,12 +130,6 @@
  </extension>
  <extension
        point="org.kalypso.deegree.functionProperty">
-	<!-- @Dejan: TODO remove if no more needed?-->
-    <function
-          class="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
-          id="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
-          name="VirtualRasterGeometryProperty">
-    </function>
     <function
           class="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
           id="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
