@@ -30,9 +30,11 @@ import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -43,20 +45,18 @@ import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Geometry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyledLayerDescriptor_Impl;
-import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
  * Utility class for creating SLD styles
- * 
+ *
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class StyleUtils
@@ -181,7 +181,7 @@ public class StyleUtils
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
     final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle();
     Fill fill = null;
     final Iterator iterator = m_CustomPropertyColorMap.entrySet().iterator();
     while( iterator.hasNext() )
@@ -202,8 +202,8 @@ public class StyleUtils
     }
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( m_StyleLayerName, m_StyleLayerName, null, false, featureTypeStyles ) };
-    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final Style[] styles = new Style[] { StyleFactory.createUserStyle( m_StyleLayerName, m_StyleLayerName, null, false, featureTypeStyles ) };
+    final Layer[] layers = new Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
     final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
@@ -241,7 +241,7 @@ public class StyleUtils
 
   /**
    * Creates custom SLD file based on input GML file
-   * 
+   *
    * @param inputGMLFile -
    *            input GML file, full path
    * @param resultSLDFile -
@@ -330,7 +330,7 @@ public class StyleUtils
 
   /**
    * Helper function that is actually creating SLD file
-   * 
+   *
    * @param styleLayerName
    * @param geometryProperty
    * @param filterProperty
@@ -351,7 +351,7 @@ public class StyleUtils
     final double minScaleDenominator = 0;
     final double maxScaleDenominator = 1000000000000000.0;
     final Stroke stroke = StyleFactory.createStroke( new Color( 0, 0, 0 ), 1.0, 0.5, null, "mitre", "butt" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final FeatureTypeStyle featureTypeStyle = new FeatureTypeStyle_Impl();
+    final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle();
     Fill fill = null;
     final Iterator iterator = filterPropertyColorMap.entrySet().iterator();
     final boolean b_filterPropertySet = (filterProperty != null && filterProperty.trim().length() > 0);
@@ -373,8 +373,8 @@ public class StyleUtils
     }
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
-    final org.kalypsodeegree.graphics.sld.Style[] styles = new org.kalypsodeegree.graphics.sld.Style[] { new UserStyle_Impl( styleLayerName, styleLayerName, null, false, featureTypeStyles ) };
-    final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
+    final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleLayerName, styleLayerName, null, false, featureTypeStyles ) };
+    final Layer[] layers = new Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
     final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
