@@ -48,31 +48,20 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
       </objectContribution>
-
-      <objectContribution
-                  adaptable="false"
-                  id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"
-                  objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-               <filter
-                     name="featureThemeQname"
-                     value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
-		         <action
-		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
-		               label="%org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
-		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-		               style="push"
-		               tooltip="%org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction.description"/>
-           <action
-                 class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-                 id="org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
-                 label="%org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction"
-                 menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-                 style="push"
-                 tooltip="%org.kalypso.model.wspm.tuhh.ui.action.IntersectRoughnessMapThemeAction.description">
-           </action>
-            </objectContribution>
    </extension>
+
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" class="org.kalypso.model.wspm.ui.action.CreateDeviderHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected"/>
+			</activeWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" class="org.kalypso.model.wspm.ui.action.IntersectRoughnessHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected"/>
+			</activeWhen>
+		</handler>
+	</extension>
 
    <extension
          point="org.eclipse.ui.exportWizards">
@@ -260,4 +249,18 @@
                module="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
          </module>
       </extension>
+
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.kalypso.model.wspm.tuhh.ui.definition.oneProfileThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspm.tuhh}ProfileReachSegmentWspmTuhhSteadyState"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+	</extension>
+      
 </plugin>

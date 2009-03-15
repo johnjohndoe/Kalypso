@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.ui.adapter;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
@@ -56,12 +54,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.AbstractProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
@@ -72,10 +68,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -124,32 +118,32 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
   }
 
   /* find all results connected to this water */
-  private IStationResult[] findResults( final IProfileFeature profileMember )
-  {
-    final WspmWaterBody water = profileMember.getWater();
-    if( water == null )
-      return new IStationResult[] {};
-
-    final GMLWorkspace workspace = water.getFeature().getWorkspace();
-
-    final List<IStationResult> results = new ArrayList<IStationResult>();
-
-    /* Waterlevel fixations */
-    final List< ? > wspFixations = water.getWspFixations();
-    for( final Object wspFix : wspFixations )
-    {
-      final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
-
-      final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
-      results.add( result );
-    }
-
-    /* Calculated results. */
-    // TRICKY: this depends currently on the concrete model
-    // so we need to know the model-type (such as tuhh) and
-    // delegate the search for results to model-specific code.
-    return results.toArray( new IStationResult[results.size()] );
-  }
+// private IStationResult[] findResults( final IProfileFeature profileMember )
+// {
+// final WspmWaterBody water = profileMember.getWater();
+// if( water == null )
+// return new IStationResult[] {};
+//
+// final GMLWorkspace workspace = water.getFeature().getWorkspace();
+//
+// final List<IStationResult> results = new ArrayList<IStationResult>();
+//
+// /* Waterlevel fixations */
+// final List< ? > wspFixations = water.getWspFixations();
+// for( final Object wspFix : wspFixations )
+// {
+// final Feature feature = FeatureHelper.getFeature( workspace, wspFix );
+//
+// final IStationResult result = new ObservationStationResult( feature, profileMember.getStation() );
+// results.add( result );
+// }
+//
+// /* Calculated results. */
+// // TRICKY: this depends currently on the concrete model
+// // so we need to know the model-type (such as tuhh) and
+// // delegate the search for results to model-specific code.
+// return results.toArray( new IStationResult[results.size()] );
+// }
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getEventManager()
@@ -194,11 +188,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
       try
       {
         final IProfil profil = ((IProfileFeature)m_feature).getProfil();
-        /**
-         * TODO implement IStationResult to profiles
-         */
-        final IStationResult[] results = null;
-        setProfile( profil, results, m_feature, m_workspace );
+        setProfile( profil, m_feature, m_workspace );
       }
       catch( final Exception e )
       {
@@ -295,7 +285,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
     if( profileMember == null )
     {
-      setProfile( null, null, null, null );
+      setProfile( null, null, null );
       return;
     }
 
@@ -303,12 +293,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
-    IProfil profile = profileMember.getProfil();
-    IStationResult[] results = findResults( profileMember );
-    setProfile( profile, results, profileMember, workspace );
+    final IProfil profile = profileMember.getProfil();
+    setProfile( profile, profileMember, workspace );
   }
 
-  private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
+  private void setProfile( final IProfil profil, final Feature feature, final CommandableWorkspace workspace )
   {
     final IProfil oldProfile = m_profile;
 

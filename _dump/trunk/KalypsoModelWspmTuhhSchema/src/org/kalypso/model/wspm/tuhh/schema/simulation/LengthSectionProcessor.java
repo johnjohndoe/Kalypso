@@ -53,7 +53,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -71,7 +70,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
-import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartType;

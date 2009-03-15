@@ -53,8 +53,6 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 public class StatusPosContributionItem extends ContributionItem
 {
-  private static final String POS_FORMAT = "%10.4f  /  %10.4f"; //$NON-NLS-1$
-
   public final static int DEFAULT_CHAR_WIDTH = 40;
 
   private final int m_charWidth;
@@ -126,9 +124,9 @@ public class StatusPosContributionItem extends ContributionItem
 
     if( widthHint < 0 )
     {
-      GC gc = new GC( parent );
+      final GC gc = new GC( parent );
       gc.setFont( parent.getFont() );
-      FontMetrics fm = gc.getFontMetrics();
+      final FontMetrics fm = gc.getFontMetrics();
       widthHint = fm.getAverageCharWidth() * m_charWidth;
       heightHint = fm.getHeight();
       gc.dispose();

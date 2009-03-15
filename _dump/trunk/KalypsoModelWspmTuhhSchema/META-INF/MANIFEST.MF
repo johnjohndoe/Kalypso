@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.schema; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.tuhh.schema.KalypsoModelWspmTuhhSchemaPlugin
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  org.kalypso.simulation.core,
  org.kalypso.core,
@@ -15,8 +14,9 @@ Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  de.openali.odysseus.chart.factory,
  de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.ext.observation
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.schema,
  org.kalypso.model.wspm.tuhh.schema.gml,
  org.kalypso.model.wspm.tuhh.schema.schemata,
  org.kalypso.model.wspm.tuhh.schema.simulation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

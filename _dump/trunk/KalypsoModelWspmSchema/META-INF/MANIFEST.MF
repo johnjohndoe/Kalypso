@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.kalypso.model.wspm.schema; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.schema.KalypsoModelWspmSchemaPlugin
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.model.wspm.core;visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.schema,
  org.kalypso.model.wspm.schema.gml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -130,7 +130,7 @@ public class SelectProfileDialog extends TitleAreaDialog
           final QName qStation = new QName( "org.kalypso.model.wspmprofile", "station" ); //$NON-NLS-1$ //$NON-NLS-2$
           final BigDecimal station = (BigDecimal) crossSection.getProperty( qStation );
 
-          final Feature waterbody = crossSection.getParent();
+          final Feature waterbody = crossSection.getOwner();
 
           final String wn = FeatureUtils.getFeatureName( NS.GML3, waterbody );
           final String s = String.format( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3"), name, station, wn ); //$NON-NLS-1$

@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
 
 /**
  * Contains constants for the wspm models.

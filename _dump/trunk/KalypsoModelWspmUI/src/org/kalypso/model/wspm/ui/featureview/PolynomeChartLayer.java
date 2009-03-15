@@ -76,7 +76,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    *            Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
    *            polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
+  public PolynomeChartLayer( final PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
   {
     super( lineStyle, pointStyle );
     m_pixelsPerTick = pixelsPerTick;
@@ -88,15 +88,14 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked")
   public void paint( final GC gc )
   {
     final IDataRange<Number> domainRange = m_data.getDomainRange();
     final double min = (Double) domainRange.getMin();
     final double max = (Double) domainRange.getMax();
 
-    PolylineFigure plf = getPolylineFigure();
-    PointFigure pf = getPointFigure();
+    final PolylineFigure plf = getPolylineFigure();
+    final PointFigure pf = getPointFigure();
 
     final ArrayList<Point> path = new ArrayList<Point>();
 

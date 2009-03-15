@@ -28,5 +28,6 @@ Export-Package: org.kalypso.model.wspm.core,
 Require-Bundle: org.eclipse.ui.ide,
  org.junit;resolution:=optional,
  org.kalypso.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 

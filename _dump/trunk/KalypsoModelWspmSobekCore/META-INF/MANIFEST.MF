@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.model.wspm.sobek.core;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ui;visibility:=reexport,
  org.kalypso.model.wspm.sobek.schema;visibility:=reexport,
@@ -63,3 +63,4 @@ Export-Package: nl.wldelft.fews.pi;uses:="javax.xml.bind,javax.xml.datatype",
    org.kalypsodeegree.model.geometry,
    org.kalypso.ogc.gml.selection,
    org.kalypso.gmlschema.property.relation"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

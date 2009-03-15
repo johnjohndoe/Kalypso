@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
@@ -89,8 +89,6 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 {
   private final IStructuredSelection m_selection;
 
-  private List selectedTypes = new ArrayList();
-
   // widgets
   ResourceTreeAndListGroup resourceGroup;
 
@@ -126,7 +124,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Creates an instance of this class
-   * 
+   *
    * @param aWorkbench
    *            IWorkbench
    * @param selection
@@ -180,12 +178,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   {
 
     final String currentSource = this.destinationNameField.getText();
-    DirectoryDialog dialog = new DirectoryDialog( destinationNameField.getShell(), SWT.SAVE );
+    final DirectoryDialog dialog = new DirectoryDialog( destinationNameField.getShell(), SWT.SAVE );
     dialog.setText( SELECT_DESTINATION_TITLE );
     dialog.setMessage( SELECT_DESTINATION_MESSAGE );
     dialog.setFilterPath( getDestinationDirectoryName( currentSource ) );
 
-    String selectedDirectory = dialog.open();
+    final String selectedDirectory = dialog.open();
     if( selectedDirectory != null )
     {
       // Just quit if the directory is not valid
@@ -206,7 +204,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
     initializeDialogUnits( parent );
 
-    Composite composite = new Composite( parent, SWT.NULL );
+    final Composite composite = new Composite( parent, SWT.NULL );
     composite.setLayout( new GridLayout() );
     composite.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL ) );
     composite.setFont( parent.getFont() );
@@ -234,20 +232,20 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * // * Creates the buttons for selecting specific types or selecting all or none of the // * elements. // * // *
-   * 
+   *
    * @param parent
    *            the parent control //
    */
   protected final void createButtonsGroup( final Composite parent )
   {
 
-    Font font = parent.getFont();
+    final Font font = parent.getFont();
 
     // top level group
-    Composite buttonComposite = new Composite( parent, SWT.NONE );
+    final Composite buttonComposite = new Composite( parent, SWT.NONE );
     buttonComposite.setFont( parent.getFont() );
 
-    GridLayout layout = new GridLayout();
+    final GridLayout layout = new GridLayout();
     layout.numColumns = 3;
     layout.makeColumnsEqualWidth = true;
     buttonComposite.setLayout( layout );
@@ -258,7 +256,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     SelectionListener listener = new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         resourceGroup.setAllSelections( true );
       }
@@ -286,7 +284,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Enable or disable the button group.
    */
-  protected void enableButtonGroup( boolean enable )
+  protected void enableButtonGroup( final boolean enable )
   {
     selectAllButton.setEnabled( enable );
     deselectAllButton.setEnabled( enable );
@@ -294,7 +292,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Create the export destination specification widgets
-   * 
+   *
    * @param parent
    *            org.eclipse.swt.widgets.Composite
    */
@@ -302,14 +300,14 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   {
     final Font font = parent.getFont();
     // destination specification group
-    Composite destinationSelectionGroup = new Composite( parent, SWT.NONE );
-    GridLayout layout = new GridLayout();
+    final Composite destinationSelectionGroup = new Composite( parent, SWT.NONE );
+    final GridLayout layout = new GridLayout();
     layout.numColumns = 3;
     destinationSelectionGroup.setLayout( layout );
     destinationSelectionGroup.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL ) );
     destinationSelectionGroup.setFont( font );
 
-    Label destinationLabel = new Label( destinationSelectionGroup, SWT.NONE );
+    final Label destinationLabel = new Label( destinationSelectionGroup, SWT.NONE );
     destinationLabel.setText( DESTINATION_LABEL );
     destinationLabel.setFont( font );
 
@@ -317,7 +315,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     destinationNameField = new Combo( destinationSelectionGroup, SWT.SINGLE | SWT.BORDER );
     destinationNameField.addListener( SWT.Modify, this );
     destinationNameField.addListener( SWT.Selection, this );
-    GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
+    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
     destinationNameField.setLayoutData( data );
     destinationNameField.setFont( font );
@@ -335,7 +333,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Creates the checkbox tree and list for selecting resources.
-   * 
+   *
    * @param parent
    *            the parent control
    */
@@ -344,12 +342,12 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
     // create the input element, which has the root resource
     // as its only child
-    List<IProject> input = new ArrayList<IProject>();
-    IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-    for( int i = 0; i < projects.length; i++ )
+    final List<IProject> input = new ArrayList<IProject>();
+    final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    for( final IProject project : projects )
     {
-      if( projects[i].isOpen() )
-        input.add( projects[i] );
+      if( project.isOpen() )
+        input.add( project );
     }
 
     this.resourceGroup = new ResourceTreeAndListGroup( parent, input, getResourceProvider( IResource.FOLDER | IResource.PROJECT ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), getResourceProvider( IResource.FILE ), WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider(), SWT.NONE, DialogUtil.inRegularFontMode( parent ) );
@@ -361,7 +359,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
 
   @Override
-  protected void createOptionsGroupButtons( Group optionsGroup )
+  protected void createOptionsGroupButtons( final Group optionsGroup )
   {
 
     final Font font = optionsGroup.getFont();
@@ -371,11 +369,11 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
   /**
    * Create the button for checking if we should ask if we are going to overwrite existing files.
-   * 
+   *
    * @param optionsGroup
    * @param font
    */
-  protected void createOverwriteExisting( Group optionsGroup, final Font font )
+  protected void createOverwriteExisting( final Group optionsGroup, final Font font )
   {
     // overwrite... checkbox
     overwriteExistingFilesCheckbox = new Button( optionsGroup, SWT.CHECK | SWT.LEFT );
@@ -395,7 +393,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   // return IDEWorkbenchMessages.WizardExportPage_errorDialogTitle;
   // }
 
-  //  
+  //
   // /**
   // * Returns a new subcollection containing only those resources which are not
   // * local.
@@ -408,13 +406,13 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   // protected List extractNonLocalResources(List originalList) {
   // Vector result = new Vector(originalList.size());
   // Iterator resourcesEnum = originalList.iterator();
-  //  
+  //
   // while (resourcesEnum.hasNext()) {
   // IResource currentResource = (IResource) resourcesEnum.next();
   // if (!currentResource.isLocal(IResource.DEPTH_ZERO))
   // result.addElement(currentResource);
   // }
-  //  
+  //
   // return result;
   // }
   //
@@ -426,7 +424,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     return new WorkbenchContentProvider()
     {
       @Override
-      public Object[] getChildren( Object o )
+      public Object[] getChildren( final Object o )
       {
         if( o instanceof IContainer )
         {
@@ -435,20 +433,20 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
           {
             members = ((IContainer) o).members();
           }
-          catch( CoreException e )
+          catch( final CoreException e )
           {
             // just return an empty set of children
             return new Object[0];
           }
 
           // filter out the desired resource types
-          ArrayList<IResource> results = new ArrayList<IResource>();
-          for( int i = 0; i < members.length; i++ )
+          final ArrayList<IResource> results = new ArrayList<IResource>();
+          for( final IResource member : members )
           {
             // And the test bits with the resource types to see if they are what we want
-            if( (members[i].getType() & resourceType) > 0 )
+            if( (member.getType() & resourceType) > 0 )
             {
-              results.add( members[i] );
+              results.add( member );
             }
           }
           return results.toArray();
@@ -458,7 +456,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
           // input element case
           if( o instanceof ArrayList )
           {
-            return ((ArrayList) o).toArray();
+            return ((ArrayList< ? >) o).toArray();
           }
           else
           {
@@ -472,14 +470,14 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns this page's collection of currently-specified resources to be exported. This is the primary resource
    * selection facility accessor for subclasses.
-   * 
+   *
    * @return a collection of resources currently selected for export (element type: <code>IResource</code>)
    */
   @SuppressWarnings("unchecked")
   protected List getSelectedResources( )
   {
-    Iterator resourcesToExportIterator = this.getSelectedResourcesIterator();
-    List resourcesToExport = new ArrayList();
+    final Iterator resourcesToExportIterator = this.getSelectedResourcesIterator();
+    final List resourcesToExport = new ArrayList();
     while( resourcesToExportIterator.hasNext() )
       resourcesToExport.add( resourcesToExportIterator.next() );
     return resourcesToExport;
@@ -488,33 +486,25 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns this page's collection of currently-specified resources to be exported. This is the primary resource
    * selection facility accessor for subclasses.
-   * 
+   *
    * @return an iterator over the collection of resources currently selected for export (element type:
    *         <code>IResource</code>). This will include white checked folders and individually checked files.
    */
-  protected Iterator getSelectedResourcesIterator( )
+  @SuppressWarnings("unchecked")
+  protected Iterator<IResource> getSelectedResourcesIterator( )
   {
     return this.resourceGroup.getAllCheckedListItems().iterator();
   }
 
-  /**
-   * Returns the resource extensions currently specified to be exported.
-   * 
-   * @return the resource extensions currently specified to be exported (element type: <code>String</code>)
-   */
-  protected List getTypesToExport( )
-  {
 
-    return selectedTypes;
-  }
 
   /**
    * Returns this page's collection of currently-specified resources to be exported. This returns both folders and files -
    * for just the files use getSelectedResources.
-   * 
+   *
    * @return a collection of resources currently selected for export (element type: <code>IResource</code>)
    */
-  protected List getWhiteCheckedResources( )
+  protected List< ? > getWhiteCheckedResources( )
   {
     return this.resourceGroup.getAllWhiteCheckedItems();
   }
@@ -605,13 +595,13 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
     {
-      String[] destinationNames = settings.getArray( STORE_DESTINATION_NAMES_ID );
+      final String[] destinationNames = settings.getArray( STORE_DESTINATION_NAMES_ID );
       if( destinationNames == null )
         return; // ie.- no values stored, so stop
 
       // set filenames history
-      for( int i = 0; i < destinationNames.length; i++ )
-        destinationNameField.add( destinationNames[i] );
+      for( final String destinationName : destinationNames )
+        destinationNameField.add( destinationName );
 
       // radio buttons and checkboxes
       overwriteExistingFilesCheckbox.setSelection( settings.getBoolean( STORE_OVERWRITE_EXISTING_RESOURCES_ID ) );
@@ -623,8 +613,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    */
   protected void setupBasedOnInitialSelections( )
   {
-
-    Iterator it = m_selection.iterator();
+    final Iterator< ? > it = m_selection.iterator();
     while( it.hasNext() )
     {
       final Object res = it.next();
@@ -653,13 +642,13 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Returns a File object representing the currently-named destination directory iff it exists as a valid directory, or
    * <code>null</code> otherwise.
-   * 
+   *
    * @param path
    *            a String not yet formatted for java.io.File compatability
    */
-  private File getDestinationDirectory( String path )
+  private File getDestinationDirectory( final String path )
   {
-    File destinationDirectory = new File( getDestinationDirectoryName( path ) );
+    final File destinationDirectory = new File( getDestinationDirectoryName( path ) );
     if( !destinationDirectory.exists() || !destinationDirectory.isDirectory() )
     {
       return null;
@@ -681,7 +670,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * Answer the directory name specified as being the export destination. Note that if it ends with a separator then the
    * separator is first removed so that java treats it as a proper directory
    */
-  private String getDestinationDirectoryName( String destinationName )
+  private String getDestinationDirectoryName( final String destinationName )
   {
     IPath result = new Path( destinationName.trim() );
 
@@ -696,16 +685,16 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
   /**
    * Sets the destination name of the export to be the supplied path. Adds the name of the path to the list of items in
    * the destination combo and selects it.
-   * 
+   *
    * @param path
    *            the path to be added
    */
-  protected void setDestinationName( String path )
+  protected void setDestinationName( final String path )
   {
     if( path.length() > 0 )
     {
 
-      String[] currentItems = this.destinationNameField.getItems();
+      final String[] currentItems = this.destinationNameField.getItems();
       int selectionIndex = -1;
       for( int i = 0; i < currentItems.length; i++ )
       {
@@ -714,8 +703,8 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
       }
       if( selectionIndex < 0 )
       {
-        int oldLength = currentItems.length;
-        String[] newItems = new String[oldLength + 1];
+        final int oldLength = currentItems.length;
+        final String[] newItems = new String[oldLength + 1];
         System.arraycopy( currentItems, 0, newItems, 0, oldLength );
         newItems[oldLength] = path;
         this.destinationNameField.setItems( newItems );
@@ -735,7 +724,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * the buttons client data. Note that the parent's layout is assumed to be a GridLayout and the number of columns in
    * this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *            the parent composite
    * @param id
@@ -745,14 +734,14 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * @param defaultButton
    *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    */
-  protected Button createButton( Composite parent, int id, String label, boolean defaultButton )
+  protected Button createButton( final Composite parent, final int id, final String label, final boolean defaultButton )
   {
     // increment the number of columns in the button bar
     ((GridLayout) parent.getLayout()).numColumns++;
 
-    Button button = new Button( parent, SWT.PUSH );
+    final Button button = new Button( parent, SWT.PUSH );
 
-    GridData buttonData = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData buttonData = new GridData( GridData.FILL_HORIZONTAL );
     button.setLayoutData( buttonData );
 
     button.setData( new Integer( id ) );
@@ -761,7 +750,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
 
     if( defaultButton )
     {
-      Shell shell = parent.getShell();
+      final Shell shell = parent.getShell();
       if( shell != null )
       {
         shell.setDefaultButton( button );

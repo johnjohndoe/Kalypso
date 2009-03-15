@@ -7,9 +7,10 @@ Bundle-Activator: org.kalypso.model.wspm.sobek.calculation.job.KalypsoModelWspmS
 Require-Bundle: org.kalypso.simulation.core,
  org.kalypso.commons,
  org.junit4
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.sobek.calculation.job;
   uses:="org.kalypso.contribs.java.net,
    org.kalypso.simulation.core,
    org.osgi.framework,
    org.eclipse.core.runtime"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -7,3 +7,4 @@ Bundle-Vendor: kalypso.sourceforge.net
 Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.help
 Export-Package: org.kalypso.KalypsoManualWSPM.help
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

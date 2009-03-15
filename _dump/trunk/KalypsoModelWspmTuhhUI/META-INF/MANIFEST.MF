@@ -23,4 +23,5 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ModelSimulationBase;bundle-version="0.0.0",
  org.kalypso.afgui;bundle-version="0.0.0",
  org.kalypso.project.database.client;bundle-version="1.0.0"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

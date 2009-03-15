@@ -57,18 +57,6 @@
            </action>
         </viewContribution>
      </extension>
-        <extension
-           point="org.eclipse.ui.editors">
-        <editor
-              class="org.kalypso.model.wspm.ui.editor.ProfilchartEditor"
-              contributorClass="org.kalypso.model.wspm.ui.editor.ProfilchartEditorContributor"
-              default="true"
-              extensions="prf"
-              icon="icons/eview16/profil_editor.gif"
-              id="org.kalypso.model.wspm.ui.editor.ProfilchartEditor"
-              matchingStrategy="org.kalypso.contribs.eclipse.ui.FileResourceEditorMatchingStrategy"
-              name="%org.kalypso.model.wspm.ui.editor.ProfilchartEditor"/>
-     </extension>
      <extension
            point="org.eclipse.ui.views">
         <category
@@ -278,28 +266,7 @@
                style="push"
                tooltip="%org.kalypso.model.wspm.ui.action.CreateProfileMapAction.description"/>
       </objectContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"
-            objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-         <filter
-               name="featureThemeQname"
-               value="org.kalypso.model.wspmprofile#Profile"/>
-	         <action
-		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-		               id="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-		               label="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
-		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-		               style="push"
-		               tooltip="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-               id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-               label="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
-      </objectContribution>
+ 
         <objectContribution
               adaptable="true"
               id="org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer.objectcontribution"
@@ -526,5 +493,65 @@
                icon="icons/etool16/delete_layer.gif">
          </image>
       </extension>
+     
+    <!-- Commands for the map outline -->
+	<extension point="org.eclipse.ui.commands">
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" class="org.kalypso.model.wspm.ui.action.CreateDeviderHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+			</activeWhen>
+		</handler>
+		<handler commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" class="org.kalypso.model.wspm.ui.action.IntersectRoughnessHandler">
+			<enabledWhen>
+				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+			</enabledWhen>
+		</handler>
+	</extension>
+
+	<extension point="org.eclipse.ui.menus">
+   		<menuContribution locationURI="menu:org.kalypso.map.outline.GisMapEditor?before=theme">
+			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		
+   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
+			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
+			<with variable="selection">
+				<and>
+					<count value="1"/>
+					<iterate ifEmpty="false" operator="and">
+						<test property="org.kalypso.ui.test.theme.qname" value="{org.kalypso.model.wspmprofile}Profile"/>
+					</iterate>
+				</and>
+			</with>
+		</definition>
+	</extension>
 
 </plugin>

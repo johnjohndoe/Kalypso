@@ -94,7 +94,7 @@ public class OperationChooserPage extends WizardPage
 
     private final IPointPropertyCalculator m_calculator;
 
-    private PropertyCalculator( final String id, final String label, final String tooltip, final IPointPropertyCalculator calculator )
+    public PropertyCalculator( final String id, final String tooltip, final IPointPropertyCalculator calculator )
     {
       m_tooltip = tooltip;
       m_id = id;
@@ -115,7 +115,7 @@ public class OperationChooserPage extends WizardPage
   private Double m_value = Double.NaN;
 
   private final IStructuredSelection m_selectedpoints;
-  
+
   public OperationChooserPage( final IStructuredSelection selection )
   {
     super( "operationChooserPage", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -254,7 +254,7 @@ public class OperationChooserPage extends WizardPage
         try
         {
           final IPointPropertyCalculator calculator = (IPointPropertyCalculator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          final PropertyCalculator propCalc = new PropertyCalculator( id, label, tooltip, calculator );
+          final PropertyCalculator propCalc = new PropertyCalculator( id, tooltip, calculator );
           m_calculators.add( propCalc );
           combo.add( label );
           if( id.equals( calculatorId ) )
@@ -297,7 +297,7 @@ public class OperationChooserPage extends WizardPage
     combo.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -327,7 +327,7 @@ public class OperationChooserPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

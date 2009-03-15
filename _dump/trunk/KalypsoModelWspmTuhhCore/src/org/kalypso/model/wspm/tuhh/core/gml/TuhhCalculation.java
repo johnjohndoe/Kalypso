@@ -41,12 +41,11 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -61,11 +60,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 /**
  * Binding class for CalculationReibConstWspmTuhhSteadyState AND CalculationWspmTuhhSteadyState
- * 
+ *
  * @author Gernot Belger
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
@@ -160,11 +157,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     }
 
     calcCreationFeature.setProperty( new QName( NS_WSPM, "user" ), user ); //$NON-NLS-1$
-
-    final Calendar calendar = Calendar.getInstance();
-    calendar.setTime( date );
-
-    calcCreationFeature.setProperty( new QName( NS_WSPM, "date" ), new XMLGregorianCalendarImpl( (GregorianCalendar) calendar ) ); //$NON-NLS-1$
+    calcCreationFeature.setProperty( new QName( NS_WSPM, "date" ), DateUtilities.toXMLGregorianCalendar( date ) ); //$NON-NLS-1$
   }
 
   public void setReachRef( final TuhhReach reach )

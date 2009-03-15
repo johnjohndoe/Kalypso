@@ -67,10 +67,11 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 /**
  * TODO: show marker text as tooltip<br>
  * TODO: open dialog that shows all markers if user clicks on marker (use cell-editor)
- * 
+ *
  * @author Gernot Belger
  * @author Kim Werner
  */
+@SuppressWarnings("restriction")
 public class ComponentUiProblemHandler implements IComponentUiHandler
 {
   private static final String IMAGE_ERROR = "profilLabelProvider.img.error"; //$NON-NLS-1$
@@ -85,7 +86,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   private final IProfil m_profile;
 
-  public ComponentUiProblemHandler( final IProfil profile, final Display display )
+  public ComponentUiProblemHandler( final IProfil profile )
   {
     m_profile = profile;
 
@@ -194,11 +195,11 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     final String key = buffer.toString();
 
     final IProfilPointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
-    Image image = m_imgRegistry.get( key );
+    final Image image = m_imgRegistry.get( key );
     if( image == null )
     {
       final Display display = Display.getCurrent();
-      Image img = new Image( display, 16, 16 );
+      final Image img = new Image( display, 16, 16 );
       final GC gc = new GC( img );
       try
       {
@@ -277,7 +278,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     final HashSet<String> types = new HashSet<String>();
     for( final IProfilPointMarker marker : markers )
     {
-      IComponent type = marker.getId();
+      final IComponent type = marker.getId();
       if( !types.contains( type ) )
         types.add( type.getId() );
     }

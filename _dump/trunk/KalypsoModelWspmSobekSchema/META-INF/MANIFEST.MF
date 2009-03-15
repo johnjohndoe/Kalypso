@@ -5,8 +5,9 @@ Bundle-SymbolicName: org.kalypso.model.wspm.sobek.schema;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.model.wspm.sobek.schema.KalypsoModelWspmSobekSchemaPlugin
 Require-Bundle: org.kalypso.core,
  de.openali.odysseus.chart.ext.base
 Export-Package: org.kalypso.model.wspm.sobek.schema;uses:="org.osgi.framework,org.eclipse.core.runtime"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

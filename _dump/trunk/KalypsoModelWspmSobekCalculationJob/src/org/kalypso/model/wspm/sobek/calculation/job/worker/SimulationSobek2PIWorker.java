@@ -23,7 +23,7 @@ public class SimulationSobek2PIWorker implements ISimulation
 
   private final MyPrintStream m_sobekStream;
 
-  public SimulationSobek2PIWorker( MyPrintStream nofdpStream, MyPrintStream sobekStream )
+  public SimulationSobek2PIWorker( final MyPrintStream nofdpStream, final MyPrintStream sobekStream )
   {
     m_nofdpStream = nofdpStream;
     m_sobekStream = sobekStream;
@@ -72,7 +72,6 @@ public class SimulationSobek2PIWorker implements ISimulation
     error.start();
     input.start();
 
-    int exitValue = 0;
     int timeRunning = 0;
 
     /* It is running until the job has finished or the timeout of 5 minutes is reached. */
@@ -80,7 +79,7 @@ public class SimulationSobek2PIWorker implements ISimulation
     {
       try
       {
-        exitValue = exec.exitValue();
+        exec.exitValue();
         if( monitor.isCanceled() )
           throw new SimulationException( "Computation Canceld" );
 
@@ -107,14 +106,14 @@ public class SimulationSobek2PIWorker implements ISimulation
     ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
 
     /* add calculation points conversion log file */
-    File logCalculationPoints = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS_PATH );
+    final File logCalculationPoints = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS_PATH );
     if( !logCalculationPoints.exists() )
       throw new SimulationException( Messages.SimulationSobek2PIWorker_7 );
 
     resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS, logCalculationPoints );
 
     /* add structure nodes conversion log file */
-    File logStructureNodes = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES_PATH );
+    final File logStructureNodes = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES_PATH );
     if( !logStructureNodes.exists() )
       throw new SimulationException( Messages.SimulationSobek2PIWorker_8 );
 

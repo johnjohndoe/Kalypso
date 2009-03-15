@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view.table;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -60,8 +59,6 @@ public class PropertyEditDelegate implements IViewActionDelegate
 {
   private IViewPart m_view;
 
-  private ISelection m_selection;
-
   /**
    * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
    */
@@ -76,10 +73,6 @@ public class PropertyEditDelegate implements IViewActionDelegate
   public void run( final IAction action )
   {
     final Shell viewShell = m_view.getViewSite().getShell();
-
-    final ISelectionProvider selectionProvider = m_view.getViewSite().getSelectionProvider();
-    if( selectionProvider != null )
-      m_selection = selectionProvider.getSelection();
 
     final IProfil profile = (m_view instanceof TableView) ? ((TableView) m_view).getProfil() : null;
 
@@ -105,7 +98,6 @@ public class PropertyEditDelegate implements IViewActionDelegate
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_selection = selection;
   }
 
 }

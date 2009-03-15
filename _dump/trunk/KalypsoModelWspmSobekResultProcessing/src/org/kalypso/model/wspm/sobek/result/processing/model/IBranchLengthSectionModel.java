@@ -7,7 +7,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 
 public interface IBranchLengthSectionModel extends List
 {

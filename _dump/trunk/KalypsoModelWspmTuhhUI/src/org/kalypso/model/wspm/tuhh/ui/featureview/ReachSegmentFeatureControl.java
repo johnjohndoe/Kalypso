@@ -74,12 +74,10 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author belger
+ * @author jung
  */
 public class ReachSegmentFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  /**
-   * @author jung
-   */
   private final class ChangeListSelectionCommand implements ICommand
   {
     private final TuhhReach m_reach;
@@ -90,7 +88,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
 
     private final GMLWorkspace m_workspace;
 
-    private ChangeListSelectionCommand( final TuhhReach reach, final Feature feature, final IProfileFeature changedProfile, final GMLWorkspace workspace )
+    public ChangeListSelectionCommand( final TuhhReach reach, final Feature feature, final IProfileFeature changedProfile, final GMLWorkspace workspace )
     {
       m_reach = reach;
       m_feature = feature;
@@ -240,7 +238,7 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
 
       if( waterBody != null )
       {
-        final List profiles = (List) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
+        final List< ? > profiles = (List< ? >) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
         m_viewer.setInput( profiles );
       }
 

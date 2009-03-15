@@ -28,7 +28,7 @@ public class SimulationPi2SobekWorker implements ISimulation
 
   private final MyPrintStream m_sobekStream;
 
-  public SimulationPi2SobekWorker( MyPrintStream nofdpStream, MyPrintStream sobekStream )
+  public SimulationPi2SobekWorker( final MyPrintStream nofdpStream, final MyPrintStream sobekStream )
   {
     m_outputStream = nofdpStream;
     m_sobekStream = sobekStream;
@@ -76,7 +76,6 @@ public class SimulationPi2SobekWorker implements ISimulation
     error.start();
     input.start();
 
-    int exitValue = 0;
     int timeRunning = 0;
 
     /* It is running until the job has finished or the timeout of 5 minutes is reached. */
@@ -84,7 +83,7 @@ public class SimulationPi2SobekWorker implements ISimulation
     {
       try
       {
-        exitValue = exec.exitValue();
+        exec.exitValue();
         if( monitor.isCanceled() )
           throw new SimulationException( "Computation Canceld" );
 
@@ -111,7 +110,7 @@ public class SimulationPi2SobekWorker implements ISimulation
     ConsoleHelper.writeLine( m_outputStream, "" ); //$NON-NLS-1$
 
     /* add pi conversion log to result eater */
-    File logFile = new File( tmpdir, ISobekCalculationJobConstants.LOG_PI2SOBEK_PATH );
+    final File logFile = new File( tmpdir, ISobekCalculationJobConstants.LOG_PI2SOBEK_PATH );
     if( !logFile.exists() )
       throw new SimulationException( Messages.SimulationPi2SobekWorker_6 );
 
@@ -125,7 +124,7 @@ public class SimulationPi2SobekWorker implements ISimulation
    * In case of a valid conversion, the log file contains the following phrase: "The conversion was successfull" (typo
    * is correct!)
    */
-  private boolean checkLogFile( File logFile ) throws SimulationException
+  private boolean checkLogFile( final File logFile ) throws SimulationException
   {
     FileInputStream inputStream = null;
     BufferedReader reader = null;
@@ -142,11 +141,11 @@ public class SimulationPi2SobekWorker implements ISimulation
       }
 
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       throw new SimulationException( Messages.SimulationPi2SobekWorker_9 );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new SimulationException( Messages.SimulationPi2SobekWorker_10 );
     }

@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kalypso.wspwin.core.i18n.Messages;
 import org.kalypso.wspwin.core.prf.datablock.DataBlockHeader;
 import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
 

@@ -39,8 +39,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 public class ResultWorker
 {
   private final IResultTimeSeries m_handler;
@@ -64,7 +62,7 @@ public class ResultWorker
 
   private final GregorianCalendar m_end;
 
-  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, IResultTimeSeries handler, GregorianCalendar start, GregorianCalendar end )
+  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, final IResultTimeSeries handler, final GregorianCalendar start, final GregorianCalendar end )
   {
     m_workspace = targetWorkspace;
     m_binding = binding;
@@ -74,7 +72,7 @@ public class ResultWorker
     m_end = end;
   }
 
-  public void process( IResultWorkerSettings settings ) throws CoreException
+  public void process( final IResultWorkerSettings settings ) throws CoreException
   {
     final IObservation<TupleResult> observation = m_handler.getObservation();
 
@@ -106,7 +104,9 @@ public class ResultWorker
 
       /* new record */
       final IRecord record = result.createRecord();
-      record.setValue( 0, new XMLGregorianCalendarImpl( calendar ) );
+      final GregorianCalendar xmlCal = (GregorianCalendar) GregorianCalendar.getInstance( calendar.getTimeZone() );
+      xmlCal.setTime( calendar.getTime() );
+      record.setValue( 0, xmlCal );
       record.setValue( 1, BigDecimal.valueOf( value ) );
 
       result.add( record );
@@ -173,7 +173,7 @@ public class ResultWorker
 
     final Map<Duration, Double> myResult = new TreeMap<Duration, Double>( new Comparator<Duration>()
     {
-      public int compare( Duration o1, Duration o2 )
+      public int compare( final Duration o1, final Duration o2 )
       {
         return o1.compare( o2 );
       }

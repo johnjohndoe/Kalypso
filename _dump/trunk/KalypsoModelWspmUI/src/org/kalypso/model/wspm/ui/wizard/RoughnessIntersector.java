@@ -101,7 +101,6 @@ public class RoughnessIntersector
     m_pointFilters = pointFilters;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.RoughnessIntersector.0"), m_profileFeatures.length ); //$NON-NLS-1$
@@ -112,7 +111,7 @@ public class RoughnessIntersector
     for( final Object object : m_profileFeatures )
     {
       final IProfileFeature profile = (IProfileFeature) object;
-      String crs = profile.getSrsName();
+      final String crs = profile.getSrsName();
       final IProfil profil = profile.getProfil();
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...
@@ -149,7 +148,7 @@ public class RoughnessIntersector
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private List<Object> assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
     final TupleResult owner = point.getOwner();

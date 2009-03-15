@@ -72,9 +72,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class PropertyEditWizard extends Wizard
 {
-
-  private String m_profiletype = ""; //$NON-NLS-1$
-
   final private ArrayChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_propertyChooserPage;
@@ -99,7 +96,6 @@ public class PropertyEditWizard extends Wizard
     m_selectedProfiles = selection;
     m_selectedPoints = null;
 
-    m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
     setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.0") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
@@ -115,7 +111,6 @@ public class PropertyEditWizard extends Wizard
     m_workspace = null;
     m_profiles = null;
     m_selectedProfiles = null;
-    m_profiletype = m_profile.getType();
     m_profileChooserPage = null;// new ArrayChooserPage( m_selectedPoints.toArray(), new Object[0],
     // m_selectedPoints.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3,
     // null ); //$NON-NLS-1$;

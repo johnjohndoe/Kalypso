@@ -266,9 +266,9 @@ public class QIntervallResult extends AbstractFeatureBinder
     return (BigDecimal) getFeature().getProperty( QNAME_P_QIntervallResult_station );
   }
 
-  public List getPolynomialFeatures( )
+  public List< ? > getPolynomialFeatures( )
   {
-    return (List) getFeature().getProperty( QNAME_P_QIntervallResult_polynomialMember );
+    return (List< ? >) getFeature().getProperty( QNAME_P_QIntervallResult_polynomialMember );
   }
 
 }

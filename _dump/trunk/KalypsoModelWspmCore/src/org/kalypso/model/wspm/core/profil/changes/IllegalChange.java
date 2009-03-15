@@ -61,7 +61,6 @@ public class IllegalChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
    */
-  @SuppressWarnings("unused") //$NON-NLS-1$
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     /**

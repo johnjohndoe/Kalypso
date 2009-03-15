@@ -11,7 +11,7 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.schema,
  org.kalypso.wspwin.core,
  de.openali.odysseus.chart.factory;bundle-version="0.2.0"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.gml,
  org.kalypso.model.wspm.tuhh.core.profile,
@@ -19,3 +19,4 @@ Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
  org.kalypso.model.wspm.tuhh.core.wspwin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

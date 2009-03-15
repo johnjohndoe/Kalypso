@@ -30,7 +30,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
 
   private final MyPrintStream m_sobekStream;
 
-  public SimulationSobekOpenMIWorker( MyPrintStream nofdpStream, MyPrintStream sobekStream )
+  public SimulationSobekOpenMIWorker( final MyPrintStream nofdpStream, final MyPrintStream sobekStream )
   {
     m_nofdpStream = nofdpStream;
     m_sobekStream = sobekStream;
@@ -79,14 +79,12 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     error.start();
     input.start();
 
-    int exitValue = 0;
-
     /* It is running until the job has finished or the timeout of 5 minutes is reached. */
     while( true )
     {
       try
       {
-        exitValue = exec.exitValue();
+        exec.exitValue();
         if( monitor.isCanceled() )
           throw new SimulationException( "Computation Canceld" );
 
@@ -112,12 +110,12 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
 
     /* add openmi control log file */
-    File logOpenMi = new File( tmpdir, ISobekCalculationJobConstants.LOG_OPENMI_CONTROL_PATH );
+    final File logOpenMi = new File( tmpdir, ISobekCalculationJobConstants.LOG_OPENMI_CONTROL_PATH );
     if( logOpenMi.exists() )
       resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
 
     /* add sobek computation log file */
-    File logSobek = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK_PATH );
+    final File logSobek = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK_PATH );
     if( logSobek.exists() )
       resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
 
@@ -138,7 +136,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
    * @return
    * @throws SimulationException
    */
-  private boolean checkLogFiles( File logOpenMi, File logSobek ) throws SimulationException
+  private boolean checkLogFiles( final File logOpenMi, final File logSobek ) throws SimulationException
   {
     boolean openmi = false;
     boolean sobek = false;
@@ -151,11 +149,11 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       reader = new BufferedReader( new InputStreamReader( inputStream, "UTF-16" ) ); //$NON-NLS-1$
       String line = null;
 
-      Pattern p = Pattern.compile( ".*Simulation finished successfuly.*" ); //$NON-NLS-1$
+      final Pattern p = Pattern.compile( ".*Simulation finished successfuly.*" ); //$NON-NLS-1$
 
       while( (line = reader.readLine()) != null )
       {
-        Matcher m = p.matcher( line );
+        final Matcher m = p.matcher( line );
         if( m.matches() )
         {
           openmi = true;
@@ -165,11 +163,11 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       }
 
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       throw new SimulationException( Messages.SimulationSobekOpenMIWorker_12 );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new SimulationException( Messages.SimulationSobekOpenMIWorker_13 );
     }
@@ -195,11 +193,11 @@ public class SimulationSobekOpenMIWorker implements ISimulation
 
       }
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       throw new SimulationException( Messages.SimulationSobekOpenMIWorker_15 );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new SimulationException( Messages.SimulationSobekOpenMIWorker_16 );
     }

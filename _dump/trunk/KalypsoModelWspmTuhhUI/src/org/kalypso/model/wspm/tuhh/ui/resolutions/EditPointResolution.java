@@ -57,19 +57,16 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
 
    private double m_value;
    
-   private boolean m_initialized = false;
-
   /**
    * @param deviderTyp,deviderIndex
    *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
   public EditPointResolution( final int index, final IComponent property, final double value )
   {
-    super( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution.0" ,property.getName() ), null, null ); //$NON-NLS-1$ 
     m_index = index;
     m_propertyId = property.getId();
     m_value = value;
-    m_initialized = true;
   }
   public EditPointResolution()
   {
@@ -110,7 +107,7 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
    */
   @Override
-  public void setData( String parameterStream )
+  public void setData( final String parameterStream )
   {
     final String[] params = getParameter( parameterStream );
     try
@@ -118,9 +115,8 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
       m_index = new Integer( params[1] );
       m_propertyId = params[2];
       m_value= new Double( params[3] );
-      m_initialized = true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new IllegalArgumentException();
     }

@@ -76,7 +76,6 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  @SuppressWarnings("unchecked")
   public PolynomeChartLayer getLayer( final URL context )
   {
     final IParameterContainer pc = getParameterContainer();
