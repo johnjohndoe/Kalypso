@@ -76,7 +76,7 @@ public class ElevationMainPage extends WizardPage
     m_filename = new Text( container, SWT.BORDER );
     m_filename.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
       }
@@ -87,7 +87,7 @@ public class ElevationMainPage extends WizardPage
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         browseForSourceFile();
       }
@@ -114,7 +114,7 @@ public class ElevationMainPage extends WizardPage
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
         updatePageComplete();
@@ -128,8 +128,7 @@ public class ElevationMainPage extends WizardPage
     m_tileTitle = new Text( container, SWT.BORDER );
     m_tileTitle.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access")
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         updatePageComplete();
       }

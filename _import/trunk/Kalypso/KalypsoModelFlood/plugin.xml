@@ -185,7 +185,7 @@
          point="org.eclipse.core.expressions.definitions">
       <definition id="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
          <with variable="activeMapPanel">
-           <test property="org.kalypso.ui.activeThemeQName" value="{org.kalypso.model.flood}AbstractFloodPolygon" />
+           <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.flood}AbstractFloodPolygon" />
          </with>
       </definition>
    </extension>
@@ -272,7 +272,6 @@
                  </reference>
               </visibleWhen>
            </command>
-
         </menuContribution>
 	</extension>
    <extension

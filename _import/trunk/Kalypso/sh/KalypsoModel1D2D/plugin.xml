@@ -571,58 +571,58 @@
   <extension point="org.eclipse.core.expressions.definitions">
     <definition id="org.kalypso.ui.views.mapView.expressions.param1d">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}_FlowRelation1D" />
       </with>
     </definition>
     <definition id="org.kalypso.ui.views.mapView.expressions.element1d">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D" />
       </with>
     </definition>
     <definition id="org.kalypso.ui.views.mapView.expressions.element2d">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
       </with>
     </definition>
     <definition id="org.kalypso.ui.views.mapView.expressions.line">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.boundaryCondition">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.transitionElement">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.hydrograph">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.junctionElement">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.wspmProfile">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{org.kalypso.model.wspmprofile}Profile" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{org.kalypso.model.wspmprofile}Profile" />
       </with>
     </definition>
     
     <definition id="org.kalypso.ui.views.mapView.expressions.roughnessPolygon">
       <with variable="activeMapPanel">
-        <test property="org.kalypso.ui.activeThemeQName" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+        <test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
       </with>
     </definition>
   </extension>

@@ -151,7 +151,6 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
-      @SuppressWarnings("synthetic-access")
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();
@@ -176,7 +175,6 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     setControl( panel );
   }
 
-  @SuppressWarnings("unchecked")
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultMetaInfoViewer resultViewer )
   {
     resultViewer.setInput( selection.getFirstElement() );

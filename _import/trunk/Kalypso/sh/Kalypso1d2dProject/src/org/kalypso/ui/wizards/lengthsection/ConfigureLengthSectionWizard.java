@@ -74,7 +74,6 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.i18n.Messages;
@@ -110,7 +109,7 @@ public class ConfigureLengthSectionWizard extends Wizard
 
   private ConfigureLengthSectionWizardPage m_lengthSectionPage;
 
-  public ConfigureLengthSectionWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel, IMapPanel mapPanel )
+  public ConfigureLengthSectionWizard( final IFolder scenarioFolder, final IScenarioResultMeta resultModel, final IMapPanel mapPanel )
   {
     m_scenarioFolder = scenarioFolder;
     m_resultModel = resultModel;
@@ -167,7 +166,7 @@ public class ConfigureLengthSectionWizard extends Wizard
         try
         {
           monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.8") ); //$NON-NLS-1$
-          BigDecimal[] stationList = lengthSectionParameters.getStationList();
+          final BigDecimal[] stationList = lengthSectionParameters.getStationList();
 
           if( stationList == null )
             return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.9") ); //$NON-NLS-1$
@@ -180,22 +179,22 @@ public class ConfigureLengthSectionWizard extends Wizard
           final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
           // just get the first selected item
-          IResultMeta resultMeta = results[0];
+          final IResultMeta resultMeta = results[0];
 
           /* get the result data */
 
           if( resultMeta instanceof IStepResultMeta )
           {
-            IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
+            final IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
 
-            IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
-            for( IResultMeta child : children )
+            final IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+            for( final IResultMeta child : children )
             {
               // get all documents
               if( child instanceof IDocumentResultMeta )
               {
-                IDocumentResultMeta docResult = (IDocumentResultMeta) child;
-                DOCUMENTTYPE documentType = docResult.getDocumentType();
+                final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                final DOCUMENTTYPE documentType = docResult.getDocumentType();
 
                 GM_TriangulatedSurface surface = null;
 
@@ -223,17 +222,17 @@ public class ConfigureLengthSectionWizard extends Wizard
             }
 
             // for terrain values we have to ask the parent, because the terrain result is assigned to him
-            IResultMeta parent = stepResult.getParent();
+            final IResultMeta parent = stepResult.getParent();
             if( parent instanceof ICalcUnitResultMeta )
             {
-              ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
-              IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
-              for( IResultMeta child : calcUniChildren )
+              final ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
+              final IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
+              for( final IResultMeta child : calcUniChildren )
               {
                 if( child instanceof IDocumentResultMeta )
                 {
-                  IDocumentResultMeta docResult = (IDocumentResultMeta) child;
-                  DOCUMENTTYPE documentType = docResult.getDocumentType();
+                  final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                  final DOCUMENTTYPE documentType = docResult.getDocumentType();
 
                   GM_TriangulatedSurface surface = null;
 
@@ -260,25 +259,25 @@ public class ConfigureLengthSectionWizard extends Wizard
               monitor.subTask( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.17") ); //$NON-NLS-1$
               ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
 
-              IPath docPath = resultMeta.getFullPath();
-              IFolder folder = m_scenarioFolder.getFolder( docPath );
+              final IPath docPath = resultMeta.getFullPath();
+              final IFolder folder = m_scenarioFolder.getFolder( docPath );
 
-              IFile lsFile = folder.getFile( "lengthSection.gml" ); //$NON-NLS-1$
+              final IFile lsFile = folder.getFile( "lengthSection.gml" ); //$NON-NLS-1$
 
               /* delete the existing length section file */
               if( lsFile.exists() )
                 lsFile.delete( true, true, new NullProgressMonitor() );
 
-              File lsObsFile = lsFile.getLocation().toFile();
+              final File lsObsFile = lsFile.getLocation().toFile();
 
               GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
 
               // if there is already a length section document, delete it
-              for( IResultMeta child : children )
+              for( final IResultMeta child : children )
               {
                 if( child instanceof IDocumentResultMeta )
                 {
-                  IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                  final IDocumentResultMeta docResult = (IDocumentResultMeta) child;
                   if( docResult.getDocumentType() == DOCUMENTTYPE.lengthSection )
                   {
                     stepResult.removeChild( docResult );
@@ -286,8 +285,8 @@ public class ConfigureLengthSectionWizard extends Wizard
                   }
                 }
               }
-              BigDecimal min = new BigDecimal( 0 );
-              BigDecimal max = new BigDecimal( 0 );
+              final BigDecimal min = new BigDecimal( 0 );
+              final BigDecimal max = new BigDecimal( 0 );
               ResultMeta1d2dHelper.addDocument( stepResult, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.20"), Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.21"), IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
             else
@@ -297,7 +296,7 @@ public class ConfigureLengthSectionWizard extends Wizard
             monitor.worked( 1 );
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
           return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard.24") ); //$NON-NLS-1$
@@ -333,9 +332,9 @@ public class ConfigureLengthSectionWizard extends Wizard
 
   }
 
-  private GM_TriangulatedSurface getSurface( IDocumentResultMeta docResult )
+  private GM_TriangulatedSurface getSurface( final IDocumentResultMeta docResult )
   {
-    GM_TriangulatedSurface surface = null;
+    final GM_TriangulatedSurface surface = null;
 
     final IPath docPath = docResult.getFullPath();
     if( docPath == null )
@@ -357,7 +356,7 @@ public class ConfigureLengthSectionWizard extends Wizard
       if( geometryProperty instanceof GM_TriangulatedSurface )
         return (GM_TriangulatedSurface) geometryProperty;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

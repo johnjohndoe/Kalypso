@@ -306,7 +306,6 @@ public class GenerateDifferenceResultTinWizardPage extends WizardPage implements
 
     stationSpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

@@ -25,16 +25,16 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
 /**
  * Opens the feature view on a given template
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class OpenFeatureViewCommandHandler extends AbstractHandler implements IExecutableExtension
@@ -46,7 +46,6 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -78,19 +77,19 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
         final UIJob job = new UIJob( Messages.getString("org.kalypso.kalypso1d2d.pjt.actions.OpenFeatureViewCommandHandler.3") + file.getName() ) //$NON-NLS-1$
         {
           @Override
-          public IStatus runInUIThread( IProgressMonitor monitor )
+          public IStatus runInUIThread( final IProgressMonitor monitor )
           {
             try
             {
-              Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
+              final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
 
-              URL urlContext = ResourceUtilities.createURL( file );
+              final URL urlContext = ResourceUtilities.createURL( file );
 
               featureView.setTemplate( template, urlContext, null, null, null );
 
               return Status.OK_STATUS;
             }
-            catch( Throwable e )
+            catch( final Throwable e )
             {
               return StatusUtilities.statusFromThrowable( e );
             }
@@ -115,7 +114,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
   {
     if( data instanceof Map )
     {
-      final Map parameterMap = (Map) data;
+      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_resource = (String) parameterMap.get( PARAM_RESOURCE );
     }
   }

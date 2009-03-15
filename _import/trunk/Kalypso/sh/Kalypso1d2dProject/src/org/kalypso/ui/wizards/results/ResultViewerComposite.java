@@ -75,7 +75,7 @@ public class ResultViewerComposite
 
   private Object[] m_checkedElements;
 
-  public ResultViewerComposite( IResultMeta resultRoot, ViewerFilter filter, ViewerComparator comparator, IThemeConstructionFactory factory )
+  public ResultViewerComposite( final IResultMeta resultRoot, final ViewerFilter filter, final ViewerComparator comparator, final IThemeConstructionFactory factory )
   {
     m_resultRoot = resultRoot;
     m_filter = filter;
@@ -112,7 +112,6 @@ public class ResultViewerComposite
 
     m_treeViewer.addCheckStateListener( new ICheckStateListener()
     {
-      @SuppressWarnings("synthetic-access")
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();
@@ -136,7 +135,6 @@ public class ResultViewerComposite
     return panel;
   }
 
-  @SuppressWarnings("unchecked")
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultMetaInfoViewer resultViewer )
   {
     resultViewer.setInput( selection.getFirstElement() );
@@ -147,7 +145,7 @@ public class ResultViewerComposite
     m_treeViewer.setSubtreeChecked( resultMeta, isChecked );
   }
 
-  public void setResultRoot( IResultMeta resultRoot )
+  public void setResultRoot( final IResultMeta resultRoot )
   {
     m_resultRoot = resultRoot;
 
@@ -174,7 +172,7 @@ public class ResultViewerComposite
     return m_treeViewer;
   }
 
-  public void setInitialCheckedElements( Object[] checkedElements )
+  public void setInitialCheckedElements( final Object[] checkedElements )
   {
     m_checkedElements = checkedElements;
   }

@@ -296,7 +296,6 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     buttonKmValues.setText( Messages.getString("org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizardPage.11") ); //$NON-NLS-1$
     buttonKmValues.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -318,7 +317,6 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
     stationSpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -458,9 +456,9 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     {
       final Feature riverFeature = (Feature) o;
 
-      IPropertyType[] properties = riverFeature.getFeatureType().getProperties();
+      final IPropertyType[] properties = riverFeature.getFeatureType().getProperties();
 
-      for( IPropertyType pt : properties )
+      for( final IPropertyType pt : properties )
       {
 
         if( pt.getQName().getLocalPart().equals( m_riverNameField ) )
@@ -496,8 +494,8 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final IPropertyType fromStationPropertyType = (IPropertyType) selFrom.getFirstElement();
     final IPropertyType toStationPropertyType = (IPropertyType) selTo.getFirstElement();
 
-    StructuredSelection selection = (StructuredSelection) m_comboRiverLineName.getSelection();
-    String selectedRiverName = (String) selection.getFirstElement();
+    final StructuredSelection selection = (StructuredSelection) m_comboRiverLineName.getSelection();
+    final String selectedRiverName = (String) selection.getFirstElement();
 
     return new LengthSectionParameters( m_riverFeatures, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, selectedRiverName, new BigDecimal( m_stationWidth ) );
   }
