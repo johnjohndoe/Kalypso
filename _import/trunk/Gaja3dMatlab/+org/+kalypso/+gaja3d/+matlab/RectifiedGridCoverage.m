@@ -293,13 +293,10 @@ classdef RectifiedGridCoverage < handle
 
                 % sort by x-coordinate
                 X = sort(points(:,1));
-                this.minx = min(X);
-                maxx = max(X);
+                
                 % sort by y-coordinate
                 Y = sort(points(:,2));
-                this.miny = min(Y);
-                maxy = max(Y);
-
+                
                 diffX = diff(X);
                 rowCoords = X([true; diffX~=0]);
                 rowSpacings = diff(rowCoords);
@@ -310,15 +307,25 @@ classdef RectifiedGridCoverage < handle
                 % parse inputs
                 p = inputParser;
                 p.KeepUnmatched = true;
-                p.addParamValue('gridx', @(x)colSpacings(1));
-                p.addParamValue('gridy', @(x)rowSpacings(1));
+                p.addParamValue('gridx', colSpacings(1));
+                p.addParamValue('gridy', rowSpacings(1));
                 p.parse(varargin{:});
-            
+                
                 this.dy = p.Results.gridy;
                 this.dx = p.Results.gridx;
 
-                rows = (maxy - this.miny) / this.dy + 1;
-                cols = (maxx - this.minx) / this.dx + 1;
+                % correct by half cell size
+                this.minx = min(X) - (this.dx / 2);
+                this.miny = min(Y) - (this.dy / 2);
+                
+                maxx = max(X) - (this.dx / 2);
+                maxy = max(Y) - (this.dy / 2);
+
+                diffx = maxx - this.minx;
+                diffy = maxy - this.miny;
+                
+                rows = diffy ./ this.dy + 1;
+                cols = diffx ./ this.dx + 1;
             else
                 rows = 0;
                 cols = 0;
@@ -335,6 +342,8 @@ classdef RectifiedGridCoverage < handle
             rangey = this.miny:this.dy:maxy;
             [X, Y] = meshgrid(rangex, rangey);
             
+            points(:,1) = points(:,1) - (this.dx / 2);
+            points(:,2) = points(:,2) - (this.dy / 2);
             pcount = size(points, 1);
             idx = 1;
             for y=1:cols
