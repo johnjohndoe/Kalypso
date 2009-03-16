@@ -90,7 +90,6 @@
          <file>$(PROJECTDIR)/jai_core.jar</file>
          <file>$(PROJECTDIR)/jts-1.10.jar</file>
          <file>$(PROJECTDIR)/jai_codec.jar</file>
-         <file>$(PROJECTDIR)/jts-1.8.jar</file>
          <file>$(PROJECTDIR)/geotiff-jai.jar</file>
          <file>$(PROJECTDIR)/vecmath.jar</file>
       </additional_files>
