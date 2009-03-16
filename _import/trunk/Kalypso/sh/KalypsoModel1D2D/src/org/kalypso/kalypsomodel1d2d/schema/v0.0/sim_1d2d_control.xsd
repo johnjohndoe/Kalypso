@@ -811,6 +811,11 @@ uncheckt: absolute Änderungen als Konvergenzkriterien verwenden
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Relaxationsfaktor</xs:label>
+								<xs:tooltip>Der Relaxationsfaktor für stationäre Berechnung</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Relaxationsfaktor</xs:label>
+								<xs:tooltip>Der Relaxationsfaktor für stationäre Berechnung</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>

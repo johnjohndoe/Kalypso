@@ -56,7 +56,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -76,13 +78,12 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 
 /**
- *
+ * 
  * @author Patrice Congo
  * @author Madanagopal
- *
+ * 
  */
 public class ApplyElevationWidget extends AbstractDelegateWidget implements IWidgetWithOptions
 {
@@ -100,8 +101,8 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
   public ApplyElevationWidget( )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-    m_toolTipRendererDesc.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.14") ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.1" ), new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+    m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.14" ) ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
@@ -134,8 +135,9 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       if( theme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
-        final QName qName = ft.getFeatureType().getQName();
-        if( qName.equals( IFE1D2DNode.QNAME ) )
+        final IFeatureType ftp = ft.getFeatureType();
+        final QName qName = ftp == null ? null : ftp.getQName();
+        if( IFE1D2DNode.QNAME.equals( qName ) ) 
         {
           final IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
           fts[0] = ft;
@@ -354,7 +356,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
     final Rectangle bounds = mapPanel.getScreenBounds();
     final String delegateTooltip = getDelegate().getToolTip();
 
-    m_toolTipRendererDesc.setTooltip( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.16") + delegateTooltip ); //$NON-NLS-1$
+    m_toolTipRendererDesc.setTooltip( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget.16" ) + delegateTooltip ); //$NON-NLS-1$
     m_toolTipRendererDesc.paintToolTip( new Point( 5, bounds.height - 5 ), g2, bounds );
   }
 

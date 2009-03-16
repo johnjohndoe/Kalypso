@@ -165,8 +165,8 @@
 							</gft:enabledOperation>
 						</gft:validatorlabel>
 
-						<gft:label text="Relaxationsfaktor" visible="true"
-							tooltip="Der Relaxationsfaktor für stationäre Berechnung" style="SWT.NONE">
+						<gft:label property="c1d2d:_steadyBC" visible="true"
+							 style="SWT.NONE">
 							<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 								grabExcessHorizontalSpace="false" />
 							<gft:enabledOperation>
@@ -177,7 +177,8 @@
 								</ogc:PropertyIsLike>
 							</gft:enabledOperation>
 						</gft:label>
-						<gft:combo property="c1d2d:_steadyBC" tooltip="Der Relaxationsfaktor für stationäre Berechnung"
+						
+						<gft:combo property="c1d2d:_steadyBC" 
 							style="SWT.BORDER">
 							<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 							<gft:enabledOperation>

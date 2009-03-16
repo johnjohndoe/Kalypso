@@ -6,21 +6,21 @@
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
-	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+	<gft:label property="gml:name"  visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER">
+	<gft:text editable="true" property="gml:name" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
 	<gft:validatorlabel property="gml:name" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+	<gft:label property="gml:description"  visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER">
+	<gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
 			heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
@@ -42,7 +42,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label text="Profil" visible="true" tooltip="Referenzierte Profil" style="SWT.NONE">
+	<gft:label property="wb1d2d:profileMember" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -55,11 +55,11 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label text="Gefälle" visible="true" tooltip="Angabe des Gefälles." style="SWT.NONE">
+	<gft:label property="wb1d2d:slope" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="wb1d2d:slope" tooltip="Gefälle" style="SWT.BORDER">
+	<gft:text editable="true" property="wb1d2d:slope" style="SWT.BORDER">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
 			grabExcessHorizontalSpace="true" />
 		<gft:format>%.4f</gft:format>
