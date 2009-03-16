@@ -810,16 +810,16 @@ classdef Gaja3D < handle
             %    nodeCount = nodeCount + 1;
             %end
             %segmentsMatrixFinal = [segmentsMatrixFinal; nodeCount first];
-            nodeCount = numel(polyX);
             
             breaklines = this.breaklinesMerged;
-
+            nodeCount = numel(polyX);
+            nodeCount = nodeCount + 1;
+            
             % clip breaklines that are too close to outer boundary (20 m)
             % EXPERIMENTAL
             %[outerClipX, outerClipY] = bufferPolygon(boundariesMerged.getX, boundariesMerged.getY, -20);
             %outerClip = org.kalypso.gaja3d.matlab.Polygon(outerClipX, outerClipY);
             %breaklines = breaklines.clip(outerClip);
-            
             for i=1:numel(breaklines)
                 lineX = breaklines(i).getX();
                 lineY = breaklines(i).getY();
