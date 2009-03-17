@@ -47,15 +47,15 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.extension.IKalypsoModule;
-import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
-import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.project.database.client.extension.IKalypsoModulePageHandler;
+import org.kalypso.project.database.client.extension.IKalypsoModuleWelcomePageHandler;
 
 /**
  * @author Dirk Kuch
@@ -98,7 +98,7 @@ public class WelcomePageIndexComposite extends Composite
     final ImageCanvas2 mainCanvas = new ImageCanvas2( this, SWT.NO_REDRAW_RESIZE );
     mainCanvas.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final IKalypsoModule[] extensions = KalypsoAFGUIFrameworkPlugin.getKalypsoModules();
+    final IKalypsoModule[] extensions = KalypsoProjectDatabaseClient.getKalypsoModules();
     for( final IKalypsoModule module : extensions )
     {
       final IKalypsoModuleWelcomePageHandler handler = module.getWelcomePageHandler();

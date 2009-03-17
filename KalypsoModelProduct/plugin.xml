@@ -25,7 +25,7 @@
                value="etc/applicationicons/icon_16.gif,etc/applicationicons/icon_32.gif,etc/applicationicons/icon_48.gif,etc/applicationicons/icon_64.gif,etc/applicationicons/icon_128.gif"/>
          <property
                name="startupMessageRect"
-               value="5,200,390,15"/>
+               value="4,200,390,15"/>
          <property
                name="startupForegroundColor"
                value="000000"/>

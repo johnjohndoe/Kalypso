@@ -55,8 +55,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IntroPart;
-import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.afgui.extension.IKalypsoModulePageHandler;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
@@ -64,6 +62,8 @@ import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.model.product.ui.ModuleEnteringPageComposite;
 import org.kalypso.model.product.ui.WelcomePageIndexComposite;
+import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.project.database.client.extension.IKalypsoModulePageHandler;
 
 /**
  * @author Dirk Kuch
@@ -113,9 +113,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
   public void update( )
   {
     if( m_contentArea.isDisposed() )
-    {
       return;
-    }
 
     if( m_contentClient != null )
     {
