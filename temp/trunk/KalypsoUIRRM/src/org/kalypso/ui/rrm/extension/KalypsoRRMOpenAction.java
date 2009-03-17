@@ -52,7 +52,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
