@@ -10,13 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.afgui.extension.IKalypsoModule;
-import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.afgui.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
-import org.kalypso.afgui.extension.INewProjectWizard;
-import org.kalypso.afgui.extension.IProjectDatabaseFilter;
-import org.kalypso.afgui.extension.IProjectHandler;
+import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -25,10 +19,15 @@ import org.kalypso.model.wspm.tuhh.ui.wizards.DemoProjectWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
+import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
+import org.kalypso.project.database.client.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.IProjectHandler;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
-
   protected static final Image IMG = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_no.gif" ) ); //$NON-NLS-1$
 
   protected static final Image IMG_HOVER = new Image( null, KalypsoWspmTuhhModule.class.getResourceAsStream( "icons/wspm_hover.gif" ) ); //$NON-NLS-1$

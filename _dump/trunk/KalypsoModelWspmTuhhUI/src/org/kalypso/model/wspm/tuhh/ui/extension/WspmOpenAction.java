@@ -55,10 +55,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.intro.IIntroManager;
-import org.kalypso.afgui.extension.IKalypsoProjectOpenAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
+import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
 
 /**
  * @author kuch
