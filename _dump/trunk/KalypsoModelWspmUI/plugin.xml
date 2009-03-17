@@ -514,19 +514,6 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="menu:org.kalypso.map.outline.GisMapEditor?before=theme">
-			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-		
    		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" style="push">
 				<visibleWhen checkEnabled="false">
