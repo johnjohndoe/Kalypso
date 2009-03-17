@@ -1,18 +1,11 @@
 package org.kalypso.afgui;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -22,8 +15,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
-import org.kalypso.afgui.extension.IKalypsoModule;
-import org.kalypso.afgui.extension.IKalypsoModuleEnteringPageHandler;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.IScenario;
@@ -33,7 +24,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
@@ -51,9 +41,6 @@ import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
-  private final static String KALYPSO_MODULES_EXTENSION_POINT = "org.kalypso.afgui.kalypsoModule"; //$NON-NLS-1$
-
-  private static List<IKalypsoModule> KALYPSO_MODULES = null;
 
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.afgui"; //$NON-NLS-1$
@@ -172,7 +159,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   public void stop( final BundleContext context ) throws Exception
   {
     if( m_activeWorkContext != null )
+    {
       m_activeWorkContext.removeActiveContextChangeListener( m_activeContextChangeListener );
+    }
 
     if( PlatformUI.isWorkbenchRunning() )
     {
@@ -281,59 +270,5 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       job.setUser( true );
       job.schedule();
     }
-  }
-
-  /**
-   * @return list of feature binding handlers, handling a special featureType qname
-   */
-  public synchronized static IKalypsoModule[] getKalypsoModules( )
-  {
-    // fill binding map
-    if( KALYPSO_MODULES == null )
-    {
-
-      KALYPSO_MODULES = new ArrayList<IKalypsoModule>();
-      /* get extension points */
-      final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( KALYPSO_MODULES_EXTENSION_POINT );
-
-      for( final IConfigurationElement element : elements )
-      {
-        try
-        {
-          final String pluginid = element.getContributor().getName();
-          final Bundle bundle = Platform.getBundle( pluginid );
-          final Class< ? extends IKalypsoModule> featureClass = bundle.loadClass( element.getAttribute( "module" ) ); //$NON-NLS-1$
-          final Constructor< ? extends IKalypsoModule> constructor = featureClass.getConstructor();
-
-          final IKalypsoModule instance = constructor.newInstance();
-          KALYPSO_MODULES.add( instance );
-        }
-        catch( final Throwable e )
-        {
-          e.printStackTrace();
-        }
-      }
-
-      final Comparator<IKalypsoModule> comparator = new Comparator<IKalypsoModule>()
-      {
-        @Override
-        public int compare( final IKalypsoModule o1, final IKalypsoModule o2 )
-        {
-          final IKalypsoModuleEnteringPageHandler p1 = o1.getModuleEnteringPage();
-          final IKalypsoModuleEnteringPageHandler p2 = o2.getModuleEnteringPage();
-
-          final int compare = p1.getPriority().compareTo( p2.getPriority() );
-          if( compare == 0 )
-            return p1.getHeader().compareTo( p2.getHeader() );
-
-          return compare;
-        }
-      };
-
-      Collections.sort( KALYPSO_MODULES, comparator );
-    }
-
-    return KALYPSO_MODULES.toArray( new IKalypsoModule[] {} );
   }
 }
