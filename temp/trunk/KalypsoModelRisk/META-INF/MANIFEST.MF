@@ -15,7 +15,8 @@ Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.simulation.ui;bundle-version="0.0.1",
  org.kalypso.project.database.client;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.risk.model.actions.dataImport.waterdepth,
+Export-Package: org.kalypso.risk.extension,
+ org.kalypso.risk.model.actions.dataImport.waterdepth,
  org.kalypso.risk.model.operation,
  org.kalypso.risk.model.schema,
  org.kalypso.risk.model.schema.binding,
