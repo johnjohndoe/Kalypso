@@ -1,3 +1,4 @@
+!     Last change:  MD   19 Mar 2009    1:03 pm
 subroutine PipeSurfaceConnectionQs 
 
   use blk10mod, only: maxps, PipeSurfConn, ncorn, area, maxn
@@ -139,7 +140,7 @@ function PipeSurfConnFlow (he_upper, he_lower, manh) result (flow)
   PS1 = pipeMaximum (he_upper.total, he_lower.total, he_upper.bedLevel, manh.length, lambda, manh.diameter, InflowLoss, OutflowLoss)
   
   if (he_upper.total < he_lower.total) then
-    flow = PS1 * -1
+    flow = PS1 * (-1.0)
   else
   
     !Calculate mue correction
