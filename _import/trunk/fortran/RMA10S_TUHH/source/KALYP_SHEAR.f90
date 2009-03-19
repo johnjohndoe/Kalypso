@@ -1,4 +1,4 @@
-!     Last change:  MD    6 Nov 2008    5:23 pm
+!     Last change:  MD   13 Jan 2009    5:59 pm
 !----------------------------------------------------------------------
 SUBROUTINE KALYP_SHEAR
 
@@ -28,24 +28,41 @@ REAL(KIND=8) :: VELS
 
 
 !---------------------------------------------------
+!MD: Basis-Variable: Wasserdichte
+!MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+!     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+ROAVG=1.935
+IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
 DO N=1,NPM
   IF (LSS .GT. 0) THEN
+    IF (VEL(6,N).ge.0.) THEN
+      GAWND(N)=(VEL(6,N)/1000.)*(1.-(ROAVG/GACND(N))) + ROAVG
+    Else
+      GAWND(N)= ROAVG
+    END IF
     GAW=GAWND(N)
   Endif
   IF(GAW.LE.0.) then
-    GAW=1000.
+    GAW=ROAVG
   END IF
 
   K1=N
   !MD: Deactivate 3d option!
   !MD:  IF(NDEP(N) .GT. 1) K1=NREF(N)+NDEP(N)-1
 
-  VELS=SQRT(VEL(1,K1)**2.0 + VEL(2,K1)**2.0)
-  UST(K1)=SQRT(FFACT_KN(N)) * VELS
+  if(wsll(N) .ge. ao(N)) then !Nur wenn knoten nass!
+    VELS=SQRT(VEL(1,K1)**2.0 + VEL(2,K1)**2.0)
+    UST(K1)=SQRT(FFACT_KN(N)) * VELS
 
-  IF(VELS.EQ.0. .or. VEL(3,K1).lt.0.01) THEN
+    IF(VELS.EQ.0. .or. VEL(3,K1).lt.0.01) THEN
+      UST(K1)=0.0
+    ENDIF
+  else !Wenn knoten trocken!
     UST(K1)=0.0
-  ENDIF
+  endif
+
   BSHEAR(K1)=UST(K1)*UST(K1)*GAW
 
   IF(IT .EQ. 1) THEN
