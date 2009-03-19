@@ -1,4 +1,4 @@
-C     Last change:  MD    5 Nov 2008    3:23 pm
+C     Last change:  MD   14 Jan 2009    6:29 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -34,39 +34,46 @@ C
 C******************************************************************
 C
 cipk  set IBNK =0 for the moment until bank shear is implemented
+
+!MD: Basis-Variable: Wasserdichte
+      !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+      !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
       CALL GINPT(LIN,ID,DLIN)
 
-	IF(ID(1:4) .EQ. 'CSS1') THEN
+      IF(ID(1:4) .EQ. 'CSS1') THEN
         READ(DLIN,'(I8,5F8.5)') ISVL,VSST,CRCON1,VSS1,CRCON2,EXP2
-	ELSE
+      ELSE
         WRITE(75,*) 'EXPECTED CSS1 DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED CSS1 DATA - NONE FOUND'
         STOP
-	ENDIF
-C      WRITE(LOUT,6032)
+      ENDIF
+
+C     WRITE(LOUT,6032)
       IF(ISVL .EQ. 2) THEN
         VSK=VSS1/CRCON1**EXP2
         VSS2=VSK*CRCON2**EXP2
-C
         WRITE(LOUT,6033)
         WRITE(LOUT,6034) CRCON1,VSS1
         WRITE(LOUT,6035) CRCON1,CRCON2,VSK,EXP2
         WRITE(LOUT,6036) CRCON2,VSS2
-C
       ELSE
-
         WRITE(LOUT,6037) VSST*1000.
-
       ENDIF
 
       CALL GINPT(LIN,ID,DLIN)
-	IF(ID(1:4) .EQ. 'CSS2') THEN
+
+      IF(ID(1:4) .EQ. 'CSS2') THEN
         READ (DLIN,'(3F8.0)') VK,RKS,D90
-	ELSE
+      ELSE
         WRITE(75,*) 'EXPECTED CSS2 DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED CSS2 DATA - NONE FOUND'
         STOP
-	ENDIF
+      ENDIF
+
       IF (VK .EQ. 0)  VK=0.4
       WRITE (LOUT,6038) VK, RKS,D90
 
@@ -80,14 +87,15 @@ C.................................................................
 CIPK SEP05
       NN=NN+1	      
       N1=1
-  275 CONTINUE      
+  275 CONTINUE
+        
       IF(ID(1:4) .EQ. 'CSMT') THEN
         N9=N1+8
         READ(DLIN,'(9I8)') (IMTREF(I),I=N1,N9)
         N1=N1+9
         CALL GINPT(LIN,ID,DLIN)
         GO TO 275
-	ELSEIF(ID(1:4) .EQ. 'CSS3') THEN
+      ELSEIF(ID(1:4) .EQ. 'CSS3') THEN
         READ(DLIN,5001)NLAYTM,TAUCDM,GAWM,GABM
      +     ,TTLAYM ,GACM ,ERCM ,UNM
 
@@ -102,12 +110,12 @@ CIPK SEP05
       ENDIF
 
 crrr aug97
-      if (NLAYTM  .GT. MXSEDLAY ) THEN
-         WRITE(LOUT,'(/A,I3)')  
+      if (NLAYTM  .GT. MXSEDLAY) THEN
+        WRITE(LOUT,'(/A,I3)')
      &      ' Too many cohesive sediment layers, NLAYT =', NLAYTM 
-         WRITE(LOUT,'(/A)')  
+        WRITE(LOUT,'(/A)')
      &      ' Increase dimension MLAYER '
-         STOP ' Too many cohesive sediment layers'
+        STOP ' Too many cohesive sediment layers'
       ENDIF
    
       DO K=1,NLMTP
@@ -123,11 +131,15 @@ crrr aug97
       WRITE(LOUT,6001)TAUCDM
       WRITE(LOUT,6002)
 
-      !MD Gewicht des Sediments pro Fläche WEGTM
-      WEGTM =TTLAYM *(GABM -GAWM )*GACM /
-     +             (GACM -GAWM )
-      !MD Achtung: Annahme hier, dass GAWM = Suspensionsdichte
-      !MD      gleich der Wasserdichte ist (nicht ganz richtig!)
+      !MD:  NEUE Trocken-Rohdichte [kg/m3] fuer Gewicht des
+      !     Sediments pro Fläche WEGTM
+      WEGTM =TTLAYM *(GABM -ROAVG)*GACM/ (GACM -ROAVG)
+      !MD GAWM wurde mit Wasserdichte ersetzt
+
+      !MD: ALte Berechnung Deaktiviert: 13.01.2009
+      !MD  WEGTM =TTLAYM *(GABM -GAWM )*GACM / (GACM -GAWM )
+      !MD  Achtung: Annahme dass GAWM = Suspensionsdichte
+      !MD  gleich Wasserdichte ist (nicht richtig!)
 
       WRITE(LOUT,6020)NLAYTM ,GAWM ,UNM ,GABM ,TTLAYM 
      +,GACM ,WEGTM ,ERCM 
@@ -150,10 +162,14 @@ CIPK MAY06   ADD EROSTM
       ENDDO
 
       DO I=1,NLAYTM
-        !MD:  Berechnung der Trocken-Rohdichte [kg/m3]
-        GADM(I)=(GBM(I)-GAWM )*GACM /(GACM -GAWM )
-        !MD Achtung: Annahme hier, dass GAWM = Suspensionsdichte
-        !MD      gleich der Wasserdichte ist (nicht ganz richtig!)
+        !MD:  NEUE Berechnung der Trocken-Rohdichte [kg/m3]
+        GADM(I)=(GBM(I)-ROAVG)*GACM /(GACM -ROAVG)
+        !MD GAWM wurde mit Wasserdichte ersetzt
+
+        !MD:  ALte Berechnung Deaktiviert: 13.01.2009
+        !MD  GADM(I)=(GBM(I)-GAWM )*GACM /(GACM -GAWM )
+        !MD  Achtung: Annahme dass GAWM = Suspensionsdichte
+        !MD  gleich Wasserdichte ist (nicht richtig!)
 
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
         IF(TLAYM(I) .EQ. 0.) THEN
@@ -164,21 +180,30 @@ CIPK MAY06   ADD EROSTM
       ENDDO
 
       DO N=1,NE
-        IF(IMAT(N) .GT. 0) THEN
+        !MD:  IF(IMAT(N) .GT. 0) THEN
+        !MD:  Layer auch fuer momentan trockene Elemente und Knoten!!
+        IF(IMAT(N) .NE. 0) THEN
           DO I=1,NLMTP
             IF(IMTREF(I) .EQ. 0  .AND.  I .GT. 1) GO TO 350
-            IF(IMTREF(I) .EQ. IMAT(N)  .OR.  IMTREF(I) .EQ. 0) THEN
+            !MD: IF(IMTREF(I) .EQ. IMAT(N)  .OR.  IMTREF(I) .EQ. 0) THEN
               DO JJ=1,NCORN(N)
                 J=NOP(N,JJ)
                 NLAYTND(J)=NLAYTM
                 TAUCDND(J)=TAUCDM
-                GAWND(J)=GAWM
                 UNND(J)=UNM
                 GABND(J)=GABM
                 TTLAYND(J)=TTLAYM 
                 GACND(J)=GACM
                 WEGTND(J)=WEGTM
                 ERCND(J)=ERCM
+                !MD: NEU Berechnung der Suspensionsdichte
+                IF (VEL(6,J).ge.0.) THEN
+                GAWND(J)=(VEL(6,J)/1000.)*(1.-(ROAVG/GACND(J))) + ROAVG
+                Else
+                  GAWND(J)= ROAVG
+                END IF
+                !MD: alte Vorgabe deaktiviert: 13.01.2009
+                !MD  GAWND(J)=GAWM
                 DO K=1,NLAYTM
                   SSND(J,K)=SSM(K)
                   GBND(J,K)=GBM(K)
@@ -188,7 +213,7 @@ CIPK MAY06   ADD EROSTM
                   EROST(J,K)=EROSTM(K)
                 ENDDO
               ENDDO
-            ENDIF
+            !MD: ENDIF
           ENDDO
   350     CONTINUE          
         ENDIF
@@ -210,9 +235,9 @@ cipk June 1996        WRITE(LOUT,6030) BNKCD,BNKGAB,BNKERC,BRKS
 cipk June 1996      ENDIF
 
       IF(ID(1:6) .NE. 'ENDSED') THEN
-	  WRITE(75,*) 'NO ENDSED DATA LINE FOUND'
-	  WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
-	  STOP
+	WRITE(75,*) 'NO ENDSED DATA LINE FOUND'
+	WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
+	STOP
       ENDIF
 C
       RETURN
