@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Jul 2008    5:19 pm
+!     Last change:  MD   14 Jan 2009   10:55 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -536,8 +536,6 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7049 format ('PS', 3i10)
 
 
-
-
 !--------------- deallocation section -----------------------------
 !NiS,apr06      to clean the memory, the arrays, allocated and only used
 !               in this subroutine, are deallocated again.
@@ -547,12 +545,99 @@ DEALLOCATE  (arc_tmp, arcmid)
 RETURN
 
 END SUBROUTINE write_KALYPSO
-
 !**********************************************************
 
 
+SUBROUTINE write_KALYP_Bed (bedout)
+
+!MD: character (LEN = 96), INTENT (inOUT) :: resultBed, inputBed
+USE BLK10mod
+USE BLK11mod
+USE PARAKalyps
+USE BlkDRmod
+USE BLKSEDMOD
+USE BLKSANMOD
+
+! local variables
+CHARACTER*256 LINE256
+CHARACTER (LEN = 96), INTENT (IN) :: bedout
+INTEGER:: IDX
+INTEGER:: istat      !Variable for I/O errors
+REAL(KIND=8):: SUMTHICK
+
+! ----------------------
+
+!NiS,apr06: Write informational the generated bed output name; Changed iout to Lout
+WRITE ( * , * ) ' '
+WRITE ( * , * ) 'Name der Modell-Ausgabedatei: ', TRIM(bedout)
+WRITE (Lout, * ) ' '
+WRITE (Lout, * ) 'Name der Modell-Ausgabedatei: ', TRIM(bedout)
+!-
+
+! WRITING PART --------------------------------------------------------------------------
+! Writing results in file
+OPEN (IKALYPSOFM, FILE = bedout, FORM = 'formatted', STATUS = 'REPLACE', IOSTAT = istat)
+if (istat /= 0) then
+  WRITE (*,3000) istat
+  stop
+end if
+
+
+WRITE(LINE256,'(A)') '  Node Bed Shear Bed-elev   SedMass  SumLayer SusLayer-Thickness '
+IDX = MAX(65,47+NLAYT*10) + 3
+
+IF (NLAYO(1) .GT. 0) THEN
+  WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
+ENDIF
+WRITE(IKALYPSOFM,'(/A)') LINE256(1:IDX+26)
+
+
+WRITE(LINE256,'(A,12I10)') '          (N/m2)    (m)       (Kg/m2)   (mm) ',&
+&                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
+WRITE(IKALYPSOFM,'(A)') LINE256
+
+
+
+DO NN=1,NPM
+  NLAYT=NLAYTND(NN)
+  !MD: Berechnung Gesamt-Layerdicke
+  SUMTHICK = 0.
+  DO L=1,NLAY(NN)
+    SUMTHICK = SUMTHICK + THICK(NN,L)
+  ENDDO
+
+  IF(NLAYO(NN) .GT. 0) THEN
+    DO L=1,NLAYO(NN)
+      SUMTHICK = SUMTHICK + THICKO(NN,L)
+    ENDDO
+  ENDIF
+
+  !MD: Ausgabe der Layerdicken
+  IF (NLAYT.GT.0 .OR. NLAYO(NN).GT.0) THEN
+    MLAYRS = NLAY(NN)
+    WRITE(IKALYPSOFM,'(I5,F10.4,F10.6, F10.2, 20F10.3)')  &
+       &          NN, BSHEAR(NN), AO(NN), TMSED(NN), SUMTHICK*1000.,&
+       &             (1000. * THICK(NN,L),L=1,NLAYT),&
+       &             (1000. * THICKO(NN,L),L=1,NLAYO(NN))
+  ENDIF
+Enddo
+
+
+CLOSE (IKALYPSOFM, STATUS='keep')
+
+!--------------- Formatdefinition: -----------------------------
+3000 format (1X, 'Opening output file failed. (IOSTAT =',I2,')',/ &
+     &        1X, 'Stopping Program...')
+
+
+
+END SUBROUTINE write_KALYP_Bed
+
+
+!**********************************************************
+
 SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
-           &                   resultName, inputName)
+           &                   resultName, inputName, resultBed, inputBed)
 
 implicit none
 INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
@@ -562,6 +647,8 @@ CHARACTER (LEN = 32), INTENT (IN)  :: inname, rstname
 character (len = *) , intent (in) :: outsuffix
 CHARACTER (LEN = 1), INTENT (IN)   :: prefix
 CHARACTER (LEN = 4), INTENT (IN)   :: sort
+!MD: new for kohesive Bed
+character (LEN = 96), INTENT (OUT) :: resultBed, inputBed
 
 ! ------------------------------------------------------------------------------------------
 ! NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
@@ -576,12 +663,17 @@ if (sort == 'inst' .or. sort == 'stat') then
 
       !output after steady state solution
       WRITE (resultName,'(a,a1,a)') 'steady', '.', outsuffix
+      !MD: new for kohesive Bed
+      WRITE (resultBed,'(a,a1,a)') 'steady', '.', 'bed'
 
       !if restarting, then particular name is used, otherwise not
       IF (restartUnit > 0) THEN
         WRITE (inputName,'(a)') rstname
+        !MD: new for kohesive Bed
+        WRITE (inputBed,'(a)') 'restart', '.', 'bed'
       ELSE
         WRITE (inputName,'(a)') 'none, new 2D-Calculation'
+        WRITE (inputBed,'(a)') 'none, new 2D-Calculation'
       ENDIF
 
     !for dynamic solution after calculated time step, that is not the first in current run
@@ -590,6 +682,10 @@ if (sort == 'inst' .or. sort == 'stat') then
       WRITE (inputName,'(a,i4.4,a1,a)')  prefix, timeStep, '.', outsuffix
       !Starting from the solution of time step before
       WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
+
+      !MD: new for kohesive Bed
+      WRITE (inputBed,'(a,i4.4,a1,a)')  prefix, timeStep, '.', 'bed'
+      WRITE (resultBed,'(a,i4.4,a1,a)') prefix, timeStep, '.', 'bed'
     ENDIF
 
   !after iteration step, if wanted
