@@ -1,4 +1,4 @@
-C     Last change:  MD    6 Nov 2008    5:23 pm
+C     Last change:  MD   13 Jan 2009   12:24 pm
 cipk last update JUNE 5 2006  add test marshing
 cipk last update MAY 30 2006  add test for zero thickness and correct NL
 cipk last update dec 21 2004 fix bug getting node at bed for averaging
@@ -46,6 +46,14 @@ C********************************************************************
 C    LAYERS ARE NUMBERED FROM BOTTOM TO TOP.
 C    CHECK IF TOP LAYER WILL ERODE.
 C
+
+!MD: Basis-Variable: Wasserdichte
+      !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+      !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
       DO NN=1,NPM
         N=NN
         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
@@ -53,16 +61,19 @@ CIPKSEP05
         NLAYT=NLAYTND(N)
         DO J=1,NLAYT
           SS(J)=SSND(N,J)
+
+          !MD:NEUE Berechnung der Trocken-Rohdichte Sus [kg/m3]
+          GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
           GAD(J)=GADND(N,J)
-CIPK MAY06          
+          !MD:NEUE Berechnung der Trocken-Rohdichte Sus [kg/m3]
+
           EROSTM(J)=EROST(N,J)
         ENDDO
                 
-       EDOT(N)=0.
-cipk mar00
-       edot(nn)=0.
+        EDOT(N)=0.
+        edot(nn)=0.
 cipk jun06  test for marshing
-       if(wsll(n) .lt. ao(n)) go to 100
+        if(wsll(n) .lt. ao(n)) go to 100
 
 !MD:  Entfernen einer zeitlichen Wichtung an dieser
 !MD:   Stelle! Konzept durchgängig gleich mit einwirkender
