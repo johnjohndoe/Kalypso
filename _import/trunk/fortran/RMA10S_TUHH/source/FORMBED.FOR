@@ -1,4 +1,4 @@
-C     Last change:  MD    6 Nov 2008    5:23 pm
+C     Last change:  MD   14 Jan 2009    1:03 pm
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -33,12 +33,20 @@ crrr aug97 add character lines
       CHARACTER*80  FMT
 C-
 !NiS,jul06: Consistent data types for variable passing
-      REAL(KIND=8) :: HTP
-      
+      REAL(KIND=8):: HTP
+      REAL(KIND=8):: SUMTHICK   
       integer (kind = 4) :: iprtf
 !-
 C-.....ASSIGN PROPER COEFS.....
 C-
+
+!MD: Basis-Variable: Wasserdichte
+      !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+      !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
       DO 350 NN=1,NPM
         N=NN
         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
@@ -52,12 +60,12 @@ CIPKSEP05
         ENDDO
         GAC=GACND(N)
         GAB=GABND(N)
+        !MD: NEU mit berechneter Suspensionsdichte aus SPROP
         GAW=GAWND(N)
         TAUCD=TAUCDND(N)
         WEGT=WEGTND(N)
-
         TH1=0.
-ccc      AT(NN)=0.
+ccc     AT(NN)=0.
 C
 C********************************************************************
 C
@@ -329,12 +337,12 @@ cipk apr97 add option
       IF (MOD(IT,IPRTF).NE.0  .AND. TET.NE.0.) THEN
 crrr aug97 revise print format and structure
         WRITE(LINE256,'(A)')
-     &  '  Node  Bed Shear  Bed-elev  Sed Dep  Sed Dep  New Layer Thick
-     +  ness (mm)'
-        IDX = MAX(65,45+NLAYT*10) + 1
-        IF (IDX .GT. 144) IDX = 144
+     &  '  Node Bed Shear Bed-elev   SedMass  SumLayer
+     + SusLayer-Thickness (mm)'
+        IDX = MAX(65,47+NLAYT*10) + 3
+
         IF (NLAYO(1) .GT. 0) THEN
-          WRITE(LINE256(IDX:IDX+26),'(A)') 'Old Layer Thickness (mm)'
+          WRITE(LINE256(IDX:IDX+26),'(A)') 'BedLayer-Thickness (mm) '
         ENDIF
         WRITE(LOUT,'(/A)') LINE256(1:IDX+26)
 
@@ -357,12 +365,24 @@ CIPKSEP05
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
            SS(J)=SSND(N,J)
+           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
+           GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
            GAD(J)=GADND(N,J)
+           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
            TLAY(J)=TLAYND(N,J)
          ENDDO
          GAC=GACND(N)
          GAB=GABND(N)
+
+         !MD NEU Berechnung der Suspensionsdichte
+         IF (VEL(6,N).ge.0.) THEN
+           GAWND(N)=(VEL(6,N)/1000.)*(1.-(ROAVG/GACND(N))) + ROAVG
+         Else
+           GAWND(N)= ROAVG
+         END IF
          GAW=GAWND(N)
+         !MD NEU Berechnung der Suspensionsdichte
+
          TAUCD=TAUCDND(N)
          WEGT=WEGTND(N)
 C Calculate total dry mass of new bed
@@ -375,11 +395,13 @@ C Calculate total dry mass of new bed
 cipk jan05
          IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
-             GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
+             !MD: GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
+             GADLN=(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
+             !MD:  NEUE Berechnung der Trocken-Rohdichte Bed [kg/m3]
              TVN = TVN + THICKO(NN,L)*GADLN
              SUMTHICK = SUMTHICK + THICKO(NN,L)
            ENDDO
-	   ENDIF
+	 ENDIF
 
 C
 C Print layer info
@@ -392,7 +414,7 @@ cipk jan99     &          N, BSHEAR(N), TVN, SUMTHICK*1000.,
 cipk jan99     &             (1000. * THICK(NN,L),L=1,NLAYT),
 cipk jan99     &             (1000. * THICKO(NN,L),L=1,NLAYO(N))
 cipk jan99         ENDIF
-         IF (NLAY(NN) .GT. 0 .OR. NLAYO(NN) .GT. 0) THEN
+         IF (NLAYT .GT. 0 .OR. NLAYO(NN) .GT. 0) THEN
 c             SUMTHICK = BEDEL(N) - AO(N)
              MLAYRS = NLAY(NN)
              WRITE(LOUT,'(I5,F10.4,F10.6, F10.2, 20F10.3)')
