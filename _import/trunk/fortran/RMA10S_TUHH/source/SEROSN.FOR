@@ -1,4 +1,4 @@
-C     Last change:  MD    6 Nov 2008    5:24 pm
+C     Last change:  MD   13 Jan 2009    5:50 pm
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -47,29 +47,49 @@ crrr aug97 new looping
 !MD: Schleife ueber alle Layer NLAYT, in der Wassersaule
 !MD:  Sortierung der Daten "Suspendiertes Material"
 !......................................................
+
+!MD: Basis-Variable: Wasserdichte
+      !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+      !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
       DO 500 N=1,NPM
-       IF(IMID(N,1) .EQ. 0) THEN
-         NN = N
-         IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
+        IF(IMID(N,1) .EQ. 0) THEN
+          NN = N
+          IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
 CIPKSEP05
-        NLAYT=NLAYTND(N)
-        DO J=1,NLAYT
-          SS(J)=SSND(N,J)
-          GAD(J)=GADND(N,J)
-        ENDDO
-        ERC=ERCND(N)
-        GAC=GACND(N)
-        GAB=GABND(N)
-        GAW=GAWND(N)
+          NLAYT=NLAYTND(N)
+          DO J=1,NLAYT
+            SS(J)=SSND(N,J)
+
+            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
+            GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
+            GAD(J)=GADND(N,J)
+            !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
+          ENDDO
+          ERC=ERCND(N)
+          GAC=GACND(N)
+          GAB=GABND(N)
+
+          !MD NEU Berechnung der Suspensionsdichte
+          IF (VEL(6,N).ge.0.) THEN
+            GAWND(N)=(VEL(6,N)/1000.)*(1.-(ROAVG/GACND(N))) + ROAVG
+          Else
+            GAWND(N)= ROAVG
+          END IF
+          GAW=GAWND(N)
+          !MD NEU Berechnung der Suspensionsdichte
                          
-         NL = NLAYT
+          NL = NLAYT
 crr aug97 new units for temal2
-!MD:     TEMAL2 = SERAT(NN)/1000.  :never used!!
+!MD:      TEMAL2 = SERAT(NN)/1000.  :never used!!
 cipk mar00
-         serat(n)=0.
-         SERAT(NN) = 0.
+          serat(n)=0.
+          SERAT(NN) = 0.
 cipk jun06  test for marshing
-         if(wsll(n) .lt. ao(n)) go to 500
+          if(wsll(n) .lt. ao(n)) go to 500
 
 cipk mar06         
          seratnewl=0
@@ -140,7 +160,12 @@ c             newval=mass from full layers+new layer
               seratold1 = SMVAL(N,L)*(BSHEAR(NN)/SSTO(N,L)-1.)
 c             seratold1 is rate for this layer assuming full erosion              
               OLDEROD=SERATOLD1*DELTREM
-              GADLN = (GBO(N,L)-GAW)*GAC/(GAC-GAW)
+
+              !MD: NEUE Berechnung der Trocken-Rohdichte BETT[kg/m3]
+              GADLN =(GBO(N,L)-ROAVG)*GAC/(GAC-ROAVG)
+              !MD: GADLN =(GBO(N,L)-GAW)*GAC/(GAC-GAW)
+              !MD: NEUE Berechnung der Trocken-Rohdichte BETT [kg/m3]
+
               DTHKOLD = OLDEROD/GADLN
               BALOLD  = THICKO(N,L) - DTHKOLD
 c  rates for this layer computed  balold positive means all taken so finalize
