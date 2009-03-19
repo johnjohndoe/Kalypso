@@ -45,6 +45,8 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -451,5 +453,14 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
     parameterFeature.setProperty( QNAME_PROP_EXE_VERSION, version == null ? null : version.name() );
+  }
+
+  public IPath getResultFolder( )
+  {
+    final String calcCaseName = getName();
+    final Path path = new Path( String.format( "Ergebnisse/%s", calcCaseName ) );
+// "Ergebnisse/kollau-ist-HQ_5_neu";
+
+    return path;
   }
 }
