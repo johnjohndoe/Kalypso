@@ -1,4 +1,4 @@
-C     Last change:  MD    5 Nov 2008    4:14 pm
+C     Last change:  MD   13 Jan 2009   12:24 pm
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
 cipk last update apr 7 2000 correct interpolation function for 3-d
 cipk  last update Mar 14 2000 make shear stress linear
@@ -35,13 +35,31 @@ C    CHECK TO SEE IF SMOOTH OR ROUGH BED (RKS=0 MEANS SMOOTH)
 C   IF CONSTANTS ARE ZERO SET DEFAULT VALUES
 C......................................................................
       VK=0.4
-      IF(GAW .EQ. 0.) GAW=1000.
+      !MD: IF(GAW .EQ. 0.) GAW=1000.
       CON=2.3/VK
       IF(RKS .LE. 0.0001)THEN
 C......................................................................
 C          ****   SMOOTH BED   *****
 C......................................................................
+!MD: Basis-Variable: Wasserdichte
+!MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+!     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
         DO  N=1,NPM
+          IF (LSS .GT. 0) THEN
+            IF (VEL(6,N).ge.0.) THEN
+              GAWND(N)=(VEL(6,N)/1000.)*(1.-ROAVG/GACND(N)) + ROAVG
+            Else
+              GAWND(N)= ROAVG
+            END IF
+            GAW=GAWND(N)
+          Endif
+          IF(GAW.LE.0.) then
+            GAW=ROAVG
+          END IF
           !MD  use original data
           !MD: UN=XNU(N)
           !MD: IF(UN.EQ.0.) UN=1.142E-6
