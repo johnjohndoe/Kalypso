@@ -208,9 +208,9 @@ Version 1.0.2 (laufende Änderungen)
 
 --- Nico Schrage, 28.07.2008 (1.0.2alpha1)
 
-----------------------------------------------------------------------------------------------------
-28.07.2008 Branch 'update subroutines' was merged into the TRUNK. Merged revisions are 4957 to 5252.
-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
+-----------------------------------------------------------------------------------------------------
 
 Ziel-Version 1.1.0 (laufende Änderungen)
 -----------------------------------
@@ -555,44 +555,37 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 
 --- Nico Schrage, 07.11.2008 (RMAKalypso 1.1.0alpha7)
 
-081.) bugfix regarding kilometer in coef1dPoly
-082.) Enable shore line friction for Darcy-Weisbach; implemented in coef25.sub and coef25nt.sub. Is done analoguous to Chezy coefficient. (affects coef25nt.sub, coef25.sub)
-083.) Reactivate efpor in update, because after several tests it seems to be the correct way. Attention has to be payed to very steep perpendicular to 
-      the flow direction, because they cause convergence problems then. (affects update.sub)
-084.) Specifying used global variables from modules in particular, so developer knows, which variables are really used within subroutines, started for several subs, not finished at all.
-      Additionally updating subroutines from *.for to *.f90 partly. ...to be continued.
-085.) Error message for unsteady restart from nth step (n>1) with steady calculation activated before;logical mistake that is catched. (affects input.sub)
-086.) Get rid of some output frequency variables: Effects C5 and C6 lines (affects input.sub)
-087.) Increase default MR1 size for Pardiso from 200000 to 300000 (affects initl.sub
-088.) Boundary directio fix at 1D/2D transition (affects: LineTransitionCalc.sub)
-089.) Fix tree resistance to c_wr = 0.0, if energy slope is to small. (affects get_element_cwr.sub)
-090.) Bug fix for interpolation of elements in 1D, i.e. number of nodes for interpolated elements was not correct. (affects InterpolateProfs.sub)
---- committed ---
-
---- Nico Schrage, 09.01.2009 (released RMA·Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
-
-001.) Reduce exchange conditions at 1D2D junctions only to the proper values they as the transition type intends it.
-002.) Direction fix for boundary nodes in 1D2D line transition (affects BLINE.sub)
-003.) Comments and code updates (affects coef25nt.sub); Preperation of comparability of the coef2* subroutines to make them a unique subroutine controlling the different options
-004.) Update 1D2D-boundary exchange conditions and boundary conditions taken from the coef25.sub
-
---- committed ---
-
---- Nico Schrage, 29.01.2009 (RMAKalypso 1.1.1alpha1)
-
-005.) Add possibility of reading a node's dry/wet status for proper restarting
-006.) Increase accuracy of variables in *.2d file to minimize restart error. Problem is to prohibit mistakes with older models. That should be prevented.
-007.) Speed up calculation of velocity distribution. Restart file was used to get the correct water stages for the distribution calculation. Problem was that restart was read after preperation of
-      boundary conditions. This changed already months ago. Consequently this file reading that was pretty slow could be deleted.
-008.) Set all variables (including depth) of dry nodes to zero.
-
---- Nico Schrage, 04.02.2009 (RMAKalypso 1.1.1alpha2)
-
-009.) Introduce changes from coef25nt to the other coef2* subroutines: Goal is to make them comparable so the can be merged for reducing the amount of files.
-010.) Release notes into RMA·Kalypso console output
-
---- committed ---
-
---- Nico Schrage, 13.02.2009 (released RMA·Kalypso Version 1.1.1 build 13.02.2009 with filename: rma-kalypso_1.1.1_build20090213.exe)
-
-001.) 
+--- Monika Donner, 19.03.2009
+081.) Corrections for cohesive Sediment:
+      Using general formulations or definitions for densities:
+      --> Transfering the approach for water density in all cohesive
+      sediment calculations according to all SubR COEFxxx where 
+      water density ROAVG [kg/m^3] is defined as: ROAVG=516.*1.935
+      >> SubR SPROP, SEROSN, FORMBED, MEROSN, NEWBED, GETMAS, SHEAR
+         KALYPSO-SHEAR        
+082.) Corrections for cohesive Sediment:
+      Using general formulations for suspended-water density GAW in all cohesive
+      sediment calculations by using water density ROAVG, sediment density GACND
+      bzw. GAC (~2650 kg/m³) and suspended sediment concentration VEL(6,J)[mg/l]:     
+         GAW = (VEL(6,J)/1000.)*(1.-(ROAVG/GACND(J))) + ROAVG      
+      The option to define GAW by user in the Control-File is overwritten by
+      this new approach (>> SubR SPROP)
+      >> SubR SPROP, SEROSN, FORMBED, MEROSN, NEWBED, GETMAS, SHEAR
+         KALYPSO-SHEAR        
+083.) Corrections for cohesive Sediment:
+      Using general formulations for calculation the dry mass of suspended-sediment
+      WEGTM by using Layer-Thickness TTLAYM [m], bulk density GAB, water density ROAVG
+      and sediment density GACND bzw. GAC (~2650 kg/m³)in :          
+         WEGTM =TTLAYM *(GABM -ROAVG)*GACM/ (GACM -ROAVG)     
+      >> SubR SPROP, GETMAS,
+084.) Corrections for cohesive Sediment:
+      Using suspended-water density GAW for bed-shear-stress calculation. 
+      Water density or 1000. kg/m³ is deleted.  
+      >> SubR SHEAR, KALYPSO-SHEAR 
+085.) New Output for cohesive Sediment:
+      Writing actual cohesive bed-structur with all layers and its thickness by
+      using "Modell-schreiben" in order to prepare a restart option for cohesive bed.
+      >> New SUBROUTINE write_KALYP_Bed (bedout) in "Modell-schreiben"
+      Additional informations in SUBROUTINE GenerateOutputFileName and RMA10     
+      >> SubR RMA10, Modell_Schreiben                                                 
+--- Monika Donner, 19.03.2009
