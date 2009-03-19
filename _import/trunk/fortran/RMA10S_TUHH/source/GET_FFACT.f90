@@ -1,4 +1,4 @@
-! Last change:  MD    5 Nov 2008    4:21 pm
+! Last change:  MD   13 Jan 2009    6:08 pm
 
 !--------------------------------------------------------------
 !MD: 28.07.2008
@@ -72,28 +72,50 @@ DO N=1,NP         ! over all nodes N
       ELSE                        ! for triangle elements
         FACT=3.
       ENDIF
-      AREA_PART(N,I)=AREA(M)/FACT
-      ! Teilflaeche je Element M zum Knoten N
-      TRIBAREA(N)=TRIBAREA(N)+AREA(M)/FACT
-      ! Gesamte-Einflussflaeche je Knoten N
-      FFACT_TEMP(N,I)=FFACT_EL(M)
-      ! Lambda-Wert je Element M
-      FFACT_KN(N)= FFACT_KN(N) + (FFACT_TEMP(N,I)*AREA_PART(N,I))
-      ! Summation der Teilwerte lambda * Teilfläche
+
+      if((wsll(N) .ge. ao(N)) .and. (AREA(M).gt.0.))then !Nur wenn knoten Nass!
+        AREA_PART(N,I)=AREA(M)/FACT
+        ! Teilflaeche je Element M zum Knoten N
+        TRIBAREA(N)=TRIBAREA(N)+AREA(M)/FACT
+        ! Gesamte-Einflussflaeche je Knoten N
+        FFACT_TEMP(N,I)=FFACT_EL(M)
+        ! Lambda-Wert je Element M
+        FFACT_KN(N)= FFACT_KN(N) + (FFACT_TEMP(N,I)*AREA_PART(N,I))
+        ! Summation der Teilwerte lambda * Teilfläche
+      endif
     ENDIF
   ENDDO
-  IF (TRIBAREA(N).gt.0) THEN
+
+  IF (TRIBAREA(N).gt.0.) THEN
     FFACT_KN(N)= FFACT_KN(N) / TRIBAREA(N)
   END IF
 
-  IF (TRIBAREA(N).le.0) THEN
-    WRITE(*,*) 'STOP!  NO Area was found for NODE: ',N
-    STOP
+  IF (TRIBAREA(N).le.0. .and. FFACT_KN(N).gt.0.0) THEN
+    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten nass!
+      WRITE(*,*) 'STOP!  NO Area was found for NODE: ',N
+      STOP
+    else !wenn knoten trocken
+      FFACT_KN(N)= 0.00
+    endif
   END IF
-  IF (FFACT_KN(N).le.0) THEN
-    WRITE(*,*) 'STOP!  NO friction factor was found for NODE: ',N
-    STOP
+
+  IF (FFACT_KN(N).le.0.0 .and. TRIBAREA(N).gt.0.) THEN
+    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten Nass!
+      WRITE(*,*) 'STOP!  NO friction factor was found for NODE: ',N
+      STOP
+    endif
   END IF
+
+  IF (FFACT_KN(N).eq.0.0 .and. TRIBAREA(N).eq.0.) THEN
+    if(wsll(N) .ge. ao(N)) then !Nur wenn knoten Nass!
+      WRITE(LOUT,*) 'ACHTUNG: NO friction factor and NO Area was found for NODE: ',N
+    endif
+  END IF
+
+  IF (FFACT_KN(N).lt.0.0) THEN
+    FFACT_KN(N)= 0.00
+  END IF
+
   IF (N.eq.NP) THEN
     WRITE(75,*) 'All Friction factors are calculated till NODE ',N
   END IF
