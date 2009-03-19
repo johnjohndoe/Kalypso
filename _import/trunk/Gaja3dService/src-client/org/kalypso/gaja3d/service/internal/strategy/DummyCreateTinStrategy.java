@@ -54,34 +54,23 @@ import org.kalypso.gaja3d.service.client.Client;
  */
 public class DummyCreateTinStrategy implements CreateTinStrategy {
 
-	public URI createTin(final URI boundaryLocation,
-			final URI breaklinesLocation) throws RemoteException {
+	public void setMaxArea(double maxArea) {
+	}
+
+	public void setMinAngle(double minAngle) {
+	}
+
+	public void setDemGridLocation(URI[] gridLocation) {
+	}
+
+	public void setBreaklinesLocation(URI[] breaklinesLocation) {
+	}
+
+	public URI createTin(URI[] boundaryLocation) throws RemoteException {
 		try {
 			return Client.class.getResource(Client.MODEL_TIN_FILENAME).toURI();
 		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}
-	}
-
-	@Override
-	public void setMaxArea(double maxArea) {
-	}
-
-	@Override
-	public void setMinAngle(double minAngle) {
-	}
-
-	@Override
-	public void setDemGridLocation(URI gridLocation) {
-	}
-
-	@Override
-	public void setBreaklinesLocation(URI breaklinesLocation) {
-	}
-
-	@Override
-	public URI createTin(URI boundaryLocation) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

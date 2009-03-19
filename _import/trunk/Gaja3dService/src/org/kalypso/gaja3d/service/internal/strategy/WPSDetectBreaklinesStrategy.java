@@ -41,28 +41,32 @@
 package org.kalypso.gaja3d.service.internal.strategy;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ComplexValueType;
 
 import org.apache.axis.AxisFault;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.simulation.DetectBreaklinesSimulation;
 import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This strategy calls a local WPS to start the simulation
  * 
  * @author kurzbach
  */
-public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
+public class WPSDetectBreaklinesStrategy extends AbstractWPSStrategy implements
+		DetectBreaklinesStrategy {
+	private static final String DEM_GRID_GML_TEMPLATE = "DemGrids.gml";
+
 	private String edgeMethod = null;
 	private String smoothMethod = null;
 	private int smooth = -1;
@@ -71,13 +75,21 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 	private double highThresh = -1;
 	private double distanceTolerance = -1;
 
-	public URI detectBreaklines(final URI boundaryLocation,
-			final URI demGridLocation) throws RemoteException {
+	public URI[] detectBreaklines(final URI[] boundaryLocations,
+			final URI[] demGridLocations) throws RemoteException {
+		final GMLWorkspace boundariesWorkspace = buildGMLWorkspace(
+				boundaryLocations, BOUNDARIES_GML_TEMPLATE,
+				Gaja3dQNames.RP_BOUNDARY);
+		final GMLWorkspace demGridsWorkspace = buildGMLWorkspace(
+				demGridLocations, DEM_GRID_GML_TEMPLATE,
+				Gaja3dQNames.RP_DEM_GRID);
+
 		final Map<String, Object> inputs = new HashMap<String, Object>();
-		inputs.put(DetectBreaklinesSimulation.INPUT_BOUNDARY, boundaryLocation);
-		inputs.put(DetectBreaklinesSimulation.INPUT_DEM_GRID, demGridLocation);
-		inputs.put("_" + DetectBreaklinesSimulation.OUTPUT_BREAKLINES,
-				"Breaklines.zip");
+		inputs.put(DetectBreaklinesSimulation.INPUT_BOUNDARY,
+				boundariesWorkspace);
+		inputs
+				.put(DetectBreaklinesSimulation.INPUT_DEM_GRID,
+						demGridsWorkspace);
 
 		if (edgeMethod != null) {
 			inputs
@@ -126,14 +138,16 @@ public class WPSDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 		if (!status.isOK())
 			throw AxisFault.makeFault(new CoreException(status));
 
-		/* Get the result. */
-		final Map<String, ComplexValueReference> references = simulationJob
-				.getReferences();
-		final ComplexValueReference breaklinesLocation = (ComplexValueReference) references
-				.get(DetectBreaklinesSimulation.OUTPUT_BREAKLINES);
 		try {
-			return new URI(breaklinesLocation.getReference());
-		} catch (final URISyntaxException e) {
+			/* Get the result. */
+			final Map<String, ComplexValueType> results = simulationJob
+					.getComplexValues();
+			final ComplexValueType complexValue = results
+					.get(DetectBreaklinesSimulation.OUTPUT_BREAKLINES);
+			final URI[] breaklinesLocations = parseLocations(complexValue,
+					Gaja3dQNames.RP_BREAKLINES);
+			return breaklinesLocations;
+		} catch (final Exception e) {
 			throw AxisFault.makeFault(e);
 		}
 	}

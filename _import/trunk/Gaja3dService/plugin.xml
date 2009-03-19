@@ -16,5 +16,12 @@
             httpcontextId="org.globus.ws.core.httpcontext">
       </resource>
    </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.gaja3d.service.internal.Gaja3dServiceUrlCatalog"
+            id="org.kalypso.gaja3d.service.urlCatalog">
+      </catalog>
+   </extension>
 
 </plugin>

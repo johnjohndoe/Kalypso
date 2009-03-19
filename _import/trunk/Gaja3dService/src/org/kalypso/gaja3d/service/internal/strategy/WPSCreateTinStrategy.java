@@ -54,43 +54,60 @@ import org.apache.axis.AxisFault;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.simulation.CreateTinSimulation;
 import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This strategy calls a local WPS to start the simulation
  * 
  * @author kurzbach
  */
-public class WPSCreateTinStrategy implements CreateTinStrategy {
+public class WPSCreateTinStrategy extends AbstractWPSStrategy implements
+		CreateTinStrategy {
 
-	private static final String MODEL_TIN_FILE = "ModelTin.zip";
+	private static final String BREAKLINES_GML_TEMPLATE = "Breaklines.gml";
+	private static final String DEM_GRID_GML_TEMPLATE = "DemGrids.gml";
 
 	private double m_minAngle;
 	private double m_maxArea;
-	private URI m_breaklinesLocation;
-	private URI m_demGridLocation;
+	private URI[] m_breaklinesLocations;
+	private URI[] m_demGridLocations;
 
-	public URI createTin(final URI boundaryLocation) throws RemoteException {
-		/* Modify the model data to your needs. */
+	public URI createTin(final URI[] boundaryLocations) throws RemoteException {
+		final GMLWorkspace boundariesWorkspace = buildGMLWorkspace(
+				boundaryLocations, BOUNDARIES_GML_TEMPLATE,
+				Gaja3dQNames.RP_BOUNDARY);
+
 		final Map<String, Object> inputs = new HashMap<String, Object>();
-		inputs.put(CreateTinSimulation.INPUT_BOUNDARY, boundaryLocation);
-		if (m_breaklinesLocation != null) {
+
+		inputs.put(CreateTinSimulation.INPUT_BOUNDARY, boundariesWorkspace);
+
+		if (m_breaklinesLocations != null) {
+			final GMLWorkspace breaklinesWorkspace = buildGMLWorkspace(
+					m_breaklinesLocations, BREAKLINES_GML_TEMPLATE,
+					Gaja3dQNames.RP_BREAKLINES);
 			inputs.put(CreateTinSimulation.INPUT_BREAKLINES,
-					m_breaklinesLocation);
+					breaklinesWorkspace);
 		}
-		if (m_demGridLocation != null) {
-			inputs.put(CreateTinSimulation.INPUT_DEM_GRID, m_demGridLocation);
+
+		if (m_demGridLocations != null) {
+			final GMLWorkspace demGridsWorkspace = buildGMLWorkspace(
+					m_demGridLocations, DEM_GRID_GML_TEMPLATE,
+					Gaja3dQNames.RP_DEM_GRID);
+			inputs.put(CreateTinSimulation.INPUT_DEM_GRID, demGridsWorkspace);
 		}
+
 		if (m_maxArea != 0) {
 			inputs.put(CreateTinSimulation.INPUT_MAX_AREA, Double
 					.toString(m_maxArea));
 		}
+
 		if (m_minAngle != 0) {
 			inputs.put(CreateTinSimulation.INPUT_MIN_ANGLE, Double
 					.toString(m_minAngle));
 		}
-		inputs.put("_" + CreateTinSimulation.OUTPUT_MODEL_TIN, MODEL_TIN_FILE);
 
 		final List<String> outputs = new ArrayList<String>();
 		outputs.add(CreateTinSimulation.OUTPUT_MODEL_TIN);
@@ -122,24 +139,20 @@ public class WPSCreateTinStrategy implements CreateTinStrategy {
 		}
 	}
 
-	@Override
 	public void setMaxArea(final double maxArea) {
 		this.m_maxArea = maxArea;
 	}
 
-	@Override
 	public void setMinAngle(final double minAngle) {
 		this.m_minAngle = minAngle;
 	}
 
-	@Override
-	public void setDemGridLocation(final URI gridLocation) {
-		m_demGridLocation = gridLocation;
+	public void setDemGridLocation(final URI[] gridLocations) {
+		m_demGridLocations = gridLocations;
 	}
 
-	@Override
-	public void setBreaklinesLocation(final URI breaklinesLocation) {
-		this.m_breaklinesLocation = breaklinesLocation;
+	public void setBreaklinesLocation(final URI[] breaklinesLocations) {
+		this.m_breaklinesLocations = breaklinesLocations;
 	}
 
 }

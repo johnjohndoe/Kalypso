@@ -61,11 +61,12 @@ public class DummyCreateGridStrategy implements CreateGridStrategy {
 	 * org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy#createGrid
 	 * (java.lang.String, java.lang.String, double, double)
 	 */
-	public URI createGrid(final URI boundaryLocation,
+	public URI[] createGrid(final URI[] boundaryLocation,
 			final URI demPointsLocation, final double dx, final double dy)
 			throws RemoteException {
 		try {
-			return Client.class.getResource(Client.DEMGRID_FILENAME).toURI();
+			return new URI[] { Client.class
+					.getResource(Client.DEMGRID_FILENAME).toURI() };
 		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}

@@ -1,3 +1,43 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ * 
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ * 
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.client;
 
 import java.io.BufferedWriter;
@@ -30,7 +70,6 @@ import org.globus.axis.gsi.GSIConstants;
 import org.globus.wsrf.encoding.ObjectDeserializer;
 import org.globus.wsrf.encoding.ObjectSerializer;
 import org.globus.wsrf.encoding.SerializationException;
-import org.globus.wsrf.impl.security.authorization.HostAuthorization;
 import org.globus.wsrf.impl.security.authorization.SelfAuthorization;
 import org.globus.wsrf.security.Constants;
 import org.kalypso.gaja3d.service.Gaja3DServiceAddressingLocator;
@@ -39,21 +78,22 @@ import org.kalypso.gaja3d.service.factory.stubs.CreateResource;
 import org.kalypso.gaja3d.service.factory.stubs.CreateResourceResponse;
 import org.kalypso.gaja3d.service.factory.stubs.Gaja3DResourceFactoryPortType;
 import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
-import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.stubs.Boundary;
+import org.kalypso.gaja3d.service.stubs.Breaklines;
 import org.kalypso.gaja3d.service.stubs.CreateGridParametersType;
 import org.kalypso.gaja3d.service.stubs.CreateTinParametersType;
+import org.kalypso.gaja3d.service.stubs.DemGrid;
 import org.kalypso.gaja3d.service.stubs.DemPoints;
 import org.kalypso.gaja3d.service.stubs.DetectBreaklinesParametersType;
 import org.kalypso.gaja3d.service.stubs.Gaja3DPortType;
 import org.kalypso.gaja3d.service.stubs.GridX;
 import org.kalypso.gaja3d.service.stubs.GridY;
-import org.kalypso.gaja3d.service.stubs.Identifier;
 import org.kalypso.gaja3d.service.stubs.MaxArea;
 import org.kalypso.gaja3d.service.stubs.MinAngle;
 import org.kalypso.gaja3d.service.stubs.SmoothFilter;
 import org.kalypso.gaja3d.service.stubs.SmoothFilterMethod;
 import org.kalypso.service.wps.utils.MarshallUtilities;
+import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
 import org.oasis.wsrf.lifetime.Destroy;
 import org.oasis.wsrf.properties.GetMultipleResourcePropertiesResponse;
 import org.oasis.wsrf.properties.GetMultipleResourceProperties_Element;
@@ -71,9 +111,9 @@ import org.xml.sax.InputSource;
  */
 public class Client {
 
-//	private static final String SERVICE_FACTORY_URI = "http://gdi-kalypso1.gridlab.uni-hannover.de:8080/services/Gaja3dResourceFactoryService";
-	 private static final String SERVICE_FACTORY_URI =
-	 "http://localhost:8080/services/Gaja3dResourceFactoryService";
+	private static final String SERVICE_FACTORY_URI = "http://gdi-kalypso1.gridlab.uni-hannover.de:8080/services/Gaja3dResourceFactoryService";
+//	 private static final String SERVICE_FACTORY_URI =
+//	 "http://localhost:8080/services/Gaja3dResourceFactoryService";
 
 	private static final String EPR_FILENAME = "test.epr";
 	private static final boolean SAVE_EPR = true;
@@ -173,8 +213,6 @@ public class Client {
 			stub._setProperty(Constants.GSI_SEC_CONV, Constants.ENCRYPTION);
 			stub._setProperty(Constants.AUTHORIZATION, SelfAuthorization
 					.getInstance());
-//			stub._setProperty(Constants.AUTHORIZATION, HostAuthorization
-//					.getInstance());
 			stub._setProperty(GSIConstants.GSI_MODE,
 					GSIConstants.GSI_MODE_FULL_DELEG);
 
@@ -182,7 +220,6 @@ public class Client {
 			final SetResourceProperties_Element setResourcePropertiesRequest = buildSetBoundaryResourceProperty();
 			gaja3d.setResourceProperties(setResourcePropertiesRequest);
 			logger.debug("Finished setting boundaries.");
-
 			now = System.currentTimeMillis();
 			logger.info("Time used: " + (now - last));
 			last = now;
@@ -191,23 +228,25 @@ public class Client {
 			final CreateGridParametersType execute_createGrid = buildExecuteCreateGrid();
 			gaja3d.execute_createGrid(execute_createGrid);
 			logger.debug("Finished creating grid.");
-
 			now = System.currentTimeMillis();
 			logger.info("Time used: " + (now - last));
 			last = now;
 
-			//
-			// // call Execute_detectBreaklines
-			// final DetectBreaklinesParametersType detectBreaklinesParameters =
-			// buildExecuteDetectBreaklines();
-			// gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
-			// logger.debug("Finished detecting breaklines.");
-			//
-			// // call Execute_createTin
-			// final CreateTinParametersType createTinParameters =
-			// buildExecuteCreateTin();
-			// gaja3d.execute_createTin(createTinParameters);
-			// logger.debug("Finished creating tin.");
+			// call Execute_detectBreaklines
+			final DetectBreaklinesParametersType detectBreaklinesParameters = buildExecuteDetectBreaklines();
+			gaja3d.execute_detectBreaklines(detectBreaklinesParameters);
+			logger.debug("Finished detecting breaklines.");
+			now = System.currentTimeMillis();
+			logger.info("Time used: " + (now - last));
+			last = now;
+
+			// call Execute_createTin
+			final CreateTinParametersType createTinParameters = buildExecuteCreateTin();
+			gaja3d.execute_createTin(createTinParameters);
+			logger.debug("Finished creating tin.");
+			now = System.currentTimeMillis();
+			logger.info("Time used: " + (now - last));
+			last = now;
 
 			printResourceProperties(gaja3d);
 
@@ -234,44 +273,51 @@ public class Client {
 		 * remove comment when skipping breakline detection
 		 */
 		// try {
-		// final DemGrid demGrid = new DemGrid();
-		// demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-		// Gaja3dQNames.RP_DEM_GRID));
-		// final URI demGridHref = new URI(
-		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
-		// // final URI demGridHref = new URI(Client.class.getResource(
-		// // DEMGRID_FILENAME).toURI().toString());
-		// demGrid.setHref(demGridHref);
-		// execute_createTin.setDemGrid(demGrid);
 		//
-		// final Breaklines breaklines = new Breaklines();
-		// breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
-		// new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-		// // final URI breaklinesHref = new URI(Client.class.getResource(
-		// // BREAKLINES_FILENAME).toURI().toString());
-		// final URI breaklinesHref = new URI(
-		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines.zip");
-		// breaklines.setHref(breaklinesHref);
-		// execute_createTin.setBreaklines(breaklines);
+		// final DemGrid[] demGrids = getDemGrids();
+		// execute_createTin.setDemGrid(demGrids);
+		//
+		// final Breaklines[] getBreaklines = getBreaklines();
+		// execute_createTin.setBreaklines(getBreaklines);
+		//
 		// } catch (final MalformedURIException e) {
 		// e.printStackTrace();
 		// }
-		// // catch (final URISyntaxException e) {
-		// // e.printStackTrace();
-		// // }
 		final MinAngle minAngle = new MinAngle();
-		minAngle.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_MIN_ANGLE));
 		minAngle.setAngle(22);
 		execute_createTin.setMinAngle(minAngle);
 
 		final MaxArea maxArea = new MaxArea();
-		maxArea.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_MAX_AREA));
 		maxArea.setArea(10000);
 		execute_createTin.setMaxArea(maxArea);
 
 		return execute_createTin;
+	}
+
+	private static Breaklines[] getBreaklines() throws MalformedURIException {
+		final Breaklines breaklines1 = new Breaklines();
+		final URI breaklinesHref1 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0001.zip");
+		breaklines1.set_value(breaklinesHref1);
+
+		final Breaklines breaklines2 = new Breaklines();
+		final URI breaklinesHref2 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0002.zip");
+		breaklines2.set_value(breaklinesHref2);
+
+		final Breaklines breaklines3 = new Breaklines();
+		final URI breaklinesHref3 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0003.zip");
+		breaklines3.set_value(breaklinesHref3);
+
+		final Breaklines breaklines4 = new Breaklines();
+		final URI breaklinesHref4 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/Breaklines_0004.zip");
+		breaklines4.set_value(breaklinesHref4);
+
+		final Breaklines[] getBreaklines = new Breaklines[] { breaklines1,
+				breaklines2, breaklines3, breaklines4 };
+		return getBreaklines;
 	}
 
 	private static DetectBreaklinesParametersType buildExecuteDetectBreaklines() {
@@ -280,31 +326,14 @@ public class Client {
 		 * remove comment for skipping grid creation
 		 */
 		// try {
-		// final Boundary boundary = new Boundary();
-		// boundary.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-		// Gaja3dQNames.RP_BOUNDARY));
-		// final URI boundaryHref = new URI(Client.class.getResource(
-		// BOUNDARY_FILENAME).toURI().toString());
-		// boundary.setHref(boundaryHref);
-		// execute_detectBreaklines.setBoundary(boundary);
-		// final DemGrid demGrid = new DemGrid();
-		// demGrid.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-		// Gaja3dQNames.RP_DEM_GRID));
-		// final URI demGridHref = new URI(Client.class.getResource(
-		// DEMGRID_FILENAME).toURI().toString());
-		// final URI demGridHref = new URI(
-		// "gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid.asc");
-		// demGrid.setHref(demGridHref);
-		// execute_detectBreaklines.setDemGrid(demGrid);
+		//
+		// final DemGrid[] demGrids = getDemGrids();
+		// execute_detectBreaklines.setDemGrid(demGrids);
+		//
 		// } catch (final MalformedURIException e) {
 		// e.printStackTrace();
 		// }
-		// catch (final URISyntaxException e) {
-		// e.printStackTrace();
-		// }
 		final SmoothFilter smoothFilter = new SmoothFilter();
-		smoothFilter.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_SMOOTH_FILTER));
 		final SmoothFilterMethod method = SmoothFilterMethod.gauss;
 		smoothFilter.setMethod(method);
 		smoothFilter.setSmooth(20);
@@ -314,38 +343,53 @@ public class Client {
 		return execute_detectBreaklines;
 	}
 
+	private static DemGrid[] getDemGrids() throws MalformedURIException {
+		final DemGrid demGrid1 = new DemGrid();
+		final URI demGridHref1 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0001.asc");
+		demGrid1.set_value(demGridHref1);
+
+		final DemGrid demGrid2 = new DemGrid();
+		final URI demGridHref2 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0002.asc");
+		demGrid2.set_value(demGridHref2);
+
+		final DemGrid demGrid3 = new DemGrid();
+		final URI demGridHref3 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0003.asc");
+		demGrid3.set_value(demGridHref3);
+
+		final DemGrid demGrid4 = new DemGrid();
+		final URI demGridHref4 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/DemGrid_0004.asc");
+		demGrid4.set_value(demGridHref4);
+
+		final DemGrid[] demGrids = new DemGrid[] { demGrid1, demGrid2,
+				demGrid3, demGrid4 };
+		return demGrids;
+	}
+
 	private static CreateGridParametersType buildExecuteCreateGrid() {
 		final CreateGridParametersType execute_createGrid = new CreateGridParametersType();
 
 		final DemPoints demPoints = new DemPoints();
-		demPoints.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_DEM_POINTS));
 
 		try {
-			// final URI demPointsHref = new URI(Client.class.getResource(
-			// DEMPOINTS_FILENAME).toURI().toString());
+
 			final URI demPointsHref = new URI(
 					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/allpoints.zip");
-			// final URI demPointsHref = new
-			// URI("file:///home/skurzbach/example/allpoints.zip");
-			demPoints.setHref(demPointsHref);
+			demPoints.set_value(demPointsHref);
+
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-		// catch (final URISyntaxException e) {
-		// e.printStackTrace();
-		// }
 		execute_createGrid.setDemPoints(demPoints);
 
 		final GridX gridX = new GridX();
-		gridX.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_GRID_X));
 		gridX.setDx(100);
 		execute_createGrid.setGridX(gridX);
 
 		final GridY gridY = new GridY();
-		gridY.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_GRID_Y));
 		gridY.setDy(100);
 		execute_createGrid.setGridY(gridY);
 
@@ -356,28 +400,51 @@ public class Client {
 		final SetResourceProperties_Element setResourcePropertiesRequest = new SetResourceProperties_Element();
 		final UpdateType update = new UpdateType();
 
-		final Boundary boundary = new Boundary();
-		boundary.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-				Gaja3dQNames.RP_BOUNDARY));
-
 		try {
-			// final URI boundaryHref = new URI(Client.class.getResource(
-			// BOUNDARY_FILENAME).toURI().toString());
-			final URI boundaryHref = new URI(
-					"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip");
-			// final URI boundaryHref = new URI(
-			// "file:///home/skurzbach/example/boundary1.zip");
-			boundary.setHref(boundaryHref);
+
+			final Boundary[] boundaries = getBoundaries();
+			update
+					.set_any(new MessageElement[] {
+							new MessageElement(Gaja3dQNames.RP_BOUNDARY,
+									boundaries[0]),
+							new MessageElement(Gaja3dQNames.RP_BOUNDARY,
+									boundaries[1]),
+							new MessageElement(Gaja3dQNames.RP_BOUNDARY,
+									boundaries[2]),
+							new MessageElement(Gaja3dQNames.RP_BOUNDARY,
+									boundaries[3]) });
+
+			setResourcePropertiesRequest.setUpdate(update);
 		} catch (final MalformedURIException e) {
 			e.printStackTrace();
 		}
-		// catch (final URISyntaxException e) {
-		// e.printStackTrace();
-		// }
-		update.set_any(new MessageElement[] { new MessageElement(
-				Gaja3dQNames.RP_BOUNDARY, boundary) });
-		setResourcePropertiesRequest.setUpdate(update);
 		return setResourcePropertiesRequest;
+	}
+
+	private static Boundary[] getBoundaries() throws MalformedURIException {
+		final Boundary boundary1 = new Boundary();
+		final URI boundaryHref1 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary1.zip");
+		boundary1.set_value(boundaryHref1);
+
+		final Boundary boundary2 = new Boundary();
+		final URI boundaryHref2 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary2.zip");
+		boundary2.set_value(boundaryHref2);
+
+		final Boundary boundary3 = new Boundary();
+		final URI boundaryHref3 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary3.zip");
+		boundary3.set_value(boundaryHref3);
+
+		final Boundary boundary4 = new Boundary();
+		final URI boundaryHref4 = new URI(
+				"gridftp://gramd1.gridlab.uni-hannover.de/opt/d-grid-users/gdigrid/gaja3d/boundary4.zip");
+		boundary4.set_value(boundaryHref4);
+
+		final Boundary[] boundaries = new Boundary[] { boundary1, boundary2,
+				boundary3, boundary4 };
+		return boundaries;
 	}
 
 	private static void callDescribeProcess(final Gaja3DPortType gaja3d,
@@ -394,7 +461,8 @@ public class Client {
 			// don't know how to pretty print the ProcessDescriptions using
 			// GT4 ObjectSerializer, so we use KalypsoWPS JAXB
 			final Object fromKalypsoWPS = MarshallUtilities.unmarshall(pds);
-			logger.debug(MarshallUtilities.marshall(fromKalypsoWPS));
+			logger.debug(MarshallUtilities.marshall(fromKalypsoWPS,
+					WPS_VERSION.V040));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -410,54 +478,15 @@ public class Client {
 	}
 
 	private static void setCreateResourceSecurity(final Stub stub) {
-		// final String secDescFile = Client.class.getResource(
-		// "client_security_descriptor.xml").getFile();
-		// stub._setProperty(Constants.CLIENT_DESCRIPTOR_FILE, secDescFile);
 		stub._setProperty(Constants.GSI_SEC_CONV, Constants.ENCRYPTION);
-		 stub._setProperty(Constants.AUTHORIZATION, SelfAuthorization
-		 .getInstance());
-//		stub._setProperty(Constants.AUTHORIZATION, HostAuthorization
-//				.getInstance());
+// stub._setProperty(Constants.AUTHORIZATION, SelfAuthorization
+// .getInstance());
+		stub._setProperty(Constants.AUTHORIZATION,
+				org.globus.wsrf.impl.security.authorization.HostAuthorization
+						.getInstance());
 		stub._setProperty(GSIConstants.GSI_MODE,
 				GSIConstants.GSI_MODE_FULL_DELEG);
 	}
-
-	// private static Execute buildExecute() {
-	// final Execute execute = new Execute();
-	// execute.setService("WPS");
-	// execute.setVersion("0.4");
-	// final CodeType codeType = new CodeType("Gaja3d_createGrid");
-	// execute.setIdentifier(codeType);
-	// final DataInputsType dataInputs = new DataInputsType();
-	// final IOValueType input = new IOValueType();
-	// input.setTitle("The input");
-	// input
-	// .setIdentifier(new CodeType(
-	// CreateGridSimulation.INPUT_DEM_POINTS));
-	// try {
-	// final ComplexValueReferenceType complexValueReference = new
-	// ComplexValueReferenceType(
-	// new URI("uri:TheTinLocation"), null, null, null);
-	// final ValueFormChoice valueFormChoice = new ValueFormChoice();
-	// valueFormChoice.setComplexValueReference(complexValueReference);
-	// input.setValueFormChoice(valueFormChoice);
-	// } catch (final MalformedURIException e) {
-	// e.printStackTrace();
-	// }
-	// dataInputs.setInput(new IOValueType[] { input });
-	// execute.setDataInputs(dataInputs);
-	// final OutputDefinitionType output = new OutputDefinitionType();
-	// output.setTitle("The output");
-	// output
-	// .setIdentifier(new CodeType(
-	// CreateGridSimulation.OUTPUT_DEM_GRID));
-	// final OutputDefinitionsType outputDefinitions = new
-	// OutputDefinitionsType();
-	// OutputDefinitionType[] outputs = new OutputDefinitionType[] { output };
-	// outputDefinitions.setOutput(outputs);
-	// execute.setOutputDefinitions(outputDefinitions);
-	// return execute;
-	// }
 
 	private static DescribeProcess buildDescribeProcess(
 			Capabilities capabilities) {

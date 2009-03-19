@@ -41,28 +41,30 @@
 package org.kalypso.gaja3d.service.internal.strategy;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.opengeospatial.wps.IOValueType.ComplexValueReference;
+import net.opengeospatial.wps.ComplexValueType;
 
 import org.apache.axis.AxisFault;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gaja3d.service.impl.Gaja3dQNames;
 import org.kalypso.gaja3d.simulation.CreateGridSimulation;
 import org.kalypso.service.wps.client.WPSRequest;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * This strategy calls a local WPS to start the simulation
  * 
  * @author kurzbach
  */
-public class WPSCreateGridStrategy implements CreateGridStrategy {
+public class WPSCreateGridStrategy extends AbstractWPSStrategy implements
+		CreateGridStrategy {
 
 	/*
 	 * (non-Javadoc)
@@ -71,16 +73,17 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 	 * org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy#createGrid
 	 * (java.lang.String, java.lang.String, double, double)
 	 */
-	public URI createGrid(final URI boundaryLocation,
+	public URI[] createGrid(final URI[] boundaryLocations,
 			final URI demPointsLocation, final double dx, final double dy)
 			throws RemoteException {
-		/* Modify the model data to your needs. */
+		final GMLWorkspace boundariesWorkspace = buildGMLWorkspace(boundaryLocations, BOUNDARIES_GML_TEMPLATE, Gaja3dQNames.RP_BOUNDARY);
+
 		final Map<String, Object> inputs = new HashMap<String, Object>();
-		inputs.put(CreateGridSimulation.INPUT_BOUNDARY, boundaryLocation);
+		inputs.put(CreateGridSimulation.INPUT_BOUNDARY, boundariesWorkspace);
 		inputs.put(CreateGridSimulation.INPUT_DEM_POINTS, demPointsLocation);
 		inputs.put(CreateGridSimulation.INPUT_DX, Double.toString(dx));
 		inputs.put(CreateGridSimulation.INPUT_DY, Double.toString(dy));
-		inputs.put("_" + CreateGridSimulation.OUTPUT_DEM_GRID, "DemGrid.asc");
+
 		final List<String> outputs = new ArrayList<String>();
 		outputs.add(CreateGridSimulation.OUTPUT_DEM_GRID);
 		outputs.add("stdout");
@@ -88,7 +91,7 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 
 		/* Create the delegate which can handle ISimulations. */
 		final String serviceEndpoint = WPSRequest.SERVICE_LOCAL;
-		
+
 		final int timeout = 60 * 60 * 1000;
 		final WPSRequest simulationJob = new WPSRequest(
 				CreateGridSimulation.ID, serviceEndpoint, timeout);
@@ -98,14 +101,16 @@ public class WPSCreateGridStrategy implements CreateGridStrategy {
 		if (!status.isOK())
 			throw AxisFault.makeFault(new CoreException(status));
 
-		/* Get the result. */
-		final Map<String, ComplexValueReference> references = simulationJob
-				.getReferences();
-		final ComplexValueReference demGridLocation = (ComplexValueReference) references
-				.get(CreateGridSimulation.OUTPUT_DEM_GRID);
 		try {
-			return new URI(demGridLocation.getReference());
-		} catch (final URISyntaxException e) {
+			/* Get the result. */
+			final Map<String, ComplexValueType> results = simulationJob
+					.getComplexValues();
+			final ComplexValueType complexValue = results
+					.get(CreateGridSimulation.OUTPUT_DEM_GRID);
+			final URI[] demGridLocations = parseLocations(complexValue,
+					Gaja3dQNames.RP_DEM_GRID);
+			return demGridLocations;
+		} catch (final Exception e) {
 			throw AxisFault.makeFault(e);
 		}
 	}

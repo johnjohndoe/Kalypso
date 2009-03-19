@@ -54,10 +54,11 @@ import org.kalypso.gaja3d.service.client.Client;
  */
 public class DummyDetectBreaklinesStrategy implements DetectBreaklinesStrategy {
 
-	public URI detectBreaklines(final URI boundaryLocation,
-			final URI demGridLocation) throws RemoteException {
+	public URI[] detectBreaklines(final URI[] boundaryLocation,
+			final URI[] demGridLocation) throws RemoteException {
 		try {
-			return Client.class.getResource(Client.BREAKLINES_FILENAME).toURI();
+			return new URI[] { Client.class.getResource(
+					Client.BREAKLINES_FILENAME).toURI() };
 		} catch (final URISyntaxException e) {
 			throw AxisFault.makeFault(e);
 		}

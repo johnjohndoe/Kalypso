@@ -1,3 +1,43 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ * 
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ * 
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.gaja3d.service.impl;
 
 import java.io.IOException;
@@ -37,7 +77,6 @@ import org.globus.wsrf.impl.security.descriptor.ResourceSecurityConfig;
 import org.globus.wsrf.impl.security.descriptor.ResourceSecurityDescriptor;
 import org.globus.wsrf.security.SecureResource;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.gaja3d.service.internal.CodeTypeUtil;
 import org.kalypso.gaja3d.service.internal.strategy.CreateGridStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.CreateTinStrategy;
 import org.kalypso.gaja3d.service.internal.strategy.DetectBreaklinesStrategy;
@@ -56,7 +95,6 @@ import org.kalypso.gaja3d.service.stubs.FeatureDetectorMethod;
 import org.kalypso.gaja3d.service.stubs.Gaja3DResourceProperties;
 import org.kalypso.gaja3d.service.stubs.GridX;
 import org.kalypso.gaja3d.service.stubs.GridY;
-import org.kalypso.gaja3d.service.stubs.Identifier;
 import org.kalypso.gaja3d.service.stubs.MaxArea;
 import org.kalypso.gaja3d.service.stubs.MinAngle;
 import org.kalypso.gaja3d.service.stubs.ModelTin;
@@ -338,52 +376,52 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 		if (boundaries.length == 0) {
 			throw new AxisFault("A boundary is required for grid creation.");
 		}
+
 		final DemGrid[] demGrids = new DemGrid[boundaries.length];
-		
 		try {
-
+			final java.net.URI[] boundaryLocations = new java.net.URI[boundaries.length];
 			for (int i = 0; i < boundaries.length; i++) {
-				final DemGrid demGrid = new DemGrid();
-
 				final Boundary boundary = boundaries[i];
-				final URI boundaryURI = boundary.getHref();
+				final URI boundaryURI = boundary.get_value();
 				final java.net.URI boundaryLocation = new java.net.URI(
 						boundaryURI.toString());
+				boundaryLocations[i] = boundaryLocation;
+			}
 
-				// required
-				final DemPoints demPoints = getDemPoints();
-				if (demPoints == null) {
-					throw new AxisFault(
-							"A point cloud is required for grid creation.");
-				}
-				final URI demPointsURI = demPoints.getHref();
-				final java.net.URI demPointsLocation = new java.net.URI(
-						demPointsURI.toString());
+			// required
+			final DemPoints demPoints = getDemPoints();
+			if (demPoints == null) {
+				throw new AxisFault(
+						"A point cloud is required for grid creation.");
+			}
+			final URI demPointsURI = demPoints.get_value();
+			final java.net.URI demPointsLocation = new java.net.URI(
+					demPointsURI.toString());
 
-				// required
-				final GridX gridX = getGridX();
-				if (gridX == null) {
-					throw new AxisFault(
-							"Grid resolution (X) is required for grid creation.");
-				}
-				final double dx = gridX.getDx();
+			// required
+			final GridX gridX = getGridX();
+			if (gridX == null) {
+				throw new AxisFault(
+						"Grid resolution (X) is required for grid creation.");
+			}
+			final double dx = gridX.getDx();
 
-				// required
-				final GridY gridY = getGridY();
-				if (gridY == null) {
-					throw new AxisFault(
-							"Grid resolution (Y) is required for grid creation.");
-				}
-				final double dy = gridY.getDy();
+			// required
+			final GridY gridY = getGridY();
+			if (gridY == null) {
+				throw new AxisFault(
+						"Grid resolution (Y) is required for grid creation.");
+			}
+			final double dy = gridY.getDy();
 
-				// do the actual work sequentially
-				final java.net.URI demGridLocation = m_createGridStrategy
-						.createGrid(boundaryLocation, demPointsLocation, dx, dy);
+			// do the actual work
+			final java.net.URI[] demGridLocations = m_createGridStrategy
+					.createGrid(boundaryLocations, demPointsLocation, dx, dy);
 
-				demGrid.setIdentifier(CodeTypeUtil.fillCodeType(
-						new Identifier(), Gaja3dQNames.RP_DEM_GRID));
-				demGrid.setHref(new URI(demGridLocation.toString()));
-
+			for (int i = 0; i < demGridLocations.length; i++) {
+				final java.net.URI demGridLocation = demGridLocations[i];
+				final DemGrid demGrid = new DemGrid();
+				demGrid.set_value(new URI(demGridLocation.toString()));
 				demGrids[i] = demGrid;
 			}
 		} catch (final MalformedURIException e) {
@@ -409,79 +447,82 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 			throw new AxisFault(
 					"A boundary is required for breakline detection.");
 		}
-		
+
 		// required
 		final DemGrid[] demGrids = getDemGrid();
 		if (demGrids.length != boundaries.length) {
 			throw new AxisFault(
 					"A grid is required for each boundary for breakline detection.");
 		}
-		
-		final Breaklines[] breaklinesSet = new Breaklines[boundaries.length];
 
+		final Breaklines[] breaklinesSet = new Breaklines[boundaries.length];
 		try {
+			// optional
+			final EdgeFilter edgeFilter = getEdgeFilter();
+			if (edgeFilter != null) {
+				final EdgeFilterMethod method = edgeFilter.getMethod();
+				final String edgeMethod = method.getValue();
+				m_detectBreaklinesStrategy.setEdgeMethod(edgeMethod);
+			}
+
+			// optional
+			final SmoothFilter smoothFilter = getSmoothFilter();
+			if (smoothFilter != null) {
+				final SmoothFilterMethod method = smoothFilter.getMethod();
+				final String smoothMethod = method.getValue();
+				final int smooth = smoothFilter.getSmooth();
+				m_detectBreaklinesStrategy.setSmoothMethod(smoothMethod);
+				m_detectBreaklinesStrategy.setSmooth(smooth);
+			}
+
+			// optional
+			final FeatureDetector featureDetector = getFeatureDetector();
+			if (featureDetector != null) {
+				final FeatureDetectorMethod method = featureDetector
+						.getMethod();
+				final String featureMethod = method.getValue();
+				final double lowThresh = featureDetector.getLowThresh();
+				final double highThresh = featureDetector.getHighThresh();
+				m_detectBreaklinesStrategy.setFeatureMethod(featureMethod);
+				m_detectBreaklinesStrategy.setLowThresh(lowThresh);
+				m_detectBreaklinesStrategy.setHighThresh(highThresh);
+			}
+
+			// optional
+			final DistanceTolerance distanceToleranceParameter = getDistanceTolerance();
+			if (distanceToleranceParameter != null) {
+				final double distanceTolerance = distanceToleranceParameter
+						.getTolerance();
+				m_detectBreaklinesStrategy
+						.setDistanceTolerance(distanceTolerance);
+			}
+
+			final java.net.URI[] boundaryLocations = new java.net.URI[boundaries.length];
 			for (int i = 0; i < boundaries.length; i++) {
 				final Boundary boundary = boundaries[i];
-				final DemGrid demGrid = demGrids[i];
-
-				final Breaklines breaklines = new Breaklines();
-
-				// optional
-				final EdgeFilter edgeFilter = getEdgeFilter();
-				if (edgeFilter != null) {
-					final EdgeFilterMethod method = edgeFilter.getMethod();
-					final String edgeMethod = method.getValue();
-					m_detectBreaklinesStrategy.setEdgeMethod(edgeMethod);
-				}
-
-				// optional
-				final SmoothFilter smoothFilter = getSmoothFilter();
-				if (smoothFilter != null) {
-					final SmoothFilterMethod method = smoothFilter.getMethod();
-					final String smoothMethod = method.getValue();
-					final int smooth = smoothFilter.getSmooth();
-					m_detectBreaklinesStrategy.setSmoothMethod(smoothMethod);
-					m_detectBreaklinesStrategy.setSmooth(smooth);
-				}
-
-				// optional
-				final FeatureDetector featureDetector = getFeatureDetector();
-				if (featureDetector != null) {
-					final FeatureDetectorMethod method = featureDetector
-							.getMethod();
-					final String featureMethod = method.getValue();
-					final double lowThresh = featureDetector.getLowThresh();
-					final double highThresh = featureDetector.getHighThresh();
-					m_detectBreaklinesStrategy.setFeatureMethod(featureMethod);
-					m_detectBreaklinesStrategy.setLowThresh(lowThresh);
-					m_detectBreaklinesStrategy.setHighThresh(highThresh);
-				}
-
-				// optional
-				final DistanceTolerance distanceToleranceParameter = getDistanceTolerance();
-				if (distanceToleranceParameter != null) {
-					final double distanceTolerance = distanceToleranceParameter
-							.getTolerance();
-					m_detectBreaklinesStrategy
-							.setDistanceTolerance(distanceTolerance);
-				}
-
-				final URI boundaryURI = boundary.getHref();
+				final URI boundaryURI = boundary.get_value();
 				final java.net.URI boundaryLocation = new java.net.URI(
 						boundaryURI.toString());
+				boundaryLocations[i] = boundaryLocation;
+			}
 
-				final URI demGridURI = demGrid.getHref();
+			final java.net.URI[] demGridLocations = new java.net.URI[boundaries.length];
+			for (int i = 0; i < boundaries.length; i++) {
+				final DemGrid demGrid = demGrids[i];
+				final URI demGridURI = demGrid.get_value();
 				final java.net.URI demGridLocation = new java.net.URI(
 						demGridURI.toString());
+				demGridLocations[i] = demGridLocation;
+			}
 
-				// do the actual work
-				final java.net.URI breaklinesLocation = m_detectBreaklinesStrategy
-						.detectBreaklines(boundaryLocation, demGridLocation);
+			// do the actual work
+			final java.net.URI[] breaklinesLocations = m_detectBreaklinesStrategy
+					.detectBreaklines(boundaryLocations, demGridLocations);
 
-				breaklines.setIdentifier(CodeTypeUtil.fillCodeType(
-						new Identifier(), Gaja3dQNames.RP_BREAKLINES));
-				breaklines.setHref(new URI(breaklinesLocation.toString()));
-
+			for (int i = 0; i < breaklinesLocations.length; i++) {
+				final java.net.URI breaklinesLocation = breaklinesLocations[i];
+				final Breaklines breaklines = new Breaklines();
+				breaklines.set_value(new URI(breaklinesLocation.toString()));
 				breaklinesSet[i] = breaklines;
 			}
 		} catch (final MalformedURIException e) {
@@ -504,15 +545,21 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 		}
 
 		final ModelTin modelTin = new ModelTin();
-		
+
+		// required
+		final Boundary[] boundaries = getBoundaries();
+		if (boundaries.length == 0) {
+			throw new AxisFault(
+					"At least one boundary is required for tin creation.");
+		}
+
+		// optional
+		final DemGrid[] demGrids = getDemGrid();
+
+		// optional
+		final Breaklines[] breakliness = getBreaklines();
+
 		try {
-			// required
-			final Boundary[] boundaries = getBoundaries();
-			if (boundaries.length == 0) {
-				throw new AxisFault(
-						"At least one boundary is required for tin creation.");
-			}
-			
 			// optional
 			final MaxArea maxArea = getMaxArea();
 			if (maxArea != null) {
@@ -527,34 +574,43 @@ public class Gaja3dResource extends PersistentReflectionResource implements
 				m_createTinStrategy.setMinAngle(angle);
 			}
 
-			// optional
-			final DemGrid[] demGrid = getDemGrid();
-			if (demGrid.length > 0) {
-				final URI demGridURI = demGrid[0].getHref();
-				final java.net.URI demGridLocation = new java.net.URI(
-						demGridURI.toString());
-				m_createTinStrategy.setDemGridLocation(demGridLocation);
+			final java.net.URI[] boundaryLocations = new java.net.URI[boundaries.length];
+			for (int i = 0; i < boundaries.length; i++) {
+				final Boundary boundary = boundaries[i];
+				final URI boundaryURI = boundary.get_value();
+				final java.net.URI boundaryLocation = new java.net.URI(
+						boundaryURI.toString());
+				boundaryLocations[i] = boundaryLocation;
 			}
 
-			final URI boundaryURI = boundaries[0].getHref();
-			final java.net.URI boundaryLocation = new java.net.URI(boundaryURI
-					.toString());
+			if (demGrids.length > 0) {
+				final java.net.URI[] demGridLocations = new java.net.URI[demGrids.length];
+				for (int i = 0; i < demGrids.length; i++) {
+					final DemGrid demGrid = demGrids[i];
+					final URI demGridURI = demGrid.get_value();
+					final java.net.URI demGridLocation = new java.net.URI(
+							demGridURI.toString());
+					demGridLocations[i] = demGridLocation;
+				}
+				m_createTinStrategy.setDemGridLocation(demGridLocations);
+			}
 
-			// optional
-			final Breaklines[] breaklines = getBreaklines();
-			if (breaklines.length > 0) {
-				final URI breaklinesURI = breaklines[0].getHref();
-				final java.net.URI breaklinesLocation = new java.net.URI(
-						breaklinesURI.toString());
-				m_createTinStrategy.setBreaklinesLocation(breaklinesLocation);
+			if (breakliness.length > 0) {
+				final java.net.URI[] breaklinesLocations = new java.net.URI[demGrids.length];
+				for (int i = 0; i < breakliness.length; i++) {
+					final Breaklines breaklines = breakliness[i];
+					final URI breaklinesURI = breaklines.get_value();
+					final java.net.URI breaklinesLocation = new java.net.URI(
+							breaklinesURI.toString());
+					breaklinesLocations[i] = breaklinesLocation;
+				}
+				m_createTinStrategy.setBreaklinesLocation(breaklinesLocations);
 			}
 
 			final java.net.URI modelTinLocation = m_createTinStrategy
-					.createTin(boundaryLocation);
+					.createTin(boundaryLocations);
 
-			modelTin.setIdentifier(CodeTypeUtil.fillCodeType(new Identifier(),
-					Gaja3dQNames.RP_MODEL_TIN));
-			modelTin.setHref(new URI(modelTinLocation.toString()));
+			modelTin.set_value(new URI(modelTinLocation.toString()));
 		} catch (final MalformedURIException e) {
 			throw AxisFault.makeFault(e);
 		} catch (final URISyntaxException e) {
