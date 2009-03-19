@@ -41,81 +41,151 @@
 package org.kalypso.gaja3d.simulation;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileName;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.simspec.Modelspec;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kurzbach
  */
-public class CreateGridSimulation implements ISimulation
-{
-  /**
-   * The model specification.
-   */
-  private static final String SIMULATION_SPEC = "createGrid_specification.xml";
+public class CreateGridSimulation extends AbstractGaja3dSimulation implements
+		ISimulation {
+	/**
+	 * The model specification.
+	 */
+	private static final String SIMULATION_SPEC = "createGrid_specification.xml";
 
-  public static final String INPUT_BOUNDARY = "Boundary";
+	public static final String INPUT_DEM_POINTS = "DemPoints";
 
-  public static final String INPUT_DEM_POINTS = "DemPoints";
+	public static final String INPUT_DX = "gridx";
 
-  public static final String INPUT_DX = "gridx";
+	public static final String INPUT_DY = "gridy";
 
-  public static final String INPUT_DY = "gridy";
+	public static final String OUTPUT_DEM_GRID = "DemGrid";
 
-  public static final String OUTPUT_DEM_GRID = "DemGrid";
+	public static final String ID = "Gaja3d_createGrid";
 
-  public static final String ID = "Gaja3d_createGrid";
+	private static final String DEM_GRIDS_GML_TEMPLATE = "DemGrids.gml";
 
-  /**
-   * The constructor.
-   */
-  public CreateGridSimulation( )
-  {
-  }
+	/**
+	 * The constructor.
+	 */
+	public CreateGridSimulation() {
+	}
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
-  public URL getSpezifikation( )
-  {
-    return getClass().getResource( SIMULATION_SPEC );
-  }
+	/**
+	 * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+	 */
+	public URL getSpezifikation() {
+		return getClass().getResource(SIMULATION_SPEC);
+	}
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
-  {
-    final URL spezifikation = getSpezifikation();
-    Modelspec modelSpec = null;
-    try
-    {
-      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-      modelSpec = (Modelspec) unmarshaller.unmarshal( spezifikation );
-    }
-    catch( final JAXBException e )
-    {
-      throw new SimulationException( "Could not read model spec.", e );
-    }
+	/**
+	 * @see org.kalypso.simulation.core.ISimulation#run(java.io.File,
+	 *      org.kalypso.simulation.core.ISimulationDataProvider,
+	 *      org.kalypso.simulation.core.ISimulationResultEater,
+	 *      org.kalypso.simulation.core.ISimulationMonitor)
+	 */
+	public void run(final File tmpdir,
+			final ISimulationDataProvider inputProvider,
+			final ISimulationResultEater resultEater,
+			final ISimulationMonitor monitor) throws SimulationException {
+		m_arguments.add("createGrid");
+		m_arguments.add("true");
+		m_arguments.add("bufferTin");
+		m_arguments.add("600");
+		m_arguments.add("bufferGrid");
+		m_arguments.add("300");
 
-    final ArrayList<String> arguments = new ArrayList<String>();
-    arguments.add( "createGrid" );
-    arguments.add( "true" );
+		FileObject workingDir = null;
+		try {
+			workingDir = getWorkingDir(tmpdir);
 
-    final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-    jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );
-  }
+			final Object inputForBoundary = inputProvider
+					.getInputForID(INPUT_BOUNDARY);
+			final List<String> boundaryList = getGmlList(inputForBoundary,
+					Gaja3dUrlCatalog.PROPERTY_BOUNDARY);
+			final String boundarySpec = "Boundaries.zip";
+			mergeZipsInWorking(boundaryList, boundarySpec, workingDir);
+			m_arguments.add(INPUT_BOUNDARY);
+			m_arguments.add(boundarySpec);
+
+			addReferencedInput(inputProvider, INPUT_DEM_POINTS, true);
+			addReferencedInput(inputProvider, INPUT_DX, false);
+			addReferencedInput(inputProvider, INPUT_DY, false);
+
+			m_jobSubmitter.submitJob(workingDir, monitor, m_arguments);
+
+			final int boundaryCount = boundaryList.size();
+			final GMLWorkspace demGridsWorkspace = buildDemGridsResult(
+					workingDir, boundaryCount);
+			resultEater.addResult(OUTPUT_DEM_GRID, demGridsWorkspace);
+		} catch (final SimulationException e) {
+			throw e;
+		} catch (final Exception e) {
+			throw new SimulationException("Problem during grid creation.", e);
+		} finally {
+			if (workingDir != null) {
+				try {
+					workingDir.close();
+					final StandardFileSystemManager manager = (StandardFileSystemManager) workingDir
+							.getFileSystem().getFileSystemManager();
+					manager.close();
+				} catch (final FileSystemException e) {
+					// gobble
+				}
+			}
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	private GMLWorkspace buildDemGridsResult(final FileObject workingDir,
+			final int boundaryCount) throws Exception {
+		// try to read demGrids
+		InputStream inputStream = null;
+		try {
+			final URL templateFile = getClass().getResource(
+					DEM_GRIDS_GML_TEMPLATE);
+			inputStream = templateFile.openStream();
+			final GMLWorkspace demGridsWorkspace = GmlSerializer
+					.createGMLWorkspace(inputStream, null, null);
+			final Feature demGridsFeature = demGridsWorkspace.getRootFeature();
+			final List<String> demGrids = (List<String>) demGridsFeature
+					.getProperty(Gaja3dUrlCatalog.PROPERTY_DEM_GRID);
+			for (int i = 0; i < boundaryCount; i++) {
+				final String destName;
+				if (boundaryCount == 1)
+					destName = "DemGrid.asc";
+				else
+					destName = String.format("DemGrid_%04d.asc", (i + 1));
+				final FileObject destFile = workingDir.resolveFile(destName);
+				final FileName destFileName = destFile.getName();
+				if (!destFile.exists())
+					throw new SimulationException(
+							"Required output was not found: " + destFileName);
+				final String destUri = destFileName.getURI();
+				final URI outputLocation = new URI(destUri);
+				demGrids.add(outputLocation.toString());
+			}
+			return demGridsWorkspace;
+		} finally {
+			IOUtils.closeQuietly(inputStream);
+		}
+	}
 }

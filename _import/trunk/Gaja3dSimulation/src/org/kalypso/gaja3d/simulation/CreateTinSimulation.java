@@ -41,88 +41,140 @@
 package org.kalypso.gaja3d.simulation;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.kalypso.commons.bind.JaxbUtilities;
+import org.apache.commons.vfs.FileName;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * @author kurzbach
  */
-public class CreateTinSimulation implements ISimulation
-{
-  /**
-   * The model specification.
-   */
-  private static final String SIMULATION_SPEC = "createTin_specification.xml";
+public class CreateTinSimulation extends AbstractGaja3dSimulation implements
+		ISimulation {
+	/**
+	 * The model specification.
+	 */
+	private static final String SIMULATION_SPEC = "createTin_specification.xml";
 
-  public static final String INPUT_BOUNDARY = "Boundary";
+	public static final String INPUT_BOUNDARY = "Boundary";
 
-  public static final String INPUT_BREAKLINES = "Breaklines";
+	public static final String INPUT_BREAKLINES = "Breaklines";
 
-  public static final String INPUT_MAX_AREA = "MaxArea";
+	public static final String INPUT_MAX_AREA = "MaxArea";
 
-  public static final String INPUT_MIN_ANGLE = "MinAngle";
-  
-  public static final String INPUT_DEM_GRID = "DemGrid";
+	public static final String INPUT_MIN_ANGLE = "MinAngle";
 
-  public static final String OUTPUT_MODEL_TIN = "ModelTin";
+	public static final String INPUT_DEM_GRID = "DemGrid";
 
-  public static final String ID = "Gaja3d_createTin";
+	public static final String OUTPUT_MODEL_TIN = "ModelTin";
 
-  /**
-   * The constructor.
-   */
-  public CreateTinSimulation( )
-  {
-  }
+	public static final String ID = "Gaja3d_createTin";
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
-  public URL getSpezifikation( )
-  {
-    return getClass().getResource( SIMULATION_SPEC );
-  }
+	/**
+	 * The constructor.
+	 */
+	public CreateTinSimulation() {
+	}
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
-  {
-    final URL spezifikation = getSpezifikation();
-    Modelspec modelSpec = null;
-    try
-    {
-      final Unmarshaller unmarshaller = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class ).createUnmarshaller();
-      modelSpec = (Modelspec) unmarshaller.unmarshal( spezifikation );
-    }
-    catch( final JAXBException e )
-    {
-      throw new SimulationException( "Could not read model spec.", e );
-    }
+	/**
+	 * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
+	 */
+	public URL getSpezifikation() {
+		return getClass().getResource(SIMULATION_SPEC);
+	}
 
-    final ArrayList<String> arguments = new ArrayList<String>();
-    arguments.add( "createTin" );
-    arguments.add( "true" );
-    
-    if(inputProvider.hasID( INPUT_DEM_GRID )) {
-      arguments.add( "assignElevations" );
-      arguments.add( "true" );
-    }
+	/**
+	 * @see org.kalypso.simulation.core.ISimulation#run(java.io.File,
+	 *      org.kalypso.simulation.core.ISimulationDataProvider,
+	 *      org.kalypso.simulation.core.ISimulationResultEater,
+	 *      org.kalypso.simulation.core.ISimulationMonitor)
+	 */
+	public void run(final File tmpdir,
+			final ISimulationDataProvider inputProvider,
+			final ISimulationResultEater resultEater,
+			final ISimulationMonitor monitor) throws SimulationException {
+		m_arguments.add("createTin");
+		m_arguments.add("true");
 
-    final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-    jobSubmitter.submitJob( modelSpec, tmpdir, inputProvider, resultEater, monitor, arguments );
-  }
+		FileObject workingDir = null;
+		try {
+			workingDir = getWorkingDir(tmpdir);
+
+			final Object inputForBoundary = inputProvider
+					.getInputForID(INPUT_BOUNDARY);
+			final List<String> boundaryList = getGmlList(inputForBoundary,
+					Gaja3dUrlCatalog.PROPERTY_BOUNDARY);
+			final String boundarySpec = "Boundaries.zip";
+			mergeZipsInWorking(boundaryList, boundarySpec, workingDir);
+			m_arguments.add(INPUT_BOUNDARY);
+			m_arguments.add(boundarySpec);
+
+			if (inputProvider.hasID(INPUT_DEM_GRID)) {
+				m_arguments.add("assignElevations");
+				m_arguments.add("true");
+				final Object inputForDemGrid = inputProvider
+						.getInputForID(INPUT_DEM_GRID);
+				final List<String> demGridList = getGmlList(inputForDemGrid,
+						Gaja3dUrlCatalog.PROPERTY_DEM_GRID);
+				final String demGridSpec = "DemGrid_%04d.asc";
+				copyToRemote(demGridList, demGridSpec, workingDir);
+				m_arguments.add(INPUT_DEM_GRID);
+				m_arguments.add("DemGrid_*.asc");
+			}
+
+			if (inputProvider.hasID(INPUT_BREAKLINES)) {
+				final Object inputForBreaklines = inputProvider
+						.getInputForID(INPUT_BREAKLINES);
+				final List<String> breaklinesList = getGmlList(
+						inputForBreaklines,
+						Gaja3dUrlCatalog.PROPERTY_BREAKLINES);
+				final String breaklinesSpec = "Breaklines.zip";
+				mergeZipsInWorking(breaklinesList, breaklinesSpec, workingDir);
+				m_arguments.add(INPUT_BREAKLINES);
+				m_arguments.add(breaklinesSpec);
+			}
+
+			addReferencedInput(inputProvider, INPUT_MAX_AREA, false);
+			addReferencedInput(inputProvider, INPUT_MIN_ANGLE, false);
+
+			final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
+			jobSubmitter.submitJob(workingDir, monitor, m_arguments);
+
+			final FileObject modelTinFile = workingDir
+					.resolveFile("ModelTin.zip");
+			final FileName modelTinFileName = modelTinFile.getName();
+			final String modelTinUri = modelTinFileName.getURI();
+			if (!modelTinFile.exists())
+				throw new SimulationException("Required output was not found: "
+						+ modelTinUri);
+			final URI modelTinLocation = new URI(modelTinUri);
+			resultEater.addResult(OUTPUT_MODEL_TIN, modelTinLocation);
+		} catch (final SimulationException e) {
+			throw e;
+		} catch (final Exception e) {
+			throw new SimulationException(
+					"Problem during tin creation.", e);
+		} finally {
+			if (workingDir != null) {
+				try {
+					workingDir.close();
+					final StandardFileSystemManager manager = (StandardFileSystemManager) workingDir
+							.getFileSystem().getFileSystemManager();
+					manager.close();
+				} catch (final FileSystemException e) {
+					// gobble
+				}
+			}
+		}
+	}
 }
