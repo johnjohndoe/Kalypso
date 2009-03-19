@@ -589,3 +589,12 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
       Additional informations in SUBROUTINE GenerateOutputFileName and RMA10     
       >> SubR RMA10, Modell_Schreiben                                                 
 --- Monika Donner, 19.03.2009
+
+--- Monika Donner, 19.03.2009
+086.) Correction in SubR second:
+      Definition for integer :: itim
+      >> SubR SECOND 
+087.) Correction in SubR PipeSurfaceConnectionQs :
+      Formula:  flow = PS1 * (-1.0)  is corrected  
+      >> SubR PipeSurfaceConnectionQs                                                 
+--- Monika Donner, 19.03.2009
