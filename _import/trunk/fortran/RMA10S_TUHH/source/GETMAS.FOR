@@ -1,3 +1,4 @@
+C     Last change:  MD   13 Jan 2009   12:24 pm
 CIPK LAST UPDATE SEP 05 2006 REVISE MASS COMPUTATION
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF. AND INITIAL MASS 
       SUBROUTINE GETMAS
@@ -23,20 +24,35 @@ C-
 C-.....ASSIGN PROPER COEFS.....
 C-
 
+!MD: Basis-Variable: Wasserdichte
+      !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
+      !     Je nach Vorgabe der SI-Einheiten unter "IGRV"
+      ROAVG=1.935
+      IF (GRAV.LT.32.) ROAVG=516.*1.935
+!MD: Basis-Variable: Wasserdichte
+
 C
       DO 75 NN=1,NPM
          N = NN
          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
-
-CIPKSEP05
- 
          NLAYT=NLAYTND(N)
          DO J=1,NLAYT
+           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
+           GADND(N,J)=(GABND(N)-ROAVG)*GACND(N) /(GACND(N)-ROAVG)
            GAD(J)=GADND(N,J)
+           !MD: NEUE Berechnung der Trocken-Rohdichte Sus.[kg/m3]
          ENDDO
          GAC=GACND(N)
          GAB=GABND(N)
+         !MD NEU Berechnung der Suspensionsdichte
+         IF (VEL(6,N).ge.0.) THEN
+           GAWND(N)=(VEL(6,N)/1000.)*(1.-ROAVG/GACND(N)) + ROAVG
+         Else
+           GAWND(N)= ROAVG
+         END IF
          GAW=GAWND(N)
+         !MD NEU Berechnung der Suspensionsdichte
+
 C Calculate total dry mass of new bed
          TVN = 0.
          DO L=1,NLAY(NN)
@@ -45,7 +61,9 @@ C Calculate total dry mass of new bed
 cipk jan05
          IF(NLAYO(NN) .GT. 0) THEN
            DO L=1,NLAYO(NN)
-             GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
+             !MD: GADLN = (GBO(NN,L)-GAW)*GAC/(GAC-GAW)
+             GADLN=(GBO(NN,L)-ROAVG)*GAC/(GAC-ROAVG)
+             !MD:  NEUE Berechnung der Trocken-Rohdichte Bed [kg/m3]
              TVN = TVN + THICKO(NN,L)*GADLN
            ENDDO
 	   ENDIF
