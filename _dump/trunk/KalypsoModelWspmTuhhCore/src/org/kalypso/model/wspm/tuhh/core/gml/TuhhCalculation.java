@@ -69,6 +69,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
 {
+  public static final QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" );
+
   public static enum ExeVersion
   {
     _2_0_6_6,
@@ -393,7 +395,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 
   public void setRunOffRef( final String runOffRef )
   {
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "runOffEventMember" ), runOffRef ); //$NON-NLS-1$
+    getFeature().setProperty( QN_PROPERTY_RUN_OFF_EVENT_MEMBER, runOffRef ); //$NON-NLS-1$
   }
 
   public TuhhReach getReach( )
@@ -405,9 +407,14 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     return new TuhhReach( reachFeature );
   }
 
+  public Feature getRunOffEventFeature( )
+  {
+    return FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER ); //$NON-NLS-1$
+  }
+  
   public IObservation<TupleResult> getRunOffEvent( )
   {
-    final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), new QName( NS_WSPM_TUHH, "runOffEventMember" ) ); //$NON-NLS-1$
+    final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER ); //$NON-NLS-1$
     if( runOffEvent == null )
       return null;
 
