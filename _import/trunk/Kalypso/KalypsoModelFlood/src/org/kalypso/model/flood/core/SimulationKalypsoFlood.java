@@ -132,7 +132,9 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
           processEvent( eventFolder, event, progressChunk );
         }
         else
+        {
           monitorAdd( progressChunk * 2 );
+        }
       }
       final File tmpModel = File.createTempFile( "tmpFloodModel", ".gml", tmpdir );
       GmlSerializer.serializeWorkspace( tmpModel, modelWorkspace, "UTF-8" );
@@ -141,7 +143,7 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
     }
     catch( final Exception e )
     {
-      throw new SimulationException( e.getLocalizedMessage() );
+      throw new SimulationException( e.getLocalizedMessage(), e );
     }
   }
 
@@ -150,12 +152,17 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
     final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
+    if( polygons.isEmpty() )
+      return;
+    
     /* Filter Volume Polygon */
     final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
     for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodVolumePolygon && floodPolygon.getEvents().contains( event ) )
+      {
         volumePolygons.add( (IFloodVolumePolygon) floodPolygon );
+      }
     }
 
     // final SubMonitor progress = SubMonitor.convert( event, volumePolygons.size() );
@@ -264,8 +271,10 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
     final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
 
     /* check for existing result coverages */
-    final ICoverageCollection resultCoverages = event.getResultCoverages();
-
+    // TODO: existing result should be removed! IMPORTANT: also remove underlying grid-files
+    // all this should be done before the calculation is started.
+    final ICoverageCollection resultCoverages = event.createResultCoverages();
+    
     /*
      * FIXME: in the interactive mode (workflow task handler, org.kalypso.model.flood.handlers.ProcessFloodModelHandler),
      * we are asking user to delete or to keep existing results; so, we cannot just throw an exception here!
@@ -338,7 +347,9 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
   {
     final Map<String, String> map = new HashMap<String, String>();
     for( final MODELSPEC_KALYPSOFLOOD key : keys )
+    {
       map.put( key.name(), key.getValue() );
+    }
     return map;
   }
 

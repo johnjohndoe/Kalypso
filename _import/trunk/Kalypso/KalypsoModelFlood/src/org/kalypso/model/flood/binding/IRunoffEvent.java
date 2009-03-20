@@ -77,4 +77,6 @@ public interface IRunoffEvent extends IFeatureWrapper2
   public boolean isMarkedForProcessing( );
 
   public void setMarkedForProcessing( final boolean value );
+
+  public ICoverageCollection createResultCoverages( );
 }

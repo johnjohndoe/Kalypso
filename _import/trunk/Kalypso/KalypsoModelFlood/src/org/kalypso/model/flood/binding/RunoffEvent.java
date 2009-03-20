@@ -42,7 +42,9 @@ package org.kalypso.model.flood.binding;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -75,6 +77,28 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   }
 
   /**
+   * Creates a new result collection and returns it.<br>
+   * If the result collection already exists, the eixsting one will be returned.
+   * 
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#createResultCoverages()
+   */
+  @Override
+  public ICoverageCollection createResultCoverages( )
+  {
+    final ICoverageCollection existingCoverages = getResultCoverages();
+    if( existingCoverages != null )
+      return existingCoverages;
+
+    final IRelationType relationType = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_RESULT_COVERAGES );
+    final GMLWorkspace workspace = getFeature().getWorkspace();
+    final Feature newFeature = workspace.createFeature( getFeature(), relationType, relationType.getTargetFeatureType() );
+    final ICoverageCollection newCollection = (ICoverageCollection) newFeature.getAdapter( ICoverageCollection.class );
+    setResultCoverages( newCollection );
+
+    return getResultCoverages();
+  }
+
+  /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#getTins()
    */
   public IFeatureWrapperCollection<ITinReference> getTins( )
@@ -102,7 +126,7 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   /**
    * @see org.kalypso.model.flood.binding.IRunoffEvent#setResultCoverages(org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection)
    */
-  public void setResultCoverages( ICoverageCollection collection )
+  public void setResultCoverages( final ICoverageCollection collection )
   {
     getFeature().setProperty( QNAME_PROP_RESULT_COVERAGES, collection );
   }

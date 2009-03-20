@@ -85,7 +85,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1">
+					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1" nillable="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<name><![CDATA[Fließtiefen]]></name>
