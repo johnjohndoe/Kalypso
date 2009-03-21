@@ -20,6 +20,8 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:swtimage:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:runOffEventMember:swtimage:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:RunOffEvent:uiproperties:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.properties" />
+	<catalog:system	systemId="urn:kalypso:chart:configuration:org.kalypso.model.wspmrunoff:RunOffEvent:default"	uri="org.kalypso.model.wspmrunoff.RunOffEvent.kod" />
+
 
     <!-- org.kalypso.model.wspmrunoff.WaterlevelFixation -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:featureview:default" uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.gft" />
@@ -27,6 +29,7 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:waterlevelFixationMember:swtimage:default" uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.gif" />
     <!-- REMARK: we reuse some of the RunOffEvent resources; maybe we should split this if needed -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmrunoff:WaterlevelFixation:uiproperties:default" uri="org.kalypso.model.wspmrunoff.RunOffEvent.properties" />
+	<catalog:system	systemId="urn:kalypso:chart:configuration:org.kalypso.model.wspmrunoff:WaterlevelFixation:default"	uri="org.kalypso.model.wspmrunoff.WaterlevelFixation.kod" />
     
     <!-- org.kalypso.model.wspm.WaterBody -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
