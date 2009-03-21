@@ -96,14 +96,13 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
 {
-  @SuppressWarnings("unchecked")
-  private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.<IProfilProvider> instance(), EditorFirstAdapterFinder.<IProfilProvider> instance() );
 
   protected Form m_form;
 
@@ -132,7 +131,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     {
       final IRecord[] points = m_profile.getPoints();
       if( points.length > 0 )
-        m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+        m_view.update( points, new String[] { "" } );
       updateProblemView();
       return Status.OK_STATUS;
     }
@@ -141,8 +140,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   protected final UIJob m_setActivePointJob = new UIJob( Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.1") ) //$NON-NLS-1$
   {
     @Override
-    public IStatus runInUIThread( IProgressMonitor monitor )
+    public IStatus runInUIThread( final IProgressMonitor monitor )
     {
+      EditorFirstAdapterFinder.<IProfilProvider> instance();
+
       final IRecord activePoint = m_profile.getActivePoint();
       m_view.setSelection( new StructuredSelection( activePoint ) );
       m_view.reveal( activePoint );
@@ -166,7 +167,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     /**
      * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
      */
-    public void onProblemMarkerChanged( IProfil source )
+    public void onProblemMarkerChanged( final IProfil source )
     {
       m_markerRefreshJob.cancel();
       m_markerRefreshJob.schedule( 500 );
@@ -231,7 +232,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   {
     final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
     if( contextService != null )
-      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" ); //$NON-NLS-1$
+      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" );
 
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createForm( parent );
@@ -253,8 +254,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
-    ExcelTableCursor m_cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-    ControlEditor m_controlEditor = new ControlEditor( m_cursor );
+    final ExcelTableCursor m_cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    final ControlEditor m_controlEditor = new ControlEditor( m_cursor );
     m_controlEditor.grabHorizontal = true;
     m_controlEditor.grabVertical = true;
 
@@ -307,7 +308,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( (m_profile == null) )
     {
-      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION );
 
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
@@ -318,7 +319,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
 
     /* Create handlers for this profile */
-    setContentDescription( "" ); //$NON-NLS-1$
+    setContentDescription( "" );
     final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );

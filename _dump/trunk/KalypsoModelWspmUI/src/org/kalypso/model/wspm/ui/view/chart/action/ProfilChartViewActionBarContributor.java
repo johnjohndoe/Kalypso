@@ -62,7 +62,7 @@ public class ProfilChartViewActionBarContributor implements IActionBarContributo
 {
   private final StatusPosContributionItem m_statusPosItem = new StatusPosContributionItem( "profilChartViewStatusPosItem" ); //$NON-NLS-1$
 
-  private final AdapterPartListener<ProfilChartView> m_adapterPartListener = new AdapterPartListener<ProfilChartView>( ProfilChartView.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener<ProfilChartView> m_adapterPartListener = new AdapterPartListener<ProfilChartView>( ProfilChartView.class, this, EditorFirstAdapterFinder.<ProfilChartView> instance(), EditorFirstAdapterFinder.<ProfilChartView> instance() );
 
   protected List<ChartAction> m_chartActions = new ArrayList<ChartAction>();
 
