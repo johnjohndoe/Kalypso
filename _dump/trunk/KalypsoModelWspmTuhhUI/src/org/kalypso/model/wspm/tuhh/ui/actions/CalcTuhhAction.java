@@ -119,8 +119,8 @@ public class CalcTuhhAction implements IActionDelegate
         {
           try
           {
-            final String calcxpath = Messages.getFormatString("org.kalypso.model.wspm.tuhh.ui.actions.CalcTuhhAction.2", calculation.getFeature().getId()); //$NON-NLS-1$
-            final String resultPath = "Ergebnisse/" + calculation.getName(); //$NON-NLS-1$
+            final String calcxpath = String.format( "id('%s')", calculation.getFeature().getId() ); //$NON-NLS-1$
+            final String resultPath = calculation.getResultFolder().toPortableString();
 
             final ModelNature nature = (ModelNature) gmlFile.getProject().getNature( ModelNature.ID );
             if( nature == null )

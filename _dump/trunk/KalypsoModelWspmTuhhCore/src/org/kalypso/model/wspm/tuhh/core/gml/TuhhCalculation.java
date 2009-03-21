@@ -395,7 +395,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 
   public void setRunOffRef( final String runOffRef )
   {
-    getFeature().setProperty( QN_PROPERTY_RUN_OFF_EVENT_MEMBER, runOffRef ); //$NON-NLS-1$
+    getFeature().setProperty( QN_PROPERTY_RUN_OFF_EVENT_MEMBER, runOffRef );
   }
 
   public TuhhReach getReach( )
@@ -409,12 +409,12 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 
   public Feature getRunOffEventFeature( )
   {
-    return FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER ); //$NON-NLS-1$
+    return FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
   }
-  
+
   public IObservation<TupleResult> getRunOffEvent( )
   {
-    final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER ); //$NON-NLS-1$
+    final Feature runOffEvent = FeatureHelper.resolveLink( getFeature(), QN_PROPERTY_RUN_OFF_EVENT_MEMBER );
     if( runOffEvent == null )
       return null;
 
@@ -465,9 +465,6 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
   public IPath getResultFolder( )
   {
     final String calcCaseName = getName();
-    final Path path = new Path( String.format( "Ergebnisse/%s", calcCaseName ) );
-// "Ergebnisse/kollau-ist-HQ_5_neu";
-
-    return path;
+    return new Path( String.format( "Ergebnisse/%s", calcCaseName ) );
   }
 }
