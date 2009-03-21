@@ -697,7 +697,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.39" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+      final List<GM_Surface<GM_SurfacePatch>> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
       {
@@ -772,7 +772,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
       KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", Messages.getString( "org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler.58" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+      final List<GM_Surface<GM_SurfacePatch>> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
       {
@@ -1081,7 +1081,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * Splits the triangle into sub-triangles. At first, the arcs to split get identified and the split nodes are added to
    * the node list
-   * 
+   *
    * @param nodes
    *          node list of the triangle to split. In this list the split nodes are added.
    */
@@ -1370,7 +1370,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * - the inserted node lies between node0 and node1.<br>
    * - the inserted node lies between node1 and node2.<br>
    * - the inserted node lies between node2 and node0.<br>
-   * 
+   *
    * @param nodes
    *          list of all nodes of the triangle to split
    * @param splitArcs
