@@ -46,7 +46,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * <p>
  * Painting of the layers symbol is delegated to the layers
  * </p>
- * 
+ *
  * @see de.belger.swtchart.ChartCanvas
  * @see de.belger.swtchart.layer.IChartLayer
  * @author gernot
@@ -185,14 +185,14 @@ public class ChartLegend extends LabelProvider implements DisposeListener, IChar
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     return element instanceof IChartLayer ? ((IChartLayer) element).getTitle() : element.toString();
   }
 
   /**
    * Try to recall old selection. Compares layers by name ( {@link IChartLayer#toString()})
-   * 
+   *
    * @param selection
    */
   private ISelection calcSelection( final String[] selection )
@@ -276,7 +276,7 @@ public class ChartLegend extends LabelProvider implements DisposeListener, IChar
         final IStructuredSelection struct = (IStructuredSelection) selection;
         m_lastSelection = new String[struct.size()];
         int count = 0;
-        for( final Iterator sIt = struct.iterator(); sIt.hasNext(); )
+        for( final Iterator< ? > sIt = struct.iterator(); sIt.hasNext(); )
           m_lastSelection[count++] = sIt.next().toString();
         final Object element = struct.getFirstElement();
         if( element instanceof IChartLayer )

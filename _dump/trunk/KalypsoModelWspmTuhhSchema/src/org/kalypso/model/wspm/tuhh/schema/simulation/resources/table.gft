@@ -34,6 +34,9 @@
             style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:gml="http://www.opengis.net/gml">
             <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4"
                 horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
+             <gft:toolbar>
+             	<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
+             </gft:toolbar>
         </gft:tupleResult>
 
     </gft:view>

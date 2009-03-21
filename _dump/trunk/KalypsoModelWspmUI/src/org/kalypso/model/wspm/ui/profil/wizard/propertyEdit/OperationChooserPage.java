@@ -88,11 +88,11 @@ public class OperationChooserPage extends WizardPage
 {
   private class PropertyCalculator
   {
-    private final String m_id;
+    public final String m_id;
 
-    private final String m_tooltip;
+    public final String m_tooltip;
 
-    private final IPointPropertyCalculator m_calculator;
+    public final IPointPropertyCalculator m_calculator;
 
     public PropertyCalculator( final String id, final String tooltip, final IPointPropertyCalculator calculator )
     {
@@ -284,13 +284,7 @@ public class OperationChooserPage extends WizardPage
       @Override
       public void focusLost( final FocusEvent e )
       {
-        m_value = NumberUtils.parseQuietDouble( bldText.getText() );
-        final IDialogSettings dialogSettings = getDialogSettings();
-        if( dialogSettings != null )
-        {
-          dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
-          setPageComplete( m_value.isNaN() );
-        }
+        handleFocusLost( bldText.getText() );
       }
     } );
 
@@ -413,5 +407,16 @@ public class OperationChooserPage extends WizardPage
         selected.add( (IRecord) obj );
     }
     return selected;
+  }
+
+  protected void handleFocusLost( final String text )
+  {
+    final IDialogSettings dialogSettings = getDialogSettings();
+    m_value = NumberUtils.parseQuietDouble( text );
+    if( dialogSettings != null )
+    {
+      dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
+      setPageComplete( m_value.isNaN() );
+    }
   }
 }

@@ -68,6 +68,9 @@
 		<gft:tupleResult style="SWT.BORDER" property="tuhh:buildingParameterMember">
 			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
 				verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
+			<gft:toolbar>
+				<gft:menuContribution uri="org.kalypso.ui.tupleResult.menus.standardReadOnly"/>
+			</gft:toolbar>
 		</gft:tupleResult>
 	</gft:group>
 
