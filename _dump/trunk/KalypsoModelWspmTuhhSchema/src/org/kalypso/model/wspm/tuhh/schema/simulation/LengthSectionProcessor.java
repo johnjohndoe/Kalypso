@@ -195,7 +195,7 @@ public class LengthSectionProcessor
 // timeLogger.takeInterimTime();
 // timeLogger.printCurrentInterim( "Start-Read LS: " );
 
-    final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURL(), null );
+    final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( gmlFile.toURI().toURL(), null );
     final Feature rootFeature = obsWks.getRootFeature();
 
     final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );

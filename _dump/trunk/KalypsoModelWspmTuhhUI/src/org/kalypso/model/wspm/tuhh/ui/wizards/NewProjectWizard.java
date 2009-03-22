@@ -84,24 +84,21 @@ import org.kalypso.model.wspm.tuhh.ui.i18n.Messages;
  * Wizard to create a new wspm tuhh project.<br>
  * Overwrite for special purposes, like create new project and import data from an existing datasource.<br>
  * If overwritten, also {@link #doFinish(IProject, IProgressMonitor)} should be overwritten<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class NewProjectWizard extends Wizard implements INewWizard, IExecutableExtension, INewProjectWizard
 {
   private final class DoFinishOperation extends WorkspaceModifyOperation
   {
-    private final IProject m_project;
-
-    protected DoFinishOperation( final IProject project )
+    protected DoFinishOperation( )
     {
-      m_project = project;
     }
 
     @Override
     protected void execute( final IProgressMonitor monitor ) throws CoreException
     {
-      doFinish( m_project, monitor );
+      doFinish( getNewProject(), monitor );
     }
   }
 
@@ -213,7 +210,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   {
     m_project = m_createProjectPage.getProjectHandle();
 
-    final DoFinishOperation op = new DoFinishOperation( m_project );
+    final DoFinishOperation op = new DoFinishOperation();
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( status.matches( IStatus.ERROR ) )
@@ -287,7 +284,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
   /**
    * Overwritten to remember configuration element.
-   * 
+   *
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */

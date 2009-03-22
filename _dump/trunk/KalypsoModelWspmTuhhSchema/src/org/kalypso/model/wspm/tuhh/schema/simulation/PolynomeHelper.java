@@ -102,7 +102,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Helper class to start the processing of the polynomes.
- * 
+ *
  * @author Gernot Belger
  */
 public class PolynomeHelper
@@ -119,7 +119,7 @@ public class PolynomeHelper
 
   /**
    * Prepares the input files for the polynome process
-   * 
+   *
    * @param tmpDir
    *          any tmp dir, must be empty before start, may be deleted after end
    * @param dathDir
@@ -335,7 +335,7 @@ public class PolynomeHelper
   private static void readResults( final File resultDir, final File targetGmlFile, final TuhhCalculation calculation, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
   {
     /* Read results */
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, targetGmlFile.toURI().toURL(), GmlSerializer.DEFAULT_FACTORY );
     final QIntervallResultCollection resultCollection = new QIntervallResultCollection( workspace.getRootFeature() );
     final Map<BigDecimal, QIntervallResult> pointResults = readProfFiles( resultDir, resultCollection, calculation, log );
 
@@ -723,7 +723,7 @@ public class PolynomeHelper
       /* Create a new Point Result if not yet existant */
       // REMARK: hopefully, there is always at least one result
       final QIntervallResult firstqResult = pointResults.values().iterator().next();
-      final QIntervallResultCollection qresultCollection = new QIntervallResultCollection( firstqResult.getFeature().getParent() );
+      final QIntervallResultCollection qresultCollection = new QIntervallResultCollection( firstqResult.getFeature().getOwner() );
       final QIntervallResult newqresult = qresultCollection.createQResult();
       newqresult.setStation( station );
 

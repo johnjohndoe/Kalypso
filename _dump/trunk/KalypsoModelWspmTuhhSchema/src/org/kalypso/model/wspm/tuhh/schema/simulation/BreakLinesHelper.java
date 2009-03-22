@@ -103,7 +103,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURL(), null );
+      final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURI().toURL(), null );
       final String defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
@@ -115,7 +115,7 @@ public class BreakLinesHelper implements IWspmConstants
       triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "parameter" ), "h" );
       triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "date" ), DateUtilities.toXMLGregorianCalendar( new Date() ) );
 
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURL(), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BREAKLINE, "BreaklineCollection" ), breaklineFile.toURI().toURL(), null );
       final Feature rootFeature = workspace.getRootFeature();
 
       final String gmlVersion = workspace.getGMLSchema().getGMLVersion();
@@ -221,7 +221,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     if( reachProfileSegments.length > 0 )
     {
-      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURL(), null );
+      final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPM_BOUNDARY, "Boundary" ), file.toURI().toURL(), null );
       final Feature rootFeature = workspace.getRootFeature();
 
       // we assume that all points have the same crs

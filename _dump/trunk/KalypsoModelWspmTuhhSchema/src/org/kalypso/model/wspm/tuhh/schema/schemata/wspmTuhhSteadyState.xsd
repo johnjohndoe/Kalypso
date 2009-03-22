@@ -1,42 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 	<!--
-		This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende
-		Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers),
-		http://www.bjoernsen.de Technische Universität Hamburg-Harburg,
-		Institut für Wasserbau, Hamburg, Germany (Technical University
-		Hamburg-Harburg, Institute of River and Coastal Engineering),
-		http://www.tu-harburg.de/wb/ Kalypso is free software: you can
-		redistribute it and/or modify it under the terms of the GNU Lesser
-		General Public License (LGPL) as published by the Free Software
-		Foundation, either version 3 of the License, or (at your option) any
-		later version. Kalypso is distributed in the hope that it will be
-		useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-		Lesser General Public License for more details. You should have
-		received a copy of the GNU Lesser General Public License along with
-		Kalypso. If not, see <http://www.gnu.org/licenses/>.
+		This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as
+		published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
 	-->
-<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
-	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	xmlns:wspmProf="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-	version="0.1">
+<schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmProf="org.kalypso.model.wspmprofile" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="org.kalypso.model.wspm"
-		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd" />
-	<import namespace="org.kalypso.model.wspmcommon"
-		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspmCommons.xsd" />
-	<import namespace="org.kalypso.model.wspmrunoff"
-		schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/runOff.xsd" />
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
-	<import namespace="http://www.opengis.net/om"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
+	<import namespace="org.kalypso.model.wspm" schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspm.xsd" />
+	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/wspmCommons.xsd" />
+	<import namespace="org.kalypso.model.wspmrunoff" schemaLocation="../../../../../../../../../KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/schemata/runOff.xsd" />
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
 	<!-- Schema-Erweiterung für das stationäre WSPM der TU-HH -->
 	<include schemaLocation="wspmTuhhQintervallResults.xsd" />
 	<!--
@@ -44,80 +21,42 @@
 		ELEMENTS
 		_________________________________________________________________________________________
 	-->
-	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType"
-		substitutionGroup="wspm:AbstractCalculation">
+	<element name="CalculationWspmTuhhSteadyState" type="tuhh:CalculationWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
 				Deprecated: use the new calculations cases instead!
 				<name>Berechnungsvariante - stationär (TU-HH)</name>
-				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-Name
-					nicht
-					gesetzt-}
-				</label>
-				<tooltip>
-					${property:http://www.opengis.net/gml#name;0;-Name
-					nicht
-					gesetzt-}
-				</tooltip>
-				<description>
-					<![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]>
-				</description>
+				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]></label>
+				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]></tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Calculation case - steady (TU-HH)</name>
-				<label>
-					${listProperty:http://www.opengis.net/gml#name;0;-no
-					name-}
-				</label>
-				<tooltip>
-					${property:http://www.opengis.net/gml#name;0;-no
-					name-}
-				</tooltip>
-				<description>
-					<![CDATA[${property:http://www.opengis.net/gml#description;-no description-}]]>
-				</description>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>${property:http://www.opengis.net/gml#name;0;-no name-}</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-no description-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
-	<element name="CalculationReibConstWspmTuhhSteadyState"
-		type="tuhh:CalculationReibConstWspmTuhhSteadyStateType"
-		substitutionGroup="wspm:AbstractCalculation">
+	<element name="CalculationReibConstWspmTuhhSteadyState" type="tuhh:CalculationReibConstWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractCalculation">
 		<annotation>
 			<documentation xml:lang="de">
-				<name>
-					<![CDATA[Berechnungsvariante - stationär (TU-HH) - konstantes Reibungsgefälle]]>
-				</name>
-				<label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]>
-				</label>
-				<tooltip>
-					<![CDATA[${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]>
-				</tooltip>
-				<description>
-					<![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]>
-				</description>
+				<name><![CDATA[Berechnungsvariante - stationär (TU-HH) - konstantes Reibungsgefälle]]></name>
+				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]></label>
+				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}]]></tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>
-					<![CDATA[Calculation case - steady (TU-HH)- constant XXXX???]]>
-				</name>
-				<label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
-				</label>
-				<tooltip>
-					<![CDATA[${property:http://www.opengis.net/gml#name;0;-no name-}]]>
-				</tooltip>
-				<description>
-					<![CDATA[${property:http://www.opengis.net/gml#description;-no description-}]]>
-				</description>
+				<name><![CDATA[Calculation case - steady (TU-HH)- constant XXXX???]]></name>
+				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></label>
+				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;0;-no name-}]]></tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-no description-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
 	<!-- 
 	-->
-	<element name="StartCondition" type="tuhh:StartConditionType"
-		substitutionGroup="gml:_Feature">
+	<element name="StartCondition" type="tuhh:StartConditionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>
@@ -145,8 +84,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="RunOffInterval" type="tuhh:RunOffIntervalType"
-		substitutionGroup="gml:_Feature">
+	<element name="RunOffInterval" type="tuhh:RunOffIntervalType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Abflussintervall - stationär (TU-HH)</name>
@@ -164,8 +102,7 @@
 	</element>
 	<!--
 	-->
-	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType"
-		substitutionGroup="gml:_Feature">
+	<element name="WaterlevelParameter" type="tuhh:WaterlevelParameterType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Numerische Parameter - stationär (TU-HH)</name>
@@ -183,8 +120,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType"
-		substitutionGroup="wspm:AbstractReach">
+	<element name="ReachWspmTuhhSteadyState" type="tuhh:ReachWspmTuhhSteadyStateType" substitutionGroup="wspm:AbstractReach">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>
@@ -219,14 +155,7 @@
 	<!-- 
 	-->
 	<!--
-		element name="influentReachSegmentWspmTuhhSteadyStateMember"
-		type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType"
-		substitutionGroup="wspm:reachSegmentMember"> <annotation>
-		<documentation xml:lang="de"> <label>Zufluss-Strangsegmente</label>
-		<tooltip>Zufluss-Strangsegmente</tooltip>
-		<description>Zufluss-Strangsegmente</description> </documentation>
-		<documentation xml:lang="en"> <label>Influent string segments</label>
-		<tooltip>Influent string segments</tooltip> <description>Influent
+		element name="influentReachSegmentWspmTuhhSteadyStateMember" type="tuhh:InfluentReachSegmentWspmTuhhSteadyStatePropertyType" substitutionGroup="wspm:reachSegmentMember"> <annotation> <documentation xml:lang="de"> <label>Zufluss-Strangsegmente</label> <tooltip>Zufluss-Strangsegmente</tooltip> <description>Zufluss-Strangsegmente</description> </documentation> <documentation xml:lang="en"> <label>Influent string segments</label> <tooltip>Influent string segments</tooltip> <description>Influent
 		string segments</description> </documentation> </annotation> </element
 	-->
 	<!-- TODO Überflüssig?, kann eventuell weg. -->
@@ -243,45 +172,25 @@
 	-->
 	<!-- 
 	-->
-	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType"
-		substitutionGroup="gml:_Feature">
+	<element name="ProfileReachSegmentWspmTuhhSteadyState" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStateType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<name>Profil-Strangsegment - stationär (TU-HH)</name>
-				<label>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</label>
-				<tooltip>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</tooltip>
-				<description>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</description>
+				<name><![CDATA[Profil-Strangsegment - stationär (TU-HH)]]></name>
+				<label><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></label>
+				<tooltip><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></tooltip>
+				<description><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Profile string segment - steady (TU-HH)</name>
-				<label>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</label>
-				<tooltip>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</tooltip>
-				<description>
-					Station km
-					${property:org.kalypso.model.wspm.tuhh#station;-}
-				</description>
+				<name><![CDATA[Profile string segment - steady (TU-HH)]]></name>
+				<label><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></label>
+				<tooltip><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></tooltip>
+				<description><![CDATA[Station km ${property:org.kalypso.model.wspm.tuhh#station;-}]]></description>
 			</documentation>
 		</annotation>
 	</element>
 	<!-- 
 	-->
-	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType"
-		substitutionGroup="gml:_Feature">
+	<element name="SubReachDefinition" type="tuhh:subReachDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Berechnungsabschnitt - stationär (TU-HH)</name>
@@ -299,8 +208,7 @@
 	</element>
 	<!-- 
 	-->
-	<element name="SpecialOptions" type="tuhh:specialOptionsType"
-		substitutionGroup="gml:_Feature">
+	<element name="SpecialOptions" type="tuhh:specialOptionsType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Zusatzoptionen - stationär (TU-HH)</name>
@@ -697,8 +605,7 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<element name="fliessgesetz" type="tuhh:fluidModelType"
-		default="DARCY_WEISBACH_MIT_FORMEINFLUSS">
+	<element name="fliessgesetz" type="tuhh:fluidModelType" default="DARCY_WEISBACH_MIT_FORMEINFLUSS">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Fließgesetz</label>
@@ -1059,8 +966,7 @@
 			<element ref="tuhh:CalcPolynomes" />
 		</sequence>
 	</complexType>
-	<element name="CalcPolynomes" type="tuhh:CalcPolynomesType"
-		substitutionGroup="gml:_Feature">
+	<element name="CalcPolynomes" type="tuhh:CalcPolynomesType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Polynomberechnung</name>
@@ -1708,9 +1614,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 	<complexType name="ReachWspmTuhhSteadyStateType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty"
-					kapp:property="tuhh:waterBodyLinkMember">
+				<kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.tuhh.schema.function.WaterBodyParentFunctionProperty" kapp:property="tuhh:waterBodyLinkMember">
 				</kapp:functionProperty>
 			</appinfo>
 		</annotation>
@@ -1764,9 +1668,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="reachSegmentMember"
-						type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<element name="reachSegmentMember" type="tuhh:ProfileReachSegmentWspmTuhhSteadyStatePropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Gewässerstrangsegmente</label>
@@ -1786,8 +1688,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="markerMember" type="tuhh:ProfileMarkerPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<element name="markerMember" type="tuhh:ProfileMarkerPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation>
 								This list of markers is generated from
@@ -1808,9 +1709,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 	<complexType name="ProfileReachSegmentWspmTuhhSteadyStateType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.gml.functionProperty.copyProperty"
-					kapp:property="tuhh:station">
+				<kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:station">
 					<kapp:parameter>
 						<!-- TODO -->
 						<kapp:name>xpath</kapp:name>
@@ -1823,9 +1722,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						<kapp:value>false</kapp:value>
 					</kapp:parameter>
 				</kapp:functionProperty>
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.gml.functionProperty.copyProperty"
-					kapp:property="tuhh:profileLocation">
+				<kapp:functionProperty kapp:functionId="org.kalypso.gml.functionProperty.copyProperty" kapp:property="tuhh:profileLocation">
 					<kapp:parameter>
 						<!-- TODO -->
 						<kapp:name>xpath</kapp:name>
@@ -1928,18 +1825,8 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						the tuhh steady-state flow model
 					-->
 					<!--
-						<element name="distanceL" type="double"> <annotation>
-						<documentation xml:lang="de"> <label>???distanceL</label>
-						<tooltip>???tooltip</tooltip> <description>Abstand UW??? linkes
-						Vorland</description> </documentation> </annotation> </element>
-						<element name="distanceM" type="double"> <annotation>
-						<documentation xml:lang="de"> <label>???distanceM</label>
-						<tooltip>???tooltip</tooltip> <description>Abstand UW???
-						Hauptöffnung</description> </documentation> </annotation>
-						</element> <element name="distanceR" type="double"> <annotation>
-						<documentation xml:lang="de"> <label>???distanceR</label>
-						<tooltip>???tooltip</tooltip> <description>Abstand UW??? rechtes
-						Vorland</description> </documentation> </annotation> </element>
+						<element name="distanceL" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceL</label> <tooltip>???tooltip</tooltip> <description>Abstand UW??? linkes Vorland</description> </documentation> </annotation> </element> <element name="distanceM" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceM</label> <tooltip>???tooltip</tooltip> <description>Abstand UW??? Hauptöffnung</description> </documentation> </annotation> </element> <element
+						name="distanceR" type="double"> <annotation> <documentation xml:lang="de"> <label>???distanceR</label> <tooltip>???tooltip</tooltip> <description>Abstand UW??? rechtes Vorland</description> </documentation> </annotation> </element>
 					-->
 				</sequence>
 			</extension>
@@ -2097,8 +1984,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 			<element ref="tuhh:ProfileMarker" />
 		</sequence>
 	</complexType>
-	<element name="ProfileMarker" type="tuhh:ProfileMarkerType"
-		substitutionGroup="gml:_Feature">
+	<element name="ProfileMarker" type="tuhh:ProfileMarkerType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Marker</label>
@@ -2112,9 +1998,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 	<complexType name="ProfileMarkerType">
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.gmlschema.functionProperty.dontinvalidgeo"
-					kapp:property="tuhh:location">
+				<kapp:functionProperty kapp:functionId="org.kalypso.gmlschema.functionProperty.dontinvalidgeo" kapp:property="tuhh:location">
 				</kapp:functionProperty>
 			</appinfo>
 		</annotation>
