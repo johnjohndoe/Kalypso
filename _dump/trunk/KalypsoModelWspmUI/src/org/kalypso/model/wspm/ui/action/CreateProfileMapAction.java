@@ -4,24 +4,30 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.progress.UIJob;
@@ -78,40 +84,47 @@ public class CreateProfileMapAction extends ActionDelegate
 
     if( selectedFeatures.size() == 0 )
     {
-      MessageDialog.openWarning( shell, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.0"), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( shell, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    createAndOpenMap( action, selectedFeatures, shell );
+    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    createAndOpenMap( activePart, selectedFeatures );
   }
 
-  public static void createAndOpenMap( final IAction action, final Map<Feature, IRelationType> selectedProfiles, final Shell shell )
+  public static void createAndOpenMap( final IWorkbenchPart activePart, final Map<Feature, IRelationType> selectedProfiles )
   {
-    final String mapTemplate = createMapTemplate( action, selectedProfiles, shell );
-    if( mapTemplate == null )
-      return;
 
-    final UIJob uijob = new UIJob( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.2") ) //$NON-NLS-1$
+    final UIJob uijob = new UIJob( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.2" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         try
         {
-          final IWorkbench workbench = PlatformUI.getWorkbench();
+          final String title = guessTitle( selectedProfiles.keySet() );
+          final String mapTemplate = createMapTemplate( selectedProfiles, title );
+          if( mapTemplate == null )
+            return Status.OK_STATUS;
 
-          final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-          final IWorkbenchPage page = window.getActivePage();
+          final String storageName = title == null ? "<unbekannt>.gmt" : title + ".gmt";
+          final IPath storagePath = guessPath( activePart, storageName );
+
+          final IWorkbenchPartSite activeSite = activePart.getSite();
+          final IWorkbenchPage page = activeSite.getPage();
+          final IWorkbench workbench = activeSite.getWorkbenchWindow().getWorkbench();
 
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
-          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", mapTemplate, null ) ); //$NON-NLS-1$
+          final IEditorInput input = new StorageEditorInput( new StringStorage( storageName, mapTemplate, storagePath ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
-        catch( final Exception e )
+        catch( final CoreException e )
         {
-          return StatusUtilities.statusFromThrowable( e );
+          final IStatus status = e.getStatus();
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+          return status;
         }
 
         return Status.OK_STATUS;
@@ -121,11 +134,42 @@ public class CreateProfileMapAction extends ActionDelegate
     uijob.schedule();
   }
 
-  private static String createMapTemplate( final IAction action, final Map<Feature, IRelationType> selectedProfiles, final Shell shell )
+  static IPath guessPath( final IWorkbenchPart part, final String storageName ) throws CoreException
+  {
+    if( part instanceof IEditorPart )
+    {
+      final IEditorInput editorInput = ((IEditorPart) part).getEditorInput();
+      if( editorInput instanceof IStorageEditorInput )
+      {
+        final IStorage storage = ((IStorageEditorInput) editorInput).getStorage();
+        final IPath fullPath = storage.getFullPath();
+        if( fullPath != null )
+        {
+          final IPath parentPath = fullPath.removeLastSegments( 1 );
+          return parentPath.append( storageName );
+        }
+      }
+    }
+
+    return null;
+  }
+
+  static String guessTitle( final Set<Feature> keySet )
+  {
+    if( keySet.isEmpty() )
+      return null;
+
+    final Feature firstFeature = keySet.iterator().next();
+    return firstFeature.getName();
+  }
+
+  static String createMapTemplate( final Map<Feature, IRelationType> selectedProfiles, final String title ) throws CoreException
   {
     try
     {
       final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
+      if( title != null )
+        gismapview.setName( title );
       final StringWriter stringWriter = new StringWriter();
       GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" ); //$NON-NLS-1$
       stringWriter.close();
@@ -134,16 +178,13 @@ public class CreateProfileMapAction extends ActionDelegate
     }
     catch( final JAXBException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( shell, action.getText(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.action.CreateProfileMapAction.4"), status ); //$NON-NLS-1$
-      return null;
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.4" ), e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
     catch( final IOException e )
     {
-      // will never happen as we have a string-writer here
-      e.printStackTrace();
-      return null;
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), e );
+      throw new CoreException( status );
     }
   }
 
