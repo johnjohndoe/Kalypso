@@ -45,20 +45,6 @@
    </requires>
 
    <plugin
-         id="com.bce.profil.resources"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.belger.swtchart.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.kalypso.model.wspm.core"
          download-size="0"
          install-size="0"
@@ -102,13 +88,6 @@
 
    <plugin
          id="org.kalypso.wspwin.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -206,13 +185,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.jwsdp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.kalypso.auth"
          download-size="0"
          install-size="0"
@@ -221,13 +193,6 @@
 
    <plugin
          id="org.kalypso.metadoc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.services.core.client"
          download-size="0"
          install-size="0"
          version="0.0.0"
