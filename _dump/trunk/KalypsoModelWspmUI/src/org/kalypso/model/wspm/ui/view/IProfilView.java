@@ -57,13 +57,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IProfilView
 {
-  /**
-   * <p>
-   * Creates control of this view and returns it
-   * </p>
-   */
-  public Control createControl( final Composite parent, final int style );
-  
   public Control createControl( final Composite parent, final FormToolkit toolkit);
 
   /**

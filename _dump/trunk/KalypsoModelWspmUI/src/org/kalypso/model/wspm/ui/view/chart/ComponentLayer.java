@@ -47,12 +47,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public class ComponentLayer extends AbstractProfilLayer
 {
-
- 
   public ComponentLayer( final IProfil profil, final String targetRangeProperty )
   {
     super( profil, targetRangeProperty, null );
   }
- 
-
 }

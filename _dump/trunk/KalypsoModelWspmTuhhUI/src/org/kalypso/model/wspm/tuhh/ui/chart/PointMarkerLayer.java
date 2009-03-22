@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
@@ -64,12 +64,11 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
  */
 public class PointMarkerLayer extends AbstractProfilLayer
 {
-
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     final EditInfo ei = super.getHover( pos );
     if( ei == null )
@@ -98,9 +97,9 @@ public class PointMarkerLayer extends AbstractProfilLayer
    */
 
   @Override
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
+    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
@@ -125,9 +124,8 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public Rectangle getHoverRect( IRecord profilPoint )
+  public Rectangle getHoverRect( final IRecord profilPoint )
   {
-
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( profilPoint );
     for( final IProfilPointMarker devider : deviders )
     {
@@ -145,7 +143,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
     final IComponent target = getTargetComponent();
@@ -160,16 +158,15 @@ public class PointMarkerLayer extends AbstractProfilLayer
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-
       final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() ) );
       final Point p1 = new Point( x, m_offset );
       final Point p2 = new Point( x, baseLine );
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
     }
+
     if( m_close && len > 1 )
     {
-
       final int x1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
       final int x2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
       final Point p1 = new Point( x1, m_offset );
@@ -184,7 +181,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfil profil = getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
@@ -195,21 +192,20 @@ public class PointMarkerLayer extends AbstractProfilLayer
     hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
 
     return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( point ), dragStartData.m_pos );
-
   }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getTooltipInfo(java.awt.geom.Point2D)
    */
   @Override
-  public String getTooltipInfo( IRecord point )
+  public String getTooltipInfo( final IRecord point )
   {
     final Point2D p = getPoint2D( point );
     try
     {
       return String.format( Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.PointMarkerLayer.0"), new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } ); //$NON-NLS-1$
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       return e.getLocalizedMessage();
     }

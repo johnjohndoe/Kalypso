@@ -65,13 +65,12 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class PointsLineLayer extends AbstractProfilLayer
 {
-
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
       getEventHandler().fireLayerContentChanged( this );
@@ -90,12 +89,11 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    LegendEntry le = new LegendEntry( this, toString() )
+    final LegendEntry le = new LegendEntry( this, toString() )
     {
       @Override
-      public void paintSymbol( GC gc, Point size )
+      public void paintSymbol( final GC gc, final Point size )
       {
-
         final Rectangle clipping = gc.getClipping();
 
         final PolylineFigure figure = new PolylineFigure();
@@ -122,10 +120,10 @@ public class PointsLineLayer extends AbstractProfilLayer
    */
 
   @Override
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final Point newPoint = verifyPos( dragStartData.m_pos, point );
-    Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
+    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
@@ -146,7 +144,7 @@ public class PointsLineLayer extends AbstractProfilLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
 
@@ -179,7 +177,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       pf.paint( gc );
     }
 
-    PointFigure pf2 = new PointFigure();
+    final PointFigure pf2 = new PointFigure();
 
     pf2.setStyle( getPointStyle() );
     pf2.setPoints( points );
@@ -197,7 +195,7 @@ public class PointsLineLayer extends AbstractProfilLayer
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
 
     final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
@@ -219,7 +217,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     {
 
       @Override
-      public void paint( GC gc )
+      public void paint( final GC gc )
       {
         lineFigure.paint( gc );
         pointFigure.paint( gc );
@@ -238,7 +236,7 @@ public class PointsLineLayer extends AbstractProfilLayer
    */
 
   @Override
-  public Rectangle getHoverRect( IRecord profilPoint )
+  public Rectangle getHoverRect( final IRecord profilPoint )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
@@ -262,7 +260,7 @@ public class PointsLineLayer extends AbstractProfilLayer
         }
       }
 
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         return oldPos;
       }

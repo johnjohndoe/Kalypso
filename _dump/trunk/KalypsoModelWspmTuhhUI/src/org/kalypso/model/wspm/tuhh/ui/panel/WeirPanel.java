@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
@@ -124,7 +124,7 @@ public class WeirPanel extends AbstractProfilView
     {
       final Composite cmp = m_toolkit.createComposite( parent );
       position = index;
-      GridLayout layout2 = new GridLayout( 4, true );
+      final GridLayout layout2 = new GridLayout( 4, true );
       layout2.marginWidth = 0;
       layout2.marginHeight = 0;
       cmp.setLayout( layout2 );
@@ -140,7 +140,7 @@ public class WeirPanel extends AbstractProfilView
       m_toolkit.createLabel( cmp, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.0") ); //$NON-NLS-1$
       m_point = m_toolkit.createText( cmp, "", SWT.TRAIL | SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
       final GridData pointData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-      Label spacer = m_toolkit.createSeparator( cmp, SWT.SEPARATOR | SWT.HORIZONTAL );
+      final Label spacer = m_toolkit.createSeparator( cmp, SWT.SEPARATOR | SWT.HORIZONTAL );
       spacer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
       m_point.setLayoutData( pointData );
 
@@ -179,7 +179,7 @@ public class WeirPanel extends AbstractProfilView
       if( position < Integer.MAX_VALUE )
       {
         final Composite btnGroup = m_toolkit.createComposite( cmp );
-        GridLayout layout3 = new GridLayout( 2, true );
+        final GridLayout layout3 = new GridLayout( 2, true );
         layout3.marginWidth = 0;
         layout3.marginHeight = 0;
 
@@ -344,7 +344,7 @@ public class WeirPanel extends AbstractProfilView
 
   protected FormToolkit m_toolkit;
 
-  private HashMap<String, Wehrart> m_wehrarten;
+  private final HashMap<String, Wehrart> m_wehrarten;
 
   public WeirPanel( final IProfil profile )
   {
@@ -369,11 +369,11 @@ public class WeirPanel extends AbstractProfilView
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
-  protected Control doCreateControl( final Composite parent, FormToolkit toolkit, final int style )
+  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
     final Composite panel = toolkit.createComposite( parent );
@@ -382,7 +382,7 @@ public class WeirPanel extends AbstractProfilView
 
     // Wehrart ComboBox
     final String tooltip = "";/* TODO:Kim getLabelProvider; */ //$NON-NLS-1$
-    final Label label = toolkit.createLabel( panel, Messages.getString("org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.31"), style ); //$NON-NLS-1$
+    final Label label = toolkit.createLabel( panel, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel.31" ), SWT.NONE ); //$NON-NLS-1$
     label.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label.setToolTipText( tooltip );
 
@@ -426,7 +426,7 @@ public class WeirPanel extends AbstractProfilView
       }
     } );
     toolkit.adapt( m_Wehrart.getCombo() );
-    m_parameterLabel = toolkit.createLabel( panel, "", style ); //$NON-NLS-1$
+    m_parameterLabel = toolkit.createLabel( panel, "", SWT.NONE );
     final GridData plGridData = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     plGridData.horizontalSpan = 2;
     m_parameterLabel.setLayoutData( plGridData );

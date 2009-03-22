@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
@@ -71,12 +71,11 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
-
   private final String m_domainComponent;
 
   private boolean m_isLocked = false;
 
-  private ILineStyle m_LineStyle = null;
+  private ILineStyle m_lineStyle = null;
 
   private ILineStyle m_LineStyle_active = null;
 
@@ -101,7 +100,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       final String id = getId();
 
-      m_LineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
+      m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
       m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
 
       m_LineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
@@ -116,18 +115,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  public EditInfo commitDrag( Point point, EditInfo dragStartData )
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
-
-    if( getTargetComponent() != null )
-      getProfil().setActivePointProperty( getTargetComponent() );
+    final IComponent targetComponent = getTargetComponent();
+    if( targetComponent != null )
+      getProfil().setActivePointProperty( targetComponent );
 
     if( dragStartData.m_pos == point )
       executeClick( dragStartData );
     else
-    {
       executeDrop( point, dragStartData );
-    }
+
     return null;
   }
 
@@ -147,7 +145,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   protected ILegendEntry[] createLegendEntries( )
   {
     // override this method
-    return null;// new ILegendEntry[] {};
+    return null;
   }
 
   /**
@@ -166,7 +164,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
 
-  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     // override this method
     return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
@@ -175,7 +173,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  public void executeClick( EditInfo clickInfo )
+  public void executeClick( final EditInfo clickInfo )
   {
     final Object data = clickInfo.m_data;
     final Integer pos = data instanceof Integer ? (Integer) data : null;
@@ -190,11 +188,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   /**
    * To be implemented by subclasses - if needed
-   * 
+   *
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void executeDrop( final Point point, final EditInfo dragStartData )
   {
   }
 
@@ -221,7 +219,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     if( !isVisible() || getProfil() == null )
       return null;
@@ -263,9 +261,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   protected ILineStyle getLineStyle( )
   {
-    if( m_LineStyle == null )
-      m_LineStyle = StyleUtils.getDefaultLineStyle();
-    return m_LineStyle;
+    if( m_lineStyle == null )
+      m_lineStyle = StyleUtils.getDefaultLineStyle();
+    return m_lineStyle;
   }
 
   protected ILineStyle getLineStyle_active( )
@@ -365,12 +363,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public String getTitle( )
   {
     final IComponent cmp = m_profil == null ? null : m_profil.hasPointProperty( m_targetComponent );
-    return cmp == null ? m_targetComponent : cmp.getName();
+    return cmp == null ? "" : cmp.getName(); //$NON-NLS-1$
   }
 
   public String getTooltipInfo( final IRecord point )
   {
-
     if( point == null || (getTargetComponent() == null) || (getDomainComponent() == null) )
       return ""; //$NON-NLS-1$
     try
@@ -378,7 +375,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       final Point2D p = getPoint2D( point );
       return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName(), p.getY(), getTargetComponent().getUnit() } );
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       return e.getLocalizedMessage();
     }
@@ -396,7 +393,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
    */
-  public void lockLayer( boolean isLocked )
+  public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
 
@@ -406,7 +403,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IProfil profil = getProfil();
     if( profil == null )
@@ -420,7 +417,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     // override this method
   }
@@ -434,32 +431,32 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     throw new UnsupportedOperationException();
   }
 
-  public void setLineStyle( ILineStyle lineStyle )
+  public void setLineStyle( final ILineStyle lineStyle )
   {
-    m_LineStyle = lineStyle;
+    m_lineStyle = lineStyle;
   }
 
-  public void setLineStyle_active( ILineStyle lineStyle_active )
+  public void setLineStyle_active( final ILineStyle lineStyle_active )
   {
     m_LineStyle_active = lineStyle_active;
   }
 
-  public void setLineStyle_hover( ILineStyle lineStyle_hover )
+  public void setLineStyle_hover( final ILineStyle lineStyle_hover )
   {
     m_LineStyle_hover = lineStyle_hover;
   }
 
-  public void setPointStyle( IPointStyle pointStyle )
+  public void setPointStyle( final IPointStyle pointStyle )
   {
     m_pointStyle = pointStyle;
   }
 
-  public void setPointStyle_active( IPointStyle pointStyle_active )
+  public void setPointStyle_active( final IPointStyle pointStyle_active )
   {
     m_pointStyle_active = pointStyle_active;
   }
 
-  public void setPointStyle_hover( IPointStyle pointStyle_hover )
+  public void setPointStyle_hover( final IPointStyle pointStyle_hover )
   {
     m_pointStyle_hover = pointStyle_hover;
   }
@@ -467,7 +464,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
    */
-  public void setProfil( IProfil profil )
+  public void setProfil( final IProfil profil )
   {
     m_profil = profil;
   }
@@ -475,7 +472,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setTargetComponent(java.lang.String)
    */
-  public void setTargetComponent( String componentId )
+  public void setTargetComponent( final String componentId )
   {
     m_targetComponent = componentId;
 

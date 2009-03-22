@@ -57,9 +57,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author kimwerner
  */
 public class CrossSectionTheme extends AbstractProfilTheme
-
 {
-
   public CrossSectionTheme(final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super(profil, IWspmTuhhConstants.LAYER_GELAENDE, Messages.getString("org.kalypso.model.wspm.tuhh.ui.chart.CrossSectionTheme.0"), chartLayers, cm ); //$NON-NLS-1$
@@ -77,7 +75,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint, org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if(hint.isActivePointChanged()||hint.isPointValuesChanged()||hint.isPointsChanged())
     {

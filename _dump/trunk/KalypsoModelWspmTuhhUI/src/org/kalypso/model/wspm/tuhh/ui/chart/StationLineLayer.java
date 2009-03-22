@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
@@ -58,7 +58,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public class StationLineLayer extends ComponentLayer
 {
-
   public StationLineLayer( final IProfil profil, final String targetRangeProperty )
   {
     super( profil, targetRangeProperty );
@@ -70,10 +69,10 @@ public class StationLineLayer extends ComponentLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    LegendEntry le = new LegendEntry( this, toString() )
+    final LegendEntry le = new LegendEntry( this, toString() )
     {
       @Override
-      public void paintSymbol( GC gc, Point size )
+      public void paintSymbol( final GC gc, final Point size )
       {
         drawLine( gc, gc.getClipping() );
       }
@@ -97,7 +96,7 @@ public class StationLineLayer extends ComponentLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
 
@@ -105,9 +104,9 @@ public class StationLineLayer extends ComponentLayer
       return;
     final IRecord[] profilPoints = profil.getPoints();
 
-    IAxis targetAxis = getCoordinateMapper().getTargetAxis();
+    final IAxis targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
-    for( IRecord profilPoint : profilPoints )
+    for( final IRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
       if( point == null )
@@ -116,11 +115,12 @@ public class StationLineLayer extends ComponentLayer
     }
   }
 
-  protected void drawLine( GC gc, final Rectangle clipping )
+  protected void drawLine( final GC gc, final Rectangle clipping )
   {
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle_hover() );
-    pf.setPoints( new Point[] { new Point( clipping.x, clipping.height ), new Point( clipping.x, clipping.y ) } );
+    final int lineX = clipping.x + clipping.width / 2;
+    pf.setPoints( new Point[] { new Point( lineX, clipping.height ), new Point( lineX, clipping.y ) } );
     pf.paint( gc );
   }
 

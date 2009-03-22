@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
@@ -263,18 +263,18 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
         layerToAdd.add( IWspmTuhhConstants.LAYER_TUBES );
     }
 
-    /* We always have a trenner layer, even if no trenner is defined. */
-    layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
-
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) != null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
-    
+
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
 
-   
+
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) != null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GELAENDE );
+
+    /* We always have a trenner layer, even if no trenner is defined. */
+    layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
 
     return layerToAdd.toArray( new String[0] );
   }
@@ -284,50 +284,38 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
    */
   public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view )
   {
-
-    IMapperRegistry mr = view.getChart().getChartModel().getMapperRegistry();
+    final IMapperRegistry mr = view.getChart().getChartModel().getMapperRegistry();
     final CoordinateMapper cmLeft = new CoordinateMapper( mr.getAxis( ProfilChartView.ID_AXIS_DOMAIN ), mr.getAxis( ProfilChartView.ID_AXIS_LEFT ) );
     final CoordinateMapper cmRight = new CoordinateMapper( mr.getAxis( ProfilChartView.ID_AXIS_DOMAIN ), mr.getAxis( ProfilChartView.ID_AXIS_RIGHT ) );
     final IProfil profil = view.getProfil();
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
-    {
       return new VegetationTheme(profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ),
           new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
-    {
+
+    if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       return new GeoCoordinateTheme(profil, new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ),
           new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) }, null );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
-    {
+
+    if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
       return new CrossSectionTheme(profil, new IProfilChartLayer[] {new StationLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE ), new PointsLineLayer( profil, IWspmConstants.POINT_PROPERTY_HOEHE, m_lsp )
            }, cmLeft );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
-    {
 
+    if( layerId.equals( IWspmTuhhConstants.LAYER_DEVIDER ) )
       return new DeviderTheme(profil, new IProfilChartLayer[] { new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_lsp, 5, true ),
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_lsp, 25, false ), new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_lsp, 15, false ) }, cmLeft );
-    }
 
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
-    {
+    if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
       return new RoughnessTheme(profil, new IProfilChartLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ),
           new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) }, cmRight );
-    }
 
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
-    {
+    if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
       return new BuildingBridgeTheme(profil, new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
           new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }, cmLeft );
-    }
-    else if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
-    {
+
+    if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
       return new BuildingWeirTheme(profil,new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, m_lsp ),
           new PointMarkerLayer( profil, IWspmTuhhConstants.MARKER_TYP_WEHR, m_lsp, 30, false ) }, cmLeft );
-    }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_TUBES ) )
       return new BuildingTubesTheme(profil, new IProfilChartLayer[] { new TubeLayer( profil, m_lsp ) }, cmLeft );
@@ -343,7 +331,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 // }
 
     return null;
-
   }
 
   /**

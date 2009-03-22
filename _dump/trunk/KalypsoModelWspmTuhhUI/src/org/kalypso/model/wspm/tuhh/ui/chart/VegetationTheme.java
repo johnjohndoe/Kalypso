@@ -80,7 +80,7 @@ public class VegetationTheme extends AbstractProfilTheme
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isActivePointChanged() || hint.isPointValuesChanged() )
     {
@@ -96,12 +96,11 @@ public class VegetationTheme extends AbstractProfilTheme
   {
 
     {
-      LegendEntry le = new LegendEntry( this, toString() )
+      final LegendEntry le = new LegendEntry( this, toString() )
       {
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
-          drawClippingRect( gc );
           final Rectangle clipping = gc.getClipping();
           drawIcon( gc, new Rectangle( clipping.x + clipping.width / 2, clipping.y + clipping.height / 2, clipping.width, clipping.height ) );
         }
@@ -138,7 +137,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     final IProfil profil = getProfil();
     final IRecord[] profilPoints = profil.getPoints();
@@ -160,7 +159,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTooltipInfo(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public String getTooltipInfo( IRecord point )
+  public String getTooltipInfo( final IRecord point )
   {
     final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
     final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
@@ -203,7 +202,7 @@ public class VegetationTheme extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilTheme#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
 
     final IProfil profil = getProfil();
