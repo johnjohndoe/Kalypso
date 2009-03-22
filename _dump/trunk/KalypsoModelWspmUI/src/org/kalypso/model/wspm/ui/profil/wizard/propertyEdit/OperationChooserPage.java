@@ -78,6 +78,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -116,9 +117,9 @@ public class OperationChooserPage extends WizardPage
 
   private final IStructuredSelection m_selectedpoints;
 
-  public OperationChooserPage( final IStructuredSelection selection )
+  public OperationChooserPage( final IStructuredSelection selection, final String title )
   {
-    super( "operationChooserPage", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "operationChooserPage", title, null ); //$NON-NLS-1$
     m_selectedpoints = selection;
   }
 
@@ -127,14 +128,8 @@ public class OperationChooserPage extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-// the panel
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
-    final Composite buttonpanel = new Composite( panel, SWT.RIGHT );
-    buttonpanel.setLayout( new GridLayout( 3, true ) );
-    final GridData buttonpaneldata = new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL );
-    buttonpaneldata.grabExcessHorizontalSpace = true;
-    buttonpanel.setData( buttonpaneldata );
 
     final Set<String> selectedFilters = new HashSet<String>();
     String selectedCalculator = ""; //$NON-NLS-1$
@@ -199,8 +194,8 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( "" ); //$NON-NLS-1$
-    new Label( group, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+    group.setText( "Filter" );
+    new Label( group, SWT.NONE ).setText( "Choose which profile points will be changed:" );
 
     if( m_filters == null )
     {
@@ -219,9 +214,9 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 2, false ) );
-    group.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.0") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.0" ) ); //$NON-NLS-1$
     final Label lbl = new Label( group, SWT.NONE );
-    lbl.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.1") ); //$NON-NLS-1$
+    lbl.setText( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.1" ) ); //$NON-NLS-1$
     final GridData labelData = new GridData();
     labelData.horizontalSpan = 2;
     lbl.setLayoutData( labelData );
