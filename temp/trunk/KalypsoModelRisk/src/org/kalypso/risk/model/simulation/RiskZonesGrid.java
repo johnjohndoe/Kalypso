@@ -109,7 +109,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final List<IGeoGrid> gridList = new ArrayList<IGeoGrid>();
 
       for( final ICoverage coverage : collection )
+      {
         gridList.add( GeoGridUtilities.toGrid( coverage ) );
+      }
 
       m_gridMap.put( collection.getGmlID(), gridList );
     }
@@ -145,7 +147,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       /* we need a sorted list of the annual coverage collections */
       final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
       for( final IAnnualCoverageCollection cov : m_annualCoverageCollection )
+      {
         covMap.put( cov.getReturnPeriod().doubleValue(), cov );
+      }
 
       final Collection<IAnnualCoverageCollection> collections = covMap.values();
       final IAnnualCoverageCollection[] covArray = collections.toArray( new IAnnualCoverageCollection[collections.size()] );
@@ -177,10 +181,11 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         return Double.NaN;
 
       final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
-
       String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
       if( coordinateSystem == null )
+      {
         coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      }
 
       final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
@@ -204,7 +209,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
 
           final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
-
+          if( Double.isInfinite( riskZoneValue ) || Double.isNaN( riskZoneValue ) )
+            return Double.NaN;
+          
           /* check min/max */
           m_min = m_min.min( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
           m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
@@ -216,7 +223,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
       return Double.NaN;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new GeoGridException( Messages.getString( "RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
     }
@@ -231,10 +238,14 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     {
       final double cellSize = landuseClass.getCellSize();
       if( Double.isNaN( cellSize ) )
+      {
         landuseClass.setCellSize( m_cellSize );
+      }
 
       if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
+      {
         landuseClass.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
+      }
     }
   }
 
@@ -274,12 +285,12 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( isUrbanLanduseType == null )
       return Double.NaN;
 
-    SortedMap<Double, IRiskZoneDefinition> defs = getRiskZoneDefiniion( isUrbanLanduseType );
-    SortedMap<Double, IRiskZoneDefinition> headMap = defs.headMap( damageValue );
+    final SortedMap<Double, IRiskZoneDefinition> defs = getRiskZoneDefiniion( isUrbanLanduseType );
+    final SortedMap<Double, IRiskZoneDefinition> headMap = defs.headMap( damageValue );
     if( headMap.isEmpty() )
       return Double.NaN;
 
-    Double lastKey = headMap.lastKey();
+    final Double lastKey = headMap.lastKey();
     return headMap.get( lastKey ).getOrdinalNumber();
   }
 
@@ -290,7 +301,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
     {
       if( riskZoneDefinition.isUrbanLanduseType().booleanValue() == isUrbanLanduse )
+      {
         treeMap.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
+      }
     }
 
     return treeMap;
