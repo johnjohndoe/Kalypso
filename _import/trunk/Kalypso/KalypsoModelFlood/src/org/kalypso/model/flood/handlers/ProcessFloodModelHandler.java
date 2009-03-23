@@ -122,7 +122,6 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
 
       // decision dialog for user, if he wants to overwrite existing data
       final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
-
       for( final IRunoffEvent runoffEvent : eventsToProcess )
       {
         final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
@@ -152,7 +151,8 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IMapModell mapModell = mapPanel.getMapModell();
       final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
 
-      runCalculation( shell, scenarioFolder, model, eventsToProcess, dataProvider, wspTheme );
+      final IRunoffEvent[] event2process = eventListToProcess.toArray( new IRunoffEvent[eventListToProcess.size()] );
+      runCalculation( shell, scenarioFolder, model, event2process, dataProvider, wspTheme );
       return null;
     }
     catch( final Exception e )

@@ -73,7 +73,8 @@ public interface IRunoffEvent extends IFeatureWrapper2
   public IPath getDataPath( );
 
   public void setDataPath( final IPath path );
-
+  
+  // TODO bad idea -> add list of IRunoffEvent references to ISimulation.INPUT
   public boolean isMarkedForProcessing( );
 
   public void setMarkedForProcessing( final boolean value );
