@@ -281,7 +281,12 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
      * What to do?
      */
     if( resultCoverages.size() != 0 )
-      throw new IllegalStateException( "Event enthält noch Ergebnisse: " + event.getName() );
+    {
+      // FIXME @dejan multiple processing of process chain leads to this exception // hotfix: clear list
+      resultCoverages.clear(); // hotfix!!!
+      // throw new IllegalStateException( "Event enthält noch Ergebnisse: " + event.getName() );
+    }
+      
 
     // final IFolder eventFolder = eventsFolder.getFolder( event.getDataPath().toPortableString() );
 

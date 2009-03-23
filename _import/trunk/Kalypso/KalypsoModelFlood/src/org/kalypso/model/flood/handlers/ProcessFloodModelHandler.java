@@ -134,12 +134,15 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
             // clear existing results (gml and file and themes).
             final IStatus status = FloodModelHelper.removeResultCoverages( dataProvider, resultCoverages );
             if( status == Status.OK_STATUS )
+            {
               eventListToProcess.add( runoffEvent );
+            }
           }
         }
         else
+        {
           eventListToProcess.add( runoffEvent );
-
+        }
       }
 
       // check prerequisites
@@ -171,9 +174,13 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     FloodModelHelper.removeWspThemes( wspTheme, eventsToProcess );
 
     for( final IRunoffEvent runoffEvent : model.getEvents() )
+    {
       runoffEvent.setMarkedForProcessing( false );
+    }
     for( final IRunoffEvent runoffEvent : eventsToProcess )
+    {
       runoffEvent.setMarkedForProcessing( true );
+    }
     // REMARK: post an empty command in order to make the pool dirty, else save does not work.
     final ICommand command = new EmptyCommand( "Feature Changed", false );
     try
@@ -181,7 +188,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       dataProvider.postCommand( IFloodModel.class, command );
       dataProvider.saveModel( IFloodModel.class, new NullProgressMonitor() );
     }
-    catch( Exception e1 )
+    catch( final Exception e1 )
     {
       ErrorDialog.openError( shell, "Flood-Modeller", "Problem with saving the model.", Status.CANCEL_STATUS );
       return;
