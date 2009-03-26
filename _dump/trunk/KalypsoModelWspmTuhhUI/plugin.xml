@@ -244,7 +244,7 @@
          </reparator>
       </extension>
        <extension
-         point="org.kalypso.afgui.kalypsoModule">
+         point="org.kalypso.project.database.client.kalypsoModule">
          <module
                module="org.kalypso.model.wspm.tuhh.ui.extension.KalypsoWspmTuhhModule">
          </module>
