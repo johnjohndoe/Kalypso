@@ -155,7 +155,10 @@ public class ModuleEnteringPageComposite extends Composite
     try
     {
       final URL url = m_enteringPage.getInfoURL();
-      browser.setUrl( url.toExternalForm() );
+      if( url != null )
+      {
+        browser.setUrl( url.toExternalForm() );
+      }
     }
     catch( final Exception e )
     {
