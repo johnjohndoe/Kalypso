@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.extension;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -52,29 +49,24 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
 
 /**
  * @author kuch
  */
-public class KalypsoRRMOpenAction implements IKalypsoProjectOpenAction
+public class KalypsoRRMOpenAction implements IKalypsoModuleProjectOpenAction
 {
 
   /**
    * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
    */
   @Override
-  public IStatus open( final Properties properties )
+  public IStatus open( final IProject project )
   {
     /* Validate parameters */
-    final String projectName = properties.getProperty( "project", null ); //$NON-NLS-1$
-
-    final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() || !project.isOpen() )
-    {
       return Status.CANCEL_STATUS;
-    }
 
     /* hide intro */
     final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -84,9 +76,7 @@ public class KalypsoRRMOpenAction implements IKalypsoProjectOpenAction
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage page = window.getActivePage();
     if( page == null )
-    {
       return Status.CANCEL_STATUS;
-    }
 
     /* close unused perspectives */
     final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
