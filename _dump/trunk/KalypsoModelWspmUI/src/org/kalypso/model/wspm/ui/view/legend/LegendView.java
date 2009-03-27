@@ -262,7 +262,6 @@ public class LegendView extends ViewPart implements IAdapterEater<IChartPart>, I
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     updateChartLegend();
-
   }
 
   private void updateChartLegend( )

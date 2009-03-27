@@ -66,7 +66,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ChartView extends AbstractProfilViewPart implements IChartPart, IProfilListener
 {
-
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
   private ProfilChartView m_chart = null;
@@ -74,8 +73,6 @@ public class ChartView extends AbstractProfilViewPart implements IChartPart, IPr
   private FormToolkit m_toolkit = null;
 
   private Form m_form = null;
-  
-  
 
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
@@ -176,7 +173,7 @@ public class ChartView extends AbstractProfilViewPart implements IChartPart, IPr
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
