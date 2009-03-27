@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.extension;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
@@ -93,7 +92,14 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabase
           }
         }
         else if( handler instanceof IRemoteProject )
-          throw new NotImplementedException(); // TODO handle remote projects
+        {
+          final IRemoteProject remote = (IRemoteProject) handler;
+          final String projectType = remote.getBean().getProjectType();
+          if( getModuleCommitType().equals( projectType ) )
+            return true;
+        }
+          
+
 
         return false;
       }
