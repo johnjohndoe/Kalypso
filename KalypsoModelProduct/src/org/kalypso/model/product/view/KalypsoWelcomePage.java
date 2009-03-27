@@ -42,6 +42,9 @@ package org.kalypso.model.product.view;
 
 import java.awt.Point;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,15 +58,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IntroPart;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.i18n.Messages;
-import org.kalypso.model.product.ui.ModuleEnteringPageComposite;
-import org.kalypso.model.product.ui.WelcomePageIndexComposite;
-import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
+import org.kalypso.project.database.client.ui.composites.ModulePageComposite;
+import org.kalypso.project.database.client.ui.composites.WelcomePageComposite;
 
 /**
  * @author Dirk Kuch
@@ -82,7 +86,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 
   private Composite m_contentClient;
 
-  private IKalypsoModulePage m_page;
+  private IKalypsoModule m_selectedModule;
 
   /**
    * @see org.eclipse.ui.part.IntroPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -125,13 +129,14 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
       m_contentClient = null;
     }
 
-    if( m_page == null )
+    if( m_selectedModule == null )
     {
-      m_contentClient = new WelcomePageIndexComposite( m_contentArea, SWT.NULL, this );
+      m_contentClient = new WelcomePageComposite( m_contentArea, SWT.NULL, this );
     }
     else
     {
-      m_contentClient = new ModuleEnteringPageComposite( m_contentArea, SWT.NULL, m_page, this );
+      final FormToolkit toolkit = KalypsoModelProductPlugin.getFormToolkit();
+      m_contentClient = new ModulePageComposite( m_selectedModule, toolkit, m_contentArea, SWT.NULL );
     }
 
     /* footer */
@@ -164,11 +169,11 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
         helpSystem.displayHelp();
       }
-    }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.4") ); //$NON-NLS-1$
+    }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.4" ) ); //$NON-NLS-1$
 
     footer.addContentArea( footerHelpContent );
 
-    if( m_page != null )
+    if( m_selectedModule != null )
     {
 
       final DefaultContentArea footerBackContent = new DefaultContentArea()
@@ -191,10 +196,9 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         @Override
         public void mouseUp( final MouseEvent e )
         {
-          setPage( null );
-          update();
+          setSelectedModule( null );
         }
-      }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.5") ); //$NON-NLS-1$
+      }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.5" ) ); //$NON-NLS-1$
 
       footer.addContentArea( footerBackContent );
     }
@@ -231,7 +235,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
         }
 
       }
-    }, Messages.getString("org.kalypso.model.product.view.KalypsoWelcomePage.6") ); //$NON-NLS-1$
+    }, Messages.getString( "org.kalypso.model.product.view.KalypsoWelcomePage.6" ) ); //$NON-NLS-1$
 
     footer.addContentArea( footerLogo );
 
@@ -255,12 +259,22 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModulePageHandler#setPage(org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler)
+   * @see org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage#setSelectedModule(org.kalypso.project.database.client.extension.IKalypsoModule)
    */
   @Override
-  public void setPage( final IKalypsoModulePage page )
+  public void setSelectedModule( final IKalypsoModule module )
   {
-    m_page = page;
-  }
+    m_selectedModule = module;
+    
+    new UIJob( "" )
+    {
 
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        update();
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+  }
 }
