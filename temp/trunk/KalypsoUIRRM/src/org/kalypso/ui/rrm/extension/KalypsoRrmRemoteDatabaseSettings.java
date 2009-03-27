@@ -40,13 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.rrm.extension;
 
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author kuch
  *
  */
-public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoRemoteDatabaseSettings
+public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
 
   /**
@@ -57,5 +65,33 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoRemoteDatabaseS
   {
     return "KalypsRrmModel";
   }
+  @Override
+  public IProjectDatabaseFilter getFilter( )
+  {
+    return new IProjectDatabaseFilter()
+    {
+      @Override
+      public boolean select( final IProjectHandler handler )
+      {
+        if( handler instanceof ILocalProject )
+        {
+          final ILocalProject local = (ILocalProject) handler;
+          final IProject project = local.getProject();
+          final IFile file = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
 
+          return file.exists();
+        }
+        else if( handler instanceof IRemoteProject )
+          throw new NotImplementedException();
+        
+        return false;
+      }
+    };
+  }
+
+  @Override
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new KalypsoRRMOpenAction();
+  }
 }

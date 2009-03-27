@@ -47,19 +47,13 @@ import java.net.URL;
 
 import kalypsoUIRRM.KalypsoUIRRMPlugin;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard;
 
 /**
@@ -74,28 +68,6 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
 
   protected static boolean INFO_PAGE_EXTRACTED = false;
   
-
-  @Override
-  public IProjectDatabaseFilter getDatabaseFilter( )
-  {
-    return new IProjectDatabaseFilter()
-    {
-      @Override
-      public boolean select( final IProjectHandler handler )
-      {
-        if( handler instanceof ILocalProject )
-        {
-          final ILocalProject local = (ILocalProject) handler;
-          final IProject project = local.getProject();
-          final IFile file = project.getFile( "hydrotop.gml" ); //$NON-NLS-1$
-
-          return file.exists();
-        }
-
-        return false;
-      }
-    };
-  }
 
   @Override
   public String getHeader( )
@@ -186,12 +158,4 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
   {
     return 1;
   }
-
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new KalypsoRRMOpenAction();
-  }
-
-
 }

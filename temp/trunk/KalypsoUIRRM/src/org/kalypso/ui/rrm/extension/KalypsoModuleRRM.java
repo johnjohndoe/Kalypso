@@ -1,7 +1,7 @@
 package org.kalypso.ui.rrm.extension;
 
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
 
@@ -33,7 +33,7 @@ public class KalypsoModuleRRM implements IKalypsoModule
    * @see org.kalypso.project.database.client.extension.IKalypsoModule#getRemoteDatabaseSettings()
    */
   @Override
-  public IKalypsoRemoteDatabaseSettings getRemoteDatabaseSettings( )
+  public IKalypsoModuleDatabaseSettings getDatabaseSettings( )
   {
     return new KalypsoRrmRemoteDatabaseSettings();
   }
