@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.extension;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
@@ -99,7 +98,12 @@ public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoModuleDatabas
           }
         }
         else if( handler instanceof IRemoteProject )
-          throw new NotImplementedException();
+        {
+          final IRemoteProject remote = (IRemoteProject) handler;
+          final String projectType = remote.getBean().getProjectType();
+          if( getModuleCommitType().equals( projectType ) )
+            return true;
+        }
 
         return false;
       }
