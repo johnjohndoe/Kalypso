@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
@@ -54,16 +53,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard;
 import org.kalypso.model.flood.ui.wizards.NewProjectWizard;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
-import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
-
-import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.WorkflowProjectNature;
 
 /**
  * @author kuch
@@ -75,39 +66,6 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
   public KalypsoFloodModulePage( final IKalypsoModule module )
   {
     super( module );
-  }
-
-  @Override
-  public IProjectDatabaseFilter getDatabaseFilter( )
-  {
-    return new IProjectDatabaseFilter()
-    {
-      @Override
-      public boolean select( final IProjectHandler handler )
-      {
-        if( handler instanceof ILocalProject )
-        {
-          try
-          {
-            final ILocalProject local = (ILocalProject) handler;
-            final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( local.getProject() );
-            if( nature == null )
-              return false;
-
-            final IWorkflow workflow = nature.getCurrentWorklist();
-            final String uri = workflow.getURI();
-
-            return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" );
-          }
-          catch( final CoreException e )
-          {
-            KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
-        }
-
-        return false;
-      }
-    };
   }
 
   @Override
@@ -201,10 +159,5 @@ public class KalypsoFloodModulePage extends AbstractKalypsoModulePage
     return 4;
   }
 
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new SzenarioProjectOpenAction();
-  }
-
+ 
 }

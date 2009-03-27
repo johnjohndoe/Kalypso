@@ -40,12 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.extension;
 
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.flood.KalypsoModelFloodPlugin;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
+
+import de.renew.workflow.base.IWorkflow;
+import de.renew.workflow.connector.WorkflowProjectNature;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoRemoteDatabaseSettings
+public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
 
   /**
@@ -55,6 +68,48 @@ public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoRemoteDatabas
   public String getModuleCommitType( )
   {
     return "KalypsoFloodModelType";
+  }
+
+  
+  @Override
+  public IProjectDatabaseFilter getFilter( )
+  {
+    return new IProjectDatabaseFilter()
+    {
+      @Override
+      public boolean select( final IProjectHandler handler )
+      {
+        if( handler instanceof ILocalProject )
+        {
+          try
+          {
+            final ILocalProject local = (ILocalProject) handler;
+            final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( local.getProject() );
+            if( nature == null )
+              return false;
+
+            final IWorkflow workflow = nature.getCurrentWorklist();
+            final String uri = workflow.getURI();
+
+            return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" );
+          }
+          catch( final CoreException e )
+          {
+            KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          }
+        }
+        else if( handler instanceof IRemoteProject )
+          throw new NotImplementedException();
+
+        return false;
+      }
+    };
+  }
+  
+  @Override
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new SzenarioProjectOpenAction();
   }
 
 }
