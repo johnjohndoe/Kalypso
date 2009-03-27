@@ -62,13 +62,13 @@ import org.kalypso.model.product.KalypsoModelProductPlugin;
 import org.kalypso.model.product.i18n.Messages;
 import org.kalypso.model.product.ui.ModuleEnteringPageComposite;
 import org.kalypso.model.product.ui.WelcomePageIndexComposite;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModulePageHandler;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
 
 /**
  * @author Dirk Kuch
  */
-public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageHandler
+public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
 {
   private static final Image IMG_BACKGROUND = new Image( null, KalypsoWelcomePage.class.getResourceAsStream( "images/background.gif" ) ); //$NON-NLS-1$
 
@@ -82,7 +82,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
 
   private Composite m_contentClient;
 
-  private IKalypsoModuleEnteringPageHandler m_page;
+  private IKalypsoModulePage m_page;
 
   /**
    * @see org.eclipse.ui.part.IntroPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -258,7 +258,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoModulePageH
    * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModulePageHandler#setPage(org.kalypso.kalypsosimulationmodel.extension.IKalypsoModuleEnteringPageHandler)
    */
   @Override
-  public void setPage( final IKalypsoModuleEnteringPageHandler page )
+  public void setPage( final IKalypsoModulePage page )
   {
     m_page = page;
   }

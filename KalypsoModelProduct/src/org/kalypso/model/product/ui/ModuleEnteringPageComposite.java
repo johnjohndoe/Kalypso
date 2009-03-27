@@ -63,10 +63,10 @@ import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
 import org.kalypso.project.database.client.extension.IEnteringPageWizardDelegate;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModulePageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 import org.kalypso.project.database.client.ui.project.database.ProjectDatabaseComposite;
 import org.kalypso.project.database.client.ui.project.status.ProjectDatabaseServerStatusComposite;
 import org.kalypso.project.database.client.ui.project.wizard.create.CreateProjectComposite;
@@ -78,13 +78,13 @@ import org.kalypso.project.database.client.ui.project.wizard.imp.SpecialImportPr
  */
 public class ModuleEnteringPageComposite extends Composite
 {
-  protected final IKalypsoModulePageHandler m_pageHandler;
+  protected final IKalypsoWelcomePage m_pageHandler;
 
-  protected final IKalypsoModuleEnteringPageHandler m_enteringPage;
+  protected final IKalypsoModulePage m_enteringPage;
 
   private static final Color COLOR_BOX = new Color( null, 0x7f, 0xb2, 0x99 );
 
-  public ModuleEnteringPageComposite( final Composite parent, final int style, final IKalypsoModuleEnteringPageHandler enteringPage, final IKalypsoModulePageHandler pageHandler )
+  public ModuleEnteringPageComposite( final Composite parent, final int style, final IKalypsoModulePage enteringPage, final IKalypsoWelcomePage pageHandler )
   {
     super( parent, style );
 
@@ -177,7 +177,7 @@ public class ModuleEnteringPageComposite extends Composite
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final IProjectDatabaseFilter handler = m_enteringPage.getDatabaseFilter();
-    final IKalypsoProjectOpenAction openAction = m_enteringPage.getProjectOpenAction();
+    final IKalypsoModuleProjectOpenAction openAction = m_enteringPage.getProjectOpenAction();
 
     final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( bodyProjects, toolkit, handler, openAction );
     projects.setLayout( new GridLayout() );

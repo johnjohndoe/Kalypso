@@ -53,9 +53,9 @@ import org.kalypso.model.product.utils.MyColors;
 import org.kalypso.model.product.utils.MyFonts;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModulePageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModuleWelcomePageHandler;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
 
 /**
  * @author Dirk Kuch
@@ -64,9 +64,9 @@ public class WelcomePageIndexComposite extends Composite
 {
   protected int IMG_OFFSET = 0;
 
-  protected final IKalypsoModulePageHandler m_pageHandler;
+  protected final IKalypsoWelcomePage m_pageHandler;
 
-  public WelcomePageIndexComposite( final Composite parent, final int style, final IKalypsoModulePageHandler pageHandler )
+  public WelcomePageIndexComposite( final Composite parent, final int style, final IKalypsoWelcomePage pageHandler )
   {
     super( parent, style );
     m_pageHandler = pageHandler;
@@ -101,7 +101,7 @@ public class WelcomePageIndexComposite extends Composite
     final IKalypsoModule[] extensions = KalypsoProjectDatabaseClient.getKalypsoModules();
     for( final IKalypsoModule module : extensions )
     {
-      final IKalypsoModuleWelcomePageHandler handler = module.getWelcomePageHandler();
+      final IKalypsoModuleWelcomePageFrame handler = module.getWelcomePageFrame();
 
       final DefaultContentArea content = new DefaultContentArea()
       {
@@ -127,7 +127,7 @@ public class WelcomePageIndexComposite extends Composite
         @Override
         public void mouseUp( final MouseEvent e )
         {
-          final IKalypsoModuleEnteringPageHandler page = module.getModuleEnteringPage();
+          final IKalypsoModulePage page = module.getModulePage();
           m_pageHandler.setPage( page );
 
           m_pageHandler.update();
