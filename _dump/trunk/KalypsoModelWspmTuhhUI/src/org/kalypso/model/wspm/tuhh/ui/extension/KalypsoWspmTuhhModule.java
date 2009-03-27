@@ -20,11 +20,11 @@ import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectImportWspwinWizard;
 import org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
@@ -39,9 +39,9 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
   }
 
   @Override
-  public IKalypsoModuleWelcomePageHandler getWelcomePageHandler( )
+  public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( )
   {
-    return new IKalypsoModuleWelcomePageHandler()
+    return new IKalypsoModuleWelcomePageFrame()
     {
       @Override
       public Image getIcon( )
@@ -74,9 +74,9 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
    * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule#getModuleEnteringPage()
    */
   @Override
-  public IKalypsoModuleEnteringPageHandler getModuleEnteringPage( )
+  public IKalypsoModulePage getModulePage( )
   {
-    return new IKalypsoModuleEnteringPageHandler()
+    return new IKalypsoModulePage()
     {
       @Override
       public String getHeader( )
@@ -200,7 +200,7 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
       }
 
       @Override
-      public IKalypsoProjectOpenAction getProjectOpenAction( )
+      public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
       {
         return new WspmOpenAction();
       }

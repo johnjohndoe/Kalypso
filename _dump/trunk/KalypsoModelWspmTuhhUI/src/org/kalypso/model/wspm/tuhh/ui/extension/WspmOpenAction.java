@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -58,28 +55,23 @@ import org.eclipse.ui.intro.IIntroManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author kuch
  */
-public class WspmOpenAction implements IKalypsoProjectOpenAction
+public class WspmOpenAction implements IKalypsoModuleProjectOpenAction
 {
 
   /**
    * @see org.kalypso.afgui.extension.IKalypsoProjectOpenAction#open(java.util.Properties)
    */
   @Override
-  public IStatus open( final Properties properties )
+  public IStatus open( final IProject project )
   {
     /* Validate parameters */
-    final String projectName = properties.getProperty( "project", null ); //$NON-NLS-1$
-
-    final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() || !project.isOpen() )
-    {
       return Status.CANCEL_STATUS;
-    }
 
     // TODO: move hiding the into into welcome page code
     /* hide intro */
@@ -90,9 +82,7 @@ public class WspmOpenAction implements IKalypsoProjectOpenAction
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage page = window.getActivePage();
     if( page == null )
-    {
       return Status.CANCEL_STATUS;
-    }
 
     /* close unused perspectives */
     final IPerspectiveDescriptor[] perspectives = page.getOpenPerspectives();
