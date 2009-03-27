@@ -45,7 +45,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.kalypso.afgui.wizards.INewProjectWizard;
@@ -53,15 +52,9 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
-import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 /**
  * @author kuch
@@ -76,31 +69,6 @@ public class Kalypso1d2dModulePage extends AbstractKalypsoModulePage
     super( module );
   }
 
-  public IProjectDatabaseFilter getDatabaseFilter( )
-  {
-    return new IProjectDatabaseFilter()
-    {
-      @Override
-      public boolean select( final IProjectHandler handler )
-      {
-        if( handler instanceof ILocalProject )
-        {
-          try
-          {
-            final ILocalProject local = (ILocalProject) handler;
-            return Kalypso1D2DProjectNature.isOfThisNature( local.getProject() );
-          }
-          catch( final CoreException e )
-          {
-            Kalypso1d2dProjectPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
-        }
-        // TODO handle remote projects
-
-        return false;
-      }
-    };
-  }
 
   public String getHeader( )
   {
@@ -182,11 +150,5 @@ public class Kalypso1d2dModulePage extends AbstractKalypsoModulePage
   {
     return 3;
   }
-
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new SzenarioProjectOpenAction();
-  }
-
 
 }

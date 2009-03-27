@@ -40,13 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.extension;
 
-import org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings;
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 
 /**
  * @author kuch
  *
  */
-public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoRemoteDatabaseSettings
+public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
 
   /**
@@ -58,4 +69,40 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoRemoteDatabase
     return "Kalypso1d2dModel"; //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.IKalypsoRemoteDatabaseSettings#getFilter()
+   */
+  @Override
+  public IProjectDatabaseFilter getFilter( )
+  {
+    return new IProjectDatabaseFilter()
+    {
+      @Override
+      public boolean select( final IProjectHandler handler )
+      {
+        if( handler instanceof ILocalProject )
+        {
+          try
+          {
+            final ILocalProject local = (ILocalProject) handler;
+            return Kalypso1D2DProjectNature.isOfThisNature( local.getProject() );
+          }
+          catch( final CoreException e )
+          {
+            Kalypso1d2dProjectPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          }
+        }
+        else if( handler instanceof IRemoteProject )
+          throw new NotImplementedException(); // TODO handle remote projects
+
+        return false;
+      }
+    };
+  }
+  
+
+  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
+  {
+    return new SzenarioProjectOpenAction();
+  }
 }
