@@ -14,12 +14,12 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
 import org.kalypso.project.database.client.extension.IKalypsoModule;
-import org.kalypso.project.database.client.extension.IKalypsoModuleEnteringPageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoModuleWelcomePageHandler;
-import org.kalypso.project.database.client.extension.IKalypsoProjectOpenAction;
-import org.kalypso.project.database.client.extension.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.IProjectHandler;
-import org.kalypso.project.database.client.extension.SzenarioProjectOpenAction;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.IProjectHandler;
+import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
+import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
+import org.kalypso.project.database.client.extension.project.SzenarioProjectOpenAction;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.risk.project.KalypsoRiskDemoProjectWizard;
 import org.kalypso.risk.project.KalypsoRiskProjectWizard;
@@ -40,9 +40,9 @@ public class KalypsoRiskModule implements IKalypsoModule
   }
 
   @Override
-  public IKalypsoModuleWelcomePageHandler getWelcomePageHandler( )
+  public IKalypsoModuleWelcomePageFrame getWelcomePageFrame( )
   {
-    return new IKalypsoModuleWelcomePageHandler()
+    return new IKalypsoModuleWelcomePageFrame()
     {
       @Override
       public Image getIcon( )
@@ -75,9 +75,9 @@ public class KalypsoRiskModule implements IKalypsoModule
    * @see org.kalypso.kalypsosimulationmodel.extension.IKalypsoModule#getModuleEnteringPage()
    */
   @Override
-  public IKalypsoModuleEnteringPageHandler getModuleEnteringPage( )
+  public IKalypsoModulePage getModulePage( )
   {
-    return new IKalypsoModuleEnteringPageHandler()
+    return new IKalypsoModulePage()
     {
       @Override
       public IProjectDatabaseFilter getDatabaseFilter( )
@@ -94,9 +94,7 @@ public class KalypsoRiskModule implements IKalypsoModule
                 final ILocalProject local = (ILocalProject) handler;
                 final WorkflowProjectNature nature = WorkflowProjectNature.toThisNature( local.getProject() );
                 if( nature == null )
-                {
                   return false;
-                }
 
                 final IWorkflow workflow = nature.getCurrentWorklist();
                 final String uri = workflow.getURI();
@@ -215,7 +213,7 @@ public class KalypsoRiskModule implements IKalypsoModule
       }
 
       @Override
-      public IKalypsoProjectOpenAction getProjectOpenAction( )
+      public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
       {
         return new SzenarioProjectOpenAction();
       }
