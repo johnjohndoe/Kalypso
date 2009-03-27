@@ -62,7 +62,6 @@ import org.kalypso.project.database.client.extension.IKalypsoModule;
 import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.pages.module.AbstractKalypsoModulePage;
-import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
  * @author kuch
@@ -82,28 +81,6 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
   public String getHeader( )
   {
     return "KalypsoWSPM"; //$NON-NLS-1$
-  }
-
-  @Override
-  public IProjectDatabaseFilter getDatabaseFilter( )
-  {
-    return new IProjectDatabaseFilter()
-    {
-      @Override
-      public boolean select( final IProjectHandler handler )
-      {
-        if( handler instanceof ILocalProject )
-        {
-          final ILocalProject local = (ILocalProject) handler;
-          final IProject project = local.getProject();
-          final IFile file = project.getFile( "WSPM.gmv" ); //$NON-NLS-1$
-
-          return file.exists();
-        }
-
-        return false;
-      }
-    };
   }
 
   @Override
@@ -193,11 +170,6 @@ public class KalypsoWspmModulePage extends AbstractKalypsoModulePage
     return 2;
   }
 
-  @Override
-  public IKalypsoModuleProjectOpenAction getProjectOpenAction( )
-  {
-    return new WspmOpenAction();
-  }
-
+ 
 
 }
