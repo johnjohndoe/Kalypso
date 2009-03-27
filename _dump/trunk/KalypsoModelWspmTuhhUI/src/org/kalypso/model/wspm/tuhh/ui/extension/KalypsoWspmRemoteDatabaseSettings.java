@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.extension;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalProject;
@@ -82,7 +81,12 @@ public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabase
           return file.exists();
         }
         else if( handler instanceof IRemoteProject )
-          throw new NotImplementedException();
+        {
+          final IRemoteProject remote = (IRemoteProject) handler;
+          final String projectType = remote.getBean().getProjectType();
+          if( getModuleCommitType().equals( projectType ) )
+            return true;
+        }
 
         return false;
       }
