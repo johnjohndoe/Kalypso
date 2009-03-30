@@ -26,6 +26,9 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements ISimulation
 {
+  public Connector_FM_RM_Job( )
+  {
+  }
 
   @Override
   public URL getSpezifikation( )

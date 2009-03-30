@@ -32,6 +32,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements ISimulation
 {
+  public Connector_WSPM_FM_Job( )
+  {
+  }
 
   @Override
   public URL getSpezifikation( )
