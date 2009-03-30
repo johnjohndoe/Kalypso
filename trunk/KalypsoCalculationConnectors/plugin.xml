@@ -8,11 +8,11 @@
             typeID="KalypsoModelConnector_NA_WSPM">
       </simulation>
       <simulation
-            simulationClass="org.kalypso.calculation.chain.connector.wspm_fm.Connector_WSPM_FM_Job"
+            simulationClass="org.kalypso.calculation.connector.wspm_fm.Connector_WSPM_FM_Job"
             typeID="KalypsoModelConnector_WSPM_FM">
       </simulation>
       <simulation
-            simulationClass="org.kalypso.calculation.chain.connector.fm_rm.Connector_FM_RM_Job"
+            simulationClass="org.kalypso.calculation.connector.fm_rm.Connector_FM_RM_Job"
             typeID="KalypsoModelConnector_FM_RM">
       </simulation>
    </extension>
