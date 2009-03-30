@@ -50,7 +50,7 @@ import org.kalypso.project.database.client.extension.database.IProjectHandler;
 import org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabaseSettings
 {
@@ -61,7 +61,7 @@ public class KalypsoWspmRemoteDatabaseSettings implements IKalypsoModuleDatabase
   @Override
   public String getModuleCommitType( )
   {
-    return "KalypsoWspmModel"; //$NON-NLS-1$
+    return KalypsoWspmTuhhModule.ID; //$NON-NLS-1$
   }
 
   @Override

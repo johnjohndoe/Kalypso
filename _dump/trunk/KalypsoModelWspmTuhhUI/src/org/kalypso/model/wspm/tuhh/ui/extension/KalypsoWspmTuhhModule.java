@@ -5,9 +5,13 @@ import org.kalypso.project.database.client.extension.database.IKalypsoModuleData
 import org.kalypso.project.database.client.extension.pages.module.IKalypsoModulePage;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
 
+/**
+ * @author Dirk Kuch
+ */
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
-
+  public static final String ID = "KalypsoWspmModel";
+  
   // public constructor, needed because of declared extension point and java class loader
   public KalypsoWspmTuhhModule( )
   {
