@@ -61,7 +61,7 @@ public class KalypsoRrmRemoteDatabaseSettings implements IKalypsoModuleDatabaseS
   @Override
   public String getModuleCommitType( )
   {
-    return "KalypsRrmModel";
+    return KalypsoModuleRRM.ID;
   }
   @Override
   public IProjectDatabaseFilter getFilter( )
