@@ -66,7 +66,7 @@ public class KalypsoRiskRemoteDatabaseSettings implements IKalypsoModuleDatabase
   @Override
   public String getModuleCommitType( )
   {
-    return "KalypsoRiskModel";
+    return KalypsoRiskModule.ID;
   }
 
   
