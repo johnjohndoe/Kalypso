@@ -35,7 +35,11 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements ISimulation
 {
-
+  public Connector_NA_WSPM_Job( )
+  {
+  }
+  
+  
   @Override
   public URL getSpezifikation( )
   {
