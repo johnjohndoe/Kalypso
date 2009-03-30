@@ -66,7 +66,7 @@ public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoModuleDatabas
   @Override
   public String getModuleCommitType( )
   {
-    return "KalypsoFloodModelType";
+    return KalypsoModelFloodModule.ID;
   }
 
   
