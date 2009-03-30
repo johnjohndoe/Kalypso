@@ -65,7 +65,7 @@ public class Kalypso1d2dRemoteDatabaseSettings implements IKalypsoModuleDatabase
   @Override
   public String getModuleCommitType( )
   {
-    return "Kalypso1d2dModel"; //$NON-NLS-1$
+    return Kalypso1d2dModule.ID;
   }
 
   /**
