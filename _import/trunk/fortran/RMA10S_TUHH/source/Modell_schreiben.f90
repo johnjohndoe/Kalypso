@@ -1,4 +1,4 @@
-!     Last change:  MD   14 Jan 2009   10:55 am
+!     Last change:  MD    1 Apr 2009   12:23 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -637,7 +637,7 @@ END SUBROUTINE write_KALYP_Bed
 !**********************************************************
 
 SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
-           &                   resultName, inputName, resultBed, inputBed)
+           &                   resultName, inputName)
 
 implicit none
 INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
@@ -648,7 +648,7 @@ character (len = *) , intent (in) :: outsuffix
 CHARACTER (LEN = 1), INTENT (IN)   :: prefix
 CHARACTER (LEN = 4), INTENT (IN)   :: sort
 !MD: new for kohesive Bed
-character (LEN = 96), INTENT (OUT) :: resultBed, inputBed
+!MD character (LEN = 96), INTENT (OUT) :: resultBed, inputBed
 
 ! ------------------------------------------------------------------------------------------
 ! NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
@@ -663,17 +663,12 @@ if (sort == 'inst' .or. sort == 'stat') then
 
       !output after steady state solution
       WRITE (resultName,'(a,a1,a)') 'steady', '.', outsuffix
-      !MD: new for kohesive Bed
-      WRITE (resultBed,'(a,a1,a)') 'steady', '.', 'bed'
 
       !if restarting, then particular name is used, otherwise not
       IF (restartUnit > 0) THEN
         WRITE (inputName,'(a)') rstname
-        !MD: new for kohesive Bed
-        WRITE (inputBed,'(a)') 'restart', '.', 'bed'
       ELSE
         WRITE (inputName,'(a)') 'none, new 2D-Calculation'
-        WRITE (inputBed,'(a)') 'none, new 2D-Calculation'
       ENDIF
 
     !for dynamic solution after calculated time step, that is not the first in current run
@@ -683,9 +678,6 @@ if (sort == 'inst' .or. sort == 'stat') then
       !Starting from the solution of time step before
       WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
 
-      !MD: new for kohesive Bed
-      WRITE (inputBed,'(a,i4.4,a1,a)')  prefix, timeStep, '.', 'bed'
-      WRITE (resultBed,'(a,i4.4,a1,a)') prefix, timeStep, '.', 'bed'
     ENDIF
 
   !after iteration step, if wanted
