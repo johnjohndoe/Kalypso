@@ -598,3 +598,8 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
       Formula:  flow = PS1 * (-1.0)  is corrected  
       >> SubR PipeSurfaceConnectionQs                                                 
 --- Monika Donner, 19.03.2009
+
+--- Monika Donner, 01.04.2009
+088.) Correction in SubR rma10 & GenerateOutputFileName:
+      Deleting additional Variables for Bed-files                                               
+--- Monika Donner, 01.04.2009
