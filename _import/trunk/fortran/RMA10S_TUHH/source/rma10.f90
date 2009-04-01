@@ -1,4 +1,4 @@
-!     Last change:  MD   19 Mar 2009   11:57 am
+!     Last change:  MD    1 Apr 2009   12:22 pm
   !update degrees of freedom and check for convergence
   !---------------------------------------------------
 subroutine RMA_Kalypso
@@ -184,7 +184,7 @@ real (kind = 8) :: dtfac
 real (kind = 8) :: sallowperm, salhighperm
 real (kind = 8) :: thetcn
 CHARACTER (LEN = 96) :: outputFileName, inputFileName
-CHARACTER (LEN = 96) :: outputBedName, inputBedName
+!MD CHARACTER (LEN = 96) :: outputBedName, inputBedName
 !meaning of the variables
 !------------------------
 !idryc            is something like a count down variable to process drying/ wetting
@@ -464,7 +464,7 @@ steadyCycle: Do
     !Pardiso solver from the Intel MKL library
     !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO.
     !In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
-    call front_pardiso (1)
+!MD:    call front_pardiso (1)
   endif
   
 
@@ -554,13 +554,15 @@ steadyCycle: Do
     if (mod (maxn, nprti) == 0 .and. ikalypsofm /= 0) then
       !generate output file name
       call generateOutputFileName ('stat', niti, 0, maxn, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
       !write the result
       call write_kalypso (outputfilename, 'resu')
 
       !MD: only for kohesive Sediment
       IF (LSS.gt.0) THEN
-        CALL write_KALYP_Bed (outputBedName)
+        call generateOutputFileName ('stat', niti, 0, maxn, modellaus, 'bed', modellrst, ct, nb, &
+                             &     outputFileName, inputFileName)
+        CALL write_KALYP_Bed (outputFileName)
       END IF
     endif
   endif
@@ -623,13 +625,15 @@ maxn = temp_maxn
 !----------------------------------------------
 if (ikalypsofm /= 0) then
   call generateOutputFileName ('stat', niti, 0, 0, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
   !write the result
   call write_kalypso (outputfilename, 'resu')
 
   !MD: only for kohesive Sediment
   IF (LSS.gt.0) THEN
-    CALL write_KALYP_Bed (outputBedName)
+    call generateOutputFileName ('stat', niti, 0, 0, modellaus, 'bed', modellrst, ct, nb, &
+                             &     outputFileName, inputFileName)
+    CALL write_KALYP_Bed (outputFileName)
   END IF
 end if
 
@@ -1133,7 +1137,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       !Pardiso solver from the Intel MKL library
       !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO.
       !In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
-      call front_pardiso (1)
+!MD:      call front_pardiso (1)
     endif
   
 
@@ -1241,13 +1245,15 @@ DynamicTimestepCycle: do n = 1, ncyc
     if (nprti /= 0) then
       if (mod (icyc, iprtf) == 0 .and. mod (maxn, iprti) == 0) then
          call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
          !write the result
          call write_kalypso (outputfilename, 'resu')
 
          !MD: only for kohesive Sediment
          IF (LSS.gt.0) THEN
-           CALL write_KALYP_Bed (outputBedName)
+           call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, 'bed', modellrst, ct, nb, &
+                             &     outputFileName, inputFileName)
+           CALL write_KALYP_Bed (outputFileName)
          END IF
       endif
     endif
@@ -1338,23 +1344,25 @@ DynamicTimestepCycle: do n = 1, ncyc
     MAXN = 0
     !generate file name for result
     call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
     !write the result
     call write_kalypso (outputfilename, 'resu')
     !MD: only for kohesive Sediment
     IF (LSS.gt.0) THEN
-      CALL write_KALYP_Bed (outputBedName)
+      call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, 'bed', modellrst, ct, nb, &
+                             &     outputFileName, inputFileName)
+      CALL write_KALYP_Bed (outputFileName)
     END IF
 
     !MD: keine Ausgabe koh. bed fuer Mini & Maxi
     !generate file name for minimum values 
     call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
     !write minimum values file
     call write_Kalypso (outputFileName, 'mini')
     !generate file name for maximum values 
     call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, &
-                             &     outputFileName, inputFileName, outputBedName, inputBedName)
+                             &     outputFileName, inputFileName)
     !write maximum values file
     call write_Kalypso (outputFileName, 'maxi')
   end if
