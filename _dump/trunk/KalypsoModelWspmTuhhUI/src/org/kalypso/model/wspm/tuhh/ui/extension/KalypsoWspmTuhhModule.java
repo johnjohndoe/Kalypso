@@ -41,4 +41,9 @@ public class KalypsoWspmTuhhModule implements IKalypsoModule
     return new KalypsoWspmRemoteDatabaseSettings();
   }
 
+  @Override
+  public String getId( )
+  {
+    return ID;
+  }
 }
