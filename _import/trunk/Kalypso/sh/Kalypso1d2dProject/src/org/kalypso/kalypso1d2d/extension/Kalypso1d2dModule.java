@@ -40,4 +40,9 @@ public class Kalypso1d2dModule implements IKalypsoModule
     return new Kalypso1d2dRemoteDatabaseSettings();
   }
 
+  @Override
+  public String getId( )
+  {
+    return ID;
+  }
 }
