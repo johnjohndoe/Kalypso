@@ -37,5 +37,10 @@ public class KalypsoModuleRRM implements IKalypsoModule
   {
     return new KalypsoRrmRemoteDatabaseSettings();
   }
-  
+
+  @Override
+  public String getId( )
+  {
+    return ID;
+  }
 }
