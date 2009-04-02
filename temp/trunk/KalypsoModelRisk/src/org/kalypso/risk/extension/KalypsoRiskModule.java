@@ -38,4 +38,9 @@ public class KalypsoRiskModule implements IKalypsoModule
     return new KalypsoRiskRemoteDatabaseSettings();
   }
 
+  @Override
+  public String getId( )
+  {
+    return ID;
+  }
 }
