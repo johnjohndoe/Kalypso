@@ -273,9 +273,8 @@
 								grabExcessHorizontalSpace="true" />
 							<gft:text>activate</gft:text><!-- aktivieren -->
 						</gft:checkbox>
-						<gft:label text="Max. Anzahl Iterationen" visible="true"
-							tooltip="Maximale Anzahl der Iterationen für instationäre Berechnung."
-							style="SWT.NONE">
+						<gft:label property="c1d2d:NITN" visible="true"
+														style="SWT.NONE">
 							<gft:gridData verticalAlignment="GridData.CENTER"
 								horizontalAlignment="GridData.BEGINNING"
 								grabExcessHorizontalSpace="false" />
@@ -771,34 +770,34 @@
 						</gft:enabledOperation>
 					</gft:validatorlabel>
 				</gft:group>
-
-				<gft:group style="SWT.NONE" text="Rechenkernparameter">
+				<!-- Rechenkernparameter -->
+				<gft:group style="SWT.NONE" text="Calculation Unit Parameter">
 					<gft:gridData horizontalAlignment="GridData.FILL"
 						verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
 						grabExcessVerticalSpace="false" />
 					<gft:gridLayout numColumns="3" horizontalSpacing="10" />
 					<gft:checkbox editable="true" property="c1d2d:VEGETA"
-						tooltip="Berücksichtigung der Bewuchsparameter bei der Berechnung"
+						
 						style="SWT.NONE">
-						<gft:text>Bewuchsparameter verwenden</gft:text>
+						
 						<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 					</gft:checkbox>
 					<gft:checkbox editable="true" property="c1d2d:BEIENT"
-						tooltip="Berücksichtigung des Boussinesq-Beiwertes bei der Berechnung"
+						
 						style="SWT.NONE">
-						<gft:text>Boussinesq-Beiwert verwenden</gft:text>
+						
 						<gft:gridData horizontalSpan="3" horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 					</gft:checkbox>
-					<gft:label text="Breitengrad [°]" visible="true"
-						tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]" style="SWT.NONE">
+					<gft:label property="c1d2d:OMEGA" visible="true"
+						 style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:OMEGA"
-						tooltip="Breitengrad zur Ermittlung der Corioliskraft [°]" style="SWT.BORDER">
+						 style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 					</gft:text>
@@ -834,8 +833,8 @@
 					</gft:validatorlabel>
 					<!--Smagorinsky-Parameter-->
 
-					<gft:label text="Smagorinsky-Faktor" visible="true"
-						tooltip="Alfa Wert des Smagorinsky Ansatzes [-]" style="SWT.NONE">
+					<gft:label property="c1d2d:TBFACT" visible="true"
+						 style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
@@ -861,7 +860,7 @@
 						</gft:enabledOperation>
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:TBFACT"
-						tooltip="Alfa Wert des Smagorinsky Ansatzes [-]" style="SWT.BORDER">
+						 style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 						<gft:enabledOperation>
@@ -934,8 +933,8 @@
 							</or>
 						</gft:enabledOperation>
 					</gft:validatorlabel>
-
-					<gft:label text="Scherschichtdicke" visible="true" style="SWT.NONE">
+				<!-- text="Scherschichtdicke" -->
+					<gft:label property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
@@ -1010,15 +1009,14 @@
 						</gft:enabledOperation>
 					</gft:validatorlabel>
 
-					<gft:label text="Min. Wirbelviskosität [m²/s]" visible="true"
-						tooltip="Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]"
-						style="SWT.NONE">
+					<gft:label property="c1d2d:TBMIN" visible="true"
+												style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:TBMIN"
-						tooltip="Minimale Wirbelviskosität beim Smagorinsky-Ansatz [m²/s]"
+						
 						style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
@@ -1033,7 +1031,7 @@
 							grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
 
-					<gft:label text="Dispersionskoeffizient" visible="true"
+					<gft:label property="c1d2d:_p_bottom" visible="true"
 						style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
@@ -1123,15 +1121,15 @@
 					<gft:gridLayout numColumns="3" horizontalSpacing="10"
 						makeColumnsEqualWidth="false" />
 
-					<gft:label text="Marsh Algorithmus" visible="true"
-						tooltip="Art der gesonderten Behandlung von nur teilweise durchströmten Elementen (Randelemente)."
+					<gft:label property="c1d2d:IDNOPT" visible="true"
+						
 						style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:label>
 					<gft:combo property="c1d2d:IDNOPT"
-						tooltip="Art der gesonderten Behandlung von nur teilweise durchströmten Elementen (Randelemente)."
+						
 						style="SWT.DROP_DOWN | SWT.READ_ONLY">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
@@ -1141,8 +1139,8 @@
 						<gft:gridData horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
-					<gft:label text="Deaktivierungstiefe [m]" visible="true"
-						tooltip="Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]"
+					<gft:label property="c1d2d:AC1" visible="true"
+						
 						style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
@@ -1156,7 +1154,7 @@
 						</gft:enabledOperation>
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:AC1"
-						tooltip="Tiefe unter der Oberfläche zur deaktivierung von Knoten [m]"
+						
 						style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
@@ -1180,8 +1178,8 @@
 							</ogc:PropertyIsLike>
 						</gft:enabledOperation>
 					</gft:validatorlabel>
-					<gft:label text="Übergangstiefe [m]" visible="true"
-						tooltip="Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m]."
+					<gft:label property="c1d2d:AC2" visible="true"
+						
 						style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
@@ -1195,7 +1193,7 @@
 						</gft:enabledOperation>
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:AC2"
-						tooltip="Wassertiefe ab der Marsh-Algorithmus aktiviert wird [m]."
+						
 						style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
@@ -1219,8 +1217,8 @@
 							</ogc:PropertyIsLike>
 						</gft:enabledOperation>
 					</gft:validatorlabel>
-					<gft:label text="Porosität [-]" visible="true"
-						tooltip="Porosität des Marsh-Bodens [-]." style="SWT.NONE">
+					<gft:label property="c1d2d:AC3" visible="true"
+						 style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
@@ -1233,7 +1231,7 @@
 						</gft:enabledOperation>
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:AC3"
-						tooltip="Porosität des Marsh-Bodens [-]." style="SWT.BORDER">
+						 style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 						<gft:enabledOperation>
@@ -1256,14 +1254,14 @@
 							</ogc:PropertyIsLike>
 						</gft:enabledOperation>
 					</gft:validatorlabel>
-					<gft:label text="Trockenfalltiefe [m]" visible="true"
-						tooltip="Wassertiefe ab welcher Knoten trocken f?llt [m]." style="SWT.NONE">
+					<gft:label property="c1d2d:DSET" visible="true"
+						 style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:DSET"
-						tooltip="Wassertiefe ab welcher Knoten trocken fällt [m]." style="SWT.BORDER">
+						 style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />
 					</gft:text>
@@ -1272,15 +1270,15 @@
 						<gft:gridData horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
-					<gft:label text="Wiederbenetzungstiefe [m]" visible="true"
-						tooltip="Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m]."
+					<gft:label property="c1d2d:DSETD" visible="true"
+						
 						style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER"
 							horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 					</gft:label>
 					<gft:text editable="true" property="c1d2d:DSETD"
-						tooltip="Wassertiefe bei welcher trockener Knoten wiederbenetzt wird [m]."
+						
 						style="SWT.BORDER">
 						<gft:gridData horizontalAlignment="GridData.FILL"
 							grabExcessHorizontalSpace="true" />

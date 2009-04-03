@@ -6,11 +6,11 @@
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
-	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+	<gft:label property="gml:name" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER"
+	<gft:text editable="true" property="gml:name" style="SWT.BORDER"
 		xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
@@ -18,7 +18,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+	<gft:label property="gml:description" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -32,7 +32,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:label text="Absolutwert?" visible="true" tooltip="absoluter oder entsprechender Wert" style="SWT.NONE">
+	<gft:label property="op1d2d:absolute" visible="true" style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -49,7 +49,7 @@
 			</gft:excludeOperation>
 		</gft:gridData>
 	</gft:label>
-	<gft:checkbox property="op1d2d:absolute" tooltip="absoluter oder entsprechender Wert" style="SWT.HORIZONTAL">
+	<gft:checkbox property="op1d2d:absolute"  style="SWT.HORIZONTAL">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -83,7 +83,7 @@
 		</gft:gridData>
 	</gft:validatorlabel>
 
-	<gft:label text="Richtung berücksichtigen" visible="true" tooltip="richtungsabhüngiger Zufluss oder diffuser Quellen-/ Senkenterm" style="SWT.NONE">
+	<gft:label property="op1d2d:hasDirection" visible="true"  style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -108,7 +108,7 @@
 			</gft:excludeOperation>
 		</gft:gridData>
 	</gft:label>
-	<gft:checkbox property="op1d2d:hasDirection" tooltip="Richtung berücksichtigen oder diffuser Zufluss" style="SWT.HORIZONTAL">
+	<gft:checkbox property="op1d2d:hasDirection"  style="SWT.HORIZONTAL">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -158,7 +158,7 @@
 
 
 
-	<gft:label text="Richtung" visible="true" tooltip="Richtung der Randbedingung" style="SWT.NONE">
+	<gft:label property="op1d2d:direction" visible="true"  style="SWT.NONE">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -181,7 +181,7 @@
 			</gft:excludeOperation>
 		</gft:gridData>
 	</gft:label>
-	<gft:spinner property="op1d2d:direction" tooltip="Richtung [°]" style="SWT.BORDER | SWT.HORIZONTAL">
+	<gft:spinner property="op1d2d:direction"  style="SWT.BORDER | SWT.HORIZONTAL">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
@@ -227,7 +227,7 @@
 	</gft:validatorlabel>
 
 
-	<gft:label text="Eintströmgeschwindigkeit" visible="true" tooltip="Einströmgeschwindigkeit" style="SWT.NONE">
+	<gft:label property="op1d2d:inflowVelocity" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 		<gft:visibleOperation>
@@ -250,7 +250,7 @@
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
 	</gft:label>
-	<gft:text editable="true" property="op1d2d:inflowVelocity" tooltip="Einströmgeschwindigkeit" style="SWT.BORDER">
+	<gft:text editable="true" property="op1d2d:inflowVelocity" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 		<gft:visibleOperation>
 			<and>
@@ -298,18 +298,18 @@
 
 
 
-	<gft:label text="Stationäre Randbedingung" visible="true" tooltip="stationäre Randbedingung" style="SWT.NONE">
+	<gft:label property="op1d2d:stationaryCondition" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="op1d2d:stationaryCondition" tooltip="stationäre Randbedingung" style="SWT.BORDER">
+	<gft:text editable="true" property="op1d2d:stationaryCondition" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
 	<gft:validatorlabel property="op1d2d:stationaryCondition" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:group text="Randbedingung" tooltip="Randbedingung" style="SWT.NONE">
+	<gft:group property="op1d2d:observation"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" />

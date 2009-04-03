@@ -27,13 +27,12 @@
 	<gft:validatorlabel property="gml:description" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-	<gft:label text="Station [km]" visible="true"
-		tooltip="Optionale Angabe der Station. Falls gesetzt, wird die Länge des&#xa;FE-Elements als Differenz der anliegenden Stationierung&#xa;ermittelt."
+	<gft:label property="wb1d2d:station" visible="true"
 		style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="wb1d2d:station" tooltip="Stationierung" style="SWT.BORDER">
+	<gft:text editable="true" property="wb1d2d:station" style="SWT.BORDER">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL"
 			grabExcessHorizontalSpace="true" />
 		<gft:format>%.4f</gft:format>
@@ -72,7 +71,7 @@
 		<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
 			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
 		<gft:tabItem>
-			<gft:tabLabel>Abfluss</gft:tabLabel>
+			<gft:tabLabel>Flow Off</gft:tabLabel><!-- Abfluss -->
 			<gft:extensioncontrol property="gml:name"
 				extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
 				<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
@@ -87,7 +86,7 @@
 			</gft:extensioncontrol>
 		</gft:tabItem>
 		<gft:tabItem>
-			<gft:tabLabel>Fläche</gft:tabLabel>
+			<gft:tabLabel>Area</gft:tabLabel><!-- Fläche -->
 			<gft:extensioncontrol property="gml:name"
 				extension-id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory" style="SWT.NONE">
 				<gft:gridData horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"

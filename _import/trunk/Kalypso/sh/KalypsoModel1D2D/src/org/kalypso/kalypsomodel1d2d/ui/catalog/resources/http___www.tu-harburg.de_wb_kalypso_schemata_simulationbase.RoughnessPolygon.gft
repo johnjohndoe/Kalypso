@@ -5,8 +5,8 @@
 
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="1" horizontalSpacing="20" verticalSpacing="20"/>
-
-        <gft:group text="Rauheitspolygon Angaben" style="0">
+<!-- text="Rauheitspolygon Angaben" -->
+        <gft:group text="Roughness Polygon Settings" style="0">
 			<gft:gridData verticalSpan="1" horizontalSpan="1"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL"
@@ -14,7 +14,7 @@
 				grabExcessVerticalSpace="false" />
 			<gft:gridLayout numColumns="3" horizontalSpacing="10" verticalSpacing="10" />
 
-        <gft:label text="Name" visible="true" style="SWT.NONE">
+        <gft:label property="gml:name"  visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING"
             			  horizontalAlignment="GridData.BEGINNING"
                           grabExcessHorizontalSpace="false"/>
@@ -26,7 +26,7 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
 
-        <gft:label text="Beschreibung" visible="true" style="SWT.NONE">
+        <gft:label property="gml:description" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
@@ -36,7 +36,7 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
 
-        <gft:label text="Rauheitsklasse" visible="true" style="SWT.NONE">
+        <gft:label property="simBase:roughnessClassMember"  visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:combo property="simBase:roughnessClassMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
@@ -48,7 +48,7 @@
 
         </gft:group>
 
-        <gft:group text="Korrekturparameter" style="0">
+        <gft:group text="Corrections" style="0">
 			<gft:gridData verticalSpan="1" horizontalSpan="1"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL"
@@ -56,7 +56,7 @@
 				grabExcessVerticalSpace="false" />
 			<gft:gridLayout numColumns="3" horizontalSpacing="10" verticalSpacing="10" />
 
-        <gft:label text="Korrektur KS" visible="true" style="SWT.NONE">
+        <gft:label property="simBase:correction_ks" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="simBase:correction_ks" style="SWT.BORDER">
@@ -68,7 +68,7 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
 
-        <gft:label text="Korrektur Ax Ay" visible="true" style="SWT.NONE">
+        <gft:label property="simBase:correction_axay" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="simBase:correction_axay" style="SWT.BORDER">
@@ -78,7 +78,7 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
 
-        <gft:label text="Korrektur Dp" visible="true" style="SWT.NONE">
+        <gft:label property="simBase:correction_dp" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="simBase:correction_dp" style="SWT.BORDER">

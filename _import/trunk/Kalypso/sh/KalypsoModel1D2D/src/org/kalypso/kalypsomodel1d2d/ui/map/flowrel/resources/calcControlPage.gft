@@ -6,8 +6,8 @@
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
 	
-	<gft:group text="Abflussintervall"
-		tooltip="Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)" style="SWT.NONE">
+	<gft:group property="tuhh:runOffIntervalMember"
+		 style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" />
@@ -17,14 +17,14 @@
 		</gft:subcomposite>
 	</gft:group>
 
-	<gft:label text="stationär-gleichförmiges Gefälle" visible="true"
-		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+	<gft:label property="tuhh:bottomSlope" visible="true"
+		
 		style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="tuhh:bottomSlope"
-		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+		
 		style="SWT.BORDER">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 		<gft:format>%.4f</gft:format>
@@ -36,7 +36,7 @@
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
 
-	<gft:group text="Numerische Parameter" tooltip="Numerische Parameter" style="SWT.NONE">
+	<gft:group property="tuhh:waterlevelParameterMember" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" />
@@ -46,7 +46,7 @@
 		</gft:subcomposite>
 	</gft:group>
 
-	<gft:group text="Polynomerzeugung" tooltip="Parameter für die Erzeugung der Polynome" style="SWT.NONE">
+	<gft:group property="tuhh:calcPolynomesMember" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" />

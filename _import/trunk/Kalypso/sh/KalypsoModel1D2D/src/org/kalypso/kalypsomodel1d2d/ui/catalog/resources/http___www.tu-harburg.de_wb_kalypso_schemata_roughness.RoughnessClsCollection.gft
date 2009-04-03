@@ -6,7 +6,7 @@
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="2" numRows="4" makeColumnsEqualWidth="false" horizontalSpacing="10" />
 
-	<gft:group text="Fliesswiderstandsklassifizierung" style="0">
+	<gft:group property="wbr:roughnessClsMember" style="0">
 		<gft:gridData horizontalSpan="2" verticalSpan="2" horizontalAlignment="GridData.FILL"
 			verticalAlignment="GridData.FILL" heightHint="200" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="2" horizontalSpacing="10" numRows="2" />
@@ -29,7 +29,7 @@
 		</gft:table>
 	</gft:group>
 
-	<gft:group text="Rauheitsklassen" style="0">
+	<gft:group property="wbr:roughness_GroundClsMember" style="0">
 		<gft:gridData horizontalSpan="1" minimumHeight="150" horizontalAlignment="GridData.FILL"
 			verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
@@ -47,7 +47,7 @@
 		</gft:table>
 	</gft:group>
 
-	<gft:group text="Bewuchsklassen" style="0">
+	<gft:group property="wbr:roughness_VegetationClsMember" style="0">
 		<gft:gridData horizontalSpan="1" verticalSpan="2" minimumHeight="200" horizontalAlignment="GridData.FILL"
 			verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="2" horizontalSpacing="5" />
@@ -66,7 +66,7 @@
 		</gft:table>
 	</gft:group>
 
-	<gft:group text="Wirbelviskosität" style="0">
+	<gft:group property="wbr:roughness_EddyViscosityClsMember" style="0">
 		<gft:gridData horizontalSpan="1" minimumHeight="50" horizontalAlignment="GridData.FILL"
 			verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		<gft:gridLayout numColumns="1" horizontalSpacing="5" />
