@@ -51,7 +51,6 @@ import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
-import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -151,8 +150,8 @@ public class DetectBreaklinesSimulation extends AbstractGaja3dSimulation
 			addReferencedInput(inputProvider, INPUT_LOW_THRESH, false);
 			addReferencedInput(inputProvider, INPUT_DISTANCE_TOLERANCE, false);
 
-			final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-			jobSubmitter.submitJob(workingDir, monitor, m_arguments);
+			m_jobSubmitter.submitJob(workingDir, EXECUTABLE_NAME, monitor,
+					m_arguments.toArray(new String[m_arguments.size()]));
 
 			final int boundaryCount = boundaryList.size();
 			final GMLWorkspace breaklinesWorkspace = buildBreaklinesResult(

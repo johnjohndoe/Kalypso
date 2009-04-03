@@ -129,7 +129,8 @@ public class CreateGridSimulation extends AbstractGaja3dSimulation implements
 			addReferencedInput(inputProvider, INPUT_DX, false);
 			addReferencedInput(inputProvider, INPUT_DY, false);
 
-			m_jobSubmitter.submitJob(workingDir, monitor, m_arguments);
+			m_jobSubmitter.submitJob(workingDir, EXECUTABLE_NAME, monitor,
+					m_arguments.toArray(new String[m_arguments.size()]));
 
 			final int boundaryCount = boundaryList.size();
 			final GMLWorkspace demGridsWorkspace = buildDemGridsResult(

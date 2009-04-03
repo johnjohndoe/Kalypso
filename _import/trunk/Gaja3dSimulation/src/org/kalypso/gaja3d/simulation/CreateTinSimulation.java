@@ -49,7 +49,6 @@ import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
-import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -147,8 +146,8 @@ public class CreateTinSimulation extends AbstractGaja3dSimulation implements
 			addReferencedInput(inputProvider, INPUT_MAX_AREA, false);
 			addReferencedInput(inputProvider, INPUT_MIN_ANGLE, false);
 
-			final Gaja3dGridJobSubmitter jobSubmitter = new Gaja3dGridJobSubmitter();
-			jobSubmitter.submitJob(workingDir, monitor, m_arguments);
+			m_jobSubmitter.submitJob(workingDir, EXECUTABLE_NAME, monitor,
+					m_arguments.toArray(new String[m_arguments.size()]));
 
 			final FileObject modelTinFile = workingDir
 					.resolveFile("ModelTin.zip");
@@ -162,8 +161,7 @@ public class CreateTinSimulation extends AbstractGaja3dSimulation implements
 		} catch (final SimulationException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new SimulationException(
-					"Problem during tin creation.", e);
+			throw new SimulationException("Problem during tin creation.", e);
 		} finally {
 			if (workingDir != null) {
 				try {

@@ -20,9 +20,9 @@ import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.gaja3d.simulation.grid.Gaja3dGridJobSubmitter;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.grid.GridJobSubmitter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -30,12 +30,34 @@ import uk.ac.dl.escience.vfs.util.VFSUtil;
 
 public abstract class AbstractGaja3dSimulation {
 
+	public static final String EXECUTABLE_NAME = "Gaja3dService_linux64.sh";
+
 	public static final String INPUT_BOUNDARY = "Boundary";
 
+	private static final URL EXEC_ZIP_URL = GridJobSubmitter.class
+			.getResource("Gaja3dService_linux64.zip");
+
+	private static final URL EXEC_SCRIPT_URL = GridJobSubmitter.class
+			.getResource(EXECUTABLE_NAME);
+
+	private static final String WORKING_DIR = ".";
+
 	protected final ArrayList<String> m_arguments = new ArrayList<String>();
-	protected final Gaja3dGridJobSubmitter m_jobSubmitter = new Gaja3dGridJobSubmitter();
+	protected final GridJobSubmitter m_jobSubmitter = new GridJobSubmitter();
+
+	public static final String GRID_SERVER_ROOT = "gridftp://gramd1.gridlab.uni-hannover.de";
 
 	public AbstractGaja3dSimulation() {
+		try {
+			m_jobSubmitter.addExternalInput(EXEC_ZIP_URL.toURI(), null);
+			m_jobSubmitter.addExternalInput(EXEC_SCRIPT_URL.toURI(), null);
+		} catch (final Exception e) {
+			// could be null or not a valid uri
+			throw new RuntimeException("Problem with executable.", e);
+		}
+		// always add workingDir argument
+		m_arguments.add("workingDir");
+		m_arguments.add(WORKING_DIR);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,8 +123,7 @@ public abstract class AbstractGaja3dSimulation {
 		try {
 			final FileSystemManager manager = VFSUtilities.getNewManager();
 			final String sandboxRoot = tmpdir.getName();
-			final FileObject remoteRoot = manager
-					.resolveFile(Gaja3dGridJobSubmitter.GRID_SERVER_ROOT);
+			final FileObject remoteRoot = manager.resolveFile(GRID_SERVER_ROOT);
 			final FileSystem fileSystem = remoteRoot.getFileSystem();
 			final String homeDirString = (String) fileSystem
 					.getAttribute("HOME_DIRECTORY");
