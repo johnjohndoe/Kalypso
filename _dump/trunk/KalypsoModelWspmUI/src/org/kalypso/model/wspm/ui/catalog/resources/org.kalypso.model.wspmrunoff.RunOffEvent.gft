@@ -2,10 +2,10 @@
 <gft:featureview typename="runoff:RunOffEvent" style="SWT.NONE" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
-	<gft:label text="Name" visible="true" tooltip="Name des Abflussereignisses" style="SWT.NONE">
+	<gft:label property="gml:name" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:name" tooltip="Name des Abflussereignisses" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+	<gft:text editable="true" property="gml:name"  style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING" />
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">
@@ -14,10 +14,10 @@
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:label text="Beschreibung" visible="true" tooltip="Ereignisbeschreibung (optional)" style="SWT.NONE">
+	<gft:label property="gml:description" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:description" tooltip="Ereignisbeschreibung (optional)" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+	<gft:text editable="true" property="gml:description"  style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
 		<gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">

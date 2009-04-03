@@ -5,7 +5,7 @@
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="2"/>
 
-        <gft:label text="Station km" visible="true" tooltip="Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird." style="SWT.NONE">
+        <gft:label property="tuhh:station" visible="true" tooltip="Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird." style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="tuhh:station" tooltip="Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird." style="SWT.BORDER" >

@@ -2,10 +2,10 @@
 <gft:featureview typename="common:Image" style="SWT.NONE" xmlns:common="org.kalypso.gml.common" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
     <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
     <gft:gridLayout numColumns="4"/>
-    <gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+    <gft:label property="gml:name" visible="true" style="SWT.NONE">
         <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gft:text editable="true" property="gml:name" style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
         <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
     </gft:text>
     <gft:label visible="false" style="SWT.NONE">
@@ -14,10 +14,10 @@
     <gft:label visible="false" style="SWT.NONE">
         <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+    <gft:label property="gml:description" visible="true"  style="SWT.NONE">
         <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+    <gft:text editable="true" property="gml:description" style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
         <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true"/>
     </gft:text>
     <gft:label visible="false" style="SWT.NONE">
@@ -26,10 +26,10 @@
     <gft:label visible="false" style="SWT.NONE">
         <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:label text="URL" visible="true" tooltip="Speicherort des Bildes (relative Pfade möglich)" style="SWT.NONE">
+    <gft:label property="common:uri" visible="true"  style="SWT.NONE">
         <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:text editable="true" property="common:uri" tooltip="Speicherort des Bildes (relative Pfade möglich)" style="SWT.BORDER">
+    <gft:text editable="true" property="common:uri"  style="SWT.BORDER">
         <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
     </gft:text>
     <gft:label visible="false" style="SWT.NONE">
@@ -38,7 +38,7 @@
     <gft:label visible="false" style="SWT.NONE">
         <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
-    <gft:label text="Bild" visible="true" tooltip="" style="SWT.NONE">
+    <gft:label text="Image" visible="true" tooltip="" style="SWT.NONE">
         <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
     </gft:label>
     <gft:image property="common:uri" style="SWT.NONE">
