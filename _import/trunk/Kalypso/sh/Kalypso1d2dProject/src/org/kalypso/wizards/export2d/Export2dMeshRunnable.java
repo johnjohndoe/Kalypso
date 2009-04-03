@@ -41,7 +41,9 @@
 package org.kalypso.wizards.export2d;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -83,7 +85,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
   public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.wizards.export2d.Export2dMeshRunnable.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.wizards.export2d.Export2dMeshRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
@@ -98,7 +100,8 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
       try
       {
-        converter.writeRMA10sModel( m_exportFile );
+        final OutputStream outputStream = new FileOutputStream( m_exportFile );
+        converter.writeRMA10sModel( outputStream );
       }
       catch( IOException e )
       {
