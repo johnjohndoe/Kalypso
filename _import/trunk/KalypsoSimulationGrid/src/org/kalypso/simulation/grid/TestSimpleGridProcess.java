@@ -41,25 +41,35 @@
 package org.kalypso.simulation.grid;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.process.IProcess;
+import org.osgi.framework.Bundle;
 
 public class TestSimpleGridProcess extends TestCase
 {
 
+  public static final String GRID_SERVER_ROOT = "gridftp://gramd1.gridlab.uni-hannover.de";
+
+  @Override
   protected void setUp( ) throws Exception
   {
     super.setUp();
   }
 
+  @Override
   protected void tearDown( ) throws Exception
   {
     super.tearDown();
@@ -68,18 +78,38 @@ public class TestSimpleGridProcess extends TestCase
   public void testGridProcess( ) throws Exception
   {
     final String processFactoryId = "org.kalypso.simulation.gridprocess";
-    final File tmpDir = new File( "test" );
     System.setProperty( "GLOBUS_LOCATION", "d:/workspace3.4/org.globus.ws.core" );
-    // final URL exeURL = new
-    // File("d:\\eclipse3.4\\bin\\RMA10Sk_35").toURI().toURL();
-    final URL exeURL = FileLocator.find( Activator.getDefault().getBundle(), new Path( "RMA10Sk_35" ), null );
-    final FileSystemManager manager = VFSUtilities.getManager();
-    final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, manager.toFileObject( tmpDir), exeURL, null );
+    final String sandboxRoot = "testRma";
+
+    final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+
+    final String rmaName = "RMA10Sk_35";
+
+    final IProcess process = KalypsoCommonsExtensions.createProcess( processFactoryId, sandboxRoot, rmaName );
     process.environment().put( "OMP_NUM_THREADS", "4" );
-//    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "model.2d" ), null ).toURI() );
-//    ((SimpleGridProcess) process).addInput( FileLocator.find( Activator.getDefault().getBundle(), new Path( "control.r10" ), null ).toURI() );
-//    ((SimpleGridProcess) process).addOutput( new File(tmpDir, "A*.2d").toURI() );
+
+    final String sandboxDirectory = process.getSandboxDirectory();
+    final FileObject workingDir = manager.resolveFile( sandboxDirectory );
+    copyFileToWorking( manager, workingDir, rmaName );
+    copyFileToWorking( manager, workingDir, "model.2d" );
+    copyFileToWorking( manager, workingDir, "control.r10" );
+
     process.startProcess( System.out, System.err, null, null );
+
+    final FileObject resultFile = workingDir.resolveFile( "A0001.2d" );
+    if( !resultFile.exists() )
+      fail( "Result was not created!" );
+
+    manager.close();
+  }
+
+  private void copyFileToWorking( final FileSystemManager manager, final FileObject workingDir, final String rmaName ) throws IOException, FileSystemException, URISyntaxException
+  {
+    final Path path = new Path( rmaName );
+    final Bundle bundle = Activator.getDefault().getBundle();
+    final URL exeURL = FileLocator.toFileURL( FileLocator.find( bundle, path, null ) );
+    final FileObject exeFile = manager.toFileObject( new File( exeURL.toURI() ) );
+    VFSUtilities.copy( exeFile, workingDir );
   }
 
 }

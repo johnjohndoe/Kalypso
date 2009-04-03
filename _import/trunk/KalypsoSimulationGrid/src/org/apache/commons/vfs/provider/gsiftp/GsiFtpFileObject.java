@@ -474,7 +474,7 @@ public class GsiFtpFileObject extends AbstractFileObject
     final GridFTPClient client = getClient();
     try
     {
-      client.site( "chmod 755 " + getName().getPath() );
+      client.site( "chmod 744 " + getName().getPath() );
     }
     catch( final ServerException e )
     {

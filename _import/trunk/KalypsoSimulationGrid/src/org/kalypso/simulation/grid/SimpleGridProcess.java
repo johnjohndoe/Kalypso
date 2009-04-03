@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.grid;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,25 +53,23 @@ import java.util.Set;
 import javax.security.auth.Subject;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.Selectors;
+import org.apache.commons.vfs.FileSystem;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.provider.gsiftp.GsiFtpFileObject;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
+import org.gridforum.jgss.ExtendedGSSManager;
 import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.process.IProcess;
 import org.kalypso.commons.process.ProcessTimeoutException;
 import org.kalypso.contribs.java.lang.ICancelable;
 
-import de.unihannover.rvs.gdi.jobsubmit.impl.GDIFileTransfer;
 import de.unihannover.rvs.gdi.jobsubmit.impl.GDIJobFactory;
 import de.unihannover.rvs.gdi.jobsubmit.impl.GDIJobProperties;
 import de.unihannover.rvs.gdi.jobsubmit.impl.GDIState;
@@ -88,55 +84,77 @@ import de.unihannover.rvs.gdi.jobsubmit.interfaces.GDIObserverSubject;
  */
 public class SimpleGridProcess implements IProcess, GDIObserver
 {
+  private static final String GRID_SERVER_HANNOVER = "gramd1.gridlab.uni-hannover.de";
+
+  @SuppressWarnings("unused")
+  private static final String GRID_SERVER_KAISERSLAUTERN = "gt4-gdi.sugi.uni-kl.de";
+
+  private final String m_targetHostName;
+
   private final FileObject m_workingDir;
 
-  private final URL m_exeUrl;
-
-  private final List<String> m_commandLine = new ArrayList<String>();
-
-  private GDIJob m_job = GDIJobFactory.createGDIJob( GDIJobFactory.defaultGDIJob );
-
-  private final Map<String, String> m_environment = new HashMap<String, String>();
-
-  private IProgressMonitor m_monitor;
-
-  private GDIState m_status = GDIState.UNSUBMITTED;
+  private final String m_executable;
 
   private long m_timeout;
 
+  private final List<String> m_commandLine = new ArrayList<String>();
+
+  private final Map<String, String> m_environment = new HashMap<String, String>();
+
+  private GDIState m_status = GDIState.UNSUBMITTED;
+
+  private final StandardFileSystemManager m_manager;
+
+// private IProgressMonitor m_monitor;
+
   /**
-   * Creates a new grid process that gets its files from workingDir and runs the executable exeUrl on a computing grid
-   * server as an asynchronous job
+   * Creates a new grid process with given sandbox, executable and arguments.
    * 
-   * @param workingDir
+   * @param tempDirName
    * @param exeUrl
    * @param commandlineArgs
    */
-  public SimpleGridProcess( final FileObject workingDir, final URL exeUrl, final String... commandlineArgs )
+  public SimpleGridProcess( final String tempDirName, final String executable, final String... commandLineArgs ) throws IOException
   {
-    Assert.isNotNull( workingDir );
-    Assert.isNotNull( exeUrl );
+    Assert.isNotNull( tempDirName );
+    Assert.isNotNull( executable );
 
-    m_workingDir = workingDir;
-    m_exeUrl = exeUrl;
+    m_executable = executable;
+    m_targetHostName = GRID_SERVER_HANNOVER;
+    // m_targetHostName = GRID_SERVER_KAISERSLAUTERN;
 
-    if( commandlineArgs != null )
+    if( commandLineArgs != null )
     {
-      for( final String arg : commandlineArgs )
+      for( final String arg : commandLineArgs )
+      {
         m_commandLine.add( arg );
+      }
     }
+
+    m_manager = VFSUtilities.getNewManager();
+    m_workingDir = createSandbox( tempDirName );
   }
 
   /**
-   * Sets a progress monitor.
-   * 
-   * @see org.kalypso.commons.process.IProcess#setProgressMonitor(org.eclipse.core .runtime.IProgressMonitor)
+   * @see org.kalypso.commons.process.IProcess#getSandboxDirectory()
    */
   @Override
-  public void setProgressMonitor( final IProgressMonitor monitor )
+  public String getSandboxDirectory( )
   {
-    m_monitor = monitor;
+    final FileName name = m_workingDir.getName();
+    return name.getURI();
   }
+
+// /**
+// * Sets a progress monitor.
+// *
+// * @see org.kalypso.commons.process.IProcess#setProgressMonitor(org.eclipse.core .runtime.IProgressMonitor)
+// */
+// @Override
+// public void setProgressMonitor( final IProgressMonitor monitor )
+// {
+// m_monitor = monitor;
+// }
 
   /**
    * Gets the grid job's environment
@@ -165,73 +183,71 @@ public class SimpleGridProcess implements IProcess, GDIObserver
   @Override
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws ProcessTimeoutException, IOException
   {
-    final FileSystemManager manager = VFSUtilities.getManager();
-
-    // stage-in the exe to remote place
-    // try to convert bundle resouce url to local file url
-    final String exeUrlName = FileLocator.toFileURL( m_exeUrl ).toString();
-    final FileObject exeFile = manager.resolveFile( exeUrlName );
-    final File localExeFile = exeFile.getFileSystem().replicateFile( exeFile, Selectors.SELECT_SELF );
-    final String exeBaseName = FileUtilities.nameFromPath( exeUrlName );
-    final List<GDIFileTransfer> stageInFiles = new ArrayList<GDIFileTransfer>();
-    stageInFiles.add( new GDIFileTransfer( localExeFile.toURI().toString(), m_workingDir.resolveFile( exeBaseName ).getName().getURI() ));
-    
     // initialize simulation monitor if not set
-    // TODO check monitor
-    m_monitor = SubMonitor.convert( m_monitor, String.format( "Running grid process for executable %s in directoy %s.", exeUrlName, m_workingDir.getName().getFriendlyURI() ), 10 );
+    // final String friendlyURI = m_workingDir.getName().getFriendlyURI();
+    // m_monitor = SubMonitor.convert( m_monitor, String.format(
+    // "Running grid process for executable %s in directoy %s.", m_executable, friendlyURI ), 10 );
 
-    
     /* configure and submit grid job */
 
     // logging output
-    final String stdOutFileName = exeBaseName + ".out";
-    final String stdErrFileName = exeBaseName + ".err";
-    final Path rootWorkingPath = new Path(m_workingDir.getName().getRootURI());
-    final String targetHostName = rootWorkingPath.lastSegment();
-// final String targetHostName = GridProcessFactory.GRID_SERVER_URL;
+    final String stdOutFileName = m_executable + ".out";
+    final String stdErrFileName = m_executable + ".err";
 
-    final String queue = "dgitest"; // for hannover
-    final String factory = "PBS"; // for hannover
+    // for hannover
+    final String queue = "dgitest";
+    final String factory = "PBS";
 
-    // final String factory = "SGE" // for kaiserslautern
+    // for kaiserslautern
+    // final String queue = "dgitest";
+    // final String factory = "SGE"
 
-    final String sandBoxDir = m_workingDir.getName().getBaseName();
-    
-    // use current security credential for grid submission
-    final Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
-    final Set creds = currentSubject.getPrivateCredentials();
-    GSSCredential credential = null; 
-    if( creds.size() >= 1 )
-      credential = (GSSCredential) creds.iterator().next();
-    
+    final FileObject executableFile = m_workingDir.resolveFile( m_executable );
+    if( !executableFile.exists() )
+      throw new IOException( "Executable does not exist!" );
+
+    // make file executable
+    ((GsiFtpFileObject) executableFile).makeExecutable();
+
+    final GSSCredential credential = getCredential();
+
     final GDIJobProperties props = new GDIJobProperties();
-    props.addPreference( "gdi.targethostname", targetHostName );
-    props.addPreference( "gdi.executable", "./" + exeBaseName );
+
+    props.addPreference( "gdi.targethostname", m_targetHostName );
+    props.addPreference( "gdi.executable", "./" + m_executable );
     props.addPreference( "gdi.arguments", m_commandLine );
+    props.addPreference( "gdi.environment", m_environment );
+
+    final String sandboxName = m_workingDir.getName().getBaseName();
+    props.addPreference( "gdi.sandboxdir", sandboxName );
+
     props.addPreference( "gdi.stdout", stdOutFileName );
     props.addPreference( "gdi.stderr", stdErrFileName );
-    props.addPreference( "gdi.filestagein", stageInFiles );
     props.addPreference( "gdi.factory", factory );
     props.addPreference( "gdi.queue", queue );
-    props.addPreference( "gdi.sandboxdir", sandBoxDir );
-    props.addPreference( "gdi.environment", m_environment );
     props.addPreference( "gdi.credential", credential );
-    m_job.setProps( props );
 
-    m_monitor.subTask( String.format( "Submitting grid job to server %s.", targetHostName ) );
+    final GDIJob job = GDIJobFactory.createGDIJob( GDIJobFactory.defaultGDIJob );
+    job.setProps( props );
+
+    // m_monitor.subTask( String.format( "Submitting grid job to server %s.", m_targetHostName ) );
 
     final PrintWriter stdPrinter = new PrintWriter( stdOut );
     final PrintWriter errPrinter = new PrintWriter( stdErr );
 
-    // register observer
-    ((GDIObserverSubject) m_job).registerObserver( this );
-    int returnCode = Status.ERROR;
+    // on error iRetVal will be IStatus.ERROR (4)
+    // if finished successfully, iRetVal will be IStatus.OK (0)
+    int iRetVal = IStatus.ERROR;
     try
     {
-      m_job.submit();
+      // register observer
+      ((GDIObserverSubject) job).registerObserver( this );
+
+      // submit job
+      job.submit();
 
       final long startTime = System.currentTimeMillis();
-      finished: while( !(m_monitor.isCanceled()) )
+      finished: while( !isCanceled( cancelable ) )
       {
         if( m_timeout > 0 )
         {
@@ -245,59 +261,100 @@ public class SimpleGridProcess implements IProcess, GDIObserver
         }
         switch( m_status )
         {
-          case RUNNING:
           case UNSUBMITTED:
           case STAGEIN:
           case STAGEOUT:
-            sleep();
+          case RUNNING:
+            Thread.sleep( 1000 );
             break;
           case FINISHED:
-            returnCode = IStatus.OK;
+            iRetVal = IStatus.OK;
           case FAILED:
             break finished;
         }
       }
     }
-    catch( final ProcessTimeoutException e )
+    catch( final InterruptedException e )
     {
-      // rethrow if process timed out
-      throw e;
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace( errPrinter );
+      e.printStackTrace();
     }
     finally
     {
+      IOUtils.closeQuietly( stdPrinter );
+      IOUtils.closeQuietly( errPrinter );
+
       // clean up job in case of an error
       // this will have no effect if job has finished successfully
-      if( m_job != null && m_job.getStatus() == GDIState.RUNNING )
-        m_job.cancelJob();
-      m_job = null;
+      if( job != null && job.getStatus() == GDIState.RUNNING )
+      {
+        job.cancelJob();
+      }
 
-      if( m_monitor.isCanceled() || (cancelable != null && cancelable.isCanceled()) )
+      if( m_manager != null )
+        m_manager.close();
+
+      if( isCanceled( cancelable ) )
       {
         errPrinter.println( "Job has been canceled." );
         throw new OperationCanceledException();
       }
     }
 
-    IOUtils.closeQuietly( stdPrinter );
-    IOUtils.closeQuietly( errPrinter );
-
-    return returnCode;
+    return iRetVal;
   }
 
-  private void sleep( )
+  private FileObject createSandbox( final String tempDirName ) throws FileSystemException
   {
+    final String gridFtpRoot = "gridftp://" + m_targetHostName;
+    final FileObject remoteRoot = m_manager.resolveFile( gridFtpRoot );
+    final FileSystem fileSystem = remoteRoot.getFileSystem();
+
+    // get home directory of user who created this job
+    final String homeDirString = (String) fileSystem.getAttribute( "HOME_DIRECTORY" );
+    final FileObject homeDir = remoteRoot.resolveFile( homeDirString );
+    final FileObject workingDir = homeDir.resolveFile( tempDirName );
+    workingDir.createFolder();
+    return workingDir;
+  }
+
+  private GSSCredential getCredential( ) throws IOException
+  {
+    // 1.
+    // search for credential in current security context
+    final Subject currentSubject = org.globus.gsi.jaas.JaasSubject.getCurrentSubject();
+    if( currentSubject != null )
+    {
+      final Set<Object> creds = currentSubject.getPrivateCredentials();
+      if( creds.size() >= 1 )
+      {
+        return (GSSCredential) creds.iterator().next();
+      }
+      else
+      {
+        // if we are on server side, we cannot just create a credential, so throw an exception
+        throw new IOException( "Current subject does not have private credentials." );
+      }
+    }
+
+    // 2.
+    // Authenticate with user credential defined in <USER_HOME>/.globus/cog.properties
+    // or (if undefined) use default proxy certificate <TEMP>/X509...
+    final ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager.getInstance();
     try
     {
-      Thread.sleep( 1000 );
+      return manager.createCredential( GSSCredential.INITIATE_AND_ACCEPT );
     }
-    catch( final InterruptedException e )
+    catch( final GSSException e )
     {
-      e.printStackTrace();
+      // wrap as IOException because we cannot do I/O without security
+      throw new IOException( e );
     }
+  }
+
+  private boolean isCanceled( final ICancelable cancelable )
+  {
+    return cancelable != null && cancelable.isCanceled();
+    // return m_monitor.isCanceled() || (cancelable != null && cancelable.isCanceled());
   }
 
   /*
@@ -307,7 +364,6 @@ public class SimpleGridProcess implements IProcess, GDIObserver
   public void update( final GDIState newStatus )
   {
     m_status = newStatus;
-    m_monitor.subTask( m_status.toString() );
+    // m_monitor.subTask( m_status.toString() );
   }
-
 }

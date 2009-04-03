@@ -40,26 +40,61 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.grid;
 
-import java.io.IOException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.simulation.core.ISimulationMonitor;
 
-import org.kalypso.commons.process.IProcess;
-import org.kalypso.commons.process.IProcessFactory;
+public class SimulationMonitorAdaptor implements IProgressMonitor {
+	private final ISimulationMonitor m_monitor;
 
-/**
- * This implementation creates {@link GridProcess}'es.
- * 
- * @author Gernot Belger
- */
-public class GridProcessFactory implements IProcessFactory
-{
-  public static final String ID = "org.kalypso.simulation.gridprocess";
+	private int m_worked;
 
-  /**
-   * @see org.kalypso.commons.process.IProcessFactory#newProcess(String, String, String...)
-   */
-  @Override
-  public IProcess newProcess( final String tempDirName, final String executable, final String... commandlineArgs ) throws IOException
-  {
-    return new SimpleGridProcess( tempDirName, executable, commandlineArgs );
-  }
+	private int m_totalWork;
+
+	public SimulationMonitorAdaptor(final ISimulationMonitor monitor) {
+		m_monitor = monitor;
+	}
+
+	@Override
+	public void beginTask(final String name, final int totalWork) {
+		m_totalWork = totalWork;
+		m_monitor.setMessage(name);
+	}
+
+	@Override
+	public void done() {
+		m_monitor.setProgress(100);
+		m_monitor.setFinishInfo(IStatus.OK, "Finished.");
+	}
+
+	@Override
+	public void internalWorked(final double work) {
+	}
+
+	@Override
+	public boolean isCanceled() {
+		return m_monitor.isCanceled();
+	}
+
+	@Override
+	public void setCanceled(final boolean value) {
+		if (value)
+			m_monitor.cancel();
+	}
+
+	@Override
+	public void setTaskName(final String name) {
+		m_monitor.setMessage(name);
+	}
+
+	@Override
+	public void subTask(final String name) {
+		m_monitor.setMessage(name);
+	}
+
+	@Override
+	public void worked(final int work) {
+		m_monitor.setProgress((m_worked += work) / m_totalWork);
+	}
+
 }
