@@ -51,12 +51,15 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -126,7 +129,7 @@ public class VeloDiff2DTest extends TestCase
     }
   }
 
-  private static void processResults( final File result2dFile1, final File result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
+  private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
     final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
@@ -173,11 +176,13 @@ public class VeloDiff2DTest extends TestCase
     file1 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_plan\\ohne_Hafen\\mhw_hq100\\mhw_hq100_plan_p16.2d" );
     file2 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_ref\\mhw_hq100\\mhw_ref_g18.2d" );
 
-    processResults( file1, file2, parameters, outputDir1, outputDir2 );
+    final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+    processResults( manager.toFileObject( file1 ), manager.toFileObject( file2 ), parameters, outputDir1, outputDir2 );
+    manager.close();
 
     final File outputFile = new File( "P:\\emu0528409\\modell\\bce_2d\\Auswertung_Querstroemung\\oH-Ref\\oH-Ref_mhw_hq100_quer.2d" );
     final File template = file2;
-// File template = templateFile.getLocation().toFile();
+    // File template = templateFile.getLocation().toFile();
 
     final boolean parallel = true;
     if( parallel == true )

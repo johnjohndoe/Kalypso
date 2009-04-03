@@ -49,7 +49,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler;
@@ -119,7 +122,10 @@ public class VeloDiff2D
       }
 
       System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.0") ); //$NON-NLS-1$
-      processResults( resultFile1, resultFile2, parameters, outputDir1, outputDir2 );
+      
+      final StandardFileSystemManager manager = VFSUtilities.getNewManager();
+      processResults( manager.toFileObject( resultFile1 ), manager.toFileObject( resultFile2 ), parameters, outputDir1, outputDir2 );
+      manager.close();
 
       System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.6") ); //$NON-NLS-1$
 
@@ -195,7 +201,7 @@ public class VeloDiff2D
     }
   }
 
-  private static void processResults( final File result2dFile1, final File result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
+  private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.differences.VeloDiff2D.14") ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );

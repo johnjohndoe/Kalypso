@@ -40,13 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,6 +61,9 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileUtil;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
@@ -108,7 +115,7 @@ public class IterationInfo
 
   private final List<IterationBean> m_iterations = new ArrayList<IterationBean>();
 
-  private final File m_itrFile;
+  private final FileObject m_itrFile;
 
   private final File m_outputDir;
 
@@ -124,9 +131,9 @@ public class IterationInfo
 
   private final IControlModel1D2D m_controlModel;
 
-  public IterationInfo( final File file, final File outputDir, final IControlModel1D2D controlModel )
+  public IterationInfo( final FileObject iterObsFile, final File outputDir, final IControlModel1D2D controlModel )
   {
-    m_itrFile = file;
+    m_itrFile = iterObsFile;
     m_outputDir = outputDir;
     m_controlModel = controlModel;
 
@@ -156,8 +163,9 @@ public class IterationInfo
     return m_stepNr;
   }
 
-  public void readIterFile( )
+  public void readIterFile( ) throws IOException
   {
+    m_itrFile.refresh();
     if( !m_itrFile.exists() )
       return;
 
@@ -165,7 +173,10 @@ public class IterationInfo
     LineNumberReader lnr = null;
     try
     {
-      lnr = new LineNumberReader( new FileReader( m_itrFile ) );
+      // final InputStream inputStream = m_itrFile.getContent().getInputStream();
+      final byte[] content = FileUtil.getContent( m_itrFile );
+      // lnr = new LineNumberReader( new BufferedReader( new InputStreamReader( inputStream ) ) );
+      lnr = new LineNumberReader( new StringReader( new String( content, Charset.defaultCharset() ) ) );
       while( lnr.ready() )
       {
         final String line = lnr.readLine();
@@ -181,14 +192,6 @@ public class IterationInfo
         StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.1" ), e ); //$NON-NLS-1$
 
       final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.2" ), lnr.getLineNumber() ); //$NON-NLS-1$
-      StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
-    }
-    catch( final IOException e )
-    {
-      if( lnr == null )
-        StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.3" ), e ); //$NON-NLS-1$
-
-      final String msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.4" ), lnr.getLineNumber() ); //$NON-NLS-1$
       StatusUtilities.createStatus( IStatus.WARNING, ISimulation1D2DConstants.CODE_RMA10S, msg, e );
     }
     finally
@@ -281,6 +284,14 @@ public class IterationInfo
   public void finish( )
   {
     finishCurrent();
+    try
+    {
+      m_itrFile.close();
+    }
+    catch( final FileSystemException e )
+    {
+      // gobble
+    }
     m_obs = null;
     m_workspace.dispose();
     m_workspace = null;
@@ -346,7 +357,7 @@ public class IterationInfo
       }
       catch( final Throwable e )
       {
-        status = StatusUtilities.createStatus( IStatus.ERROR, String.format(Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20" ), obsName), e ); //$NON-NLS-1$
+        status = StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfo.20" ), obsName ), e ); //$NON-NLS-1$
       }
     }
 

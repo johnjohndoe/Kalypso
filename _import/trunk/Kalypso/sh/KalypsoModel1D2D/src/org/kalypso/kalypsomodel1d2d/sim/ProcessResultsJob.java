@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -52,17 +56,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -106,14 +112,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * TODO: remove processing of the map This job processed one 2d-result file. *
- *
+ * 
  * @author Gernot Belger
  */
 public class ProcessResultsJob extends Job
 {
   private final File m_outputDir;
 
-  private final File m_inputFile;
+  private final FileObject m_inputFile;
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
@@ -145,13 +151,13 @@ public class ProcessResultsJob extends Job
    * @param stepDate
    *          The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
-  public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
+  public ProcessResultsJob( final FileObject file, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
-    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0" ) + inputFile.getName() ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.0" ) + file.getName() ); //$NON-NLS-1$
 
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_inputFile = inputFile;
+    m_inputFile = file;
     m_outputDir = outputDir;
     m_flowModel = flowModel;
     m_controlModel = controlModel;
@@ -196,15 +202,52 @@ public class ProcessResultsJob extends Job
     try
     {
       /* Zip .2d file to outputDir */
-      final File[] files = new File[] { m_inputFile };
+      final InputStream contentStream = m_inputFile.getContent().getInputStream();
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" ); //$NON-NLS-1$
-      ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
+      // ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
+      ZipOutputStream zos = null;
+      final PipedOutputStream out = new PipedOutputStream();
+      final Thread thread = new Thread( new Runnable()
+      {
+        public void run( )
+        {
+          try
+          {
+            /* Read into NodeResults */
+            final PipedInputStream in = new PipedInputStream( out );
+            read2DIntoGmlResults( in );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      } );
+      thread.start();
+      try
+      {
+        zos = new ZipOutputStream( new FileOutputStream( outputZip2d ) );
+        final String pathname = m_inputFile.getName().getBaseName();
+        final ZipEntry newEntry = new ZipEntry( pathname );
+        zos.putNextEntry( newEntry );
+
+        // pipe to both OutputStreams
+        final MultiOutputStream multi = new MultiOutputStream();
+        multi.addStream( zos );
+        multi.addStream( out );
+        IOUtils.copy( new BufferedInputStream( contentStream, 4 * 1024 ), new BufferedOutputStream( multi, 4 * 1024 ) );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( zos );
+        IOUtils.closeQuietly( out );
+        m_inputFile.close();
+      }
+      // wait until
+      thread.join();
       ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "RMA-Rohdaten", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.12" ), IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       ProgressUtilities.worked( monitor, 1 );
-
-      /* Read into NodeResults */
-      read2DIntoGmlResults();
     }
     catch( final Throwable e )
     {
@@ -214,7 +257,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public File read2DIntoGmlResults( ) throws Exception
+  public File read2DIntoGmlResults( final InputStream is ) throws Exception
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -226,11 +269,8 @@ public class ProcessResultsJob extends Job
     final File gmlResultFile = new File( m_outputDir, "results.gml" ); //$NON-NLS-1$
     final File gmlZipResultFile = new File( m_outputDir, "results.zip" ); //$NON-NLS-1$
 
-    InputStream is = null;
     try
     {
-      is = new FileInputStream( m_inputFile );
-
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, gmlZipResultFile.toURL(), null );
       final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
@@ -283,11 +323,9 @@ public class ProcessResultsJob extends Job
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( String.format(Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" ), m_inputFile.getName())); //$NON-NLS-1$
+      logger.printCurrentInterim( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.54" ), m_inputFile.getName() ) ); //$NON-NLS-1$
 
       conv.parse( is );
-
-      is.close();
 
       logger.takeInterimTime();
       logger.printCurrentInterim( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.56" ) ); //$NON-NLS-1$
@@ -467,12 +505,12 @@ public class ProcessResultsJob extends Job
 
       case DIFFERENCE:
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "-" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.111") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.111" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
 
       case TERRAIN:
         properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.112") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        properties.add( new QNameAndString( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob.112" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         break;
     }
 

@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.File;
-
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,8 +63,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.util.swt.StatusComposite;
 
@@ -96,9 +95,9 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_calculation = new RMAKalypsoSimulationRunner( geoLog, caseDataProvider );
     final ICalculationUnit calculationUnit = m_calculation.getControlModel().getCalculationUnit();
 
-	setTitle( String.format(Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0"), calculationUnit.getName() )); //$NON-NLS-1$
+    setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.0" ), calculationUnit.getName() ) ); //$NON-NLS-1$
 
-    setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -118,23 +117,23 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     final Group statusGroup = new Group( composite, SWT.NONE );
     statusGroup.setLayout( new GridLayout() );
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    statusGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.3") ); //$NON-NLS-1$
+    statusGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.3" ) ); //$NON-NLS-1$
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.4"), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.4" ), null ) ); //$NON-NLS-1$
 
     final Group tweakGroup = new Group( composite, SWT.NONE );
     final GridLayout tweakLayout = new GridLayout();
     tweakLayout.numColumns = 2;
     tweakGroup.setLayout( tweakLayout );
     tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    tweakGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.5") ); //$NON-NLS-1$
+    tweakGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.5" ) ); //$NON-NLS-1$
 
     m_startResultProcessingCheck = new Button( tweakGroup, SWT.CHECK );
     final Button startResultProcessingCheck = m_startResultProcessingCheck;
     startResultProcessingCheck.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    startResultProcessingCheck.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.6") ); //$NON-NLS-1$
-    startResultProcessingCheck.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.7") ); //$NON-NLS-1$
+    startResultProcessingCheck.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.6" ) ); //$NON-NLS-1$
+    startResultProcessingCheck.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.7" ) ); //$NON-NLS-1$
     startResultProcessingCheck.setSelection( m_startResultProcessing );
     startResultProcessingCheck.addSelectionListener( new SelectionAdapter()
     {
@@ -158,7 +157,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
 
     final Label spinnerLabel1 = new Label( buttonComposite, SWT.NONE );
-    spinnerLabel1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.8") ); //$NON-NLS-1$
+    spinnerLabel1.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.8" ) ); //$NON-NLS-1$
     final GridData gridData1 = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel1.setLayoutData( gridData1 );
 
@@ -172,10 +171,10 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     m_resultInterval.setMaximum( 100 );
     m_resultInterval.setSelection( 1 );
 
-    m_resultInterval.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.9") ); //$NON-NLS-1$
+    m_resultInterval.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.9" ) ); //$NON-NLS-1$
 
     final Label spinnerLabel2 = new Label( buttonComposite, SWT.NONE );
-    spinnerLabel2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.10") ); //$NON-NLS-1$
+    spinnerLabel2.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.10" ) ); //$NON-NLS-1$
     final GridData gridData2 = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel2.setLayoutData( gridData2 );
 
@@ -184,7 +183,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     iterGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final GridLayout iterLayout = new GridLayout();
     iterGroup.setLayout( iterLayout );
-    iterGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.11") ); //$NON-NLS-1$
+    iterGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.11" ) ); //$NON-NLS-1$
 
     final Composite iterComp = new IterationComposite( m_calculation, iterGroup, SWT.NONE );
     iterComp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -206,8 +205,8 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
 
   public void runCalculation( )
   {
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12"), null ) ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13") ); //$NON-NLS-1$
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.12" ), null ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.13" ) ); //$NON-NLS-1$
 
     final ICoreRunnableWithProgress calculationOperation = new ICoreRunnableWithProgress()
     {
@@ -228,13 +227,13 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
       m_simulationStatus = RunnableContextHelper.execute( container, true, true, calculationOperation );
 
     if( m_simulationStatus.matches( IStatus.CANCEL ) )
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14"), WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.14" ), WARNING ); //$NON-NLS-1$
     else if( m_simulationStatus.matches( IStatus.WARNING ) )
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.15"), WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.15" ), WARNING ); //$NON-NLS-1$
     else if( m_simulationStatus.matches( IStatus.ERROR ) )
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.16"), ERROR ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.16" ), ERROR ); //$NON-NLS-1$
     else
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10CalculationPage.17" ) ); //$NON-NLS-1$
 
     m_statusComp.setStatus( m_simulationStatus );
 
@@ -247,7 +246,7 @@ public class RMA10CalculationPage extends WizardPage implements IWizardPage
     return m_simulationStatus;
   }
 
-  public File getResultDir( )
+  public FileObject getResultDir( )
   {
     return m_calculation.getTempDir();
   }

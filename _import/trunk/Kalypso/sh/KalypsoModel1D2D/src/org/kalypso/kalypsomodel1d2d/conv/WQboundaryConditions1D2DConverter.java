@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Formatter;
@@ -68,14 +68,14 @@ public class WQboundaryConditions1D2DConverter
     m_boundaryConditionsIDProvider = boundaryConditionsIDProvider;
   }
 
-  public void writeWQbcFile( final File file ) throws IOException
+  public void writeWQbcFile( final OutputStream outputStream ) throws IOException
   {
     Formatter formatter = null;
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
-      formatter = new Formatter( file, Charset.defaultCharset().name(), Locale.US );
+      formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
       writeWQbcFile( formatter );
       FormatterUtils.checkIoException( formatter );
     }

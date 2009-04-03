@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,6 +52,10 @@ import java.util.TreeSet;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.vfs.FileName;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.impl.StandardFileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,7 +68,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
@@ -88,17 +91,15 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.<br>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
- *
+ * 
  * @author Gernot Belger
  */
 public class ResultManager implements ISimulation1D2DConstants
 {
-  private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" ); //$NON-NLS-1$ //$NON-NLS-2$
-
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
   // never read
-//  private final Pattern m_resultFilePattern = Pattern.compile( "A(\\d+)" );
+  // private final Pattern m_resultFilePattern = Pattern.compile( "A(\\d+)" );
 
   /* just for test purposes TODO: still? */
   private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
@@ -113,17 +114,17 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
-  private File[] m_stepsToProcess;
+  private FileObject[] m_stepsToProcess;
 
   private File m_outputDir;
 
-  private final File m_resultDir;
+  private final FileObject m_resultDir;
 
-  private Map<Date, File> m_dateFileMap;
+  private Map<Date, FileObject> m_dateFileMap;
 
-  public ResultManager( final File resultDir, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
+  public ResultManager( final FileObject fileObject, final ICaseDataProvider<IModel> caseDataProvider, final IGeoLog geoLog ) throws CoreException
   {
-    m_resultDir = resultDir;
+    m_resultDir = fileObject;
     final IControlModelGroup controlModelGroup = caseDataProvider.getModel( IControlModelGroup.class );
     m_controlModel = controlModelGroup.getModel1D2DCollection().getActiveControlModel();
     m_flowModel = caseDataProvider.getModel( IFlowRelationshipModel.class );
@@ -140,18 +141,18 @@ public class ResultManager implements ISimulation1D2DConstants
 
   public IStatus processResults( final ICalcUnitResultMeta calcUnitMeta, final IProgressMonitor monitor )
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.3"), 1000 ); //$NON-NLS-1$
-    progress.subTask( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.4") ); //$NON-NLS-1$
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.3" ), 1000 ); //$NON-NLS-1$
+    progress.subTask( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.4" ) ); //$NON-NLS-1$
 
     try
     {
       m_outputDir = SimulationUtilitites.createSimulationTmpDir( "output" + calcUnitMeta.getCalcUnit() ); //$NON-NLS-1$
 
       if( m_stepsToProcess == null )
-        return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.5") ); //$NON-NLS-1$
+        return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.5" ) ); //$NON-NLS-1$
 
       /* Process all remaining .2d files. Now including min and max files */
-      final File[] existing2dFiles = m_stepsToProcess;
+      final FileObject[] existing2dFiles = m_stepsToProcess;
 
       progress.setWorkRemaining( existing2dFiles.length );
       // final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
@@ -161,28 +162,28 @@ public class ResultManager implements ISimulation1D2DConstants
 
       for( int i = 0; i < fileStati.length; i++ )
       {
-        final File file = existing2dFiles[i];
+        final FileObject file = existing2dFiles[i];
         fileStati[i] = processResultFile( file, m_controlModel, m_flowModel, m_discModel, calcUnitMeta, progress.newChild( 1 ) );
       }
 
       final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, "", null ); //$NON-NLS-1$
       if( multiStatus.isOK() )
-        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.7"), null ); //$NON-NLS-1$
+        return StatusUtilities.createStatus( IStatus.OK, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.7" ), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.CANCEL ) )
-        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.8"), null ); //$NON-NLS-1$
+        return StatusUtilities.createStatus( IStatus.WARNING, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.8" ), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.WARNING ) )
-        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.9"), null ); //$NON-NLS-1$
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.9" ), null ); //$NON-NLS-1$
 
       if( multiStatus.matches( IStatus.ERROR ) )
-        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.10"), null ); //$NON-NLS-1$
+        return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.10" ), null ); //$NON-NLS-1$
 
-      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.11"), null ); //$NON-NLS-1$
+      return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_POST, fileStati, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.11" ), null ); //$NON-NLS-1$
     }
     catch( final OperationCanceledException e )
     {
-      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.12"), e ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.CANCEL, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.12" ), e ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -190,15 +191,32 @@ public class ResultManager implements ISimulation1D2DConstants
     }
     catch( final Throwable e )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.13"), e ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.ERROR, CODE_POST, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.13" ), e ); //$NON-NLS-1$
+    }
+    finally
+    {
+
+      if( m_resultDir != null )
+      {
+        try
+        {
+          m_resultDir.close();
+          final StandardFileSystemManager fileSystemManager = (StandardFileSystemManager) m_resultDir.getFileSystem().getFileSystemManager();
+          fileSystemManager.close();
+        }
+        catch( final IOException e )
+        {
+          // gobble
+        }
+      }
     }
   }
 
-  private IStatus processResultFile( final File file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
+  private IStatus processResultFile( final FileObject file, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final ICalcUnitResultMeta calcUnitResultMeta, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
-      final String filename = file.getName();
+      final String filename = file.getName().getBaseName();
 
       if( ISimulation1D2DConstants.MODEL_2D.equals( filename ) )
         return Status.OK_STATUS;
@@ -209,7 +227,7 @@ public class ResultManager implements ISimulation1D2DConstants
       if( stepDate == null )
         return Status.OK_STATUS;
 
-      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.ResultManager.14"), resultFileName ); //$NON-NLS-1$
+      m_geoLog.formatLog( IStatus.INFO, CODE_RUNNING_FINE, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.ResultManager.14" ), resultFileName ); //$NON-NLS-1$
 
       // start a job for each unknown 2d file.
       final String outDirName;
@@ -263,16 +281,39 @@ public class ResultManager implements ISimulation1D2DConstants
     return DateUtilities.toDate( stepCal );
   }
 
-  public Date[] findCalculatedSteps( )
+  private FileObject[] find2dFiles( final FileObject remoteWorking ) throws IOException
+  {
+    final List<FileObject> resultList = new ArrayList<FileObject>();
+    final FileObject[] children = remoteWorking.getChildren();
+    for( final FileObject child : children )
+    {
+      final FileName childName = child.getName();
+      final String baseName = childName.getBaseName();
+      if( FilenameUtils.wildcardMatch( baseName, "*.2d" ) )
+      {
+        resultList.add( child );
+      }
+
+    }
+    return resultList.toArray( new FileObject[resultList.size()] );
+  }
+
+  public Date[] findCalculatedSteps( ) throws IOException
   {
     final Set<Date> dates = new TreeSet<Date>();
-    final File[] existing2dFiles = m_resultDir.listFiles( FILTER_2D );
-    for( final File file : existing2dFiles )
+
+    final FileObject[] existing2dFiles = find2dFiles(m_resultDir);
+
+    if( existing2dFiles != null )
     {
-      final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
-      final Date stepDate = findStepDate( m_controlModel, resultFileName );
-      if( stepDate != null )
-        dates.add( stepDate );
+      for( final FileObject file : existing2dFiles )
+      {
+        final String baseName = file.getName().getBaseName();
+        final String resultFileName = FileUtilities.nameWithoutExtension( baseName );
+        final Date stepDate = findStepDate( m_controlModel, resultFileName );
+        if( stepDate != null )
+          dates.add( stepDate );
+      }
     }
 
     return dates.toArray( new Date[dates.size()] );
@@ -303,46 +344,46 @@ public class ResultManager implements ISimulation1D2DConstants
     return m_geoLog;
   }
 
-  public void setStepsToProcess( final Date[] dates, final IControlModel1D2D controlModel )
+  public void setStepsToProcess( final Date[] dates, final IControlModel1D2D controlModel ) throws IOException
   {
-    final List<File> fileList = new ArrayList<File>();
+    final List<FileObject> fileList = new ArrayList<FileObject>();
     if( m_dateFileMap == null )
       fillStepMap( controlModel );
 
     for( final Date date : dates )
     {
-      final File stepFile = m_dateFileMap.get( date );
+      final FileObject stepFile = m_dateFileMap.get( date );
       if( stepFile != null )
         fileList.add( stepFile );
     }
 
-    m_stepsToProcess = fileList.toArray( new File[fileList.size()] );
-
+    m_stepsToProcess = fileList.toArray( new FileObject[fileList.size()] );
   }
 
-  public File[] getStepsToProcess( )
+  public FileObject[] getStepsToProcess( )
   {
     return m_stepsToProcess;
   }
 
-  private void fillStepMap( final IControlModel1D2D controlModel )
+  private void fillStepMap( final IControlModel1D2D controlModel ) throws IOException
   {
-    m_dateFileMap = new HashMap<Date, File>();
+    m_dateFileMap = new HashMap<Date, FileObject>();
 
-    final File[] existing2dFiles = m_resultDir.listFiles( FILTER_2D );
+    final FileObject[] existing2dFiles = find2dFiles( m_resultDir );
 
-    for( final File file : existing2dFiles )
+    for( final FileObject file : existing2dFiles )
     {
-      if( file.getName().equals( "steady.2d" ) ) //$NON-NLS-1$
+      final String baseName = file.getName().getBaseName();
+      if( baseName.equals( "steady.2d" ) ) //$NON-NLS-1$
         m_dateFileMap.put( STEADY_DATE, file );
 
-      if( file.getName().equals( "maxi.2d" ) ) //$NON-NLS-1$
+      if( baseName.equals( "maxi.2d" ) ) //$NON-NLS-1$
         m_dateFileMap.put( MAXI_DATE, file );
 
-      if( file.getName().equals( "steady.2d" ) || file.getName().equals( "maxi.2d" ) || file.getName().equals( "mini.2d" ) || file.getName().equals( "model.2d" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      if( baseName.equals( "steady.2d" ) || baseName.equals( "maxi.2d" ) || baseName.equals( "mini.2d" ) || baseName.equals( "model.2d" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         continue;
 
-      final String resultFileName = file.getName();
+      final String resultFileName = baseName;
       final int index = resultFileName.indexOf( "." ); //$NON-NLS-1$
       final CharSequence sequence = resultFileName.subSequence( 1, index );
       final String string = sequence.toString();

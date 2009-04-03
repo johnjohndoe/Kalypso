@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -53,10 +53,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.conv.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
@@ -229,14 +229,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return 0;
   }
 
-  public void writeRMA10sModel( final File outputFile ) throws CoreException, IOException
+  public void writeRMA10sModel( final OutputStream outputStream ) throws CoreException, IOException
   {
     Formatter formatter = null;
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
-      formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
+      formatter = new Formatter( outputStream, Charset.defaultCharset().name(), Locale.US );
       writeRMA10sModel( formatter );
       FormatterUtils.checkIoException( formatter );
     }

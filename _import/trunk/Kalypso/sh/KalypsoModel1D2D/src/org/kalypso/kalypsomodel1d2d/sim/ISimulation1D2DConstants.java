@@ -51,7 +51,7 @@ public interface ISimulation1D2DConstants
 
   public static final String MODEL_2D = "model.2d"; //$NON-NLS-1$
 
-  public static final String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
+  public static final String OUTPUT_DIR_NAME = "./"; //$NON-NLS-1$
 
   public static final String RESOURCEBASE = "resource/"; //$NON-NLS-1$
 

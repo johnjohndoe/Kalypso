@@ -61,10 +61,10 @@ import org.eclipse.swt.widgets.Button;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
@@ -388,7 +388,7 @@ public class RMA10CalculationWizard extends Wizard implements IWizard, ISimulati
     }
     finally
     {
-      SimulationUtilitites.clearTmpDir( m_calcPage.getResultDir() );
+      // SimulationUtilitites.clearTmpDir( m_calcPage.getResultDir() );
       if( m_resultPage != null )
         SimulationUtilitites.clearTmpDir( m_resultPage.getResultDir() );
     }

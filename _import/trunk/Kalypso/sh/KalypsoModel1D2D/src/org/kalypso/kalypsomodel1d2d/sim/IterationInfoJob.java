@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -59,8 +61,6 @@ import org.kalypso.kalypsomodel1d2d.sim.i18n.Messages;
 public class IterationInfoJob extends Job
 {
   private IterationInfo m_iterationInfo = null;
-
-  private IStatus m_result = Status.OK_STATUS;
 
   private final IProgressMonitor m_monitor;
 
@@ -85,26 +85,23 @@ public class IterationInfoJob extends Job
     {
       try
       {
-        Thread.sleep( 250 );
         updateIteration();
+        Thread.sleep( 500 );
       }
-      catch( final InterruptedException e )
+      catch( final Exception e )
       {
         e.printStackTrace();
-
-        m_result = StatusUtilities.statusFromThrowable( e );
-        break;
+        return StatusUtilities.statusFromThrowable( e );
       }
     }
-
-    return m_result;
+    return Status.OK_STATUS;
   }
 
   /**
    * Will be called while the rma10s process is running.<br>
    * Updates the calculation progress monitor and reads the Output.itr.
    */
-  protected void updateIteration( )
+  protected void updateIteration( ) throws IOException
   {
     final int oldStepNr = m_iterationInfo.getStepNr();
 
@@ -115,28 +112,24 @@ public class IterationInfoJob extends Job
     {
       String msg = ""; //$NON-NLS-1$
       if( stepNr == 0 )
-        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2") ); //$NON-NLS-1$
+        msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.2" ) ); //$NON-NLS-1$
       else
-        msg = String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3"), stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
+        msg = String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.IterationInfoJob.3" ), stepNr, m_controlModel.getNCYC() ); //$NON-NLS-1$
 
       m_monitor.subTask( msg );
       m_monitor.worked( stepNr - oldStepNr );
     }
   }
 
-  public IterationInfo finish( )
+  public void finish( ) throws IOException
   {
-    cancel();
-
-    /* Update the iteration one last time, it should be complete now... */
-    updateIteration();
     if( m_iterationInfo != null )
+    {
+      updateIteration(); // update one last time
       m_iterationInfo.finish(); // save the last observation
+    }
 
-    if( m_result != null && m_result.isOK() )
-      return m_iterationInfo;
-
-    return null;
+    cancel();
   }
 
 }

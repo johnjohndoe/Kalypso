@@ -41,10 +41,12 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -112,25 +114,25 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   private CheckboxTableViewer m_resultProcessViewer;
 
   private Date[] m_selection = null;
-  
+
   private final RMA10CalculationWizard m_parentWizard;
 
-  protected RMA10ResultPage( final String pageName, final File resultDir, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
+  protected RMA10ResultPage( final String pageName, final FileObject fileObject, final IGeoLog geoLog, final IContainer unitFolder, final ICaseDataProvider<IModel> caseDataProvider, final RMA10CalculationWizard parentWizard ) throws CoreException
   {
     super( pageName );
-    final ResultManager resultManager = new ResultManager( resultDir, caseDataProvider, geoLog );
-    
+    final ResultManager resultManager = new ResultManager( fileObject, caseDataProvider, geoLog );
+
     m_resultManager = resultManager;
     m_unitFolder = unitFolder;
     m_caseDataProvider = caseDataProvider;
     m_parentWizard = parentWizard;
 
-    setTitle( String.format( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0"), resultManager.getControlModel().getCalculationUnit().getName() )); //$NON-NLS-1$
+    setTitle( String.format( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.0" ), resultManager.getControlModel().getCalculationUnit().getName() ) ); //$NON-NLS-1$
 
     if( m_unitFolder.exists() )
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.1"), WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.1" ), WARNING ); //$NON-NLS-1$
     else
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.2") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -145,24 +147,24 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     final Group statusGroup = new Group( composite, SWT.NONE );
     statusGroup.setLayout( new GridLayout() );
     statusGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    statusGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.3") ); //$NON-NLS-1$
+    statusGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.3" ) ); //$NON-NLS-1$
 
     m_statusComp = new StatusComposite( statusGroup, StatusComposite.DETAILS );
     m_statusComp.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.4"), null ) ); //$NON-NLS-1$
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.4" ), null ) ); //$NON-NLS-1$
 
     /* Control flags */
     final Group tweakGroup = new Group( composite, SWT.NONE );
     tweakGroup.setLayout( new GridLayout() );
     tweakGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    tweakGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.5") ); //$NON-NLS-1$
+    tweakGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.5" ) ); //$NON-NLS-1$
 
     final IControlModel1D2D controlModel = m_resultManager.getControlModel();
     m_deleteAllResults = !controlModel.getRestart();
 
     final Button deleteAllCheck = new Button( tweakGroup, SWT.CHECK );
-    deleteAllCheck.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.6") ); //$NON-NLS-1$
-    deleteAllCheck.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.7") ); //$NON-NLS-1$
+    deleteAllCheck.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.6" ) ); //$NON-NLS-1$
+    deleteAllCheck.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.7" ) ); //$NON-NLS-1$
     deleteAllCheck.setSelection( m_deleteAllResults );
     deleteAllCheck.addSelectionListener( new SelectionAdapter()
     {
@@ -184,7 +186,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     final Group resultChooserGroup = new Group( composite, SWT.NONE );
     resultChooserGroup.setLayout( new GridLayout() );
     resultChooserGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    resultChooserGroup.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.8") ); //$NON-NLS-1$
+    resultChooserGroup.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.8" ) ); //$NON-NLS-1$
 
     final Composite resultChooserComp = new Composite( resultChooserGroup, SWT.BORDER );
     resultChooserComp.setLayout( new FillLayout( SWT.HORIZONTAL ) );
@@ -205,9 +207,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
         {
           final Date date = (Date) element;
           if( date.equals( MAXI_DATE ) )
-            return Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.9"); //$NON-NLS-1$
+            return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.9" ); //$NON-NLS-1$
           else if( date.equals( STEADY_DATE ) )
-            return Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.10"); //$NON-NLS-1$
+            return Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.10" ); //$NON-NLS-1$
         }
         return super.getText( element );
       }
@@ -215,10 +217,17 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     );
 
-    final Date[] calculatedSteps = m_resultManager.findCalculatedSteps();
-    m_resultProcessViewer.setInput( calculatedSteps );
-    m_selection = calculatedSteps;
-    m_resultManager.setStepsToProcess( m_selection, m_resultManager.getControlModel() );
+    try
+    {
+      final Date[] calculatedSteps = m_resultManager.findCalculatedSteps();
+      m_resultProcessViewer.setInput( calculatedSteps );
+      m_selection = calculatedSteps;
+      m_resultManager.setStepsToProcess( m_selection, m_resultManager.getControlModel() );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
     getContainer().updateButtons();
 
     /* Info View for one result */
@@ -248,7 +257,6 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     setControl( composite );
   }
 
-  @SuppressWarnings("unchecked")
   protected void handleSelectionChanged( final IStructuredSelection selection, final ResultInfoViewer infoViewer )
   {
     infoViewer.setInput( selection.getFirstElement() );
@@ -305,15 +313,15 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
    * button will be accessible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
-   *            the parent composite
+   *          the parent composite
    * @param id
-   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *            the label from the button
+   *          the label from the button
    * @param defaultButton
-   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @return the new button
    * @see #getCancelButton
    * @see #getOKButton()
@@ -353,7 +361,14 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     final IControlModel1D2D controlModel = m_resultManager.getControlModel();
 
-    m_resultManager.setStepsToProcess( m_selection, controlModel );
+    try
+    {
+      m_resultManager.setStepsToProcess( m_selection, controlModel );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
     getContainer().updateButtons();
   }
 
@@ -368,7 +383,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
 
     final Label spinnerLabel = new Label( buttonComposite, SWT.NONE );
-    spinnerLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.11") ); //$NON-NLS-1$
+    spinnerLabel.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.11" ) ); //$NON-NLS-1$
     final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     spinnerLabel.setLayoutData( gridData );
 
@@ -385,7 +400,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     updateTableSelection( resultProcessViewer, spinNumStepProcessing );
     updateSelection();
 
-    spinNumStepProcessing.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.12") ); //$NON-NLS-1$
+    spinNumStepProcessing.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.12" ) ); //$NON-NLS-1$
     spinNumStepProcessing.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -439,10 +454,10 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     }
   }
 
-  public void runResultProcessing()
+  public void runResultProcessing( )
   {
-    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13"), null ) ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.14") ); //$NON-NLS-1$
+    m_statusComp.setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.13" ), null ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.14" ) ); //$NON-NLS-1$
 
     final ProcessResultsBean bean = new ProcessResultsBean();
 
@@ -454,7 +469,14 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
     bean.userCalculatedSteps = m_selection;
     if( m_selection == null )
-      bean.userCalculatedSteps = m_resultManager.findCalculatedSteps();
+      try
+      {
+        bean.userCalculatedSteps = m_resultManager.findCalculatedSteps();
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
     /* Result processing */
     final ResultManagerOperation operation = new ResultManagerOperation( m_resultManager, m_unitFolder, m_simulationStatus, bean, m_caseDataProvider );
 
@@ -476,7 +498,7 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
 
       m_statusComp.setStatus( m_resultStatus );
 
-      setMessage( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.15") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10ResultPage.15" ) ); //$NON-NLS-1$
 
       m_isProcessing = false;
     }
@@ -491,8 +513,9 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
   {
     return m_isProcessing;
   }
-  
-  public File getResultDir() {
+
+  public File getResultDir( )
+  {
     return m_resultManager.getOutputDir();
   }
 
