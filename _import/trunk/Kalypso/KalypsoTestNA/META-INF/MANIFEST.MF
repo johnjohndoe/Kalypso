@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoTestNA
 Bundle-SymbolicName: org.kalypso.test.na
 Bundle-Version: 1.0.0
-Bundle-Localization: plugin
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.test,
  org.kalypso.contribs.eclipseplatform,
@@ -13,6 +12,7 @@ Require-Bundle: org.kalypso.test,
  org.junit,
  org.kalypso.commons,
  org.kalypso.NACalcJob,
- org.kalypso.ant,
  org.kalypso.simulation.core,
- org.kalypso.dwd
+ org.kalypso.dwd,
+ org.kalypso.simulation.ui;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

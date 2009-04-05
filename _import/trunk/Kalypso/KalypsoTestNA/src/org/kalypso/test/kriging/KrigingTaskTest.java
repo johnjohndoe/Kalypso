@@ -36,7 +36,7 @@ package org.kalypso.test.kriging;
 
 import junit.framework.TestCase;
 
-import org.kalypso.ant.KrigingTask;
+import org.kalypso.simulation.ui.ant.KrigingTask;
 
 /**
  * GenerateObservationMappingKrigingTest
