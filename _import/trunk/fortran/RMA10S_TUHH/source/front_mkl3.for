@@ -784,8 +784,9 @@ C
       !additionally it gives free that certain line again, to store
       !a new registered equation in it
       LELTM = 0
-      DO LL = 1, lRowMax
+      AddEquations: DO LL = 1, lRowMax
 	  L = LL + LELIM
+	  if (l > MR1) exit AddEquations
 	  lrow = lrpoint (l)
 	  IF (NLSTEL (L) == N) THEN
           IRWEPT (L) = ICUR - NSZF
@@ -828,7 +829,7 @@ c              ENDIF
 	    GO TO 100
         ENDIF
 
-      ENDDO
+      ENDDO AddEquations
   100 CONTINUE
 	LELIM=LELIM+LELTM
       GO TO 18
