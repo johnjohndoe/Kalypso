@@ -276,18 +276,18 @@ transitionloop: do i = 1, MaxLT
   do j = 1, lmt(TransLines (i, 2))
 
     !get the nodes
-    node = line (TransLines (i, 2), j)
+    nod = line (TransLines (i, 2), j)
 
     !change velocities
-    vel (1, node) = vel (1, node) + Dv * COS (alfa(node))
-    vel (2, node) = vel (2, node) + Dv * SIN (alfa(node))
+    vel (1, nod) = vel (1, nod) + Dv * COS (alfa(nod))
+    vel (2, nod) = vel (2, nod) + Dv * SIN (alfa(nod))
 
     !WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
     call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
     !Restore velocities
-    vel (1, node) = vel (1, node) - Dv * COS (alfa(TransNo))
-    vel (2, node) = vel (2, node) - Dv * SIN (alfa(TransNo))
+    vel (1, nod) = vel (1, nod) - Dv * COS (alfa(TransNo))
+    vel (2, nod) = vel (2, nod) - Dv * SIN (alfa(TransNo))
 
     !store it in derivative
     dspecdv(na) = TransSpec (j)
@@ -328,8 +328,8 @@ transitionloop: do i = 1, MaxLT
   !Reduce this assignment to the proper transition type
   if (.not. (TransLines(i,4) == 2)) then
     do j = 1, lmt (TransLines (i, 2))
-      node = line (TransLines (i, 2), j)
-      spec (node, 3) = waspi - ao (node)
+      nod = line (TransLines (i, 2), j)
+      spec (nod, 3) = waspi - ao (nod)
     enddo
   endif
 
@@ -337,7 +337,7 @@ transitionloop: do i = 1, MaxLT
   dh = 0.01
   dq2ddh(i) = 0.0
 
-  do derivative = 1, 2
+  do deriv = 1, 2
 
   !Get actual 2D-discharge (algorithm out of check-subroutine)
   sumx = 0.0
@@ -354,10 +354,10 @@ transitionloop: do i = 1, MaxLT
       DY = (CORD (NC, 2) - CORD (NA, 2))
 
       !get nodal water depths
-      if (derivative == 1) then
+      if (deriv == 1) then
         D1 = VEL (3, NA)
         D3 = VEL (3, NC)
-      ELSEIF (derivative == 2) then
+      ELSEIF (deriv == 2) then
         D1 = VEL (3, na) + dh
         D3 = VEL (3, nc) + dh
       endif
@@ -371,14 +371,14 @@ transitionloop: do i = 1, MaxLT
 
     end do GetDischarge
   !calculate discharge be cross product ([V] x [L])
-  if (derivative == 1) then
+  if (deriv == 1) then
     q2D(i) = SUMX - SUMY
 
     !testing
     WRITE(*,*) 'calculated discharge at 2D-line. It must be the same than discharge calculated as BC for this line: ', i, q2d(i)
     !testing-
 
-  ELSEIF (derivative == 2) then
+  ELSEIF (deriv == 2) then
     dq2ddh(i) = SUMX - sumy
 
     dq2ddh(i) = (dq2ddh(i) - q2d(i))/ dh
