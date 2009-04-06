@@ -18,6 +18,8 @@
 SUBROUTINE GETGEO
 
 
+use mod_fileHandler
+
 USE BLK10MOD, only: &
 &  ifile, lout, lin, icfl, id, dlin,       &
 &  maxp, maxe, maxlt, maxt,                &
@@ -32,7 +34,7 @@ USE BLK10MOD, only: &
 &  vel,                                    &
 &  xscale, yscale, zscale,                 &
 &  roavg, den, tempi, grav, igf,           &
-&  ndp, ndep
+&  ndp, ndep, fileControl, StorageElts
 !---------------------------------------------------------------------
 !3D-source-code: Just activate, adapt for allocatables, debug and run!
 !---------------------------------------------------------------------
@@ -192,6 +194,7 @@ real (kind = 8) :: dx, dy
 !twht:   read-in parameter - weir data
 !twln:   read-in parameter - weir data
 !trael:  read-in parameter - weir data
+type (StorageElement), pointer :: localStorElt(:) => null()
 
 
 DATA VOID/-1.E20/
@@ -446,6 +449,15 @@ Weirdata: do
   ENDIF
 enddo Weirdata
 
+!Read Volume Waterlevel Relationships of Storage Elements
+!--------------------------------------------------------
+
+if (associated (fileControl.volWlFil)) then
+  localStorElt => StorageElts
+  call readVolumeWaterlevelFile (fileControl.volWlFil, localStorElt)
+endif 
+
+
 
 !Adapt position of transitioning nodes at 1D/2D element-2-element transitions
 !-------------------------------------------------------------------------
@@ -506,11 +518,9 @@ ELSE
   CHI = CHI/ 239.87
 ENDIF
 
-!Go to Marsh routine for possible input
-!--------------------------------------
-! - set up Marsh-parameters
+!Set up Marsh-parameters for each node
+!-------------------------------------
 CALL MARSH
-
 
 !---------------------------------------------------------------------
 !3D-source-code: Just activate, adapt for allocatables, debug and run!
@@ -1079,3 +1089,4 @@ return
 
 end 
 !***
+

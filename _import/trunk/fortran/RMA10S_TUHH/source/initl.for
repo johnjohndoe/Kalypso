@@ -817,7 +817,7 @@ CIPK MAR01
         ConnectedElt(i) = 0
       enddo
       
-      allocate (StorageElts (1: MaxStorageElts))
+      allocate (StorageElts (1: maxSE))
       
 
 !nis,nov06: allocating the 1D-2D-Transition-line-Factor array and initialization of that (at the beginning no scaling)
@@ -967,9 +967,11 @@ CIPK MAR01
       !nis,aug07: number of 12 elements maximum at a node is because of reducing the inside element angle to
       !           20 degrees in average (360°/12)
       !TODO: make second entry dynamical
-      ALLOCATE (IsNodeOfElement(0:maxp, 0:12))
-      do i = 0, maxp
+      ALLOCATE (IsNodeOfElement(1:maxp, 0:12))
+      do i = 1, maxp
         do j = 0, 12
+          !0: counter
+          !1-12: element numbers
           IsNodeOfElement(i, j) = 0
         end do
       end do

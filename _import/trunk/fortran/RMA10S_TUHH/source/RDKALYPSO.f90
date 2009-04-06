@@ -451,7 +451,7 @@ reading: do
         IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0d0, 0.0d0)
       ENDIF
 
-    !Interpolation information for elements
+    !INTERPOLATION PROFILE informations
     ELSEIF (linie(1:2) == 'IP') THEN
       IF (kswit == 1) THEN
         READ (linie, '(a2, i10, i10)') id_local, i, j
@@ -461,11 +461,7 @@ reading: do
         READ (linie, '(a2, i10, i10)') id_local, i, IntPolNo(i)
       ENDIF
 
-    !nis,aug08: Valid range of polynomials is not needed anymore
-    ELSEIF (linie(1:2) == 'MM') then
-      continue
-
-    !nis,nov07: new range line ID (polynom range PR)
+    !POLYNOMIAL RANGE CROSS SECTIONAL AREA
     !id_local  = 'PR'
     !       i  = node-ID
     !       j  = number of polynom splitting parts
@@ -481,6 +477,8 @@ reading: do
         hhmin(i) = max (hhmin(i), hhmin_loc)
         hhmax(i) = min (hhmax(i), polyrangeA (i, polySplitsA(i)))
       endif
+
+    !POLYNOMIAL RANGE Q (SCHLUESSELKURVE)
     ELSEIF (linie(1:3) == 'PRQ') then
       IF (KSWIT == 1) then
         linestat = 0
@@ -492,6 +490,8 @@ reading: do
         hhmin(i) = max (hhmin (i), hhmin_loc)
         hhmax(i) = min (hhmax (i), polyrangeQ (i, polySplitsQ(i)))
       endif
+
+    !POLYNOMIAL RANGE BOUSSINESQ COEFFICIENT
     ELSEIF (linie(1:3) == 'PRB') then
       IF (KSWIT == 1) then
         linestat = 0
@@ -507,6 +507,7 @@ reading: do
           hbordv (i) = polyrangeB (i, 1)
         endif
       endif
+
     !nis,nov07: new range line ID (polynom range PR)
     !id_local  = 'AP '
     !       i  = node-ID
@@ -538,7 +539,7 @@ reading: do
         endif
       endif
 
-    !ELEMENT DEFINITIONS ---
+    !FINITE ELEMENT DEFINITIONS ---
     ELSEIF (linie (1:2) =='FE') then
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
@@ -601,6 +602,7 @@ reading: do
       END IF
     !-
 
+    !TRANSITION LINE ---
     !NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection
     !           TransLines(i,1): transitioning element
     !           TransLines(i,2): transitioning line
@@ -622,23 +624,41 @@ reading: do
         TransitionElement (TransLines(i, 1)) = .true.
       END IF
     
+    !PIPE SURFACE CONNECTION (PIPE)
     ELSEIF (linie(1:2) == 'PS') then
       if (kswit == 1) then
         read (linie, '(a2,i10)') id_local, i
         if (i > psConn) psConn = i
       else
         write(*,*) psconn
-        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%pipeElt
-        ConnectedElt (PipeSurfConn(i)%SurfElt) = PipeSurfConn(i)%pipeElt
-        ConnectedElt (PipeSurfConn(i)%pipeElt) = PipeSurfConn(i)%SurfElt
+        read (linie, '(a2,3i10)') id_local, i, PipeSurfConn(i).SurfElt, PipeSurfConn(i).pipeElt
+        ConnectedElt (PipeSurfConn(i).SurfElt) = PipeSurfConn(i).pipeElt
+        ConnectedElt (PipeSurfConn(i).pipeElt) = PipeSurfConn(i)%SurfElt
+      endif
+      
+    !PIPE SURFACE CONNECTION GEOMETRY
+    elseif (linie(1:4) == 'PP_G') then
+      if (kswit /= 1) then
+        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.ks, PipeSurfConn(i).manholeDef.diameter
+      endif
+    !PIPE SURFACE CONNECTION LOSS COEFFICIENTS
+    elseif (linie(1:4) == 'PP_L') then
+      if (kswit /= 1) then
+        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.zetaInflowUpper, PipeSurfConn(i).manholeDef.zetaOutflowUpper, PipeSurfConn(i).manholeDef.zetaInflowLower, PipeSurfConn(i).manholeDef.zetaOutflowLower
+      endif
+    elseif (linie(1:4) == 'PP_M') then
+      if (kswit /= 1) then
+        read (linie, *) id_local, i, PipeSurfConn(i).manholeDef.mue
       endif
     
+    !STORAGE ELEMENT
     ELSEIF (linie(1:2) == 'SE') then
       if (kswit == 1) then
-        read (linie, '(a2,i10)') id_local, i
+        read (linie, *) id_local, i
         if (i > maxSE) maxSE= i
       else
-        read (linie, '(a2,2i10)') id_local, i, StorageElts(i).ContinuityLineID
+        read (linie, *) id_local, i, StorageElts(i).CCLID, StorageElts(i).storageContent
+        StorageElts(i).ID = i
       endif
     
     endif

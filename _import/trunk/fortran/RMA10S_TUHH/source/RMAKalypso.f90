@@ -56,7 +56,7 @@ PROGRAM RMAKalypso
   character (len = 12) :: version
   character (len = 10) :: builddate
       
-  version = '1.1.1'
+  version = '1.1.2 beta'
   builddate = '2009/02/13'
 
 !information during the execution:
@@ -103,7 +103,7 @@ PROGRAM RMAKalypso
   !-
 
   !open the input files
-  call file (1, fnam0)
+  call filehandling (1, fnam0)
   !read size of the model geometry
   call getgeo1
   !start main execution of the simulation model

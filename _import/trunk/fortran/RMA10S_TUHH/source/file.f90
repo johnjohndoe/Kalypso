@@ -16,10 +16,16 @@
 !       general information file; it gets connected to the former echo file unit number.
 !
 !******************************************************************************************
-SUBROUTINE FILE (NT, FNAM0)
+SUBROUTINE filehandling (NT, FNAM0)
+
+use mod_fileType
+use mod_fileHandler
+
+
 
 USE BLK10MOD, only:   &
 !unit definitions
+&  fileControl, &
 &                     lout, lin, litr, imesout, ifile, ikalypsofm, nb, ibup, &
 &                     incstr, iocon, insfl, &
 &                     iwvin, iwvfc, instr, iowgt, inwgt, icordin, intims, imassout, itimfl, &
@@ -59,10 +65,13 @@ USE WBMMODS, only: wbm_initcons, wbm_initconsfile, wbm_scourlim, wbm_scourlimfil
 implicit none
 SAVE
 
+!local temporary file
+type (file), pointer :: tempFile
+
 
 !passed input variables
 !----------------------
-character (len = 96), intent (in) ::  FNAM0
+character (len = *), intent (in) ::  FNAM0
 integer (kind = 4), intent (in) :: NT
 !meaning of the variables
 !------------------------
@@ -102,7 +111,7 @@ character (len = 96) :: FNAM1,  FNAM2,  FNAM3,  FNAM6
 character (len = 96) :: FNAM10, FNAM11, FNAM12, FNAM13, FNAM14, FNAM15, FNAM16, FNAM17, FNAM19
 character (len = 96) :: FNAM20, FNAM21, FNAM22, FNAM26, FNAM27
 character (len = 96) :: FNAM30, FNAM32, FNAM33, FNAM34, FNAM36, FNAM38, FNAM39
-character (len = 96) :: FNAM40
+character (len = 96) :: FNAM40, FNAM41
 !meaning of file names
 !---------------------
 !FNAMMES= message file                     (OutputMESS.out)
@@ -246,10 +255,12 @@ ITIMFL = 0     !processing time data                               (FNAM39)
 insfl = 0      !input control stage flow relationship file         (FNAM40)
 
 
+fileControl.lin => newFile (2, fnam0, 'old')
 
 !Open the main control file of the execution
 !-------------------------------------------
-OPEN (LIN, FILE = FNAM0, IOSTAT = IOERR, status = 'OLD')
+call openFileObject (fileControl.lin)
+
 WRITE(*,*) 'Inputstatus control-file: ', ioerr
 !check for errors
 IF(IOERR /= 0) THEN
@@ -264,7 +275,7 @@ ENDIF
 FileRead: DO
 
   !read the next line from the control file
-  READ (LIN, '(A8, A96)') ID, FNAMIN
+  READ (fileControl.lin.unit, '(A8, A96)') ID, FNAMIN
   !write out the read line from the control file to the console
   WRITE(*,*) ' id: ', ID, ' file name: ', FNAMIN
   !trim the read file name from control file, to leave outer blanks aside
@@ -305,7 +316,7 @@ FileRead: DO
     iaccyc = 1
 
     !Read additional informations; THEY HAVE TO BE THERE!!!
-    READ (LIN,'(A8,A96)') ID, FNAMIN
+    READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
 
     !Error, if the additional control informations were not entered
     IF (ID(1:7) /= 'CONTROL') call ErrorMessageAndStop (1010, 0, 0.0d0, 0.0d0)
@@ -325,7 +336,7 @@ FileRead: DO
     !In both cases the geometry file (line INKALYPS) contains the result to restart with, too.
 
     !check for 'RESTART' in next line
-    READ (LIN,'(A8,A96)') ID, FNAMIN
+    READ (fileControl.lin.unit,'(A8,A96)') ID, FNAMIN
     !handle restarting
     IF (ID(1:7) == 'RESTART' .or. iaccyc > 1) THEN
       !unit number of restart file is the same as input file
@@ -337,7 +348,7 @@ FileRead: DO
       FNAM3  = FNAM2    
     endif
     !backspace file, if 'RESTART'-entry was not present, not to jump over any line
-    if (.not. (ID(1:7) == 'RESTART')) backspace (lin)
+    if (.not. (ID(1:7) == 'RESTART')) backspace (fileControl.lin.unit)
 
 
   !meteorological data time series (INPUT)
@@ -431,6 +442,12 @@ FileRead: DO
   ELSEIF(ID == 'STFLFIL ') THEN
     INSFL=40
     call fileOpen (INSFL, trim(FNAME), 'OLD', 'FORMATTED', FNAM40, IERMSG)
+    
+  !volume - waterlevel relationship of storage elements definitino (input)
+  !-----------------------------------------------------------------------
+  ELSEIF (ID == 'VOLWLFIL') THEN
+    fileControl.volWlFil => newFile (41, trim(fname), 'old')
+    call openFileObject (fileControl.volWlFil)
 
   !weighting factors for interpolation from external grid (INPUT)
   !--------------------------------------------------------------
@@ -715,46 +732,4 @@ end subroutine
 !    a lot of lines in file.sub. >globalErrorStatus< gives back the opening status. The
 !    appearing value, when calling should be zero.
 !******************************************************************************************
-subroutine fileOpen (unitNo, fileName, statusString, formString, localFileName, globalErrorStatus)
-
-implicit none
-
-!passed input variables
-!----------------------
-integer (kind = 4), intent (in)  :: unitNo
-character (len = *), intent (in) :: fileName
-character (len = *), intent (in) :: statusString, formString
-!passed output variables
-!----------------------
-integer (kind = 4), intent (out) :: globalErrorStatus
-character (len = *), intent (out) :: localFileName
-!local variables
-!---------------
-integer (kind = 4) :: ioStatus
-!meaning of the variables
-!------------------------
-!unitNo        : unit number during runtim for the file that shall be openend
-!fileName      : name of the file that shall be opened
-!statusString  : describes the status, which is used during opening statement
-!formString    : describes the form(at) of the file that shall be opened
-!globalErrorStatus : Becomes 0 or 1
-!                0 means no problems with any file
-!                1 means problem with any arbitrary file during opening process
-!localFileName : copy of the input file name
-!ioStatus      : gives back the system error ID, if any problems occur during opening process
-
-!initialisations
-!---------------
-ioStatus = 0
-
-!execution
-!---------
-!open the file
-OPEN (UNIT = unitNo, FILE = fileName, STATUS = statusString, FORM = formString, IOSTAT = ioStatus)
-!check for status and - on demand - write problem message and get global error status
-IF(ioStatus /= 0) CALL iosmsg (iostatus, trim (fileName), globalErrorStatus)
-!copy the file name
-localFileName = fileName
-
-end subroutine
 !***

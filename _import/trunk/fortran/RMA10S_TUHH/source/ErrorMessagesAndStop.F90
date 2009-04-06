@@ -182,6 +182,14 @@ elseif (ErrorID == 1403) then
   WRITE (ErrorUnit, 1403) ObjectID
   WRITE (        *, 1403) ObjectID
 
+elseif (ErrorID == 1404) then
+  WRITE (ErrorUnit, 1404) ObjectID
+  WRITE (        *, 1404) ObjectID
+elseif (ErrorID == 1405) then
+  WRITE (ErrorUnit, 1405) ObjectID
+  WRITE (        *, 1405) ObjectID
+
+
 elseif (ErrorID == 1501) then
   WRITE (ErrorUnit, 1501) ObjectID
   WRITE (        *, 1501) ObjectID
@@ -194,13 +202,21 @@ elseif (ErrorID == 1602) then
   WRITE (ErrorUnit, 1602) ObjectID
   WRITE (        *, 1602) ObjectID
 
-elseif (ErrorID == 1602) then
+elseif (ErrorID == 1603) then
   WRITE (ErrorUnit, 1603) ObjectID
   WRITE (        *, 1603) ObjectID
 
 elseif (ErrorID == 1604) then
   write (ErrorUnit, 1604)
   write (        *, 1604)
+
+elseif (ErrorID == 1701) then
+  WRITE (ErrorUnit, 1701) ObjectID
+  WRITE (        *, 1701) ObjectID
+
+elseif (ErrorID == 1702) then
+  WRITE (ErrorUnit, 1702) ObjectID
+  WRITE (        *, 1702) ObjectID
 
 ELSEIF (ErrorID == 3501) then
   WRITE (ErrorUnit, 3501)
@@ -243,18 +259,21 @@ end if
 !Write coordinates or not
 if (coorx <= 0.001 .and. coory <= 0.001) then
   write (ErrorUnit, 998)
+  write (        *, 998)
 else
   WRITE (ErrorUnit, 999) coorx, coory
   WRITE (        *, 999) coorx, coory
 end if
+  write (ErrorUnit, 1000)
+  write (        *, 1000)
 
 
 !999    Position of Error
 !***
   998 FORMAT (1x, 'No coordinates for ERROR available')
   999 FORMAT (1x, 'Error occurs at or near to position: ' / &
-            & 1x, 'Rechtswert: ', f13.4, '; Hochwert: ', f13.4 / &
-            & 1x, 'EXECUTION TERMINATED')
+            & 1x, 'Rechtswert: ', f13.4, '; Hochwert: ', f13.4 ) 
+ 1000 format (1x, 'EXECUTION TERMINATED')
 
 !1000   Input Errors in general
 !****
@@ -368,6 +387,10 @@ end if
  1403 format (1x, 'ERROR - Transitioning node is not defined in 1D-element' / &
             & 1x, 'Problem occured in line ', i5, '. Compare the defined transition' / &
             & 1x, 'node in TL-line with the two corner nodes of the transition 1D-element.')
+ 1404 format (1x, 'ERROR - No CC1 block found for line, ', i5, '. Please check control file.')
+ 1405 format (1x, 'ERROR - First node of continuity line definition (No. ', i5, ') is 0. Please' / &
+            & 1x, 'check control file!')
+ 
 
 !1500  Errors with connectivity
 !****
@@ -389,6 +412,15 @@ end if
  1604 format (1x, 'You are about to restart from a later time step, but you ordered to start with steady', / &
             & 1x, 'state calculation. Please change that in C5!', / &
             & 1x, 'EXYECUTION TERMINATED!')
+            
+!1700   Model definition errors
+!****
+ !volume water level realtionship of storage elements
+ 1701 format (1x, 'ERROR - Storage element ', i5, ' already contains a Volume Waterlevel',/ &
+            & 1x, 'relationship. Please check the input files!')
+ 
+ 1702 format (1x, 'ERROR - Storage element ', i5, ' does not have a Volume Waterlevel',/ &
+            & 1x, 'relationship. Please check the input files!')
 
 !2000   Output Errors
 !3000   Mesh Errors

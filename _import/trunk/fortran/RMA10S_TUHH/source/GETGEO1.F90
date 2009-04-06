@@ -6,7 +6,7 @@
 subroutine GETGEO1
 
 use BLK10MOD, only: &
-&   maxp, maxe, maxa, maxlt, maxps, maxStorageElts, &
+&   maxp, maxe, maxa, maxlt, maxps, maxSE, &
 &   maxpolya, maxpolyb, maxpolyq, &
 &   ifile
 !meaning of the used variables
@@ -98,7 +98,7 @@ MaxLT = LT
 !pipe surface connections
 maxps = ps
 !storage elements
-maxStorageElts = mse
+maxSE = mse
 !maximum number of polynomial splitting at any node
 MaxPolyA = PA
 MaxPolyQ = PQ

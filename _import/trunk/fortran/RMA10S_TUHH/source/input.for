@@ -77,8 +77,21 @@ CIPK  LAST UPDATED SEP 19 1995
 !           that is defined within that module (NLAYMX)
       USE Parammod
       USE Para1DPoly
+      use mod_Nodes
+      use mod_ContiLines
 !-
       SAVE
+
+      type (linkedNode), pointer :: tmpNode => null()
+      type (Node), pointer :: node1D_first, node1D_last
+      type (arc), pointer :: arc1D
+      real (kind = 8) :: arcVec (1:2)
+      type (contiLine), pointer :: tmp_contiLines (:)
+      type (contiLine), pointer :: tmp_singleCCL
+      integer (kind = 4) :: i
+      integer (kind = 4) :: elt
+
+
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK APR96 ADD BLK11
@@ -90,6 +103,7 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
 !NiS,mar06: new variable definitions
       INTEGER :: k,NL,kmax
       CHARACTER(LEN=5)::IDString
+      character (len = 192) :: inputline
       INTEGER :: istat_temp
 !-
 !NiS,jul06: Consistent data types for passing parameters
@@ -1050,65 +1064,88 @@ C-
       end do
       !-
 
-      IF (IFILE == 60) THEN
-        IF (id == 'SCL') THEN
-          READ(DLIN,*) NCL
-          kmax = NCL
-          !EFa jun07, necessary for autoconverge
-          ALLOCATE (speccc(kmax,8))
-          ALLOCATE (specccold(kmax,8))
-          ALLOCATE (specccfut(kmax,8))
-          do i = 1, kmax
-            do k=1,8
-              speccc(i,k) = 0.0
-              specccold(i,k) = 0.0
-              specccfut(i,k) = 0.0
-            end do
-          end do
-          !-
+      if (ifile == 60) then
+        !if continuity line block is present
+        if (id == 'SCL') then
+          !read number of continuity lines
+          read (dlin, *) ncl
+          !allocate continuity line objects
+          allocate (contiLines (1:ncl))
+          !assign local pointer on continuity lines
+          !tmp_contiLines => contiLines
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+!          kmax = NCL
+!          !EFa jun07, necessary for autoconverge
+!          ALLOCATE (speccc(kmax,8))
+!          ALLOCATE (specccold(kmax,8))
+!          ALLOCATE (specccfut(kmax,8))
+!          do i = 1, kmax
+!            do k=1,8
+!              speccc(i,k) = 0.0
+!              specccold(i,k) = 0.0
+!              specccfut(i,k) = 0.0
+!            end do
+!          end do
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+          !if there is at least one continuity line
           IF (NCL > 0) THEN
-            READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN
-            all_CL: DO k=1,kmax
-              NL = 1
+            !read on input file
+            read (filecontrol.lin.unit, '(a)') inputline
+            !READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN
+             
+            all_CL: do k = 1, ncl
+              nl = 1
+              !throw error, if there's no continuity line block
+              if (inputline(1:3) /= 'CC1') 
+     #          call ErrorMessageAndStop (1404, k, 0.0d0, 0.0d0)
+              !read first continuity line definition line
+              read (inputline (4:8), *) i
+              read (inputline (9:), '(9i8)') (line (i, j), j = 1, 9)
+              !add continuity line ID
+              tmp_singleCCL => contiLines (i)
+              call addID (tmp_singleCCL, i)
 
-              IF (ID /= 'CC1') then
-                close (75)
-                OPEN(75,File='ERROR.dat')
-                WRITE ( *, 6801) k
-                WRITE (75, 6801) k
-                stop
-              ENDIF
+              !check for zero entry in first definition position
+              if (line (i, 1) == 0)
+     +          call ErrorMessageAndStop (1405, i, 0.0d0, 0.0d0)
 
-              READ (IDString,'(I5)') I
-              READ (DLIN,'(9I8)') (LINE(I,J),J=1,9)
-              IF(I>NCL) NCL = I
+              endless: do
+                read(filecontrol.lin.unit,'(a)') inputline
+                if (inputline(1:3) /= 'CC2') exit endless
+                nl = nl + 9
+                read (inputline(9:),'(9i8)') (line (i, j), j = nl, nl+8)
+              enddo endless
 
-              IF (LINE(I,1) == 0) THEN
-                close (75)
-                OPEN (75,File='ERROR.dat')
-                WRITE( *,6802)
-                WRITE(75,6802)
-                stop
-              END IF
+              !look for positive normal side definition
+              if (inputLine(1:3) == 'CPN') then
+                read (inputLine(4:), *) tmp_singleCCL.posNormal(1),
+     +                                  tmp_singleCCL.posNormal(2)
+                !read next line
+                read (filecontrol.lin.unit, '(a)') inputLine
+              endif
 
-              ENDLESS: DO
-                READ(lin,'(A3,A5,A72)') ID,IDString,DLIN
-                NL = NL + 9
-                IF(ID/='CC2') EXIT ENDLESS
-                READ(DLIN,'(9I8)') (LINE(I,J),J=NL,NL+8)
-              ENDDO ENDLESS
+              lmt_loop: do j = min (nl + 9, 350), 1, -1
+                if (line (i, j) /= 0) then
+                  lmt (i) = j
+                  exit lmt_loop
+                endif
+              enddo lmt_loop
+              
+              assignNodes: do j = 1, lmt(i)
+                if (line (i, j) == 0) exit assignNodes
+                tmpNode => newLinkedNode 
+     +            (line (i, j), cord (line (i, j), 1),
+     +             cord (line (i, j), 2))
+                call addNode (tmp_singleCCL, tmpNode)
+              enddo assignNodes
 
-              LMT_Loop: DO j=1,350
-                IF (LINE(I,j)==0) THEN
-                  LMT(I) = j-1
-                  EXIT LMT_Loop
-                ENDIF
-              ENDDO LMT_Loop
-
-              IF (LMT(I) == 0) LMT(I)=350
             ENDDO all_CL
 
-            IF(ID=='ECL') THEN
+            IF(inputLine(1:3)=='ECL') THEN
               write ( *,6901)
               write (75,6901)
               CALL GINPT(lin,ID,DLIN)
@@ -1215,6 +1252,50 @@ C-.....READ GENERATED GEOMETRY DATA
 C-
    
       CALL GETGEO
+      
+      !get coordinates of the continuity line nodes
+      getCoords: do i = 1, ncl
+        !get contiLine
+        tmp_singleCCL => contiLines(i)
+        if (associated (tmp_singleCCL.firstNode)) then
+          tmpNode => tmp_singleCCL.firstNode
+          if (associated (tmpNode.next)) then
+            assignCoords: do 
+              call setCoords (tmpNode.thisNode,
+     +          cord (tmpNode.thisNode.ID, 1:2),
+     +          ao(tmpNode.thisNode.ID))
+              if (.not. (associated (tmpNode.next))) exit assignCoords
+              tmpNode => tmpNode.next
+            enddo assignCoords
+            call setChordNormal (tmp_singleCCL)
+            call calcSegments (tmp_singleCCL)
+            call assignSegPosNormals (tmp_singleCCL)
+          else
+            elt = isNodeOfElement (tmpNode.thisNode.ID, 1)
+            node1D_first => newNode (nop (elt,1), cord (nop (elt,1), 1),
+     +                             cord (nop (elt, 1), 2))
+            node1D_last => newNode (nop (elt,3), cord (nop (elt,3), 1),
+     +                            cord (nop (elt,3), 2))
+            arc1D => newArc (node1D_first, node1D_last)
+            arcVec = arcVector (arc1D)
+            !get direction pointer
+            if (contiLines(i).posNormal(1) == 0.0d0 .and.
+     +          contiLines(i).posNormal(2) == 0.0d0) then
+              dirPointer = 1.0d0
+            else
+              dirPointer = projectionDirPointer
+     +                     (arcVec, contiLines(i).posNormal)
+            endif 
+            contiLines(i).posNormal = arcVec
+            call scaleToUnitVector (contiLines(i).posNormal, dirPointer)
+          endif
+        endif
+        
+      enddo getCoords
+      
+      
+
+
 
 !NiS,apr06: In the case of ORT(J,5)==-1.0, the parameters are given to the arrays:
 !           At this point the IMAT-array is not modified by additions for element
@@ -1504,6 +1585,9 @@ CIPK MAY01
       IF(LSAND .NE. 0  .OR.  LBED .NE. 0) CALL INSAND
 
       IF(LSS .NE. 0) CALL SPROP
+
+
+      call getinit(ibin,1)
 
 C
 C...... Initialize CHECK
@@ -2166,7 +2250,7 @@ CIPK AUG95 ADD CALL TO GET MET DATA
       CALL INMET(LOUT,NMETF,TET)
 
 CIPK APR06
-      call getinit(ibin,1)
+!      call getinit(ibin,1)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
@@ -2230,7 +2314,7 @@ cipk may06
 
 
 CIPK JUL01
-      CALL FILE(2,ANAME)
+      CALL filehandling(2,ANAME)
 
       RETURN
 C-
@@ -2434,11 +2518,6 @@ c6190 FORMAT(/15X,'TIME IN VOLUME GENERATION',I6)
      + 5X,'TRANSITION VELOCITY FOR HEAT FLUX',F8.3/)
 
 !NiS,mar06      new formats for Error handling messages
- 6801        FORMAT(5x,'------------------------------------',/
-     +              5x,'Wrong Definition of Continuity line!',/
-     +              5x,I3,' st/nd/rd/th "CC1" is missing!',/
-     +              5x,'Program will be stopped!',/
-     +              5x,'-----------------------------------')
  6802        FORMAT(5x,'------------------------------',/
      +              5x,'Wrong Definition of Continuity',/
      +              5x,'line with ID-No.: ',I3,/

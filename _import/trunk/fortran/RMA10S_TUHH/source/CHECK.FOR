@@ -7,6 +7,12 @@ cipk  last update feb 09 2001 allow for zero length cc lines
 cipk  last update jan 12 1999  add ss1 terms
 cipk  last update Jan 21 1998
       SUBROUTINE CHECK
+
+      use mod_storageElt
+      use mod_ContiLines
+      use mod_Arcs
+      use mod_Nodes
+
       USE BLK10MOD
       USE BLKDRMOD
       USE BLK11MOD
@@ -15,6 +21,13 @@ cipk  last update Jan 21 1998
       USE Para1DPoly
       !-
       SAVE
+      
+      
+      type (contiLine), pointer :: tmpContiLine => null()
+      type (arc), pointer :: tmpSeg => null()
+      type (node), pointer :: tmpNode => null()
+      real (kind = 8), dimension (1:2) :: tmpVec
+      real (kind = 8) :: dirScaling
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK JUL01
@@ -40,6 +53,7 @@ cipk jul01 add line above
 !nis,nov06: For line connections
       INTEGER :: linecheck, LineLength
 !-
+      type (StorageElement), pointer :: SElt => null()
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
@@ -54,13 +68,14 @@ C-
 
       !nis,sep06,com: Jump over, if not called the first time
       IF( NCALL .GT. 0 ) GO TO 140
-      !nis,sep06,com: Show that it was called minimum one time
-      NCALL = 1
 C-
 C-..... Augment continuity lists.....
 C-
       !nis,sep06,com: Run through every CCL to overgive the real number of nodes
       DO 125 J = 1, NCL
+        !assign continuity line
+        tmpContiLine => contiLines(j)
+
         M = LMT(J)
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
@@ -97,9 +112,15 @@ cipk feb01  skip out for zero lines
         !           with one of the nodes. The last node starts no segment, so it can be taken out
         !           of the loop.
         !DO 124 L = 1, LineLength, 2
+        
         DO 124 L = 1, LineLength-2, 2
         !-
-
+  
+          if (.not. (associated (tmpSeg))) then
+            tmpSeg => tmpContiLine.firstSegment
+          else
+            tmpSeg => tmpSeg.nextSeg
+          endif
           !nis,sep06,com: Count the number of segments
           N = N + 1
           !nis,sep06,com: Get the two actual corner nodes in CCL J
@@ -136,6 +157,13 @@ CIPK OCT98 CONVERT TO F90
 CIPK OCT98 CONVERT TO F90
               !nis,sep06,com: enter the correct midside node reference into the CCL J
   115         LINE(J,L+1) = ABS(NOP(JJ,KK+1))
+              !Assing midside node to arc
+              
+              allocate (tmpNode)
+              tmpNode = newNode (line(j,l+1), 
+     +                    cord(line(j,l+1), 1), cord(line(j,l+1), 2))
+              call addMidside (tmpSeg, tmpNode)
+              nullify (tmpNode)
 
               !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
               lineimat(j,l+1) = ABS(imat(jj))
@@ -235,12 +263,19 @@ CIPK JUL01
  6200	  FORMAT('      TOTAL CONTINUITY LINE FLOWS BY CONTINUITY LINE NUM
      +BER'//'  DAY      HOUR',I9,19I11)
       ENDIF
-      IF(NB .EQ. 0) RETURN
+
+
+      IF(NB .EQ. 0) then
+        ncall = 1
+        RETURN
+      endif
   140 CONTINUE
       WRITE(LOUT,6030)
 
       ND = NB
       DO 180 J = 1, NCL
+        !get current continuity line
+        tmpContiLine => contiLines (j)
 CIPK OCT98        NTL=1
         SUMX = 0.0
         SUMY = 0.0
@@ -255,8 +290,13 @@ cipk jul01
 cipk feb01  skip out for zero lines
         IF(LMT(j) .EQ. 0) THEN
           GO TO 180
+        !---------------------------------------------------------------------
+        !calculate discharge through 1D or 2D horizontally averaged boundaries
+        !---------------------------------------------------------------------
         ELSEIF(LMT(J) .EQ. 1) THEN
           NA=LINE(J,1)
+          !1D 1D 1D 1D 1D 1D 1D 1D 
+          !-----------------------
           IF(NDEP(NA) .LT. 2) THEN
             !nis,feb07: Allow for continuity checks at nodes with polynomial approach
             !Proceed on nodes of polynomial approach
@@ -268,18 +308,22 @@ cipk feb01  skip out for zero lines
               TempArea = calcPolynomial (apoly(PolyPos, NA, 0:12),
      +                                   vel(3, NA), ubound (apoly, 3))
 
+              dirScaling = projectionDirPointer (tmpContiLine.posNormal,
+     +                                          vel(1:2,na))
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
+     +               * dirScaling
 
             !nis,feb07,com: Original trapezoidal cross sections
             else
               SUMX=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)*VEL(3,NA)*
      +           (2.*WIDTH(NA)+(SS1(NA)+SS2(NA))*VEL(3,NA))/2.
 cipk mar01 add constituents
+            endif
             SUMXS=SUMX*VEL(4,NA)
             SUMXT=SUMX*VEL(5,NA)
             SUMXSD=SUMX*VEL(6,NA)
-            endif
-            !-
+          !2D horizontally averaged
+          !------------------------
           ELSE
             K=NREF(NA)
             L=K+NDEP(NA)-3
@@ -327,243 +371,275 @@ cip apr01 fix error using V1 for lines below
               SUMXSD=SUMXSD+(SD1+SD2+SD3)
   160       CONTINUE
           ENDIF
+        !---------------------------------------------------------------------------------
+        !calculate discharge through continuity line at 2D depth averaged or 3D boundaries
+        !---------------------------------------------------------------------------------
         ELSE
           MAX = LMT(J)-2
+          if (associated (tmpSeg)) nullify (tmpSeg)
           DO 700 K = 1, MAX, 2
-            NA = LINE(J,K)
-            NB = LINE(J,K+1)
-            NC = LINE(J,K+2)
+            if (.not. (associated (tmpSeg))) then
+              tmpSeg => tmpContiLine.firstSegment
+            else
+              tmpSeg => tmpSeg.nextSeg
+            endif
+
+            NA = tmpSeg.first.ID
+            NB = tmpSeg.midside.ID
+            NC = tmpSeg.last.ID
+            
+            tmpVec = arcVector (tmpSeg)
+            
             DX=(CORD(NC,1)-CORD(NA,1))
             DY=(CORD(NC,2)-CORD(NA,2))
+
+            !3D applications
+            !---------------
             IF(NDEP(NB) .GT. 1) THEN
-              IDPI=NDEP(NA)
-              IDPK=NDEP(NC)
-              I1=NA
-              J1=NB
-              K1=NC
-C-
-C...... Count elements downward
-C-
-              NEL=NDEP(NA)-2
-              IF(NDEP(NC)-2 .GT. NEL) NEL=NDEP(NC)-2
-              DO 500 M=1,NEL,2
-C-
-C...... Test for triangle
-C-
-                IF(IDPK .GT. 1) THEN
-                  IF(IDPI .GT. 1) THEN
-C-
-C...... This is quadrilateral
-C-
-                    I2=NREF(NA)+M
-                    I3=I2+1
-                    J2=NREF(NB)+(M+1)/2
-                    K2=NREF(NC)+M
-                    K3=K2+1
-                    VF1=VEL(3,NA)/(ELEV-AO(NA))
-                    VF2=VEL(3,NC)/(ELEV-AO(NC))
-                    VDIST=((CORD(I1,3)-CORD(I3,3))*VF1
-     +                    +(CORD(K1,3)-CORD(K3,3))*VF2)/2.
-                    AREAC(1)=VDIST*DY
-                    AREAC(2)=VDIST*DX
-                    DO  LA=1,2
-                      FLW(LA)=((VEL(LA,I2)+VEL(LA,J2)+VEL(LA,K2)
-     +                +VEL(LA,J1))/3.-(VEL(LA,I1)+VEL(LA,I3)+VEL(LA,K3)
-     +                +VEL(LA,K1))/12.)*AREAC(LA)
-CIPK MAR01   ADD OTHER CONSTITUENTS
-
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
-                      NGP = 9
-                      NCN = 8
-C-
-C-.....COPY SHAPE FUNCTIONS
-C-
-                      CALL SB2(NCN,NGP)
-C-
-C-.....COMPUTE ELEMENT EQUATIONS.....
-C-
-                      DO I = 1, NGP
-                        WAITX(I) = WAITR(I)/4.
-                        DO JJ = 1, NCN
-                          XN(JJ) = XNX(JJ,I)
-                        ENDDO
-
-                  VX=VEL(LA,I1)*XN(1)+VEL(LA,I2)*XN(2)+VEL(LA,I3)*XN(3)
-     +              +VEL(LA,J2)*XN(4)+VEL(LA,K3)*XN(5)+VEL(LA,K2)*XN(6)
-     +              +VEL(LA,K1)*XN(7)+VEL(LA,J1)*XN(8)
-                  S1=VEL(4,I1)*XN(1)+VEL(4,I2)*XN(2)+VEL(4,I3)*XN(3)
-     +              +VEL(4,J2)*XN(4)+VEL(4,K3)*XN(5)+VEL(4,K2)*XN(6)
-     +              +VEL(4,K1)*XN(7)+VEL(4,J1)*XN(8)
-                  T1=VEL(5,I1)*XN(1)+VEL(5,I2)*XN(2)+VEL(5,I3)*XN(3)
-     +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,K2)*XN(6)
-     +              +VEL(5,K1)*XN(7)+VEL(5,J1)*XN(8)
-                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
-     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,K2)*XN(6)
-     +              +VEL(6,K1)*XN(7)+VEL(6,J1)*XN(8)
-                        IF(LA .EQ. 1) THEN
-                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
-                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
-                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
-                        ELSE
-                          SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
-                          SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
-                          SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-                        ENDIF
-                      ENDDO
-
-                    ENDDO
-                    SUMX=SUMX+FLW(1)
-                    SUMY=SUMY+FLW(2)
-cipk jul01
-                    TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
-                    IDPI=IDPI-2
-                    IDPK=IDPK-2
-                    I1=I3
-                    J1=J2
-                    K1=K3
-                  ELSE
-C-
-C...... Triangle type 1
-C-
-                    J2=NREF(NB)+(M+1)/2
-                    K2=NREF(NC)+M
-                    K3=K2+1
-                    VDIST=(CORD(K1,3)-CORD(K3,3))*VEL(3,NC)/(2.*
-     +              (ELEV-AO(NC)))
-                    AREAC(1)=VDIST*DY
-                    AREAC(2)=VDIST*DX
-                    DO 425 LA=1,2
-                      FLW(LA)=(VEL(LA,J1)+VEL(LA,J2)+VEL(LA,K2))/3.
-     +                        *AREAC(LA)
-CIPK MAR01   ADD OTHER CONSTITUENTS
-
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
-                      NGP = 7
-	                NCN = 6
-C-
-C-.....COPY SHAPE FUNCTIONS
-C-
-                      CALL SB2(NCN,NGP)
-C-
-C-.....COMPUTE ELEMENT EQUATIONS.....
-C-
-                      DO I = 1, NGP
-                        WAITX(I) = WAITT(I)*2.
-                        DO JJ = 1, NCN
-                          XN(JJ) = XNX(JJ,I)
-                        ENDDO
-
-                  VX=VEL(LA,I3)*XN(1)+VEL(LA,J2)*XN(2)+VEL(LA,K3)*XN(3)
-     +              +VEL(LA,K2)*XN(4)+VEL(LA,K1)*XN(5)+VEL(LA,J1)*XN(6)
-                  S1=VEL(4,I3)*XN(1)+VEL(4,J2)*XN(2)+VEL(4,K3)*XN(3)
-     +              +VEL(4,K2)*XN(4)+VEL(4,K1)*XN(5)+VEL(4,J1)*XN(6)
-                  T1=VEL(5,I3)*XN(1)+VEL(5,J2)*XN(2)+VEL(5,K3)*XN(3)
-     +              +VEL(5,K2)*XN(4)+VEL(5,K1)*XN(5)+VEL(5,J1)*XN(6)
-                  SD1=VEL(6,I3)*XN(1)+VEL(6,J2)*XN(2)+VEL(6,K3)*XN(3)
-     +              +VEL(6,K2)*XN(4)+VEL(6,K1)*XN(5)+VEL(6,J1)*XN(6)
-                        IF(LA .EQ. 1) THEN
-                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
-                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
-                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
-                        ELSE
-                          SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
-                          SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
-                          SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-                        ENDIF
-                      ENDDO
-
-  425               CONTINUE
-                    SUMX=SUMX+FLW(1)
-                    SUMY=SUMY+FLW(2)
-CIPK JUL01
-                    TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
-CIPK SEP01
-                    IDPK=IDPK-2
-                    J1=J2
-                    K1=K3
-
-CIPK SEP01                    GO TO 700
-                  ENDIF
-                ELSE
-C-
-C...... Triangle type 2
-C-
-                  J2=NREF(NB)+(M+1)/2
-                  I2=NREF(NA)+M
-                  I3=I2+1
-                  VDIST=(CORD(I1,3)-CORD(I3,3))*VEL(3,NA)/
-     +                  (2.*(ELEV-AO(NA)))
-                  AREAC(1)=VDIST*DY
-                  AREAC(2)=VDIST*DX
-                  DO 475 LA=1,2
-                    FLW(LA)=(VEL(LA,J1)+VEL(LA,J2)+VEL(LA,I2))/
-     +                      3.*AREAC(LA)
-CIPK MAR01   ADD OTHER CONSTITUENTS
-
-C-
-C-.....COPY PROPER WEIGHTING FUNCTIONS.....
-C-
-                    NGP = 7
-	              NCN = 6
-C-
-C-.....COPY SHAPE FUNCTIONS
-C-
-                    CALL SB2(NCN,NGP)
-C-
-C-.....COMPUTE ELEMENT EQUATIONS.....
-C-
-                    DO I = 1, NGP
-                      WAITX(I) = WAITT(I)*2.
-                      DO JJ = 1, NCN
-                        XN(JJ) = XNX(JJ,I)
-                      ENDDO
-
-                  VX=VEL(LA,I1)*XN(1)+VEL(LA,I2)*XN(2)+VEL(LA,I3)*XN(3)
-     +              +VEL(LA,J2)*XN(4)+VEL(LA,K3)*XN(5)+VEL(LA,J1)*XN(6)
-                  S1=VEL(4,I1)*XN(1)+VEL(4,I2)*XN(2)+VEL(4,I3)*XN(3)
-     +              +VEL(4,J2)*XN(4)+VEL(4,K3)*XN(5)+VEL(4,J1)*XN(6)
-                  T1=VEL(5,I1)*XN(1)+VEL(5,I2)*XN(2)+VEL(5,I3)*XN(3)
-     +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,J1)*XN(6)
-                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
-     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,J1)*XN(6)
-                      IF(LA .EQ. 1) THEN
-                        SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
-                        SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
-                        SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
-                      ELSE
-                        SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
-                        SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
-                        SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-                      ENDIF
-                    ENDDO
-
-  475             CONTINUE
-                  SUMX=SUMX+FLW(1)
-                  SUMY=SUMY+FLW(2)
-CIPK JUL01
-                  TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
-CIPK SEP01
-                    IDPI=IDPI-2
-                    J1=J2
-                    I1=I3
-CIPK SEP01                  GO TO 700
-                ENDIF
-  500         CONTINUE
+              !temporary
+              continue
+              !temporary-
+!--------------------------------------------------------------------------------------
+!3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D
+!--------------------------------------------------------------------------------------
+!              IDPI=NDEP(NA)
+!              IDPK=NDEP(NC)
+!              I1=NA
+!              J1=NB
+!              K1=NC
+!C-
+!C...... Count elements downward
+!C-
+!              NEL=NDEP(NA)-2
+!              IF(NDEP(NC)-2 .GT. NEL) NEL=NDEP(NC)-2
+!              DO 500 M=1,NEL,2
+!C-
+!C...... Test for triangle
+!C-
+!                IF(IDPK .GT. 1) THEN
+!                  IF(IDPI .GT. 1) THEN
+!C-
+!C...... This is quadrilateral
+!C-
+!                    I2=NREF(NA)+M
+!                    I3=I2+1
+!                    J2=NREF(NB)+(M+1)/2
+!                    K2=NREF(NC)+M
+!                    K3=K2+1
+!                    VF1=VEL(3,NA)/(ELEV-AO(NA))
+!                    VF2=VEL(3,NC)/(ELEV-AO(NC))
+!                    VDIST=((CORD(I1,3)-CORD(I3,3))*VF1
+!     +                    +(CORD(K1,3)-CORD(K3,3))*VF2)/2.
+!                    AREAC(1)=VDIST*DY
+!                    AREAC(2)=VDIST*DX
+!                    DO  LA=1,2
+!                      FLW(LA)=((VEL(LA,I2)+VEL(LA,J2)+VEL(LA,K2)
+!     +                +VEL(LA,J1))/3.-(VEL(LA,I1)+VEL(LA,I3)+VEL(LA,K3)
+!     +                +VEL(LA,K1))/12.)*AREAC(LA)
+!CIPK MAR01   ADD OTHER CONSTITUENTS
+!
+!C-
+!C-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!C-
+!                      NGP = 9
+!                      NCN = 8
+!C-
+!C-.....COPY SHAPE FUNCTIONS
+!C-
+!                      CALL SB2(NCN,NGP)
+!C-
+!C-.....COMPUTE ELEMENT EQUATIONS.....
+!C-
+!                      DO I = 1, NGP
+!                        WAITX(I) = WAITR(I)/4.
+!                        DO JJ = 1, NCN
+!                          XN(JJ) = XNX(JJ,I)
+!                        ENDDO
+!
+!                  VX=VEL(LA,I1)*XN(1)+VEL(LA,I2)*XN(2)+VEL(LA,I3)*XN(3)
+!     +              +VEL(LA,J2)*XN(4)+VEL(LA,K3)*XN(5)+VEL(LA,K2)*XN(6)
+!     +              +VEL(LA,K1)*XN(7)+VEL(LA,J1)*XN(8)
+!                  S1=VEL(4,I1)*XN(1)+VEL(4,I2)*XN(2)+VEL(4,I3)*XN(3)
+!     +              +VEL(4,J2)*XN(4)+VEL(4,K3)*XN(5)+VEL(4,K2)*XN(6)
+!     +              +VEL(4,K1)*XN(7)+VEL(4,J1)*XN(8)
+!                  T1=VEL(5,I1)*XN(1)+VEL(5,I2)*XN(2)+VEL(5,I3)*XN(3)
+!     +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,K2)*XN(6)
+!     +              +VEL(5,K1)*XN(7)+VEL(5,J1)*XN(8)
+!                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
+!     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,K2)*XN(6)
+!     +              +VEL(6,K1)*XN(7)+VEL(6,J1)*XN(8)
+!                        IF(LA .EQ. 1) THEN
+!                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
+!                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
+!                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                        ELSE
+!                          SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
+!                          SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
+!                          SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                        ENDIF
+!                      ENDDO
+!
+!                    ENDDO
+!                    SUMX=SUMX+FLW(1)
+!                    SUMY=SUMY+FLW(2)
+!cipk jul01
+!                    TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
+!                    IDPI=IDPI-2
+!                    IDPK=IDPK-2
+!                    I1=I3
+!                    J1=J2
+!                    K1=K3
+!                  ELSE
+!C-
+!C...... Triangle type 1
+!C-
+!                    J2=NREF(NB)+(M+1)/2
+!                    K2=NREF(NC)+M
+!                    K3=K2+1
+!                    VDIST=(CORD(K1,3)-CORD(K3,3))*VEL(3,NC)/(2.*
+!     +              (ELEV-AO(NC)))
+!                    AREAC(1)=VDIST*DY
+!                    AREAC(2)=VDIST*DX
+!                    DO 425 LA=1,2
+!                      FLW(LA)=(VEL(LA,J1)+VEL(LA,J2)+VEL(LA,K2))/3.
+!     +                        *AREAC(LA)
+!CIPK MAR01   ADD OTHER CONSTITUENTS
+!
+!C-
+!C-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!C-
+!                      NGP = 7
+!	                NCN = 6
+!C-
+!C-.....COPY SHAPE FUNCTIONS
+!C-
+!                      CALL SB2(NCN,NGP)
+!C-
+!C-.....COMPUTE ELEMENT EQUATIONS.....
+!C-
+!                      DO I = 1, NGP
+!                        WAITX(I) = WAITT(I)*2.
+!                        DO JJ = 1, NCN
+!                          XN(JJ) = XNX(JJ,I)
+!                        ENDDO
+!
+!                  VX=VEL(LA,I3)*XN(1)+VEL(LA,J2)*XN(2)+VEL(LA,K3)*XN(3)
+!     +              +VEL(LA,K2)*XN(4)+VEL(LA,K1)*XN(5)+VEL(LA,J1)*XN(6)
+!                  S1=VEL(4,I3)*XN(1)+VEL(4,J2)*XN(2)+VEL(4,K3)*XN(3)
+!     +              +VEL(4,K2)*XN(4)+VEL(4,K1)*XN(5)+VEL(4,J1)*XN(6)
+!                  T1=VEL(5,I3)*XN(1)+VEL(5,J2)*XN(2)+VEL(5,K3)*XN(3)
+!     +              +VEL(5,K2)*XN(4)+VEL(5,K1)*XN(5)+VEL(5,J1)*XN(6)
+!                  SD1=VEL(6,I3)*XN(1)+VEL(6,J2)*XN(2)+VEL(6,K3)*XN(3)
+!     +              +VEL(6,K2)*XN(4)+VEL(6,K1)*XN(5)+VEL(6,J1)*XN(6)
+!                        IF(LA .EQ. 1) THEN
+!                          SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
+!                          SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
+!                          SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                        ELSE
+!                          SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
+!                          SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
+!                          SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                        ENDIF
+!                      ENDDO
+!
+!  425               CONTINUE
+!                    SUMX=SUMX+FLW(1)
+!                    SUMY=SUMY+FLW(2)
+!CIPK JUL01
+!                    TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
+!CIPK SEP01
+!                    IDPK=IDPK-2
+!                    J1=J2
+!                    K1=K3
+!
+!CIPK SEP01                    GO TO 700
+!                  ENDIF
+!                ELSE
+!C-
+!C...... Triangle type 2
+!C-
+!                  J2=NREF(NB)+(M+1)/2
+!                  I2=NREF(NA)+M
+!                  I3=I2+1
+!                  VDIST=(CORD(I1,3)-CORD(I3,3))*VEL(3,NA)/
+!     +                  (2.*(ELEV-AO(NA)))
+!                  AREAC(1)=VDIST*DY
+!                  AREAC(2)=VDIST*DX
+!                  DO 475 LA=1,2
+!                    FLW(LA)=(VEL(LA,J1)+VEL(LA,J2)+VEL(LA,I2))/
+!     +                      3.*AREAC(LA)
+!CIPK MAR01   ADD OTHER CONSTITUENTS
+!
+!C-
+!C-.....COPY PROPER WEIGHTING FUNCTIONS.....
+!C-
+!                    NGP = 7
+!	              NCN = 6
+!C-
+!C-.....COPY SHAPE FUNCTIONS
+!C-
+!                    CALL SB2(NCN,NGP)
+!C-
+!C-.....COMPUTE ELEMENT EQUATIONS.....
+!C-
+!                    DO I = 1, NGP
+!                      WAITX(I) = WAITT(I)*2.
+!                      DO JJ = 1, NCN
+!                        XN(JJ) = XNX(JJ,I)
+!                      ENDDO
+!
+!                  VX=VEL(LA,I1)*XN(1)+VEL(LA,I2)*XN(2)+VEL(LA,I3)*XN(3)
+!     +              +VEL(LA,J2)*XN(4)+VEL(LA,K3)*XN(5)+VEL(LA,J1)*XN(6)
+!                  S1=VEL(4,I1)*XN(1)+VEL(4,I2)*XN(2)+VEL(4,I3)*XN(3)
+!     +              +VEL(4,J2)*XN(4)+VEL(4,K3)*XN(5)+VEL(4,J1)*XN(6)
+!                  T1=VEL(5,I1)*XN(1)+VEL(5,I2)*XN(2)+VEL(5,I3)*XN(3)
+!     +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,J1)*XN(6)
+!                  SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
+!     +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,J1)*XN(6)
+!                      IF(LA .EQ. 1) THEN
+!                        SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
+!                        SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
+!                        SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                      ELSE
+!                        SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
+!                        SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
+!                        SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
+!                      ENDIF
+!                    ENDDO
+!
+!  475             CONTINUE
+!                  SUMX=SUMX+FLW(1)
+!                  SUMY=SUMY+FLW(2)
+!CIPK JUL01
+!                  TOTAL(J)=TOTAL(J)+FLW(1)-FLW(2)
+!CIPK SEP01
+!                    IDPI=IDPI-2
+!                    J1=J2
+!                    I1=I3
+!CIPK SEP01                  GO TO 700
+!                ENDIF
+!  500         CONTINUE
+!--------------------------------------------------------------------------------------
+!3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D 3D
+!--------------------------------------------------------------------------------------
             ELSE
 C-
 C........ Two dimensional element
 C-
-              D1=VEL(3,NA)
-              D3=VEL(3,NC)
-              IF(D1 .LE. DSET  .OR.  D3 .LE. DSET) GO TO 700
-              D2=(D1+D3)/2.
+              !get water levels of segment
+              d1 = vel (3, na)
+              d3 = vel (3, nc)
+              if (d1 <= dset .or. d3 <= dset) go to 700
+              d2 = (d1 + d3)/ 2.
+
 CIPK MAR01  ADD OTHER CONSTITUENTS
+              !calculate x-flow
+              dirScaling = normalDirPointer (tmpSeg)
+              dy = tmpVec(2) * dirScaling
               TEMPX=DY*(VEL(1,NA)*D1+4.0*VEL(1,NB)*D2+VEL(1,NC)*D3)
      1             /6.
+              !calculate y-flow
+              dx = tmpVec(1) * dirScaling
               TEMPY=DX*(VEL(2,NA)*D1+4.0*VEL(2,NB)*D2+VEL(2,NC)*D3)
      1             /6.
               NGP=4
@@ -595,7 +671,6 @@ C-
         ENDIF
 CIPK JUL01
         TOTAL(J) = SUMX - SUMY
-        Q_current (j) = Total(j)
         
 cipk apr01
 CIPK JUL01
@@ -630,7 +705,30 @@ CIPK JUL01
           ENDIF
         ENDDO
       ENDIF
+      
+      !Save the water that's going through the line within the current step
+      write (*,*) maxn
+      do jj = 1, maxSE
+        if (ncall == 0) then
+          StorageElts (jj).currQ = Total (StorageElts(jj).CCLID)
+        else
+          if (maxn == 1) StorageElts(jj).prevQ = StorageElts(jj).currQ
+          StorageElts(jj).currQ = Total (StorageElts(jj).CCLID)
+          StorageElts(jj).storageAddition = 
+     +      QAverage(StorageElts(jj)) * delt
+     
+          SElt => StorageElts(jj)
+          WL = waterlevel (SElt, .true.)
+          continue
+        endif
+      enddo
+      
+      
+      !remember that first call is over
+      ncall = 1
+      
       RETURN
+      
  6030 FORMAT( // 10X, 'CONTINUITY CHECKS' //  10X, 'LINE          TOTAL
      1         X FLOW         Y FLOW   PERCENT  AVE-SALT  AVE-TEMP   AVE
      +-SED' )

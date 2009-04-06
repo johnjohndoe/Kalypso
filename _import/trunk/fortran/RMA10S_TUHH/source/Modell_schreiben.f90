@@ -1,4 +1,4 @@
-!     Last change:  MD    1 Apr 2009   12:23 pm
+!     Last change:  WP   28 Jul 2008    5:19 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -433,8 +433,12 @@ write_trans_lines: do i = 1, MaxLT
 end do write_trans_lines
 
 write_PipeSurfConn: do i = 1, MaxPS
-  write(IKALYPSOFM, 7049) i, PipeSurfConn(i)%SurfElt, PipeSurfConn(i)%PipeElt
+  write(IKALYPSOFM, 7049) i, PipeSurfConn(i).SurfElt, PipeSurfConn(i).PipeElt
 enddo write_PipeSurfConn
+
+write_StorageElts: do i = 1, MaxSE
+  write(IKALYPSOFM, 7050) i, StorageElts(i).CCLID, StorageElts(i).storageContent, StorageElts(i).storageAddition
+enddo write_StorageElts
 
 ! Roughness classes:
 write_roughness: DO i = 1, irk
@@ -534,6 +538,10 @@ CLOSE (IKALYPSOFM, STATUS='keep')
  7048 format ('CU', 2i10, '(a128)')
  !nis,feb09: for pipe surface connections
  7049 format ('PS', 3i10)
+ !nis,mar09: storage elements
+ 7050 format ('SE', 2i10, 2f20.7)
+
+
 
 
 !--------------- deallocation section -----------------------------
@@ -633,22 +641,20 @@ CLOSE (IKALYPSOFM, STATUS='keep')
 
 END SUBROUTINE write_KALYP_Bed
 
-
 !**********************************************************
 
+
 SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
-           &                   resultName, inputName)
+           &                       resultName, inputName)
 
 implicit none
 INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
 INTEGER, INTENT (IN) :: niti_local
-character (LEN = 96), INTENT (inOUT) :: resultName, inputName
+character (LEN = 96), INTENT (OUT) :: resultName, inputName
 CHARACTER (LEN = 32), INTENT (IN)  :: inname, rstname
 character (len = *) , intent (in) :: outsuffix
 CHARACTER (LEN = 1), INTENT (IN)   :: prefix
 CHARACTER (LEN = 4), INTENT (IN)   :: sort
-!MD: new for kohesive Bed
-!MD character (LEN = 96), INTENT (OUT) :: resultBed, inputBed
 
 ! ------------------------------------------------------------------------------------------
 ! NiS,may06: Creation of output/solution file names has a little bit changed in logic order,
@@ -677,7 +683,6 @@ if (sort == 'inst' .or. sort == 'stat') then
       WRITE (inputName,'(a,i4.4,a1,a)')  prefix, timeStep, '.', outsuffix
       !Starting from the solution of time step before
       WRITE (resultName,'(a,i4.4,a1,a)') prefix, timeStep, '.', outsuffix
-
     ENDIF
 
   !after iteration step, if wanted
@@ -700,4 +705,3 @@ ENDIF
 !-
 
 end subroutine
-
