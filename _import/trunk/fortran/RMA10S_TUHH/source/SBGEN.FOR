@@ -180,14 +180,21 @@ CIPK DEC97 END ADDITION
           ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
           ! LABL = 1 for using a hydrograph file in dynamic solution; chose 0 for a steady or specified solution
           !-
-          !EFa jul07, necessary for autoconverge
-          specccfut(j,1) = 2.5
-          specccfut(j,2) = qf
-          specccfut(j,3) = qdir
-          specccfut(j,6) = qqal(1)
-          specccfut(j,7) = qqal(2)
-          specccfut(j,8) = qqal(3)
-          !-
+
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+!EFa jul07, necessary for autoconverge
+!          specccfut(j,1) = 2.5
+!          specccfut(j,2) = qf
+!          specccfut(j,3) = qdir
+!          specccfut(j,6) = qqal(1)
+!          specccfut(j,7) = qqal(2)
+!          specccfut(j,8) = qqal(3)
+!          !-
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
 
 
 CIPK NOV97          READ(IBIN,7000) ID,DLIN
@@ -395,16 +402,22 @@ CIPK APR01
         READ(DLIN,5031) J,LN,HF,QQAL,LABL,HF2
  5031   FORMAT(2I8,4F8.0,I8,F8.0)
 
-        !EFa jul07, necessary for autoconverge
-        specccfut(j,1) = 1.5
-        specccfut(j,2) = hf
-        specccfut(j,3) = hf2
-        specccfut(j,4) = ibin
-        specccfut(j,5) = iinterp(ihgnn)
-        specccfut(j,6) = qqal(1)
-        specccfut(j,7) = qqal(2)
-        specccfut(j,8) = qqal(3)
-        !-
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+!        !EFa jul07, necessary for autoconverge
+!        specccfut(j,1) = 1.5
+!        specccfut(j,2) = hf
+!        specccfut(j,3) = hf2
+!        specccfut(j,4) = ibin
+!        specccfut(j,5) = iinterp(ihgnn)
+!        specccfut(j,6) = qqal(1)
+!        specccfut(j,7) = qqal(2)
+!        specccfut(j,8) = qqal(3)
+!        !-
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
 
 cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
@@ -461,14 +474,20 @@ C
         GO TO 208
       ENDIF
 
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
+!      !EFa jul07, necessary for autoconverge
+!      do i=1,ncl
+!        do k=1,8
+!          speccc(i,k)=specccfut(i,k)
+!        end do
+!      end do
+!      !-
+!----------------------------------------------------------------
+!AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
+!----------------------------------------------------------------
 
-      !EFa jul07, necessary for autoconverge
-      do i=1,ncl
-        do k=1,8
-          speccc(i,k)=specccfut(i,k)
-        end do
-      end do
-      !-
 C-
 C...... Input stage-flow for a continuity line if required
 C-
