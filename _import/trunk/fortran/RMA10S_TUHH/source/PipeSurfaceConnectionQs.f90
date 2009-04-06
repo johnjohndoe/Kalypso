@@ -1,4 +1,3 @@
-!     Last change:  MD   19 Mar 2009    1:03 pm
 subroutine PipeSurfaceConnectionQs 
 
   use blk10mod, only: maxps, PipeSurfConn, ncorn, area, maxn
