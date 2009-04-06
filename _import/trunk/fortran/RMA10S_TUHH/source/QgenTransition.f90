@@ -42,7 +42,7 @@
       INTEGER       :: maxL, mel
 !      INTEGER       :: iostaterror
       INTEGER       :: no, k, l, i, Comp
-      INTEGER       :: node
+      INTEGER       :: nod
       INTEGER       :: TLine, TNode
       INTEGER       :: na, nc, nbb, na1, na2, ncc
       REAL (KIND=8) :: weight(0:2), di(0:2)
@@ -163,7 +163,7 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
     IF (ort (lineimat (TLine, k + 1), 15) > 0.) then
 
       !actual node
-      node = line (TLine, k)
+      nod = line (TLine, k)
 
       !calculate the absolute flow-velocity of beginning corner node of the actual CCL-segment
       vecq = sqrt (vel (1, na)**2 + vel (2, na) **2)
@@ -178,7 +178,7 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
       if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
-        lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (akp(node) * adb(node) - d1) / (akp(node) * adb(node)) + 1.0
+        lambda = lambda * (ort (lineimat (TLine, k + 1), 12)**2 - 1.) * (akp(nod) * adb(nod) - d1) / (akp(nod) * adb(nod)) + 1.0
       end if
 
       !Conveyance represents the Conveyance factor of the element part.

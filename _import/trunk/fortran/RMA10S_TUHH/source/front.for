@@ -45,7 +45,7 @@ c     LBMAX=MBUF
 
       !local copy of the actual nbn of the element
       INTEGER                       :: temp_nbn
-      INTEGER                       :: node, degree
+      INTEGER                       :: nod, degree
 
       NMAX = MFW
       CALL SECOND(ASEC)
@@ -430,13 +430,13 @@ C...... Set up heading vectors
 C-
       LFZ=1
       DO 52 LK=1,NBN !NiS,may06: do for every node-degree-of-freedom; nbn=ndf*ncn
-        NODE=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
-        IF(NODE.EQ.0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
-        LM=IABS(NODE) !NiS,may06: get absolute number
+        nod=NK(LK)  !NiS,may06: get equation number of node-degree-of-freedom
+        IF(nod.EQ.0) GO TO 52 !NiS,may06: if equation number is deactivated, switch
+        LM=IABS(nod) !NiS,may06: get absolute number
         LL=IPOINT(LM) !NiS,may06: IPOINT is always zero at the first call
         IF(LL .NE. 0) THEN
           LDEST(LK)=LL
-          IF(NODE .LT. 0) LHED(LL)=NODE
+          IF(nod .LT. 0) LHED(LL)=nod
         ELSE
 C
 C     Look for vacant slot
@@ -444,7 +444,7 @@ C
           DO 35 L=LFZ,LCOL
             IF(LHED(L) .EQ. 0) THEN
               IPOINT(LM)=L
-              LHED(L)=NODE
+              LHED(L)=nod
               LDEST(LK)=L
               LFZZ=L
               ISHRK=ISHRK-1
@@ -453,7 +453,7 @@ C
    35     CONTINUE
           LCOL=LCOL+1
           LDEST(LK)=LCOL
-          LHED(LCOL)=NODE
+          LHED(LCOL)=nod
           IPOINT(LM)=LCOL
           LFZZ=LCOL
           DO 38 L=1,LCOL

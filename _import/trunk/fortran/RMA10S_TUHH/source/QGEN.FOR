@@ -424,7 +424,7 @@ CIPK OCT01
               !Darcy-Weisbach:
               IF (ort (lineimat (j, k + 1), 15) > 0.) then
                 !actual node
-                node = line (j, k)
+                nod = line (j, k)
                 !calculate the absolute flow-velocity of beginning corner node of the actual CCL-segment
                 vecq = sqrt (vel (1, na)**2 + vel (2, na) **2)
                 !default vegetation cwr-value
@@ -441,8 +441,8 @@ CIPK OCT01
                 if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
                   lambda = lambda
      +              * (ort (lineimat (j, k + 1), 12)**2 - 1.)
-     +              * (akp(node) * adb(node) - d1)
-     +              / (akp(node) * adb(node)) + 1.0
+     +              * (akp(nod) * adb(nod) - d1)
+     +              / (akp(nod) * adb(nod)) + 1.0
                 end if
                 !Conveyance represents the Conveyance factor of the element part.
                 Conveyance(k + no) =

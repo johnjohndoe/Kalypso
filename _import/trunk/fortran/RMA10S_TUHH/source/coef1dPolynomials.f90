@@ -472,9 +472,9 @@ if (ntx == 1) then
     do j = 1, 2
       !get the node to calculate values from for node n
       if (IntPolProf(n)) then
-        node = NeighProf (n, j)
+        nod = NeighProf (n, j)
       else
-        node = n
+        nod = n
       end if
 
       !get the weighting for the calculated value influencing node n
@@ -493,7 +493,7 @@ if (ntx == 1) then
       end if
 
       !dA(h)/dh
-      dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), node, 0:12), vel(3, n), ubound (apoly, 3))
+      dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), nod, 0:12), vel(3, n), ubound (apoly, 3))
 
     end do
   enddo
