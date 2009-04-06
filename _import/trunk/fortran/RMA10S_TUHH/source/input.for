@@ -480,7 +480,7 @@ C
 !parameter meaning
 !nprti      frequency to print results to model output file at the end of time step
 !nprt       frequency to print results to model output file at the end of iteration
-!irsav      frequency to print results to output file at the end of iteration
+!irsav      time step to start with writing of results
 
 
 
@@ -512,7 +512,15 @@ CIPK AUG07  ADD ICPU
       IF(ID(1:2) .EQ. 'C6') THEN
 cipk mar06 allow for output file rewind      
 CIPK AUG07  ADD ICPU
-        READ(DLIN,'(16x,2I8)') IOUTRWD,ICPU
+        READ(DLIN,'(4I8)') irMiniMaxiSav, nprtmetai, IOUTRWD,ICPU
+        !nprtmetai  frequency to print results to output file at the end of iteration
+        !ioutrwd    frequency of rewinding output file to reduce the file size
+        !icpu       number of processors; if value is greater than 0 it means that the MKL is used!
+        
+        if (irMiniMaxiSav == 0) irMiniMaxiSav = nitn
+        
+        
+
         call ginpt(lin,id,dlin)
 	    WRITE(LOUT,6024) IOUTRWD,ICPU
         IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1

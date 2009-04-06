@@ -26,6 +26,8 @@ REAL(KIND=8) H, H1, VT, HS
 !nis,feb07: Cross section of Flow1dFE elements
 REAL (KIND=8) :: NodalArea
 !nis,sep07: Remember problematic node
+character (len = 96) :: outputfilename, inputfilename
+
 INTEGER :: problematicNode
 !IPK apr05
 common /epor/ efpor
@@ -705,6 +707,17 @@ IF (ABS (EMAX (3)) > 100. .OR. ABS (EMAX (1)) .GT. 50. .OR. ABS (EMAX (2)) >  50
   end if
 
   CALL OUTPUT (2)
+  
+  
+  !generate file name for minimum values 
+  call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+  !write minimum values file
+  call write_Kalypso (outputFileName, 'mini')
+  !generate file name for maximum values 
+  call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+  !write maximum values file
+  call write_Kalypso (outputFileName, 'maxi')
+
 !IPK sep04
 
   !TOASK

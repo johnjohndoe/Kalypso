@@ -4,7 +4,7 @@ subroutine RMA_Kalypso
 
 USE BLK10MOD, only: &
 &  niti, nita, maxn, nitn, itpas, iaccyc, icyc, ncyc, it, &
-&  ioutrwd, nprtf, nprti, irsav, &
+&  ioutrwd, nprtf, nprti, nprtmetai, irsav, irMiniMaxiSav, &
 &  maxp, maxe, maxlt, maxps, maxse, ne, np, npm, nem, nmat, &
 &  ncrn, nops, imat, &
 &  ao, &
@@ -189,7 +189,7 @@ character (len = 96) :: outputfilename, inputfilename
 !idryc            is something like a count down variable to process drying/ wetting
 !iprtf            local variable to get time step frequency to write out results (only transient calculations)
 !iprti            local variable to get iteration frequency to write out results within steady or iprtf-controlled transient calculations
-!iprtMetai        local variables to get iteration frequency to write out results to the output file (not result model file)
+!nprtMetai        local variables to get iteration frequency to write out results to the output file (not result model file)
 !i, j, k, l, m, n local counter variables
 !kk, ll           local counter variables; all connected to logic concerned about 3D applications
 !n1, n2           local copies of nodes
@@ -354,7 +354,7 @@ iprti = abs (nprti)
 if (iprti == 0) iprti = nita
 !get prinout frequency for results to output file (not model result file)
 !---------------------------------
-iprtMetai = abs (irsav)
+iprtMetai = abs (nprtMetai)
 if (iprtMetai == 0) iprtMetai = nita
 
 !Iterate steady state
@@ -944,7 +944,7 @@ DynamicTimestepCycle: do n = 1, ncyc
   !if frequency is not given, chose only to give out after last iteration
   if (iprti == 0) iprti = nita
   !get iteration frequency to write out 
-  iprtMetai = abs (irsav)
+  iprtMetai = abs (nprtmetai)
   if (iprtMetai == 0) iprtMetai = nita
 
 !----------------------------------------------------------------
@@ -1306,10 +1306,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 !AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE AUTOCONVERGE
 !----------------------------------------------------------------
 
-!save results file
-!-----------------
-  if (ikalypsofm > 0 .and. mod (icyc, iprtf) == 0) then
- 
+
 !c       1   time in hours (Julian)
 !c       2   number of nodes
 !c       3   obsolete counter of degrees of freedom (set to 5) NDF=6
@@ -1326,28 +1323,35 @@ DynamicTimestepCycle: do n = 1, ncyc
 !c      13   DFCT                stratification multiplier by element
 !c      14   VSING subscript(7)  water column potential by node
 
+!save results file
+!-----------------
+  if (ikalypsofm > 0 .and. mod (icyc, iprtf) == 0) then
     MAXN = 0
-    !generate file name for result
-    call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-    !calculate the content of the storage elements
-    call calcAllStorageContents (StorageElts)
-    !write result
-    call write_kalypso (outputfilename, 'resu')
-    !MD: only for kohesive Sediment
-    IF (LSS.gt.0) THEN
-      call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
-      CALL write_KALYP_Bed (outputFileName)
-    END IF
-
-    !MD: keine Ausgabe koh. bed fuer Mini & Maxi
-    !generate file name for minimum values 
-    call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-    !write minimum values file
-    call write_Kalypso (outputFileName, 'mini')
-    !generate file name for maximum values 
-    call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
-    !write maximum values file
-    call write_Kalypso (outputFileName, 'maxi')
+    if (icyc >= irsav) then
+      !generate file name for result
+      call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+      !calculate the content of the storage elements
+      call calcAllStorageContents (StorageElts)
+      !write result
+      call write_kalypso (outputfilename, 'resu')
+      !MD: only for kohesive Sediment
+      IF (LSS.gt.0) THEN
+        call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
+        CALL write_KALYP_Bed (outputFileName)
+      END IF
+    endif
+    
+    if (icyc >= irMiniMaxiSav) then
+      !MD: keine Ausgabe koh. bed fuer Mini & Maxi
+      !generate file name for minimum values 
+      call generateOutputFileName ('mini', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+      !write minimum values file
+      call write_Kalypso (outputFileName, 'mini')
+      !generate file name for maximum values 
+      call generateOutputFileName ('maxi', 0, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+      !write maximum values file
+      call write_Kalypso (outputFileName, 'maxi')
+    endif 
   end if
 
 

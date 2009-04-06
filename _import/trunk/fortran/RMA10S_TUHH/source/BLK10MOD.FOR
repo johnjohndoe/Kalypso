@@ -377,12 +377,15 @@
       !file handling and outwriting frequencies
       !----------------------------------------
       integer (kind = 4) :: ioutrwd
-      integer (kind = 4) :: nprti, nprtf
+      integer (kind = 4) :: nprti, nprtf, nprtmetai
+      integer (kind = 4) :: irsav, irMiniMaxiSav
 !meaning of the variables
 !------------------------
 !ioutrwd                frequency to rewind output file LOUT
 !nprtf                  frequency of time steps to write out full results
 !nprti                  frequency of iterations within nprtf to write out full results
+!irsav                  time step to start with writing of results
+!irMiniMaxiSav          time step to start with writing of minimum and maximum results
 
       !controlling of active degrees of freedom
       !----------------------------------------
@@ -465,8 +468,6 @@ C-
      2         ,NLP,NS
      3          ,IVS,IR1MAX
      5          ,NPSAV,NESAV,ISALBC,ISTRT,IZB
-                !TODO: IRSAV can be deleted; it's not used anymore
-     +          ,IRSAV
      6          ,IPASS1,IPASS2,IPASS3
      7          ,ibinrst,iyend,idye,nscrin,ISVS,NMETF
      9          ,nrbd,iedsw,istch
