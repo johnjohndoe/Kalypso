@@ -555,15 +555,55 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 
 --- Nico Schrage, 07.11.2008 (RMAKalypso 1.1.0alpha7)
 
+081.) bugfix regarding kilometer in coef1dPoly
+082.) Enable shore line friction for Darcy-Weisbach; implemented in coef25.sub and coef25nt.sub. Is done analoguous to Chezy coefficient. (affects coef25nt.sub, coef25.sub)
+083.) Reactivate efpor in update, because after several tests it seems to be the correct way. Attention has to be payed to very steep perpendicular to 
+      the flow direction, because they cause convergence problems then. (affects update.sub)
+084.) Specifying used global variables from modules in particular, so developer knows, which variables are really used within subroutines, started for several subs, not finished at all.
+      Additionally updating subroutines from *.for to *.f90 partly. ...to be continued.
+085.) Error message for unsteady restart from nth step (n>1) with steady calculation activated before;logical mistake that is catched. (affects input.sub)
+086.) Get rid of some output frequency variables: Effects C5 and C6 lines (affects input.sub)
+087.) Increase default MR1 size for Pardiso from 200000 to 300000 (affects initl.sub
+088.) Boundary directio fix at 1D/2D transition (affects: LineTransitionCalc.sub)
+089.) Fix tree resistance to c_wr = 0.0, if energy slope is to small. (affects get_element_cwr.sub)
+090.) Bug fix for interpolation of elements in 1D, i.e. number of nodes for interpolated elements was not correct. (affects InterpolateProfs.sub)
+--- committed ---
+
+--- Nico Schrage, 09.01.2009 (released RMA·Kalypso 1.1.0 'rma-kalypso_1_1_0_20090109.exe')
+
+001.) Reduce exchange conditions at 1D2D junctions only to the proper values they as the transition type intends it.
+002.) Direction fix for boundary nodes in 1D2D line transition (affects BLINE.sub)
+003.) Comments and code updates (affects coef25nt.sub); Preperation of comparability of the coef2* subroutines to make them a unique subroutine controlling the different options
+004.) Update 1D2D-boundary exchange conditions and boundary conditions taken from the coef25.sub
+
+--- committed ---
+
+--- Nico Schrage, 29.01.2009 (RMAKalypso 1.1.1alpha1)
+
+005.) Add possibility of reading a node's dry/wet status for proper restarting
+006.) Increase accuracy of variables in *.2d file to minimize restart error. Problem is to prohibit mistakes with older models. That should be prevented.
+007.) Speed up calculation of velocity distribution. Restart file was used to get the correct water stages for the distribution calculation. Problem was that restart was read after preperation of
+      boundary conditions. This changed already months ago. Consequently this file reading that was pretty slow could be deleted.
+008.) Set all variables (including depth) of dry nodes to zero.
+
+--- Nico Schrage, 04.02.2009 (RMAKalypso 1.1.1alpha2)
+
+009.) Introduce changes from coef25nt to the other coef2* subroutines: Goal is to make them comparable so the can be merged for reducing the amount of files.
+010.) Release notes into RMA·Kalypso console output
+
+--- committed ---
+
+--- Nico Schrage, 13.02.2009 (released RMA·Kalypso Version 1.1.1 build 13.02.2009 with filename: rma-kalypso_1.1.1_build20090213.exe)
+
 --- Monika Donner, 19.03.2009
-081.) Corrections for cohesive Sediment:
+001.) Corrections for cohesive Sediment:
       Using general formulations or definitions for densities:
       --> Transfering the approach for water density in all cohesive
       sediment calculations according to all SubR COEFxxx where 
       water density ROAVG [kg/m^3] is defined as: ROAVG=516.*1.935
       >> SubR SPROP, SEROSN, FORMBED, MEROSN, NEWBED, GETMAS, SHEAR
          KALYPSO-SHEAR        
-082.) Corrections for cohesive Sediment:
+002.) Corrections for cohesive Sediment:
       Using general formulations for suspended-water density GAW in all cohesive
       sediment calculations by using water density ROAVG, sediment density GACND
       bzw. GAC (~2650 kg/m³) and suspended sediment concentration VEL(6,J)[mg/l]:     
@@ -572,17 +612,17 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
       this new approach (>> SubR SPROP)
       >> SubR SPROP, SEROSN, FORMBED, MEROSN, NEWBED, GETMAS, SHEAR
          KALYPSO-SHEAR        
-083.) Corrections for cohesive Sediment:
+003.) Corrections for cohesive Sediment:
       Using general formulations for calculation the dry mass of suspended-sediment
       WEGTM by using Layer-Thickness TTLAYM [m], bulk density GAB, water density ROAVG
       and sediment density GACND bzw. GAC (~2650 kg/m³)in :          
          WEGTM =TTLAYM *(GABM -ROAVG)*GACM/ (GACM -ROAVG)     
       >> SubR SPROP, GETMAS,
-084.) Corrections for cohesive Sediment:
+004.) Corrections for cohesive Sediment:
       Using suspended-water density GAW for bed-shear-stress calculation. 
       Water density or 1000. kg/m³ is deleted.  
       >> SubR SHEAR, KALYPSO-SHEAR 
-085.) New Output for cohesive Sediment:
+005.) New Output for cohesive Sediment:
       Writing actual cohesive bed-structur with all layers and its thickness by
       using "Modell-schreiben" in order to prepare a restart option for cohesive bed.
       >> New SUBROUTINE write_KALYP_Bed (bedout) in "Modell-schreiben"
@@ -591,15 +631,61 @@ RENAMING THE PRODUCT FROM RMA10SK TO RMA·KALYPSO
 --- Monika Donner, 19.03.2009
 
 --- Monika Donner, 19.03.2009
-086.) Correction in SubR second:
+006.) Correction in SubR second:
       Definition for integer :: itim
       >> SubR SECOND 
-087.) Correction in SubR PipeSurfaceConnectionQs :
+007.) Correction in SubR PipeSurfaceConnectionQs :
       Formula:  flow = PS1 * (-1.0)  is corrected  
       >> SubR PipeSurfaceConnectionQs                                                 
 --- Monika Donner, 19.03.2009
 
 --- Monika Donner, 01.04.2009
-088.) Correction in SubR rma10 & GenerateOutputFileName:
+008.) Correction in SubR rma10 & GenerateOutputFileName:
       Deleting additional Variables for Bed-files                                               
 --- Monika Donner, 01.04.2009
+
+009.) Introducing data types to make program more modular. Important: Don not increase the storage size that is needed
+      for the calcualtion. That means that no arrays should be created anymore that contain big gaps. Following modules are new:
+      - folder: modules_components_general
+        - mod_Node: Holds 'node' and 'linkedNode' definitions with editing subroutines and functions
+        - mod_Arc: Holds 'Arc' definition with editing subroutines and functions, also to understand an arc as a vector.
+        - mod_ContiLines: Holds 'ContiLine' definition with editing subroutines and functions
+      - folder: modules_Components_special
+        - mod_LineTransition: Holds 'TransLine1D2D' definition without subroutines and functions yet
+        - mod_ManholeDefinitions: Holds 'pipeManhole' definition without subroutines and functions yet
+        - mod_StorageElement: Holds 'StorageElement' definition with editing subroutines and functions
+      - folder: modules_fileHandling: 
+        - mod_fileType: Holds 'file' definition and subroutines/ functions
+        - mod_fileHandler: Holds 'fileCtrl' and subroutines/functions (usage has to become more detailed)
+      - folder: modules_hydraulics
+        - mod_EnergyElevations: Holds 'energyLevel' and subroutines/ functions
+      - folder: modules_numerics
+        - mod_discreteFunction: Holds 'discreteFunction' and 'valuePair' definitions (rework this)
+      The seperation of modules to folders has the intention to structure the code a bit regarding topics that are executed. The given structure is
+      just something initial and can be improved by any developer. At critical points please talk to the other developers.
+      The purpose of the modules is to generate much more general code that can be reused on other places. As we're all no programmers
+      this is some introduction of object based thinking. For the future new elements should be introduced modulary in this more modern way to come
+      to a higher efficiency in execution and programming.
+010.) outcommenting of autoconverge code as it is not tested to be operative properly
+011.) Versioning in RMA·Kalypso main routine
+012.) Look for the end of equations to add, then exit loop to add equations: Not nice hotfix!
+new features introduced/ started to be introduced:
+013.) discrete function:
+      Discrete function adresses different parts of the calculation. It can be used for any function, where discrete values are required. This may be
+      waterstage-discharge relationship BC, volume-waterstage relationship BC (will be soon available), weirs and bridges etc..
+014.) direction of continuity line:
+      Basicly there is a new implementation for continuity lines. It will be step by step introduced to replace all the old remaining variables. Basic
+      idea of the direction that was introduced concernes the storage elements. Here it is necessary to define inflow as positive discharge, while outflow
+      needs to be negative discharge. Problem is, that Kalypso (1D/2D) writes out a continuity line in an arbitrary direction. The discharge is always
+      defined as third component of cross product of velocity and continuityline (chord) vector. So it might differ from case to case depending on the
+      definition direction of the continuity line.
+015.) Storage Element:
+      Storage Element is the concept for accumulating the flow through continuity lines or other bilancing cross sections. (They just need to be
+      connected.) Generally it is just calculating the water volume ('content') that flew through a continuity line.
+      Additionally a storage element might contain a volume-waterstage relationship to get the water level in the storage element at the current time
+      step. This will be used as a new type of boundary condition.
+      Another extension will be the definition of an arbirtrary number of inflows that contribute to the total volume inside the storage element.
+016.) file controller:
+      The file controller is meant to be a very general part of Kalypso to store the used files. It will be used to pass the files for reading and
+      writing to the proper routines. All reading and writing routines shall be collected in the file controller.
+--- Nico Schrage, 06.04.2009
