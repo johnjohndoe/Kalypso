@@ -71,9 +71,32 @@
                         </appinfo>
                 </annotation>
                 <complexContent>
-                        <extension base="om:ObservationType"/>
+					<extension base="om:ObservationType">
+						<sequence>
+							<element name="returnPeriod" type="runoff:PositiveIntType" default="1">
+							<!-- default = "1" only for backward compatibility -->
+								<annotation>
+									<documentation xml:lang="de">
+										<label><![CDATA[Wiederkehr Intervall]]></label>
+										<tooltip><![CDATA[Wiederkehr Intervall]]></tooltip>
+										<description><![CDATA[Wiederkehr Intervall]]></description>
+									</documentation>
+									<documentation xml:lang="en">
+										<label><![CDATA[Return interval]]></label>
+										<tooltip><![CDATA[Return interval]]></tooltip>
+										<description><![CDATA[Return interval of the event]]></description>
+									</documentation>
+								</annotation>
+							</element>
+						</sequence>
+					</extension>
                 </complexContent>
         </complexType>
+		<simpleType name="PositiveIntType">
+			<restriction base="int">
+				<minInclusive value="1" />
+			</restriction>
+		</simpleType>
         <!-- Wasserspiegelfixierung -->
         <complexType name="WaterlevelFixationInlinePropertyType">
                 <sequence minOccurs="1" maxOccurs="1">

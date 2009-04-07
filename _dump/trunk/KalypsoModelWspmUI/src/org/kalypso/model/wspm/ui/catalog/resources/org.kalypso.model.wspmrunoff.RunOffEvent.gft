@@ -6,11 +6,8 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="gml:name"  style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
-		<gft:gridData widthHint="200" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING" />
+		<gft:gridData widthHint="200" horizontalSpan="2" horizontalAlignment="GridData.BEGINNING" />
 	</gft:text>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
@@ -18,17 +15,23 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
 	<gft:text editable="true" property="gml:description"  style="SWT.MULTI | SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
-		<gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
+		<gft:gridData widthHint="200" verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL" heightHint="30" grabExcessHorizontalSpace="true" />
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	<gft:label property="runoff:returnPeriod" visible="true"  style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
+	<gft:text editable="true" property="runoff:returnPeriod"  style="SWT.BORDER" xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData widthHint="50" horizontalSpan="1" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:text>
+	<gft:validatorlabel property="runoff:returnPeriod" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
 
 	<gft:composite style="SWT.NONE">
-		<gft:gridData horizontalSpan="2" verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" heightHint="300" />
+		<gft:gridData horizontalSpan="3" verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" heightHint="300" />
 		<gft:gridLayout />
 		<gft:tabFolder style="SWT.NONE">
 			<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalSpan="1" />
