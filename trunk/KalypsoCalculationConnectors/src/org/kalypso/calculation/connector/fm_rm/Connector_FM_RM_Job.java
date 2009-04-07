@@ -63,6 +63,7 @@ public class Connector_FM_RM_Job extends AbstractInternalStatusJob implements IS
       {
         final IAnnualCoverageCollection annualCoverageCollection = riskWaterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
+        annualCoverageCollection.setReturnPeriod(runoffEvent.getReturnPeriod());
         final ICoverageCollection coverages = runoffEvent.getResultCoverages();
         for( final ICoverage coverage : coverages )
         {

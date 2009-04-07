@@ -2,6 +2,7 @@
 <modeldata xmlns="simspec.core.simulation.kalypso.org"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoModelConnector_NA_WSPM">
 	<input id="NA_Model" path="" relativeToCalcCase="false" />
+	<input id="NA_ControlModel" path="" relativeToCalcCase="false" />
 	<input id="NA_StatisticalReport" path="" relativeToCalcCase="false" />
 	<input id="NA_RiverCode" />
 	<input id="WSPM_RunoffEventID" />
