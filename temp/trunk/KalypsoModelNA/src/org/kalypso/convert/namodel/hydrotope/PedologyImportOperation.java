@@ -55,8 +55,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.schema.binding.Landuse;
-import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
+import org.kalypso.convert.namodel.schema.binding.SoilType;
+import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -66,11 +66,11 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * Imports landuse into a 'landuse.gml' file from another gml-workspace (probably a shape-file).
+ * Imports pedology into a 'pedology.gml' file from another gml-workspace (probably a shape-file).
  * 
- * @author Gernot Belger
+ * @author Gernot Belger, Dejan Antanaskovic
  */
-public class LanduseImportOperation implements ICoreRunnableWithProgress
+public class PedologyImportOperation implements ICoreRunnableWithProgress
 {
   public static interface InputDescriptor
   {
@@ -83,30 +83,26 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
     GM_MultiSurface getGeometry( int index ) throws CoreException;
 
-    String getLanduseclass( int index ) throws CoreException;
-
-    double getCorrSealing( int index ) throws CoreException;
-
-    String getDrainageType( int index ) throws CoreException;
+    String getSoilType( int index ) throws CoreException;
   }
 
-  private final LanduseCollection m_output;
+  private final SoilTypeCollection m_output;
 
   private final ImportType m_importType;
 
   private final InputDescriptor m_inputDescriptor;
 
-  private final Map<String, String> m_landuseClasses;
+  private final Map<String, String> m_soilTypes;
 
   /**
    * @param output
-   *          An (empty) list containing rrmLanduse:landuse features
+   *          An (empty) list containing rrmsoilType:soilType features
    */
-  public LanduseImportOperation( final InputDescriptor inputDescriptor, final LanduseCollection output, final Map<String, String> landuseClasses, final ImportType importType )
+  public PedologyImportOperation( final InputDescriptor inputDescriptor, final SoilTypeCollection output, final Map<String, String> soilTypes, final ImportType importType )
   {
     m_inputDescriptor = inputDescriptor;
     m_output = output;
-    m_landuseClasses = landuseClasses;
+    m_soilTypes = soilTypes;
     m_importType = importType;
   }
 
@@ -117,33 +113,33 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, "Importing landuses", size + 10 );
+    final SubMonitor progess = SubMonitor.convert( monitor, "Importing soilTypes", size + 10 );
 
-    final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
+    final IFeatureBindingCollection<SoilType> soilTypes = m_output.getSoilTypes();
     if( m_importType == ImportType.CLEAR_OUTPUT )
-      landuses.clear();
+      soilTypes.clear();
 
     ProgressUtilities.worked( progess, 10 );
 
     final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) );
-    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
+    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) );
+    final IRelationType pt = (IRelationType) schema.getFeatureType( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
 
     final List<IStatus> log = new ArrayList<IStatus>();
-    // traverse input workspace and import all single input landuses, if the landuse class exists
+    // traverse input workspace and import all single input soilTypes, if the soilType class exists
     for( int i = 0; i < size; i++ )
     {
       try
       {
         final String label = m_inputDescriptor.getName( i );
         final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
-        final String landuseclass = m_inputDescriptor.getLanduseclass( i );
+        final String soilTypeLink = m_inputDescriptor.getSoilType( i );
 
-        // find landuse-class
-        final String landuseRef = m_landuseClasses.get( landuseclass );
-        if( landuseRef == null )
+        // find soilType-class
+        final String soilTypeRef = m_soilTypes.get( soilTypeLink );
+        if( soilTypeRef == null )
         {
-          final String message = String.format( "Unknwon landuse class '%s' at feature-id %d", landuseclass, i + 1 );
+          final String message = String.format( "Unknwon soilType class '%s' at feature-id %d", soilTypeLink, i + 1 );
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
@@ -153,21 +149,17 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
-        final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
-        if( landuse != null )
+        final SoilType soilType = m_output.importSoilType( label, geometry, m_importType, log );
+        if( soilType != null )
         {
           final String desc = m_inputDescriptor.getDescription( i );
-          final double corrSealing = m_inputDescriptor.getCorrSealing( i );
-          final String drainageType = m_inputDescriptor.getDrainageType( i );
 
-          landuse.setDescription( desc );
-          landuse.setCorrSealing( corrSealing );
-          landuse.setDrainageType( drainageType );
+          soilType.setDescription( desc );
 
-          final String href = "parameter.gml#" + landuseRef;
-          final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
+          final String href = "parameter.gml#" + soilTypeRef;
+          final XLinkedFeature_Impl soilTypeXLink = new XLinkedFeature_Impl( soilType, pt, lcFT, href, null, null, null, null, null );
 
-          landuse.setLanduse( landuseXLink );
+          soilType.setSoilType( soilTypeXLink );
         }
       }
       catch( final CoreException e )

@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
-import org.kalypso.convert.namodel.schema.binding.LanduseCollection.ImportType;
+import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -68,7 +68,7 @@ public class HydrotopeMain extends TestCase
   public void testImportLanduseFromShape( ) throws Exception
   {
     final File shapeFile = new File( "C:\\Projekte\\plc0822907\\work\\HydrotopVerschneidung\\BeispieldatenKollau\\Gernot\\landnutzung.shp" );
-    final InputDescriptor inputDescriptor = new ShapeInputDescriptor( shapeFile, "ALB_NR", "VERSIEGKOR", "ENTWART" );
+    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, "ALB_NR", "VERSIEGKOR", "ENTWART" );
 
     final File landuseTemplateFile = new File( "C:\\Eclipse\\runtime-kalypsomodel.product\\DemoModell\\landuse.gml" );
     final GMLWorkspace landuseWorkspace = GmlSerializer.createGMLWorkspace( landuseTemplateFile, null );

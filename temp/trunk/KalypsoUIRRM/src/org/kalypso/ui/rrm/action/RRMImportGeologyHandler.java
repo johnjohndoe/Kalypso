@@ -51,14 +51,14 @@ import org.eclipse.ui.ISources;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ui.rrm.wizards.importLanduse.ImportLanduseWizard;
+import org.kalypso.ui.rrm.wizards.importGeologyData.ImportGeologyWizard;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author Gernot Belger
  * @author Dejan Antanaskovic
  */
-public class RRMImportLanduseHandler extends AbstractHandler
+public class RRMImportGeologyHandler extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -75,7 +75,7 @@ public class RRMImportLanduseHandler extends AbstractHandler
       return null;
 
     final FeatureList featureList = ((IKalypsoFeatureTheme) themes[0]).getFeatureList();
-    final INewWizard wizard = new ImportLanduseWizard( featureList );
+    final INewWizard wizard = new ImportGeologyWizard( featureList );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     return dialog.open();
   }

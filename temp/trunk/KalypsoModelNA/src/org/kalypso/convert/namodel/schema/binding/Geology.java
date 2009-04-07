@@ -50,22 +50,20 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Binding class for rrmLanduse:Landuse
- *
+ * 
  * @author Gernot Belger
  */
-public class Landuse extends Feature_Impl
+public class Geology extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NALANDUSE, "Landuse" );
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" );
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NALANDUSE, "location" );
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" );
 
-  public static final QName QNAME_PROP_LANDUSE = new QName( NaModelConstants.NS_NALANDUSE, "landuseclassLink" );
+  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" );
 
-  public static final QName QNAME_PROP_CORRSEALING = new QName( NaModelConstants.NS_NAHYDROTOP, "corrSealing" );
+  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" );
 
-  public static final QName QNAME_PROP_DRAINAGETYPE = new QName( NaModelConstants.NS_NAHYDROTOP, "drainageType" );
-
-  public Landuse( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -80,38 +78,23 @@ public class Landuse extends Feature_Impl
     setProperty( QNAME_PROP_GEOMETRY, geometry );
   }
 
-  /**
-   * @param landuseClass
-   *          Must be either a {@link org.kalypsodeegree.model.feature.Feature} (maybe xlinked) or a {@link String}-ref
-   *          to a feature.
-   */
-  public void setLanduse( final Object landuseClass )
+  public void setMaxPerkulationsRate( final Object value )
   {
-    setProperty( QNAME_PROP_LANDUSE, landuseClass );
+    setProperty( QNAME_PROP_MAXPERKULATIONSRATE, value );
   }
 
-  public Object getLanduse( )
+  public Object getMaxPerkulationsRate( )
   {
-    return getProperty( QNAME_PROP_LANDUSE );
+    return getProperty( QNAME_PROP_MAXPERKULATIONSRATE );
   }
 
-  public Double getCorrSealing( )
+  public void setGWFactor( final Object value )
   {
-    return getProperty( QNAME_PROP_CORRSEALING, Double.class );
+    setProperty( QNAME_PROP_GWFACTOR, value );
   }
 
-  public void setCorrSealing( final Double corrSealing )
+  public Object getGWFactor( )
   {
-    setProperty( QNAME_PROP_CORRSEALING, corrSealing );
-  }
-
-  public String getDrainageType( )
-  {
-    return getProperty( QNAME_PROP_DRAINAGETYPE, String.class );
-  }
-
-  public void setDrainageType( final String drainageType )
-  {
-    setProperty( QNAME_PROP_DRAINAGETYPE, drainageType );
+    return getProperty( QNAME_PROP_GWFACTOR );
   }
 }

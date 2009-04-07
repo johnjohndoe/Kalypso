@@ -35,7 +35,7 @@
 				<extension base="gml:AbstractFeatureType">
 					<sequence>
 						<element name="location" type="gml:MultiPolygonPropertyType" />
-						<element name="soiltypeLink">
+						<element name="soilTypeLink">
 							<complexType>
 								<sequence minOccurs="0" maxOccurs="0">
 									<element ref="par:Soiltype" />

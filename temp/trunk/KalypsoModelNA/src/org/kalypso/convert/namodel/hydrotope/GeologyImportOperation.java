@@ -42,9 +42,6 @@ package org.kalypso.convert.namodel.hydrotope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,23 +51,18 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.schema.binding.Landuse;
-import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
+import org.kalypso.convert.namodel.schema.binding.Geology;
+import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * Imports landuse into a 'landuse.gml' file from another gml-workspace (probably a shape-file).
+ * Imports geology into a 'geology.gml' file from another gml-workspace (probably a shape-file).
  * 
- * @author Gernot Belger
+ * @author Gernot Belger, Dejan Antanaskovic
  */
-public class LanduseImportOperation implements ICoreRunnableWithProgress
+public class GeologyImportOperation implements ICoreRunnableWithProgress
 {
   public static interface InputDescriptor
   {
@@ -83,30 +75,25 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
     GM_MultiSurface getGeometry( int index ) throws CoreException;
 
-    String getLanduseclass( int index ) throws CoreException;
+    double getMaxPerkulationsRate( int index ) throws CoreException;
 
-    double getCorrSealing( int index ) throws CoreException;
-
-    String getDrainageType( int index ) throws CoreException;
+    double getGWFactor( int index ) throws CoreException;
   }
 
-  private final LanduseCollection m_output;
+  private final GeologyCollection m_output;
 
   private final ImportType m_importType;
 
   private final InputDescriptor m_inputDescriptor;
 
-  private final Map<String, String> m_landuseClasses;
-
   /**
    * @param output
-   *          An (empty) list containing rrmLanduse:landuse features
+   *          An (empty) list containing rrmgeology:geology features
    */
-  public LanduseImportOperation( final InputDescriptor inputDescriptor, final LanduseCollection output, final Map<String, String> landuseClasses, final ImportType importType )
+  public GeologyImportOperation( final InputDescriptor inputDescriptor, final GeologyCollection output, final ImportType importType )
   {
     m_inputDescriptor = inputDescriptor;
     m_output = output;
-    m_landuseClasses = landuseClasses;
     m_importType = importType;
   }
 
@@ -117,35 +104,22 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, "Importing landuses", size + 10 );
+    final SubMonitor progess = SubMonitor.convert( monitor, "Importing geologies", size + 10 );
 
-    final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
+    final IFeatureBindingCollection<Geology> geologies = m_output.getGeologies();
     if( m_importType == ImportType.CLEAR_OUTPUT )
-      landuses.clear();
+      geologies.clear();
 
     ProgressUtilities.worked( progess, 10 );
 
-    final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) );
-    final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
-
     final List<IStatus> log = new ArrayList<IStatus>();
-    // traverse input workspace and import all single input landuses, if the landuse class exists
+    // traverse input workspace and import all single input geologies, if the geology class exists
     for( int i = 0; i < size; i++ )
     {
       try
       {
         final String label = m_inputDescriptor.getName( i );
         final GM_MultiSurface geometry = m_inputDescriptor.getGeometry( i );
-        final String landuseclass = m_inputDescriptor.getLanduseclass( i );
-
-        // find landuse-class
-        final String landuseRef = m_landuseClasses.get( landuseclass );
-        if( landuseRef == null )
-        {
-          final String message = String.format( "Unknwon landuse class '%s' at feature-id %d", landuseclass, i + 1 );
-          throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
-        }
 
         if( geometry == null )
         {
@@ -153,21 +127,12 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
-        final Landuse landuse = m_output.importLanduse( label, geometry, m_importType, log );
-        if( landuse != null )
+        final Geology geology = m_output.importGeology( label, geometry, m_importType, log );
+        if( geology != null )
         {
-          final String desc = m_inputDescriptor.getDescription( i );
-          final double corrSealing = m_inputDescriptor.getCorrSealing( i );
-          final String drainageType = m_inputDescriptor.getDrainageType( i );
-
-          landuse.setDescription( desc );
-          landuse.setCorrSealing( corrSealing );
-          landuse.setDrainageType( drainageType );
-
-          final String href = "parameter.gml#" + landuseRef;
-          final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
-
-          landuse.setLanduse( landuseXLink );
+          geology.setDescription( m_inputDescriptor.getDescription( i ) );
+          geology.setMaxPerkulationsRate( m_inputDescriptor.getMaxPerkulationsRate( i ) );
+          geology.setGWFactor( m_inputDescriptor.getGWFactor( i ) );
         }
       }
       catch( final CoreException e )

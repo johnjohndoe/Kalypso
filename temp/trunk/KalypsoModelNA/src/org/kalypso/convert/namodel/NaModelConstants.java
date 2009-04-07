@@ -143,9 +143,15 @@ public interface NaModelConstants
 
   public static final QName HYDRO_PROP_LANDUSE_NAME = new QName( NS_NAHYDROTOP, "landuse" );
 
+  public static final QName HYDRO_PROP_SOILTYPE = new QName( NS_NAHYDROTOP, "soiltype" );
+
   public static final QName HYDRO_PROP_HYDTYPE = new QName( NS_NAHYDROTOP, "hydType" );
 
   public static final QName HYDRO_PROP_DAINAGETYPE = new QName( NS_NAHYDROTOP, "drainageType" );
+
+  public static final QName HYDRO_PROP_MAXPERCOLATIONSRATE = new QName( NS_NAHYDROTOP, "m_perkm" );
+
+  public static final QName HYDRO_PROP_INFLOWRATEGW = new QName( NS_NAHYDROTOP, "m_f1gws" );
 
   public static final QName HYDRO_ENUM_HYDTYPE_SWALETRENCH = new QName( NS_NAHYDROTOP, "MuldenRigole" );
 
@@ -454,6 +460,8 @@ public interface NaModelConstants
 
   public static final QName CONTROL_IPVER_PROP = new QName( NS_NAMETA, "ipver" );
 
+  public static final QName CONTROL_RETURN_PERIOD_PROP = new QName( NS_NAMETA, "returnPeriod" );
+
   /** synthN.xsd */
   public static final QName SYNTHN_STATN_FT = new QName( NS_SYNTHN, "StatN" );
 
@@ -519,6 +527,5 @@ public interface NaModelConstants
   public static final QName NACONTROL_USEOFFENDPRED_PROP = new QName( NS_NACONTROL, "useOffsetEndPrediction" );
 
   public static final QName NACONTROL_USE_RESULTS_PROP = new QName( NS_NACONTROL, "useResults" );
-
 
 }

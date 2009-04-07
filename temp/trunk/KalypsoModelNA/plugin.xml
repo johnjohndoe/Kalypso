@@ -132,4 +132,26 @@
               qname="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse">
         </feature>
      </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.SoilTypeCollection"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}SoiltypeCollection">
+        </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.SoilType"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype">
+        </feature>
+     </extension>
+     <extension
+           point="org.kalypso.deegree.featureBinding">
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.GeologyCollection"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}GeologieCollection">
+        </feature>
+        <feature
+              class="org.kalypso.convert.namodel.schema.binding.Geology"
+              qname="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie">
+        </feature>
+     </extension>
 </plugin>

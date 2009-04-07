@@ -56,87 +56,87 @@ import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Binding class for rrmLanduse:LanduseCollection's
+ * Binding class for rrmGeology:GeologyCollection's
  * 
  * @author Gernot Belger
  */
-public class LanduseCollection extends Feature_Impl
+public class GeologyCollection extends Feature_Impl
 {
-  public static final QName QNAME_PROP_LANDUSEMEMBER = new QName( NaModelConstants.NS_NALANDUSE, "landuseMember" );
+  public static final QName QNAME_PROP_GEOLOGYMEMBER = new QName( NaModelConstants.NS_NAGEOLOGIE, "geologieMember" );
 
-  private final IFeatureBindingCollection<Landuse> m_landuses;
+  private final IFeatureBindingCollection<Geology> m_geologyMembers;
 
-  public LanduseCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public GeologyCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_landuses = new FeatureBindingCollection<Landuse>( this, Landuse.class, QNAME_PROP_LANDUSEMEMBER );
+    m_geologyMembers = new FeatureBindingCollection<Geology>( this, Geology.class, QNAME_PROP_GEOLOGYMEMBER );
   }
 
-  public IFeatureBindingCollection<Landuse> getLanduses( )
+  public IFeatureBindingCollection<Geology> getGeologies( )
   {
-    return m_landuses;
+    return m_geologyMembers;
   }
 
   /**
-   * Create/Import a new landuse into this collection.
+   * Create/Import a new geology into this collection.
    * 
    * @return <code>null</code> if the given geometry is <code>null</code>.
    */
-  public Landuse importLanduse( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
+  public Geology importGeology( final String label, final GM_MultiSurface geometry, final ImportType importType, final List<IStatus> log )
   {
     if( geometry == null )
       return null;
 
-    // Handle existing landuses that intersect the new one
-    final List<Landuse> existingLanduses = m_landuses.query( geometry.getEnvelope() );
-    for( final Landuse existingLanduse : existingLanduses )
+    // Handle existing geologys that intersect the new one
+    final List<Geology> existingMembers = m_geologyMembers.query( geometry.getEnvelope() );
+    for( final Geology existingMember : existingMembers )
     {
       switch( importType )
       {
         case DELETE_INTERSECTING:
         {
-          m_landuses.remove( existingLanduse );
-          final String message = String.format( "Landuse '%s' was deleted due to intersection", existingLanduse.getId() );
+          m_geologyMembers.remove( existingMember );
+          final String message = String.format( "Geology '%s' was deleted due to intersection", existingMember.getId() );
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           break;
 
         case IGNORE_INTERSECTING:
         {
-          final String message = String.format( "Ingoring imported landuse '%s' due to intersection", label );
+          final String message = String.format( "Ingoring imported geology '%s' due to intersection", label );
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           return null;
 
         case INTERSECT:
         {
-          final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
+          final GM_MultiSurface existingGeometry = existingMember.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
           if( difference != null )
           {
-            existingLanduse.setGeometry( difference );
-            final String message = String.format( "Landuse '%s' was reduced by imported landuse '%s'", existingLanduse.getId(), label );
+            existingMember.setGeometry( difference );
+            final String message = String.format( "Geology '%s' was reduced by imported geology '%s'", existingMember.getId(), label );
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
           else
           {
-            m_landuses.remove( existingLanduse );
-            final String message = String.format( "Landuse '%s' was removed by imported landuse '%s'", existingLanduse.getId(), label );
+            m_geologyMembers.remove( existingMember );
+            final String message = String.format( "Geology '%s' was removed by imported geology '%s'", existingMember.getId(), label );
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
         }
 
         case CLEAR_OUTPUT:
-          // nothing to do, we add all landuses
+          // nothing to do, we add all geologys
           break;
       }
     }
 
-    // Create new landuse
-    final Landuse landuse = m_landuses.addNew( Landuse.QNAME );
-    landuse.setName( label );
-    landuse.setGeometry( geometry );
-    return landuse;
+    // Create new geology
+    final Geology geology = m_geologyMembers.addNew( Geology.QNAME );
+    geology.setName( label );
+    geology.setGeometry( geometry );
+    return geology;
   }
 }

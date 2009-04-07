@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
-public class ShapeInputDescriptor implements InputDescriptor
+public class LanduseShapeInputDescriptor implements InputDescriptor
 {
   private final Map<String, Integer> m_propHash = new HashMap<String, Integer>();
 
@@ -70,7 +70,7 @@ public class ShapeInputDescriptor implements InputDescriptor
 
   private ShapeFile m_shape;
 
-  public ShapeInputDescriptor( final File shapeFile, final String landuseclassColumn, final String corrSealingColumn, final String drainageTypeColumn )
+  public LanduseShapeInputDescriptor( final File shapeFile, final String landuseclassColumn, final String corrSealingColumn, final String drainageTypeColumn )
   {
     m_shapeFile = shapeFile;
     m_landuseclassColumn = landuseclassColumn;
