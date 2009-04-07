@@ -1595,7 +1595,6 @@ CIPK MAY01
       IF(LSS .NE. 0) CALL SPROP
 
 
-      call getinit(ibin,1)
 
 C
 C...... Initialize CHECK
@@ -2258,7 +2257,7 @@ CIPK AUG95 ADD CALL TO GET MET DATA
       CALL INMET(LOUT,NMETF,TET)
 
 CIPK APR06
-!      call getinit(ibin,1)
+      call getinit(ibin,1)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
