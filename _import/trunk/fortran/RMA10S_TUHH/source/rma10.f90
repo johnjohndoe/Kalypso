@@ -1372,7 +1372,7 @@ USE parakalyps
 implicit none
 
 INTEGER :: i
-INTEGER, intent (IN) :: Points
+INTEGER (kind = 4), intent (IN) :: Points
 
 do i = 1, Points
   if (SQRT (vel(1,i)**2 + vel(2,i)**2) > SQRT (maxvel(1,i)**2 + maxvel(2,i)**2)) then
