@@ -149,4 +149,22 @@ public class RunoffEvent extends AbstractFeatureBinder implements IRunoffEvent
   {
     getFeature().setProperty( QNAME_PROP_MARKEDFORPROCESSING, value );
   }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#getReturnPeriod()
+   */
+  @Override
+  public Integer getReturnPeriod( )
+  {
+    return (Integer) getFeature().getProperty( QNAME_PROP_RETURN_PERIOD );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IRunoffEvent#setReturnPeriod(java.lang.Integer)
+   */
+  @Override
+  public void setReturnPeriod( final Integer value )
+  {
+    getFeature().setProperty( QNAME_PROP_RETURN_PERIOD, value );
+  }
 }

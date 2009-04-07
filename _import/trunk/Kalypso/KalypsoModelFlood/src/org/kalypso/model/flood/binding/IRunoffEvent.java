@@ -64,6 +64,8 @@ public interface IRunoffEvent extends IFeatureWrapper2
 
   public final static QName QNAME_PROP_MARKEDFORPROCESSING = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "markedForProcessing" );
 
+  public final static QName QNAME_PROP_RETURN_PERIOD = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "returnPeriod" );
+  
   public ICoverageCollection getResultCoverages( );
 
   public void setResultCoverages( final ICoverageCollection collection );
@@ -73,6 +75,10 @@ public interface IRunoffEvent extends IFeatureWrapper2
   public IPath getDataPath( );
 
   public void setDataPath( final IPath path );
+  
+  public Integer getReturnPeriod( );
+
+  public void setReturnPeriod( final Integer value );
   
   // TODO bad idea -> add list of IRunoffEvent references to ISimulation.INPUT
   public boolean isMarkedForProcessing( );

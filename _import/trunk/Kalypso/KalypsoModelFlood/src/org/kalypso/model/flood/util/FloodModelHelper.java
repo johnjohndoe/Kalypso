@@ -123,6 +123,9 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
+        if( featureList == null )
+          continue;
+        final QName memberFT = featureList.getParentFeatureTypeProperty().getQName();
         if( eventsToRemove != null )
         {
           for( final IRunoffEvent runoffEvent : eventsToRemove )
@@ -130,7 +133,7 @@ public class FloodModelHelper
             Feature parentFeature = featureList.getParentFeature();
             while( parentFeature != null )
             {
-              if( runoffEvent.getGmlID().equals( parentFeature.getId() ) )
+              if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) && runoffEvent.getGmlID().equals( parentFeature.getId() ) )
               {
                 wspTheme.removeTheme( theme );
                 break;
@@ -142,8 +145,7 @@ public class FloodModelHelper
         else
         {
           // TODO: this is dangerous, because it is possible that other features have property with the same name!
-          final QName name = featureList.getParentFeatureTypeProperty().getQName();
-          if( name.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) )
+          if( memberFT.equals( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER ) )
           {
             wspTheme.removeTheme( theme );
           }

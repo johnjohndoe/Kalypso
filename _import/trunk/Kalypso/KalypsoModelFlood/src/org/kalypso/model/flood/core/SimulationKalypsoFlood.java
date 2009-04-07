@@ -237,6 +237,7 @@ public class SimulationKalypsoFlood implements ISimulationSpecKalypsoFlood, ISim
     if( currentVolume < targetVolume )
       return searchWsp( targetVolume, currentWsp, maxWsp, terrainModel, volumeGmObject );
     else
+      // FIXME endless loop here!
       return searchWsp( targetVolume, minWsp, currentWsp, terrainModel, volumeGmObject );
   }
 
