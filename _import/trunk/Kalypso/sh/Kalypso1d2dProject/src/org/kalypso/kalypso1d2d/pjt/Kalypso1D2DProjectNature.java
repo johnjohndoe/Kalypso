@@ -40,26 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
-import org.kalypso.simulation.core.ISimulationService;
-import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
-import org.kalypso.simulation.core.calccase.CalcJobHandler;
-import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.ui.calccase.ModelNature;
 
 /**
  * Project Nature for 1d 2d simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
@@ -100,50 +85,6 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   public void deconfigure( )
   {
     // does nothing by default
-  }
-
-  // TODO does that really belong here? Move somewhere else... Use ModelNature stuff instead, refaktor!
-  public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( Messages.getString( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.10" ), 5 ); //$NON-NLS-1$
-
-    try
-    {
-      final Modeldata modelspec = loadModelspec();
-      final String typeID = modelspec.getTypeID();
-      final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-
-      monitor.worked( 1 );
-      final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-      return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  private Modeldata loadModelspec( ) throws CoreException
-  {
-    try
-    {
-      final IFolder modelFolder = getProject().getFolder( ModelNature.MODELLTYP_FOLDER );
-      final IFile file = modelFolder.getFile( ModelNature.MODELLTYP_MODELSPEC_XML );
-      if( !file.exists() )
-        return null;
-
-      final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
-
-      final Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
-      return modelData;
-
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature.11" ) ) ); //$NON-NLS-1$
-    }
   }
 
   /**

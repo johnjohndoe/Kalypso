@@ -234,9 +234,6 @@
            </class>
 	     </handler>
        <handler
-            class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
-            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/>
-       <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs">
        </handler>
