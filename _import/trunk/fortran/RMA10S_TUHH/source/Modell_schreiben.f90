@@ -648,8 +648,8 @@ SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuf
            &                       resultName, inputName)
 
 implicit none
-INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
-INTEGER, INTENT (IN) :: niti_local
+INTEGER (kind = 4), INTENT (IN) :: timeStep, iteration, restartUnit
+INTEGER (kind = 4), INTENT (IN) :: niti_local
 character (LEN = 96), INTENT (OUT) :: resultName, inputName
 CHARACTER (LEN = 32), INTENT (IN)  :: inname, rstname
 character (len = *) , intent (in) :: outsuffix
