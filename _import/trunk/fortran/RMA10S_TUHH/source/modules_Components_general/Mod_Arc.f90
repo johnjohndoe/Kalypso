@@ -64,8 +64,16 @@ CONTAINS
     !get vector norm (length)
     vecNorm = sqrt (arcVec(1)**2 + arcVec(2)**2)
     !calculate default normal
-    defaultNormal (2) = ((-1.0) * vecNorm / (arcVec(2)**2/ arcVec(1) + arcVec(1)))
-    defaultNormal (1) = ((-1.0) * defaultNormal (2) * arcVec(2)/ arcVec(1))
+    if (arcVec(1) == 0.0d0) then
+      defaultNormal (1) = 1.0d0 * arcVec(2)/ vecNorm
+      defaultNormal (2) = 0.0d0
+    elseif (arcVec(2) == 0.0d0) then
+      defaultNormal (1) = 0.0d0
+      defaultNormal (2) = (-1.0d0) * arcVec(1)/ vecNorm
+    else
+      defaultNormal (2) = ((-1.0) * vecNorm / (arcVec(2)**2/ arcVec(1) + arcVec(1)))
+      defaultNormal (1) = ((-1.0) * defaultNormal (2) * arcVec(2)/ arcVec(1))
+    endif
     if (present (scaling)) then
       defaultNormal (1) = defaultNormal (1) * scaling
       defaultNormal (2) = defaultNormal (2) * scaling
@@ -168,6 +176,9 @@ CONTAINS
     integer (kind = 2) :: i
     
     normOfVector = sqrt (Vector(1)**2 + Vector(2)**2)
+    if (normOfVector == 0) then
+      continue
+    endif
     do i = 1, 2
       Vector(i) = Vector (i) / normOfVector
       if (present (direction)) Vector(i) = Vector (i) * direction
