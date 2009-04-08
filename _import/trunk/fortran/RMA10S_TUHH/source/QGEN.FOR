@@ -296,6 +296,34 @@ CIPK OCT01
       !NiS,sep06: Using the Kalypso-2D-option for Q-boundary condition transformation
         ELSEIF (BSWIT.eq.2) then
 
+          !Getting the initial solution for first iteration, if restarting
+          do i = 1, lmt(j)
+            iostaterror = 0
+            !Nis,oct06: Only possible if it is a restart input file in Kalypso2D-format
+            if (nb.ne.0) then
+              REWIND(nb)
+              reading: do
+                !WRITE(*,*) lineID
+                read (nb,'(a2)', iostat = iostaterror) LineID
+                if (iostaterror /= 0) EXIT reading
+                if (LineID.eq.'VA') then
+                  BACKSPACE(nb)
+                  read (nb,*) LineID, tmpnode,tmpvx,tmpvy,tmpdepth,tmpwl
+                  if (tmpnode.eq.line(j,i)) then
+                    VEL(1,tmpnode)=tmpvx
+                    VEL(2,tmpnode)=tmpvy
+                    VEL(3,tmpnode)=tmpdepth
+
+                    EXIT reading
+                  endif
+                endif
+              enddo reading
+              REWIND(nb)
+            endif
+          enddo
+          !-
+
+
           !check, whether Q-Line is valid. Flow should cross every segment in same direction
           vnomx = COS (thet)
           vnomy = SIN (thet)

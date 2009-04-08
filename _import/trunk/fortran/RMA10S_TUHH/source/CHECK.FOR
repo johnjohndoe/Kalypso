@@ -308,8 +308,12 @@ cipk feb01  skip out for zero lines
               TempArea = calcPolynomial (apoly(PolyPos, NA, 0:12),
      +                                   vel(3, NA), ubound (apoly, 3))
 
-              dirScaling = projectionDirPointer (tmpContiLine.posNormal,
-     +                                          vel(1:2,na))
+              if (vel(1,na) /= 0.0d0 .and. vel(2,na) /= 0.0d0) then
+                dirScaling = projectionDirPointer
+     +          (tmpContiLine.posNormal, vel(1:2,na))
+              else
+                dirScaling = 1.0d0
+              endif
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
      +               * dirScaling
 
