@@ -10,6 +10,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.calculation.connector.AbstractInternalStatusJob;
 import org.kalypso.calculation.connector.IKalypsoModelConnectorType.MODELSPEC_CONNECTOR_WSPM_FM;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
@@ -28,6 +29,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -73,6 +76,11 @@ public class Connector_WSPM_FM_Job extends AbstractInternalStatusJob implements 
 	    final IFloodModel floodModel = (IFloodModel) fmModel.getRootFeature().getAdapter(IFloodModel.class);
 	    final IFeatureWrapperCollection<IRunoffEvent> floodModelEvents = floodModel.getEvents();
 	    if (deleteExistingRunoffEvents) {
+		for (final IRunoffEvent event : floodModelEvents) {
+		    final ICoverageCollection coverages = event.getResultCoverages();
+		    for (final ICoverage coverage : coverages)
+			CoverageManagementHelper.deleteGridFile(coverage);
+		}
 		floodModelEvents.clear();
 	    }
 	    final IRunoffEvent newRunoffEvent = floodModelEvents.addNew(IRunoffEvent.QNAME);

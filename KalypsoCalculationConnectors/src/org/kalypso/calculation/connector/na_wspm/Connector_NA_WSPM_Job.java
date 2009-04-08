@@ -77,7 +77,8 @@ public class Connector_NA_WSPM_Job extends AbstractInternalStatusJob implements 
 			wspmRunoffEventTupleResult = wspmObservation.getResult();
 		    } else
 			throw new SimulationException("Undefined WSPM runoff event ID specified.");
-
+		    
+		    wspmRunoffEventTupleResult.clear();
 		    int stationComp = -1;
 		    int abflussComp = -1;
 		    final IComponent[] wspmRunoffEventTupleResultComponents = wspmRunoffEventTupleResult.getComponents();

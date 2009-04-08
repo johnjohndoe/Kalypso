@@ -5,6 +5,6 @@
 	<input id="FM_Model" description="FM model relative path"/>
 	<input id="WSPM_TinFile" description="WSPM tin file, given by platform resource path"/>
 	<input id="WSPM_TinReference" type="xs:string" description="WSPM tin file URL, given by platform resource path (same value as 'WSPM_TinFile')" />
-	<input id="OPT_DeleteExistingRunoffEvents" type="xs:Boolean" optional="true" description="Instruction either to delete existing events from flood model or to keep them; if ommited, events will not be deleted, i.e. default is 'false'" />
+	<input id="OPT_DeleteExistingRunoffEvents" type="xs:boolean" optional="true" description="Instruction either to delete existing events from flood model or to keep them; if ommited, events will not be deleted, i.e. default is 'false'" />
 	<output id="FM_Model" description="FM model relative path"/>
 </modelspec>
