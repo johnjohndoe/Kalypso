@@ -55,6 +55,7 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
@@ -153,10 +154,16 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     try
     {
       /* remove existing (invalid) coverages from the model and clean statistic */
-      rasterModel.getRiskZonesCoverage().clear();
+      final ICoverageCollection coverageCollection = rasterModel.getRiskZonesCoverage();
+      for( final ICoverage coverage : coverageCollection )
+        CoverageManagementHelper.deleteGridFile( coverage );
+      
+      coverageCollection.clear();
       controlModel.resetStatistics();
 
       final ICoverageCollection outputCoverages = rasterModel.getRiskZonesCoverage();
+      for( final ICoverage coverage : outputCoverages )
+        CoverageManagementHelper.deleteGridFile( coverage );
 
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( rasterModel.getSpecificDamageCoverageCollection() );
       final ICoverageCollection baseCoverages = maxCoveragesCollection;

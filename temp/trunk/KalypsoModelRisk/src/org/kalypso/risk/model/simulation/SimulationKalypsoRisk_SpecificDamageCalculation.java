@@ -47,6 +47,7 @@ import java.util.List;
 
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -147,7 +148,14 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     try
     {
       /* clear existing data */
+      for( int i = 0; i < specificDamageCoverageCollection.size(); i++ )
+      {
+        final IAnnualCoverageCollection annualCoverageCollection = specificDamageCoverageCollection.get( i );
+        for( int k = 0; k < annualCoverageCollection.size(); k++ )
+          CoverageManagementHelper.deleteGridFile( annualCoverageCollection.get( k ) );
+      }
       specificDamageCoverageCollection.clear();
+      
       for( final ILanduseClass landuseClass : landuseClassesList )
         landuseClass.clearStatisticEntries();
 

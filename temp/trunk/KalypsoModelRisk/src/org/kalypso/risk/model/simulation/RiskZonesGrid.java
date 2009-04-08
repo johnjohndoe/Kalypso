@@ -154,6 +154,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final Collection<IAnnualCoverageCollection> collections = covMap.values();
       final IAnnualCoverageCollection[] covArray = collections.toArray( new IAnnualCoverageCollection[collections.size()] );
 
+      /* This coordinate has the cs of the input grid! */
+      final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
+
       /* fill the probabilities and damages */
       final double[] damage = new double[m_annualCoverageCollection.size()];
       final double[] probability = new double[m_annualCoverageCollection.size()];
@@ -161,8 +164,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       for( int i = probability.length - 1; i >= 0; i-- )
       {
         final IAnnualCoverageCollection collection = covArray[i];
-
-        final double value = getValue( collection, x, y );
+        final double value = getValue( collection, coordinate );
 
         damage[i] = Double.isNaN( value ) ? 0.0 : value;
         probability[i] = 1.0 / collection.getReturnPeriod();
@@ -173,9 +175,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
       if( averageAnnualDamageValue == 0 || Double.isNaN( averageAnnualDamageValue ) )
         return Double.NaN;
-
-      /* This coordinate has the cs of the input grid! */
-      final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
 
       if( m_landusePolygonCollection.size() == 0 )
         return Double.NaN;
@@ -211,7 +210,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
           if( Double.isInfinite( riskZoneValue ) || Double.isNaN( riskZoneValue ) )
             return Double.NaN;
-          
+
           /* check min/max */
           m_min = m_min.min( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
           m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
@@ -251,31 +250,34 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   /**
    * returns the flow depth value for a given position.
-   *
+   * 
    * @param collection
-   *            grid collection of water depth grids
+   *          grid collection of water depth grids
    * @param x
-   *            column number of the grid
+   *          column number of the grid
    * @param y
-   *            row number of the grid
+   *          row number of the grid
    * @return the first found valid grid value within the grid collection
    * @throws GeoGridException
    */
-  private double getValue( final IAnnualCoverageCollection collection, final int x, final int y ) throws GeoGridException
+  private double getValue( final IAnnualCoverageCollection collection, final Coordinate coordinate ) throws GeoGridException
   {
     final List<IGeoGrid> list = m_gridMap.get( collection.getGmlID() );
     for( final IGeoGrid geoGrid : list )
     {
-      final double value = geoGrid.getValueChecked( x, y );
+      if( geoGrid.getEnvelope().contains( coordinate ) )
+      {
+        final double value = geoGrid.getValue( coordinate );
 
-      if( Double.isNaN( value ) )
-        return Double.NaN;
+        if( Double.isNaN( value ) )
+          return Double.NaN;
 
-      // we allow no negative flow depths!
-      if( value < 0.0 )
-        return 0.0;
+        // we allow no negative flow depths!
+        if( value < 0.0 )
+          return 0.0;
 
-      return value;
+        return value;
+      }
     }
     return Double.NaN;
   }
