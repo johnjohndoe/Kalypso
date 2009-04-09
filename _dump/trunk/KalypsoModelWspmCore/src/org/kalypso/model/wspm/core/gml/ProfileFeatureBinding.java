@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -19,6 +20,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 //public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
@@ -242,5 +244,11 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
     }
 
     return myResults.toArray( new IObservation[] {} );
+  }
+  
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    return getLine();
   }
 }
