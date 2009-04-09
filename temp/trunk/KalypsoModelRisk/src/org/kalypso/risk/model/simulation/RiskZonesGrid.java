@@ -148,7 +148,9 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
       for( final IAnnualCoverageCollection cov : m_annualCoverageCollection )
       {
-        covMap.put( cov.getReturnPeriod().doubleValue(), cov );
+        final IAnnualCoverageCollection previousValue = covMap.put( cov.getReturnPeriod().doubleValue(), cov );
+        if( previousValue != null )
+          throw new IllegalArgumentException( "Several specific damage collections with the same return period detected: " + cov.getReturnPeriod().doubleValue() );
       }
 
       final Collection<IAnnualCoverageCollection> collections = covMap.values();
@@ -158,10 +160,10 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
 
       /* fill the probabilities and damages */
-      final double[] damage = new double[m_annualCoverageCollection.size()];
-      final double[] probability = new double[m_annualCoverageCollection.size()];
+      final double[] damage = new double[covArray.length];
+      final double[] probability = new double[covArray.length];
 
-      for( int i = probability.length - 1; i >= 0; i-- )
+      for( int i = covArray.length - 1; i >= 0; i-- )
       {
         final IAnnualCoverageCollection collection = covArray[i];
         final double value = getValue( collection, coordinate );
@@ -219,7 +221,6 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
           return riskZoneValue;
         }
       }
-
       return Double.NaN;
     }
     catch( final Exception ex )
