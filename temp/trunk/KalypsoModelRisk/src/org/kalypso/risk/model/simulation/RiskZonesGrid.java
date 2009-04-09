@@ -71,6 +71,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.util.Assert;
 
 public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 {
@@ -159,10 +160,13 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       /* This coordinate has the cs of the input grid! */
       final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
 
+      Assert.isTrue( m_annualCoverageCollection.size() == covArray.length );
+
       /* fill the probabilities and damages */
       final double[] damage = new double[covArray.length];
       final double[] probability = new double[covArray.length];
-
+      
+      
       for( int i = covArray.length - 1; i >= 0; i-- )
       {
         final IAnnualCoverageCollection collection = covArray[i];
