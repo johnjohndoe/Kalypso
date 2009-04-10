@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  * <p>
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
@@ -108,7 +108,9 @@ public class TuhhWspmProject extends WspmProject implements IWspmTuhhConstants
   public IProfileFeature createNewProfile( final String waterName, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody newWater = createWaterBody( waterName, isDirectionUpstreams );
-    return newWater.createNewProfile();
+    final IProfileFeature newProfile = newWater.createNewProfile();
+    newProfile.setProfileType( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
+    return newProfile;
   }
 
   public TuhhCalculation createCalculation( ) throws GMLSchemaException
