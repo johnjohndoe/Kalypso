@@ -1,6 +1,8 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -21,6 +22,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 //public class ProfileFeatureBinding extends AbstractCachedFeature implements IProfileFeature
@@ -156,6 +158,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
   /**
    * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setStation(double)
    */
+  @Deprecated
   @Override
   public void setStation( final double station )
   {
@@ -245,7 +248,34 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
 
     return myResults.toArray( new IObservation[] {} );
   }
-  
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setImage(java.net.URL)
+   */
+  @Override
+  public void setImage( final URL imageURL )
+  {
+    Image imageFeature = (Image) getProperty( QNAME_IMAGE_MEMBER );
+    if( imageFeature == null )
+    {
+      final IFeatureType featureType = getFeatureType();
+      final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.QNAME );
+      final IRelationType rt = (IRelationType) featureType.getProperty( QNAME_IMAGE_MEMBER );
+      imageFeature = (Image) getWorkspace().createFeature( this, rt, ft );
+      setProperty( QNAME_IMAGE_MEMBER, imageFeature );
+    }
+
+    try
+    {
+      imageFeature.setUri( imageURL.toURI() );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  // TODO: don't! Please discuss with me (Gernot)
   @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
