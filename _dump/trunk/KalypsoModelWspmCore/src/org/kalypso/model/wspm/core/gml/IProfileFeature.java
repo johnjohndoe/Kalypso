@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
@@ -67,7 +68,9 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
   public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
   public static final QName QNAME_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
-  
+
+  public static final QName QNAME_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
+
   /**
    * The scale (i.e. fraction digits) for station values.
    *
@@ -101,8 +104,10 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
   public void setSrsName( final String srsName );
 
   public WspmWaterBody getWater( );
-  
+
   public String getProfileType(  );
 
   public void setProfileType( final String type );
+
+  public void setImage( URL photoURL );
 }

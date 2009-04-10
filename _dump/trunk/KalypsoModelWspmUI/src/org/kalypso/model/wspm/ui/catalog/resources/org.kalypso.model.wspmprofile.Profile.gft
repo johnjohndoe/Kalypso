@@ -40,10 +40,10 @@
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
     <gft:group property="prof:imageMember" style="SWT.NONE">
-        <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true"/>
+        <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="4" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="2"/>
         <gft:subcomposite property="prof:imageMember" style="SWT.NONE">
-            <gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true"/>
+            <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         </gft:subcomposite>
     </gft:group>
     </gft:featureview>
