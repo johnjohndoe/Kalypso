@@ -221,5 +221,23 @@
   </swe:ItemDefinition>
  </gml:dictionaryEntry>
 
+ <gml:dictionaryEntry>
+  <swe:ItemDefinition gml:id="COMMENT">
+   <gml:name>%commentItemName</gml:name>
+   <swe:property>
+    <swe:Phenomenon gml:id="Phenomenon_Comment">
+     <gml:description/>
+     <gml:name>%commentItemUnit</gml:name>
+    </swe:Phenomenon>
+   </swe:property>
+   <swe:representation>
+     <swe:Word>
+          <swe:classification/>
+     </swe:Word>
+   </swe:representation>
+  </swe:ItemDefinition>
+ </gml:dictionaryEntry>
+
+
 
 </gml:Dictionary>

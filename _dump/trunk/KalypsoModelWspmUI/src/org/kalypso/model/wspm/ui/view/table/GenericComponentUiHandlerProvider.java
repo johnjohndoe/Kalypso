@@ -139,6 +139,9 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
+    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+      return new ComponentUiStringHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     throw new UnsupportedOperationException();
   }
 
