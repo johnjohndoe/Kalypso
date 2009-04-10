@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
 	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+    <!-- org.kalypso.model.wspmproj.WspmProject -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmproj:WspmProject:featureview:default" uri="org.kalypso.model.wspmproj.WspmProject.gft" />
 	
     <!-- org.kalypso.model.wspmboundary:Boundary -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspmboundary:Boundary:sld:default" uri="org.kalypso.model.wspmboundary.Boundary.sld" />
@@ -34,6 +37,7 @@
     <!-- org.kalypso.model.wspm.WaterBody -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:waterBodyMember:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:featureview:default" uri="org.kalypso.model.wspm.WaterBody.gft" />
 
     <!-- {org.kalypso.model.wspm}calculationMember -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:calculationMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif" />

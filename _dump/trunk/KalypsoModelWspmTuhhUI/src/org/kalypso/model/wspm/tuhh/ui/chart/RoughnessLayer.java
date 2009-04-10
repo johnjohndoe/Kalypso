@@ -59,7 +59,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
  */
 public class RoughnessLayer extends AbstractProfilLayer
 {
-
   public RoughnessLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );
@@ -69,7 +68,7 @@ public class RoughnessLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
    */
   @Override
-  public Rectangle getHoverRect( IRecord profilPoint )
+  public Rectangle getHoverRect( final IRecord profilPoint )
   {
     // TODO get HoverInfo
     return null;
@@ -79,7 +78,7 @@ public class RoughnessLayer extends AbstractProfilLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     if( getTargetComponent() == null )
       return;
@@ -94,8 +93,8 @@ public class RoughnessLayer extends AbstractProfilLayer
     final int baseLine = getTargetAxis().getScreenHeight();
     final FullRectangleFigure fr = new FullRectangleFigure();
 
-    IPointStyle ps = getPointStyle();
-    AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
+    final IPointStyle ps = getPointStyle();
+    final AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
     fr.setStyle( as );
     final IAxis dom = getDomainAxis();
     final IAxis tar = getTargetAxis();

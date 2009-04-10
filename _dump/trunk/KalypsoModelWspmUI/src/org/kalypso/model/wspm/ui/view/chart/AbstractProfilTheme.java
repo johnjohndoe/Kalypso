@@ -74,10 +74,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public void setProfil( final IProfil profil )
   {
     super.setProfil( profil );
-    for (final IChartLayer layer : getLayerManager().getLayers())
+    for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      if (layer instanceof IProfilChartLayer)
-        ((IProfilChartLayer)layer).setProfil( profil );
+      if( layer instanceof IProfilChartLayer )
+        ((IProfilChartLayer) layer).setProfil( profil );
     }
   }
 
@@ -155,7 +155,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final String m_title;
 
-  public AbstractProfilTheme(final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, id, null );
     m_title = title;
@@ -163,11 +163,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     setCoordinateMapper( cm );
     m_layerManager.addListener( m_eventListener );
     if( chartLayers != null )
+    {
       for( final IChartLayer layer : chartLayers )
       {
         m_layerManager.addLayer( layer );
         layer.setCoordinateMapper( cm );
       }
+    }
   }
 
   protected final void fireLayerContentChanged( )
@@ -182,7 +184,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
-
     if( getTargetComponent() != null )
       getProfil().setActivePointProperty( getTargetComponent() );
     final IProfilChartLayer layer = getActiveLayer();
@@ -203,6 +204,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
+    // TODO: implement combined legend entry and reuse
     final LegendEntry le = new LegendEntry( this, toString() )
     {
       @Override
@@ -351,25 +353,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return m_layerManager;
   }
 
-//  /**
-//   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getProfil()
-//   */
-//  @Override
-//  public IProfil getProfil( )
-//  {
-//    for( final IChartLayer layer : getLayerManager().getLayers() )
-//    {
-//      if( layer instanceof IProfilChartLayer )
-//      {
-//        final IProfilChartLayer pLayer = (IProfilChartLayer) layer;
-//        final IProfil profil = pLayer.getProfil();
-//        if( profil != null )
-//          return profil;
-//      }
-//    }
-//    return null;
-//  }
-
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
    */
@@ -379,7 +362,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     final IProfilChartLayer layer = getActiveLayer();
     return layer == null ? null : layer.getTargetComponent();
-
   }
 
   /**
@@ -451,6 +433,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public void removeYourself( )
   {
-    throw new UnsupportedOperationException( Messages.getString("org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
   }
 }
