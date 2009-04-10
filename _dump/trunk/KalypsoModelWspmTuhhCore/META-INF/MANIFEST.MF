@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
 Bundle-Vendor: kalypso.sourceforge.net
-Require-Bundle: org.kalypso.model.wspm.core,
+Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
+ org.kalypso.model.wspm.core,
  org.kalypso.ui,
- org.junit;resolution:=optional,
  org.kalypso.model.wspm.schema,
  org.kalypso.wspwin.core,
  de.openali.odysseus.chart.factory;bundle-version="0.2.0"
