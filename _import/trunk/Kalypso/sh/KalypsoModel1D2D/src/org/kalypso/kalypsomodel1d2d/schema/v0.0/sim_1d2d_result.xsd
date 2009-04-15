@@ -129,22 +129,22 @@ Provide schema for the result model metadata of 1d2d simulations.
 					<xs:element name="minValue" type="xs:decimal"
 						minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>kleinster Wert</xs:label>
+							<xs:documentation >
+								kleinster Wert
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>minimum value</xs:label>
+							<xs:documentation >
+								minimum value
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="maxValue" type="xs:decimal"
 						minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>größter Wert</xs:label>
+							<xs:documentation >
+								größter Wert
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>maximum value</xs:label>
+							<xs:documentation >
+								maximum value
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>

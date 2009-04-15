@@ -60,13 +60,13 @@
 	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
 		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Netzparameter (King)</xs:label>
-				<xs:tooltip>Netzparameter (King)</xs:tooltip>
+			<xs:documentation >
+				Netzparameter (King)
+				Netzparameter (King)
 			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Flowrelations (King)</xs:label>
-				<xs:tooltip>Flowrelations (King)</xs:tooltip>
+			<xs:documentation >
+				Flowrelations (King)
+				Flowrelations (King)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -78,78 +78,78 @@
 					<xs:element name="kingProfileMember" type="wb1d2d:KingProfilePropertyType" />
 					<xs:element name="width" type="xs:decimal">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Breite [m]</xs:label>
-								<xs:tooltip>Breite der Sohle des Flussschlauches [m]</xs:tooltip>
+							<xs:documentation >
+								Breite [m]
+								Breite der Sohle des Flussschlauches [m]
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Width [m]</xs:label>
-								<xs:tooltip>Width of the riverbed [m]</xs:tooltip>
+							<xs:documentation >
+								Width [m]
+								Width of the riverbed [m]
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ss1" type="xs:decimal" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Böschungsneigung rechts</xs:label>
-								<xs:tooltip>Böschungsneigung rechts</xs:tooltip>
+							<xs:documentation >
+								Böschungsneigung rechts
+								Böschungsneigung rechts
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>bankslope right</xs:label>
-								<xs:tooltip>bankslope right</xs:tooltip>
+							<xs:documentation >
+								bankslope right
+								bankslope right
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ss2" type="xs:decimal" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Böschungsneigung links</xs:label>
-								<xs:tooltip>Böschungsneigung links</xs:tooltip>
+							<xs:documentation >
+								Böschungsneigung links
+								Böschungsneigung links
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>bankslope left</xs:label>
-								<xs:tooltip>bankslope left</xs:tooltip>
+							<xs:documentation >
+								bankslope left
+								bankslope left
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="wids" type="xs:decimal">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Speicherbreite</xs:label>
-								<xs:tooltip>
+							<xs:documentation >
+								Speicherbreite
+								
 									Breite des Speichers bei Übertreten des Ufers (Summe beider Vorländer)
-								</xs:tooltip>
+								
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>TODO</xs:label>
-								<xs:tooltip>TODO</xs:tooltip>
+							<xs:documentation >
+								TODO
+								TODO
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="widbs" type="xs:decimal">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Übertretungshöhe</xs:label>
-								<xs:tooltip>
+							<xs:documentation >
+								Übertretungshöhe
+								
 									Übertretungshöhe des Ufers - entspricht geringster Höhe des Wasserstands im
 									Hochwasserspeicher
-								</xs:tooltip>
+								
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>TODO</xs:label>
-								<xs:tooltip>TODO</xs:tooltip>
+							<xs:documentation >
+								TODO
+								TODO
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="wss" type="xs:decimal" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Böschungsneigung Speicher</xs:label>
-								<xs:tooltip>Neigung der Böschung des Hochwasserspeichers</xs:tooltip>
+							<xs:documentation >
+								Böschungsneigung Speicher
+								Neigung der Böschung des Hochwasserspeichers
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>TODO</xs:label>
-								<xs:tooltip>TODO</xs:tooltip>
+							<xs:documentation >
+								TODO
+								TODO
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -171,13 +171,13 @@
 	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
 		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Netzparameter (Teschke)</xs:label>
-				<xs:tooltip>Netzparameter (Teschke)</xs:tooltip>
+			<xs:documentation >
+				Netzparameter (Teschke)
+				Netzparameter (Teschke)
 			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Flowrelations (Teschke)</xs:label>
-				<xs:tooltip>Flowrelations (Teschke)</xs:tooltip>
+			<xs:documentation >
+				Flowrelations (Teschke)
+				Flowrelations (Teschke)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -188,63 +188,63 @@
 				<xs:sequence>
 					<xs:element name="pointsMember" type="wb1d2d:HPointsPropertyType">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Punkte</xs:label>
+							<xs:documentation >
+								Punkte
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Points</xs:label>
+							<xs:documentation >
+								Points
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Polygon</xs:label>
+							<xs:documentation >
+								Polygon
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Polygone</xs:label>
+							<xs:documentation >
+								Polygone
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="station" type="xs:decimal" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Station [km]</xs:label>
-								<xs:tooltip>
+							<xs:documentation >
+								Station [km]
+								
 									Optionale Angabe der Station. Falls gesetzt, wird die Länge des FE-Elements als
 									Differenz der anliegenden Stationierung ermittelt.
-								</xs:tooltip>
+								
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Station [km]</xs:label>
-								<xs:tooltip>
+							<xs:documentation >
+								Station [km]
+								
 									TODO: I18N: Optional Angabe der Station. Falls gesetzt wird die Länge des
 									FE-Elements als Differenz der anliegenden Stationierung ermittelt.
-								</xs:tooltip>
+								
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Profil</xs:label>
-								<xs:tooltip>Referenz auf Profil</xs:tooltip>
+							<xs:documentation >
+								Profil
+								Referenz auf Profil
 								<xs:description>Referenz auf Profil</xs:description>
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Profile</xs:label>
-								<xs:tooltip>Profile Reference</xs:tooltip>
+							<xs:documentation >
+								Profile
+								Profile Reference
 								<xs:description>Reference to profile</xs:description>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="slope" type="xs:decimal" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Gefälle</xs:label>
+							<xs:documentation >
+								Gefälle
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Slope</xs:label>
+							<xs:documentation >
+								Slope
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -282,13 +282,13 @@
 	<xs:element name="BuildingFlowRelation" type="wb1d2d:AbstractBuildingFlowRelationType" abstract="true"
 		substitutionGroup="wb1d2d:_FlowRelation1D">
 		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Bauwerk (1D)</xs:label>
-				<xs:tooltip>Bauwerk (1D)</xs:tooltip>
+			<xs:documentation >
+				Bauwerk (1D)
+				Bauwerk (1D)
 			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Building (1D)</xs:label>
-				<xs:tooltip>Building (1D)</xs:tooltip>
+			<xs:documentation >
+				Building (1D)
+				Building (1D)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -299,50 +299,50 @@
 				<xs:sequence>
 					<xs:element name="kind" type="wb1d2d:buildingKind" fixed="10">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Fließformel</xs:label>
-								<xs:tooltip>Fließformel</xs:tooltip>
+							<xs:documentation >
+								Fließformel
+								Fließformel
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Kind</xs:label>
-								<xs:tooltip>Kind</xs:tooltip>
+							<xs:documentation >
+								Kind
+								Kind
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="direction" type="gml:DegreeValueType" nillable="false" default="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Richtung</xs:label>
-								<xs:tooltip>Fließrichtung des Bauwerks</xs:tooltip>
+							<xs:documentation >
+								Richtung
+								Fließrichtung des Bauwerks
 							</xs:documentation>
 							<xs:documentation>
-								<xs:label>Direction</xs:label>
-								<xs:tooltip>Direction of flow for this building</xs:tooltip>
+								Direction
+								Direction of flow for this building
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Parameter</xs:label>
-								<xs:tooltip>Parameter</xs:tooltip>
+							<xs:documentation >
+								Parameter
+								Parameter
 							</xs:documentation>
 							<xs:documentation>
-								<xs:label>Parameters</xs:label>
-								<xs:tooltip>Parameters</xs:tooltip>
+								Parameters
+								Parameters
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Profil</xs:label>
-								<xs:tooltip>Referenz auf Profil</xs:tooltip>
+							<xs:documentation >
+								Profil
+								Referenz auf Profil
 								<xs:description>Referenz auf Profil</xs:description>
 							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Profile</xs:label>
-								<xs:tooltip>Profile Reference</xs:tooltip>
+							<xs:documentation >
+								Profile
+								Profile Reference
 								<xs:description>Reference to profile</xs:description>
 							</xs:documentation>
 						</xs:annotation>
@@ -365,11 +365,11 @@
 			<xs:enumeration value="9"></xs:enumeration>
 			<xs:enumeration value="10">
 				<xs:annotation>
-					<xs:documentation xml:lang="de">
-						<xs:label>Tabellarisch</xs:label>
+					<xs:documentation >
+						Tabellarisch
 					</xs:documentation>
-					<xs:documentation xml:lang="en">
-						<xs:label>Tabular</xs:label>
+					<xs:documentation >
+						Tabular
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
@@ -379,13 +379,13 @@
 	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType"
 		substitutionGroup="wb1d2d:BuildingFlowRelation">
 		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Wehr (1D)</xs:label>
-				<xs:tooltip>Wehr (1D)</xs:tooltip>
+			<xs:documentation >
+				Wehr (1D)
+				Wehr (1D)
 			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Weir (1D)</xs:label>
-				<xs:tooltip>Weir (1D)</xs:tooltip>
+			<xs:documentation >
+				Weir (1D)
+				Weir (1D)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
@@ -399,13 +399,13 @@
 	<xs:element name="BridgeFlowRelation" type="wb1d2d:BridgeFlowRelationType"
 		substitutionGroup="wb1d2d:BuildingFlowRelation">
 		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Brücke (1D)</xs:label>
-				<xs:tooltip>Brücke (1D)</xs:tooltip>
+			<xs:documentation >
+				Brücke (1D)
+				Brücke (1D)
 			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Brücke (1D)</xs:label>
-				<xs:tooltip>Brücke (1D)</xs:tooltip>
+			<xs:documentation >
+				Brücke (1D)
+				Brücke (1D)
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>

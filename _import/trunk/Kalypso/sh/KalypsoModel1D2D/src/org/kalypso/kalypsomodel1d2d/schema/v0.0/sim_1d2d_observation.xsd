@@ -36,11 +36,8 @@
 				<xs:sequence>
 					<xs:element name="dataSourceURI" type="xs:anyURI">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Herkunft</xs:label>
-							</xs:documentation>
 							<xs:documentation>
-								<xs:label>Source</xs:label>
+								Source
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
