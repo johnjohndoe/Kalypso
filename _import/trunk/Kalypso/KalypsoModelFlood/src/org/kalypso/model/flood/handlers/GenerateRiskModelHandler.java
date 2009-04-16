@@ -1,10 +1,10 @@
 package org.kalypso.model.flood.handlers;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import ogc31.www.opengis.net.gml.FileType;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -12,10 +12,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -29,6 +32,10 @@ import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.grid.IGeoGrid;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.util.FloodModelHelper;
@@ -40,7 +47,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
@@ -48,7 +54,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class GenerateRiskModelHandler extends AbstractHandler implements IHandler
 {
-
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
@@ -106,61 +111,32 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         return null;
       }
 
-      /* The active scenario must have changed to the risk project. We can now access risk project data. */
-      final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
-      final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
-      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
-
-      // final Map<String, Integer> eventNameToAnnualityMap = new HashMap<String, Integer>();
-      // for( final IRunoffEvent runoffEvent : eventsToProcess )
-      // eventNameToAnnualityMap.put( runoffEvent.getName(), 0 );
-      //
-
-      /* --- demo code for accessing the depth grid coverage collections --- */
-
-      // get the result coverage collections (depth grids) from the events
-      final List<Feature> createdFeatures = new ArrayList<Feature>();
-      for( final IRunoffEvent runoffEvent : eventsToProcess )
+      /* Now we can import the flodd-depth grids */
+      final ICoreRunnableWithProgress importOperation = new ICoreRunnableWithProgress()
       {
-        final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-        annualCoverageCollection.setName( "[" + runoffEvent.getName() + "]" );
-        createdFeatures.add( annualCoverageCollection.getFeature() );
-        final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
-        final String rasterFolderPath = "raster/input/";
-        final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" );
-        final ICoverageCollection coverages = runoffEvent.getResultCoverages();
-        for( final ICoverage coverage : coverages )
+        @Override
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
         {
-          if( floodModelScenarioFolder != null && rasterFolder != null && coverage instanceof RectifiedGridCoverage )
+          try
           {
-            final RectifiedGridCoverage rCoverage = (RectifiedGridCoverage) coverage;
-            final Object rangeSet = rCoverage.getRangeSet();
-            // TODO: support other rangeSet types; possibly put this code into a helper class
-            if( rangeSet instanceof FileType )
-            {
-              final FileType fileType = (FileType) rangeSet;
-
-              final IResource resource = floodModelScenarioFolder.findMember( fileType.getFileName() );
-              if( resource != null && resource instanceof IFile )
-              {
-                final IFile file = (IFile) resource;
-                final String newRelativePath = rasterFolderPath.concat( file.getName() );
-                file.copy( rasterFolder.getFullPath().addTrailingSeparator().append( file.getName() ), false, new NullProgressMonitor() );
-                fileType.setFileName( newRelativePath );
-              }
-            }
+            importEvents( floodModelScenarioFolder, eventsToProcess );
           }
-          annualCoverageCollection.add( coverage );
+          catch( final CoreException e )
+          {
+            throw e;
+          }
+          catch( final InvocationTargetException e )
+          {
+            throw e;
+          }
+          catch( final Exception e )
+          {
+            throw new InvocationTargetException( e );
+          }
+          return Status.OK_STATUS;
         }
-      }
-
-      /* ------ */
-
-      // TODO: maybe save other models?
-      final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-      riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
-      riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
+      };
+      ProgressUtilities.busyCursorWhile( importOperation, "Failed to import flood depth data into new project" );
     }
     catch( final Exception e )
     {
@@ -170,6 +146,56 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     }
     return null;
 
+  }
+
+  protected void importEvents( final IFolder floodModelScenarioFolder, final IRunoffEvent[] eventsToProcess ) throws CoreException, Exception, InvocationTargetException
+  {
+    /* The active scenario must have changed to the risk project. We can now access risk project data. */
+    final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
+    final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
+    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
+
+    /* --- demo code for accessing the depth grid coverage collections --- */
+    final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
+    final String rasterFolderPath = "raster/input/";
+    final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" );
+
+    Assert.isNotNull( floodModelScenarioFolder );
+    Assert.isNotNull( rasterFolder );
+
+    // get the result coverage collections (depth grids) from the events
+    final List<Feature> createdFeatures = new ArrayList<Feature>();
+    for( final IRunoffEvent runoffEvent : eventsToProcess )
+    {
+      final IAnnualCoverageCollection annualCoverageCollection = waterlevelCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+      annualCoverageCollection.setName( runoffEvent.getName() );
+      createdFeatures.add( annualCoverageCollection.getFeature() );
+
+      final ICoverageCollection coverages = runoffEvent.getResultCoverages();
+      int coverageCount = 0;
+      for( final ICoverage coverage : coverages )
+      {
+        final String targetFileName = String.format( "grid_%d_%d.ascbin", annualCoverageCollection.getReturnPeriod(), coverageCount );
+        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
+        final String targetGridPath = rasterFolderPath + targetFileName;
+        final File targetFile = new File( rasterFolder.getLocation().toFile(), targetFileName );
+
+        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", new NullProgressMonitor() );
+        newCoverage.setName( "" + coverageCount );
+        newCoverage.setDescription( String.format( "Imported from KalypsoFlood" ) );
+        grid.dispose();
+
+        coverageCount++;
+      }
+    }
+
+    /* ------ */
+    // TODO: maybe save other models?
+    final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+    riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
   }
 
   /**
