@@ -69,6 +69,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
       final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
+      widget.setAllowUserChangeGridFolder( false );
 
       final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePage ); //$NON-NLS-1$
       job.schedule();
