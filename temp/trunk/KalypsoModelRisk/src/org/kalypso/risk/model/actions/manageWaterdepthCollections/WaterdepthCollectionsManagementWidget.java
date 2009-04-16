@@ -98,11 +98,13 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
@@ -257,11 +259,26 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
               m_buttonsMap.get( "CHANGE" ).setEnabled( false ); //$NON-NLS-1$
               m_buttonsMap.get( "REMOVE" ).setEnabled( false ); //$NON-NLS-1$
             }
-            if( feature.getAdapter( IAnnualCoverageCollection.class ) != null )
+
+            final IAnnualCoverageCollection coverageCollection = (IAnnualCoverageCollection) feature.getAdapter( IAnnualCoverageCollection.class );
+            if( coverageCollection != null )
             {
               m_buttonsMap.get( "ADD" ).setEnabled( true ); //$NON-NLS-1$
               m_buttonsMap.get( "CHANGE" ).setEnabled( true ); //$NON-NLS-1$
               m_buttonsMap.get( "REMOVE" ).setEnabled( true ); //$NON-NLS-1$
+
+              /* Check/Add event-themes to map */
+              final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
+              Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
+              try
+              {
+                RiskModelHelper.addEventThemes( wspThemes, coverageCollection );
+              }
+              catch( final CoreException e )
+              {
+                e.printStackTrace();
+                ErrorDialog.openError( parent.getDisplay().getActiveShell(), "Themen erzeugen", "Fehler beim Erzeugen des Ereignisthemas", e.getStatus() );
+              }
             }
           }
         }
@@ -279,7 +296,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
     sc.setMinHeight( size.y );
-    // sc.setMinSize( panel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
 
     return panel;
   }
@@ -461,15 +477,21 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       return;
 
     final String eventName = "HQ " + dialog.getValue(); //$NON-NLS-1$
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
-    Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
 
-    final ICoreRunnableWithProgress operation = new AddCollectionOperation( eventName, Integer.parseInt( dialog.getValue() ), model, wspThemes, m_dataProvider );
+    final AddCollectionOperation operation = new AddCollectionOperation( eventName, Integer.parseInt( dialog.getValue() ), model, m_dataProvider );
 
     final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
-    if( !resultStatus.isOK() )
+    if( resultStatus.isOK() )
+    {
+      /* Select newly created event */
+      final StructuredSelection structuredSelection = new StructuredSelection( operation.getNewFeature() );
+      m_eventViewer.setSelection( structuredSelection );
+    }
+    else
+    {
       KalypsoRiskPlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.36" ), Messages.getString( "WaterdepthCollectionsManagementWidget.37" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "WaterdepthCollectionsManagementWidget.36" ), Messages.getString( "WaterdepthCollectionsManagementWidget.37" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
   }
 
   protected void handleChange( final Event event )

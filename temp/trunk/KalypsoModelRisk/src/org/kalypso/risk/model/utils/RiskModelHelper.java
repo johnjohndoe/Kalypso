@@ -34,6 +34,8 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
@@ -65,7 +67,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -117,7 +119,7 @@ public class RiskModelHelper
   /**
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
-   * 
+   *
    * @param scenarioFolder
    *          scenario folder
    * @param polygonCollection
@@ -149,7 +151,7 @@ public class RiskModelHelper
          *      from the underlying polygon.
          */
         @Override
-        public double getValue( int x, int y ) throws GeoGridException
+        public double getValue( final int x, final int y ) throws GeoGridException
         {
           try
           {
@@ -202,7 +204,7 @@ public class RiskModelHelper
               return Double.NaN;
             }
           }
-          catch( Exception ex )
+          catch( final Exception ex )
           {
             throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.0" ), ex ); //$NON-NLS-1$
           }
@@ -251,7 +253,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   * 
+   *
    * @param parentKalypsoTheme
    *          {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -296,8 +298,8 @@ public class RiskModelHelper
   public static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme )
   {
     final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
-    for( int i = 0; i < childThemes.length; i++ )
-      parentKalypsoTheme.removeTheme( childThemes[i] );
+    for( final IKalypsoTheme childTheme : childThemes )
+      parentKalypsoTheme.removeTheme( childTheme );
   }
 
   /**
@@ -328,9 +330,9 @@ public class RiskModelHelper
   }
 
   /**
-   * 
+   *
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   * 
+   *
    * @param scenarioFolder
    *          relative path needed for the output file path to append on
    * @param inputCoverages
@@ -361,7 +363,7 @@ public class RiskModelHelper
            *      class
            */
           @Override
-          public double getValue( int x, int y ) throws GeoGridException
+          public double getValue( final int x, final int y ) throws GeoGridException
           {
             progress.setWorkRemaining( sizeY + 2 );
 
@@ -399,7 +401,7 @@ public class RiskModelHelper
                 return Double.NaN;
               }
             }
-            catch( Exception ex )
+            catch( final Exception ex )
             {
               throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.10" ), ex ); //$NON-NLS-1$
             }
@@ -426,7 +428,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   * 
+   *
    * @param waterDepthCoverageCollection
    *          raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -448,7 +450,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -477,7 +479,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -534,9 +536,9 @@ public class RiskModelHelper
       final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
       final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
       final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
-      for( int j = 0; j < childThemes.length; j++ )
-        if( childThemes[j].getName().getKey().equals( layerName ) )
-          themesToRemove.add( childThemes[j] );
+      for( final IKalypsoTheme childTheme : childThemes )
+        if( childTheme.getName().getKey().equals( layerName ) )
+          themesToRemove.add( childTheme );
     }
     for( final IKalypsoTheme themeToRemove : themesToRemove )
       parentKalypsoTheme.removeTheme( themeToRemove );
@@ -586,7 +588,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   * 
+   *
    */
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
@@ -651,8 +653,46 @@ public class RiskModelHelper
 
       /* set the average annual damage value for the current landuse class */
       landuseClass.setAverageAnnualDamage( averageSum );
-
     }
+  }
+
+  public static void addEventThemes( final IKalypsoCascadingTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection ) throws CoreException
+  {
+    // Check, if theme already exists
+    final String featurePath = "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember"; //$NON-NLS-1$ //$NON-NLS-2$
+    final IKalypsoFeatureTheme existingTheme = CascadingThemeHelper.findThemeWithFeaturePath( parentKalypsoTheme, featurePath );
+    if( existingTheme != null )
+      return;
+
+    final String layerName = annualCoverageCollection.getName();
+    final StyledLayerType layer = new StyledLayerType();
+    layer.setName( layerName );
+    layer.setFeaturePath( featurePath );
+    layer.setLinktype( "gml" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    layer.setVisible( true );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setHref( "../models/RasterDataModel.gml" );
+    layer.setVisible( true );
+    final Property layerPropertyDeletable = new Property();
+    layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+    layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
+    final Property layerPropertyThemeInfoId = new Property();
+    layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$
+    final List<Property> layerPropertyList = layer.getProperty();
+    layerPropertyList.add( layerPropertyDeletable );
+    layerPropertyList.add( layerPropertyThemeInfoId );
+    final List<Style> styleList = layer.getStyle();
+    final Style style = new Style();
+    style.setLinktype( "sld" ); //$NON-NLS-1$
+    style.setStyle( "Kalypso style" ); //$NON-NLS-1$
+    style.setActuate( "onRequest" ); //$NON-NLS-1$
+    style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
+    style.setType( "simple" ); //$NON-NLS-1$
+    styleList.add( style );
+
+    parentKalypsoTheme.addLayer( layer );
   }
 
 }
