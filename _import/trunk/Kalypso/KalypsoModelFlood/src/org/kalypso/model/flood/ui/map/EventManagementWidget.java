@@ -171,7 +171,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- *
+ * 
  * @author Thomas Jung
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -191,8 +191,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private TableViewer m_colorMapTableViewer;
 
   private StyledLayerDescriptor m_sld;
-
-  private IFile m_styleFile;
 
   public EventManagementWidget( )
   {
@@ -492,12 +490,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         {
           try
           {
-            final String charset = m_styleFile.getCharset();
+            final IFile styleFile = getSldFile( runoffEvent );
+
+            final String charset = styleFile.getCharset();
 
             final String sldXML = m_sld.exportAsXML();
             final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
 
-            m_styleFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), false, true, new NullProgressMonitor() );
+            if( styleFile.exists() )
+              styleFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), false, true, new NullProgressMonitor() );
+            else
+              styleFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, new NullProgressMonitor() );
           }
           catch( final CoreException e )
           {
@@ -524,8 +527,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         return;
       }
 
-      m_styleFile = getSldFile( event );
-      final PolygonColorMap colorMap = findColorMap();
+      final IFile styleFile = getSldFile( event );
+      final PolygonColorMap colorMap = findColorMap( styleFile );
 
       m_colorMapTableViewer.setInput( colorMap );
     }
@@ -535,11 +538,16 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
   }
 
-  private PolygonColorMap findColorMap( )
+  private PolygonColorMap findColorMap( final IFile styleFile )
   {
     try
     {
-      m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( m_styleFile ) );
+      // TODO: should fallback to a default style file if m_styleFile does not yet exists
+      if( styleFile.exists() )
+        m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
+      else
+        m_sld = SLDFactory.createSLD( getClass().getResource( "resources/wsp.sld" ) );
+
       final NamedLayer wspLayer = m_sld.getNamedLayer( "wspLayer" );
       final UserStyle style = (UserStyle) wspLayer.getStyle( "wspUserStyle" );
       final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );

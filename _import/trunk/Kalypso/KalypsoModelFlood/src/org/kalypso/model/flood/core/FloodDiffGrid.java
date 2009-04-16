@@ -200,7 +200,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       }
       return Double.NaN;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -310,7 +310,6 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   {
     if( minValue != null )
       m_min = minValue;
-
   }
-
+  
 }
