@@ -141,7 +141,6 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("unchecked")
   private IStatus updateTinReference( final ITinReference ref, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( ref.getName(), 100 );

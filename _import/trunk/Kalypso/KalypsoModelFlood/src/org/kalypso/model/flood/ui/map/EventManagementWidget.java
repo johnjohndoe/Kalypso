@@ -166,7 +166,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- * 
+ *
  * @author Thomas Jung
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -212,7 +212,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
-      final IFloodModel model = dataProvider.getModel( IFloodModel.class );
+      final IFloodModel model = dataProvider.getModel( IFloodModel.class.getName(), IFloodModel.class );
       if( model != null )
       {
         m_dataProvider = dataProvider;
@@ -318,7 +318,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       {
         try
         {
-          m_dataProvider.postCommand( IFloodModel.class, changeCommand );
+          m_dataProvider.postCommand( IFloodModel.class.getName(), changeCommand );
           updateThemeNames();
         }
         catch( final Exception e )
@@ -615,7 +615,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( event != null )
       return event;
 
-    final Feature parent = feature.getParent();
+    final Feature parent = feature.getOwner();
     if( parent == null )
       return null;
 
@@ -878,7 +878,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     getMapPanel().setBoundingBox( scaledBox );
   }
 
-  @SuppressWarnings("unchecked")
   protected void handleMove( final Event event, final int step )
   {
     if( m_treeSelection == null )
@@ -893,7 +892,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     final Feature selectedFeature = (Feature) m_treeSelection[0];
 
-    final Feature parentFeature = selectedFeature.getParent();
+    final Feature parentFeature = selectedFeature.getOwner();
     final IPropertyType pt = selectedFeature.getParentRelation();
 
     final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
@@ -908,7 +907,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final SzenarioDataProvider sdProvider = m_dataProvider;
     try
     {
-      sdProvider.postCommand( IFloodModel.class, command );
+      sdProvider.postCommand( IFloodModel.class.getName(), command );
     }
     catch( final Exception e )
     {
@@ -1268,7 +1267,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
               final Feature feature = (Feature) object;
 
               // the papa papa of the coverage is the event
-              final Feature parent = feature.getParent().getParent();
+              final Feature parent = feature.getOwner().getOwner();
               if( parent != null )
               {
                 if( parent.getId().equals( event.getGmlID() ) )

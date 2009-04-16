@@ -69,7 +69,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         return null;
       }
 
-      /* collect the flood model data, that is needed for Risk Modeler */
+      /* collect the flood model data, that is needed for Risk Modeller */
       // get the data provider
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" );
@@ -94,7 +94,6 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       }
 
       /* Create Risk Projekt: show project new dialog */
-
       final IAction action = new NewWizardShortcutAction( workbenchWindow, wizardDesc );
       action.run();
 
@@ -107,7 +106,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         return null;
       }
 
-      /* The active scenario must have changed to the risk project. We can now acces risk project data. */
+      /* The active scenario must have changed to the risk project. We can now access risk project data. */
       final SzenarioDataProvider riskDataProvider = ScenarioHelper.getScenarioDataProvider();
       final IRasterDataModel rasterDataModel = riskDataProvider.getModel( IRasterDataModel.class );
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
