@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.handlers;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -72,6 +74,8 @@ import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.util.SimulationUtilitites;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -202,7 +206,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
         final IStatus status;
         try
         {
-          status = ModelNature.runCalculation( scenarioFolder, monitor, SimulationKalypsoFlood.getModeldata() );
+          status = ModelNature.runCalculation( scenarioFolder, monitor, getModeldata() );
           if( status.isOK() )
           {
             // handle results if job is successful
@@ -233,6 +237,19 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     };
     job.setUser( true );
     job.schedule( 50 );
+  }
+
+  final Modeldata getModeldata( )
+  {
+    final Map<String, String> inputs = new HashMap<String, String>();
+    inputs.put( SimulationKalypsoFlood.INPUT_FLOOD_MODEL, "models/flood.gml" );
+    inputs.put( SimulationKalypsoFlood.INPUT_GRID_FOLDER, "grids" );
+
+    final Map<String, String> outputs = new HashMap<String, String>();
+    outputs.put( SimulationKalypsoFlood.OUTPUT_FLOOD_MODEL, "models/flood.gml" );
+    outputs.put( SimulationKalypsoFlood.OUTPUT_EVENTS_BASE_FOLDER, "events" );
+
+    return SimulationUtilitites.createModelData( SimulationKalypsoFlood.TYPEID, inputs, true, outputs, true );
   }
 
   protected static void showInfoDialog( final Shell shell, final String message )
