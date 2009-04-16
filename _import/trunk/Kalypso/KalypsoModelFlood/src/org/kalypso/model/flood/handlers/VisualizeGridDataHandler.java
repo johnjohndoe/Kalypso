@@ -54,6 +54,7 @@ public class VisualizeGridDataHandler extends AbstractHandler implements IHandle
       final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Geländedaten verwalten", "Geländedaten verwalten" );
       final IFolder scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
       coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
+      coverageManagementWidget.setAllowUserChangeGridFolder( false );
 
       final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage );
       job.schedule();
