@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="WINDOWS-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <flood:FloodModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:flood="org.kalypso.model.flood" gml:id="root">
  <flood:eventMember>
   <flood:RunoffEvent gml:id="RunoffEvent12120677134540">
@@ -2498,7 +2498,7 @@ Datum: 29.05.2008 15:32</gml:description>
         </gml:File>
        </gml:rangeSet>
        <gml:description>erzeugt am: 29.05.2008 - Thu May 29 15:41:21 CEST 2008</gml:description>
-       <gml:name>Fließtiefen - dgm.asc</gml:name>
+       <gml:name>FlieÃŸtiefen - dgm.asc</gml:name>
       </gml:RectifiedGridCoverage>
      </cov:coverageMember>
     </cov:CoverageCollection>
@@ -5004,7 +5004,7 @@ Datum: 29.05.2008 15:32</gml:description>
         </gml:File>
        </gml:rangeSet>
        <gml:description>erzeugt am: 29.05.2008 - Thu May 29 15:42:05 CEST 2008</gml:description>
-       <gml:name>Fließtiefen - dgm.asc</gml:name>
+       <gml:name>FlieÃŸtiefen - dgm.asc</gml:name>
       </gml:RectifiedGridCoverage>
      </cov:coverageMember>
     </cov:CoverageCollection>
@@ -5041,7 +5041,7 @@ Datum: 29.05.2008 15:32</gml:description>
      </rectifiedGridDomain>
      <gml:rangeSet xmlns:ns3="http://www.w3.org/2001/SMIL20/" xmlns:swe="http://www.opengis.net/swe" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns1="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language">
       <gml:File>
-       <gml:fileName>platform:/resource//FloodDemo/Basis/grids/dgm.asc36675.bin</gml:fileName>
+       <gml:fileName>./../grids/dgm.asc36675.bin</gml:fileName>
        <gml:fileStructure>Record Interleaved</gml:fileStructure>
        <gml:mimeType>image/bin</gml:mimeType>
       </gml:File>
