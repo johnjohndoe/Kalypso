@@ -97,6 +97,9 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" class="org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler">
+			<activeWhen>
+				<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+			</activeWhen>
 		</handler>
 	</extension>
 
@@ -107,29 +110,20 @@
 					<reference definitionId="org.kalypso.ui.rrm.definition.oneLanduseThemeSelected"/>
 				</visibleWhen>
 			</command>
-		</menuContribution>
-	</extension>
-	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.RRMImportPedology" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.kalypso.ui.rrm.definition.onePedologyThemeSelected"/>
 				</visibleWhen>
 			</command>
-		</menuContribution>
-	</extension>
-	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.RRMImportGeology" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected"/>
 				</visibleWhen>
 			</command>
-		</menuContribution>
-	</extension>
-	<extension point="org.eclipse.ui.menus">
-   		<menuContribution locationURI="popup:org.kalypso.map.outline.GisMapEditor?after=additions">
 			<command commandId="org.kalypso.ui.map.outline.command.RRMCreateHydrotops" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected"/>
+				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
@@ -145,8 +139,6 @@
 				</and>
 			</with>
 		</definition>
-	</extension>
-	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ui.rrm.definition.onePedologyThemeSelected">
 			<with variable="selection">
 				<and>
@@ -157,8 +149,6 @@
 				</and>
 			</with>
 		</definition>
-	</extension>
-	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.ui.rrm.definition.oneGeologyThemeSelected">
 			<with variable="selection">
 				<and>
@@ -166,6 +156,30 @@
 					<iterate ifEmpty="false" operator="and">
 						<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
 					</iterate>
+				</and>
+			</with>
+		</definition>
+		<definition id="org.kalypso.ui.rrm.definition.onlyRRMThemesSelected">
+			<with variable="selection">
+				<and>
+					<count value="+"/>
+					<or>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/geologie}Geologie"/>
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/pedologie}Soiltype"/>
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://sourceforge.kalypso.org/schemata/hydrology/landuse}Landuse"/>					
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/hydrotop}Hydrotop"/>					
+						</iterate>
+						<iterate ifEmpty="false" operator="or">
+							<test property="org.kalypso.ui.test.theme.qname" value="{http://www.tuhh.de/kalypsoNA}Catchment"/>					
+						</iterate>
+					</or>
 				</and>
 			</with>
 		</definition>
