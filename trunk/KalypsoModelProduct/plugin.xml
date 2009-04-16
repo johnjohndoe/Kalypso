@@ -54,6 +54,14 @@
             introId="org.kalypso.model.product.introID"
             productId="org.kalypso.model.product.product">
       </introProductBinding>
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.kalypso.model.product.intro">
+      </intro>
+      <introProductBinding
+            introId="org.kalypso.model.product.intro"
+            productId="org.kalypso.planer.client.manager.product">
+      </introProductBinding>
    </extension>
     <extension
          point="org.eclipse.ui.activities">
@@ -94,6 +102,22 @@
             id="org.kalypso.model.product.activity">
       </defaultEnablement>
    </extension>
+    <extension
+          point="org.eclipse.ui.intro.config">
+       <config
+             content="introContent.xml"
+             id="org.kalypso.model.product.introConfigId"
+             introId="org.kalypso.model.product.intro">
+          <presentation
+                home-page-id="root">
+             <implementation
+                   kind="html"
+                   os="win32,linux,macosx"
+                   style="content/shared.css">
+             </implementation>
+          </presentation>
+       </config>
+    </extension>
 
 
 </plugin>
