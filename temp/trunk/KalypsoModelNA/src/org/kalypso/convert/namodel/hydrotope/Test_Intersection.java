@@ -46,6 +46,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.binding.Geology;
@@ -101,13 +102,13 @@ public class Test_Intersection extends TestCase
 
     final FeatureList hydrotopFeatureList = (FeatureList) outputWS.getRootFeature().getProperty( NaModelConstants.HYDRO_MEMBER );
     final IFeatureType typeHydrotop = outputWS.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT );
-    
+
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
     geometryIntersector.addFeatureList( catchmentFeatureList );
     geometryIntersector.addFeatureList( soilTypesFeatureList );
     geometryIntersector.addFeatureList( geologiesFeatureList );
     geometryIntersector.addFeatureList( landuseFeatureList );
-    final List<MultiPolygon> intersectionList = geometryIntersector.intersect( );
+    final List<MultiPolygon> intersectionList = geometryIntersector.intersect( new NullProgressMonitor() );
 
     hydrotopFeatureList.clear();
     for( final Geometry geometry : intersectionList )

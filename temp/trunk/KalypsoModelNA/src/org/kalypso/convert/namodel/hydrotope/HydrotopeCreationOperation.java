@@ -43,8 +43,11 @@ package org.kalypso.convert.namodel.hydrotope;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.schema.binding.Geology;
@@ -66,7 +69,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 /**
  * Creates and writes hydrotops into a 'hydrotop.gml' file from 'modell.gml' (catchments), 'pedologie.gml',
  * 'geologie.gml' and 'landuse.gml'
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class HydrotopeCreationOperation implements IRunnableWithProgress
@@ -100,22 +103,36 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
    * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+  public void run( final IProgressMonitor monitor ) throws InvocationTargetException
   {
+    final SubMonitor progress = SubMonitor.convert( monitor, "Hydrotope Intersection", 100 );
+
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
     geometryIntersector.addFeatureList( m_catchmentsList );
     geometryIntersector.addFeatureList( m_pedologyList );
     geometryIntersector.addFeatureList( m_geologyList );
     geometryIntersector.addFeatureList( m_landuseList );
-    geometryIntersector.setMonitor( monitor );
-    geometryIntersector.setMonitorPercent( 70 );
     List<MultiPolygon> intersectionList;
     try
     {
-      intersectionList = geometryIntersector.intersect();
+      progress.setTaskName( "Step 1/2: Geometric intersection" );
+      intersectionList = geometryIntersector.intersect( progress.newChild( 50 ) );
+
+      progress.setTaskName( "Step 2/2: Creation of hydrotope features" );
+      progress.setWorkRemaining( intersectionList.size() );
+
       m_outputList.clear();
+      int count = 0;
       for( final Geometry geometry : intersectionList )
       {
+        if( count % 100 == 0 )
+          progress.subTask( String.format( "Creating features... (%d of %d)", count, intersectionList.size() ) );
+        count++;
+
+        // TODO: belongs to the end of this loop, but there are just too many else's
+        // Better: put into sub-method and 'return' instead of 'continue'
+        ProgressUtilities.worked( monitor, 1 );
+
         final Feature feature = m_outputWorkspace.createFeature( null, null, m_outputFeatureType );
         final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal() );
         final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
@@ -209,6 +226,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       }
     }
     catch( final GM_Exception e )
+    {
+      throw new InvocationTargetException( e );
+    }
+    catch( final CoreException e )
     {
       throw new InvocationTargetException( e );
     }

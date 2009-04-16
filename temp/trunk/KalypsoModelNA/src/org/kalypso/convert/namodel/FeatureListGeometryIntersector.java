@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
@@ -46,8 +46,10 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -65,7 +67,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for intersecting a number of feature geometry layers
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class FeatureListGeometryIntersector
@@ -74,19 +76,15 @@ public class FeatureListGeometryIntersector
 
   private Envelope m_bbox; // index bounding box
 
-  private List<Geometry> m_coverBuffer = new ArrayList<Geometry>();
+  private final List<Geometry> m_coverBuffer = new ArrayList<Geometry>();
 
   // better performances if layers with smaller number of (big) polygons are processed first - the reason for sorted
   // map...
-  private SortedMap<Integer, FeatureList> m_sourceLayers = new TreeMap<Integer, FeatureList>();
+  private final SortedMap<Integer, FeatureList> m_sourceLayers = new TreeMap<Integer, FeatureList>();
 
   private boolean m_initialized = false;
 
   private long m_numberOfFeatures = 0;
-
-  private IProgressMonitor m_monitor = null;
-
-  private int m_monitorPrecentage = 100;
 
   public FeatureListGeometryIntersector( )
   {
@@ -95,10 +93,11 @@ public class FeatureListGeometryIntersector
 
   public FeatureListGeometryIntersector( final List<FeatureList> sourceFeatureLists )
   {
-    this();
     for( final FeatureList featureList : sourceFeatureLists )
+    {
       if( featureList != null && featureList.size() > 0 )
         m_sourceLayers.put( featureList.size(), featureList );
+    }
   }
 
   public void addFeatureList( final FeatureList featureList )
@@ -128,8 +127,6 @@ public class FeatureListGeometryIntersector
         m_bbox.expandToInclude( JTSAdapter.export( layer.getBoundingBox() ) );
       }
       m_index = new SplitSortSpatialIndex( m_bbox );
-      if( m_monitor == null )
-        m_monitor = new NullProgressMonitor();
       m_initialized = true;
       return true;
     }
@@ -138,29 +135,33 @@ public class FeatureListGeometryIntersector
   }
 
   /**
-   * Intersects features given as a list of feature lists, produces the result into the resultList
+   * Intersects features given as a list of feature lists, produces the result into the resultList<br>
    */
-  public List<MultiPolygon> intersect( ) throws GM_Exception, InterruptedException
+  public List<MultiPolygon> intersect( final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
+    final SubMonitor progress = SubMonitor.convert( monitor, "Geometry Intersection", 1000 );
+
+    progress.subTask( "Initialising spatial index..." );
     final List<MultiPolygon> resultGeometryList = new ArrayList<MultiPolygon>();
     if( !init() )
       return resultGeometryList;
-    m_monitor.subTask( "Intersecting..." );
-    final long tick = m_numberOfFeatures / m_monitorPrecentage;
-    long processedFeatures = 0;
-    int worked = 0;
-    final Iterator<FeatureList> layers = m_sourceLayers.values().iterator();
-    while( layers.hasNext() )
+    progress.worked( 100 );
+
+    /* Find out num feature */
+    int countFeatures = 0;
+    for( final FeatureList list : m_sourceLayers.values() )
+      countFeatures += list.size();
+    progress.setWorkRemaining( countFeatures );
+
+    int count = 0;
+    for( final FeatureList featureList : m_sourceLayers.values() )
     {
-      final FeatureList featureList = layers.next();
       for( final Feature feature : featureList.toFeatures() )
       {
-        if( ++processedFeatures % tick == 0 )
-        {
-          m_monitor.worked( ++worked );
-          if( m_monitor.isCanceled() )
-            throw new InterruptedException();
-        }
+        if( count % 100 == 0 )
+          progress.subTask( String.format( "Intersecting polygones... (%d of %d)", count, countFeatures ) );
+        count++;
+
         final List<Geometry> featurePolygons = removeGeometryCollections( JTSAdapter.export( feature.getDefaultGeometryPropertyValue() ) );
         for( final Geometry featurePolygon : featurePolygons )
         {
@@ -233,6 +234,8 @@ public class FeatureListGeometryIntersector
           {
             // e.printStackTrace();
           }
+
+          ProgressUtilities.worked( progress, 1 );
         }
       }
     }
@@ -343,16 +346,6 @@ public class FeatureListGeometryIntersector
       }
     }
     return list;
-  }
-
-  public void setMonitor( final IProgressMonitor monitor )
-  {
-    m_monitor = monitor == null ? new NullProgressMonitor() : monitor;
-  }
-
-  public void setMonitorPercent( final int monitorPrecentage )
-  {
-    m_monitorPrecentage = monitorPrecentage;
   }
 
 }
