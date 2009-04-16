@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.simulation;
 
@@ -94,7 +94,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Dejan Antanaskovic
- * 
+ *
  */
 public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSpecKalypsoRisk, ISimulation
 {
@@ -131,8 +131,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
 
       final File outputRasterTmpDir = new File( tmpdir, "outputRaster" );
       outputRasterTmpDir.mkdir();
-      // doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 0.5 );
-      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor, 1.0 );
+
+      doRiskZonesCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor );
       final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir );
       GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" );
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
@@ -144,7 +144,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
     }
   }
 
-  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
+  private void doRiskZonesCalculation( final File tmpdir, final IRasterizationControlModel controlModel, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor ) throws SimulationException
   {
     monitor.setMessage( Messages.getString( "RiskZonesCalculationHandler.7" ) ); //$NON-NLS-1$
 
@@ -157,7 +157,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
       final ICoverageCollection coverageCollection = rasterModel.getRiskZonesCoverage();
       for( final ICoverage coverage : coverageCollection )
         CoverageManagementHelper.deleteGridFile( coverage );
-      
+
       coverageCollection.clear();
       controlModel.resetStatistics();
 
@@ -176,7 +176,7 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
         final IGeoGrid outputGrid = new RiskZonesGrid( inputGrid, rasterModel.getSpecificDamageCoverageCollection(), vectorModel.getLandusePolygonCollection(), controlModel.getLanduseClassesList(), controlModel.getRiskZoneDefinitionsList() );
 
         // TODO: change name: better: use input name
-        final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final String outputCoverageFileName = "RiskZonesCoverage_" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$
         final String outputCoverageFileRelativePath = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + outputCoverageFileName;
         final File outputCoverageFile = new File( tmpdir.getAbsolutePath(), outputCoverageFileName );
         final ICoverage newCoverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, outputCoverageFile, outputCoverageFileRelativePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
