@@ -18,8 +18,8 @@ import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.ui.map.EventManagementWidget;
 import org.kalypso.model.flood.util.FloodModelHelper;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -38,9 +38,9 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
 
   protected final SzenarioDataProvider m_provider;
 
-  private final AbstractCascadingLayerTheme m_wspThemes;
+  private final IKalypsoCascadingTheme m_wspThemes;
 
-  public RemoveEventOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final AbstractCascadingLayerTheme wspThemes )
+  public RemoveEventOperation( final Object[] treeSelection, final SzenarioDataProvider provider, final IKalypsoCascadingTheme wspThemes )
   {
     m_treeSelection = treeSelection;
     m_provider = provider;
@@ -105,7 +105,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
-  private void deleteThemes( final AbstractCascadingLayerTheme wspThemes, final IRunoffEvent event )
+  private void deleteThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event )
   {
     final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )

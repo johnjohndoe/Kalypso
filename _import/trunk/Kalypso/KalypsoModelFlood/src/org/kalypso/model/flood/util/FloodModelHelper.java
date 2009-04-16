@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.flood.util;
 
@@ -59,8 +59,8 @@ import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -77,17 +77,16 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class FloodModelHelper
 {
-
   /**
    * gets the index of a given wsp theme inside the cascading "wasserspiegellagen" theme.
-   * 
+   *
    * @return index of the wsp theme or -1 if none is found
    */
-  public static int findWspTheme( final IRunoffEvent runoffEvent, final AbstractCascadingLayerTheme wspTheme )
+  public static int findWspTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
   {
     final IKalypsoTheme[] themes = wspTheme.getAllThemes();
 
@@ -98,7 +97,7 @@ public class FloodModelHelper
       {
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final FeatureList featureList = ft.getFeatureList();
-        if( featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
+        if( featureList != null && featureList.getParentFeatureTypeProperty().getQName().equals( IRunoffEvent.QNAME_PROP_TIN_MEMBER ) )
         {
           final Feature parentFeature = featureList.getParentFeature();
           if( parentFeature.getId().equals( runoffEvent.getFeature().getId() ) )
@@ -110,10 +109,41 @@ public class FloodModelHelper
   }
 
   /**
+   * gets the index of a given result theme inside the cascading "wasserspiegellagen" theme.
+   *
+   * @return index of the result theme or -1 if none is found
+   */
+  public static int findResultTheme( final IRunoffEvent runoffEvent, final IKalypsoCascadingTheme wspTheme )
+  {
+    final IKalypsoTheme[] themes = wspTheme.getAllThemes();
+
+    for( int i = 0; i < themes.length; i++ )
+    {
+      final IKalypsoTheme theme = themes[i];
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final FeatureList featureList = ft.getFeatureList();
+        if( featureList != null && featureList.getParentFeature() != null )
+        {
+          final Feature grandPa = featureList.getParentFeature();
+          if( grandPa != null && grandPa.getParentRelation() != null && grandPa.getParentRelation().getQName().equals( IRunoffEvent.QNAME_PROP_RESULT_COVERAGES ) )
+          {
+            final Feature grandGrandPa = grandPa.getOwner();
+            if( grandGrandPa.getId().equals( runoffEvent.getFeature().getId() ) )
+              return i;
+          }
+        }
+      }
+    }
+    return -1;
+  }
+
+  /**
    * removes wsp themes in the cascading "wasserspiegellagen" theme; only coverages referenced by the entries of
    * eventsToRemove array will be removed; if eventsToRemove is null, all wsp themes will be removed
    */
-  public static void removeWspThemes( final AbstractCascadingLayerTheme wspTheme, final IRunoffEvent[] eventsToRemove )
+  public static void removeWspThemes( final IKalypsoCascadingTheme wspTheme, final IRunoffEvent[] eventsToRemove )
   {
     final IKalypsoTheme[] themes = wspTheme.getAllThemes();
 
@@ -157,7 +187,7 @@ public class FloodModelHelper
   /**
    * adds a coverage theme inside the cascading "wasserspiegellagen" theme for a given event at a given index
    */
-  public static void addResultTheme( final IRunoffEvent event, final AbstractCascadingLayerTheme theme, final int index ) throws Exception
+  public static void addResultTheme( final IRunoffEvent event, final IKalypsoCascadingTheme theme, final int index ) throws Exception
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
@@ -240,11 +270,11 @@ public class FloodModelHelper
 
   /**
    * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
-   * 
+   *
    * @param shell
    * @param events
    *          the RunoffEvents
-   * 
+   *
    * @return a array of selected {@link IRunoffEvent}
    */
   public static IRunoffEvent[] askUserForEvents( final Shell shell, final IFeatureWrapperCollection<IRunoffEvent> events )
@@ -255,7 +285,7 @@ public class FloodModelHelper
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
       @Override
-      public String getText( Object element )
+      public String getText( final Object element )
       {
         final IRunoffEvent event = (IRunoffEvent) element;
         final ICoverageCollection resultCoverages = event.getResultCoverages();
@@ -293,9 +323,9 @@ public class FloodModelHelper
     return selectedEventList.toArray( new IRunoffEvent[selectedEventList.size()] );
   }
 
-  public static IKalypsoTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
+  public static IKalypsoFeatureTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
   {
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
 
     if( runoffEvent == null || wspThemes == null )
       return null;
@@ -305,6 +335,6 @@ public class FloodModelHelper
     if( index == -1 )
       return null;
 
-    return wspThemes.getAllThemes()[index];
+    return (IKalypsoFeatureTheme) wspThemes.getAllThemes()[index];
   }
 }

@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -25,7 +26,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.types.StyledLayerType;
@@ -44,7 +45,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final IFolder m_eventsFolder;
 
-  private final AbstractCascadingLayerTheme m_wspThemes;
+  private final IKalypsoCascadingTheme m_wspThemes;
 
   private final String m_eventName;
 
@@ -52,7 +53,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   private final URL m_sldContent;
 
-  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final AbstractCascadingLayerTheme wspThemes, final SzenarioDataProvider provider, final URL sldContent )
+  public AddEventOperation( final String eventName, final IFloodModel model, final IFolder eventsFolder, final IKalypsoCascadingTheme wspThemes, final SzenarioDataProvider provider, final URL sldContent )
   {
     m_eventName = eventName;
     m_model = model;
@@ -99,19 +100,13 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       /* Create new folder and fill with defaults */
       final IFolder newEventFolder = m_eventsFolder.getFolder( dataPath );
       newEventFolder.create( false, true, new SubProgressMonitor( monitor, 2 ) );
-      final IFile sldFile = newEventFolder.getFile( "wsp.sld" );
       // search/replace in order to configure filter
-
-      final String sldContent = FileUtilities.toString( m_sldContent, "UTF-8" ).replaceAll( "%eventFeatureId%", newEvent.getFeature().getId() );
-      ProgressUtilities.worked( monitor, 1 );
-
-      final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" );
-      sldFile.create( sldSource, false, new SubProgressMonitor( monitor, 1 ) );
 
       /* Add event-themes to map */
 
       // - check if theme is already there
       // - add theme to map
+      checkSLDFile( newEvent, newEventFolder, m_sldContent );
       addEventThemes( m_wspThemes, newEvent );
 
       final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, newEventFeature, null, true );
@@ -141,7 +136,23 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     }
   }
 
-  protected void addEventThemes( final AbstractCascadingLayerTheme wspThemes, final IRunoffEvent event ) throws Exception
+  /**
+   * Checks, if an sld file for this event already exists, creates it from the template if not
+   */
+  public static void checkSLDFile( final IRunoffEvent event, final IFolder eventFolder, final URL sldTemplate ) throws Exception
+  {
+    // Configure sld
+    final IFile sldFile = eventFolder.getFile( "wsp.sld" );
+    if( !sldFile.exists() )
+    {
+      final String sldContent = FileUtilities.toString( sldTemplate, "UTF-8" ).replaceAll( "%eventFeatureId%", event.getFeature().getId() );
+
+      final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" );
+      sldFile.create( sldSource, false, new NullProgressMonitor() );
+    }
+  }
+
+  public static void addEventThemes( final IKalypsoCascadingTheme wspThemes, final IRunoffEvent event ) throws Exception
   {
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();

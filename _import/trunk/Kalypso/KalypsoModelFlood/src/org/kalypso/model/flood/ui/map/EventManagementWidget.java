@@ -48,7 +48,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -105,7 +104,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -129,9 +127,9 @@ import org.kalypso.model.flood.ui.map.operations.AddEventOperation;
 import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.model.flood.util.FloodModelHelper;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -149,9 +147,7 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider;
 import org.kalypso.ui.editor.sldEditor.PolygonColorMapLabelProvider;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -161,7 +157,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -176,6 +171,8 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );
+
   private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )
   {
   };
@@ -189,8 +186,6 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private Object[] m_treeSelection;
 
   private TableViewer m_colorMapTableViewer;
-
-  private StyledLayerDescriptor m_sld;
 
   public EventManagementWidget( )
   {
@@ -381,17 +376,37 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         featureComposite.disposeControl();
 
         final IRunoffEvent runoffEvent = getCurrentEvent();
-        final IKalypsoTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
-        if( runoffEventTheme == null )
-        {
-          m_infoWidget.setThemes( null );
-        }
-        else
-        {
-          m_infoWidget.setThemes( new IKalypsoTheme[] { runoffEventTheme } );
-        }
+        IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
 
-        updateStylePanel( runoffEvent );
+          try
+          {
+            // Always check, if sld file exists
+          AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
+
+          final IKalypsoCascadingTheme wspThemes = findWspTheme();
+          if( runoffEventTheme == null )
+          {
+            /* A bit crude: if the theme does not yet exist, we create it right now */
+            AddEventOperation.addEventThemes( wspThemes, runoffEvent );
+          }
+          /* Also add result theme if results are available */
+          if( getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
+            FloodModelHelper.addResultTheme( runoffEvent, wspThemes, -1 );
+          }
+          catch( final Exception e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
+
+        // TODO: add theme if missing
+        if( runoffEventTheme == null )
+          m_infoWidget.setThemes( null );
+        else
+          m_infoWidget.setThemes( new IKalypsoTheme[] { runoffEventTheme } );
+
+        updateStylePanel( runoffEventTheme );
 
         if( m_treeSelection != null && m_treeSelection.length > 0 )
         {
@@ -454,11 +469,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
+
     if( runoffEvent == null )
     {
       MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
       return;
     }
+
     final IFeatureWrapperCollection<ITinReference> tins = runoffEvent.getTins();
 
     // get min / max of the selected runoff event
@@ -485,27 +502,23 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       final EventStyleDialog dialog = new EventStyleDialog( shell, input, event_min, event_max );
       if( dialog.open() == Window.OK )
       {
-        // save sld-file
-        if( m_sld != null )
+        try
         {
-          try
+          final IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
+          final UserStyle[] styles = runoffEventTheme.getStyles();
+          for( final UserStyle userStyle : styles )
           {
-            final IFile styleFile = getSldFile( runoffEvent );
-
-            final String charset = styleFile.getCharset();
-
-            final String sldXML = m_sld.exportAsXML();
-            final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
-
-            if( styleFile.exists() )
-              styleFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), false, true, new NullProgressMonitor() );
-            else
-              styleFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, new NullProgressMonitor() );
+            if( userStyle instanceof GisTemplateUserStyle )
+            {
+              final GisTemplateUserStyle gtus = (GisTemplateUserStyle) userStyle;
+              gtus.fireStyleChanged();
+              gtus.save( new NullProgressMonitor() );
+            }
           }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-          }
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
         }
         m_colorMapTableViewer.refresh();
 
@@ -517,50 +530,53 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   /**
    * update the style panel with the {@link PolygonColorMap}
    */
-  protected void updateStylePanel( final IRunoffEvent event )
+  protected void updateStylePanel( final IKalypsoFeatureTheme runoffEventTheme )
   {
-    try
+    if( runoffEventTheme == null )
     {
-      if( event == null )
-      {
-        m_colorMapTableViewer.setInput( StatusUtilities.createInfoStatus( "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der ereignisliste, um die Darstellung zu editieren." ) );
-        return;
-      }
-
-      final IFile styleFile = getSldFile( event );
-      final PolygonColorMap colorMap = findColorMap( styleFile );
-
-      m_colorMapTableViewer.setInput( colorMap );
+      // MessageDialog.openConfirm( shell, "Kartenthemen ",
+      // "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      // m_colorMapTableViewer.setInput( StatusUtilities.createInfoStatus(
+      // "Keine Ereignis ausgewählt. Wählen Sie ein Ereignis in der Ereignisliste, um die Darstellung zu editieren." )
+      // );
+      return;
     }
-    catch( final CoreException e )
-    {
-      KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+
+    final PolygonColorMap colorMap = findColorMap( runoffEventTheme );
+    m_colorMapTableViewer.setInput( colorMap );
   }
 
-  private PolygonColorMap findColorMap( final IFile styleFile )
+  private PolygonColorMap findColorMap( final IKalypsoFeatureTheme runoffEventTheme )
   {
     try
     {
-      // TODO: should fallback to a default style file if m_styleFile does not yet exists
-      if( styleFile.exists() )
-        m_sld = SLDFactory.createSLD( ResourceUtilities.createURL( styleFile ) );
-      else
-        m_sld = SLDFactory.createSLD( getClass().getResource( "resources/wsp.sld" ) );
-
-      final NamedLayer wspLayer = m_sld.getNamedLayer( "wspLayer" );
-      final UserStyle style = (UserStyle) wspLayer.getStyle( "wspUserStyle" );
-      final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
-      final Rule wspRule = wspFts.getRule( "wspRule" );
-      final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
-      return symb.getColorMap();
+      final UserStyle[] styles = runoffEventTheme.getStyles();
+      final UserStyle style = findUserStyle( styles, "wspUserStyle" );
+      if( style != null )
+      {
+        final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
+        final Rule wspRule = wspFts.getRule( "wspRule" );
+        final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
+        return symb.getColorMap();
+      }
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-
-      return null;
     }
+
+    return null;
+  }
+
+  private UserStyle findUserStyle( final UserStyle[] styles, final String name )
+  {
+    for( final UserStyle userStyle : styles )
+    {
+      if( userStyle.getName().equals( name ) )
+        return userStyle;
+    }
+
+    return null;
   }
 
   public static IFile getSldFile( final IRunoffEvent event ) throws CoreException
@@ -575,6 +591,13 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     return eventsFolder.getFolder( event.getDataPath() );
   }
 
+  public static IFolder getResultFolder( final IRunoffEvent event ) throws CoreException
+  {
+    final IFolder eventsFolder = getEventsFolder();
+    final IFolder folder = eventsFolder.getFolder( event.getDataPath() );
+    return folder.getFolder( "results" );
+  }
+
   public static IFolder getEventsFolder( ) throws CoreException
   {
     final IFolder szenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
@@ -584,23 +607,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private IRunoffEvent getCurrentEvent( )
   {
     if( m_treeSelection == null || m_treeSelection.length == 0 )
-    {
       return null;
-    }
 
     final Feature feature = (Feature) m_treeSelection[0];
 
     final IRunoffEvent event = (IRunoffEvent) feature.getAdapter( IRunoffEvent.class );
     if( event != null )
-    {
       return event;
-    }
 
     final Feature parent = feature.getParent();
     if( parent == null )
-    {
       return null;
-    }
 
     return (IRunoffEvent) parent.getAdapter( IRunoffEvent.class );
   }
@@ -927,15 +944,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     try
     {
       final String eventName = dialog.getValue();
-      final IFloodModel model = m_model;
       final IFolder eventsFolder = getEventsFolder();
-      final IMapModell mapModell = getMapPanel().getMapModell();
-      final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
-      Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
+      final IFloodModel model = m_model;
+      final IKalypsoCascadingTheme wspThemes = findWspTheme();
 
-      final URL sldContent = getClass().getResource( "resources/wsp.sld" );
-
-      final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, sldContent );
+      final ICoreRunnableWithProgress operation = new AddEventOperation( eventName, model, eventsFolder, wspThemes, m_dataProvider, SLD_TEMPLATE_LOCATION );
 
       final IStatus resultStatus = ProgressUtilities.busyCursorWhile( operation );
       if( !resultStatus.isOK() )
@@ -948,6 +961,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       KalypsoModelFloodPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private IKalypsoCascadingTheme findWspTheme( )
+  {
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+    Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
+    return wspThemes;
   }
 
   protected void handleImportTin( final Event event )
@@ -984,15 +1005,15 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   }
 
   /**
+   * TODO: replace by getCurrentEvent, should do the same...<br>
+   *
    * Searches for the first occurrence of {@link IRunoffEvent} in the current selection.<br>
    * If a tin is selected its parent will be returned.
    */
   private IRunoffEvent findFirstEvent( final Object[] treeSelection )
   {
     if( treeSelection == null )
-    {
       return null;
-    }
 
     for( final Object object : m_treeSelection )
     {
@@ -1028,7 +1049,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
     final Shell shell = event.display.getActiveShell();
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
@@ -1187,7 +1208,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private void updateThemeNames( )
   {
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
     final IRunoffEvent event = getCurrentEvent();
     final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
