@@ -56,6 +56,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
@@ -66,7 +67,6 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -108,7 +108,7 @@ public class LanduseStyleUpdateService extends Job
       final URL databaseUrl = ResourceUtilities.createURL( m_dbFile );
       final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
 
-      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
       GMLWorkspace workspace;
 
       synchronized( this )

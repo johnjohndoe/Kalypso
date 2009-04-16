@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Thomas Jung
- * 
+ *
  */
 public class RiskLanduseHelper
 {
@@ -223,7 +223,6 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
@@ -348,7 +347,7 @@ public class RiskLanduseHelper
           final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surface );
           polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
-          polygon.getFeature().invalidEnvelope();
+          polygon.getFeature().setEnvelopesUpdated();
           createdFeatures.add( polygon.getFeature() );
           // style and landuse class ordinal number will be set automatically (property functions)
         }
@@ -359,7 +358,7 @@ public class RiskLanduseHelper
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
-        polygon.getFeature().invalidEnvelope();
+        polygon.getFeature().setEnvelopesUpdated();
         createdFeatures.add( polygon.getFeature() );
       }
       else
@@ -386,7 +385,7 @@ public class RiskLanduseHelper
     return null;
   }
 
-  public static HashSet<String> getLanduseTypeSet( final List shapeFeatureList, final String propertyLanduse )
+  public static HashSet<String> getLanduseTypeSet( final List< ? > shapeFeatureList, final String propertyLanduse )
   {
     final HashSet<String> set = new HashSet<String>();
 

@@ -130,7 +130,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_initialSelection = selection;
@@ -152,7 +152,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public void addPages( )
   {
@@ -189,7 +189,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public boolean performFinish( )
   {
@@ -209,8 +208,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
     try
     {
-      final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class );
-      final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
+      final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class.getName(), IVectorDataModel.class );
+      final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class.getName(), IRasterizationControlModel.class );
 
       final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
@@ -218,7 +217,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
       landuseShapeWS.accept( visitor, shapeRootFeature, FeatureVisitor.DEPTH_INFINITE );
 
-      final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+      final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
       /* check for right user selection */
       final HashSet<String> landuseTypeSet = new HashSet<String>();
@@ -278,8 +277,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         KalypsoRiskPlugin.getDefault().getLog().log( execute );
       }
 
-      szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-      szenarioDataProvider.postCommand( IVectorDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      szenarioDataProvider.postCommand( IRasterizationControlModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      szenarioDataProvider.postCommand( IVectorDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
       /* creating styles */
       final IFile polygonSldFile = scenarioFolder.getFile( "styles/LanduseVector.sld" ); //$NON-NLS-1$

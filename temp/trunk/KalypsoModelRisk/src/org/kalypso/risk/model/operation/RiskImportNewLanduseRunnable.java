@@ -34,7 +34,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private final List m_shapeFeatureList;
 
   private final IRasterizationControlModel m_controlModel;
@@ -43,7 +43,7 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public RiskImportNewLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
@@ -53,7 +53,6 @@ public final class RiskImportNewLanduseRunnable implements ICoreRunnableWithProg
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$

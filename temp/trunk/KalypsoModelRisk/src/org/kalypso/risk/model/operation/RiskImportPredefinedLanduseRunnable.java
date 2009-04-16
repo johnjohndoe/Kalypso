@@ -8,7 +8,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.Messages;
@@ -29,9 +28,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableWithProgress
 {
-
-  private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
-
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
   private static final QName PROP_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "value" ); //$NON-NLS-1$
@@ -52,11 +48,9 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  private final List m_shapeFeatureList;
+  private final List< ? > m_shapeFeatureList;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection )
+  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List< ? > shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -69,7 +63,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$

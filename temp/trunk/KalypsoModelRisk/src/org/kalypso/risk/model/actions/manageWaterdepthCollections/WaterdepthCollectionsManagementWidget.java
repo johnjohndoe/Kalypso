@@ -161,7 +161,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
-      final IRasterDataModel model = dataProvider.getModel( IRasterDataModel.class );
+      final IRasterDataModel model = dataProvider.getModel( IRasterDataModel.class.getName(), IRasterDataModel.class );
       if( model != null )
       {
         m_dataProvider = dataProvider;
@@ -427,6 +427,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
   protected void handleAddEvent( final Event event )
   {
+    final IRasterDataModel model = m_model;
     final IInputValidator inputValidator = new IInputValidator()
     {
       public String isValid( final String newText )
@@ -438,7 +439,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
           final int i = Integer.parseInt( newText );
           if( i <= 0 )
             return Messages.getString( "WaterdepthCollectionsManagementWidget.26" ); //$NON-NLS-1$
-          for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
+          for( final IAnnualCoverageCollection collection : model.getWaterlevelCoverageCollection() )
             if( collection.getReturnPeriod() == i )
               return Messages.getString( "WaterdepthCollectionsManagementWidget.27" ); //$NON-NLS-1$
         }
@@ -460,7 +461,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       return;
 
     final String eventName = "HQ " + dialog.getValue(); //$NON-NLS-1$
-    final IRasterDataModel model = m_model;
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
     Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.35" ) ); //$NON-NLS-1$
 
@@ -474,6 +474,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
   protected void handleChange( final Event event )
   {
+    final IRasterDataModel model = m_model;
     final IInputValidator inputValidator = new IInputValidator()
     {
       public String isValid( final String newText )
@@ -485,7 +486,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
           final int i = Integer.parseInt( newText );
           if( i <= 0 )
             return Messages.getString( "WaterdepthCollectionsManagementWidget.39" ); //$NON-NLS-1$
-          for( final IAnnualCoverageCollection collection : m_model.getWaterlevelCoverageCollection() )
+          for( final IAnnualCoverageCollection collection : model.getWaterlevelCoverageCollection() )
             if( collection.getReturnPeriod() == i )
               return Messages.getString( "WaterdepthCollectionsManagementWidget.40" ); //$NON-NLS-1$
         }
@@ -506,7 +507,6 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     if( dialog.open() != Window.OK )
       return;
 
-    final IRasterDataModel model = m_model;
     final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( getMapPanel().getMapModell(), "HQi" ); //$NON-NLS-1$
     Assert.isNotNull( wspThemes, Messages.getString( "WaterdepthCollectionsManagementWidget.47" ) ); //$NON-NLS-1$
 
@@ -586,7 +586,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
 
     final Feature selectedFeature = (Feature) m_treeSelection[0];
 
-    final Feature parentFeature = selectedFeature.getParent();
+    final Feature parentFeature = selectedFeature.getOwner();
     final IPropertyType pt = selectedFeature.getParentRelation();
 
     final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
@@ -599,7 +599,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     final SzenarioDataProvider sdProvider = m_dataProvider;
     try
     {
-      sdProvider.postCommand( IRasterDataModel.class, command );
+      sdProvider.postCommand( IRasterDataModel.class.getName(), command );
     }
     catch( final Exception e )
     {

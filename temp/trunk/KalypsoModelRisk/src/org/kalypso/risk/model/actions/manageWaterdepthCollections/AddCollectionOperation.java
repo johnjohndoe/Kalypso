@@ -91,8 +91,8 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
        */
       final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), new Feature[] { newCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-      m_provider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-      m_provider.saveModel( IRasterDataModel.class, new SubProgressMonitor( monitor, 1 ) );
+      m_provider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
       // TODO: save map. Necessary?
 
       return Status.OK_STATUS;

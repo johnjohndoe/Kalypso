@@ -29,15 +29,13 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgress
 {
-  private final static int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
-
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
 
   private static final QName PROP_VALUE = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "value" ); //$NON-NLS-1$
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private final List m_shapeFeatureList;
 
   private final String m_externalProjectName;
@@ -50,7 +48,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final IFolder m_scenarioFolder;
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
@@ -62,7 +60,6 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$

@@ -56,9 +56,9 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
       updateTheme( m_wspThemes, oldReturnPeriod );
 
       final GMLWorkspace workspace = m_model.getFeature().getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_coverageCollection.getFeature().getParent(), new Feature[] { m_coverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-      m_provider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-      m_provider.saveModel( IRasterDataModel.class, new SubProgressMonitor( monitor, 1 ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_coverageCollection.getFeature().getOwner(), new Feature[] { m_coverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      m_provider.postCommand( IRasterDataModel.class.getName(), new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      m_provider.saveModel( IRasterDataModel.class.getName(), new SubProgressMonitor( monitor, 1 ) );
       return Status.OK_STATUS;
     }
     catch( final IOException e )
@@ -79,10 +79,10 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
   {
     final IKalypsoTheme[] themes = parentKalypsoTheme.getAllThemes();
     boolean themeFound = false;
-    for( int i = 0; i < themes.length; i++ )
-      if( themes[i].getName().equals( "HQ " + oldReturnPeriod ) ) //$NON-NLS-1$
+    for( final IKalypsoTheme theme : themes )
+      if( theme.getName().equals( "HQ " + oldReturnPeriod ) ) //$NON-NLS-1$
       {
-        themes[i].setName( new I10nString( "HQ " + m_newReturnPeriod ) ); //$NON-NLS-1$
+        theme.setName( new I10nString( "HQ " + m_newReturnPeriod ) ); //$NON-NLS-1$
         themeFound = true;
         break;
       }
@@ -96,7 +96,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
       layer.setType( "simple" ); //$NON-NLS-1$
       layer.setVisible( true );
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
-      layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$ 
+      layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$
       layer.setVisible( true );
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );

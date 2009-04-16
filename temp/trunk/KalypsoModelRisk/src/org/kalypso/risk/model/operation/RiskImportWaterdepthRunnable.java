@@ -65,7 +65,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
-        final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( asciiRasterInfo.getSourceFile().toURL(), dstRasterFile, 2, asciiRasterInfo.getCoordinateSystem() );
+        final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( asciiRasterInfo.getSourceFile().toURI().toURL(), dstRasterFile, 2, asciiRasterInfo.getCoordinateSystem() );
         ascii2Binary.doConvert( monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
