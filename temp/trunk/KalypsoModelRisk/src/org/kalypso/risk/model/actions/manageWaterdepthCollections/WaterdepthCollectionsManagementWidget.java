@@ -122,7 +122,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- * 
+ *
  * @author Thomas Jung
  */
 public class WaterdepthCollectionsManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -615,18 +615,19 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
       return;
 
     final GeoTransform projection = getMapPanel().getProjection();
+    if( projection != null )
+    {
+      final GM_Position minPoint = projection.getDestPoint( envelope.getMin() );
+      final GM_Position maxPoint = projection.getDestPoint( envelope.getMax() );
+      final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
+      final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
 
-    final GM_Position minPoint = projection.getDestPoint( envelope.getMin() );
-    final GM_Position maxPoint = projection.getDestPoint( envelope.getMax() );
+      final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
+      final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
 
-    final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
-    final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
-
-    final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
-    final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
-
-    g.setColor( Color.RED );
-    g.drawRect( x, y, width, height );
+      g.setColor( Color.RED );
+      g.drawRect( x, y, width, height );
+    }
   }
 
   private GM_Envelope envelopeForSelected( final Object selectedObject )
