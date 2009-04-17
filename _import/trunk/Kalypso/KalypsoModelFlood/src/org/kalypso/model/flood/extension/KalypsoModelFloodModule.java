@@ -7,7 +7,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
 
 public class KalypsoModelFloodModule implements IKalypsoModule
 {
-  public static final String ID = "KalypsoFloodModelType";
+  public static final String ID = "KalypsoFloodModelType"; //$NON-NLS-1$
 
   // public constructor, needed because of declared extension point and java class loader
   public KalypsoModelFloodModule( )

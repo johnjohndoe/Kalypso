@@ -51,11 +51,11 @@ import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
  */
 public interface IFloodVolumePolygon extends IFloodPolygon
 {
-  final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodVolumePolygon" );
+  final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodVolumePolygon" ); //$NON-NLS-1$
 
-  final static QName QNAME_PROP_VOLUME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "volume" );
+  final static QName QNAME_PROP_VOLUME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "volume" ); //$NON-NLS-1$
 
-  final static QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "waterlevel" );
+  final static QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "waterlevel" ); //$NON-NLS-1$
 
   BigDecimal getVolume( );
 

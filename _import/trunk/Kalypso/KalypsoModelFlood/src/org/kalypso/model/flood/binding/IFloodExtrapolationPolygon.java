@@ -50,9 +50,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFloodExtrapolationPolygon extends IFloodPolygon
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodExtrapolationPolygon" );
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodExtrapolationPolygon" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_REFPOINT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "referencePoint" );
+  public static final QName QNAME_PROP_REFPOINT = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "referencePoint" ); //$NON-NLS-1$
 
   GM_Point getRefPoint( );
 }

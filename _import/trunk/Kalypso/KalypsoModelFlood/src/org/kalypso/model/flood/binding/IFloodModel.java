@@ -52,13 +52,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public interface IFloodModel extends IModel
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodModel" );
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodModel" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_POLYGONE_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "polygonMember" );
+  public static final QName QNAME_PROP_POLYGONE_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "polygonMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_COVERAGES_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "coveragesMember" );
+  public static final QName QNAME_PROP_COVERAGES_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "coveragesMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_EVENT_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" );
+  public static final QName QNAME_PROP_EVENT_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "eventMember" ); //$NON-NLS-1$
 
   public ICoverageCollection getTerrainModel( );
 

@@ -38,42 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.flood.extension;
+package org.kalypso.model.flood.i18n;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.flood.i18n.Messages;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author kuch
+ * @author kimwerner
+ *
  */
-public class KalypsoFloodWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class Messages
 {
-  protected static final Image IMG = new Image( null, KalypsoFloodWelcomePageFrame.class.getResourceAsStream( "icons/flood_no.gif" ) ); //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.model.flood.i18n.messages"; //$NON-NLS-1$
 
-  protected static final Image IMG_HOVER = new Image( null, KalypsoFloodWelcomePageFrame.class.getResourceAsStream( "icons/flood_hover.gif" ) ); //$NON-NLS-1$
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  @Override
-  public Image getIcon( )
+  private Messages( )
   {
-    return IMG;
   }
 
-  @Override
-  public String getLabel( )
+  public static String getString( String key )
   {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.2"); //$NON-NLS-1$
-  }
-
-  @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.3"); //$NON-NLS-1$
-  }
-
-  @Override
-  public Image getHoverIcon( )
-  {
-    return IMG_HOVER;
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }

@@ -14,11 +14,11 @@ public class KalypsoModelFloodImages
 {
   public static enum DESCRIPTORS implements ImageKey
   {
-    EVENT_ADD("icons/etool16/event_add.gif"),
-    TIN_ADD("icons/etool16/tin_add.gif"),
-    TIN_UPDATE("icons/etool16/tin_update.gif"),
-    TIN_JUMPTO("icons/etool16/tin_jumpto.gif"),
-    DELETE("icons/etool16/delete_edit.gif");
+    EVENT_ADD("icons/etool16/event_add.gif"), //$NON-NLS-1$
+    TIN_ADD("icons/etool16/tin_add.gif"), //$NON-NLS-1$
+    TIN_UPDATE("icons/etool16/tin_update.gif"), //$NON-NLS-1$
+    TIN_JUMPTO("icons/etool16/tin_jumpto.gif"), //$NON-NLS-1$
+    DELETE("icons/etool16/delete_edit.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

@@ -4,6 +4,6 @@ public class NewDemoProjectWizard extends org.kalypso.afgui.wizards.NewProjectWi
 {
   public NewDemoProjectWizard( )
   {
-    super( "org.kalypso.model.flood.demoProject", true );
+    super( "org.kalypso.model.flood.demoProject", true ); //$NON-NLS-1$
   }
 }

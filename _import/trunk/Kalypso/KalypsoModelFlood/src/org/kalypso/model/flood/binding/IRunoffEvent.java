@@ -54,17 +54,17 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public interface IRunoffEvent extends IFeatureWrapper2
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "RunoffEvent" );
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "RunoffEvent" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RESULT_COVERAGES = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "resultCoveragesMember" );
+  public final static QName QNAME_PROP_RESULT_COVERAGES = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "resultCoveragesMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_TIN_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tinMember" );
+  public final static QName QNAME_PROP_TIN_MEMBER = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tinMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_DATAPATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "dataPath" );
+  public final static QName QNAME_PROP_DATAPATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "dataPath" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_MARKEDFORPROCESSING = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "markedForProcessing" );
+  public final static QName QNAME_PROP_MARKEDFORPROCESSING = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "markedForProcessing" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RETURN_PERIOD = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "returnPeriod" );
+  public final static QName QNAME_PROP_RETURN_PERIOD = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "returnPeriod" ); //$NON-NLS-1$
   
   public ICoverageCollection getResultCoverages( );
 

@@ -53,9 +53,9 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class UrlCatalogModelFlood extends AbstractUrlCatalog
 {
-  final static public String NS_MODEL_FLOOD = "org.kalypso.model.flood";
+  final static public String NS_MODEL_FLOOD = "org.kalypso.model.flood"; //$NON-NLS-1$
 
-  final static public String PREFIX_MODEL_FLOOD = "flood";
+  final static public String PREFIX_MODEL_FLOOD = "flood"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -63,7 +63,7 @@ public class UrlCatalogModelFlood extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModel.xsd" ) );
+    catalog.put( NS_MODEL_FLOOD, myClass.getResource( "floodModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_MODEL_FLOOD, PREFIX_MODEL_FLOOD );
   }
 }

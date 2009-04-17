@@ -90,7 +90,7 @@ public class KalypsoFloodRemoteDatabaseSettings implements IKalypsoModuleDatabas
             final IWorkflow workflow = nature.getCurrentWorklist();
             final String uri = workflow.getURI();
 
-            return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" );
+            return uri.contains( "org.kalypso.model.flood.WF_KalypsoFlood" ); //$NON-NLS-1$
           }
           catch( final CoreException e )
           {

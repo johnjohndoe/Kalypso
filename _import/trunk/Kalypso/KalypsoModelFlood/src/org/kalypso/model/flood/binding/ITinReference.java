@@ -69,7 +69,7 @@ public interface ITinReference extends IFeatureWrapper2
       @Override
       public String toString( )
       {
-        return "GML";
+        return "GML"; //$NON-NLS-1$
       }
     },
     hmo
@@ -80,7 +80,7 @@ public interface ITinReference extends IFeatureWrapper2
       @Override
       public String toString( )
       {
-        return "HMO-Datei";
+        return "HMO-Datei"; //$NON-NLS-1$
       }
     },
     shape
@@ -91,26 +91,26 @@ public interface ITinReference extends IFeatureWrapper2
       @Override
       public String toString( )
       {
-        return "ESRI Shape-Datei";
+        return "ESRI Shape-Datei"; //$NON-NLS-1$
       }
     }
   }
 
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" );
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "TinReference" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" );
+  public final static QName QNAME_PROP_MIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "min" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" );
+  public final static QName QNAME_PROP_MAX = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "max" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" );
+  public final static QName QNAME_PROP_SOURCE_LOCATION = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceLocation" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" );
+  public final static QName QNAME_PROP_SOURCE_PATH = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourcePath" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" );
+  public final static QName QNAME_PROP_SOURCE_DATE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceDate" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" );
+  public final static QName QNAME_PROP_SOURCE_TYPE = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "sourceType" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" );
+  public final static QName QNAME_PROP_TIN = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "tin" ); //$NON-NLS-1$
 
   public void setMin( BigDecimal min );
 

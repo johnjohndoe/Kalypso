@@ -43,6 +43,7 @@ package org.kalypso.model.flood.ui.map;
 import java.util.List;
 
 import org.kalypso.model.flood.binding.IFloodPolygon;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -62,7 +63,7 @@ public class EventFilterExpression extends AbstractFunctionExpression
   {
     if( args.size() != 1 )
     {
-      System.out.println( "Invalid filter arguments: " + getName() );
+      System.out.println( Messages.getString("org.kalypso.model.flood.ui.map.EventFilterExpression.0") + getName() ); //$NON-NLS-1$
       return false;
     }
 

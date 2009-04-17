@@ -11,10 +11,10 @@
 
 	<element name="FloodModel" type="flood:FloodModelType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[FloodModel]]></name>
-				<label><![CDATA[FloodModel]]></label>
-				<tooltip><![CDATA[FloodModel]]></tooltip>
+				<![CDATA[FloodModel]]>
+				<![CDATA[FloodModel]]>
 				<description><![CDATA[FloodModel]]></description>
 			</documentation>
 		</annotation>
@@ -26,9 +26,9 @@
 				<sequence>
 					<element name="polygonMember" type="flood:FloodPolygonPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Polygon</label>
-								<tooltip>Polygon</tooltip>
+							<documentation >
+								Polygon
+								Polygon
 								<description>Polygon</description>
 							</documentation>
 						</annotation>
@@ -62,10 +62,10 @@
 
 	<element name="RunoffEvent" type="flood:RunoffEventType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[Ereignis]]></name>
-				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
-				<tooltip><![CDATA[Ereignis]]></tooltip>
+				${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}
+				<![CDATA[Ereignis]]>
 				<description><![CDATA[Ereignis]]></description>
 			</documentation>
 		</annotation>
@@ -78,27 +78,27 @@
 					<element name="markedForProcessing" type="boolean" default="false" minOccurs="0" maxOccurs="1" />
 					<element name="tinMember" type="flood:TinReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Wasserspiegellagen]]></name>
-								<tooltip><![CDATA[Wasserspiegellagen]]></tooltip>
+								<![CDATA[Wasserspiegellagen]]>
 								<description><![CDATA[Wasserspiegellagen]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="resultCoveragesMember" type="flood:CoverageCollectionPropertyType" minOccurs="1" maxOccurs="1" nillable="false">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Fließtiefen]]></name>
-								<tooltip><![CDATA[Fließtiefen]]></tooltip>
+								<![CDATA[Fließtiefen]]>
 								<description><![CDATA[Fließtiefen]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="dataPath" type="string">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Datenverzeichnis]]></name>
-								<tooltip><![CDATA[Pfad zu den unterliegenden Daten]]></tooltip>
+								<![CDATA[Pfad zu den unterliegenden Daten]]>
 								<description><![CDATA[Datenverzeichnis]]></description>
 							</documentation>
 						</annotation>
@@ -106,14 +106,14 @@
 					<element name="returnPeriod" type="flood:PositiveIntType" default="1">
 					<!-- default = "1" only for backward compatibility -->
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Wiederkehr Intervall]]></label>
-								<tooltip><![CDATA[Wiederkehr Intervall]]></tooltip>
+							<documentation >
+								<![CDATA[Wiederkehr Intervall]]>
+								<![CDATA[Wiederkehr Intervall]]>
 								<description><![CDATA[Wiederkehr Intervall]]></description>
 							</documentation>
-							<documentation xml:lang="en">
-								<label><![CDATA[Return interval]]></label>
-								<tooltip><![CDATA[Return interval]]></tooltip>
+							<documentation >
+								<![CDATA[Return interval]]>
+								<![CDATA[Return interval]]>
 								<description><![CDATA[Return interval of the event]]></description>
 							</documentation>
 						</annotation>
@@ -136,10 +136,10 @@
 
 	<element name="TinReference" type="flood:TinReferenceType" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[WSP-Referenz]]></name>
-				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
-				<tooltip><![CDATA[Referenz auf einen Wasserspiegel]]></tooltip>
+				${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}
+				<![CDATA[Referenz auf einen Wasserspiegel]]>
 				<description><![CDATA[Referenz auf einen Wasserspiegel]]></description>
 			</documentation>
 		</annotation>
@@ -151,54 +151,54 @@
 				<sequence>
 					<element name="min" type="decimal">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Minimum]]></label>
-								<tooltip><![CDATA[Minimum aller TIN-Werte]]></tooltip>
+							<documentation >
+								<![CDATA[Minimum]]>
+								<![CDATA[Minimum aller TIN-Werte]]>
 								<description><![CDATA[Minimum aller TIN-Werte]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="max" type="decimal">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Maximum]]></label>
-								<tooltip><![CDATA[Maximum aller TIN-Werte]]></tooltip>
+							<documentation >
+								<![CDATA[Maximum]]>
+								<![CDATA[Maximum aller TIN-Werte]]>
 								<description><![CDATA[Maximum aller TIN-Werte]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceLocation" type="anyURI">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Quell-URL]]></label>
-								<tooltip><![CDATA[Herkunftsort der TIN-Daten]]></tooltip>
+							<documentation >
+								<![CDATA[Quell-URL]]>
+								<![CDATA[Herkunftsort der TIN-Daten]]>
 								<description><![CDATA[Herkunftsort der TIN-Daten]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourcePath" type="string">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Quell-Pfad]]></label>
-								<tooltip><![CDATA[Pfad innerhalb der Herkunftsdatei]]></tooltip>
+							<documentation >
+								<![CDATA[Quell-Pfad]]>
+								<![CDATA[Pfad innerhalb der Herkunftsdatei]]>
 								<description><![CDATA[GMLXPfad innerhalb der Herkunftsdatei auf die TIN-Geometry (gml:TriangulatedSurface)]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceDate" type="dateTime">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Quell-Datum]]></label>
-								<tooltip><![CDATA[Datum der letzten Datenübernahme]]></tooltip>
+							<documentation >
+								<![CDATA[Quell-Datum]]>
+								<![CDATA[Datum der letzten Datenübernahme]]>
 								<description><![CDATA[Datum der letzten Datenübernahme]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="sourceType">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Quelldateityp]]></label>
-								<tooltip><![CDATA[Datentyp der Quelldatei]]></tooltip>
+							<documentation >
+								<![CDATA[Quelldateityp]]>
+								<![CDATA[Datentyp der Quelldatei]]>
 								<description><![CDATA[Datentyp der Quelldatei]]></description>
 							</documentation>
 						</annotation>
@@ -212,9 +212,9 @@
 					</element>
 					<element name="tin" type="flood:TriangulatedSurfacePropertyType">
 						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Dreiecksnetz]]></label>
-								<tooltip><![CDATA[Die TIN-Geometry]]></tooltip>
+							<documentation >
+								<![CDATA[Dreiecksnetz]]>
+								<![CDATA[Die TIN-Geometry]]>
 								<description><![CDATA[Die TIN-Geometry]]></description>
 							</documentation>
 						</annotation>
@@ -238,10 +238,10 @@
 
 	<element name="AbstractFloodPolygon" type="flood:AbstractFloodPolygonType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[Polygon]]></name>
-				<label><![CDATA[Polygon]]></label>
-				<tooltip><![CDATA[Polygon]]></tooltip>
+				<![CDATA[Polygon]]>
+				<![CDATA[Polygon]]>
 				<description><![CDATA[Polygon]]></description>
 			</documentation>
 		</annotation>
@@ -253,9 +253,9 @@
 				<sequence>
 					<element name="areaMember" type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Geometrie des Polygons</label>
-								<tooltip>Geometrie des Polygons</tooltip>
+							<documentation >
+								Geometrie des Polygons
+								Geometrie des Polygons
 								<description>Geometrie des Polygons</description>
 							</documentation>
 						</annotation>
@@ -268,10 +268,10 @@
 
 	<element name="FloodExtrapolationPolygon" type="flood:FloodExtrapolationPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[Extrapolationspolygon]]></name>
-				<label><![CDATA[Extrapolationspolygon]]></label>
-				<tooltip><![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]></tooltip>
+				<![CDATA[Extrapolationspolygon]]>
+				<![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]>
 				<description><![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]></description>
 			</documentation>
 		</annotation>
@@ -302,18 +302,18 @@
 				<sequence>
 					<element name="referencePoint" type="gml:PointPropertyType">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Bezugspunkt</label>
-								<tooltip>Bezugspunkt zum Höhenmodell</tooltip>
+							<documentation >
+								Bezugspunkt
+								Bezugspunkt zum Höhenmodell
 								<description>Bezugspunkt zum Höhenmodell</description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="connectorLine" type="gml:LineStringPropertyType">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>Verbindungslinie</label>
-								<tooltip>Verbindunglinie ziwschen Referenzpunkt und Fläche</tooltip>
+							<documentation >
+								Verbindungslinie
+								Verbindunglinie ziwschen Referenzpunkt und Fläche
 								<description>Verbindunglinie ziwschen Referenzpunkt und Fläche</description>
 							</documentation>
 						</annotation>
@@ -325,10 +325,10 @@
 
 	<element name="FloodClipPolygon" type="flood:FloodClipPolygonType" substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[Clip-Polygon]]></name>
-				<label><![CDATA[Clip-Polygon]]></label>
-				<tooltip><![CDATA[Clip-Polygon]]></tooltip>
+				<![CDATA[Clip-Polygon]]>
+				<![CDATA[Clip-Polygon]]>
 				<description><![CDATA[Clip-Polygon]]></description>
 			</documentation>
 		</annotation>
@@ -340,10 +340,10 @@
 				<sequence minOccurs="1" maxOccurs="1">
 					<element name="type" default="negative">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Art]]></name>
-								<label><![CDATA[Art]]></label>
-								<tooltip><![CDATA[Art des Clip-Polygons]]></tooltip>
+								<![CDATA[Art]]>
+								<![CDATA[Art des Clip-Polygons]]>
 								<description><![CDATA[Die Art des Clip-Polygon bestimmt, ob der angegebene Bereich explizit ausgeschlossen oder eingeschlossen wird.]]></description>
 							</documentation>
 						</annotation>
@@ -351,15 +351,15 @@
 							<restriction base="string">
 								<enumeration value="positive">
 									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[Einschluss]]></label>
+										<documentation >
+											<![CDATA[Einschluss]]>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="negative">
 									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[Ausschluss]]></label>
+										<documentation >
+											<![CDATA[Ausschluss]]>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -373,10 +373,10 @@
 
 	<element name="FloodVolumePolygon" type="flood:FloodVolumePolygonType" substitutionGroup="flood:AbstractFloodPolygon">
 		<annotation>
-			<documentation xml:lang="de">
+			<documentation >
 				<name><![CDATA[Volumen-Polygon]]></name>
-				<label><![CDATA[Volumen-Polygon]]></label>
-				<tooltip><![CDATA[Volumen-Polygon]]></tooltip>
+				<![CDATA[Volumen-Polygon]]>
+				<![CDATA[Volumen-Polygon]]>
 				<description><![CDATA[Volumen-Polygon]]></description>
 			</documentation>
 		</annotation>
@@ -388,18 +388,18 @@
 				<sequence minOccurs="1" maxOccurs="1">
 					<element name="volume" type="decimal">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Volumen]]></name>
-								<label><![CDATA[Volumen]]></label>
+								<![CDATA[Volumen]]>
 								<description><![CDATA[]]></description>
 							</documentation>
 						</annotation>
 					</element>
 					<element name="waterlevel" type="decimal">
 						<annotation>
-							<documentation xml:lang="de">
+							<documentation >
 								<name><![CDATA[Wasserspiegel]]></name>
-								<label><![CDATA[Wasserspiegel]]></label>
+								<![CDATA[Wasserspiegel]]>
 								<description><![CDATA[]]></description>
 							</documentation>
 						</annotation>

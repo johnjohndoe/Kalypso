@@ -2,6 +2,7 @@ package org.kalypso.model.flood;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.model.flood.i18n.Messages;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -10,7 +11,7 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelFloodPlugin extends AbstractUIPlugin
 {
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.model.flood";
+  public static final String PLUGIN_ID = "org.kalypso.model.flood"; //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoModelFloodPlugin plugin;

@@ -56,6 +56,7 @@ import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceRunnableWithProgress;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.ui.map.UpdateTinsOperation;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -107,10 +108,10 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Wasserspiegel-Import", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.0"), 100 ); //$NON-NLS-1$
 
     /* Add sources as new tin references */
-    progress.subTask( "erstelle Referenzen" );
+    progress.subTask( Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.1") ); //$NON-NLS-1$
     final ITinReference[] tinRefs = new ITinReference[m_sources.length];
     final Feature[] changedFeatures = new Feature[m_sources.length];
 
@@ -139,7 +140,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
     // progress.subTask( "speichere Datenmodell" );
     // m_provider.saveModel( IFloodModel.class, progress.newChild( 20 ) );
     /* update tins */
-    progress.subTask( "importiere Daten" );
+    progress.subTask( Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.2") ); //$NON-NLS-1$
     final UpdateTinsOperation updateOp = new UpdateTinsOperation( tinRefs, m_provider );
     updateOp.execute( progress.newChild( 60 ) );
 
@@ -155,13 +156,13 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
   private SOURCETYPE typeForSource( IGmlSource source )
   {
     final String file = source.getLocation().getPath().toLowerCase();
-    if( file.endsWith( ".hmo" ) )
+    if( file.endsWith( ".hmo" ) ) //$NON-NLS-1$
       return SOURCETYPE.hmo;
 
-    if( file.endsWith( ".gml" ) )
+    if( file.endsWith( ".gml" ) ) //$NON-NLS-1$
       return SOURCETYPE.gml;
 
-    if( file.endsWith( ".shp" ) )
+    if( file.endsWith( ".shp" ) ) //$NON-NLS-1$
       return SOURCETYPE.shape;
 
     // In doubt, probably its an gml
@@ -176,7 +177,7 @@ public class ImportTinOperation implements IGmlSourceRunnableWithProgress
   {
     if( !resultStatus.isOK() )
       KalypsoCorePlugin.getDefault().getLog().log( resultStatus );
-    ErrorDialog.openError( shell, "Wasserspiegel importieren", "Fehler beim Import eines Wasserspiegels", resultStatus );
+    ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.6"), Messages.getString("org.kalypso.model.flood.ui.map.operations.ImportTinOperation.7"), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
     return resultStatus.isOK();
   }
 }

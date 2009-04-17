@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.flood.binding.IFloodPolygon;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -78,10 +79,10 @@ public class PolygonEditingHandler extends AbstractHandler implements IHandler
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     final IMapPanel mapPanel = mapView.getMapPanel();
     if( mapView == null )
-      throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+      throw new ExecutionException( Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.0") ); //$NON-NLS-1$
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.1"), Messages.getString("org.kalypso.model.flood.handlers.PolygonEditingHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     /* Activate theme */

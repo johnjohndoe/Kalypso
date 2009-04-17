@@ -38,42 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.flood.extension;
+package org.kalypso.model.flood.core;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.model.flood.i18n.Messages;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.apache.commons.lang.NotImplementedException;
 
 /**
- * @author kuch
+ * @author Dejan Antanaskovic
+ * 
  */
-public class KalypsoFloodWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public interface ISimulationSpecKalypsoFlood
 {
-  protected static final Image IMG = new Image( null, KalypsoFloodWelcomePageFrame.class.getResourceAsStream( "icons/flood_no.gif" ) ); //$NON-NLS-1$
-
-  protected static final Image IMG_HOVER = new Image( null, KalypsoFloodWelcomePageFrame.class.getResourceAsStream( "icons/flood_hover.gif" ) ); //$NON-NLS-1$
-
-  @Override
-  public Image getIcon( )
+  public enum MODELSPEC_KALYPSOFLOOD
   {
-    return IMG;
+    FLOOD_MODEL,
+    GRID_FOLDER,
+    EVENTS_BASE_FOLDER;
+
+    public String getValue( )
+    {
+      final MODELSPEC_KALYPSOFLOOD kind = MODELSPEC_KALYPSOFLOOD.valueOf( name() );
+
+      switch( kind )
+      {
+        case FLOOD_MODEL:
+          return "models/flood.gml"; //$NON-NLS-1$
+        case GRID_FOLDER:
+          return "grids"; //$NON-NLS-1$
+        case EVENTS_BASE_FOLDER:
+          return "events"; //$NON-NLS-1$
+        default:
+          throw new NotImplementedException();
+      }
+    }
   }
 
-  @Override
-  public String getLabel( )
-  {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.2"); //$NON-NLS-1$
-  }
+  public static String FLOODSIMULATION_TYPEID = "KalypsoFloodSimulation"; //$NON-NLS-1$
 
-  @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.model.flood.extension.KalypsoFloodWelcomePageFrame.3"); //$NON-NLS-1$
-  }
-
-  @Override
-  public Image getHoverIcon( )
-  {
-    return IMG_HOVER;
-  }
+  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "../events/"; //$NON-NLS-1$
 }

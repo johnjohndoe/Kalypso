@@ -26,7 +26,7 @@
       <workflowSystem
             definition="etc/workflow.xml"
             id="org.kalypso.model.flood.workflow"
-            name="Flood-Modeller-Workflow">
+            name="%org.kalypso.model.flood.workflow">
       </workflowSystem>
    </extension>
    <extension
@@ -194,27 +194,27 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createExtrapolationPolygon"
-            name="Extrapolations-Polygon erzeugen" description="Extrapolations-Polygon erzeugen">
+            name="%org.kalypso.model.flood.command.createExtrapolationPolygon" description="%org.kalypso.model.flood.command.createExtrapolationPolygon.description">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createClipPolygon"
-            name="Clip-Polygon erzeugen" description="Clip-Polygon erzeugen">
+            name="%org.kalypso.model.flood.command.createClipPolygon" description="%org.kalypso.model.flood.command.createClipPolygon.description">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.createVolumePolygon"
-            name="Volumen-Polygon erzeugen" description="Volumen-Polygon erzeugen">
+            name="%org.kalypso.model.flood.command.createVolumePolygon" description="%org.kalypso.model.flood.command.createVolumePolygon.description">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.editFloodPolygon"
-            name="WSP-Anpassung editieren" description="WSP-Anpassung editieren">
+            name="%org.kalypso.model.flood.command.editFloodPolygon" description="%org.kalypso.model.flood.command.editFloodPolygon.description">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.model.flood.command.deleteFloodPolygon"
-            name="WSP-Anpassung entfernen" description="WSP-Anpassung entfernen">
+            name="%org.kalypso.model.flood.command.deleteFloodPolygon" description="%org.kalypso.model.flood.command.deleteFloodPolygon.description">
       </command>
    </extension>
    <extension
@@ -278,7 +278,8 @@
          point="org.eclipse.ui.newWizards">
       <category
             id="org.kalypso.model.flood.newwizard"
-            name="Flood Model"
+            name="%org.kalypso.model.flood.newwizard"
+            description= "%org.kalypso.model.flood.newwizard.description"
             parentCategory="org.kalypso.ui.newwizards.kalypso">
       </category>
       <wizard
@@ -290,10 +291,10 @@
             hasPages="true"
             icon="icons//button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewProjectWizard"
-            name="Kalypso Flood Model"
+            name="%org.kalypso.model.flood.ui.wizards.NewProjectWizard"
             project="true">
          <description>
-            Erzeugt ein neues Flood-Modeller Projekt zur Generierung von Fliesstiefenkarten anhand zuvor berechneter Wasserspiegel.
+            %org.kalypso.model.flood.ui.wizards.NewProjectWizard.description
          </description>
       </wizard>
       <wizard
@@ -304,15 +305,18 @@
             hasPages="true"
             icon="icons//button_flood.gif"
             id="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
-            name="Kalypso Flood Model - Demo Projekt"
+            name="%org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
             project="true">
+         <description>
+            %org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard.description
+         </description>
       </wizard>
    </extension>
    <extension
          point="org.kalypso.deegree.functionExpression">
       <function
             class="org.kalypso.model.flood.ui.map.EventFilterExpression"
-            label="Event Filter"
+            label="%org.kalypso.model.flood.ui.map.EventFilterExpression"
             name="org.kalypso.model.flood.ui.map.EventFilterExpression">
       </function>
    </extension>
@@ -321,7 +325,7 @@
       <provider
             class="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
             id="org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider"
-            label="Externe Datei (.hmo, .shp, .gml)">
+            label="%org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider">
          <category
                id="org.kalypso.core.tin.waterlevel">
          </category>
@@ -332,8 +336,8 @@
       <project
             category="org.kalypso.model.flood.projectTemplate"
             data="etc/projectTemplate.zip"
-            description="Die leere Vorlage für Flood-Projekte"
-            label="Leere Vorlage"
+            description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
+            label="%org.kalypso.contribs.eclipseplatform.projectTemplate"
             projectName="">
       </project>
    </extension>

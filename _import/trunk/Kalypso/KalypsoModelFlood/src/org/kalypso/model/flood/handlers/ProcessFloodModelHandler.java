@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.core.SimulationKalypsoFlood;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
@@ -110,12 +111,12 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
       final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
       if( mapView == null )
-        throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+        throw new ExecutionException( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.0") ); //$NON-NLS-1$
 
       final IMapPanel mapPanel = mapView.getMapPanel();
 
       /* wait for map to load */
-      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.1"), Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return null;
 
       /* ask user which events to process? */
@@ -132,7 +133,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
 
         if( resultCoverages.size() != 0 )
         {
-          if( MessageDialog.openQuestion( shell, "Fließtiefendaten für Ereignis " + runoffEvent.getName() + "bereits vorhanden", "Sollen vorhandene Daten überschrieben werden?" ) == true )
+          if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.3") + runoffEvent.getName() + Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.4"), Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.5") ) == true ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           {
             // clear existing results (gml and file and themes).
             final IStatus status = FloodModelHelper.removeResultCoverages( dataProvider, resultCoverages );
@@ -153,7 +154,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       // - at least one grid present
 
       final IMapModell mapModell = mapPanel.getMapModell();
-      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.6"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IRunoffEvent[] event2process = eventListToProcess.toArray( new IRunoffEvent[eventListToProcess.size()] );
       runCalculation( shell, scenarioFolder, model, event2process, dataProvider, wspTheme );
@@ -171,7 +172,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
   {
     if( eventsToProcess.length == 0 )
     {
-      MessageDialog.openInformation( shell, "Flood-Modeller", "Keine Ereignisse prozessiert." );
+      MessageDialog.openInformation( shell, "Flood-Modeller", Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.9") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
     // remove themes (processed coverages only)
@@ -186,7 +187,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       runoffEvent.setMarkedForProcessing( true );
     }
     // REMARK: post an empty command in order to make the pool dirty, else save does not work.
-    final ICommand command = new EmptyCommand( "Feature Changed", false );
+    final ICommand command = new EmptyCommand( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.10"), false ); //$NON-NLS-1$
     try
     {
       dataProvider.postCommand( IFloodModel.class, command );
@@ -194,11 +195,11 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     }
     catch( final Exception e1 )
     {
-      ErrorDialog.openError( shell, "Flood-Modeller", "Problem with saving the model.", Status.CANCEL_STATUS );
+      ErrorDialog.openError( shell, "Flood-Modeller", Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.12"), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    final Job job = new Job( "Berechne..." )
+    final Job job = new Job( Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.13") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -220,13 +221,13 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
               }
               catch( final Exception e )
               {
-                showErrorDialog( shell, "Could not create map layers: " + e.getLocalizedMessage() );
+                showErrorDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.14") + e.getLocalizedMessage() ); //$NON-NLS-1$
                 return StatusUtilities.createErrorStatus( e.getLocalizedMessage(), new Object[] {} );
               }
             }
-            showInfoDialog( shell, "Fließtiefen wurden erfolgreich erzeugt." );
+            showInfoDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.15") ); //$NON-NLS-1$
           }
-          showErrorDialog( shell, "Fließtiefen erzeugen", status );
+          showErrorDialog( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.16"), status ); //$NON-NLS-1$
         }
         catch( final Exception e )
         {
@@ -258,7 +259,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     {
       public void run( )
       {
-        MessageDialog.openInformation( shell, "Flood-Modeller info", message );
+        MessageDialog.openInformation( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.17"), message ); //$NON-NLS-1$
       }
     } );
   }
@@ -269,7 +270,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     {
       public void run( )
       {
-        MessageDialog.openError( shell, "Flood-Modeller fehler", message );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.18"), message ); //$NON-NLS-1$
       }
     } );
   }
@@ -280,7 +281,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
     {
       public void run( )
       {
-        ErrorDialog.openError( shell, "Flood-Modeller fehler", message, status );
+        ErrorDialog.openError( shell, Messages.getString("org.kalypso.model.flood.handlers.ProcessFloodModelHandler.19"), message, status ); //$NON-NLS-1$
       }
     } );
   }

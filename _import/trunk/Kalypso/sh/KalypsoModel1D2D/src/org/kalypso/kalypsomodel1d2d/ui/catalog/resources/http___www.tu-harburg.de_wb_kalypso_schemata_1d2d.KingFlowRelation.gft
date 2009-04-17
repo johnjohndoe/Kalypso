@@ -33,7 +33,7 @@
         <gft:validatorlabel property="wb1d2d:width" visible="true" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:validatorlabel>
-        <gft:labelproperty="wb1d2d:ss1" visible="true" style="SWT.NONE">
+        <gft:label property="wb1d2d:ss1" visible="true" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
         <gft:text editable="true" property="wb1d2d:ss1"  style="SWT.BORDER">

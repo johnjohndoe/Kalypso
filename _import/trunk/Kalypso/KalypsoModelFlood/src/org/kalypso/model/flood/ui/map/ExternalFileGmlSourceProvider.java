@@ -65,6 +65,7 @@ import org.kalypso.core.gml.provider.GmlSource;
 import org.kalypso.core.gml.provider.IGmlSource;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.model.flood.KalypsoModelFloodPlugin;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -74,7 +75,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeContentProvider
 {
-  private static final Object THE_ELEMENT = "Externe Datei";
+  private static final Object THE_ELEMENT = Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.0"); //$NON-NLS-1$
 
   private final FileChooserDelegate m_fileDelegate = new FileChooserDelegate( FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE.eOpen )
   {
@@ -84,7 +85,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     @Override
     public String[] getFilterNames( )
     {
-      return new String[] { "Alle Dateien (*.*)", "HMO-Dateien (*.hmo)", "ESRI-Shape Dateien (*.shp)", "GML-Dateien (*.gml)" };
+      return new String[] { Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.1"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.2"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.3"), Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.4") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     /**
@@ -93,7 +94,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     @Override
     public String[] getFilterExtensions( )
     {
-      return new String[] { "*.*", "*.hmo", "*.shp", "*.gml" };
+      return new String[] { "*.*", "*.hmo", "*.shp", "*.gml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   };
 
@@ -134,18 +135,18 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
     panel.setLayout( new GridLayout() );
 
     final Label label = new Label( panel, SWT.NONE );
-    label.setText( "Externe Datei als Wasserspiegel-Tin importieren: " );
+    label.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.9") ); //$NON-NLS-1$
 
     final Group fileControl = m_fileChooserGroup.createControl( panel, SWT.NONE );
     fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileControl.setText( "Externe Datei" );
+    fileControl.setText( Messages.getString("org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider.10") ); //$NON-NLS-1$
 
     m_crsPanel = new CRSSelectionPanel( panel, SWT.NONE );
     m_crsPanel.setSelectedCRS( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // Set dialog settings at the end, so update is correctly done for all controls
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelFloodPlugin.getDefault(), "externalWspFileImport" ); //$NON-NLS-1$
     m_fileChooserGroup.setDialogSettings( dialogSettings );
   }
 
@@ -173,12 +174,12 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
       return null;
 
     final String name = m_file.getName();
-    final String description = "";
+    final String description = ""; //$NON-NLS-1$
 
     try
     {
       final URL fileUrl = m_file.toURI().toURL();
-      final URL location = crs == null ? fileUrl : new URL( fileUrl.toExternalForm() + "?srs=" + crs );
+      final URL location = crs == null ? fileUrl : new URL( fileUrl.toExternalForm() + "?srs=" + crs ); //$NON-NLS-1$
 
       // TODO: we should set here a correct xpath to the GM_TriangualtedSurface (for tins)
       return new GmlSource( name, description, location, null );
@@ -201,7 +202,7 @@ public class ExternalFileGmlSourceProvider implements IGmlSourceProvider, ITreeC
       return false;
 
     final String extLow = ext.toLowerCase();
-    if( "hmo".equals( extLow ) || "shp".equals( extLow ) )
+    if( "hmo".equals( extLow ) || "shp".equals( extLow ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return true;
 
     return false;

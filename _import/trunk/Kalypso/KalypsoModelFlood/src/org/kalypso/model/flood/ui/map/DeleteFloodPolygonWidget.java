@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.flood.binding.IFloodPolygon;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
@@ -30,9 +31,9 @@ public class DeleteFloodPolygonWidget extends AbstractDelegateWidget
 
   public DeleteFloodPolygonWidget( )
   {
-    super( "WSP-Anpassungen löschen", "löscht WSP-Anpassungen", new SelectFeatureWidget( "", "", new QName[] { IFloodPolygon.QNAME }, IFloodPolygon.QNAME_PROP_AREA ) );
+    super( Messages.getString("org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget.0"), Messages.getString("org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget.1"), new SelectFeatureWidget( "", "", new QName[] { IFloodPolygon.QNAME }, IFloodPolygon.QNAME_PROP_AREA ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-    m_toolTipRenderer.setTooltip( "Selektieren Sie die WSP-Anpassungen in der Karte.\n    'Del': selektierte WSP-Anpassungen löschen." );
+    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget.4") ); //$NON-NLS-1$
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
@@ -50,7 +51,7 @@ public class DeleteFloodPolygonWidget extends AbstractDelegateWidget
       final Rectangle bounds = mapPanel.getScreenBounds();
       final String delegateTooltip = getDelegate().getToolTip();
 
-      m_toolTipRenderer.setTooltip( "Selektieren Sie WSP-Anpassungen in der Karte.\n    'Del': selektierte WSP-Anpassungen löschen.\n" + delegateTooltip );
+      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.model.flood.ui.map.DeleteFloodPolygonWidget.5") + delegateTooltip ); //$NON-NLS-1$
 
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }

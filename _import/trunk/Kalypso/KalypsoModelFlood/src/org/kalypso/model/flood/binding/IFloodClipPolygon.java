@@ -49,5 +49,5 @@ import org.kalypso.model.flood.schema.UrlCatalogModelFlood;
  */
 public interface IFloodClipPolygon extends IFloodPolygon
 {
-  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodClipPolygon" );
+  public final static QName QNAME = new QName( UrlCatalogModelFlood.NS_MODEL_FLOOD, "FloodClipPolygon" ); //$NON-NLS-1$
 }
