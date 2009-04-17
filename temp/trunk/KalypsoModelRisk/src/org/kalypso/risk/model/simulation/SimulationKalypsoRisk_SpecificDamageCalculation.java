@@ -119,6 +119,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new SimulationException( e.getLocalizedMessage() );
     }
   }
