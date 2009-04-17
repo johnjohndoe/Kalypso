@@ -104,7 +104,7 @@ public class LanduseCollection extends Feature_Impl
 
         case IGNORE_INTERSECTING:
         {
-          final String message = String.format( "Ingoring imported landuse '%s' due to intersection", label );
+          final String message = String.format( "Ignoring imported landuse '%s' due to intersection", label );
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           return null;
@@ -114,7 +114,7 @@ public class LanduseCollection extends Feature_Impl
           final GM_MultiSurface existingGeometry = existingLanduse.getGeometry();
           final GM_MultiSurface difference = PolygonIntersectionHelper.createDifference( geometry, existingGeometry );
           if( difference != null )
-          {
+          {// TODO: check if area of difference is > 0!
             existingLanduse.setGeometry( difference );
             final String message = String.format( "Landuse '%s' was reduced by imported landuse '%s'", existingLanduse.getId(), label );
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
