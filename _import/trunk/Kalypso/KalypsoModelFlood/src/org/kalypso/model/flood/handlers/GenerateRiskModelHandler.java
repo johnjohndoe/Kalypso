@@ -38,6 +38,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -67,17 +68,17 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
 
       /* Find risk project wizard: serves as test if risk-model is available */
-      final IWizardDescriptor wizardDesc = NewWizardRegistry.getInstance().findWizard( "org.kalypso.risk.project.KalypsoRiskProjectWizard" );
+      final IWizardDescriptor wizardDesc = NewWizardRegistry.getInstance().findWizard( "org.kalypso.risk.project.KalypsoRiskProjectWizard" ); //$NON-NLS-1$
       if( wizardDesc == null )
       {
-        MessageDialog.openError( shell, "Risk Modell erzeugen", "Risk Modell Plug-Ins nicht verfügbar, es kann kein Risk Modell Projekt erzeugt werden." );
+        MessageDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.1" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 
       /* collect the flood model data, that is needed for Risk Modeller */
       // get the data provider
       final SzenarioDataProvider dataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" );
+      final IFolder floodModelScenarioFolder = (IFolder) dataProvider.getScenarioFolder().findMember( "/models/" ); //$NON-NLS-1$
 
       // get the flood model
       final IFloodModel model = dataProvider.getModel( IFloodModel.class );
@@ -94,7 +95,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       final IRunoffEvent[] eventsToProcess = checkEvents( selectedEvents, shell );
       if( eventsToProcess.length == 0 )
       {
-        MessageDialog.openInformation( shell, "Risk Modell erzeugen", "Sie haben keine Ereignisse mit Ergebnissen ausgewählt. Vorgang wird abgebrochen." );
+        MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.4" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 
@@ -105,7 +106,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* Check if project creation succeeded */
       final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
       final CaseHandlingProjectNature nature = activeWorkContext.getCurrentProject();
-      if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) )
+      if( !nature.getProject().hasNature( "org.kalypso.risk.project.KalypsoRiskProjectNature" ) ) //$NON-NLS-1$
       {
         // we simply return, because that means no new project was created (maybe user cancelled the dialog)
         return null;
@@ -114,8 +115,10 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       /* Now we can import the flodd-depth grids */
       final ICoreRunnableWithProgress importOperation = new ICoreRunnableWithProgress()
       {
+
         @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+
         {
           try
           {
@@ -135,8 +138,10 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
           }
           return Status.OK_STATUS;
         }
+
       };
       ProgressUtilities.busyCursorWhile( importOperation, "Failed to import flood depth data into new project" );
+
     }
     catch( final Exception e )
     {
@@ -212,7 +217,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
       if( resultCoverages.size() == 0 )
       {
-        MessageDialog.openInformation( shell, "Risk Model erzeugen", "Keine Fließtiefendaten für Ereignis " + runoffEvent.getName() + " vorhanden. Ereignis wird nicht berücksichtigt." );
+        MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.12" ), Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.13" ) + runoffEvent.getName() + Messages.getString( "org.kalypso.model.flood.handlers.GenerateRiskModelHandler.14" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       else
         eventList.add( runoffEvent );

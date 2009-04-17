@@ -26,6 +26,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -67,9 +68,9 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( "Ereignis hinzufügen", 7 );
+      monitor.beginTask( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.0" ), 7 ); //$NON-NLS-1$
 
-      final String dialogValue = FileUtilities.validateName( m_eventName, "_" );
+      final String dialogValue = FileUtilities.validateName( m_eventName, "_" ); //$NON-NLS-1$
 
       /* Create a unique name */
       final IFeatureWrapperCollection<IRunoffEvent> events = m_model.getEvents();
@@ -100,6 +101,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       /* Create new folder and fill with defaults */
       final IFolder newEventFolder = m_eventsFolder.getFolder( dataPath );
       newEventFolder.create( false, true, new SubProgressMonitor( monitor, 2 ) );
+
       // search/replace in order to configure filter
 
       /* Add event-themes to map */
@@ -157,44 +159,44 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     {// Polygone
       final StyledLayerType polygoneLayer = new StyledLayerType();
 
-      polygoneLayer.setName( "Anpassungen (" + event.getName() + ")" );
-      polygoneLayer.setFeaturePath( "polygonMember" );
-      polygoneLayer.setLinktype( "gml" );
-      polygoneLayer.setType( "simple" );
+      polygoneLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.6" ), event.getName() ) ); //$NON-NLS-1$
+      polygoneLayer.setFeaturePath( "polygonMember" ); //$NON-NLS-1$
+      polygoneLayer.setLinktype( "gml" ); //$NON-NLS-1$
+      polygoneLayer.setType( "simple" ); //$NON-NLS-1$
       polygoneLayer.setVisible( true );
-      polygoneLayer.setActuate( "onRequest" );
-      polygoneLayer.setHref( "../models/flood.gml" );
+      polygoneLayer.setActuate( "onRequest" ); //$NON-NLS-1$
+      polygoneLayer.setHref( "../models/flood.gml" ); //$NON-NLS-1$
       polygoneLayer.setVisible( true );
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "false" );
+      layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
 
       final List<Property> layerPropertyList = polygoneLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );
 
       final List<Style> styleList = polygoneLayer.getStyle();
       final Style extrsStyle = new Style();
-      extrsStyle.setLinktype( "sld" );
-      extrsStyle.setStyle( "extrapolationPolygonUserStyle" );
-      extrsStyle.setActuate( "onRequest" );
+      extrsStyle.setLinktype( "sld" ); //$NON-NLS-1$
+      extrsStyle.setStyle( "extrapolationPolygonUserStyle" ); //$NON-NLS-1$
+      extrsStyle.setActuate( "onRequest" ); //$NON-NLS-1$
       extrsStyle.setHref( styleLocationForEventWsp( event ) );
-      extrsStyle.setType( "simple" );
+      extrsStyle.setType( "simple" ); //$NON-NLS-1$
       styleList.add( extrsStyle );
 
       final Style clipStyle = new Style();
-      clipStyle.setLinktype( "sld" );
-      clipStyle.setStyle( "clipPolygonUserStyle" );
-      clipStyle.setActuate( "onRequest" );
+      clipStyle.setLinktype( "sld" ); //$NON-NLS-1$
+      clipStyle.setStyle( "clipPolygonUserStyle" ); //$NON-NLS-1$
+      clipStyle.setActuate( "onRequest" ); //$NON-NLS-1$
       clipStyle.setHref( styleLocationForEventWsp( event ) );
-      clipStyle.setType( "simple" );
+      clipStyle.setType( "simple" ); //$NON-NLS-1$
       styleList.add( clipStyle );
 
       final Style volumeStyle = new Style();
-      volumeStyle.setLinktype( "sld" );
-      volumeStyle.setStyle( "volumePolygonUserStyle" );
-      volumeStyle.setActuate( "onRequest" );
+      volumeStyle.setLinktype( "sld" ); //$NON-NLS-1$
+      volumeStyle.setStyle( "volumePolygonUserStyle" ); //$NON-NLS-1$
+      volumeStyle.setActuate( "onRequest" ); //$NON-NLS-1$
       volumeStyle.setHref( styleLocationForEventWsp( event ) );
-      volumeStyle.setType( "simple" );
+      volumeStyle.setType( "simple" ); //$NON-NLS-1$
       styleList.add( volumeStyle );
 
       wspThemes.addLayer( polygoneLayer );
@@ -203,21 +205,21 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
     { // Wasserspiegel
       final StyledLayerType wspLayer = new StyledLayerType();
 
-      wspLayer.setName( "Wasserspiegel (" + event.getName() + ")" );
-      wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/tinMember" );
-      wspLayer.setLinktype( "gml" );
-      wspLayer.setType( "simple" );
+      wspLayer.setName( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.operations.AddEventOperation.26" ), event.getName() ) ); //$NON-NLS-1$ 
+      wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/tinMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+      wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
+      wspLayer.setType( "simple" ); //$NON-NLS-1$
       wspLayer.setVisible( true );
-      wspLayer.setActuate( "onRequest" );
-      wspLayer.setHref( "../models/flood.gml" );
+      wspLayer.setActuate( "onRequest" ); //$NON-NLS-1$
+      wspLayer.setHref( "../models/flood.gml" ); //$NON-NLS-1$
       wspLayer.setVisible( true );
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-      layerPropertyDeletable.setValue( "false" );
+      layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
 
       final Property layerPropertyThemeInfoId = new Property();
       layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" );
+      layerPropertyThemeInfoId.setValue( "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final List<Property> layerPropertyList = wspLayer.getProperty();
       layerPropertyList.add( layerPropertyDeletable );
@@ -225,11 +227,11 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
       final List<Style> styleList = wspLayer.getStyle();
       final Style style = new Style();
-      style.setLinktype( "sld" );
-      style.setStyle( "wspUserStyle" );
-      style.setActuate( "onRequest" );
+      style.setLinktype( "sld" ); //$NON-NLS-1$
+      style.setStyle( "wspUserStyle" ); //$NON-NLS-1$
+      style.setActuate( "onRequest" ); //$NON-NLS-1$
       style.setHref( styleLocationForEventWsp( event ) );
-      style.setType( "simple" );
+      style.setType( "simple" ); //$NON-NLS-1$
       styleList.add( style );
 
       wspThemes.addLayer( wspLayer );
@@ -238,7 +240,7 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
 
   public static String styleLocationForEventWsp( final IRunoffEvent event )
   {
-    return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld";
+    return "../events/" + event.getDataPath().toPortableString() + "/wsp.sld"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

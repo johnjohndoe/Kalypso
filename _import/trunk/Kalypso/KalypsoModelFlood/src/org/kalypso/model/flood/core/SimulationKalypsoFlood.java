@@ -66,6 +66,7 @@ import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -120,7 +121,7 @@ public class SimulationKalypsoFlood implements ISimulation
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "Specification_FloodCalculation.xml" );
+    return getClass().getResource( "Specification_FloodCalculation.xml" ); //$NON-NLS-1$
   }
 
   /**
@@ -171,7 +172,9 @@ public class SimulationKalypsoFlood implements ISimulation
       for( final IRunoffEvent event : events )
       {
         if( event.isMarkedForProcessing() )
+
           markedEvents.add( event );
+
       }
 
       if( markedEvents.size() == 0 )
@@ -196,6 +199,7 @@ public class SimulationKalypsoFlood implements ISimulation
     catch( final SimulationException e )
     {
       throw e;
+
     }
     catch( final Exception e )
     {
@@ -402,17 +406,18 @@ public class SimulationKalypsoFlood implements ISimulation
 
       /* set destination: => event folder/results */
       // generate unique name for grid file
-      final File resultsFolder = new File( eventFolder, "results" );
+      final File resultsFolder = new File( eventFolder, "results" ); //$NON-NLS-1$
       resultsFolder.mkdir();
-      final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", resultsFolder );
+      final String uniqueFileName = FileUtilities.createNewUniqueFileName( "grid", ".ascbin", resultsFolder ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final File outputCoverageFile = new File( resultsFolder, uniqueFileName );
-      final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();
 
-      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );
-      coverage.setName( "Flieﬂtiefen - " + terrainCoverage.getName() );
+      final String fileName = CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX + event.getDataPath() + "/results/" + outputCoverageFile.getName();//$NON-NLS-1$
 
-      final String desc = String.format( "erzeugt am: %1$te.%1$tm.%1$tY - %s", new Date(), terrainCoverage.getName() );
+      final ICoverage coverage = GeoGridUtilities.addCoverage( resultCoverages, diffGrid, outputCoverageFile, fileName, "image/bin", progress.newChild( 1 ) );//$NON-NLS-1$
+      coverage.setName( String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.10" ), terrainCoverage.getName() ) ); //$NON-NLS-1$
+
+      final String desc = String.format( Messages.getString( "org.kalypso.model.flood.core.SimulationKalypsoFlood.11" ), new Date(), terrainCoverage.getName() ); //$NON-NLS-1$
       coverage.setDescription( desc );
 
       terrainGrid.dispose();
@@ -434,6 +439,5 @@ public class SimulationKalypsoFlood implements ISimulation
   //
   // return filteredPolygons.toArray( new IFloodPolygon[filteredPolygons.size()] );
   // }
-
 
 }

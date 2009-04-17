@@ -59,6 +59,7 @@ import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -191,20 +192,20 @@ public class FloodModelHelper
   {
     final StyledLayerType wspLayer = new StyledLayerType();
 
-    wspLayer.setName( "Flieﬂtiefen (" + event.getName() + ")" );
-    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() );
-    wspLayer.setLinktype( "gml" );
-    wspLayer.setType( "simple" );
+    wspLayer.setName(String.format(  Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.0") , event.getName() ) ); //$NON-NLS-1$
+    wspLayer.setFeaturePath( "#fid#" + event.getFeature().getId() + "/" + IRunoffEvent.QNAME_PROP_RESULT_COVERAGES.getLocalPart() + "/" + ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER.getLocalPart() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    wspLayer.setLinktype( "gml" ); //$NON-NLS-1$
+    wspLayer.setType( "simple" ); //$NON-NLS-1$
     wspLayer.setVisible( true );
-    wspLayer.setActuate( "onRequest" );
-    wspLayer.setHref( "../models/flood.gml" );
+    wspLayer.setActuate( "onRequest" ); //$NON-NLS-1$
+    wspLayer.setHref( "../models/flood.gml" ); //$NON-NLS-1$
     final Property layerPropertyDeletable = new Property();
     layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-    layerPropertyDeletable.setValue( "false" );
+    layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
 
     final Property layerPropertyThemeInfoId = new Property();
     layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-    layerPropertyThemeInfoId.setValue( CoverageThemeInfo.class.getName() + "?format=Fliesstiefen (" + event.getName() + ") %.2f NN+m" );
+    layerPropertyThemeInfoId.setValue( CoverageThemeInfo.class.getName() + "?format=Fliesstiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final List<Property> layerPropertyList = wspLayer.getProperty();
     layerPropertyList.add( layerPropertyDeletable );
@@ -212,11 +213,11 @@ public class FloodModelHelper
 
     final List<Style> styleList = wspLayer.getStyle();
     final Style style = new Style();
-    style.setLinktype( "sld" );
-    style.setStyle( "waterdepthUserStyle" );
-    style.setActuate( "onRequest" );
-    style.setHref( "../maps/results.sld" );
-    style.setType( "simple" );
+    style.setLinktype( "sld" ); //$NON-NLS-1$
+    style.setStyle( "waterdepthUserStyle" ); //$NON-NLS-1$
+    style.setActuate( "onRequest" ); //$NON-NLS-1$
+    style.setHref( "../maps/results.sld" ); //$NON-NLS-1$
+    style.setType( "simple" ); //$NON-NLS-1$
     styleList.add( style );
 
     if( index == -1 )
@@ -264,7 +265,7 @@ public class FloodModelHelper
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, "Lˆschen von Raster-Daten fehlgeschlagen" );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.1") ); //$NON-NLS-1$
     }
   }
 
@@ -291,21 +292,21 @@ public class FloodModelHelper
         final ICoverageCollection resultCoverages = event.getResultCoverages();
         if( resultCoverages != null && resultCoverages.size() > 0 )
         {
-          return event.getName() + " (Ergebnisse vorhanden)";
+          return event.getName() + Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.18"); //$NON-NLS-1$
         }
         else
         {
           final String name = event.getName();
           if( name == null || name.length() == 0 )
-            return "[" + event.getGmlID() + "]";
+            return "[" + event.getGmlID() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
           else
             return name;
         }
       }
     };
 
-    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, "Welche Ereignisse sollen verarbeitet werden?" );
-    dialog.setTitle( "Flood-Modeller" );
+    final ListSelectionDialog dialog = new ListSelectionDialog( shell, events, new ArrayContentProvider(), labelProvider, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.21") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.22") ); //$NON-NLS-1$
 
     if( dialog.open() != Window.OK )
       return null;

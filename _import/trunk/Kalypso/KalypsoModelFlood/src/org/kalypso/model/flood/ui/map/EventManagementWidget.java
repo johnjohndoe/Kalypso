@@ -123,6 +123,7 @@ import org.kalypso.model.flood.KalypsoModelFloodPlugin;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.model.flood.ui.map.operations.AddEventOperation;
 import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
@@ -166,14 +167,16 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * A widget with option pane, which allows the user to manage (add/remove) run-off events and to import water level data
  * for each event.
- *
+ * 
  * @author Thomas Jung
  */
 public class EventManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );
 
-  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )
+  private final static URL SLD_TEMPLATE_LOCATION = EventManagementWidget.class.getResource( "resources/wsp.sld" );//$NON-NLS-1$
+
+  private final AbstractThemeInfoWidget m_infoWidget = new AbstractThemeInfoWidget( "", "" )//$NON-NLS-1$//$NON-NLS-2$
+
   {
   };
 
@@ -189,9 +192,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   public EventManagementWidget( )
   {
-    super( "Ereignisse verwalten", "Ereignisse verwalten" );
+    super( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.2" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_infoWidget.setNoThemesTooltip( "<kein Ereignis ausgewählt>" );
+    m_infoWidget.setNoThemesTooltip( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.4" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -304,11 +307,11 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     eventInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( eventInfoGroup );
-    eventInfoGroup.setText( "Info" );
+    eventInfoGroup.setText( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.5" ) ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    featureviewFactory.addView( getClass().getResource( "resources/event.gft" ) );
-    featureviewFactory.addView( getClass().getResource( "resources/tinReference.gft" ) );
+    featureviewFactory.addView( getClass().getResource( "resources/event.gft" ) ); //$NON-NLS-1$
+    featureviewFactory.addView( getClass().getResource( "resources/tinReference.gft" ) ); //$NON-NLS-1$
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
     featureComposite.addChangeListener( new IFeatureChangeListener()
@@ -378,9 +381,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         final IRunoffEvent runoffEvent = getCurrentEvent();
         IKalypsoFeatureTheme runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
 
-          try
-          {
-            // Always check, if sld file exists
+        try
+        {
+          // Always check, if sld file exists
           AddEventOperation.checkSLDFile( runoffEvent, getEventFolder( runoffEvent ), SLD_TEMPLATE_LOCATION );
 
           final IKalypsoCascadingTheme wspThemes = findWspTheme();
@@ -392,12 +395,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
           /* Also add result theme if results are available */
           if( getResultFolder( runoffEvent ).exists() && FloodModelHelper.findResultTheme( runoffEvent, wspThemes ) == -1 )
             FloodModelHelper.addResultTheme( runoffEvent, wspThemes, -1 );
-          }
-          catch( final Exception e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+        }
+        catch( final Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
         runoffEventTheme = FloodModelHelper.findThemeForEvent( getMapPanel().getMapModell(), runoffEvent );
 
         // TODO: add theme if missing
@@ -440,7 +443,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     // We are reusing images of KalypsoGmlUi here
     final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
 
-    final Action action = new Action( "Farbtabelle anpassen", generateID )
+    final Action action = new Action( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.8" ), generateID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -451,7 +454,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleGenerateColorMap( event );
       }
     };
-    action.setToolTipText( "Farbtabelle anpassen" );
+    action.setToolTipText( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.9" ) ); //$NON-NLS-1$
 
     createButton( toolkit, parent, action );
 
@@ -472,7 +475,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     if( runoffEvent == null )
     {
-      MessageDialog.openConfirm( shell, "Wasserspiegel importieren", "Wählen Sie das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.10" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -508,12 +511,14 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
           final UserStyle[] styles = runoffEventTheme.getStyles();
           for( final UserStyle userStyle : styles )
           {
+
             if( userStyle instanceof GisTemplateUserStyle )
             {
               final GisTemplateUserStyle gtus = (GisTemplateUserStyle) userStyle;
               gtus.fireStyleChanged();
               gtus.save( new NullProgressMonitor() );
             }
+
           }
         }
         catch( final CoreException e )
@@ -554,10 +559,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       final UserStyle style = findUserStyle( styles, "wspUserStyle" );
       if( style != null )
       {
+
         final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
         final Rule wspRule = wspFts.getRule( "wspRule" );
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
         return symb.getColorMap();
+
       }
     }
     catch( final Exception e )
@@ -572,8 +579,10 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     for( final UserStyle userStyle : styles )
     {
+
       if( userStyle.getName().equals( name ) )
         return userStyle;
+
     }
 
     return null;
@@ -582,7 +591,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   public static IFile getSldFile( final IRunoffEvent event ) throws CoreException
   {
     final IFolder eventFolder = getEventFolder( event );
-    return eventFolder.getFile( "wsp.sld" );
+    return eventFolder.getFile( "wsp.sld" ); //$NON-NLS-1$
   }
 
   public static IFolder getEventFolder( final IRunoffEvent event ) throws CoreException
@@ -601,7 +610,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   public static IFolder getEventsFolder( ) throws CoreException
   {
     final IFolder szenarioFolder = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getFolder();
-    return szenarioFolder.getFolder( "events" );
+    return szenarioFolder.getFolder( "events" ); //$NON-NLS-1$
   }
 
   private IRunoffEvent getCurrentEvent( )
@@ -646,7 +655,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     if( m_model == null )
     {
-      viewer.setInput( StatusUtilities.createErrorStatus( "Flood-Modell nicht geladen." ) );
+      viewer.setInput( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.21" ) ) ); //$NON-NLS-1$
     }
     else
     {
@@ -676,7 +685,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final ImageDescriptor jumptoID = KalypsoModelFloodPlugin.getImageProvider().getImageDescriptor( KalypsoModelFloodImages.DESCRIPTORS.TIN_JUMPTO );
     final ImageDescriptor updateDataID = KalypsoModelFloodPlugin.getImageProvider().getImageDescriptor( KalypsoModelFloodImages.DESCRIPTORS.TIN_UPDATE );
 
-    final Action addEventAction = new Action( "AddEvent", addEventID )
+    final Action addEventAction = new Action( "AddEvent", addEventID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -687,9 +696,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleAddEvent( event );
       }
     };
-    addEventAction.setDescription( "Neues Ereignis" );
+    addEventAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.23" ) ); //$NON-NLS-1$
 
-    final Action importTinAction = new Action( "ImportTin", importTinID )
+    final Action importTinAction = new Action( "ImportTin", importTinID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -700,9 +709,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleImportTin( event );
       }
     };
-    importTinAction.setDescription( "Wasserspiegel importieren" );
+    importTinAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.25" ) ); //$NON-NLS-1$
 
-    final Action removeAction = new Action( "Remove", removeID )
+    final Action removeAction = new Action( "Remove", removeID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -713,9 +722,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleRemove( event );
       }
     };
-    removeAction.setDescription( "Ereignis/Wasserspiegel löschen" );
+    removeAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.27" ) ); //$NON-NLS-1$
 
-    final Action moveUpAction = new Action( "Move Up", upID )
+    final Action moveUpAction = new Action( "Move Up", upID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -726,9 +735,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleMove( event, -1 );
       }
     };
-    moveUpAction.setDescription( "Nach Oben verschieben" );
+    moveUpAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.29" ) ); //$NON-NLS-1$
 
-    final Action moveDownAction = new Action( "Move Down", downID )
+    final Action moveDownAction = new Action( "Move Down", downID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -739,9 +748,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleMove( event, 1 );
       }
     };
-    moveDownAction.setDescription( "Nach Unten verschieben" );
+    moveDownAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.31" ) ); //$NON-NLS-1$
 
-    final Action jumpToAction = new Action( "Jump To", jumptoID )
+    final Action jumpToAction = new Action( "Jump To", jumptoID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -752,9 +761,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleJumpTo();
       }
     };
-    jumpToAction.setDescription( "Springe zu" );
+    jumpToAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.33" ) ); //$NON-NLS-1$
 
-    final Action updateDataAction = new Action( "Update Data", updateDataID )
+    final Action updateDataAction = new Action( "Update Data", updateDataID ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -765,7 +774,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
         handleUpdateData( event );
       }
     };
-    updateDataAction.setDescription( "Daten aktualisieren" );
+    updateDataAction.setDescription( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.35" ) ); //$NON-NLS-1$
 
     createButton( toolkit, parent, addEventAction );
     createButton( toolkit, parent, importTinAction );
@@ -837,7 +846,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     final Shell shell = event.display.getActiveShell();
-    final ListSelectionDialog dialog = new ListSelectionDialog( shell, tinRefs, new ArrayContentProvider(), new GMLLabelProvider(), "Welche Wasserspiegel sollen aktualisiert werden?" );
+    final ListSelectionDialog dialog = new ListSelectionDialog( shell, tinRefs, new ArrayContentProvider(), new GMLLabelProvider(), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.36" ) ); //$NON-NLS-1$
     dialog.setInitialSelections( tinRefs.toArray() );
     if( dialog.open() != Window.OK )
     {
@@ -858,7 +867,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
     }
-    ErrorDialog.openError( shell, "Daten aktualisieren", "Fehler beim Aktualisieren der Daten", resultStatus );
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.37" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.38" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected void handleJumpTo( )
@@ -913,7 +922,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelFloodPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( event.display.getActiveShell(), "Reihenfolge ändern", "Fehler beim Ändern der Reihenfolge", status );
+      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.39" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.40" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -925,7 +934,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       {
         if( newText == null || newText.length() == 0 )
         {
-          return "Name darf nicht leer sein";
+          return Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.41" ); //$NON-NLS-1$
         }
 
         return null;
@@ -934,7 +943,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
     // show input dialog
     final Shell shell = event.display.getActiveShell();
-    final InputDialog dialog = new InputDialog( shell, "Ereignis hinzufügen", "Bitte geben Sie den Namen des neuen Ereignis ein:", "", inputValidator );
+    final InputDialog dialog = new InputDialog( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.42" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.43" ), "", inputValidator ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     if( dialog.open() != Window.OK )
     {
       return;
@@ -944,6 +953,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       final String eventName = dialog.getValue();
       final IFolder eventsFolder = getEventsFolder();
+
       final IFloodModel model = m_model;
       final IKalypsoCascadingTheme wspThemes = findWspTheme();
 
@@ -954,7 +964,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
       {
         KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
       }
-      ErrorDialog.openError( shell, "Ereignis hinzufügen", "Fehler beim Erzeugen des Ereignisses", resultStatus );
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.49" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.50" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
@@ -973,21 +983,21 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   protected void handleImportTin( final Event event )
   {
     final Shell shell = event.display.getActiveShell();
-    final String windowTitle = "Wasserspiegel importieren";
+    final String windowTitle = Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.51" ); //$NON-NLS-1$
 
     // get selected event
     final IRunoffEvent runoffEvent = findFirstEvent( m_treeSelection );
     if( runoffEvent == null )
     {
-      MessageDialog.openConfirm( shell, windowTitle, "Wählen Sie bitte zuerst das Ereignis aus, zu welchem zu Wasserspiegel hinzufügen möchten." );
+      MessageDialog.openConfirm( shell, windowTitle, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.52" ) ); //$NON-NLS-1$
       return;
     }
 
     /* Get source provider for tins */
-    final IGmlSourceProvider[] provider = KalypsoCoreExtensions.createGmlSourceProvider( "org.kalypso.core.tin.waterlevel" );
+    final IGmlSourceProvider[] provider = KalypsoCoreExtensions.createGmlSourceProvider( "org.kalypso.core.tin.waterlevel" ); //$NON-NLS-1$
     if( provider.length == 0 )
     {
-      MessageDialog.openConfirm( shell, windowTitle, "In dieser Installation stehen keine Wasserspiegel zur Verfügung." );
+      MessageDialog.openConfirm( shell, windowTitle, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.54" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -1005,7 +1015,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   /**
    * TODO: replace by getCurrentEvent, should do the same...<br>
-   *
+   * 
    * Searches for the first occurrence of {@link IRunoffEvent} in the current selection.<br>
    * If a tin is selected its parent will be returned.
    */
@@ -1048,7 +1058,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     }
 
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.55" ), "waterlevelThemes" );//$NON-NLS-1$ //$NON-NLS-2$
+
     final Shell shell = event.display.getActiveShell();
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
@@ -1058,7 +1070,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     {
       KalypsoModelFloodPlugin.getDefault().getLog().log( resultStatus );
     }
-    ErrorDialog.openError( shell, "Ereignis löschen", "Fehler beim Löschen des Ereignisses", resultStatus );
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.57" ), Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.58" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -1207,7 +1219,9 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private void updateThemeNames( )
   {
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.59" ), "waterlevelThemes" );//$NON-NLS-1$ //$NON-NLS-2$
+
     final IRunoffEvent event = getCurrentEvent();
     final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
@@ -1231,26 +1245,26 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
               // HACK!
 
-              if( name.contains( "Wasserspiegel" ) )
+              if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.61" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( "Wasserspiegel (" + event.getName() + ")" ) );
-                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName()
-                    + ") %.2f NN+m" );
+                kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.62" ), event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName() //$NON-NLS-1$
+                    + ") %.2f NN+m" ); //$NON-NLS-1$
               }
-              if( name.contains( "Fließtiefen" ) )
+              if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.66" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( "Fließtiefen (" + event.getName() + ")" ) );
-                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.67" ), event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
-              if( name.contains( "Fliesstiefen" ) )
+              if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.71" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( "Fließtiefen (" + event.getName() + ")" ) );
-                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.72" ), event.getName() ) ) ); //$NON-NLS-1$ 
+                kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
               }
 
-              if( name.contains( "Anpassungen" ) )
+              if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.76" ) ) ) //$NON-NLS-1$
               {
-                kalypsoTheme.setName( new I10nString( "Anpassungen (" + event.getName() + ")" ) );
+                kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.77" ), event.getName() ) ) ); //$NON-NLS-1$ 
               }
 
             }
@@ -1275,15 +1289,15 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
                   final String name = kalypsoTheme.getLabel();
 
                   // HACK!
-                  if( name.contains( "Fließtiefen" ) )
+                  if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.79" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString( "Fließtiefen (" + event.getName() + ")" ) );
-                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                    kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.80" ), event.getName() ) ) ); //$NON-NLS-1$ 
+                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
-                  if( name.contains( "Fliesstiefen" ) )
+                  if( name.contains( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.84" ) ) ) //$NON-NLS-1$
                   {
-                    kalypsoTheme.setName( new I10nString( "Fließtiefen (" + event.getName() + ")" ) );
-                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" );
+                    kalypsoTheme.setName( new I10nString( String.format( Messages.getString( "org.kalypso.model.flood.ui.map.EventManagementWidget.85" ), event.getName() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                    kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Fließtiefen (" + event.getName() + ") %.2f NN+m" ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                 }
               }

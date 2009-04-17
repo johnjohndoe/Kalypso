@@ -10,6 +10,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
+import org.kalypso.model.flood.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -37,13 +38,13 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
-      throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+      throw new ExecutionException( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.0" ) ); //$NON-NLS-1$
     }
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "WSP-Anpassen", "Fehler beim Öffnen der Karte" ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.1" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       return null;
     }
@@ -52,14 +53,14 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.3" ), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
       if( wspTheme != null )
       {
         mapModell.activateTheme( wspTheme );
       }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( "Ergebnisse verwalten", "Ergebnisse verwalten" );
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.5" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowAddRemoveButtons( false );
 
     final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage );
