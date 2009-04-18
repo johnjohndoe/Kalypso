@@ -98,7 +98,7 @@
 			</Geometry>
 			<Graphic>
 				<ExternalGraphic>
-					<OnlineResource xlink:href="images/weir.gif"></OnlineResource>
+					<OnlineResource xlink:href="images/weir.png"></OnlineResource>
 					<Format>GIF</Format>
 				</ExternalGraphic>
 			</Graphic>
@@ -153,7 +153,7 @@
 			</Geometry>
 			<Graphic>
 				<ExternalGraphic>
-					<OnlineResource xlink:href="images/bridge.gif"></OnlineResource>
+					<OnlineResource xlink:href="images/bridge.png"></OnlineResource>
 					<Format>GIF</Format>
 				</ExternalGraphic>
 			</Graphic>
