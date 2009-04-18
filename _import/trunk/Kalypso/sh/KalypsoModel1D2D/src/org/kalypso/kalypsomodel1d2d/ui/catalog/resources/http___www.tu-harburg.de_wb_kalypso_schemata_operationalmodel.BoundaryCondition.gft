@@ -2,7 +2,7 @@
 <gft:featureview typename="op1d2d:BoundaryCondition" style="SWT.NONE"
 	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:gft="featureview.template.kalypso.org">
+	xmlns:gft="featureview.template.kalypso.org" xmlns:gml="http://www.opengis.net/gml">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
@@ -228,30 +228,29 @@
 
 
 	<gft:label property="op1d2d:inflowVelocity" visible="true"  style="SWT.NONE">
+		<gft:visibleOperation>
+			<and>
+				<ogc:Not>
+					<ogc:PropertyIsNull>
+						<ogc:PropertyName>op1d2d:direction</ogc:PropertyName>
+					</ogc:PropertyIsNull>
+				</ogc:Not>
+				<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+					<ogc:PropertyName>c1d2d:bcType</ogc:PropertyName>
+					<ogc:Literal>ELEMENT1D2D</ogc:Literal>
+				</ogc:PropertyIsLike>
+		    </and>
+		</gft:visibleOperation>
+		<gft:enabledOperation>
+			<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+				<ogc:PropertyName>c1d2d:hasDirection</ogc:PropertyName>
+				<ogc:Literal>true</ogc:Literal>
+			</ogc:PropertyIsLike>
+		</gft:enabledOperation>
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
-		<gft:visibleOperation>
-			<and>
-				<ogc:Not>
-					<ogc:PropertyIsNull>
-						<ogc:PropertyName>op1d2d:direction</ogc:PropertyName>
-					</ogc:PropertyIsNull>
-				</ogc:Not>
-				<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-					<ogc:PropertyName>c1d2d:bcType</ogc:PropertyName>
-					<ogc:Literal>ELEMENT1D2D</ogc:Literal>
-				</ogc:PropertyIsLike>
-		    </and>
-		</gft:visibleOperation>
-		<gft:enabledOperation>
-			<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-				<ogc:PropertyName>c1d2d:hasDirection</ogc:PropertyName>
-				<ogc:Literal>true</ogc:Literal>
-			</ogc:PropertyIsLike>
-		</gft:enabledOperation>
 	</gft:label>
 	<gft:text editable="true" property="op1d2d:inflowVelocity" style="SWT.BORDER">
-		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 		<gft:visibleOperation>
 			<and>
 				<ogc:Not>
@@ -271,9 +270,9 @@
 				<ogc:Literal>true</ogc:Literal>
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
+		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
 	<gft:validatorlabel property="op1d2d:inflowVelocity" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 		<gft:visibleOperation>
 			<and>
 				<ogc:Not>
@@ -293,10 +292,8 @@
 				<ogc:Literal>true</ogc:Literal>
 			</ogc:PropertyIsLike>
 		</gft:enabledOperation>
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-
-
-
 
 	<gft:label property="op1d2d:stationaryCondition" visible="true"  style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
@@ -318,6 +315,4 @@
 				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
-
 </gft:featureview>
-

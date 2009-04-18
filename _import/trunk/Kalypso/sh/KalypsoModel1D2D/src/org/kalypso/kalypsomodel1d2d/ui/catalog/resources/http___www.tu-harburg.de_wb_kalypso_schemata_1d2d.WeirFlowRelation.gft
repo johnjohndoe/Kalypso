@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featureview typename="wb1d2d:WeirFlowRelation" style="SWT.NONE"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:gft="featureview.template.kalypso.org"
-	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="2" />
@@ -40,7 +40,7 @@
 			grabExcessHorizontalSpace="true" />
 	</gft:spinner>
 
-	<gft:label property="wb1d2d:profileMember"visible="true"  style="SWT.NONE">
+	<gft:label property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>

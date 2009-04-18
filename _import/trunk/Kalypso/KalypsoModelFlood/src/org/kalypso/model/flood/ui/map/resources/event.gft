@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featureview typename="flood:RunoffEvent" style="SWT.NONE" xmlns:flood="org.kalypso.model.flood"
 	xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org"
-	xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />

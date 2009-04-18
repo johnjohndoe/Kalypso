@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featureview typename="wb1d2d:BridgeFlowRelation" style="SWT.NONE"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:gft="featureview.template.kalypso.org"
-	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 		grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="2" />
@@ -9,11 +9,10 @@
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:text editable="true" property="gml:name" style="SWT.BORDER"
-		xmlns:gml="http://www.opengis.net/gml">
+	<gft:text editable="true" property="gml:name" style="SWT.BORDER">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:text>
-	<gft:label property="gml:description" visible="true"  style="SWT.NONE">
+	<gft:label property="gml:description" visible="true" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
 			grabExcessHorizontalSpace="false" />
 	</gft:label>
