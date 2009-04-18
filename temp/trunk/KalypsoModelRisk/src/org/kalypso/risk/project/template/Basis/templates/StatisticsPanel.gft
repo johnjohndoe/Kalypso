@@ -11,7 +11,7 @@
 		<gft:gridData verticalAlignment="GridData.FILL"
 			horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
 			grabExcessHorizontalSpace="true" />
-		<gft:gridLayout numColumns="2" numRows="4"
+		<gft:gridLayout numColumns="2" 
 			makeColumnsEqualWidth="false" horizontalSpacing="10" />
 
 		<gft:group text="Landnutzungsklassen" style="0">
@@ -19,14 +19,13 @@
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" heightHint="200"
 				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
-			<gft:gridLayout numColumns="2" horizontalSpacing="10"
-				numRows="2" />
+			<gft:gridLayout numColumns="2" horizontalSpacing="10" />
 			<gft:table property="krrcm:landuseClassMember"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.FILL"
 					grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 				<ns1:gistableview>
-					<ns1:layer>
+					<ns1:layer id="X" linktype="">
 						<ns1:column alignment="SWT.LEFT" editable="false"
 							format="" label="Farbe der Landnutzungsklasse" name="colorStyle" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="false"
