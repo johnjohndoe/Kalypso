@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<gft:featureview typename="tuhh:ReachWspmTuhhSteadyState" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+<gft:featureview typename="tuhh:ReachWspmTuhhSteadyState" style="SWT.NONE" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
     <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
     <gft:gridLayout numColumns="4"/>
     <gft:label property="gml:name"  visible="true"  style="SWT.NONE">

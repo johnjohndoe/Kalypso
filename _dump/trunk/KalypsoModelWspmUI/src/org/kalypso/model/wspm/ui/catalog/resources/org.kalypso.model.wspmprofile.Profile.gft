@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-    <gft:featureview typename="prof:Profile" style="SWT.NONE" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <gft:featureview typename="prof:Profile" style="SWT.NONE" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="4"/>
         <gft:label property="gml:name" visible="true" style="SWT.NONE">
