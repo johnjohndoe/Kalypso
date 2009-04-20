@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This importer knows how to interpret the BCE-W80 Shape format.
- *
+ * 
  * @author Gernot Belger
  */
 public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWspmTuhhConstants
@@ -74,7 +74,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public BigDecimal getStation( final Feature feature )
   {
-    final String stationString = ObjectUtils.toString( feature.getProperty( "MEASURE" ), "-999999.9999" );
+    final String stationString = ObjectUtils.toString( feature.getProperty( "STATION" ), "-999999.9999" );
     final BigDecimal bigDecimal = new BigDecimal( stationString );
     bigDecimal.setScale( 4, BigDecimal.ROUND_HALF_UP );
     return bigDecimal;
@@ -121,7 +121,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
     return Double.parseDouble( distanceString );
   }
 
-   /**
+  /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.IWProfContentProvider#getObjectType(org.kalypsodeegree.model.feature.Feature)
    */
   @Override

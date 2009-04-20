@@ -67,7 +67,7 @@ public class ImportWProfShapeTest
   {
     final NullProgressMonitor monitor = new NullProgressMonitor();
 
-    final String fileBase = "P:\\bwg0715223\\work\\jung\\structures\\Export_Output";
+    final String fileBase = "P:\\bwg0715223\\gis\\Modell\\Querprofillagen\\vermessung";
     final String sourceCrs = "EPSG:31467";
 
     /* Load Shape */
