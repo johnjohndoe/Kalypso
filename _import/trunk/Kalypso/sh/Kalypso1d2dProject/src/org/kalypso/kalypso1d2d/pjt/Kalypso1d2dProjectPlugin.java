@@ -1,6 +1,10 @@
 package org.kalypso.kalypso1d2d.pjt;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -51,12 +55,20 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     m_imageProvider = new PluginImageProvider( this );
     m_imageProvider.resetTmpFiles();
 
-    // this way we make sure the plug-in is activated
-    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
-    m_szenarioController = new SzenarioController();
-    dataProvider.addScenarioDataListener( m_szenarioController );
-    final IScenario scenario = dataProvider.getScenario();
-    m_szenarioController.scenarioChanged( scenario );
+    // Initialize this controller inside a job, else this plugin will not get loaded
+    // if anything happens (was the case on some machines, probably due to race conditions)
+    final Job job = new Job( "Register scenario controler" )
+    {
+      @Override
+      protected IStatus run( IProgressMonitor monitor )
+      {
+        initScenarioController();
+        
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.schedule( 2000 );
   }
 
   /**
@@ -79,6 +91,15 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
     plugin = null;
     super.stop( context );
+  }
+
+  protected void initScenarioController( )
+  {
+    final SzenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    m_szenarioController = new SzenarioController();
+    dataProvider.addScenarioDataListener( m_szenarioController );
+    final IScenario scenario = dataProvider.getScenario();
+    m_szenarioController.scenarioChanged( scenario );
   }
 
   /**
