@@ -53,6 +53,7 @@ import java.util.List;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -109,7 +110,7 @@ public class BodentypManager extends AbstractManager
       if( line == null )
         return null;
 
-      System.out.println( reader.getLineNumber() + ": " + line );
+      System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
@@ -125,7 +126,7 @@ public class BodentypManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line );
+    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 1 );
 
     // generate id:
@@ -139,14 +140,14 @@ public class BodentypManager extends AbstractManager
     {
       Feature bodArtParameterFeature = createFeature( m_bodenartFT );
       line = reader.readLine();
-      System.out.println( "bodart(" + i + "): " + line );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.BodentypManager.4") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
       createProperties( bodArtPropCollector, line, 2 );
       // BodArtLink
       // final FeatureProperty BodArtNameProp = (FeatureProperty)bodArtPropCollector.get( "name" );
       String asciiBodArtId = bodArtPropCollector.get( "name" );
       final Feature BodArtFE = getFeature( asciiBodArtId, m_conf.getBodartFT() );
 
-      bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() );
+      bodArtPropCollector.put( "soilLayerLink", BodArtFE.getId() ); //$NON-NLS-1$
       bodArtParameterFeature.setProperty( NaModelConstants.PARA_SOIL_LAYER_LINK, BodArtFE.getId() );
 
       // Collection collection = bodArtPropCollector.values();
@@ -167,7 +168,7 @@ public class BodentypManager extends AbstractManager
     Feature rootFeature = paraWorkspace.getRootFeature();
     List list = (List) rootFeature.getProperty( NaModelConstants.PARA_SOILTYPE_MEMBER );
     asciiBuffer.getBodtypBuffer().append( "/Bodentypen:\n" );
-    asciiBuffer.getBodtypBuffer().append( "/\n" );
+    asciiBuffer.getBodtypBuffer().append( "/\n" ); //$NON-NLS-1$
     asciiBuffer.getBodtypBuffer().append( "/Typ       Tiefe[dm]\n" );
     Iterator iter = list.iterator();
     while( iter.hasNext() )
@@ -184,8 +185,8 @@ public class BodentypManager extends AbstractManager
   {
     // 1
     List bodartList = (List) feature.getProperty( NaModelConstants.PARA_SOIL_LAYER_PARAMETER_MEMBER );
-    asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "a10" ) + FortranFormatHelper.printf( Integer.toString( bodartList.size() ), "i4" )
-        + "\n" );
+    asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "a10" ) + FortranFormatHelper.printf( Integer.toString( bodartList.size() ), "i4" ) //$NON-NLS-2$ //$NON-NLS-3$
+        + "\n" ); //$NON-NLS-1$
     // 2
     Iterator iter = bodartList.iterator();
     while( iter.hasNext() )
@@ -198,19 +199,19 @@ public class BodentypManager extends AbstractManager
         Boolean xretProp = (Boolean) fe.getProperty( NaModelConstants.PARA_PROP_XRET );
         if( xretProp )
         {
-          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
-              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "1.0" + "\n" );
+          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" ) //$NON-NLS-2$
+              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "1.0" + "\n" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         }
         else
         {
-          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" )
-              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "0.0" + "\n" );
+          asciiBuffer.getBodtypBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( BodArtLink, "name" ), "a8" ) //$NON-NLS-2$
+              + FortranFormatHelper.printf( FeatureHelper.getAsString( fe, "xtief" ), "*" ) + " " + "0.0" + "\n" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         }
       }
       else
       {
         // TODO use logger
-        System.out.println( "Fehler in der Bodentypdatei zu Bodentyp " + feature.getId() + " (Link zu Bodenart " + fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) + " nicht vorhanden)" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.BodentypManager.29") + feature.getId() + Messages.getString("org.kalypso.convert.namodel.manager.BodentypManager.30") + fe.getProperty( NaModelConstants.PARA_SOIL_LAYER_LINK ) + Messages.getString("org.kalypso.convert.namodel.manager.BodentypManager.31") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
 

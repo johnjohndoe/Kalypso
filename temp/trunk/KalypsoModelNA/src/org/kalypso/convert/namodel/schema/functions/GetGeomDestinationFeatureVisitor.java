@@ -43,6 +43,7 @@ package org.kalypso.convert.namodel.schema.functions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -117,7 +118,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     {
       if( destFEs[i] == null )
       {
-        System.out.println( "Warning: Feature is null. That must not be!" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.schema.functions.GetGeomDestinationFeatureVisitor.0") ); //$NON-NLS-1$
         continue;
       }
 

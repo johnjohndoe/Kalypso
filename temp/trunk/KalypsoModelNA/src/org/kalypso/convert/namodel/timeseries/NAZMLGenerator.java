@@ -55,6 +55,7 @@ import java.util.TreeMap;
 import javax.xml.bind.Marshaller;
 
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -79,7 +80,7 @@ public class NAZMLGenerator
    */
   private static boolean DEBUG = false;
 
-  final static DateFormat m_grapDateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy HH mm ss" ) );
+  final static DateFormat m_grapDateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy HH mm ss" ) ); //$NON-NLS-1$
 
   // final static SimpleDateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
 
@@ -115,7 +116,7 @@ public class NAZMLGenerator
       catch( Exception e )
       {
         e.printStackTrace();
-        System.out.println( "could not create ZML, but operation will continue..." );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.1") ); //$NON-NLS-1$
       }
     if( relative )
       return generateobsLink( targetRelativePath );
@@ -131,8 +132,8 @@ public class NAZMLGenerator
   public static TimeseriesLinkType generateobsLink( String location ) throws Exception
   {
     final TimeseriesLinkType link = OF.createTimeseriesLinkType();
-    link.setLinktype( "zml" );
-    link.setType( "simple" );
+    link.setLinktype( "zml" ); //$NON-NLS-1$
+    link.setType( "simple" ); //$NON-NLS-1$
     link.setHref( location );
     return link;
   }
@@ -142,13 +143,13 @@ public class NAZMLGenerator
     StringBuffer buffer = new StringBuffer();
     generateTmpZml( buffer, axis1Type, axis2Type, sourceURL );
 
-    File zmlTmpFile = File.createTempFile( "tmp", ".zml" );
+    File zmlTmpFile = File.createTempFile( "tmp", ".zml" ); //$NON-NLS-1$ //$NON-NLS-2$
     zmlTmpFile.deleteOnExit();
     Writer tmpWriter = new FileWriter( zmlTmpFile );
     tmpWriter.write( buffer.toString() );
     tmpWriter.close();
 
-    IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL(), "ID" );
+    IObservation observation = ZmlFactory.parseXML( zmlTmpFile.toURL(), "ID" ); //$NON-NLS-1$
     final Observation type = ZmlFactory.createXML( observation, null );
     Marshaller marshaller = ZmlFactory.getMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -162,39 +163,39 @@ public class NAZMLGenerator
   {
     final String location = sourceURL.toExternalForm();
 
-    buffer.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" );
-    buffer.append( "    <observation xmlns=\"zml.kalypso.org\" " );
-    buffer.append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" );
+    buffer.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" ); //$NON-NLS-1$
+    buffer.append( "    <observation xmlns=\"zml.kalypso.org\" " ); //$NON-NLS-1$
+    buffer.append( " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"zml.kalypso.org./observation.xsd\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" ); //$NON-NLS-1$
     buffer.append( "  <name>Eine Test-Observation</name>" );
     buffer.append( "      <!-- die Metadaten list ist erweiterbar -->" );
-    buffer.append( "      <metadataList>" );
+    buffer.append( Messages.getString("org.kalypso.convert.namodel.timeseries.NAZMLGenerator.0") ); //$NON-NLS-1$
     // buffer.append( " <metadata name=\"Pegelnullpunkt\" value=\"10\"/>" );
     // buffer.append( " <metadata name=\"Rechtswert\" value=\"445566\"/>" );
     // buffer.append( " <metadata name=\"Hochwert\" value=\"887766\"/>" );
     // buffer.append( " <metadata name=\"Alarmstufe 1\" value=\"4.3\"/>" );
     // buffer.append( " <metadata name=\"Alarmstufe 2\" value=\"5.6\"/>" );
-    buffer.append( "      </metadataList>" );
+    buffer.append( "      </metadataList>" ); //$NON-NLS-1$
 
     // axis1
-    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis1Type ) + "\" "
+    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis1Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
     // +"key=\"true\""
-        + " type=\"" + axis1Type + "\" unit=\"" + TimeserieUtils.getUnit( axis1Type ) + "\"" );
+        + " type=\"" + axis1Type + "\" unit=\"" + TimeserieUtils.getUnit( axis1Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // buffer.append( " datatype=\"TYPE=xs:date#FORMAT=dd MM yyyy HH mm ss\"");
 
-    buffer.append( " >" );
-    buffer.append( "<valueLink separator=\",\" column=\"1\" line=\"4\" " );
-    buffer.append( " xlink:href=\"" + location + "\"/>" );
-    buffer.append( "</axis>" );
+    buffer.append( " >" ); //$NON-NLS-1$
+    buffer.append( "<valueLink separator=\",\" column=\"1\" line=\"4\" " ); //$NON-NLS-1$
+    buffer.append( " xlink:href=\"" + location + "\"/>" ); //$NON-NLS-1$ //$NON-NLS-2$
+    buffer.append( "</axis>" ); //$NON-NLS-1$
     // axis2
-    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis2Type ) + "\" "
+    buffer.append( "<axis name=\"" + TimeserieUtils.getName( axis2Type ) + "\" " //$NON-NLS-1$ //$NON-NLS-2$
     // +"key=\"true\""
-        + " type=\"" + axis2Type + "\" unit=\"" + TimeserieUtils.getUnit( axis2Type ) + "\"" );
+        + " type=\"" + axis2Type + "\" unit=\"" + TimeserieUtils.getUnit( axis2Type ) + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    buffer.append( "<valueLink separator=\",\" column=\"2\" line=\"4\" " );
-    buffer.append( " xlink:href=\"" + location + "\"/>" );
-    buffer.append( "</axis>" );
-    buffer.append( "</observation>" );
+    buffer.append( "<valueLink separator=\",\" column=\"2\" line=\"4\" " ); //$NON-NLS-1$
+    buffer.append( " xlink:href=\"" + location + "\"/>" ); //$NON-NLS-1$ //$NON-NLS-2$
+    buffer.append( "</axis>" ); //$NON-NLS-1$
+    buffer.append( "</observation>" ); //$NON-NLS-1$
   }
 
   public static void createFile( FileWriter writer, String axisValueType, IObservation observation ) throws Exception
@@ -210,7 +211,7 @@ public class NAZMLGenerator
 
   private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
   {
-    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) );
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) ); //$NON-NLS-1$
 
     // write standard header
 
@@ -228,9 +229,9 @@ public class NAZMLGenerator
 
       if( i == 0 )
       {
-        writer.write( "\n" );
-        writer.write( "       " + dateFormat.format( date ) + "\n" );
-        writer.write( "grap\n" );
+        writer.write( "\n" ); //$NON-NLS-1$
+        writer.write( "       " + dateFormat.format( date ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        writer.write( "grap\n" ); //$NON-NLS-1$
 
       }
       // sometimes values < 0 are used to indicate measure-failures,
@@ -240,9 +241,9 @@ public class NAZMLGenerator
       // TODO: JH Do we need a user information on this???
 
       if( value.doubleValue() < 0 )
-        writer.write( m_grapDateFormat.format( date ) + " 0.0\n" );
+        writer.write( m_grapDateFormat.format( date ) + " 0.0\n" ); //$NON-NLS-1$
       else
-        writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
+        writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -250,7 +251,7 @@ public class NAZMLGenerator
   {
     if( simulationStart.after( simulationEnd ) )
       return;
-    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) );
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) ); //$NON-NLS-1$
     final IAxis[] axis = observation.getAxisList();
     final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, valueAxisType );
 
@@ -267,16 +268,16 @@ public class NAZMLGenerator
     final long syntheticTimeseriesStep = minutesOfTimeStep * 60000; // milliseconds
 
     Date currentDate = simulationStart;
-    writer.write( "\n" );
-    writer.write( "       " + dateFormat.format( currentDate ) + "\n" );
-    writer.write( "grap\n" );
+    writer.write( "\n" ); //$NON-NLS-1$
+    writer.write( "       " + dateFormat.format( currentDate ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( "grap\n" ); //$NON-NLS-1$
     do
     {
       final double value = interpolator.getValue( currentDate );
       if( value < 0.0 )
-        writer.write( m_grapDateFormat.format( currentDate ) + " 0.0\n" );
+        writer.write( m_grapDateFormat.format( currentDate ) + " 0.0\n" ); //$NON-NLS-1$
       else
-        writer.write( m_grapDateFormat.format( currentDate ) + " " + String.format( Locale.US, "%5.3f", value ) + "\n" );
+        writer.write( m_grapDateFormat.format( currentDate ) + " " + String.format( Locale.US, "%5.3f", value ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       currentDate = new Date( currentDate.getTime() + syntheticTimeseriesStep );
     }
     while( currentDate.before( simulationEnd ) );

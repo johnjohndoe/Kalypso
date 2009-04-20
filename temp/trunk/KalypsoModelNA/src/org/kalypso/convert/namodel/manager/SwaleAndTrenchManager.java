@@ -51,6 +51,7 @@ import java.util.List;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -131,7 +132,7 @@ public class SwaleAndTrenchManager extends AbstractManager
       if( tGGeomProp.contains( sTGeomProp.getStartPoint() ) )
       {
         catchmentAsciiID = idManager.getAsciiID( catchmentFE );
-        asciiBuffer.getSwaleTrenchBuffer().append( catchmentAsciiID + "\n" );
+        asciiBuffer.getSwaleTrenchBuffer().append( catchmentAsciiID + "\n" ); //$NON-NLS-1$
       }
     }
 
@@ -141,27 +142,27 @@ public class SwaleAndTrenchManager extends AbstractManager
     final double length = sTGeomProp.getLength();
     final double area = width.doubleValue() * length;
     asciiBuffer.getSwaleTrenchBuffer().append( area );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutzung" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "maxPerk" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "InflowGW" ), "*" ) + "\n" );
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "nutzung" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "boden" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "maxPerk" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "InflowGW" ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$
 
     // Line 7
     // (diameterPipe,*)_(kfPipe,*)_(drainPipeSlope,*)_(roughnessPipe,*)_(widthTrench,*)_(dischargeNode,*)
-    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) );
-    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "widthTrench" ), "*" ) );
+    asciiBuffer.getSwaleTrenchBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "diameterPipe" ), "*" ) ); //$NON-NLS-2$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "kfPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "drainPipeSlope" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "roughnessPipe" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "widthTrench" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
 
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.LINK_MRS_DISCHARGE_NODE_PROP );
     final Feature nodeFeSTDischarge = workSpace.resolveLink( feature, rt );
     // ist der link nicht gesetzt wird der Defaultwert Knotennummer 0 gesetzt, im model entspircht das dem Quellknoten
     // des Teilgebietes.
     if( nodeFeSTDischarge != null )
-      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" );
+      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeSTDischarge ) ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
-      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( 0 ), "*" ) + "\n" );
+      asciiBuffer.getSwaleTrenchBuffer().append( " " + FortranFormatHelper.printf( Integer.toString( 0 ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     asciiBuffer.getSwaleTrenchBuffer().append( "# ende MR \n " );
 
   }

@@ -47,6 +47,7 @@ import java.net.URL;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -142,7 +143,7 @@ public class ParseManager
     // complete Features of StorageChannel
     // features = m_rhbManager.parseFile( m_conf.getRHBFile().toURL() );
 
-    System.out.println( "\n\n-----------------" );
+    System.out.println( "\n\n-----------------" ); //$NON-NLS-1$
     return naModellFe;
   }
 
@@ -167,7 +168,7 @@ public class ParseManager
     }
     catch( Exception e )
     {
-      System.out.println( "keine Datei boden_art.dat vorhanden" );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.1") ); //$NON-NLS-1$
     }
 
     // complete Feature soiltypeMember
@@ -177,13 +178,13 @@ public class ParseManager
 
     // complete Feature idealLandUseMember
     File nutzungDir = m_conf.getNutzungDir();
-    FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" );
+    FileFilter filter = FileFilterUtils.suffixFileFilter( ".nuz" ); //$NON-NLS-1$
     File nutzFiles[] = nutzungDir.listFiles( filter );
     final IPropertyType idealLandUseMemberRT = naParaFT.getProperty( NaModelConstants.PARA_IDEAL_LANDUSE_MEMBER );
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.3") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
       features = m_idleLanduseManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, idealLandUseMemberRT, features[f] );
@@ -193,12 +194,12 @@ public class ParseManager
     for( int i = 0; i < nutzFiles.length; i++ )
     {
       // es kommt pro file immer nur ein feature zurück
-      System.out.println( "Nutzungsdatei: " + nutzFiles[i].toURL().toString() );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.4") + nutzFiles[i].toURL().toString() ); //$NON-NLS-1$
       features = m_nutzManager.parseFile( nutzFiles[i].toURL() );
       for( int f = 0; f < features.length; f++ )
         FeatureHelper.addProperty( naParaFe, landuseMemberRT, features[f] );
     }
-    System.out.println( "---------Es wurden " + nutzFiles.length + " Nutzungsdateien eingelesen" );
+    System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.5") + nutzFiles.length + Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.6") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType sealingMemberRT = naParaFT.getProperty( NaModelConstants.PARA_PROP_SEALING_MEMBER );
     URL csvsealingURL = new File( nutzungDir, "Klassen_Sealing_KRUECK2007.csv" ).toURL();
@@ -221,10 +222,10 @@ public class ParseManager
     }
     catch( Exception e )
     {
-      System.out.println( "keine Datei snowtyp.dat vorhanden" );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ParseManager.9") ); //$NON-NLS-1$
     }
 
-    System.out.println( "\n\n-----------------" );
+    System.out.println( "\n\n-----------------" ); //$NON-NLS-1$
     return naParaFe;
   }
 }

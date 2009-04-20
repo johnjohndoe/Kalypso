@@ -55,7 +55,7 @@ import org.kalypso.convert.namodel.timeseries.BlockTimeSeries;
 public class BlockTimeSeriesDiffObject implements IDiffObject
 {
 
-  private static final String SEPERATOR = "#";
+  private static final String SEPERATOR = "#"; //$NON-NLS-1$
 
   private final BlockTimeSeries m_blockTimeSeries;
 

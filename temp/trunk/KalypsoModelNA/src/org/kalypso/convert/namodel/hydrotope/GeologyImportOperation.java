@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Geology;
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
@@ -104,7 +105,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, "Importing geologies", size + 10 );
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.0"), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Geology> geologies = m_output.getGeologies();
     if( m_importType == ImportType.CLEAR_OUTPUT )
@@ -123,7 +124,7 @@ public class GeologyImportOperation implements ICoreRunnableWithProgress
 
         if( geometry == null )
         {
-          final String message = String.format( "Null geometry at feature: %s", label );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.1"), label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 

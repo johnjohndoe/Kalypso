@@ -95,7 +95,7 @@ public class RHBManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( i + ": " + line );
+      System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
     int asciiID = Integer.parseInt( propCollector.get( "inum" ) );
@@ -121,7 +121,7 @@ public class RHBManager extends AbstractManager
     // }
     // rhbStrangFE.setProperty( "hvvsqd", diagram );
     line = reader.readLine();
-    System.out.println( "4: " + line );
+    System.out.println( "4: " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 4 );
 
     final Feature feature = getFeature( asciiID, m_storageChannelFT );

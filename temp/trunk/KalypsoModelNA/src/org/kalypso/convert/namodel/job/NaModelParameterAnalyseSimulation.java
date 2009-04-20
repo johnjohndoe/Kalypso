@@ -55,6 +55,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.convert.namodel.NaModelCalcJob;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.optimize.CalcDataProviderDecorater;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -107,8 +108,8 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
   {
     m_inputProvider = inputProvider;
     m_monitor = monitor;
-    m_analyseDir = new File( tmpdir, "analyseDir" );
-    m_analyseResultDir = new File( tmpdir, "analyseResultDir" );
+    m_analyseDir = new File( tmpdir, "analyseDir" ); //$NON-NLS-1$
+    m_analyseResultDir = new File( tmpdir, "analyseResultDir" ); //$NON-NLS-1$
     m_analyseDir.mkdirs();
     try
     {
@@ -158,22 +159,22 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
       monitor.setProgress( 0 );
       while( iterator.hasNext() )
       {
-        m_logger.info( "analyseCountDown: " + (list.size() * 3 - count) );
+        m_logger.info( "analyseCountDown: " + (list.size() * 3 - count) ); //$NON-NLS-1$
         final FeaturePropertyToProcess prop = iterator.next();
-        final String keyBase = prop.getFeatureType().getQName().getLocalPart() + "_" + prop.getPropertyType().getQName().getLocalPart();
-        analyseRun( prop, keyBase + "_MIN", AnalysisFeatureVisitor.MODE_MIN );
+        final String keyBase = prop.getFeatureType().getQName().getLocalPart() + "_" + prop.getPropertyType().getQName().getLocalPart(); //$NON-NLS-1$
+        analyseRun( prop, keyBase + "_MIN", AnalysisFeatureVisitor.MODE_MIN ); //$NON-NLS-1$
 
         count++;
         monitor.setProgress( (list.size() * 3) * count / 100 );
         if( monitor.isCanceled() )
           return;
-        analyseRun( prop, keyBase + "_AVERAGE", AnalysisFeatureVisitor.MODE_AVERAGE );
+        analyseRun( prop, keyBase + "_AVERAGE", AnalysisFeatureVisitor.MODE_AVERAGE ); //$NON-NLS-1$
 
         count++;
         monitor.setProgress( (list.size() * 3) * count / 100 );
         if( monitor.isCanceled() )
           return;
-        analyseRun( prop, keyBase + "_MAX", AnalysisFeatureVisitor.MODE_MAX );
+        analyseRun( prop, keyBase + "_MAX", AnalysisFeatureVisitor.MODE_MAX ); //$NON-NLS-1$
 
         count++;
         monitor.setProgress( (list.size() * 3) * count / 100 );
@@ -184,26 +185,26 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     }
     catch( Exception e )
     {
-      throw new SimulationException( "Fehler bei Berechnung", e );
+      throw new SimulationException( Messages.getString("org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation.7"), e ); //$NON-NLS-1$
     }
     resultEater.addResult( NaModelConstants.OUT_ZML, m_analyseResultDir );
   }
 
   private void analyseRun( FeaturePropertyToProcess prop, final String key, int mode ) throws Exception
   {
-    m_logger.info( "analyse run: " + key );
+    m_logger.info( "analyse run: " + key ); //$NON-NLS-1$
     final FeatureVisitor visitor = new AnalysisFeatureVisitor( prop, mode );
     final File baseDir = new File( m_analyseDir, key );
     baseDir.mkdirs();
     final URL modellURL = (URL) m_inputProvider.getInputForID( NaModelConstants.IN_MODELL_ID );
     final GMLWorkspace modellWorkspace = GmlSerializer.createGMLWorkspace( modellURL, null );
     modellWorkspace.accept( visitor, modellWorkspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-    final File modellFile = new File( baseDir, "modell" + key + ".gml" );
+    final File modellFile = new File( baseDir, "modell" + key + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     FileWriter writer = null;
     try
     {
       writer = new FileWriter( modellFile );
-      GmlSerializer.serializeWorkspace( writer, modellWorkspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( writer, modellWorkspace, "UTF-8" ); //$NON-NLS-1$
     }
     finally
     {
@@ -222,7 +223,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
         if( id.equals( NaModelConstants.OUT_ZML ) )
         {
           m_partResult = true;
-          System.out.println( "irgendwo hinkopieren" );
+          System.out.println( Messages.getString("org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation.12") ); //$NON-NLS-1$
           final File fromDir = (File) result;
           final File toDir = new File( m_analyseResultDir, key );
           toDir.mkdirs();
@@ -253,7 +254,7 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return NaModelCalcJob.class.getResource( "resources/nacalcjob_spec.xml" );
+    return NaModelCalcJob.class.getResource( "resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
   class FeaturePropertyToProcess

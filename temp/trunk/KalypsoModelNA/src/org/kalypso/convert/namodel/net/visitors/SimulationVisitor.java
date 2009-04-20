@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.NetElementCircleFinder;
 
@@ -78,18 +79,18 @@ public class SimulationVisitor extends NetElementVisitor
     // check cycle
     if( m_cycleTest.contains( netElement ) )
     {
-      StringBuffer b = new StringBuffer( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" );
-      System.out.println( "Netzplan ist fehlerhaft - Wasser flieﬂt im Kreis\n" + netElement );
+      StringBuffer b = new StringBuffer( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.0") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.1") + netElement ); //$NON-NLS-1$
 
       // check circle (shortest connection)
       // TODO: Better output handling, in this way it is not easy to find the circle
       final NetElementCircleFinder circlefinder = new NetElementCircleFinder( netElement );
       List[] circleList = circlefinder.findCircle();
-      b.append( "circle for : " + netElement + ":\n" );
+      b.append( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.2") + netElement + ":\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       for( int i = 0; i < circleList.length; i++ )
       {
-        b.append( "StrangID: " + circleList[i] + "\n" );
+        b.append( Messages.getString("org.kalypso.convert.namodel.net.visitors.SimulationVisitor.4") + circleList[i] + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       log( b.toString() );
       throw new Exception( b.toString() );

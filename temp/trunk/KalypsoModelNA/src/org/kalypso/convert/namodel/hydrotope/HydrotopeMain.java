@@ -52,6 +52,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -68,7 +69,7 @@ public class HydrotopeMain extends TestCase
   public void testImportLanduseFromShape( ) throws Exception
   {
     final File shapeFile = new File( "C:\\Projekte\\plc0822907\\work\\HydrotopVerschneidung\\BeispieldatenKollau\\Gernot\\landnutzung.shp" );
-    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, "ALB_NR", "VERSIEGKOR", "ENTWART" );
+    final InputDescriptor inputDescriptor = new LanduseShapeInputDescriptor( shapeFile, "ALB_NR", "VERSIEGKOR", "ENTWART" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File landuseTemplateFile = new File( "C:\\Eclipse\\runtime-kalypsomodel.product\\DemoModell\\landuse.gml" );
     final GMLWorkspace landuseWorkspace = GmlSerializer.createGMLWorkspace( landuseTemplateFile, null );
@@ -78,7 +79,7 @@ public class HydrotopeMain extends TestCase
     final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
 
     final Map<String, String> landuseClasses = new HashMap<String, String>();
-    final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) );
+    final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
     for( final Object object : landuseClassesFeatures )
     {
       final Feature f = (Feature) object;
@@ -93,7 +94,7 @@ public class HydrotopeMain extends TestCase
     op.execute( new NullProgressMonitor() );
 
     final File outputFile = new File( "C:\\temp\\landuse.gml.gz" );
-    GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" );
+    GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" ); //$NON-NLS-1$
   }
 
 }

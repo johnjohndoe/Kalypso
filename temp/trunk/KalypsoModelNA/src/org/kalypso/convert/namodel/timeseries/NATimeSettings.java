@@ -41,7 +41,7 @@ import java.util.TimeZone;
  */
 public class NATimeSettings
 {
-  public static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC";
+  public static String CALCULATION_CORE_TIMEZONE = "GMT+1"; //"UTC"; //$NON-NLS-1$
 
   private static NATimeSettings m_instance = null;
 

@@ -44,6 +44,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.job.NaModelParameterAnalyseSimulation;
 import org.kalypso.convert.namodel.optimize.NAOptimizingJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -106,7 +107,7 @@ public class NaModelCalcJob implements ISimulation
     }
     catch( Exception e )
     {
-      throw new SimulationException( "could not instantiate NAOptimizingJob", e );
+      throw new SimulationException( Messages.getString("org.kalypso.convert.namodel.NaModelCalcJob.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -336,7 +337,7 @@ public class NaModelCalcJob implements ISimulation
    */
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "resources/nacalcjob_spec.xml" );
+    return getClass().getResource( "resources/nacalcjob_spec.xml" ); //$NON-NLS-1$
   }
 
   public boolean isSucceeded( )

@@ -51,6 +51,7 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -98,7 +99,7 @@ public class SchneeManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( reader.getLineNumber() + ": " + line );
+      System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
@@ -113,7 +114,7 @@ public class SchneeManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line );
+    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 13 );
 
     // generate id:
@@ -132,9 +133,9 @@ public class SchneeManager extends AbstractManager
   {
     Feature rootFeature = paraWorkspace.getRootFeature();
     List list = (List) rootFeature.getProperty( NaModelConstants.PARA_PROP_SNOW_MEMBER );
-    asciiBuffer.getSnowBuffer().append( "/Parameter zur Schneeberechnung nach dem snow compaction verfahren\n" );
+    asciiBuffer.getSnowBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.SchneeManager.0") ); //$NON-NLS-1$
     asciiBuffer.getSnowBuffer().append( "/                     wwo wwmax snotem snorad h0\n" );
-    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" );
+    asciiBuffer.getSnowBuffer().append( "/                      *    *     *      *    *\n" ); //$NON-NLS-1$
     Iterator iter = list.iterator();
     while( iter.hasNext() )
     {
@@ -148,7 +149,7 @@ public class SchneeManager extends AbstractManager
 
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
-    asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" );
+    asciiBuffer.getSnowBuffer().append( toAscci( feature, 13 ) + "\n" ); //$NON-NLS-1$
   }
 
 }

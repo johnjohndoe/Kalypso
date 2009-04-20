@@ -61,6 +61,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.net.NetElement;
 import org.kalypso.convert.namodel.net.visitors.CompleteDownstreamNetAsciiWriterVisitor;
 import org.kalypso.convert.namodel.net.visitors.RootNodeCollectorVisitor;
@@ -142,7 +143,7 @@ public class NetFileManager extends AbstractManager
 
       final HashMap<String, String> propCollector = new HashMap<String, String>();
       final Map<IPropertyType, Object> fePropMap = new LinkedHashMap<IPropertyType, Object>();
-      System.out.println( 3 + ": " + line );
+      System.out.println( 3 + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, 2 );
       // final FeatureProperty knotProp = propCollector.get( "knot" );
       // final FeatureProperty izugProp = propCollector.get( "izug" );
@@ -162,34 +163,34 @@ public class NetFileManager extends AbstractManager
       final Feature fe = getFeature( knot, nodeFT );
       if( izug > 0 ) // ZUGABE
       {
-        throw new UnsupportedOperationException( "Netzdatei: izug>0 wird nicht unterstuetzt" );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.8") ); //$NON-NLS-1$
         // TODO...
       }
       if( iabg > 0 ) // ABGABE
       {
-        throw new UnsupportedOperationException( "Netzdatei: iabg>0 wird nicht unterstuetzt" );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.9") ); //$NON-NLS-1$
         // TODO...
       }
       if( iueb > 0 ) // UEBERLAUF
       {
-        throw new UnsupportedOperationException( "Netzdatei: iueb>0 wird nicht unterstuetzt" );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.10") ); //$NON-NLS-1$
         // TODO...
       }
       if( izuf > 0 ) // ZUGABE oder ABGABE Kennlinie
       {
         if( izuf != 5 )
-          throw new UnsupportedOperationException( "Netzdatei: Kennziffer Zu- oder Abgabekennlinie izuf=" + izuf + " wird nicht unterstuetzt. Unterstuetzt werden izuf=0 und izuf=5." );
+          throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.11") + izuf + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.12") ); //$NON-NLS-1$ //$NON-NLS-2$
         line = reader.readLine();
-        System.out.println( 6 + ": " + line );
+        System.out.println( 6 + ": " + line ); //$NON-NLS-1$
         // da nur izuf==5 unterstuetzt wird ist zeile 6 nicht relevant
 
         line = reader.readLine();
-        System.out.println( 7 + ": " + line );
+        System.out.println( 7 + ": " + line ); //$NON-NLS-1$
         createProperties( propCollector, line, 7 );// nzufPfad
         String nzufPfad = propCollector.get( "nzufPfad" );
         // create timeserieslink
 
-        String zmlPath = "Zufluss/Zufluss_" + fe.getId() + ".zml";
+        String zmlPath = "Zufluss/Zufluss_" + fe.getId() + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$
 
         // Was!?
         String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" );
@@ -207,7 +208,7 @@ public class NetFileManager extends AbstractManager
       if( ivzwg > 0 ) // VERZWEIGUNG
       {
         line = reader.readLine();
-        System.out.println( 8 + ": " + line );
+        System.out.println( 8 + ": " + line ); //$NON-NLS-1$
         createProperties( propCollector, line, 10 );// zproz ikz
         // resolve targetnode
         // FeatureProperty ikzProp = propCollector.get( "ikz" );
@@ -227,12 +228,12 @@ public class NetFileManager extends AbstractManager
 
       final TimeseriesLinkType pegelLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf // TODO
       // NA_PEGEL
-      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true );
+      .getGmlBaseDir(), "Pegel/Pegel_" + fe.getId() + ".zml", true, true ); //$NON-NLS-2$
       final IPropertyType pt = nodeFT.getProperty( NaModelConstants.NODE_PEGEL_ZR_PROP );
       fePropMap.put( pt, pegelLink );
 
       final TimeseriesLinkType resultLink = NAZMLGenerator.copyToTimeseriesLink( null, TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_RUNOFF, m_conf.getGmlBaseDir(), "Ergebnisse/Berechnet/Abfluss_"
-          + fe.getId() + ".zml", true, true );
+          + fe.getId() + ".zml", true, true ); //$NON-NLS-1$
       final IPropertyType pt2 = nodeFT.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
       fePropMap.put( pt2, resultLink );
 
@@ -250,12 +251,12 @@ public class NetFileManager extends AbstractManager
     line = reader.readLine();
     if( line == null || line.startsWith( "9999" ) )
       return;
-    if( line.startsWith( "\\" ) )
+    if( line.startsWith( "\\" ) ) //$NON-NLS-1$
     {
       readNet( reader, nodeCollector );
       return;
     }
-    System.out.println( 0 + ": " + line );
+    System.out.println( 0 + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 0 );
     // final FeatureProperty iteilProp = propCollector.get( "iteil" );
     // final FeatureProperty istrngProp = propCollector.get( "istrng" );
@@ -271,11 +272,11 @@ public class NetFileManager extends AbstractManager
     // final FeatureProperty numPropertyKnotO = FeatureFactory.createFeatureProperty( "num", "" + iknotoNr );
     final Feature knotoFE = getFeature( iknotoNr, m_conf.getNodeFT() );
     nodeCollector.put( knotoFE.getId(), knotoFE );
-    knotoFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotoNr );
+    knotoFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotoNr ); //$NON-NLS-1$
     // final FeatureProperty numPropertyKnotU = FeatureFactory.createFeatureProperty( "num", "" + iknotuNr );
     final Feature knotuFE = getFeature( iknotuNr, m_conf.getNodeFT() );
     nodeCollector.put( knotuFE.getId(), knotuFE );
-    knotuFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotuNr );
+    knotuFE.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, "" + iknotuNr ); //$NON-NLS-1$
     // set node channel relations
     final Feature strangFE = getExistingFeature( istrngNr, new IFeatureType[] { m_conf.getKmChannelFT(), m_conf.getVChannelFT(), m_conf.getStChannelFT() } );
     // node -> strang
@@ -297,7 +298,7 @@ public class NetFileManager extends AbstractManager
       {
         line = reader.readLine();
         final HashMap<String, String> col = new HashMap<String, String>();
-        System.out.println( 1 + ": " + line );
+        System.out.println( 1 + ": " + line ); //$NON-NLS-1$
         createProperties( col, line, 1 );
         // final FeatureProperty nteilProp = col.get( "nteil" );
         final int nteil = Integer.parseInt( col.get( "nteil" ) );
@@ -377,7 +378,7 @@ public class NetFileManager extends AbstractManager
           final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt3 );
           if( upStreamChannelFE == downStreamChannelFE )
           {
-            System.out.println( "impossible net at #" + upStreamChannelFE.getId() + "\n Node-Node relation to it self" );
+            System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.37") + upStreamChannelFE.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.38") ); //$NON-NLS-1$ //$NON-NLS-2$
             continue;
           }
           // set dependency
@@ -396,20 +397,20 @@ public class NetFileManager extends AbstractManager
       final Feature downStreamNodeFE = workspace.resolveLink( channel, rt );
       if( downStreamNodeFE == null )
       {
-        System.out.println( "Channel #" + channel.getId() + "is outside network" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.39") + channel.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.40") ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }
       final IRelationType rt2 = (IRelationType) downStreamNodeFE.getFeatureType().getProperty( NaModelConstants.LINK_NODE_DOWNSTREAMCHANNEL );
       final Feature downStreamChannelFE = workspace.resolveLink( downStreamNodeFE, rt2 );
       if( downStreamChannelFE == null )
       {
-        System.out.println( "Node #" + downStreamNodeFE.getId() + " has no downstream connection" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.41") + downStreamNodeFE.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.42") ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }
       // set dependency
       if( channel == downStreamChannelFE )
       {
-        System.out.println( "impossible net at #" + channel.getId() + "\n channel discharges to it self" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.43") + channel.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.44") ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }
 
@@ -429,7 +430,7 @@ public class NetFileManager extends AbstractManager
       final Feature upStreamFE = workspace.resolveLink( catchmentFE, rt );
       if( upStreamFE == null )
       {
-        System.out.println( " Catchment #" + catchmentFE.getId() + " is not connected to network" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.0") + catchmentFE.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.46") ); //$NON-NLS-1$ //$NON-NLS-2$
         continue;
       }
 
@@ -446,7 +447,7 @@ public class NetFileManager extends AbstractManager
         final Feature downStreamChannelFE = workspace.resolveLink( downStreamCatchmentFE, rt3 );
         if( downStreamChannelFE == null )
         {
-          System.out.println( " Catchment #" + downStreamCatchmentFE.getId() + " is not connected to network" );
+          System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.47") + downStreamCatchmentFE.getId() + Messages.getString("org.kalypso.convert.namodel.manager.NetFileManager.48") ); //$NON-NLS-1$ //$NON-NLS-2$
           continue;
         }
         final NetElement downStreamElement = netElements.get( downStreamChannelFE.getId() );
@@ -529,7 +530,7 @@ public class NetFileManager extends AbstractManager
     while( iter.hasNext() )
     {
       final Feature nodeFE = (Feature) iter.next();
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i5" ) ); //$NON-NLS-1$
 
       final int izug;
       final int iabg;
@@ -555,7 +556,7 @@ public class NetFileManager extends AbstractManager
           izuf = 0;
           ivzwg = 0;
           final double qzug = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QZUG_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( qzug, "f10.3" ) );
+          specialBuffer.append( FortranFormatHelper.printf( qzug, "f10.3" ) ); //$NON-NLS-1$
         }
         else if( branchingFT == verzweigungFT )
         {
@@ -567,8 +568,8 @@ public class NetFileManager extends AbstractManager
 
           final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double zproz = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_ZPROZ_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( zproz, "f10.3" ) );
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+          specialBuffer.append( FortranFormatHelper.printf( zproz, "f10.3" ) ); //$NON-NLS-1$
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else if( branchingFT == kontEntnahmeFT )
         {
@@ -579,8 +580,8 @@ public class NetFileManager extends AbstractManager
           ivzwg = 0;
           final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double qabg = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QABG_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( qabg, "f10.3" ) );
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+          specialBuffer.append( FortranFormatHelper.printf( qabg, "f10.3" ) ); //$NON-NLS-1$
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else if( branchingFT == ueberlaufFT )
         {
@@ -591,8 +592,8 @@ public class NetFileManager extends AbstractManager
           ivzwg = 0;
           final Feature targetNodeFE = workspace.resolveLink( branchingFE, branchingNodeMemberRT );
           final double queb = FeatureHelper.getAsDouble( branchingFE, NaModelConstants.NODE_VERZW_QUEB_PROP, 0d );
-          specialBuffer.append( FortranFormatHelper.printf( queb, "f10.3" ) );
-          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" );
+          specialBuffer.append( FortranFormatHelper.printf( queb, "f10.3" ) ); //$NON-NLS-1$
+          specialBuffer.append( FortranFormatHelper.printf( idManager.getAsciiID( targetNodeFE ), "i8" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else
         {
@@ -611,7 +612,7 @@ public class NetFileManager extends AbstractManager
         ivzwg = 0;
         izuf = 5;
         final String zuflussFileName = getZuflussEingabeDateiString( nodeFE, m_conf );
-        final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName );
+        final File targetFile = new File( m_conf.getAsciiBaseDir(), "zufluss/" + zuflussFileName ); //$NON-NLS-1$
         final File parent = targetFile.getParentFile();
         if( !parent.exists() )
           parent.mkdirs();
@@ -620,7 +621,7 @@ public class NetFileManager extends AbstractManager
         if( !targetFile.exists() )
         {
           final FileWriter writer = new FileWriter( targetFile );
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
+          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" ); //$NON-NLS-1$
           if( Boolean.TRUE.equals( nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
           {
             if( m_conf.isUsePrecipitationForm() )
@@ -642,7 +643,7 @@ public class NetFileManager extends AbstractManager
           IOUtils.closeQuietly( writer );
         }
         specialBuffer.append( "    1234\n" ); // dummyLine
-        specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" );
+        specialBuffer.append( ".." + File.separator + "zufluss" + File.separator + zuflussFileName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       else
       {
@@ -653,17 +654,17 @@ public class NetFileManager extends AbstractManager
         ivzwg = 0;
       }
 
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izug, "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iabg, "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iueb, "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izuf, "i5" ) );
-      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" );
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izug, "i5" ) ); //$NON-NLS-1$
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iabg, "i5" ) ); //$NON-NLS-1$
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( iueb, "i5" ) ); //$NON-NLS-1$
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( izuf, "i5" ) ); //$NON-NLS-1$
+      asciiBuffer.getNetBuffer().append( FortranFormatHelper.printf( ivzwg, "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       asciiBuffer.getNetBuffer().append( specialBuffer.toString() );
       // ENDKNOTEN
 
     }
-    asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" );
-    asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" );
+    asciiBuffer.getNetBuffer().append( " 9001    0    0    0    0    0\n" ); //$NON-NLS-1$
+    asciiBuffer.getNetBuffer().append( "10000    0    0    0    0    0\n" ); //$NON-NLS-1$
   }
 
   private String getZuflussEingabeDateiString( Feature nodeFE, NAConfiguration conf )

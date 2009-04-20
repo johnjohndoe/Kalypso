@@ -54,6 +54,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -87,11 +88,11 @@ public class NAControlConverter
   public static void featureToASCII( NAConfiguration conf, File projectPath, GMLWorkspace controlWorkspace, GMLWorkspace modellWorkspace ) throws IOException
   {
     final Feature controlFE = controlWorkspace.getRootFeature();
-    final File startDir = new File( projectPath, "start" );
+    final File startDir = new File( projectPath, "start" ); //$NON-NLS-1$
     startDir.mkdirs();
 
-    final File startFile = new File( startDir, "we_nat_start.txt" );
-    final File falStartFile = new File( startDir, "falstart.lst" );
+    final File startFile = new File( startDir, "we_nat_start.txt" ); //$NON-NLS-1$
+    final File falStartFile = new File( startDir, "falstart.lst" ); //$NON-NLS-1$
 
     // write FalStart
     final StringBuffer b1 = new StringBuffer();
@@ -116,7 +117,7 @@ public class NAControlConverter
   private static void appendInitailDates( final Feature controlFE, final StringBuffer b, NAConfiguration conf )
   {
     final TreeSet<Date> dateWriteSet = new TreeSet<Date>();
-    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) );
+    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMdd  HH" ) ); //$NON-NLS-1$
     final List< ? > dateList = (List< ? >) controlFE.getProperty( NaModelConstants.NACONTROL_INITIALVALUEDATE_PROP );
     if( dateList != null )
     {
@@ -139,7 +140,7 @@ public class NAControlConverter
     while( iniIter.hasNext() )
     {
       final String iniDate = format.format( iniIter.next() );
-      b.append( iniDate + "\n" );
+      b.append( iniDate + "\n" ); //$NON-NLS-1$
     }
     b.append( "99999\n" );
     conf.setInitalValues( dateWriteSet );
@@ -149,7 +150,7 @@ public class NAControlConverter
   {
     int minutesOfTimeStep = conf.getMinutesOfTimeStep();
     double hoursOfTimeStep = minutesOfTimeStep / 60d;
-    b.append( " " + hoursOfTimeStep + "\n" );
+    b.append( " " + hoursOfTimeStep + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_TMP_PROP ) ) + "       Temperatur                 .tmp\n" );
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_PRE_PROP ) ) + "       Niederschlag               .pre\n" );
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_SCH_PROP ) ) + "       Schnee                     .sch\n" );
@@ -166,7 +167,7 @@ public class NAControlConverter
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QTG_PROP ) ) + "       Kluftgrundw                .qtg\n" );
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_QGW_PROP ) ) + "       Grundwasserabfluss         .qgw\n" );
     // sollte nicht bei der Ausgabe erzeugt werden, da Berechnung mit kap. Aufstieg noch nicht implementiert!
-    b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" );
+    b.append( "n" + "       Kapil.Aufstieg/Perkolation .kap\n" ); //$NON-NLS-1$
     b.append( getBoolean( controlFE.getProperty( NaModelConstants.NACONTROL_VET_PROP ) ) + "       Evapotranspiration         .vet\n" );
     // FIXME die mulden-rigolen sind abhänging von der version der exe. muss erst noch angepasst werden. rechnet jetzt
     // nur mit der v2.5 (ask Christoph)
@@ -195,11 +196,11 @@ public class NAControlConverter
     {
       // fuer root node immer ein ergebnis generieren
       if( rootNodeID != null && rootNodeID.equals( nodeFEs[i].getId() ) )
-        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
+        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
       // fuer nicht root node nur ergebnisse generieren wenn gewuenscht
       else if( rootNodeID == null && FeatureHelper.booleanIsTrue( nodeFEs[i], NaModelConstants.GENERATE_RESULT_PROP, false ) )
-        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" );
+        b.append( idManager.getAsciiID( nodeFEs[i] ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( nodeFEs[i], "num" ) + "\n" );
     }
     b.append( "99999\n" );
@@ -209,7 +210,7 @@ public class NAControlConverter
     for( int i = 0; i < catchmentFEs.length; i++ )
     {
       if( FeatureHelper.booleanIsTrue( catchmentFEs[i], NaModelConstants.GENERATE_RESULT_PROP, false ) )
-        b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" );
+        b.append( idManager.getAsciiID( catchmentFEs[i] ) + "\n" ); //$NON-NLS-1$
       // b.append( FeatureHelper.getAsString( catchmentFEs[i], "inum" ) + "\n" );
     }
     b.append( "99999\n" );
@@ -220,7 +221,7 @@ public class NAControlConverter
 
     String system = "we";// "sys";
     String zustand = "nat";
-    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) );
+    final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) ); //$NON-NLS-1$
 
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
@@ -248,16 +249,16 @@ public class NAControlConverter
         preForm = 4;
       }
       else
-        System.out.println( "Falsche Wahl der synthetische Niederschlagsform!" );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.NAControlConverter.49") ); //$NON-NLS-1$
 
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Dateiname: Wahrscheinlichkeit [1/a]; Dauer [h]; Verteilung; Konfigurationsdatei mit Pfad\n" );
-      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" )
-          + " " + Integer.toString( preForm ) + " " + "start" + File.separator + startFile.getName() + "\n" );
+      b.append( "1 .. " + system + " " + zustand + " " + "synth.st" + " " + FortranFormatHelper.printf( conf.getAnnuality(), "f6.3" ) + " " + FortranFormatHelper.printf( conf.getDuration(), "f9.3" ) //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$ //$NON-NLS-7$
+          + " " + Integer.toString( preForm ) + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
     else
     {
       b.append( "x Niederschlagsform (2-nat; 1-syn); projektverzeichnis; System(XXXX); Zustand (YYY); Simulationsbeginn(dat+Zeit); Simulationsende; Konfigurationsdatei mit Pfad\n" );
-      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" );
+      b.append( "2 .. " + system + " " + zustand + "  " + startDate + " " + endDate + " " + "start" + File.separator + startFile.getName() + "\n" ); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
   }
 

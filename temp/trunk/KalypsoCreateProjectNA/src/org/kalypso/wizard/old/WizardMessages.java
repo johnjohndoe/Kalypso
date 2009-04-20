@@ -1,4 +1,4 @@
-package org.kalypso.wizard;
+package org.kalypso.wizard.old;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;

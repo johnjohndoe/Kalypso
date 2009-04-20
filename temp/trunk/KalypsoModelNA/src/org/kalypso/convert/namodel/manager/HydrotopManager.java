@@ -53,6 +53,7 @@ import java.util.TreeSet;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -122,14 +123,14 @@ public class HydrotopManager extends AbstractManager
         m_landuseMap.put( landuseName, SealingRate );
       // TODO: Errormassages in logger
       else
-        System.out.println( "Der Landnutzungstyp " + landuseName + "existiert mehrfach.\n Überprüfen Sie die Landnutzungstypen." );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.0") + landuseName + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.1") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     Iterator catchmentIter = catchmentList.iterator();
     // vollständige HydrotopList
     Feature rootFeature = hydWorkspace.getRootFeature();
     FeatureList hydList = (FeatureList) rootFeature.getProperty( NaModelConstants.HYDRO_MEMBER );
-    asciiBuffer.getHydBuffer().append( "Hydrotope aus GML\n" );
+    asciiBuffer.getHydBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.2") ); //$NON-NLS-1$
 
     while( catchmentIter.hasNext() )
     {
@@ -187,13 +188,13 @@ public class HydrotopManager extends AbstractManager
         int fehlerinProzent = (int) Math.abs( fehler / gesFlaeche * 100d );
         if( fehlerinProzent > 1 )
         {
-          System.out.println( "Fehler in den Hydrotopen!" );
-          System.out.println( "Fläche Teilgebiet (ID:" + catchmentFE.getId() + ") (" + (long) tGArea + ") entspricht nicht der Summe der Hydrotopflächen (" + (long) gesFlaeche + ") Fehler : "
-              + fehlerinProzent + "%, diff: " + ((int) fehler) );
+          System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.3") ); //$NON-NLS-1$
+          System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.4") + catchmentFE.getId() + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.5") + (long) tGArea + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.6") + (long) gesFlaeche + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.7") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+              + fehlerinProzent + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.8") + ((int) fehler) ); //$NON-NLS-1$
           // TODO report error to user or log file
         }
-        asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) );
-        asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + versFlaeche + " " + natFlaeche + " " + gesFlaeche + "\n" );
+        asciiBuffer.getHydBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( catchmentFE ), "i4" ) ); //$NON-NLS-1$
+        asciiBuffer.getHydBuffer().append( " " + hydAnzahl + " " + versFlaeche + " " + natFlaeche + " " + gesFlaeche + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
         Iterator<Object> hydIter = hydWriteSet.iterator();
         int anzHydrotope = 0;
@@ -222,18 +223,18 @@ public class HydrotopManager extends AbstractManager
     }
     catch( Exception e )
     {
-      System.out.println( "Der Korrekturfaktor des Versiegelungsgrades im Hydrotop (ID=" + feature.getId() + ") 0.0, er wird daher auf 1.0 gesetzt" );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.15") + feature.getId() + Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.16") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     double natHFlaeche = (HGesFlaeche - (HGesFlaeche * HVersGrad * HKorVersGrad));
     // 3
     // (flaech4,a10)(nutz,a10)_(boden,a10)(m_perkm,*)_(m_f1gws,*)_(n_hydid,*)_(m_versGes,*)_(m_hydTyp,*)
     StringBuffer b = new StringBuffer();
-    b.append( FortranFormatHelper.printf( natHFlaeche, "f9.1" ).trim() + " " );
-    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "landuse" ), "a10" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "soiltype" ), "a10" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) );
-    b.append( " " + anzHydrotope );
+    b.append( FortranFormatHelper.printf( natHFlaeche, "f9.1" ).trim() + " " ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "landuse" ), "a10" ) ); //$NON-NLS-2$
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "soiltype" ), "a10" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_perkm" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "m_f1gws" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    b.append( " " + anzHydrotope ); //$NON-NLS-1$
     // INFO: the sealing rate and the correction factor was not needed in fortran code version 2.0.4. after
     // implementation of
     // swale and trench the sealing rate is needed in fortran. we had to change the hydrotop format and put the real
@@ -241,7 +242,7 @@ public class HydrotopManager extends AbstractManager
     double versGrad = m_landuseMap.get( feature.getProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME ) ).doubleValue();
     double korVersGrad = ((Double) feature.getProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR )).doubleValue();
     double gesVersGrad = (versGrad * korVersGrad);
-    b.append( " " + FortranFormatHelper.printf( gesVersGrad, "*" ) );
+    b.append( " " + FortranFormatHelper.printf( gesVersGrad, "*" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String hydType = (String) feature.getProperty( NaModelConstants.HYDRO_PROP_HYDTYPE );
     int hydTypeNumber = 0;
@@ -252,9 +253,9 @@ public class HydrotopManager extends AbstractManager
     else if( hydType.equals( NaModelConstants.HYDRO_ENUM_HYDTYPE_GREENROOF ) )
       hydTypeNumber = 2;
     else
-      System.out.println( "Kein gültiger Hydrotoptyp" );
-    b.append( " " + hydTypeNumber );
-    asciiBuffer.getHydBuffer().append( b.toString() + "\n" );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.HydrotopManager.33") ); //$NON-NLS-1$
+    b.append( " " + hydTypeNumber ); //$NON-NLS-1$
+    asciiBuffer.getHydBuffer().append( b.toString() + "\n" ); //$NON-NLS-1$
   }
 
 }

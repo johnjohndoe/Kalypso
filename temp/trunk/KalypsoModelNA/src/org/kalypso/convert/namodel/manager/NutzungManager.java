@@ -65,6 +65,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -118,8 +119,8 @@ public class NutzungManager extends AbstractManager
   @Override
   public Feature[] parseFile( URL url ) throws Exception
   {
-    String nutzDatei = url.getPath().replaceAll( ".+/", "" );
-    String nutzID = nutzDatei.replaceAll( "\\.nuz", "" );
+    String nutzDatei = url.getPath().replaceAll( ".+/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    String nutzID = nutzDatei.replaceAll( "\\.nuz", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     List<Feature> result = new ArrayList<Feature>();
     LineNumberReader reader = new LineNumberReader( new InputStreamReader( url.openConnection().getInputStream() ) );// new
     Feature fe = null;
@@ -137,7 +138,7 @@ public class NutzungManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line );
+    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
 
     if( !m_LTable.containsKey( line ) )
     {
@@ -161,7 +162,7 @@ public class NutzungManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( "NutzParameter(" + i + "): " + line );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.6") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final Feature idleLanduseFE = getFeature( idleLanduseStringID.toString(), m_IdleLanduseFT );
@@ -196,7 +197,7 @@ public class NutzungManager extends AbstractManager
   {
 
     String nutzName = FeatureHelper.getAsString( feature, "name" );
-    File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" );
+    File nutzungDir = new File( m_conf.getNutzungDir() + "\\" + nutzName + ".nuz" ); //$NON-NLS-1$ //$NON-NLS-2$
     FileWriter writer = new FileWriter( nutzungDir );
     String name;
     try
@@ -205,7 +206,7 @@ public class NutzungManager extends AbstractManager
     }
     catch( Exception e )
     {
-      name = "pflanzenabhaengige verdunstung";
+      name = Messages.getString("org.kalypso.convert.namodel.manager.NutzungManager.11"); //$NON-NLS-1$
     }
     writer.write( name );
     writer.write( "\nidealisierter jahresgang\n" );// "ideali" ist Kennung!
@@ -235,20 +236,20 @@ public class NutzungManager extends AbstractManager
       final int year = calendar.get( Calendar.YEAR ) - yearOffset;
       final int month = calendar.get( Calendar.MONTH ) + 1;
       final int day = calendar.get( Calendar.DATE );
-      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) );
-      zmlWriter.write( "." );
-      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) );
-      zmlWriter.write( "." );
-      zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) );
+      zmlWriter.write( FortranFormatHelper.printf( day, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( "." ); //$NON-NLS-1$
+      zmlWriter.write( FortranFormatHelper.printf( month, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-2$ //$NON-NLS-3$
+      zmlWriter.write( "." ); //$NON-NLS-1$
+      zmlWriter.write( FortranFormatHelper.printf( year, "i2" ).replaceAll( " ", "0" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       Double kc = (Double) values.getElement( row, kcAxis );
       Double wt = (Double) values.getElement( row, wtAxis );
       Double lai = (Double) values.getElement( row, laiAxis );
 
-      zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) );
-      zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) );
-      zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) );
-      zmlWriter.write( "\n" );
+      zmlWriter.write( FortranFormatHelper.printf( kc, "f8.2" ) ); //$NON-NLS-1$
+      zmlWriter.write( FortranFormatHelper.printf( wt, "f8.2" ) ); //$NON-NLS-1$
+      zmlWriter.write( FortranFormatHelper.printf( lai, "f8.2" ) ); //$NON-NLS-1$
+      zmlWriter.write( "\n" ); //$NON-NLS-1$
     }
   }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.sensor.IAxis;
@@ -121,7 +122,7 @@ public class IdleLanduseManager extends AbstractManager
 
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line );
+    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 9 );
     // Kommentarzeilen
     line = reader.readLine();
@@ -147,12 +148,12 @@ public class IdleLanduseManager extends AbstractManager
     for( int i = 0; i < 12; i++ )
     {
       line = reader.readLine();
-      System.out.println( "NutzParameter(" + i + "): " + line );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.IdleLanduseManager.2") + i + "): " + line ); //$NON-NLS-1$ //$NON-NLS-2$
       createProperties( propCollector, line, 10 );
 
       // day.month.[-1|00]
       final String dateAsString = propCollector.get( "dat" );
-      final String[] dateComponents = dateAsString.split( "\\." );
+      final String[] dateComponents = dateAsString.split( "\\." ); //$NON-NLS-1$
       int day = Integer.parseInt( dateComponents[0] );
       int month = Integer.parseInt( dateComponents[1] );
       int year = Integer.parseInt( dateComponents[2] );
@@ -203,7 +204,7 @@ public class IdleLanduseManager extends AbstractManager
     line = reader2.readLine();
     if( line == null )
       return null;
-    String[] strings = line.split( ";" );
+    String[] strings = line.split( ";" ); //$NON-NLS-1$
     System.out.println( line );
     String landuse = strings[0];
     final Feature feature = getFeature( landuse, m_landuseFT );
@@ -242,7 +243,7 @@ public class IdleLanduseManager extends AbstractManager
     line = reader3.readLine();
     if( line == null )
       return null;
-    String[] strings = line.split( ";" );
+    String[] strings = line.split( ";" ); //$NON-NLS-1$
     System.out.println( line );
     String sealing = strings[0];
     final Feature feature = getFeature( sealing, m_sealingFT );

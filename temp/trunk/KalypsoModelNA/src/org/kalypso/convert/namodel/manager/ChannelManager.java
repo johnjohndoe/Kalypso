@@ -55,6 +55,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -129,7 +130,7 @@ public class ChannelManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( i + ": " + line );
+      System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
     // FeatureProperty idProp = (FeatureProperty)propCollector.get( "inum" );
@@ -146,7 +147,7 @@ public class ChannelManager extends AbstractManager
       case KMCHANNEL:
         feature = getFeature( asciiID, m_kmChannelFT );
         line = reader.readLine();
-        System.out.println( 2 + ": " + line );
+        System.out.println( 2 + ": " + line ); //$NON-NLS-1$
         createProperties( propCollector, line, 2 );
         // parse kalinin-miljukov-parameter
         HashMap<String, String> kmPropCollector = new HashMap<String, String>();
@@ -155,7 +156,7 @@ public class ChannelManager extends AbstractManager
         {
           Feature kmParameterFeature = createFeature( m_kmParameterFT );
           line = reader.readLine();
-          System.out.println( " km(" + i + "): " + line );
+          System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.0") + i + Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.5") + line ); //$NON-NLS-1$ //$NON-NLS-2$
           createProperties( kmPropCollector, line, 3 );
           // final Collection collection = kmPropCollector.values();
           setParsedProperties( kmParameterFeature, kmPropCollector, null );
@@ -167,7 +168,7 @@ public class ChannelManager extends AbstractManager
         feature = getFeature( asciiID, m_storageChannelFT );
         break;
       default:
-        throw new UnsupportedOperationException( "ChannelType " + art + " is not supported" );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.1") + art + Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.7") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     // Collection collection = propCollector.values();
     setParsedProperties( feature, propCollector, null );
@@ -192,75 +193,75 @@ public class ChannelManager extends AbstractManager
   private void writeFeature( AsciiBuffer asciiBuffer, final Feature feature, GMLWorkspace workspace ) throws Exception
   {
     IDManager idManager = m_conf.getIdManager();
-    asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature ) + "\n" );
+    asciiBuffer.getChannelBuffer().append( idManager.getAsciiID( feature ) + "\n" ); //$NON-NLS-1$
     // asciiBuffer.getChannelBuffer().append( toAscci( feature, 0 ) + "\n" );
     IFeatureType ft = feature.getFeatureType();
     if( "VirtualChannel".equals( ft.getQName().getLocalPart() ) )
-      asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" );
+      asciiBuffer.getChannelBuffer().append( VIRTUALCHANNEL + "\n" ); //$NON-NLS-1$
     else if( "KMChannel".equals( ft.getQName().getLocalPart() ) )
     {
-      asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" );
+      asciiBuffer.getChannelBuffer().append( KMCHANNEL + "\n" ); //$NON-NLS-1$
       List kmFeatures = (List) feature.getProperty( KMParameterpropName );
 
       for( int i = 0; i < kmFeatures.size(); i++ )
       {
         Feature kmFE = (Feature) kmFeatures.get( i );
-        asciiBuffer.getChannelBuffer().append( toAscci( kmFE, 3 ) + "\n" );
+        asciiBuffer.getChannelBuffer().append( toAscci( kmFE, 3 ) + "\n" ); //$NON-NLS-1$
       }
 
     }
     else if( "StorageChannel".equals( ft.getQName().getLocalPart() ) )
     {
-      asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" );
+      asciiBuffer.getChannelBuffer().append( STORAGECHANNEL + "\n" ); //$NON-NLS-1$
 
       // (txt,a8)(inum,i8)(iknot,i8)(c,f6.2-dummy)
       // RHB 5-7
-      asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) );
+      asciiBuffer.getRhbBuffer().append( "SPEICHER" + FortranFormatHelper.printf( idManager.getAsciiID( feature ), "i8" ) ); //$NON-NLS-2$
       // Ueberlaufknoten optional
       final IRelationType rt2 = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.IKNOT_MEMBER_PROP );
       Feature nodeFE = workspace.resolveLink( feature, rt2 );
       final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.DOWNSTREAM_NODE_MEMBER_PROP );
       final Feature dnodeFE = workspace.resolveLink( feature, rt );
       if( nodeFE == null || nodeFE == dnodeFE )
-        asciiBuffer.getRhbBuffer().append( "       0" );
+        asciiBuffer.getRhbBuffer().append( "       0" ); //$NON-NLS-1$
       else
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i8" ) );
-      asciiBuffer.getRhbBuffer().append( "  0.00" + "\n" );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( nodeFE ), "i8" ) ); //$NON-NLS-1$
+      asciiBuffer.getRhbBuffer().append( "  0.00" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
       // (itext,a80)
       // RHB 8
-      asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" );
+      asciiBuffer.getRhbBuffer().append( toAscci( feature, 8 ) + "\n" ); //$NON-NLS-1$
       // (lfs,i4)_(nams,a10)(sv,f10.6)(vmax,f10.6)(vmin,f10.6)(jev,i4)(itxts,a10)
       // RHB 9-10
-      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) );
+      asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( idManager.getAsciiID( dnodeFE ), "i4" ) ); //$NON-NLS-1$
       Double sv = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_SV_PROP )) / 1000000;
       Double vmax = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMAX_PROP )) / 1000000;
       Double vmin = ((Double) feature.getProperty( NaModelConstants.STORAGE_CHANNEL_VMIN_PROP)) / 1000000;
-      asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + FortranFormatHelper.printf( sv, "f9.6" ) + " " + FortranFormatHelper.printf( vmax, "f9.6" ) + " "
-          + FortranFormatHelper.printf( vmin, "f9.6" ) );
+      asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + FortranFormatHelper.printf( sv, "f9.6" ) + " " + FortranFormatHelper.printf( vmax, "f9.6" ) + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+          + FortranFormatHelper.printf( vmin, "f9.6" ) ); //$NON-NLS-1$
       // asciiBuffer.getRhbBuffer().append( " " + " FUNKTION " + toAscci( feature, 10 ) );
 
       Object wvqProp = feature.getProperty(NaModelConstants.STORAGE_CHANNEL_HVVSQD_PROP  );
       if( wvqProp instanceof IObservation )
       {
         int size = (((IObservation) wvqProp).getValues( null )).getCount();
-        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" ) + "\n" );
+        asciiBuffer.getRhbBuffer().append( FortranFormatHelper.printf( size, "i4" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         if( size > 24 )
-          throw new Exception( "Fehler!!! NA-Modell: Anzahl Wertetripel WVQ-Beziehung > maximale Anzahl (24), Rückhaltebecken: #" + FeatureHelper.getAsString( feature, "name" ) );
+          throw new Exception( Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.33") + FeatureHelper.getAsString( feature, "name" ) ); //$NON-NLS-1$
         // ____(hv,f8.2)________(vs,f9.6)______(qd,f8.3)
         writeWVQ( (IObservation) wvqProp, asciiBuffer.getRhbBuffer() );
       }
       else
       {
-        System.out.println( "Es existiert keine (gültige) WQV-Beziehung für das Rückhaltebecken, ID: " + idManager.getAsciiID( feature ) );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.2") + idManager.getAsciiID( feature ) ); //$NON-NLS-1$
       }
 
       // Kommentar Ende Speicher
       // RHB 12
-      asciiBuffer.getRhbBuffer().append( "ENDE" + "\n" );
+      asciiBuffer.getRhbBuffer().append( "ENDE" + "\n" ); //$NON-NLS-2$
 
     }
     else
-      throw new UnsupportedOperationException( "can not write Feature to ascii" + feature.toString() );
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.ChannelManager.38") + feature.toString() ); //$NON-NLS-1$
   }
 
   /**
@@ -281,9 +282,9 @@ public class ChannelManager extends AbstractManager
       Double w = (Double) values.getElement( row, waterTableAxis );
       Double v = ((Double) values.getElement( row, volumeAxis )) / 1000000;
       Double q = (Double) values.getElement( row, dischargeAxis );
-      rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) );
-      rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) );
-      rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" );
+      rhbBuffer.append( "    " + FortranFormatHelper.printf( w, "f8.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      rhbBuffer.append( "        " + FortranFormatHelper.printf( v, "f9.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      rhbBuffer.append( "      " + FortranFormatHelper.printf( q, "f8.3" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 

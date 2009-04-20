@@ -98,7 +98,7 @@ public abstract class AbstractManager
    */
   private String mapID( String asciiStringId, IFeatureType ft )
   {
-    return ft.getQName().getLocalPart() + "_" + asciiStringId;
+    return ft.getQName().getLocalPart() + "_" + asciiStringId; //$NON-NLS-1$
   }
 
   public Feature getFeature( int asciiID, IFeatureType ft )
@@ -250,7 +250,7 @@ public abstract class AbstractManager
       if( ft.getProperty( qname ) != null )
         feature.setProperty( propertyType, value );
       else
-        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" );
+        System.out.println( "property does not exist: >" + qname.getLocalPart() + "=" + value + "<" ); //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 

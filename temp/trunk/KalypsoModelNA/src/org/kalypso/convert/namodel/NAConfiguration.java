@@ -49,6 +49,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.TreeSet;
 
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.manager.IDManager;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -139,7 +140,7 @@ public class NAConfiguration
 
   private final IDManager m_idManager = new IDManager();
 
-  private String m_szenarioID = "";
+  private String m_szenarioID = ""; //$NON-NLS-1$
 
   private NaNodeResultProvider m_nodeResultProvider = null;
 
@@ -176,31 +177,31 @@ public class NAConfiguration
     m_catchmentFT = schema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
     m_bodartFT = paraSchema.getFeatureType( NaModelConstants.PARA_SoilLayer_FT );
     m_statNFT = synthNSchema.getFeatureType( NaModelConstants.SYNTHN_STATN_FT );
-    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" );
+    m_controlSchemaURL = getClass().getResource( "schema/nacontrol.xsd" ); //$NON-NLS-1$
 
     // formats:
-    m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" );
+    m_catchmentFormatURL = getClass().getResource( "formats/WernerCatchment.txt" ); //$NON-NLS-1$
     // kalypsoNa-sourcecode
-    m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" );
-    m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" );
-    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" );
-    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" );
-    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" );
-    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" );
+    m_ChannelFormatURL = getClass().getResource( "formats/gerinne.txt" ); //$NON-NLS-1$
+    m_netFormatURL = getClass().getResource( "formats/netzdatei.txt" ); //$NON-NLS-1$
+    m_rhbFormatURL = getClass().getResource( "formats/JessicaRHB.txt" ); //$NON-NLS-1$
+    m_hydrotopFormatURL = getClass().getResource( "formats/hydrotop.txt" ); //$NON-NLS-1$
+    m_parameterFormatURL = getClass().getResource( "formats/parameter.txt" ); //$NON-NLS-1$
+    m_swaleAndTrenchFormatURL = getClass().getResource( "formats/swaleAndTrench.txt" ); //$NON-NLS-1$
     // ASCII
-    (new File( asciiBaseDir, "inp.dat" )).mkdirs();
-    (new File( asciiBaseDir, "hydro.top" )).mkdirs();
-    m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" );
-    m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" );
-    m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" );
-    m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" );
-    m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" );
-    m_nutzungDir = new File( asciiBaseDir, "hydro.top" );
-    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" );
-    m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" );
-    m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" );
-    m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" );
-    m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" );
+    (new File( asciiBaseDir, "inp.dat" )).mkdirs(); //$NON-NLS-1$
+    (new File( asciiBaseDir, "hydro.top" )).mkdirs(); //$NON-NLS-1$
+    m_catchmentFile = new File( asciiBaseDir, "inp.dat/we_nat.geb" ); //$NON-NLS-1$
+    m_zftFile = new File( asciiBaseDir, "inp.dat/we_nat.zft" ); //$NON-NLS-1$
+    m_channelFile = new File( asciiBaseDir, "inp.dat/we_nat.ger" ); //$NON-NLS-1$
+    m_netFile = new File( asciiBaseDir, "inp.dat/we_nat.ntz" ); //$NON-NLS-1$
+    m_rhbFile = new File( asciiBaseDir, "inp.dat/we_nat.rhb" ); //$NON-NLS-1$
+    m_nutzungDir = new File( asciiBaseDir, "hydro.top" ); //$NON-NLS-1$
+    m_hydrotopFile = new File( asciiBaseDir, "inp.dat/we.hyd" ); //$NON-NLS-1$
+    m_bodentypFile = new File( asciiBaseDir, "hydro.top/boden.dat" ); //$NON-NLS-1$
+    m_bodenartFile = new File( asciiBaseDir, "hydro.top/bod_art.dat" ); //$NON-NLS-1$
+    m_schneeFile = new File( asciiBaseDir, "hydro.top/snowtyp.dat" ); //$NON-NLS-1$
+    m_swaleAndTrenchFile = new File( asciiBaseDir, "inp.dat/we_nat.mr" ); //$NON-NLS-1$
 
     m_iniWrite = false;
   }

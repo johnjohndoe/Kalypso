@@ -58,6 +58,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class BlockTimeSeries
@@ -79,9 +80,9 @@ public class BlockTimeSeries
   // synth. n.: haufigkeit: 0.100 jahre,dauer: 13.00 h , zeitschr.: 0.083 h , verteilung: 2
   private final static Pattern pSynthTime = Pattern.compile( ".+synth. n..+haufigkeit:.+(\\d+\\.\\d+).+jahre,dauer.+(\\d+\\.\\d+).+h , zeitschr.:.+(\\d+\\.\\d+).+" );
 
-  private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" );
+  private final Pattern pBlock = Pattern.compile( "\\D*(\\d+)\\D+(\\d+)\\D+(\\d+)\\D*" ); //$NON-NLS-1$
 
-  private final Pattern pHeader = Pattern.compile( "\\s*(-?+\\d+\\.\\d+)\\s*" );
+  private final Pattern pHeader = Pattern.compile( "\\s*(-?+\\d+\\.\\d+)\\s*" ); //$NON-NLS-1$
 
   // private final Pattern pHeader = Pattern.compile( "\\D*(\\d+\\.\\d+)\\D*" );
 
@@ -89,7 +90,7 @@ public class BlockTimeSeries
 
   public BlockTimeSeries( final TimeZone timeZone )
   {
-    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
+    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
     format.setTimeZone( timeZone );
     m_dateFormat = format;
     m_blocks = new Hashtable<String, SortedMap>();
@@ -134,7 +135,7 @@ public class BlockTimeSeries
       while( (line = reader.readLine()) != null )
       {
         // System.out.println("LINE: "+line);
-        if( !line.startsWith( "#" ) )
+        if( !line.startsWith( "#" ) ) //$NON-NLS-1$
           switch( step )
           {
             case SEARCH_TIMEOFFSET:
@@ -151,10 +152,10 @@ public class BlockTimeSeries
                 // 24 means 0 same day ! (RRM/fortran-logic)
                 if( sTime_int == 24 )
                 {
-                  sTime = "0";
+                  sTime = "0"; //$NON-NLS-1$
                 }
                 startDate += Long.parseLong( sTime ) * 1000l * 3600l;
-                if( sStep.equals( "0.083" ) )
+                if( sStep.equals( "0.083" ) ) //$NON-NLS-1$
                 {
                   /*
                    * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
@@ -174,8 +175,8 @@ public class BlockTimeSeries
               if( synthM.matches() )
               {
                 // synthetisches Ereignis hat kein Anfangsdatum, daher wird 01.01.2000 angenommen!
-                String sDate = "000101";
-                String sTime = "0";
+                String sDate = "000101"; //$NON-NLS-1$
+                String sTime = "0"; //$NON-NLS-1$
                 String sStep = synthM.group( 3 );
                 final Date parseDate = m_dateFormat.parse( sDate );
                 startDate = (parseDate).getTime();
@@ -183,10 +184,10 @@ public class BlockTimeSeries
                 // 24 means 0 same day ! (RRM/fortran-logic)
                 if( sTime_int == 24 )
                 {
-                  sTime = "0";
+                  sTime = "0"; //$NON-NLS-1$
                 }
                 startDate += Long.parseLong( sTime ) * 1000l * 3600l;
-                if( sStep.equals( "0.083" ) )
+                if( sStep.equals( "0.083" ) ) //$NON-NLS-1$
                 {
                   /*
                    * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
@@ -227,7 +228,7 @@ public class BlockTimeSeries
               }
               break;
             case SEARCH_VALUES:
-              String values[] = line.split( "\\s+" );
+              String values[] = line.split( "\\s+" ); //$NON-NLS-1$
               for( int i = 0; i < values.length; i++ )
               {
                 m = pHeader.matcher( values[i] );
@@ -251,7 +252,7 @@ public class BlockTimeSeries
     catch( Exception e )
     {
       e.printStackTrace();
-      System.out.println( "could not read blockfile " );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.timeseries.BlockTimeSeries.13") ); //$NON-NLS-1$
     }
   }
 
@@ -274,7 +275,7 @@ public class BlockTimeSeries
       {
         Object dateKey = it.next();
         Object value = map.get( dateKey );
-        line = dateFormat.format( (Date) dateKey ) + " " + value;
+        line = dateFormat.format( (Date) dateKey ) + " " + value; //$NON-NLS-1$
         writeln( writer, line );
       }
       writer.close();
@@ -289,7 +290,7 @@ public class BlockTimeSeries
 
   public void writeln( FileWriter writer, String line ) throws IOException
   {
-    line = line + System.getProperty( "line.separator" );
+    line = line + System.getProperty( "line.separator" ); //$NON-NLS-1$
     writer.write( line, 0, line.length() );
   }
 

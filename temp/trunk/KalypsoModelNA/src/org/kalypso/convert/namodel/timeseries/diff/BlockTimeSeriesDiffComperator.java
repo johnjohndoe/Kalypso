@@ -48,6 +48,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffLogger;
+import org.kalypso.convert.namodel.i18n.Messages;
 
 /**
  * @author kuepfer
@@ -71,7 +72,7 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     TreeMap timeSeries1 = ((TreeMap) content1);
     TreeMap timeSeries2 = ((TreeMap) content2);
 
-    logger.log( DIFF_INFO, "Wertevergleich" );
+    logger.log( DIFF_INFO, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.0") ); //$NON-NLS-1$
     boolean valuesResult = diffValues( logger, timeSeries1, timeSeries2 );
 
     result |= valuesResult;
@@ -89,7 +90,7 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     int max2 = timeSeries2.size();
     if( max1 != max2 )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, "Anzahl der Werte : " + max1 + " : " + max2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.1") + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
       return true;
     }
     double maxValue1 = 0;
@@ -112,7 +113,7 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
         final Date date2 = ((Date) o2);
         if( !date1.equals( date2 ) )
         {
-          logger.log( IDiffComparator.DIFF_CONTENT, "Datum  " + date1 + " : " + date2 );
+          logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.3") + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
           return true;
         }
 
@@ -147,14 +148,14 @@ public class BlockTimeSeriesDiffComperator implements IDiffComparator
     }
     if( result )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, "Anzahl Überschreitungen : #" + diffCount );
-      logger.log( IDiffComparator.DIFF_CONTENT, "maximale Überschreitung : " + maxDelta );
-      logger.log( IDiffComparator.DIFF_CONTENT, "Summe Überschreitungen " + differenceAll + " (delta >" + m_tollerance + ")" );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.5") + diffCount ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.6") + maxDelta ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.7") + differenceAll + Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.8") + m_tollerance + Messages.getString("org.kalypso.convert.namodel.timeseries.diff.BlockTimeSeriesDiffComperator.9") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     if( minValue1 != minValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "min " + minValue1 + " : " + minValue2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, "min " + minValue1 + " : " + minValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( maxValue1 != maxValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "max " + maxValue1 + " : " + maxValue2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, "max " + maxValue1 + " : " + maxValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
     double mean1 = sum1 / max1;
     double mean2 = sum2 / max2;
     if( mean1 != mean2 )

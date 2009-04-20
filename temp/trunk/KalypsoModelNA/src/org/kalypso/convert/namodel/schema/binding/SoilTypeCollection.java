@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -62,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class SoilTypeCollection extends Feature_Impl
 {
-  public static final QName QNAME_PROP_SOILTYPEMEMBER = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" );
+  public static final QName QNAME_PROP_SOILTYPEMEMBER = new QName( NaModelConstants.NS_NAPEDOLOGIE, "soiltypeMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<SoilType> m_soilTypes;
 
@@ -97,14 +98,14 @@ public class SoilTypeCollection extends Feature_Impl
         case DELETE_INTERSECTING:
         {
           m_soilTypes.remove( existingPedology );
-          final String message = String.format( "SoilType '%s' was deleted due to intersection", existingPedology.getId() );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.1"), existingPedology.getId() ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           break;
 
         case IGNORE_INTERSECTING:
         {
-          final String message = String.format( "Ingoring imported soilType '%s' due to intersection", label );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.2"), label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
           return null;
@@ -116,13 +117,13 @@ public class SoilTypeCollection extends Feature_Impl
           if( difference != null )
           {
             existingPedology.setGeometry( difference );
-            final String message = String.format( "SoilType '%s' was reduced by imported soilType '%s'", existingPedology.getId(), label );
+            final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.3"), existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
           else
           {
             m_soilTypes.remove( existingPedology );
-            final String message = String.format( "SoilType '%s' was removed by imported soilType '%s'", existingPedology.getId(), label );
+            final String message = String.format( Messages.getString("org.kalypso.convert.namodel.schema.binding.SoilTypeCollection.4"), existingPedology.getId(), label ); //$NON-NLS-1$
             log.add( StatusUtilities.createStatus( IStatus.INFO, message, null ) );
           }
         }

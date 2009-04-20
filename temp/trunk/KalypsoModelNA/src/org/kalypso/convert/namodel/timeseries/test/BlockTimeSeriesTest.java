@@ -31,7 +31,7 @@ public class BlockTimeSeriesTest extends TestCase
     // TreeMap map2 = load( "resources/qgs.dat", "103" );
     // assertNotNull( map );
     // assertNotNull( map2 );
-     TreeMap map3 = load( "./resources/WinterSommerTest.dat", "103" );
+     TreeMap map3 = load( "./resources/WinterSommerTest.dat", "103" ); //$NON-NLS-1$ //$NON-NLS-2$
 //    TreeMap map3 = load( "./resources/WinterSommer24hTest.dat", "103" );
     check( map3, 28 );
   }
@@ -40,7 +40,7 @@ public class BlockTimeSeriesTest extends TestCase
   {
     final String[] timeZones = new String[] {
 
-    "UTC", "GMT", "CET", "GMT+1" };
+    "UTC", "GMT", "CET", "GMT+1" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     final TimeZone default1 = TimeZone.getDefault();
     final DateFormat defaultFormat = new SimpleDateFormat();
@@ -55,17 +55,17 @@ public class BlockTimeSeriesTest extends TestCase
     while( iterator.hasNext() && i < max )
     {
       final Date date = (Date) iterator.next();
-      System.out.println( "\n" + i + " value:" + map.get( date ) );
+      System.out.println( "\n" + i + " value:" + map.get( date ) ); //$NON-NLS-1$ //$NON-NLS-2$
       for( int j = 0; j < timeZones.length; j++ )
       {
         String timeZone = timeZones[j];
         final TimeZone tz = TimeZone.getTimeZone( timeZone );
         final DateFormat dFormat = new SimpleDateFormat();
         dFormat.setTimeZone( tz );
-        System.out.println( tz.getID() + ":" + dFormat.format( date ) );
+        System.out.println( tz.getID() + ":" + dFormat.format( date ) ); //$NON-NLS-1$
       }
 
-      System.out.println( "NA :" + naFormat.format( date ) );
+      System.out.println( "NA :" + naFormat.format( date ) ); //$NON-NLS-1$
       if( last != null )
         System.out.println( date.getTime() - last.getTime() );
       last = date;
@@ -75,9 +75,9 @@ public class BlockTimeSeriesTest extends TestCase
 
   public TreeMap load( String resource, String key ) throws IOException
   {
-    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
+    TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
     final BlockTimeSeries block = new BlockTimeSeries( timeZone );
-    final File tmpFile = File.createTempFile( "block", "txt" );
+    final File tmpFile = File.createTempFile( "block", "txt" ); //$NON-NLS-1$ //$NON-NLS-2$
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     final FileWriter fileWriter = new FileWriter( tmpFile );
     IOUtils.copy( resourceAsStream, fileWriter );
@@ -86,8 +86,8 @@ public class BlockTimeSeriesTest extends TestCase
     block.importBlockFile( tmpFile );
     final TreeMap map = block.getTimeSerie( key );
     assertNotNull( map );
-    System.out.println( " von " + map.firstKey() );
-    System.out.println( " bis " + map.lastKey() );
+    System.out.println( " von " + map.firstKey() ); //$NON-NLS-1$
+    System.out.println( " bis " + map.lastKey() ); //$NON-NLS-1$
     return map;
   }
 }

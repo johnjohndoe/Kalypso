@@ -43,6 +43,7 @@ package org.kalypso.convert.namodel.manager;
 import java.util.regex.Matcher;
 
 import org.kalypso.contribs.java.util.FortranFormatHelper;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -52,7 +53,7 @@ public class ASCIIHelper
 {
   public static String toAsciiLine( Feature feature, String formatLine )
   {
-    StringBuffer result = new StringBuffer( "" );
+    StringBuffer result = new StringBuffer( "" ); //$NON-NLS-1$
     String[] formats = FortranFormatHelper.patternBrackets.split( formatLine );
     for( int i = 0; i < formats.length; i++ )
     {
@@ -70,13 +71,13 @@ public class ASCIIHelper
 
   public static String toAsciiValue( Feature feature, String pairFormat )
   {
-    if( "".equals( pairFormat ) )
-      return "";
-    final String[] s = pairFormat.split( "," );
+    if( "".equals( pairFormat ) ) //$NON-NLS-1$
+      return ""; //$NON-NLS-1$
+    final String[] s = pairFormat.split( "," ); //$NON-NLS-1$
     if( "todo".equals( s[0] ) )
       return "(TODO:" + s[0] + ")";
     if( "IGNORE".equals( s[0] ) )
-      return "";
+      return ""; //$NON-NLS-1$
     //        System.out.println(s[0]);
     Object property = feature.getProperty( s[0] );
 

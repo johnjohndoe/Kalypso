@@ -53,6 +53,7 @@ import java.util.List;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -79,7 +80,7 @@ public class BodenartManager extends AbstractManager
   @Override
   public String mapID( int id, IFeatureType ft )
   {
-    throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.BodenartManager.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -102,7 +103,7 @@ public class BodenartManager extends AbstractManager
         return null;
 
       // TODO remove println
-      System.out.println( reader.getLineNumber() + ": " + line );
+      System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     }
     while( (fe = readNextFeature( reader )) != null )
       result.add( fe );
@@ -117,7 +118,7 @@ public class BodenartManager extends AbstractManager
     line = reader.readLine();
     if( line == null )
       return null;
-    System.out.println( reader.getLineNumber() + ": " + line );
+    System.out.println( reader.getLineNumber() + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 6 );
 
     // generate id:
@@ -137,7 +138,7 @@ public class BodenartManager extends AbstractManager
   @Override
   public Feature getFeature( int asciiID, IFeatureType ft )
   {
-    throw new UnsupportedOperationException( " bodenartManager does not support int-ID mapping. (not necessary) " );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.convert.namodel.manager.BodenartManager.4") ); //$NON-NLS-1$
   }
 
   public void writeFile( AsciiBuffer asciiBuffer, GMLWorkspace paraWorkspace ) throws Exception
@@ -145,7 +146,7 @@ public class BodenartManager extends AbstractManager
     Feature rootFeature = paraWorkspace.getRootFeature();
     List list = (List) rootFeature.getProperty( NaModelConstants.PARA_SOIL_LAYER_MEMBER );
     // Date calcDate = new Date();
-    asciiBuffer.getBodartBuffer().append( "Bodenparameter NA-Modell" + "\n" );
+    asciiBuffer.getBodartBuffer().append( Messages.getString("org.kalypso.convert.namodel.manager.BodenartManager.5") + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     asciiBuffer.getBodartBuffer().append( "BODART_ID ArtKap.  WP     FK     BFMAX     Kf   BF0\n" );
     asciiBuffer.getBodartBuffer().append( "                [mm/dm] [mm/dm] [mm/dm]  [mm/d] [-]\n" );
     Iterator iter = list.iterator();
@@ -161,10 +162,10 @@ public class BodenartManager extends AbstractManager
   private void writeFeature( AsciiBuffer asciiBuffer, Feature feature ) throws Exception
   {
     // (name,*)_(typkap,*)_(typwp,*)_(typfk,*)_(typbfm,*)_(typkf,*)_(typbf0,*)
-    asciiBuffer.getBodartBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "*" ) + " kap "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typwp" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typfk" ), "*" ) + " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbfm" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typkf" ), "*" ) + " "
-        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbf0" ), "*" ) + "\n" );
+    asciiBuffer.getBodartBuffer().append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "name" ), "*" ) + " kap " //$NON-NLS-2$
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typwp" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typfk" ), "*" ) + " " //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$ //$NON-NLS-6$
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbfm" ), "*" ) + " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typkf" ), "*" ) + " " //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$ //$NON-NLS-6$
+        + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "typbf0" ), "*" ) + "\n" ); //$NON-NLS-2$ //$NON-NLS-3$
     // asciiBuffer.getBodartBuffer().append( toAscci( feature, 6 ) + "\n" );
   }
 }

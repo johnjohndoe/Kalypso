@@ -95,7 +95,7 @@ public class NaNodeResultProvider
     if( link == null )
       return null;
     // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" );
+    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }
@@ -106,7 +106,7 @@ public class NaNodeResultProvider
     if( link == null )
       return null;
     // optionen loeschen
-    final String href = link.getHref().replaceAll( "\\?.*", "" );
+    final String href = link.getHref().replaceAll( "\\?.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     IUrlResolver res = new UrlUtilities();
     return res.resolveURL( m_context, href );
   }

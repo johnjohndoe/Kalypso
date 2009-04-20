@@ -45,6 +45,7 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.ValueIterator;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
@@ -60,49 +61,49 @@ import com.vividsolutions.jts.geom.Geometry;
 public class NaModelHelper
 {
   // Elements
-  public static final String CATCHMENT_ELEMENT_NAME = "Catchment";
+  public static final String CATCHMENT_ELEMENT_NAME = "Catchment"; //$NON-NLS-1$
 
-  public static final String NODE_ELEMENT_NAME = "Node";
+  public static final String NODE_ELEMENT_NAME = "Node"; //$NON-NLS-1$
 
-  public static final String V_CHANNEL_ELEMENT_NAME = "VirtualChannel";
+  public static final String V_CHANNEL_ELEMENT_NAME = "VirtualChannel"; //$NON-NLS-1$
 
-  public static final String KM_CHANNEL_ELEMENT_NAME = "KMChannel";
+  public static final String KM_CHANNEL_ELEMENT_NAME = "KMChannel"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_ELEMENT_NAME = "StorageChannel";
+  public static final String STORAGE_CHANNEL_ELEMENT_NAME = "StorageChannel"; //$NON-NLS-1$
 
   // Collection props
 
   // Link Properties
-  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember";
+  public static final String LINK_CATCHMENT_CHANNEL = "entwaesserungsStrangMember"; //$NON-NLS-1$
 
-  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember";
+  public static final String LINK_CHANNEL_DOWNSTREAMNODE = "downStreamNodeMember"; //$NON-NLS-1$
 
-  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember";
+  public static final String LINK_NODE_DOWNSTREAMCHANNEL = "downStreamChannelMember"; //$NON-NLS-1$
 
   // Geometrie Properties of Model
-  public static final String NODE_GEOM_PROP = "Ort";
+  public static final String NODE_GEOM_PROP = "Ort"; //$NON-NLS-1$
 
-  public static final String CHANNEL_GEOM_PROP = "Ort";
+  public static final String CHANNEL_GEOM_PROP = "Ort"; //$NON-NLS-1$
 
-  public static final String CATCHMENT_GEOM_PROP = "Ort";
+  public static final String CATCHMENT_GEOM_PROP = "Ort"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd";
+  public static final String STORAGE_CHANNEL_ZMLINLINE_PROP = "hvvsqd"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_VMAX_PROP = "vmax";
+  public static final String STORAGE_CHANNEL_VMAX_PROP = "vmax"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_VMIN_PROP = "vmin";
+  public static final String STORAGE_CHANNEL_VMIN_PROP = "vmin"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_SV_PROP = "sv";
+  public static final String STORAGE_CHANNEL_SV_PROP = "sv"; //$NON-NLS-1$
 
-  public static final String STORAGE_CHANNEL_C_PROP = "c";
+  public static final String STORAGE_CHANNEL_C_PROP = "c"; //$NON-NLS-1$
 
   // Measure Props
-  private static final String RETENSION_PROP_SLOPE = "bankslope";
+  private static final String RETENSION_PROP_SLOPE = "bankslope"; //$NON-NLS-1$
 
-  private static final String RETENSION_PROP_DEPTH = "depth";
+  private static final String RETENSION_PROP_DEPTH = "depth"; //$NON-NLS-1$
 
   // general Props
-  public static final String GENERATE_RESULT_PROP = "generateResult";
+  public static final String GENERATE_RESULT_PROP = "generateResult"; //$NON-NLS-1$
 
   // return constants
   public static final int OPERATION_FAILED = -1;
@@ -148,8 +149,8 @@ public class NaModelHelper
     {
       // create Observation (WQV-relation) for storage channel
       final GM_Object measuerRhbGEOM = measureRhbFE.getDefaultGeometryProperty();
-      final Double slope = (Double) measureRhbFE.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", RETENSION_PROP_SLOPE ) );
-      final Double depth = (Double) measureRhbFE.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", RETENSION_PROP_DEPTH ) );
+      final Double slope = (Double) measureRhbFE.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", RETENSION_PROP_SLOPE ) ); //$NON-NLS-1$
+      final Double depth = (Double) measureRhbFE.getProperty( new QName( "http://schema.kalypso.wb.tu-harburg.de/measure/rhb", RETENSION_PROP_DEPTH ) ); //$NON-NLS-1$
       final Double min = new Double( 0 );
       final int max = 10;
       final Double intervall = new Double( depth.doubleValue() / max );
@@ -160,7 +161,7 @@ public class NaModelHelper
       /** Das Volumen muss immer in hm^3 sein, deshalb wird hier durch hundert geteilt !!!! */
       // final double maxVol = depth.doubleValue() / 3 * m_factorHecto * (Math.pow( lo, 2d ) + Math.pow( lu, 2d ) +
       // Math.sqrt( Math.pow( lo, 2d ) * Math.pow( lu, 2d ) ));
-      final ZmlInlineTypeHandler typeHandler = (ZmlInlineTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( "inline.zml.kalypso.org", "ZmlInlineWVQType" ) );
+      final ZmlInlineTypeHandler typeHandler = (ZmlInlineTypeHandler) MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( "inline.zml.kalypso.org", "ZmlInlineWVQType" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IAxis[] axis = TimeserieUtils.createDefaultAxes( typeHandler.getAxisTypes(), true );
       final Object[][] values = new Object[10][axis.length];

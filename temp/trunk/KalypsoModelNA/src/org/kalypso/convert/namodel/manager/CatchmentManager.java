@@ -60,6 +60,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.util.FortranFormatHelper;
 import org.kalypso.convert.namodel.NAConfiguration;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -89,9 +90,9 @@ public class CatchmentManager extends AbstractManager
 
   private final NAConfiguration m_conf;
 
-  public static final String STD_TEMP_FILENAME = "std.tmp";
+  public static final String STD_TEMP_FILENAME = "std.tmp"; //$NON-NLS-1$
 
-  public static final String STD_VERD_FILENAME = "std.ver";
+  public static final String STD_VERD_FILENAME = "std.ver"; //$NON-NLS-1$
 
   private static final HashMap<String, String> m_fileMap = new HashMap<String, String>();
 
@@ -135,11 +136,11 @@ public class CatchmentManager extends AbstractManager
       line = reader.readLine();
       if( line == null )
         return null;
-      System.out.println( i + ": " + line );
+      System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
     // FeatureProperty prop = propCollector.get( "anzlayy" );
-    final int anzlayy = Integer.parseInt( propCollector.get( "anzlayy" ) );
+    final int anzlayy = Integer.parseInt( propCollector.get( "anzlayy" ) ); //$NON-NLS-1$
     final List<Feature> list = new ArrayList<Feature>();
     final IPropertyType pt = m_catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
     fePropMap.put( pt, list );
@@ -147,7 +148,7 @@ public class CatchmentManager extends AbstractManager
     for( int i = 0; i < anzlayy; i++ )
     {
       line = reader.readLine();
-      System.out.println( i + ": " + line );
+      System.out.println( i + ": " + line ); //$NON-NLS-1$
       HashMap<String, String> col2 = new HashMap<String, String>();
       createProperties( col2, line, 9 );
       final Feature bodenkorrekturFE = createFeature( m_bodenKorrekturFT );
@@ -159,12 +160,12 @@ public class CatchmentManager extends AbstractManager
     for( int i = 10; i <= 11; i++ )
     {
       line = reader.readLine();
-      System.out.println( i + ": " + line );
+      System.out.println( i + ": " + line ); //$NON-NLS-1$
       createProperties( propCollector, line, i );
     }
     // 12
     line = reader.readLine();
-    System.out.println( "12: " + line );
+    System.out.println( "12: " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 12 );
 
     // FeatureProperty prop = propCollector.get( "igwzu" );
@@ -176,13 +177,13 @@ public class CatchmentManager extends AbstractManager
     if( igwzu > 0 )
     {
       final HashMap<String, String> col2 = new HashMap<String, String>();
-      String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu );
-      String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu );
+      String format13 = FortranFormatHelper.createFormatLine( "ngwzu", "*", "_", igwzu ); //$NON-NLS-2$ //$NON-NLS-3$
+      String format14 = FortranFormatHelper.createFormatLine( "gwwi", "*", "_", igwzu ); //$NON-NLS-2$ //$NON-NLS-3$
       line = reader.readLine();
-      System.out.println( "13: " + line );
+      System.out.println( "13: " + line ); //$NON-NLS-1$
       createProperties( col2, line, format13 );
       line = reader.readLine();
-      System.out.println( "14: " + line );
+      System.out.println( "14: " + line ); //$NON-NLS-1$
       createProperties( col2, line, format14 );
       for( int i = 0; i < igwzu; i++ )
       {
@@ -201,7 +202,7 @@ public class CatchmentManager extends AbstractManager
     }
     // 15
     line = reader.readLine();
-    System.out.println( 15 + ": " + line );
+    System.out.println( 15 + ": " + line ); //$NON-NLS-1$
     createProperties( propCollector, line, 15 );
 
     // generate id:
@@ -213,8 +214,8 @@ public class CatchmentManager extends AbstractManager
     // handle timeseries: convert to zmllink
     // FeatureProperty ts = propCollector.get( "kurzzeit" );
     String tsFileString = propCollector.get( "kurzzeit" );
-    String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml";
-    File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString );
+    String relativeZmlPath = "Niederschlag/Niederschlag_" + feature.getId() + ".zml"; //$NON-NLS-1$ //$NON-NLS-2$
+    File orgTsFile = new File( m_conf.getAsciiBaseDir(), "klima.dat/" + tsFileString ); //$NON-NLS-1$
 
     // JH: ZML erzeugen, dies funktioniert nicht mehr
 
@@ -262,32 +263,32 @@ public class CatchmentManager extends AbstractManager
     // 0
     final IDManager idManager = m_conf.getIdManager();
     int asciiID = idManager.getAsciiID( feature );
-    asciiBuffer.getCatchmentBuffer().append( "           " );
+    asciiBuffer.getCatchmentBuffer().append( "           " ); //$NON-NLS-1$
     asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( asciiID, "i5" ) );
-    asciiBuffer.getCatchmentBuffer().append( "      7\n" );
+    asciiBuffer.getCatchmentBuffer().append( "      7\n" ); //$NON-NLS-1$
     // 1-2
     for( int i = 1; i <= 2; i++ )
-      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( feature, i ) + "\n" ); //$NON-NLS-1$
 
     // 3
     StringBuffer b = new StringBuffer();
     if( m_conf.isUsePrecipitationForm().equals( true ) )
     {
-      b.append( "s " );
+      b.append( "s " ); //$NON-NLS-1$
     }
     else
     {
-      b.append( "n " );
+      b.append( "n " ); //$NON-NLS-1$
     }
     b.append( getNiederschlagEingabeDateiString( feature, m_conf ) );
-    b.append( " " + getNiederschlagEingabeDateiString( feature, m_conf ) );
-    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" );
+    b.append( " " + getNiederschlagEingabeDateiString( feature, m_conf ) ); //$NON-NLS-1$
+    b.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "faktn" ), "f5.2" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$
 
     // 4-6
     b.append( getTemperaturEingabeDateiString( feature, m_conf ) );
-    b.append( " " );
+    b.append( " " ); //$NON-NLS-1$
     b.append( getVerdunstungEingabeDateiString( feature, m_conf ) );
-    b.append( "\n" );
+    b.append( "\n" ); //$NON-NLS-1$
     asciiBuffer.getCatchmentBuffer().append( b.toString() );
     // Zeitflächenfunktion
     Object zftProp = feature.getProperty( NaModelConstants.CATCHMENT_PROP_ZFT );
@@ -298,7 +299,7 @@ public class CatchmentManager extends AbstractManager
     }
     else
     {
-      System.out.println( "Teilgebiet " + asciiID + " wird Standard-Zeitflächenfunktion zugeordnet (im Modell ist dem Teilgebiet keine Zeitflächenfunktion zugeordnet)" );
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.0") + asciiID + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.39") ); //$NON-NLS-1$ //$NON-NLS-2$
       asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
       
       // BUG: this can never work, as the we999 file is not available
@@ -308,7 +309,7 @@ public class CatchmentManager extends AbstractManager
 
     // 7
 
-    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 7 ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 7 ) + "\n" ); //$NON-NLS-1$
 
     // 8
     List list = (List) feature.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER );
@@ -316,21 +317,21 @@ public class CatchmentManager extends AbstractManager
     StringBuffer buf = new StringBuffer();
     // Der Versiegelungsgrad vsg wird gesetzt, da er im Rechenkern aus der Hydrotopdatei übernommen wird und somit in
     // der Gebietsdatei uninteressant ist.
-    buf.append( "1.000" + FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) );
-    buf.append( "     " + "  1.0" ); // JH: dummy for bimax, because it is not used in fortran!
+    buf.append( "1.000" + FortranFormatHelper.printf( Integer.toString( list.size() ), "i5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    buf.append( "     " + "  1.0" ); // JH: dummy for bimax, because it is not used in fortran! //$NON-NLS-1$ //$NON-NLS-2$
     // buf.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bimax" ), "f5.1" ) );
-    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "bianf" ), "f5.1" ) ); //$NON-NLS-1$ //$NON-NLS-3$
 
     final IRelationType rt = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_IZKN_VERS );
     final Feature nodeFeVers = workSpace.resolveLink( feature, rt );
     if( nodeFeVers == null )
-      buf.append( "    0" );
+      buf.append( "    0" ); //$NON-NLS-1$
     else
-      buf.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeVers ) ), "i5" ) );
+      buf.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeVers ) ), "i5" ) ); //$NON-NLS-1$
 
     // buf.append( toAscci( nodeFeVers, 18 ) );
-    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) );
-    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" );
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "tint" ), "f5.1" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    buf.append( "     " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rintmx" ), "f5.1" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$
     asciiBuffer.getCatchmentBuffer().append( buf.toString() );
 
     // 9 (cinh,*)_(cind,*)_(cex,*)_(bmax,*)_(banf,*)_(fko,*)_(retlay,*)
@@ -339,12 +340,12 @@ public class CatchmentManager extends AbstractManager
     while( iter.hasNext() )
     {
       Feature fe = (Feature) iter.next();
-      asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + " 1.0" + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( toAscci( fe, 9 ) + " 1.0" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     // 10 (____(f_eva,f4.2)_(aint,f3.1)__(aigw,f6.2)____(fint,f4.2)____(ftra,f4.2))
     // JH: only "aigw" from gml. other parameters are not used by fortran program - dummys!
-    asciiBuffer.getCatchmentBuffer().append( "1.00 0.0 " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "aigw" ), "f6.2" ) + " 0.00 0.00" + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( "1.00 0.0 " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "aigw" ), "f6.2" ) + " 0.00 0.00" + "\n" ); //$NON-NLS-1$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     // 11 (retvs,*)_(retob,*)_(retint,*)_(retbas,*)_(retgw,*)_(retklu,*))
     // if correction factors of retention constants are choosen, retention constants correction
@@ -362,11 +363,11 @@ public class CatchmentManager extends AbstractManager
     double retklu = faktorRetklu.doubleValue() * ((Double) feature.getProperty( NaModelConstants.CATCHMENT_PROP_RETKLU )).doubleValue();
 
     // asciiBuffer.getCatchmentBuffer().append( toAscci( feature, 11 ) + "\n" );
-    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( retvs, "*" ) + " " + FortranFormatHelper.printf( retob, "*" ) + " " + FortranFormatHelper.printf( retint, "*" ) + " "
-        + FortranFormatHelper.printf( retbas, "*" ) + " " + FortranFormatHelper.printf( retgw, "*" ) + " " + FortranFormatHelper.printf( retklu, "*" ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( retvs, "*" ) + " " + FortranFormatHelper.printf( retob, "*" ) + " " + FortranFormatHelper.printf( retint, "*" ) + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+        + FortranFormatHelper.printf( retbas, "*" ) + " " + FortranFormatHelper.printf( retgw, "*" ) + " " + FortranFormatHelper.printf( retklu, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     // 12-14
     List gwList = (List) feature.getProperty( NaModelConstants.GRUNDWASSERABFLUSS_MEMBER );
-    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( Integer.toString( gwList.size() ), "*" ) + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( FortranFormatHelper.printf( Integer.toString( gwList.size() ), "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     StringBuffer line13 = new StringBuffer();
     StringBuffer line14 = new StringBuffer();
     double sumGwwi = 0.0;
@@ -377,55 +378,55 @@ public class CatchmentManager extends AbstractManager
       final Feature linkedFE = workSpace.resolveLink( fe, rt2 );
 
       if( linkedFE == null )
-        throw new Exception( "Fehler!!! NA-Modell: Grundwasserabfluss in unbekanntes Teilgebiet: #" + FeatureHelper.getAsString( fe, "ngwzu" ) );
-      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " );
+        throw new Exception( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.80") + FeatureHelper.getAsString( fe, "ngwzu" ) ); //$NON-NLS-1$
+      line13.append( Integer.toString( idManager.getAsciiID( linkedFE ) ).trim() + " " ); //$NON-NLS-1$
       // line13.append( toAscci( linkedFE, 17 ) + " " );
-      line14.append( toAscci( fe, 14 ) + " " );
+      line14.append( toAscci( fe, 14 ) + " " ); //$NON-NLS-1$
       sumGwwi += ((Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_GWWI )).doubleValue();
     }
 
     if( sumGwwi > 1.001 )
-      throw new Exception( "Fehler!!! NA-Modell: Summe Grundwasserabgabe in Nachbargebiete > 1.0 (100%) in Teilgebiet (Name: " + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP )
-          + ", AsciiID: " + asciiID );
+      throw new Exception( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.84") + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) //$NON-NLS-1$
+          + ", AsciiID: " + asciiID ); //$NON-NLS-1$
     if( sumGwwi < 0.999 )
     {
       // Restanteil in virtuelles Teilgebiet außerhalb des Einzugsgebietes
       double delta = 1 - sumGwwi;
-      line13.append( "0 " );
-      line14.append( delta + " " );
-      System.out.println( "Achtung!!! Grundwasserabfluss aus Teilgebiet (Name: " + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) + ", ID: " + asciiID + ") beträgt nur " + sumGwwi
-          * 100 + "%!" );
-      System.out.println( "Es müssen 100% abgeschlagen werden! \n Restanteil des Grundwasserabflusses (" + delta * 100 + "%) wird nicht weiter bilanziert. Ist dies gewünscht?\n" );
+      line13.append( "0 " ); //$NON-NLS-1$
+      line14.append( delta + " " ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.88") + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.89") + asciiID + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.90") + sumGwwi //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          * 100 + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.91") ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.92") + delta * 100 + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.93") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     if( gwList.size() > 0 )
     {
-      asciiBuffer.getCatchmentBuffer().append( line13 + "\n" );
-      asciiBuffer.getCatchmentBuffer().append( line14 + "\n" );
+      asciiBuffer.getCatchmentBuffer().append( line13 + "\n" ); //$NON-NLS-1$
+      asciiBuffer.getCatchmentBuffer().append( line14 + "\n" ); //$NON-NLS-1$
     }
     // 15
 
     StringBuffer buffer = new StringBuffer();
-    buffer.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgru" ), "*" ) );
-    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgro" ), "*" ) );
-    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rtr" ), "*" ) );
-    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) );
-    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) );
-    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) );
+    buffer.append( FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgru" ), "*" ) ); //$NON-NLS-2$
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "hgro" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "rtr" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "pors" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "gwsent" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
+    buffer.append( " " + FortranFormatHelper.printf( FeatureHelper.getAsString( feature, "klupor" ), "*" ) ); //$NON-NLS-1$ //$NON-NLS-3$
     // tiefengrundwasser
     final IRelationType rt1 = (IRelationType) feature.getFeatureType().getProperty( NaModelConstants.CATCHMENT_PROP_IZKN );
     final Feature nodeFeGW = workSpace.resolveLink( feature, rt1 );
 
     if( nodeFeGW == null )
-      buffer.append( " 0\n" );
+      buffer.append( " 0\n" ); //$NON-NLS-1$
     else
-      buffer.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeGW ) ), "i5" ) + "\n" );
+      buffer.append( FortranFormatHelper.printf( Integer.toString( idManager.getAsciiID( nodeFeGW ) ), "i5" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     // buffer.append( toAscci( nodeFeGW, 18 ) + "\n" );
 
     asciiBuffer.getCatchmentBuffer().append( buffer.toString() );
 
     // KommentarZeile
-    asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" );
+    asciiBuffer.getCatchmentBuffer().append( "ende gebietsdatensatz" + "\n" ); //$NON-NLS-2$
 
   }
 
@@ -437,7 +438,7 @@ public class CatchmentManager extends AbstractManager
    */
   private void writeZML( IObservation observation, int asciiID, StringBuffer zftBuffer ) throws SensorException
   {
-    zftBuffer.append( FortranFormatHelper.printf( asciiID, "*" ) + "\n" );
+    zftBuffer.append( FortranFormatHelper.printf( asciiID, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     IAxis[] axisList = observation.getAxisList();
     IAxis hoursAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_HOURS );
@@ -447,12 +448,12 @@ public class CatchmentManager extends AbstractManager
     double t0 = ((Double) values.getElement( 0, hoursAxis )).doubleValue();
     double t1 = ((Double) values.getElement( 1, hoursAxis )).doubleValue();
     double dt = t1 - t0;
-    zftBuffer.append( FortranFormatHelper.printf( count, "*" ) + " " + FortranFormatHelper.printf( dt, "*" ) + " 2\n" );
+    zftBuffer.append( FortranFormatHelper.printf( count, "*" ) + " " + FortranFormatHelper.printf( dt, "*" ) + " 2\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     for( int row = 0; row < count; row++ )
     {
       Double hoursValue = (Double) values.getElement( row, hoursAxis );
       Double normAreaValue = (Double) values.getElement( row, normAreaAxis );
-      zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" );
+      zftBuffer.append( FortranFormatHelper.printf( hoursValue, "*" ) + " " + FortranFormatHelper.printf( normAreaValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   }
 
@@ -480,7 +481,7 @@ public class CatchmentManager extends AbstractManager
     if( !m_fileMap.containsKey( key ) )
     {
       final int asciiID = conf.getIdManager().getAsciiID( feature );
-      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType;
+      final String name = "C_" + Integer.toString( asciiID ).trim() + "." + axisType; //$NON-NLS-2$
       m_fileMap.put( key, name );
     }
     return m_fileMap.get( key );
@@ -570,7 +571,7 @@ public class CatchmentManager extends AbstractManager
                 IAxis[] axisList = observation.getAxisList();
                 IAxis minutesAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_MIN );
                 IAxis precipitationAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_RAINFALL );
-                buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" );
+                buffer.append( FortranFormatHelper.printf( annualityKey, "f6.3" ) + " " + "1" + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 ITuppleModel values = observation.getValues( null );
                 int count = values.getCount();
                 // if( count > 20 )
@@ -584,7 +585,7 @@ public class CatchmentManager extends AbstractManager
                   if( hoursValue.equals( conf.getDuration() ) )
                   {
                     Double precipitationValue = (Double) values.getElement( row, precipitationAxis );
-                    buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" );
+                    buffer.append( FortranFormatHelper.printf( hoursValue, "f9.3" ) + " " + FortranFormatHelper.printf( precipitationValue, "*" ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                   }
                 }
                 final FileWriter writer = new FileWriter( targetFileN );
@@ -592,7 +593,7 @@ public class CatchmentManager extends AbstractManager
                 IOUtils.closeQuietly( writer );
               }
               else
-                System.out.println( "Es existiert kein synthetischer Niederschlag für : " + synthNKey + ", Wiederkehrintervall: " + annualityKey );
+                System.out.println( Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.143") + synthNKey + Messages.getString("org.kalypso.convert.namodel.manager.CatchmentManager.144") + annualityKey ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         }

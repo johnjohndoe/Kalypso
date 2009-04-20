@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.SoilType;
 import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
@@ -113,7 +114,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, "Importing soilTypes", size + 10 );
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.0"), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<SoilType> soilTypes = m_output.getSoilTypes();
     if( m_importType == ImportType.CLEAR_OUTPUT )
@@ -122,7 +123,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
     ProgressUtilities.worked( progess, 10 );
 
     final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) );
+    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "soilType" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) schema.getFeatureType( SoilType.QNAME ).getProperty( SoilType.QNAME_PROP_SOILTYPE );
 
     final List<IStatus> log = new ArrayList<IStatus>();
@@ -139,13 +140,13 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
         final String soilTypeRef = m_soilTypes.get( soilTypeLink );
         if( soilTypeRef == null )
         {
-          final String message = String.format( "Unknwon soilType class '%s' at feature-id %d", soilTypeLink, i + 1 );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.2"), soilTypeLink, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = String.format( "Null geometry at feature: %s", label );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.3"), label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
@@ -156,7 +157,7 @@ public class PedologyImportOperation implements ICoreRunnableWithProgress
 
           soilType.setDescription( desc );
 
-          final String href = "parameter.gml#" + soilTypeRef;
+          final String href = "parameter.gml#" + soilTypeRef; //$NON-NLS-1$
           final XLinkedFeature_Impl soilTypeXLink = new XLinkedFeature_Impl( soilType, pt, lcFT, href, null, null, null, null, null );
 
           soilType.setSoilType( soilTypeXLink );

@@ -61,7 +61,7 @@ public class Ext2Writer
 
   public Ext2Writer( final Date start, final Date end )
   {
-    m_dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy 12 " ) );
+    m_dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "dd MM yyyy 12 " ) ); //$NON-NLS-1$
     m_start = start;
     m_end = end;
   }
@@ -77,7 +77,7 @@ public class Ext2Writer
     Date obsDate = (Date) values.getElement( obsOffset, dateAxis );
 
     // TimeserieUtils.
-    writer.write( "EX2\n" ); // header
+    writer.write( "EX2\n" ); // header //$NON-NLS-1$
     final Calendar calendarStart = NATimeSettings.getInstance().getCalendar();
     calendarStart.setTime( m_start );
     calendarStart.set( Calendar.DAY_OF_YEAR, 0 );
@@ -106,7 +106,7 @@ public class Ext2Writer
       {
         writer.write( defaultValue );
       }
-      writer.write( "\n" );
+      writer.write( "\n" ); //$NON-NLS-1$
       calendarStart.add( Calendar.DATE, 1 );
       final int year = calendarStart.get( Calendar.YEAR );
       if( year > writeTillYear )

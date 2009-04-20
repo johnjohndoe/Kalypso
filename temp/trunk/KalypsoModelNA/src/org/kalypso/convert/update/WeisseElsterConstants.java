@@ -73,11 +73,11 @@ public class WeisseElsterConstants
 
   public final static String ALTERNATIV_PREFIX_LINK_WQ_Pegel_Rep = "kalypso-ocs:FlussPegel://Pegel/";//...ZML-datei
 
-  public final static String PREFIX_LINK_WQ_PEGEL_LOKAL = "Pegel/Pegel_";//...+.zml
+  public final static String PREFIX_LINK_WQ_PEGEL_LOKAL = "Pegel/Pegel_";//...+.zml //$NON-NLS-1$
 
-  public final static String PREFIX_LINK_WQ_ZUFLUSS_LOKAL = "Zufluss/Zufluss_";//...+.zml
+  public final static String PREFIX_LINK_WQ_ZUFLUSS_LOKAL = "Zufluss/Zufluss_";//...+.zml //$NON-NLS-1$
 
-  public final static String PREFIX_LINK_WQ_BERECHNET_LOKAL = "Ergebnisse/Berechnet/Abfluss_";//...+.zml
+  public final static String PREFIX_LINK_WQ_BERECHNET_LOKAL = "Ergebnisse/Berechnet/Abfluss_";//...+.zml //$NON-NLS-1$
 
   //    Pegel:
   //      kalypso-ocs:psicompact://HN.5_WE.02PG...577510

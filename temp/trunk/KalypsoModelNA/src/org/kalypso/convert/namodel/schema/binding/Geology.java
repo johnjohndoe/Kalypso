@@ -55,13 +55,13 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Geology extends Feature_Impl
 {
-  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" );
+  public static final QName QNAME = new QName( NaModelConstants.NS_NAGEOLOGIE, "Geologie" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" );
+  public static final QName QNAME_PROP_GEOMETRY = new QName( NaModelConstants.NS_NAGEOLOGIE, "location" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" );
+  public static final QName QNAME_PROP_MAXPERKULATIONSRATE = new QName( NaModelConstants.NS_NAHYDROTOP, "m_perkm" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" );
+  public static final QName QNAME_PROP_GWFACTOR = new QName( NaModelConstants.NS_NAHYDROTOP, "m_f1gws" ); //$NON-NLS-1$
 
   public Geology( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

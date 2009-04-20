@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Landuse;
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
@@ -117,7 +118,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final int size = m_inputDescriptor.size();
-    final SubMonitor progess = SubMonitor.convert( monitor, "Importing landuses", size + 10 );
+    final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.0"), size + 10 ); //$NON-NLS-1$
 
     final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
     if( m_importType == ImportType.CLEAR_OUTPUT )
@@ -126,7 +127,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     ProgressUtilities.worked( progess, 10 );
 
     final IGMLSchema schema = m_output.getWorkspace().getGMLSchema();
-    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) );
+    final IFeatureType lcFT = schema.getFeatureType( new QName( NaModelConstants.NS_NAPARAMETER, "Landuse" ) ); //$NON-NLS-1$
     final IRelationType pt = (IRelationType) schema.getFeatureType( Landuse.QNAME ).getProperty( Landuse.QNAME_PROP_LANDUSE );
 
     final List<IStatus> log = new ArrayList<IStatus>();
@@ -143,13 +144,13 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         final String landuseRef = m_landuseClasses.get( landuseclass );
         if( landuseRef == null )
         {
-          final String message = String.format( "Unknwon landuse class '%s' at feature-id %d", landuseclass, i + 1 );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2"), landuseclass, i + 1 ); //$NON-NLS-1$
           throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
         if( geometry == null )
         {
-          final String message = String.format( "Null geometry at feature: %s", label );
+          final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.3"), label ); //$NON-NLS-1$
           log.add( StatusUtilities.createStatus( IStatus.WARNING, message, null ) );
         }
 
@@ -164,7 +165,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
           landuse.setCorrSealing( corrSealing );
           landuse.setDrainageType( drainageType );
 
-          final String href = "parameter.gml#" + landuseRef;
+          final String href = "parameter.gml#" + landuseRef; //$NON-NLS-1$
           final XLinkedFeature_Impl landuseXLink = new XLinkedFeature_Impl( landuse, pt, lcFT, href, null, null, null, null, null );
 
           landuse.setLanduse( landuseXLink );

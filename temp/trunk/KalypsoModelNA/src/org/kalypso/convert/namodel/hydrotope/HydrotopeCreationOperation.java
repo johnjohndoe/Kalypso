@@ -50,6 +50,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.convert.namodel.FeatureListGeometryIntersector;
 import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.convert.namodel.schema.binding.Geology;
 import org.kalypso.convert.namodel.schema.binding.Landuse;
 import org.kalypso.convert.namodel.schema.binding.SoilType;
@@ -105,7 +106,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Hydrotope Intersection", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.0"), 100 ); //$NON-NLS-1$
 
     final FeatureListGeometryIntersector geometryIntersector = new FeatureListGeometryIntersector();
     geometryIntersector.addFeatureList( m_catchmentsList );
@@ -115,10 +116,10 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
     List<MultiPolygon> intersectionList;
     try
     {
-      progress.setTaskName( "Step 1/2: Geometric intersection" );
+      progress.setTaskName( Messages.getString("org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.1") ); //$NON-NLS-1$
       intersectionList = geometryIntersector.intersect( progress.newChild( 50 ) );
 
-      progress.setTaskName( "Step 2/2: Creation of hydrotope features" );
+      progress.setTaskName( Messages.getString("org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.2") ); //$NON-NLS-1$
       progress.setWorkRemaining( intersectionList.size() );
 
       m_outputList.clear();
@@ -126,7 +127,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
       for( final Geometry geometry : intersectionList )
       {
         if( count % 100 == 0 )
-          progress.subTask( String.format( "Creating features... (%d of %d)", count, intersectionList.size() ) );
+          progress.subTask( String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.HydrotopeCreationOperation.3"), count, intersectionList.size() ) ); //$NON-NLS-1$
         count++;
 
         // TODO: belongs to the end of this loop, but there are just too many else's
@@ -166,11 +167,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           if( landuse == null )
             continue;
           final Object landuseClassLink = landuse.getLanduse();
-          String value = "";
+          String value = ""; //$NON-NLS-1$
           if( landuseClassLink instanceof XLinkedFeature_Impl )
             value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
           else
-            value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 );
+            value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
           feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, value );
           feature.setProperty( NaModelConstants.HYDRO_PROP_DAINAGETYPE, landuse.getDrainageType() );
           feature.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, landuse.getCorrSealing() );
@@ -191,11 +192,11 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           if( soilType == null )
             continue;
           final Object soiltypeClassLink = soilType.getSoilType();
-          String value = "";
+          String value = ""; //$NON-NLS-1$
           if( soiltypeClassLink instanceof XLinkedFeature_Impl )
             value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
           else
-            value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 );
+            value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
           feature.setProperty( NaModelConstants.HYDRO_PROP_SOILTYPE, value );
         }
         else

@@ -34,6 +34,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.kalypso.convert.namodel.i18n.Messages;
+
 /**
  * 
  * 
@@ -80,7 +82,7 @@ public class NetElementCircleFinder
       else if( listToHere.contains( linkNetElement ) )
       {
         // an other circle
-        System.out.println( "found an other circle:\n" + listToHere.toString() + " : " + linkNetElement );
+        System.out.println( Messages.getString("org.kalypso.convert.namodel.net.NetElementCircleFinder.0") + listToHere.toString() + " : " + linkNetElement ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       else
       {

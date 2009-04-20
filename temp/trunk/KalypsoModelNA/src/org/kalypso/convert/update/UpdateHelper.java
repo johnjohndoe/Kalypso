@@ -67,7 +67,7 @@ public class UpdateHelper
     {
       final InterpolationFilterType interpolationFilter = FilterFactory.OF_FILTER.createInterpolationFilterType();
       interpolationFilter.setAmount( amountHours );
-      interpolationFilter.setCalendarField( "HOUR_OF_DAY" );
+      interpolationFilter.setCalendarField( "HOUR_OF_DAY" ); //$NON-NLS-1$
       interpolationFilter.setDefaultValue( defaultValue );
       interpolationFilter.setDefaultStatus( KalypsoStati.BIT_CHECK );
       interpolationFilter.setForceFill( forceFill );

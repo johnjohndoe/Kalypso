@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -139,9 +140,9 @@ public class FeatureListGeometryIntersector
    */
   public List<MultiPolygon> intersect( final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Geometry Intersection", 1000 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.0"), 1000 ); //$NON-NLS-1$
 
-    progress.subTask( "Initialising spatial index..." );
+    progress.subTask( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.1") ); //$NON-NLS-1$
     final List<MultiPolygon> resultGeometryList = new ArrayList<MultiPolygon>();
     if( !init() )
       return resultGeometryList;
@@ -159,7 +160,7 @@ public class FeatureListGeometryIntersector
       for( final Feature feature : featureList.toFeatures() )
       {
         if( count % 100 == 0 )
-          progress.subTask( String.format( "Intersecting polygones... (%d of %d)", count, countFeatures ) );
+          progress.subTask( String.format( Messages.getString("org.kalypso.convert.namodel.FeatureListGeometryIntersector.2"), count, countFeatures ) ); //$NON-NLS-1$
         count++;
 
         final List<Geometry> featurePolygons = removeGeometryCollections( JTSAdapter.export( feature.getDefaultGeometryPropertyValue() ) );

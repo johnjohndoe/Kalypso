@@ -190,7 +190,7 @@ public class IDManager
     {
       IDMap idmap = iter.next();
       writer.write( idmap.toString() );
-      writer.write( "\t" );
+      writer.write( "\t" ); //$NON-NLS-1$
       final Object value = m_idMapFeature.get( idmap );
       if( value instanceof Feature )
       {
@@ -199,7 +199,7 @@ public class IDManager
       }
       else
         writer.write( "dummy" );
-      writer.write( "\n" );
+      writer.write( "\n" ); //$NON-NLS-1$
     }
   }
 
@@ -241,7 +241,7 @@ public class IDManager
     @Override
     public String toString( )
     {
-      return asciiID + "\t" + type;
+      return asciiID + "\t" + type; //$NON-NLS-1$
     }
 
     /**

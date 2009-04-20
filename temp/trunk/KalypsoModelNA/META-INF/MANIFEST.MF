@@ -34,3 +34,4 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.simulation.core,
  org.kalypso.ui
 Eclipse-LazyStart: true
+Bundle-Localization: plugin

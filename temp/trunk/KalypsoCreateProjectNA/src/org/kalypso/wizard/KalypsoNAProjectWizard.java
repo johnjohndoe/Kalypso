@@ -88,6 +88,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.wizard.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -119,7 +120,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
 
   static final String PREFERENCE_PAGE = "page_type:preferences"; //$NON-NLS-1$
 
-  private final String m_resourceBase = WizardMessages.getString( "KalypsoNAProjectWizard.ResourcePath" ); //$NON-NLS-1$
+  private final String m_resourceBase = "resources/.projecttemplate.zip"; //$NON-NLS-1$
 
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
@@ -127,18 +128,18 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
   {
 
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" );
+    final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" ); //$NON-NLS-1$
 
     final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false );
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false ); //$NON-NLS-1$
 
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false );
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false ); //$NON-NLS-1$
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false );
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false ); //$NON-NLS-1$
 
     final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false );
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false ); //$NON-NLS-1$
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( featureQName, pts );
@@ -198,8 +199,8 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     try
     {
       m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( WizardMessages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
-      m_createProjectPage.setTitle( WizardMessages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
+      m_createProjectPage.setDescription( Messages.getString( "KalypsoNAProjectWizard.DescriptionNewProjectPage" ) ); //$NON-NLS-1$
+      m_createProjectPage.setTitle( Messages.getString( "KalypsoNAProjectWizard.TitleNewProjectPage" ) ); //$NON-NLS-1$
       m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( m_createProjectPage );
     }
@@ -211,19 +212,19 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     m_createPreferencePage = new KalypsoNAProjectPreferences( PREFERENCE_PAGE, m_modelSchema );
     addPage( m_createPreferencePage );
 
-    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
+    m_createMappingCatchmentPage = new KalypsoNAProjectWizardPage( CATCHMENT_PAGE, Messages.getString( "KalypsoNAProjectWizard.CatchmentPageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Catchment" ) ); //$NON-NLS-1$
 
     addPage( m_createMappingCatchmentPage );
     final IFeatureType gewaesserFT = createGewaesserFT();
-    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
+    m_createMappingRiverPage = new KalypsoNAProjectWizardPage( RIVER_PAGE, Messages.getString( "KalypsoNAProjectWizard.ChannelPageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, gewaesserFT );
     addPage( m_createMappingRiverPage );
 
-    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
+    m_createMappingNodePage = new KalypsoNAProjectWizardPage( NODE_PAGE, Messages.getString( "KalypsoNAProjectWizard.NodePageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Node" ) ); //$NON-NLS-1$
     addPage( m_createMappingNodePage );
-    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, WizardMessages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
+    m_createMappingHydrotopPage = new KalypsoNAProjectWizardPage( HYDROTOP_PAGE, Messages.getString( "KalypsoNAProjectWizard.HydrotopePageTitle" ), //$NON-NLS-1$
     ImageProvider.IMAGE_KALYPSO_ICON_BIG, getFeatureType( "Hydrotop" ) ); //$NON-NLS-1$
     addPage( m_createMappingHydrotopPage );
   }
@@ -488,10 +489,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       }
       else
       {
-        System.out.println( "Name des Elementes existiert bereits (Name: " + IDText + idKey + ")." );
+        System.out.println( Messages.getString("org.kalypso.wizard.KalypsoNAProjectWizard.11") + IDText + idKey + Messages.getString("org.kalypso.wizard.KalypsoNAProjectWizard.12") ); //$NON-NLS-1$ //$NON-NLS-2$
         fid = sourceFeature.getId();
         m_IDMap.put( fid, sourceFeature );
-        System.out.println( "Die interne ID wurde aus diesem Grund automatisch vergeben (Id: " + fid + ")." );
+        System.out.println( Messages.getString("org.kalypso.wizard.KalypsoNAProjectWizard.13") + fid + Messages.getString("org.kalypso.wizard.KalypsoNAProjectWizard.14") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else
@@ -678,7 +679,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new NumberFormatException( WizardMessages.getString( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
+        throw new NumberFormatException( Messages.getString( "KalypsoNAProjectWizard.ExceptionStrangArt" ) ); //$NON-NLS-1$
       }
 
       Feature targetFeature = null;
@@ -726,7 +727,7 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         }
         case 3:
         {
-          throw new NotImplementedException( WizardMessages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
+          throw new NotImplementedException( Messages.getString( "KalypsoNAProjectWizard.ExceptionNotImplementedRHT" ) ); //$NON-NLS-1$
         }
         default:
         {

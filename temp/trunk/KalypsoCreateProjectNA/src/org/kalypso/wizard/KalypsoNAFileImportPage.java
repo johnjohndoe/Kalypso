@@ -127,7 +127,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName )
   {
     super( pageName );
-    setDescription( WizardMessages.getString( "KalypsoNAFileImportPage.PageDescription" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "KalypsoNAFileImportPage.PageDescription" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -139,7 +139,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   public KalypsoNAFileImportPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( WizardMessages.getString( "KalypsoNAFileImportPage.PageDescription2" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "KalypsoNAFileImportPage.PageDescription2" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -192,10 +192,10 @@ public class KalypsoNAFileImportPage extends WizardPage
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
     fileGroup.setLayoutData( topGroupData );
-    fileGroup.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileGroupText" ) ); //$NON-NLS-1$
+    fileGroup.setText( Messages.getString( "KalypsoNAFileImportPage.FileGroupText" ) ); //$NON-NLS-1$
 
     fileLabel = new Label( fileGroup, SWT.NONE );
-    fileLabel.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileLabelText" ) ); //$NON-NLS-1$
+    fileLabel.setText( Messages.getString( "KalypsoNAFileImportPage.FileLabelText" ) ); //$NON-NLS-1$
 
     // Set width of Text fields
     GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
@@ -212,7 +212,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     } );
 
     browseButton = new Button( fileGroup, SWT.PUSH );
-    browseButton.setText( WizardMessages.getString( "KalypsoNAFileImportPage.BrowseButtonText" ) ); //$NON-NLS-1$
+    browseButton.setText( Messages.getString( "KalypsoNAFileImportPage.BrowseButtonText" ) ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
@@ -225,7 +225,7 @@ public class KalypsoNAFileImportPage extends WizardPage
       }
     } );
     skipRadioButton = new Button( fileGroup, SWT.CHECK );
-    skipRadioButton.setText( WizardMessages.getString( "KalypsoNAFileImportPage.SkipRadioButtonText" ) ); //$NON-NLS-1$
+    skipRadioButton.setText( Messages.getString( "KalypsoNAFileImportPage.SkipRadioButtonText" ) ); //$NON-NLS-1$
     skipRadioButton.setSelection( true );
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
@@ -261,7 +261,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   {
     FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
-    fdialog.setText( WizardMessages.getString( "KalypsoNAFileImportPage.FileDialogText" ) ); //$NON-NLS-1$
+    fdialog.setText( Messages.getString( "KalypsoNAFileImportPage.FileDialogText" ) ); //$NON-NLS-1$
     fdialog.setFilterNames( new String[] { "Shape Files", //$NON-NLS-1$
         "All Files (*.*)" } ); //$NON-NLS-1$
     fdialog.setFilterExtensions( new String[] { "*.shp", //$NON-NLS-1$
@@ -307,19 +307,19 @@ public class KalypsoNAFileImportPage extends WizardPage
     // checks catchment field entry and file suffix
     if( textField.getText().length() == 0 )
     {
-      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageNoFile" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAFileImportPage.ErrorMessageNoFile" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( checkSuffix( textField ) == false )
     {
-      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAFileImportPage.ErrorMessageWrongSuffix" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }
     else if( validateFile( fileURL ) == false )
     {
-      setErrorMessage( WizardMessages.getString( "KalypsoNAFileImportPage.ErrorMessageFileNotValid" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "KalypsoNAFileImportPage.ErrorMessageFileNotValid" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return false;
     }

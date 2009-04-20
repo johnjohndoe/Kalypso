@@ -66,6 +66,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.NaModelInnerCalcJob;
+import org.kalypso.convert.namodel.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -123,7 +124,7 @@ public class NAOptimizingJob implements IOptimizingJob
 
   private OptimizeCalcResultEater m_bestResultEater = null;
 
-  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far";
+  public static final String IN_BestOptimizedRunDir_ID = "BestOptimizedRunDir_so_far"; //$NON-NLS-1$
 
   private int m_counter = 0;
 
@@ -180,7 +181,7 @@ public class NAOptimizingJob implements IOptimizingJob
   public void calculate( ) throws MalformedURLException
   {
     m_counter++;
-    final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir );
+    final File optimizeRunDir = FileUtilities.createNewTempDir( "optimizeRun", m_tmpDir ); //$NON-NLS-1$
     optimizeRunDir.mkdirs();
 
     final CalcDataProviderDecorater newDataProvider = new CalcDataProviderDecorater( m_dataProvider );
@@ -274,10 +275,10 @@ public class NAOptimizingJob implements IOptimizingJob
     TransformerFactory factory = TransformerFactory.newInstance();
     final Transformer t = factory.newTransformer();
 
-    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+    t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
     t.setOutputProperty( OutputKeys.INDENT, "yes" );
 
-    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir );
+    final File file = File.createTempFile( "optimizedBean", ".xml", m_tmpDir ); //$NON-NLS-2$
     Writer writer = new FileWriter( file );
     try
     {
@@ -338,10 +339,10 @@ public class NAOptimizingJob implements IOptimizingJob
     final TreeMap<Date, Object> result = new TreeMap<Date, Object>();
     final File optimizeResultDir = new File( m_lastOptimizeRunDir, NaModelConstants.OUTPUT_DIR_NAME );
 
-    String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" );
+    String calcHref = m_linkCalcedTS.getHref().replaceFirst( "^" + NaModelConstants.OUTPUT_DIR_NAME + ".", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final File tsFile = new File( optimizeResultDir, calcHref );
-    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" );
+    final IObservation observation = ZmlFactory.parseXML( tsFile.toURL(), "result" ); //$NON-NLS-1$
     final IAxis dateAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
     final IAxis qAxis = ObservationUtilities.findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_RUNOFF );
     final ITuppleModel values = observation.getValues( null );
@@ -368,7 +369,7 @@ public class NAOptimizingJob implements IOptimizingJob
       resultEater.addResult( id, m_bestResultEater.get( id ) );
     }
     resultEater.addResult( NaModelConstants.OUT_OPTIMIZEFILE, m_bestOptimizedFile );
-    System.out.println( "best was #" + m_bestNumber );
+    System.out.println( Messages.getString("org.kalypso.convert.namodel.optimize.NAOptimizingJob.12") + m_bestNumber ); //$NON-NLS-1$
   }
 
   /**
