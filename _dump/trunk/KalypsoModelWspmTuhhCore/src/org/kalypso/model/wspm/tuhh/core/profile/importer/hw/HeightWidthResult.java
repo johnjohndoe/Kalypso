@@ -94,13 +94,19 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
   private BigDecimal[] m_widths;
 
-  public HeightWidthResult( final String parentName, final String name )
+  private final String m_id;
+
+  private final String m_name;
+
+  public HeightWidthResult( final String parentName, final String dataName, final String id, final String name )
   {
-    super( name, null );
+    super( dataName, null );
     m_parentName = parentName;
+    m_id = id;
+    m_name = name;
   }
 
-  protected void calculate(  )
+  protected void calculate( )
   {
     if( m_polygon != null )
       return;
@@ -156,7 +162,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     final Set<BigDecimal> sortedSet = new TreeSet<BigDecimal>();
 
     for( final Coordinate coordinate : coordinates )
-      sortedSet.add(  new BigDecimal( coordinate.y ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
+      sortedSet.add( new BigDecimal( coordinate.y ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
 
     return sortedSet.toArray( new BigDecimal[sortedSet.size()] );
   }
@@ -196,30 +202,30 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     return widths;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.IHeightWidthResult#formatOut(java.util.Formatter)
+   */
   @Override
-  public void format( final Formatter formatter )
+  public void formatOut( final Formatter formatter )
   {
     calculate();
-
-    super.format( formatter );
 
     if( m_polygon == null )
       return;
 
-    formatter.format( "Fläche: %.2f m²%n%n", m_polygon.getArea() );
-
-    final String formatPattern = "%10s\t%10s\t%10s%n";
-    formatter.format( formatPattern, "Höhe abs", "Höhe", "Breite" );
-
+    final String id = m_id;
+    final String name = m_name;
+    formatter.format( "CRDS id '%s' nm '%s' ty 0 wm 9.274287 w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name );
+    formatter.format( "TBLE%n" );
     for( int i = 0; i < m_heights.length; i++ )
     {
       final BigDecimal height = m_heights[i];
       final BigDecimal width = m_widths[i];
-
-      formatter.format( formatPattern, height, height.subtract( m_heights[0] ), width );
+      final BigDecimal relHeight = height;
+      formatter.format( "%f %f %f <%n", relHeight, width, width );
     }
-
-    formatter.format( "%n" );
+    formatter.format( "tble%n" );
+    formatter.format( "crds%n" );
   }
 
   private void debugShapeWrite( final LinearRing shell, final boolean valid )

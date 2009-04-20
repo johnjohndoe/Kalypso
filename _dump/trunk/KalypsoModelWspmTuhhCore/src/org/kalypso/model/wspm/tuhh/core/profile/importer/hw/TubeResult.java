@@ -60,9 +60,9 @@ public class TubeResult extends HeightWidthResult
 {
   private final Collection<Coordinate> m_crdHash;
 
-  public TubeResult( final String parentName, final String name, final Collection<Coordinate> collection )
+  public TubeResult( final String parentName, final String dataName, final String id, final String name, final Collection<Coordinate> collection )
   {
-    super( parentName, name );
+    super( parentName, dataName, id, name );
 
     m_crdHash = collection;
   }
@@ -90,7 +90,7 @@ public class TubeResult extends HeightWidthResult
   /**
    * A {@link CoordinateFilter} that builds a set of <code>Coordinate</code>s. The set of coordinates contains no
    * duplicate points.
-   *
+   * 
    *@version 1.7
    */
   public static class UniqueCoordinateEPSArrayFilter implements CoordinateFilter
@@ -101,7 +101,7 @@ public class TubeResult extends HeightWidthResult
 
     /**
      * Returns the gathered <code>Coordinate</code>s.
-     *
+     * 
      *@return the <code>Coordinate</code>s collected by this <code>CoordinateArrayFilter</code>
      */
     public Coordinate[] getCoordinates( )

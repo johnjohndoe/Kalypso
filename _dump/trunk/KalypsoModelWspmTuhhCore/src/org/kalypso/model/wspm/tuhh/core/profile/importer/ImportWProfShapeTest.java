@@ -67,7 +67,7 @@ public class ImportWProfShapeTest
   {
     final NullProgressMonitor monitor = new NullProgressMonitor();
 
-    final String fileBase = "C:\\work\\kalypso\\mitStation\\Export_Output";
+    final String fileBase = "P:\\bwg0715223\\work\\jung\\structures\\Export_Output";
     final String sourceCrs = "EPSG:31467";
 
     /* Load Shape */
@@ -79,7 +79,6 @@ public class ImportWProfShapeTest
 // final GMLWorkspace targetWorkspace = FeatureFactory.createGMLWorkspace( TuhhWspmProject.QNAME, null, new
     // GmlSerializerFeatureProviderFactory() );
 // final TuhhWspmProject project = new TuhhWspmProject( targetWorkspace.getRootFeature() );
-
 // final IWProfContentHandler creatorTUHH = new TuhhProfileWProfContentHandler( project, sourceCrs );
     final HeightWidthCreator creatorHW = new HeightWidthCreator();
     final IWProfContentHandler[] creators = new IWProfContentHandler[] {
@@ -91,7 +90,9 @@ public class ImportWProfShapeTest
     importW80Data( w80features, creators, photoContext );
 
     /* Write results */
-    creatorHW.writeToFile( File.createTempFile( "heightWidth", ".txt" ) );
+    final File hwOutFile = File.createTempFile( "heightWidth", ".txt" );
+    final File hwErrFile = File.createTempFile( "heightWidth", ".err" );
+    creatorHW.writeToFile( hwOutFile, hwErrFile );
 
 // final File targetFile = File.createTempFile( "modell_w80", ".gml" );
 // GmlSerializer.serializeWorkspace( targetFile, targetWorkspace, "UTF-8" );

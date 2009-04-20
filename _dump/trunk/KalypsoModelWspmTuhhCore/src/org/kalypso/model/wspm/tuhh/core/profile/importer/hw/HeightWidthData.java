@@ -90,14 +90,21 @@ public class HeightWidthData
     return newMap;
   }
 
-  public void format( final Formatter formatter )
+  public void formatOut( final Formatter formatter )
+  {
+    final IHeightWidthResult[] results = getResults();
+    for( final IHeightWidthResult heightWidthResult : results )
+      heightWidthResult.formatOut( formatter );
+  }
+
+  public void formatErr( final Formatter formatter )
   {
     System.out.println( m_name );
     formatter.format( "%s%n%n", m_name );
 
     final IHeightWidthResult[] results = getResults();
     for( final IHeightWidthResult heightWidthResult : results )
-      heightWidthResult.format( formatter );
+      heightWidthResult.formatErr( formatter );
     formatter.format( "%n%n%n" );
   }
 
@@ -111,7 +118,7 @@ public class HeightWidthData
 
       // All tubes are calculated
       if( key.startsWith( "K" ) )
-        results.add( new TubeResult( m_name, key, crdHash.values() ) );
+        results.add( new TubeResult( m_name, key, m_name, m_name, crdHash.values() ) );
 
       // Mabye we have a bridge like structure
       if( key.startsWith( "V01" ) )
@@ -119,7 +126,7 @@ public class HeightWidthData
         /* Check if we have a 'Unterkante Brücke', then we can calculate some area as well */
         final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "V02" );
         if( ukCrds != null )
-          results.add( new BridgeResult( m_name, "V01-V03", crdHash.values(), ukCrds.values() ) );
+          results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values() ) );
       }
     }
 

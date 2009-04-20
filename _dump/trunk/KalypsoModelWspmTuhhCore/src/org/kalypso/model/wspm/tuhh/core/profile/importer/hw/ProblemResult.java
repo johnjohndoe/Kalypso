@@ -58,6 +58,7 @@ public class ProblemResult implements IHeightWidthResult
   protected final static GeometryFactory GF = new GeometryFactory();
 
   private Status m_status;
+
   private final String m_name;
 
   public ProblemResult( final String name, final Status status )
@@ -82,10 +83,18 @@ public class ProblemResult implements IHeightWidthResult
   }
 
   /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.IHeightWidthResult#formatOut(java.util.Formatter)
+   */
+  @Override
+  public void formatOut( final Formatter formatter )
+  {
+  }
+
+  /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.IHeightWidthResult#format(java.util.Formatter)
    */
   @Override
-  public void format( final Formatter formatter )
+  public void formatErr( final Formatter formatter )
   {
     formatter.format( "%s%n%n", m_name );
 

@@ -44,11 +44,11 @@ import java.util.Formatter;
 
 /**
  * @author belger
- *
  */
 public interface IHeightWidthResult
 {
+  public void formatErr( final Formatter formatter );
 
-  public void format( final Formatter formatter );
+  public void formatOut( final Formatter formatter );
 
 }

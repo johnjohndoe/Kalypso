@@ -94,24 +94,31 @@ public class HeightWidthCreator implements IWProfContentHandler
     return newData;
   }
 
-  public void writeToFile( final File outputFile ) throws IOException
+  public void writeToFile( final File outputFile, final File errFile ) throws IOException
   {
-    Formatter formatter = null;
+    Formatter formatterOut = null;
+    Formatter formatterErr = null;
     try
     {
-      formatter = new Formatter( outputFile, Charset.defaultCharset().name() );
+      formatterOut = new Formatter( outputFile, Charset.defaultCharset().name() );
+      formatterErr = new Formatter( errFile, Charset.defaultCharset().name() );
 
       for( final HeightWidthData data : m_data.values() )
       {
-        data.format( formatter );
-        if( formatter.ioException() != null )
-          throw formatter.ioException();
+        data.formatOut( formatterOut );
+        if( formatterOut.ioException() != null )
+          throw formatterOut.ioException();
+        data.formatErr( formatterErr );
+        if( formatterErr.ioException() != null )
+          throw formatterErr.ioException();
       }
     }
     finally
     {
-      if( formatter != null )
-        formatter.close();
+      if( formatterOut != null )
+        formatterOut.close();
+      if( formatterErr != null )
+        formatterErr.close();
     }
   }
 
