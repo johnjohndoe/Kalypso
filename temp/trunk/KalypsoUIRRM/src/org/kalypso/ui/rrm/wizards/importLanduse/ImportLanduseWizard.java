@@ -42,11 +42,7 @@
 package org.kalypso.ui.rrm.wizards.importLanduse;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -61,7 +57,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.convert.namodel.NaModelConstants;
+import org.kalypso.convert.namodel.hydrotope.LanduseClassHelper;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation;
 import org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
@@ -140,17 +136,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         final GMLWorkspace landuseClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
 
         final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
-
-        final Map<String, String> landuseClasses = new HashMap<String, String>();
-        final List< ? > landuseClassesFeatures = (List< ? >) landuseClassesWorkspace.getRootFeature().getProperty( new QName( NaModelConstants.NS_NAPARAMETER, "landuseMember" ) ); //$NON-NLS-1$
-        for( final Object object : landuseClassesFeatures )
-        {
-          final Feature f = (Feature) object;
-          final String name = f.getName();
-          final String id = f.getId();
-
-          landuseClasses.put( name, id );
-        }
+        final Map<String, String> landuseClasses = LanduseClassHelper.resolve( landuseClassesWorkspace );
 
         // call importer
         final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, landuseClasses, ImportType.CLEAR_OUTPUT );

@@ -46,6 +46,7 @@ import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.wizard.i18n.Messages;
 
 /**
  * @author kuepfer
@@ -67,7 +68,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
    * @param schema
    */
 
-  public KalypsoNAProjectPreferences( String pageName, GMLSchema schema )
+  public KalypsoNAProjectPreferences( final String pageName, final GMLSchema schema )
   {
     super( pageName );
     setTitle( Messages.getString( "KalypsoNAProjectPreferences.Title" ) ); //$NON-NLS-1$
@@ -80,7 +81,7 @@ public class KalypsoNAProjectPreferences extends WizardPage
    *  
    */
 
-  public KalypsoNAProjectPreferences( String pageName, String title, ImageDescriptor titleImage, GMLSchema schema )
+  public KalypsoNAProjectPreferences( final String pageName, final String title, final ImageDescriptor titleImage, final GMLSchema schema )
   {
     super( pageName, title, titleImage );
     m_modelSchema = schema;
@@ -89,25 +90,25 @@ public class KalypsoNAProjectPreferences extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite topComposite = new Composite( parent, SWT.NONE );
+    final Composite topComposite = new Composite( parent, SWT.NONE );
     topComposite.setLayout( new GridLayout() );
-    Group soil = new Group( topComposite, SWT.NONE );
+    final Group soil = new Group( topComposite, SWT.NONE );
     soil.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupText" ) ); //$NON-NLS-1$
     soil.setLayout( new GridLayout( 2, true ) );
     soil.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    Label soilLabel = new Label( soil, SWT.NONE );
+    final Label soilLabel = new Label( soil, SWT.NONE );
     soilLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.SoilGroupLable" ) ); //$NON-NLS-1$
     m_soilCombo = new Combo( soil, SWT.READ_ONLY );
-    IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
-    int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
-    ArrayList<String> noSoilLayer = new ArrayList<String>();
+    final IFeatureType catchmentFT = m_modelSchema.getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT );
+    final int maxOccursSoil = catchmentFT.getProperty( NaModelConstants.BODENKORREKTUR_MEMBER ).getMaxOccurs();
+    final ArrayList<String> noSoilLayer = new ArrayList<String>();
     for( int i = 0; i < maxOccursSoil + 1; i++ )
       noSoilLayer.add( String.valueOf( i ) );
     m_soilCombo.setItems( noSoilLayer.toArray( new String[maxOccursSoil] ) );
     m_soilCombo.select( 1 );
-    GridData soilComboGridData = new GridData();
+    final GridData soilComboGridData = new GridData();
     soilComboGridData.widthHint = 50;
     soilComboGridData.horizontalAlignment = GridData.END;
     m_soilCombo.setLayoutData( soilComboGridData );
@@ -119,30 +120,30 @@ public class KalypsoNAProjectPreferences extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Combo combo = (Combo) e.widget;
+        final Combo combo = (Combo) e.widget;
         m_soilLayerNo = combo.getItem( combo.getSelectionIndex() );
         setPageComplete( validatePage() );
       }
     } );
     m_soilLayerNo = m_soilCombo.getItem( 1 );
 
-    Group channel = new Group( topComposite, SWT.NONE );
+    final Group channel = new Group( topComposite, SWT.NONE );
     channel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupText" ) ); //$NON-NLS-1$
     channel.setLayout( new GridLayout( 2, true ) );
     channel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    Label channelLabel = new Label( channel, SWT.NONE );
+    final Label channelLabel = new Label( channel, SWT.NONE );
     channelLabel.setText( Messages.getString( "KalypsoNAProjectPreferences.KMChannelGroupLable" ) ); //$NON-NLS-1$
     m_channelCombo = new Combo( channel, SWT.READ_ONLY );
     m_channelCombo.setLayout( new GridLayout() );
-    IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
-    int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
-    ArrayList<String> noKMDischarge = new ArrayList<String>();
+    final IFeatureType kmChannelFT = m_modelSchema.getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT );
+    final int maxOccursKM = kmChannelFT.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER ).getMaxOccurs();
+    final ArrayList<String> noKMDischarge = new ArrayList<String>();
     for( int i = 0; i < maxOccursKM + 1; i++ )
       noKMDischarge.add( String.valueOf( i ) );
     m_channelCombo.setItems( noKMDischarge.toArray( new String[maxOccursKM] ) );
-    GridData channelComboGridData = new GridData();
+    final GridData channelComboGridData = new GridData();
     channelComboGridData.widthHint = 50;
     channelComboGridData.horizontalAlignment = GridData.END;
     m_channelCombo.setLayoutData( channelComboGridData );
@@ -154,9 +155,9 @@ public class KalypsoNAProjectPreferences extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Combo combo = (Combo) e.widget;
+        final Combo combo = (Combo) e.widget;
         m_kmChannelNo = combo.getItem( combo.getSelectionIndex() );
         setPageComplete( validatePage() );
       }

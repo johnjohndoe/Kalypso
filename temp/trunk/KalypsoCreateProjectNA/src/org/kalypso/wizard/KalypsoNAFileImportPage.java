@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.wizard.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -110,9 +111,9 @@ public class KalypsoNAFileImportPage extends WizardPage
 // private Button okButton;
 
   // Geodata
-  private String customCS = null;
+  private final String customCS = null;
 
-  private String defaultCS = "EPSG:31467"; //$NON-NLS-1$
+  private final String defaultCS = "EPSG:31467"; //$NON-NLS-1$
 
   private GMLWorkspace sourceWorkspace;
 
@@ -124,7 +125,7 @@ public class KalypsoNAFileImportPage extends WizardPage
   /**
    * @param pageName
    */
-  public KalypsoNAFileImportPage( String pageName )
+  public KalypsoNAFileImportPage( final String pageName )
   {
     super( pageName );
     setDescription( Messages.getString( "KalypsoNAFileImportPage.PageDescription" ) ); //$NON-NLS-1$
@@ -136,20 +137,20 @@ public class KalypsoNAFileImportPage extends WizardPage
    * @param title
    * @param titleImage
    */
-  public KalypsoNAFileImportPage( String pageName, String title, ImageDescriptor titleImage )
+  public KalypsoNAFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
     setDescription( Messages.getString( "KalypsoNAFileImportPage.PageDescription2" ) ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
-  private boolean checkSuffix( Text path )
+  private boolean checkSuffix( final Text path )
   {
     boolean test = false;
-    int dotLoc = path.getText().lastIndexOf( '.' );
+    final int dotLoc = path.getText().lastIndexOf( '.' );
     if( dotLoc != -1 )
     {
-      String ext = path.getText().substring( dotLoc + 1 );
+      final String ext = path.getText().substring( dotLoc + 1 );
       if( ext.equalsIgnoreCase( "shp" ) == false ) //$NON-NLS-1$
         test = false;
       else
@@ -163,7 +164,7 @@ public class KalypsoNAFileImportPage extends WizardPage
    * 
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
 
     topComposite = new Composite( parent, SWT.NULL );
@@ -182,12 +183,12 @@ public class KalypsoNAFileImportPage extends WizardPage
 
   }
 
-  private void createFileGroup( Composite parent )
+  private void createFileGroup( final Composite parent )
   {
 
     fileGroup = new Group( parent, SWT.NULL );
-    GridLayout topGroupLayout = new GridLayout();
-    GridData topGroupData = new GridData();
+    final GridLayout topGroupLayout = new GridLayout();
+    final GridData topGroupData = new GridData();
     topGroupLayout.numColumns = 3;
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
@@ -198,14 +199,14 @@ public class KalypsoNAFileImportPage extends WizardPage
     fileLabel.setText( Messages.getString( "KalypsoNAFileImportPage.FileLabelText" ) ); //$NON-NLS-1$
 
     // Set width of Text fields
-    GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
     dataCatchment.widthHint = SIZING_TEXT_FIELD_WIDTH;
 
     textField = new Text( fileGroup, SWT.BORDER );
     textField.setLayoutData( dataCatchment );
     textField.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         validateFileField();
       }
@@ -217,7 +218,7 @@ public class KalypsoNAFileImportPage extends WizardPage
     browseButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         // if (validateFileField())
         handleFileBrowse();
@@ -230,9 +231,9 @@ public class KalypsoNAFileImportPage extends WizardPage
     skipRadioButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Button w = (Button) e.widget;
+        final Button w = (Button) e.widget;
         if( !w.getSelection() )
         {
           setPageComplete( true );
@@ -259,7 +260,7 @@ public class KalypsoNAFileImportPage extends WizardPage
 
   protected void handleFileBrowse( )
   {
-    FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
+    final FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
     fdialog.setText( Messages.getString( "KalypsoNAFileImportPage.FileDialogText" ) ); //$NON-NLS-1$
     fdialog.setFilterNames( new String[] { "Shape Files", //$NON-NLS-1$
@@ -279,7 +280,7 @@ public class KalypsoNAFileImportPage extends WizardPage
         // copyShapeFile(fileURL);
 
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
@@ -287,14 +288,14 @@ public class KalypsoNAFileImportPage extends WizardPage
     }// if fdialog
   }// handleFileBrowse
 
-  public boolean validateFile( URL url )
+  public boolean validateFile( final URL url )
   {
     try
     {
-      InputStream ios = url.openStream();
+      final InputStream ios = url.openStream();
       ios.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       return false;
