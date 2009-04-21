@@ -47,7 +47,7 @@ import java.util.Formatter;
  */
 public interface IHeightWidthResult
 {
-  public void formatErr( final Formatter formatter );
+  public void formatLog( final Formatter formatter );
 
   public void formatOut( final Formatter formatter );
 

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.hw;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -61,9 +62,12 @@ public class HeightWidthData
 
   private final String m_name;
 
-  public HeightWidthData( final String name )
+  private final File m_tempDir;
+
+  public HeightWidthData( final String name, final File tempDir )
   {
     m_name = name;
+    m_tempDir = tempDir;
   }
 
   public void addPoint( final BigDecimal distance, final double value, final String objectType, final int attributeType, final int ord, final int partOrd )
@@ -104,7 +108,7 @@ public class HeightWidthData
 
     final IHeightWidthResult[] results = getResults();
     for( final IHeightWidthResult heightWidthResult : results )
-      heightWidthResult.formatErr( formatter );
+      heightWidthResult.formatLog( formatter );
     formatter.format( "%n%n%n" );
   }
 
@@ -118,7 +122,7 @@ public class HeightWidthData
 
       // All tubes are calculated
       if( key.startsWith( "K" ) )
-        results.add( new TubeResult( m_name, key, m_name, m_name, crdHash.values() ) );
+        results.add( new TubeResult( m_name, key, m_name, m_name, crdHash.values(), m_tempDir ) );
 
       // Mabye we have a bridge like structure
       if( key.startsWith( "V01" ) )
@@ -126,7 +130,7 @@ public class HeightWidthData
         /* Check if we have a 'Unterkante Brücke', then we can calculate some area as well */
         final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "V02" );
         if( ukCrds != null )
-          results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values() ) );
+          results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) );
       }
     }
 

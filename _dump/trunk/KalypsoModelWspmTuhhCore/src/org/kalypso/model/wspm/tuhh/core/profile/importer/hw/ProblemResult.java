@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -94,7 +95,7 @@ public class ProblemResult implements IHeightWidthResult
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.IHeightWidthResult#format(java.util.Formatter)
    */
   @Override
-  public void formatErr( final Formatter formatter )
+  public void formatLog( final Formatter formatter )
   {
     formatter.format( "%s%n%n", m_name );
 
@@ -110,8 +111,9 @@ public class ProblemResult implements IHeightWidthResult
   private void formatStatus( final Formatter formatter, final IStatus status, final int indent )
   {
     final int indentation = (indent + 1) * 2;
-    final String formatString = "%" + indentation + "s%d: %s (%s)%n";
-    formatter.format( formatString, "", status.getSeverity(), status.getMessage(), status.getException() );
+    final String formatString = "%" + indentation + "s%s: %s (%s)%n";
+    final String severity = StatusUtilities.getLocalizedSeverity( status );
+    formatter.format( formatString, "", severity, status.getMessage(), status.getException() );
     final IStatus[] children = status.getChildren();
     for( final IStatus child : children )
       formatStatus( formatter, child, indent + 1 );

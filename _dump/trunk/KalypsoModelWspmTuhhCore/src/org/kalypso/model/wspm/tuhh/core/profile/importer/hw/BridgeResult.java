@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile.importer.hw;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -62,9 +63,9 @@ public class BridgeResult extends HeightWidthResult
 
   private final Collection<Coordinate> m_lowerCrds;
 
-  public BridgeResult( final String parentName, final String dataName, final String id, final String name, final Collection<Coordinate> lowerCrds, final Collection<Coordinate> upperCrds )
+  public BridgeResult( final String parentName, final String dataName, final String id, final String name, final Collection<Coordinate> lowerCrds, final Collection<Coordinate> upperCrds, final File tempDir )
   {
-    super( parentName, dataName, id, name );
+    super( parentName, dataName, id, name, tempDir );
     m_upperCrds = upperCrds;
     m_lowerCrds = lowerCrds;
   }

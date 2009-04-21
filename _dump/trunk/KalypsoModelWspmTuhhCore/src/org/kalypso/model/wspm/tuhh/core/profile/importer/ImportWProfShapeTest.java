@@ -49,6 +49,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.tuhh.core.profile.importer.hw.HeightWidthCreator;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -69,6 +70,8 @@ public class ImportWProfShapeTest
 
     final String fileBase = "P:\\bwg0715223\\gis\\Modell\\Querprofillagen\\vermessung";
     final String sourceCrs = "EPSG:31467";
+    final File tempDir = new File( FileUtilities.TMP_DIR, "WProf2Sobek" );
+    tempDir.mkdirs();
 
     /* Load Shape */
     final GMLWorkspace w80shapeWorkspace = ShapeSerializer.deserialize( fileBase, sourceCrs, monitor );
@@ -80,7 +83,7 @@ public class ImportWProfShapeTest
     // GmlSerializerFeatureProviderFactory() );
 // final TuhhWspmProject project = new TuhhWspmProject( targetWorkspace.getRootFeature() );
 // final IWProfContentHandler creatorTUHH = new TuhhProfileWProfContentHandler( project, sourceCrs );
-    final HeightWidthCreator creatorHW = new HeightWidthCreator();
+    final HeightWidthCreator creatorHW = new HeightWidthCreator( tempDir );
     final IWProfContentHandler[] creators = new IWProfContentHandler[] {
 // creatorTUHH,
     creatorHW };
@@ -90,9 +93,9 @@ public class ImportWProfShapeTest
     importW80Data( w80features, creators, photoContext );
 
     /* Write results */
-    final File hwOutFile = File.createTempFile( "heightWidth", ".txt" );
-    final File hwErrFile = File.createTempFile( "heightWidth", ".err" );
-    creatorHW.writeToFile( hwOutFile, hwErrFile );
+    final File hwOutFile = new File( tempDir, "heightWidth.txt" );
+    final File hwLogFile = new File( tempDir, "heightWidth.log" );
+    creatorHW.writeToFile( hwOutFile, hwLogFile );
 
 // final File targetFile = File.createTempFile( "modell_w80", ".gml" );
 // GmlSerializer.serializeWorkspace( targetFile, targetWorkspace, "UTF-8" );

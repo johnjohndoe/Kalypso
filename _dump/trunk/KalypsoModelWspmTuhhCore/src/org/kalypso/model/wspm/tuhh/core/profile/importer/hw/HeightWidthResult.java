@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.core.profile.importer.hw;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -50,8 +49,8 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,23 +89,26 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
   private Polygon m_polygon;
 
-  private BigDecimal[] m_heights;
+  private double[] m_heights;
 
-  private BigDecimal[] m_widths;
+  private double[] m_widths;
 
   private final String m_id;
 
   private final String m_name;
 
-  public HeightWidthResult( final String parentName, final String dataName, final String id, final String name )
+  private final File m_tempDir;
+
+  public HeightWidthResult( final String parentName, final String dataName, final String id, final String name, final File tempDir )
   {
     super( dataName, null );
     m_parentName = parentName;
     m_id = id;
     m_name = name;
+    m_tempDir = tempDir;
   }
 
-  protected void calculate( )
+  private void calculate( )
   {
     if( m_polygon != null )
       return;
@@ -157,44 +159,53 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     m_widths = calculateWidth( m_heights, min, max );
   }
 
-  private BigDecimal[] sampleHeights( final Coordinate[] coordinates )
+  private double[] sampleHeights( final Coordinate[] coordinates )
   {
-    final Set<BigDecimal> sortedSet = new TreeSet<BigDecimal>();
+    final Set<Double> sortedSet = new TreeSet<Double>();
 
+    double lastY = Double.NaN;
     for( final Coordinate coordinate : coordinates )
-      sortedSet.add( new BigDecimal( coordinate.y ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
+    {
+      final double y = coordinate.y;
+      sortedSet.add( new Double( y ) );
 
-    return sortedSet.toArray( new BigDecimal[sortedSet.size()] );
+      if( !Double.isNaN( lastY ) )
+        sortedSet.add( new Double( (y - lastY) / 2.0 ) );
+
+      lastY = y;
+    }
+
+    final Double[] result = sortedSet.toArray( new Double[sortedSet.size()] );
+    return ArrayUtils.toPrimitive( result );
   }
 
-  private BigDecimal[] calculateWidth( final BigDecimal[] heights, final double min, final double max )
+  private double[] calculateWidth( final double[] heights, final double min, final double max )
   {
-    final BigDecimal[] widths = new BigDecimal[heights.length];
+    final double[] widths = new double[heights.length];
     for( int i = 0; i < heights.length; i++ )
     {
       try
       {
-        final double height = heights[i].doubleValue();
+        final double height = heights[i];
 
         /* Construct a line that intersects at the given height */
         final Coordinate left = new Coordinate( min, height );
         final Coordinate right = new Coordinate( max, height );
         final LineString horizontalLine = m_polygon.getFactory().createLineString( new Coordinate[] { left, right } );
         final Geometry intersection = m_polygon.intersection( horizontalLine );
-        final double width = intersection.getLength();
-        widths[i] = new BigDecimal( width ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+        widths[i] = intersection.getLength();
       }
       catch( final TopologyException e )
       {
         if( i == 0 || i == heights.length - 1 )
         {
-          widths[i] = new BigDecimal( 0 ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+          widths[i] = 0;
           addStatus( IStatus.INFO, "Topology Problem at start or end", e );
         }
         else
         {
-          widths[i] = null;
-          addStatus( IStatus.WARNING, "Topology Problem in the middle, height/width not correctly colulated", e );
+          widths[i] = 0;
+          addStatus( IStatus.WARNING, "Topology Problem in the middle, height/width not correctly calculated", e );
         }
       }
     }
@@ -219,13 +230,32 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     formatter.format( "TBLE%n" );
     for( int i = 0; i < m_heights.length; i++ )
     {
-      final BigDecimal height = m_heights[i];
-      final BigDecimal width = m_widths[i];
-      final BigDecimal relHeight = height;
+      final double height = m_heights[i];
+      final double width = m_widths[i];
+      final double relHeight = height - m_heights[0];
       formatter.format( "%f %f %f <%n", relHeight, width, width );
     }
     formatter.format( "tble%n" );
     formatter.format( "crds%n" );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.ProblemResult#formatErr(java.util.Formatter)
+   */
+  @Override
+  public void formatLog( final Formatter formatter )
+  {
+    calculate();
+    if( m_polygon == null )
+      return;
+
+    super.formatLog( formatter );
+
+    final double areaPoly = m_polygon.getArea();
+    final double areaHW = calculateArea( m_widths, m_heights );
+
+    formatter.format( "Fläche Shape: %f%n", areaPoly );
+    formatter.format( "Fläche HW   : %f%n", areaHW );
   }
 
   private void debugShapeWrite( final LinearRing shell, final boolean valid )
@@ -260,7 +290,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + 0, shapeFT, data ); //$NON-NLS-1$
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
 
-      final File shapeFile = new File( FileUtilities.TMP_DIR, m_parentName + "_" + getName() );
+      final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() );
 
       ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
     }
@@ -276,6 +306,32 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     {
       e.printStackTrace();
     }
+  }
+
+  /** Calculates the area of a width/height profile. */
+  private static double calculateArea( final double[] widths, final double[] heights )
+  {
+    double area = 0.0;
+    for( int i = 0; i < widths.length - 1; i++ )
+    {
+      final double width1 = widths[i];
+      final double height1 = heights[i];
+      final double width2 = widths[i + 1];
+      final double height2 = heights[i + 1];
+
+      final double height = height2 - height1;
+      final double trapecoidArea = calculateArea( width1, width2, height );
+      area += trapecoidArea;
+    }
+
+    return area;
+  }
+
+  /** Calculates the area of a trapezoid */
+  private static double calculateArea( final double width1, final double width2, final double height )
+  {
+    final double width = (width1 + width2) / 2;
+    return width * height;
   }
 
   protected abstract List<Coordinate> buildPolygon( );

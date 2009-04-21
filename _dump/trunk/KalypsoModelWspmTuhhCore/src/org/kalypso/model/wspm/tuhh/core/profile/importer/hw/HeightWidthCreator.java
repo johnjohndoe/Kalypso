@@ -58,6 +58,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class HeightWidthCreator implements IWProfContentHandler
 {
   private final Map<String, HeightWidthData> m_data = new LinkedHashMap<String, HeightWidthData>();
+  private final File m_tempDir;
+
+  public HeightWidthCreator( final File tempDir )
+  {
+    m_tempDir = tempDir;
+  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.importer.IWProfContentHandler#finished()
@@ -89,36 +95,36 @@ public class HeightWidthCreator implements IWProfContentHandler
 
     System.out.println( key );
 
-    final HeightWidthData newData = new HeightWidthData( key );
+    final HeightWidthData newData = new HeightWidthData( key, m_tempDir );
     m_data.put( key, newData );
     return newData;
   }
 
-  public void writeToFile( final File outputFile, final File errFile ) throws IOException
+  public void writeToFile( final File outputFile, final File logFile ) throws IOException
   {
     Formatter formatterOut = null;
-    Formatter formatterErr = null;
+    Formatter formatterLog = null;
     try
     {
       formatterOut = new Formatter( outputFile, Charset.defaultCharset().name() );
-      formatterErr = new Formatter( errFile, Charset.defaultCharset().name() );
+      formatterLog = new Formatter( logFile, Charset.defaultCharset().name() );
 
       for( final HeightWidthData data : m_data.values() )
       {
         data.formatOut( formatterOut );
         if( formatterOut.ioException() != null )
           throw formatterOut.ioException();
-        data.formatErr( formatterErr );
-        if( formatterErr.ioException() != null )
-          throw formatterErr.ioException();
+        data.formatErr( formatterLog );
+        if( formatterLog.ioException() != null )
+          throw formatterLog.ioException();
       }
     }
     finally
     {
       if( formatterOut != null )
         formatterOut.close();
-      if( formatterErr != null )
-        formatterErr.close();
+      if( formatterLog != null )
+        formatterLog.close();
     }
   }
 
