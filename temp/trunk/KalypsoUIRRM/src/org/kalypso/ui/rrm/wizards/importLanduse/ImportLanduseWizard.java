@@ -42,7 +42,6 @@
 package org.kalypso.ui.rrm.wizards.importLanduse;
 
 import java.io.File;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -57,7 +56,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.convert.namodel.hydrotope.LanduseClassHelper;
+import org.kalypso.convert.namodel.hydrotope.DefaultLanduseClassDelegate;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation;
 import org.kalypso.convert.namodel.hydrotope.LanduseShapeInputDescriptor;
 import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescriptor;
@@ -136,10 +135,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         final GMLWorkspace landuseClassesWorkspace = GmlSerializer.createGMLWorkspace( parameterFile.getContents(), null, null );
 
         final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
-        final Map<String, String> landuseClasses = LanduseClassHelper.resolve( landuseClassesWorkspace );
+        final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate( landuseClassesWorkspace );
 
         // call importer
-        final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, landuseClasses, ImportType.CLEAR_OUTPUT );
+        final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
         ErrorDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 

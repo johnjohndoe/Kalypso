@@ -42,13 +42,13 @@ package org.kalypso.convert.namodel.hydrotope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -97,13 +97,13 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
 
   private final InputDescriptor m_inputDescriptor;
 
-  private final Map<String, String> m_landuseClasses;
+  private final ILanduseClassDelegate m_landuseClasses;
 
   /**
    * @param output
    *          An (empty) list containing rrmLanduse:landuse features
    */
-  public LanduseImportOperation( final InputDescriptor inputDescriptor, final LanduseCollection output, final Map<String, String> landuseClasses, final ImportType importType )
+  public LanduseImportOperation( final InputDescriptor inputDescriptor, final LanduseCollection output, final ILanduseClassDelegate landuseClasses, final ImportType importType )
   {
     m_inputDescriptor = inputDescriptor;
     m_output = output;
@@ -120,9 +120,12 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     final int size = m_inputDescriptor.size();
     final SubMonitor progess = SubMonitor.convert( monitor, Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.0"), size + 10 ); //$NON-NLS-1$
 
-    final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
     if( m_importType == ImportType.CLEAR_OUTPUT )
+    {
+      final IFeatureBindingCollection<Landuse> landuses = m_output.getLanduses();
       landuses.clear();
+    }
+      
 
     ProgressUtilities.worked( progess, 10 );
 
@@ -141,7 +144,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
         final String landuseclass = m_inputDescriptor.getLanduseclass( i );
 
         // find landuse-class
-        final String landuseRef = m_landuseClasses.get( landuseclass );
+        final String landuseRef = m_landuseClasses.getReference( landuseclass );
         if( landuseRef == null )
         {
           final String message = String.format( Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.2"), landuseclass, i + 1 ); //$NON-NLS-1$
@@ -177,6 +180,11 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
       }
 
       ProgressUtilities.worked( progess, 1 );
+    }
+    
+    if (!log.isEmpty())
+    {
+      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), "Landuse Import Operation failed.", null );
     }
 
     return Status.OK_STATUS;

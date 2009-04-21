@@ -41,7 +41,6 @@
 package org.kalypso.convert.namodel.hydrotope;
 
 import java.io.File;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -71,10 +70,10 @@ public class TestHydrotopeMain extends TestCase
     final GMLWorkspace landuseClassesWorkspace = GmlSerializer.createGMLWorkspace( landuseClassesFile, null );
     final LanduseCollection output = (LanduseCollection) landuseWorkspace.getRootFeature();
 
-    final Map<String, String> landuseClasses = LanduseClassHelper.resolve( landuseClassesWorkspace );
-
+    final DefaultLanduseClassDelegate delegate = new DefaultLanduseClassDelegate(landuseClassesWorkspace);
+    
     // call importer
-    final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, landuseClasses, ImportType.CLEAR_OUTPUT );
+    final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
     op.execute( new NullProgressMonitor() );
 
     final File outputFile = new File( "C:\\temp\\landuse.gml.gz" );
