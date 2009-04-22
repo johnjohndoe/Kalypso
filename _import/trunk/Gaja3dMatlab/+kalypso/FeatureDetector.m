@@ -1,6 +1,6 @@
 classdef FeatureDetector
    properties (Constant)
-       DEFAULT = org.kalypso.gaja3d.matlab.SimpleFeatureDetector();
+       DEFAULT = kalypso.SimpleFeatureDetector();
    end
    
    properties

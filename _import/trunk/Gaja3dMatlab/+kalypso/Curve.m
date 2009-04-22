@@ -1,8 +1,8 @@
-classdef Curve < org.kalypso.gaja3d.matlab.Shape
+classdef Curve < kalypso.Shape
 
    properties (Constant)
        % creates an empty MultiLineString
-       EMPTY = org.kalypso.gaja3d.matlab.Curve.empty();
+       EMPTY = kalypso.Curve.empty();
    end
    
    methods (Static = true)
@@ -15,7 +15,7 @@ classdef Curve < org.kalypso.gaja3d.matlab.Shape
        % Shape constructor
        % function this = Curve(X, Y, Z)
        function this = Curve(varargin)
-           import org.kalypso.gaja3d.matlab.*;
+           import kalypso.*;
            
            if(nargin == 0)
                lineString{1} = Shape.geomFactory.createLineString([]);
@@ -25,7 +25,7 @@ classdef Curve < org.kalypso.gaja3d.matlab.Shape
                        lineString{1} = varargin{1};
                    case 'char'
                        filename = varargin{1};
-                       this = Shape.fromFile(filename, @org.kalypso.gaja3d.matlab.Curve);
+                       this = Shape.fromFile(filename, @kalypso.Curve);
                        return;
                    otherwise
                        error('Call one-argument constructor only with LineString geometries.');
@@ -74,7 +74,7 @@ classdef Curve < org.kalypso.gaja3d.matlab.Shape
            Y = this.getY();
            Z = this.getZ();
            count = numel(this);
-           allCurves = org.kalypso.gaja3d.matlab.Curve.empty();
+           allCurves = kalypso.Curve.empty();
            for i=1:count
                if(count == 1)
                    [linesXNaN, linesYNaN] = clipLine(X, Y, polygon.getX(), polygon.getY());
@@ -84,7 +84,7 @@ classdef Curve < org.kalypso.gaja3d.matlab.Shape
                if(numel(linesXNaN) > 0)
                    [linesX, linesY] = polysplit(linesXNaN, linesYNaN); 
                    %[linesX, linesZ] = polysplit(linesXNaN, linesZNaN);
-                   newCurves = org.kalypso.gaja3d.matlab.Curve(linesX, linesY);%, linesZ);
+                   newCurves = kalypso.Curve(linesX, linesY);%, linesZ);
                    c = numel(newCurves);
                    allCurves(end+1:end+c) = newCurves;
                end

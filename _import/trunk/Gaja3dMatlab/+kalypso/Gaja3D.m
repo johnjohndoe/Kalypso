@@ -15,25 +15,25 @@ classdef Gaja3D < handle
         tiles = [];
         
         % the outer boundaries of the model area tiles
-        boundaries = org.kalypso.gaja3d.matlab.Polygon.EMPTY;
+        boundaries = kalypso.Polygon.EMPTY;
         
         % original tin points and triangle indices
-        demTin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
+        demTin = kalypso.TriangulatedSurface.EMPTY;
         
         % raster elevation model (GRID)
         % single instance of RectifiedGridCoverage
-        demGrid = org.kalypso.gaja3d.matlab.RectifiedGridCoverage.EMPTY;
+        demGrid = kalypso.RectifiedGridCoverage.EMPTY;
         
         % breaklines for tin generation
         % Curve array
-        breaklines = org.kalypso.gaja3d.matlab.Curve.EMPTY;
+        breaklines = kalypso.Curve.EMPTY;
         
         % All breaklines for tin generation. These may be set manually and
         % will override the other breaklines if present.
-        breaklinesMerged = org.kalypso.gaja3d.matlab.Curve.EMPTY;
+        breaklinesMerged = kalypso.Curve.EMPTY;
         
         % generated tin points and triangle indices
-        modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
+        modelTin = kalypso.TriangulatedSurface.EMPTY;
         refineCount = 0;
         
         cmd_args = cell(0);
@@ -42,20 +42,20 @@ classdef Gaja3D < handle
     methods 
         % set demTin, revert demGrid
         function this = set.demTin(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'org.kalypso.gaja3d.matlab.TriangulatedSurface'))
+            if(nargin == 2 && isa(varargin{1},'kalypso.TriangulatedSurface'))
                 this.demTin = varargin{1};
             else
-                this.demTin = org.kalypso.gaja3d.matlab.TriangulatedSurface(varargin{:});
+                this.demTin = kalypso.TriangulatedSurface(varargin{:});
             end
             this.demGrid = [];
         end 
 
         % set demGrid, revert breaklines
         function this = set.demGrid(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'org.kalypso.gaja3d.matlab.RectifiedGridCoverage'))
+            if(nargin == 2 && isa(varargin{1},'kalypso.RectifiedGridCoverage'))
                 this.demGrid = varargin{1};
             else
-                this.demGrid = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(varargin{:});
+                this.demGrid = kalypso.RectifiedGridCoverage(varargin{:});
             end
             this.breaklines = [];
         end
@@ -65,14 +65,14 @@ classdef Gaja3D < handle
             if(nargin == 2 && iscell(varargin{1}))
                 breaklines = varargin{1};
                 for i=1:numel(breaklines)
-                    if(isa(breaklines{i},'org.kalypso.gaja3d.matlab.Curve'))
+                    if(isa(breaklines{i},'kalypso.Curve'))
                         this.breaklines{i} = breaklines{i};
                     else
                         args = breaklines{i};
                         if(isempty(args))
-                            this.breaklines{i} = org.kalypso.gaja3d.matlab.Curve.EMPTY;
+                            this.breaklines{i} = kalypso.Curve.EMPTY;
                         else
-                            this.breaklines(i) = org.kalypso.gaja3d.matlab.Curve(args{:});
+                            this.breaklines(i) = kalypso.Curve(args{:});
                         end
                     end
                 end
@@ -80,18 +80,18 @@ classdef Gaja3D < handle
                 noBreaklines = cell(size(this.tiles));
                 this.breaklines = noBreaklines;
             end
-            this.breaklinesMerged = org.kalypso.gaja3d.matlab.Curve.EMPTY;
-            this.modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
+            this.breaklinesMerged = kalypso.Curve.EMPTY;
+            this.modelTin = kalypso.TriangulatedSurface.EMPTY;
         end
         
         % set breaklines, revert modelTin
         function this = set.boundaries(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'org.kalypso.gaja3d.matlab.Polygon'))
+            if(nargin == 2 && isa(varargin{1},'kalypso.Polygon'))
                 this.boundaries = varargin{1};
             elseif(nargin == 3)
                 this.boundaries = griddedBoundaries(varargin{:}); 
             else
-                this.boundaries = org.kalypso.gaja3d.matlab.Polygon(varargin{:});
+                this.boundaries = kalypso.Polygon(varargin{:});
             end
             this.tiles = 1:numel(this.boundaries);
             this.demTin = [];
@@ -279,7 +279,7 @@ classdef Gaja3D < handle
                         end
                         eleFileName = [fileparts(tFiles) filesep file.name];
                         disp(sprintf('Loading tin with basename %s...', eleFileName));
-                        this.demTin(i) = org.kalypso.gaja3d.matlab.TriangulatedSurface(eleFileName);
+                        this.demTin(i) = kalypso.TriangulatedSurface(eleFileName);
                     end
                 end
             end
@@ -291,7 +291,7 @@ classdef Gaja3D < handle
                         file = gridFiles(i);
                         filename = [fileparts(gFiles) filesep file.name];
                         disp(sprintf('Loading grid %s...', filename));
-                        this.demGrid(i) = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(filename, varargin{:});
+                        this.demGrid(i) = kalypso.RectifiedGridCoverage(filename, varargin{:});
                     end
                 end
             end
@@ -310,8 +310,8 @@ classdef Gaja3D < handle
             
             for i=1:max(this.tiles)
                 if(~any(i==this.tiles))
-                    this.demTin(i) = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
-                    this.demGrid(i) = org.kalypso.gaja3d.matlab.RectifiedGridCoverage.EMPTY;
+                    this.demTin(i) = kalypso.TriangulatedSurface.EMPTY;
+                    this.demGrid(i) = kalypso.RectifiedGridCoverage.EMPTY;
                 end
             end
             
@@ -366,7 +366,7 @@ classdef Gaja3D < handle
                 % if elements is specified, use given tin for all
                 % boundaries
                 elements = varargin{2};
-                tin = org.kalypso.gaja3d.matlab.TriangulatedSurface(points, elements);
+                tin = kalypso.TriangulatedSurface(points, elements);
                 [this.demTin] = deal(tin);
                 return;
             else
@@ -394,7 +394,7 @@ classdef Gaja3D < handle
                     redPoints = reduceToBoundary(points(:,1:3), this.boundaries(i), bufDist);
                     if(isempty(redPoints))
                         warning('No elevation points in tile %n.', i);
-                        tin = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY;
+                        tin = kalypso.TriangulatedSurface.EMPTY;
                     else
                         exportNodes(redPoints, tempfile);
                         if(isdeployed())
@@ -405,7 +405,7 @@ classdef Gaja3D < handle
                         eval(sprintf('! %s %s', tricommand, tempfile));
                         outputPrefix = [tempfile '.1'];
                         elements = loadTriangleOutput( outputPrefix );
-                        tin = org.kalypso.gaja3d.matlab.TriangulatedSurface(redPoints, double(elements));
+                        tin = kalypso.TriangulatedSurface(redPoints, double(elements));
                         movefile([outputPrefix '.ele'], [tempfile '.ele']);
                         zip([tempfile '.zip'], {[tempfile '.ele'], [tempfile '.node']});
                     end
@@ -425,7 +425,7 @@ classdef Gaja3D < handle
         
         function this = setBreaklines(this, breaklines)
             if(~iscell(breaklines))
-                this.breaklinesMerged = org.kalypso.gaja3d.matlab.Curve(breaklines);
+                this.breaklinesMerged = kalypso.Curve(breaklines);
             elseif(~all(size(breaklines)==size(this.breaklines)))
                 error('Number of breaklines sets does not match number of grids');
             else
@@ -509,7 +509,7 @@ classdef Gaja3D < handle
                 inboundary = inpoly([gridx(:) gridy(:)], [polyX polyY], edges);
                 %inboundary = inpolygon(gridx, gridy, boundaryBuffer.getX(), boundaryBuffer.getY());
                 gridz(~inboundary) = NaN;
-                grid = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(gridz, refmat);
+                grid = kalypso.RectifiedGridCoverage(gridz, refmat);
                 this.demGrid(i) = grid;
                 if(numel(this.tiles) == 1 && i == 1)
                     gridFile = [workingDir filesep 'DemGrid'];
@@ -598,7 +598,7 @@ classdef Gaja3D < handle
                         continue;
                     end
                    edgeCount = numel(edgelist);
-                   this.breaklines{i} = org.kalypso.gaja3d.matlab.Curve.empty(edgeCount,0);
+                   this.breaklines{i} = kalypso.Curve.empty(edgeCount,0);
                    X = cell(edgeCount,0);
                    Y = cell(edgeCount,0);
                    Z = cell(edgeCount,0);
@@ -610,7 +610,7 @@ classdef Gaja3D < handle
                        end
                        Z{j} = zeros(size(X{j}));
                    end
-                   this.breaklines{i} = org.kalypso.gaja3d.matlab.Curve(X, Y, Z);
+                   this.breaklines{i} = kalypso.Curve(X, Y, Z);
                    this.breaklines{i} = this.breaklines{i}.clip(this.boundaries(i));
                    bs = this.breaklines{i}.asGeostruct();
                    if(~isempty(bs))
@@ -683,7 +683,7 @@ classdef Gaja3D < handle
             zip([tempfile '.zip'], {[tempfile '.ele'], [tempfile '.node'], [tempfile '.poly']}, workingDir);
             Ztri = zeros(size(Xtri));
             points = [Xtri Ytri Ztri];
-            this.modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface(points, elements);
+            this.modelTin = kalypso.TriangulatedSurface(points, elements);
             this.refineCount = 0;
         end
         
@@ -722,7 +722,7 @@ classdef Gaja3D < handle
                 Ztri(ZmatchedAndNotHasZ) = Zi(ZmatchedAndNotHasZ);
                 Ztri(ZmatchedAndHasZ) = (Zi(ZmatchedAndHasZ) + Ztri(ZmatchedAndHasZ)) / 2;
             end
-            this.modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface([Xtri Ytri Ztri], elements);
+            this.modelTin = kalypso.TriangulatedSurface([Xtri Ytri Ztri], elements);
             workingDir = this.workingDir;
             tempfile = [workingDir filesep 'ModelTin'];
             saveTrianglesAsEle(this.modelTin.elements, [tempfile '.ele']);
@@ -746,7 +746,7 @@ classdef Gaja3D < handle
             
             % initialize to NaN elevations
             Ztri = zeros(size(Xtri)) * NaN;
-            this.modelTin = org.kalypso.gaja3d.matlab.TriangulatedSurface([Xtri Ytri Ztri], elements);
+            this.modelTin = kalypso.TriangulatedSurface([Xtri Ytri Ztri], elements);
             this.refineCount = this.refineCount + 1;
         end
        
@@ -754,7 +754,7 @@ classdef Gaja3D < handle
         function this = delete(this)
             % clean up
             % this call will clear all the other properties too
-            this.boundaries = org.kalypso.gaja3d.matlab.Polygon.EMPTY;
+            this.boundaries = kalypso.Polygon.EMPTY;
             this.cmd_args = cell(0);
             delete('temp.*');
         end       
@@ -818,7 +818,7 @@ classdef Gaja3D < handle
             % clip breaklines that are too close to outer boundary (20 m)
             % EXPERIMENTAL
             %[outerClipX, outerClipY] = bufferPolygon(boundariesMerged.getX, boundariesMerged.getY, -20);
-            %outerClip = org.kalypso.gaja3d.matlab.Polygon(outerClipX, outerClipY);
+            %outerClip = kalypso.Polygon(outerClipX, outerClipY);
             %breaklines = breaklines.clip(outerClip);
             for i=1:numel(breaklines)
                 lineX = breaklines(i).getX();

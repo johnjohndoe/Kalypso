@@ -1,6 +1,6 @@
 classdef RectifiedGridCoverage < handle
    properties (Constant)
-       EMPTY = org.kalypso.gaja3d.matlab.RectifiedGridCoverage();
+       EMPTY = kalypso.RectifiedGridCoverage();
    end % constant properties
    
    properties
@@ -96,14 +96,14 @@ classdef RectifiedGridCoverage < handle
         function this = RectifiedGridCoverage(varargin)
             % add property listener
             % it will recalculate smoothed, slope and breakpoints
-            this.edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.DEFAULT;
-            this.featureDetector = org.kalypso.gaja3d.matlab.FeatureDetector.DEFAULT;
+            this.edgeFilter = kalypso.EdgeFilter.DEFAULT;
+            this.featureDetector = kalypso.FeatureDetector.DEFAULT;
             this.addlistener({'Z', 'dx', 'dy', 'smoothFilter', 'edgeFilter', 'featureDetector'},...
                 'PostSet', @(src,evnt)this.objectChanged(src,evnt));
             if(nargin == 0)
                 return;
             elseif(ischar(varargin{1}))
-                this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage.fromFile(varargin{:});
+                this = kalypso.RectifiedGridCoverage.fromFile(varargin{:});
                 return;
             else
                 Z = varargin{1};
@@ -155,9 +155,9 @@ classdef RectifiedGridCoverage < handle
             
             switch smoothMethod
                 case 'bilateral'
-                    this.smoothFilter = org.kalypso.gaja3d.matlab.BilateralFilter(varargin{:});
+                    this.smoothFilter = kalypso.BilateralFilter(varargin{:});
                 case 'gauss'
-                    this.smoothFilter = org.kalypso.gaja3d.matlab.GaussianFilter(varargin{:});
+                    this.smoothFilter = kalypso.GaussianFilter(varargin{:});
                 case 'none'
                     this.smoothFilter = [];
                 otherwise
@@ -174,9 +174,9 @@ classdef RectifiedGridCoverage < handle
             
             switch featureMethod
                 case 'canny'
-                    this.featureDetector = org.kalypso.gaja3d.matlab.CannyDetector(varargin{:});
+                    this.featureDetector = kalypso.CannyDetector(varargin{:});
                 case 'simple'
-                    this.featureDetector = org.kalypso.gaja3d.matlab.SimpleFeatureDetector(varargin{:});
+                    this.featureDetector = kalypso.SimpleFeatureDetector(varargin{:});
                 otherwise
                     error('Feature detection method %s not recognized.', featureMethod)
             end
@@ -192,11 +192,11 @@ classdef RectifiedGridCoverage < handle
             
             switch method
                 case {'ood', 'frei-chen'}
-                    this.edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.FREI_CHEN;
+                    this.edgeFilter = kalypso.EdgeFilter.FREI_CHEN;
                 case 'sobel'
-                    this.edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.SOBEL;
+                    this.edgeFilter = kalypso.EdgeFilter.SOBEL;
                 case 'prewitt'
-                    this.edgeFilter = org.kalypso.gaja3d.matlab.EdgeFilter.PREWITT;
+                    this.edgeFilter = kalypso.EdgeFilter.PREWITT;
                 otherwise
                     error('Edge filter %s not recognized.', method)                    
             end
@@ -287,7 +287,7 @@ classdef RectifiedGridCoverage < handle
     methods (Static = true, Access = public)       
         % load a grid from file (asc, tif, tiff)
         function this = fromPoints(points, varargin)
-            this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage();
+            this = kalypso.RectifiedGridCoverage();
             if(~isempty(points))
                 points = sortrows(points, 1:2);
 
@@ -385,21 +385,21 @@ classdef RectifiedGridCoverage < handle
                     % load world file (referencing matrix)
                     worldfile = getworldfilename(file);
                     refmat = worldfileread(worldfile);
-                    this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(Z, refmat);
+                    this = kalypso.RectifiedGridCoverage(Z, refmat);
                 case {ASCEXT}
                     % read arcview ascii grid file
                     [Z, refmat] = readAsciiGrid(file);
-                    this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(Z, refmat);
+                    this = kalypso.RectifiedGridCoverage(Z, refmat);
                 case {SHPEXT, TXTEXT, XYZEXT}
                     % load points from file
                     points = loadPointData(file);
-                    this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage.fromPoints(points, varargin{:});
+                    this = kalypso.RectifiedGridCoverage.fromPoints(points, varargin{:});
                 case {ZIPEXT}
                     tmp_dir = tempname;
                     filenames = unzip(file, tmp_dir);
                     allGrids = cell(size(filenames));
                     for i=1:numel(filenames)
-                       grid = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(filenames{i});
+                       grid = kalypso.RectifiedGridCoverage(filenames{i});
                        allGrids{i} = grid;
                     end
                     this = [allGrids{:}];
@@ -412,7 +412,7 @@ classdef RectifiedGridCoverage < handle
                     % try your luck with gdal
                     [Z, attrib] = gdalread(file);
                     refmat = flipud(reshape(attrib.GeoTransform, 3, 2));
-                    this = org.kalypso.gaja3d.matlab.RectifiedGridCoverage(Z, refmat);
+                    this = kalypso.RectifiedGridCoverage(Z, refmat);
             end
        end
    end

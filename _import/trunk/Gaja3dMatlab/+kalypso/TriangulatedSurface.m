@@ -1,6 +1,6 @@
 classdef TriangulatedSurface < handle
     properties (Constant)
-        EMPTY = org.kalypso.gaja3d.matlab.TriangulatedSurface();
+        EMPTY = kalypso.TriangulatedSurface();
     end % public static
     
     properties (Constant, Hidden, GetAccess = private)
@@ -11,10 +11,10 @@ classdef TriangulatedSurface < handle
 	properties (SetAccess = private)
         % irregular elevation model (point cloud)
         % nx3 double precision array with x,y,z coordinates
-        points = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY_POINT_CLOUD
+        points = kalypso.TriangulatedSurface.EMPTY_POINT_CLOUD
         % triangulated elevation model (TIN)
         % nx3 indices into points for triangle coordinates
-        elements = org.kalypso.gaja3d.matlab.TriangulatedSurface.EMPTY_TIN
+        elements = kalypso.TriangulatedSurface.EMPTY_TIN
         % for refinement specify maximum area for each triangle
         % nx1 double precision array
         maxArea = -1;
@@ -42,9 +42,9 @@ classdef TriangulatedSurface < handle
                                         this.points = varargin{1};
                                         this.initializeTin();
                                     case 15 % PolygonZ
-                                        [elements, Xtri, Ytri, Ztri] = loadTriangleShape( varargin{1} );
+                                        [l_elements, Xtri, Ytri, Ztri] = loadTriangleShape( varargin{1} );
                                         this.points = [Xtri Ytri Ztri];
-                                        this.elements = elements;
+                                        this.elements = l_elements;
                                     otherwise
                                         error('Shape geometry type neither PointZ nor PolygonZ.');
                                 end
@@ -55,9 +55,9 @@ classdef TriangulatedSurface < handle
                             fclose(shpFileId);
                         otherwise
                             % treat as triangle output
-                            [elements, Xtri, Ytri, Ztri] = loadTriangleOutput(fullfile(pathstr, name));
+                            [l_elements, Xtri, Ytri, Ztri] = loadTriangleOutput(fullfile(pathstr, name));
                             this.points = [Xtri Ytri Ztri];
-                            this.elements = elements;
+                            this.elements = l_elements;
                     end
                 end
             elseif(nargin == 2)
@@ -122,18 +122,18 @@ classdef TriangulatedSurface < handle
             p.addParamValue('tempfile', 'temp.1'); % number of refinement
             p.parse(varargin{:});
 
-            elements = this.elements;
-            points = this.points;
-            allX = zeros(size(elements));
-            allY = zeros(size(elements));
-            allZ = zeros(size(elements));
-            allX(:) = points(elements,1);
-            allY(:) = points(elements,2);
-            allZ(:) = points(elements,3);
+            l_elements = this.elements;
+            l_points = this.points;
+            allX = zeros(size(l_elements));
+            allY = zeros(size(l_elements));
+            allZ = zeros(size(l_elements));
+            allX(:) = l_points(l_elements,1);
+            allY(:) = l_points(l_elements,2);
+            allZ(:) = l_points(l_elements,3);
             areas = polyarea(allX, allY, 2);
             
             % iterate over elements
-            tricount = size(elements, 1);
+            tricount = size(l_elements, 1);
             maxAreaDefault = p.Results.maxArea;
             maxHeightDefault = p.Results.maxHeight;
             tempfile = p.Results.tempfile;
@@ -147,7 +147,7 @@ classdef TriangulatedSurface < handle
 %                 [keepPoints, m, n] = unique(points(keepElements(:),:),'rows');
 %                 if(size(keepPoints,1) < size(points,1))
 %                     %keepElements = reshape(n, size(keepElements));
-%                     %tin = org.kalypso.gaja3d.matlab.TriangulatedSurface(keepPoints, keepElements);
+%                     %tin = kalypso.TriangulatedSurface(keepPoints, keepElements);
 %                     %exportPoly([tempfile '.poly'], this.boundaries.asGeostruct(), this.breaklinesMerged.asGeostruct());
 %                     nodeFilename = [tempfile '.node'];
 %                     eleFilename = [tempfile '.ele'];
@@ -173,7 +173,7 @@ classdef TriangulatedSurface < handle
             this.maxArea = ones(tricount, 1) * Inf;
             maxHeight = ones(tricount, 1) * maxHeightDefault;
             if(~isempty(p.Results.refineFile))
-                refinePolygons = org.kalypso.gaja3d.matlab.Polygon(p.Results.refineFile);
+                refinePolygons = kalypso.Polygon(p.Results.refineFile);
                 [path, name] = fileparts(p.Results.refineFile);
                 [dbfData, dbfFields] = loadDbf(fullfile(path, [name '.dbf']));
                 maxAreaField = p.Results.maxAreaField;
@@ -196,10 +196,10 @@ classdef TriangulatedSurface < handle
                     end
                 end
                 for i=1:tricount
-                    pidx = elements(i,[1 2 3 1]);
-                    px = points(pidx,1);
-                    py = points(pidx,2);
-                    t = org.kalypso.gaja3d.matlab.Polygon(px, py);
+                    pidx = l_elements(i,[1 2 3 1]);
+                    px = l_points(pidx,1);
+                    py = l_points(pidx,2);
+                    t = kalypso.Polygon(px, py);
                     for j=1:numel(refinePolygons)
                         refPoly = refinePolygons(j);
                         try
@@ -234,8 +234,8 @@ classdef TriangulatedSurface < handle
                 badTriangleFraction = sum(areaFactor < 1) / tricount;
                 disp(sprintf('%f2.2 of %d triangles are bad.', badTriangleFraction, tricount));
                 if(badTriangleFraction > 0.01) % only process if more than 1/100 of all Triangles are bad
-                    maxArea = areas .* areaFactor;
-                    this.maxArea = min(maxArea, this.maxArea);
+                    l_maxArea = areas .* areaFactor;
+                    this.maxArea = min(l_maxArea, this.maxArea);
                     areaSwitch = 'a';
                 end
             end

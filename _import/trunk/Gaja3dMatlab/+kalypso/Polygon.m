@@ -1,7 +1,7 @@
-classdef Polygon < org.kalypso.gaja3d.matlab.Shape
+classdef Polygon < kalypso.Shape
    
    properties (Constant)
-       EMPTY = org.kalypso.gaja3d.matlab.Polygon.empty();
+       EMPTY = kalypso.Polygon.empty();
    end
    
    methods (Static = true)
@@ -14,7 +14,7 @@ classdef Polygon < org.kalypso.gaja3d.matlab.Shape
        
        % Constructor
        function this = Polygon(varargin)
-           import org.kalypso.gaja3d.matlab.*;
+           import kalypso.*;
            
            if(nargin == 0)
                this.jtsGeometry = Shape.geomFactory.createPolygon([], []);
@@ -25,7 +25,7 @@ classdef Polygon < org.kalypso.gaja3d.matlab.Shape
                        this.jtsGeometry = polygon;
                    case 'char'
                        filename = varargin{1};
-                       this = Shape.fromFile(filename, @org.kalypso.gaja3d.matlab.Polygon);
+                       this = Shape.fromFile(filename, @kalypso.Polygon);
                    otherwise
                        error('Call one-argument constructor only with LinearRing geometries.');
                end
@@ -67,7 +67,7 @@ classdef Polygon < org.kalypso.gaja3d.matlab.Shape
        end
        
        function this = buffer(this, distance)
-%            import org.kalypso.gaja3d.matlab.*;
+%            import kalypso.*;
 %            geom = this.jtsGeometry;
 %            extRing = geom.getExteriorRing;
 %            outer = Shape.geomFactory.createPolygon(extRing, []).buffer(distance);
@@ -114,10 +114,10 @@ classdef Polygon < org.kalypso.gaja3d.matlab.Shape
            end
            switch(class(newGeom))
                case 'com.vividsolutions.jts.geom.Polygon'
-                   result = org.kalypso.gaja3d.matlab.Polygon(newGeom);
+                   result = kalypso.Polygon(newGeom);
                case 'com.vividsolutions.jts.geom.MultiPolygon'
                    polyCount = newGeom.getNumGeometries();
-                   result = org.kalypso.gaja3d.matlab.Polygon.empty(polyCount,0);
+                   result = kalypso.Polygon.empty(polyCount,0);
                    for n=1:polyCount
                        result(n) = newGeom.getGeometryN(n-1);
                    end

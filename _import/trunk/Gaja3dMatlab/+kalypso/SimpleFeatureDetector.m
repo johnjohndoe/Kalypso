@@ -1,7 +1,7 @@
-classdef SimpleFeatureDetector < org.kalypso.gaja3d.matlab.FeatureDetector
+classdef SimpleFeatureDetector < kalypso.FeatureDetector
    methods
        function this = SimpleFeatureDetector(varargin)
-           this = this@org.kalypso.gaja3d.matlab.FeatureDetector(varargin{:});
+           this = this@kalypso.FeatureDetector(varargin{:});
        end
        
        function breakpoints = process(this, grid)

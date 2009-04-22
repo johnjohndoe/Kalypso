@@ -1,7 +1,7 @@
-classdef CannyDetector < org.kalypso.gaja3d.matlab.FeatureDetector
+classdef CannyDetector < kalypso.FeatureDetector
    methods
        function this = CannyDetector(varargin)
-           this = this@org.kalypso.gaja3d.matlab.FeatureDetector(varargin{:});
+           this = this@kalypso.FeatureDetector(varargin{:});
        end
        function breakpoints = process(this, grid)
            [ax, ay, mag, highThresh, lowThresh] = this.getInputs(grid);

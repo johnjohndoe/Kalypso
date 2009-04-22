@@ -31,7 +31,7 @@ function [ boundaries ] = loadPolygonData( file, hasheader, params  )
         case SHPEXT
             %read shapefile information
             info = shapeinfo(file);
-            if(~(strcmp(info.ShapeType, 'Polygon')))
+            if(~(strncmp(info.ShapeType, 'Polygon',7)))
                 error('Shapefile %s does not have polygon geometry.', file);
             end                        
             %read shapefile
