@@ -61,6 +61,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -168,13 +169,12 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
             }
           if( landuse == null )
             continue;
+          
           final Object landuseClassLink = landuse.getLanduse();
-          String value = ""; //$NON-NLS-1$
-          if( landuseClassLink instanceof XLinkedFeature_Impl )
-            value = ((XLinkedFeature_Impl) landuseClassLink).getFeatureId();
-          else
-            value = landuseClassLink.toString().substring( landuseClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
-          feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, value );
+          final Feature featureLanduse = FeatureHelper.resolveLinkedFeature( m_outputWorkspace, landuseClassLink );
+          final String landuseName = featureLanduse.getName();
+
+          feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, landuseName );
           feature.setProperty( NaModelConstants.HYDRO_PROP_DAINAGETYPE, landuse.getDrainageType() );
           feature.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, landuse.getCorrSealing() );
         }
