@@ -101,6 +101,8 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
   }
 
   /**
+   * TODO implements/extends ICoreRunnalbeWithProgress or WorkspaceJob -> run method return status!!!!
+   * 
    * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
