@@ -38,45 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.rrm.extension;
+package org.kalypso.ui.rrm.i18n;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
-import org.kalypso.ui.rrm.i18n.Messages;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author kuch
+ * @author kimwerner
  *
  */
-public class KalypsoRrmWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
+public class Messages
 {
-  protected static final Image IMG = new Image( null, KalypsoRrmWelcomePageFrame.class.getResourceAsStream( "icons/hydrology_no.gif" ) ); //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.ui.rrm.i18n.messages"; //$NON-NLS-1$
 
-  protected static final Image IMG_HOVER = new Image( null, KalypsoRrmWelcomePageFrame.class.getResourceAsStream( "icons/hydrology_hover.gif" ) ); //$NON-NLS-1$
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  @Override
-  public Image getIcon( )
+  private Messages( )
   {
-    return IMG;
   }
 
-  @Override
-  public String getLabel( )
+  public static String getString( String key )
   {
-    return "KalypsoHydrology"; //$NON-NLS-1$
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
-
-  @Override
-  public String getTooltip( )
-  {
-    return Messages.getString("org.kalypso.ui.rrm.extension.KalypsoRrmWelcomePageFrame.3"); //$NON-NLS-1$
-  }
-
-  @Override
-  public Image getHoverIcon( )
-  {
-    return IMG_HOVER;
-  }
-
-
 }

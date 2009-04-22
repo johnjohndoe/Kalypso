@@ -74,6 +74,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -94,7 +95,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
     final IKalypsoTheme[] themes = MapHandlerUtils.getSelectedThemes( selection );
     if( themes.length != 5 )
-      return error( shell, "Please select all the necessary data themes." );
+      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.0") ); //$NON-NLS-1$
 
     FeatureList flLanduse = null;
     FeatureList flPedology = null;
@@ -106,7 +107,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
       final FeatureList list = ((IKalypsoFeatureTheme) kalypsoTheme).getFeatureList();
       final IRelationType featureTypeProperty = list.getParentFeatureTypeProperty();
       if( featureTypeProperty == null )
-        return error( shell, String.format( "Unknown data type found in theme '%s'. Hydrotops cannot be created.", kalypsoTheme.getLabel() ) );
+        return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.1"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
 
       if( NaModelConstants.HYDRO_MEMBER.equals( featureTypeProperty.getQName() ) )
         flHydrotops = list;
@@ -122,11 +123,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
           flCatchment = list;
 
         if( list.size() == 0 )
-          return error( shell, String.format( "Theme '%s' contains no features. Hydrotops cannot be created.", kalypsoTheme.getLabel() ) );
+          return error( shell, String.format( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.2"), kalypsoTheme.getLabel() ) ); //$NON-NLS-1$
       }
     }
     if( flLanduse == null || flPedology == null || flGeology == null || flCatchment == null || flHydrotops == null )
-      return error( shell, "At least one of necessary data collections is missing. Hydrotops cannot be created." );
+      return error( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.3") ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = flHydrotops.getParentFeature().getWorkspace();
     final IFile outputFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
@@ -137,10 +138,10 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
     final FeatureList fflCatchment = flCatchment;
     final FeatureList fflHydrotops = flHydrotops;
 
-    if( !MessageDialog.openConfirm( shell, "Kalypso", "Create hydrotops?\n\nWarning: existing hydrotops will be deleted!" ) )
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.4"), Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.5") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
-    final Job job = new Job( "Creating hydrotops" )
+    final Job job = new Job( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.6") ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -151,13 +152,13 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         final HydrotopeCreationOperation op = new HydrotopeCreationOperation( fflLanduse, fflPedology, fflGeology, fflCatchment, fflHydrotops, workspace, typeHydrotop );
         try
         {
-          final SubMonitor progress = SubMonitor.convert( monitor, "Hydrotope Intersection", 1000 );
+          final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.7"), 1000 ); //$NON-NLS-1$
 
           op.run( progress.newChild( 900, SubMonitor.SUPPRESS_BEGINTASK ) );
 
-          monitor.subTask( "Saving hydrotopes GML file..." );
+          monitor.subTask( Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.8") ); //$NON-NLS-1$
           final File file = outputFile.getLocation().toFile();
-          GmlSerializer.serializeWorkspace( file, workspace, "UTF-8" );
+          GmlSerializer.serializeWorkspace( file, workspace, "UTF-8" ); //$NON-NLS-1$
           ProgressUtilities.worked( progress, 90 );
           outputFile.refreshLocal( IResource.DEPTH_ZERO, progress.newChild( 10 ) );
         }
@@ -175,11 +176,11 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
         }
         catch( final IOException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, "Failed to save hydrotopes GML", e );
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.10"), e ); //$NON-NLS-1$
         }
         catch( final GmlSerializeException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, "Failed to save hydrotopes GML", e );
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.11"), e ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -192,7 +193,7 @@ public class RRMCreateHydrotopsHandler extends AbstractHandler
 
   private Object error( final Shell shell, final String message )
   {
-    MessageDialog.openError( shell, "Create Hydrotopes", message );
+    MessageDialog.openError( shell, Messages.getString("org.kalypso.ui.rrm.action.RRMCreateHydrotopsHandler.12"), message ); //$NON-NLS-1$
     return null;
   }
 

@@ -51,6 +51,6 @@ public class KalypsoUIRRMPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("KalypsoUIRRM", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("KalypsoUIRRM", path); //$NON-NLS-1$
 	}
 }

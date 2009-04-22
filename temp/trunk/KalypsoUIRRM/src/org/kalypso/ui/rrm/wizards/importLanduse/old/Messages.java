@@ -1,4 +1,4 @@
-package org.kalypso.ui.rrm.wizards.importLanduse;
+package org.kalypso.ui.rrm.wizards.importLanduse.old;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

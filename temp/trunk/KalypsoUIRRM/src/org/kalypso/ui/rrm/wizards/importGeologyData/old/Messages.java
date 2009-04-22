@@ -1,11 +1,11 @@
-package org.kalypso.ui.rrm.wizards.importPedologyData;
+package org.kalypso.ui.rrm.wizards.importGeologyData.old;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.ui.rrm.wizards.importPedologyData.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.ui.rrm.wizards.importGeologyData.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

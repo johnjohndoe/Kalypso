@@ -68,6 +68,7 @@ import org.kalypso.convert.namodel.hydrotope.PedologyImportOperation.InputDescri
 import org.kalypso.convert.namodel.schema.binding.SoilTypeCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -92,7 +93,7 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportPedologyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -152,15 +153,15 @@ public class ImportPedologyWizard extends Wizard implements INewWizard
         // call importer
         final PedologyImportOperation op = new PedologyImportOperation( inputDescriptor, output, pedologyClasses, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.getString( "ImportPedologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 
         final File outputFile = pedologyFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" );
+        GmlSerializer.serializeWorkspace( outputFile, pedologyWorkspace, "UTF-8" ); //$NON-NLS-1$
         pedologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), Messages.getString( "ImportPedologyWizard.1" ), e.getLocalizedMessage() );
+        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importPedologyData.ImportPedologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
       }
     }

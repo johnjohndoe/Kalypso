@@ -7,7 +7,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
 
 public class KalypsoModuleRRM implements IKalypsoModule
 {
-  public static final String ID = "KalypsRrmModel";
+  public static final String ID = "KalypsRrmModel"; //$NON-NLS-1$
   // public constructor, needed because of declared extension point and java class loader
   public KalypsoModuleRRM( )
   {

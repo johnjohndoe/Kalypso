@@ -63,6 +63,7 @@ import org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.InputDescrip
 import org.kalypso.convert.namodel.schema.binding.LanduseCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -87,7 +88,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportLanduseWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -140,15 +141,15 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         // call importer
         final LanduseImportOperation op = new LanduseImportOperation( inputDescriptor, output, delegate, ImportType.CLEAR_OUTPUT );
         final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-        ErrorDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+        ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 
         final File outputFile = landuseFile.getLocation().toFile();
-        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" );
+        GmlSerializer.serializeWorkspace( outputFile, landuseWorkspace, "UTF-8" ); //$NON-NLS-1$
         landuseFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
       }
       catch( final Exception e )
       {
-        MessageDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.1" ), e.getLocalizedMessage() );
+        MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importLanduseImportLanduseWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
         return false;
       }
     }

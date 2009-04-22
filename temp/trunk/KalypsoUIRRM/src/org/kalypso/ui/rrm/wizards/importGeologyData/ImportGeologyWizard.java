@@ -61,6 +61,7 @@ import org.kalypso.convert.namodel.hydrotope.GeologyImportOperation.InputDescrip
 import org.kalypso.convert.namodel.schema.binding.GeologyCollection;
 import org.kalypso.convert.namodel.schema.binding.PolygonIntersectionHelper.ImportType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -85,7 +86,7 @@ public class ImportGeologyWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportGeologyWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -128,15 +129,15 @@ public class ImportGeologyWizard extends Wizard implements INewWizard
       // call importer
       final GeologyImportOperation op = new GeologyImportOperation( inputDescriptor, output, ImportType.CLEAR_OUTPUT );
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, op );
-      ErrorDialog.openError( getShell(), Messages.getString( "ImportGeologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), execute.getMessage(), execute ); //$NON-NLS-1$
 
       final File outputFile = geologyFile.getLocation().toFile();
-      GmlSerializer.serializeWorkspace( outputFile, workspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( outputFile, workspace, "UTF-8" ); //$NON-NLS-1$
       geologyFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( getShell(), Messages.getString( "ImportGeologyWizard.1" ), e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.wizards.importGeologyDataImportGeologyWizard.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
       return false;
     }
     return true;

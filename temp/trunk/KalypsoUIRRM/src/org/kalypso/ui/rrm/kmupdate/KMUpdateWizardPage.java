@@ -93,7 +93,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.rrm.Messages;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.tu_harburg.wb.kalypso.rrm.kalininmiljukov.KalininMiljukovGroupType;
@@ -131,8 +131,8 @@ public class KMUpdateWizardPage extends WizardPage
 
   public KMUpdateWizardPage( final CommandableWorkspace workspace, IFeatureSelection selection )
   {
-    super( Messages.getString( "KMUpdateWizardPage.0" ),//  //$NON-NLS-1$
-    Messages.getString( "KMUpdateWizardPage.1" ), null ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.0" ),//  //$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.1" ), null ); //$NON-NLS-1$
     m_workspace = workspace;
     final EasyFeatureWrapper[] allFeatures = selection.getAllFeatures();
     m_selection = new Feature[allFeatures.length];
@@ -164,7 +164,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     // column 1 tree-group
     final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( Messages.getString( "KMUpdateWizardPage.2" ) ); //$NON-NLS-1$
+    treeGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.2" ) ); //$NON-NLS-1$
     final GridData data2 = new GridData( GridData.FILL_BOTH );
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
@@ -172,7 +172,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     // column 2 KM detailed
     final Group kmGroup = new Group( m_top, SWT.NONE );
-    kmGroup.setText( Messages.getString( "KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
+    kmGroup.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.3" ) ); //$NON-NLS-1$
     GridData data4 = new GridData( GridData.FILL_BOTH );
     data4.grabExcessHorizontalSpace = true;
     data4.grabExcessVerticalSpace = true;
@@ -194,7 +194,7 @@ public class KMUpdateWizardPage extends WizardPage
     parent.setLayout( new GridLayout( 3, false ) );
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "KMUpdateWizardPage.4" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.MUpdateWizardPage.4" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData() );
 
     final Text text = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
@@ -203,7 +203,7 @@ public class KMUpdateWizardPage extends WizardPage
     text.setLayoutData( gridData );
 
     final Button loadButton = new Button( parent, SWT.PUSH );
-    loadButton.setText( Messages.getString( "KMUpdateWizardPage.5" ) ); //$NON-NLS-1$
+    loadButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.5" ) ); //$NON-NLS-1$
 
     final Label space = new Label( parent, SWT.NONE );
     final GridData data = new GridData();
@@ -211,7 +211,7 @@ public class KMUpdateWizardPage extends WizardPage
     space.setLayoutData( data );
 
     final Button saveButton = new Button( parent, SWT.PUSH );
-    saveButton.setText( Messages.getString( "KMUpdateWizardPage.6" ) ); //$NON-NLS-1$
+    saveButton.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.6" ) ); //$NON-NLS-1$
 
     loadButton.addSelectionListener( new SelectionAdapter()
     {
@@ -372,7 +372,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     catch( Exception ex )
     {
-      MessageDialog.openError( getShell(), Messages.getString( "KMUpdateWizardPage.11" ), Messages.getString( "KMUpdateWizardPage.12" ) + path + Messages.getString( "KMUpdateWizardPage.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.11" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.12" ) + path + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       createNewKMGroup();
     }
   }
@@ -448,14 +448,14 @@ public class KMUpdateWizardPage extends WizardPage
     m_plugin.getDialogSettings().put( getResourceKey(), m_configPath );
 
     if( saveAs( m_configPath ) )
-      monitorLogger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.14" ) + m_configPath + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      monitorLogger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.14" ) + m_configPath + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.16" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.16" ) ); //$NON-NLS-1$
       if( m_configPath == null )
-        errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.17" ) ); //$NON-NLS-1$
+        errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.17" ) ); //$NON-NLS-1$
       else
-        errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.18" ) + m_configPath + ".\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+        errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.18" ) + m_configPath + ".\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
@@ -470,11 +470,11 @@ public class KMUpdateWizardPage extends WizardPage
         try
         {
           updateFeature( errorLogger, detailedLogger, monitorLogger, feature, changes );
-          monitorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.20" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          monitorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.20" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch( Exception e )
         {
-          errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "KMUpdateWizardPage.22" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.22" ) + m_KMUpdateLabelProvider.getText( feature ) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
           e.printStackTrace();
           susccess = false;
         }
@@ -482,7 +482,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     if( !susccess )
     {
-      MessageDialog.openError( getShell(), Messages.getString( "KMUpdateWizardPage.24" ), errorBuffer.toString() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.24" ), errorBuffer.toString() ); //$NON-NLS-1$
       return false;
     }
 
@@ -499,15 +499,15 @@ public class KMUpdateWizardPage extends WizardPage
     }
     final String separator = "\n-------------------------------------\n"; //$NON-NLS-1$
     final String message = // 
-    Messages.getString( "KMUpdateWizardPage.26" ) + monitorBuffer.toString()//  //$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.26" ) + monitorBuffer.toString()//  //$NON-NLS-1$
         + separator//
-        + Messages.getString( "KMUpdateWizardPage.27" ) + errorBuffer.toString() //  //$NON-NLS-1$
+        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.27" ) + errorBuffer.toString() //  //$NON-NLS-1$
         + separator //  
-        + Messages.getString( "KMUpdateWizardPage.28" ) + detailBuffer.toString() // //$NON-NLS-1$
+        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.28" ) + detailBuffer.toString() // //$NON-NLS-1$
         + separator //
-        + Messages.getString( "KMUpdateWizardPage.29" ) + selectionBuffer.toString(); //$NON-NLS-1$
+        + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.29" ) + selectionBuffer.toString(); //$NON-NLS-1$
     // MessageDialog.openInformation( getShell(), "Erfolg der Berechnungen", message );
-    Dialog dialog = new ScrolledTextInformationDialog( getShell(), Messages.getString( "KMUpdateWizardPage.30" ), Messages.getString( "KMUpdateWizardPage.31" ), message ); //$NON-NLS-1$ //$NON-NLS-2$
+    Dialog dialog = new ScrolledTextInformationDialog( getShell(), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.30" ), Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.31" ), message ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.open();
     // StatusUtilities..
     return true;
@@ -529,7 +529,7 @@ public class KMUpdateWizardPage extends WizardPage
 
   private List<FeatureChange> updateFeature( ILogger errorLogger, ILogger detailedLogger, ILogger monitorLogger, final Feature feature, final List<FeatureChange> changeList ) throws Exception
   {
-    final String log = Messages.getString( "KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( feature ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String log = Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.32" ) + m_KMUpdateLabelProvider.getText( feature ) + ":"; //$NON-NLS-1$ //$NON-NLS-2$
     final List<FeatureChange> result;
     if( changeList == null )
       result = new ArrayList<FeatureChange>();
@@ -554,19 +554,19 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( km == null )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.34" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.MUpdateWizardPage.34" ) ); //$NON-NLS-1$
       return result;
     }
     final Double kmStart = km.getKmStart();
     final Double kmEnd = km.getKmEnd();
     if( kmStart == null || kmEnd == null )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.35" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.35" ) ); //$NON-NLS-1$
       return result;
     }
     if( kmStart.compareTo( kmEnd ) > 0 )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.36" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.36" ) ); //$NON-NLS-1$
       return result;
     }
     final List<File> list = new ArrayList<File>();
@@ -584,7 +584,7 @@ public class KMUpdateWizardPage extends WizardPage
     }
     if( list.isEmpty() )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.37" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.37" ) ); //$NON-NLS-1$
       return result;
     }
     final File[] files = list.toArray( new File[list.size()] );
@@ -600,12 +600,12 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( kmParameter.length < max )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.38" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.38" ) ); //$NON-NLS-1$
       // TODO add new features
     }
     else
     {
-      detailedLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "KMUpdateWizardPage.39" ) ); //$NON-NLS-1$
+      detailedLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.39" ) ); //$NON-NLS-1$
       for( int i = 0; i < kmParameter.length; i++ )
       {
         final Feature kmParameterFE = kmParameter[i];

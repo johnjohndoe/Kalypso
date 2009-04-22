@@ -72,7 +72,7 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
   @Override
   public String getHeader( )
   {
-    return "KalypsoHydrology";
+    return "KalypsoHydrology"; //$NON-NLS-1$
   }
 
   @Override
@@ -83,11 +83,11 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
       try
       {
         /* info page of plugin */
-        final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" );
+        final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" ); //$NON-NLS-1$
         try
         {
           final IPath stateLocation = KalypsoUIRRMPlugin.getDefault().getStateLocation();
-          final File targetDir = new File( stateLocation.toFile(), "infoPage" );
+          final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
           ZipUtilities.unzip( zipStream, targetDir );
 
           INFO_PAGE_EXTRACTED = true;
@@ -107,7 +107,7 @@ public class KalypsoRrmModulePage extends AbstractKalypsoModulePage
     final IPath stateLocation = KalypsoUIRRMPlugin.getDefault().getStateLocation();
     final URL baseUrl = stateLocation.toFile().toURI().toURL();
 
-    final URL url = new URL( baseUrl, "infoPage/index.html" );
+    final URL url = new URL( baseUrl, "infoPage/index.html" ); //$NON-NLS-1$
     return url;
   }
 

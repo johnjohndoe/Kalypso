@@ -73,6 +73,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.rrm.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -85,7 +86,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   // Constants
   static final String PROJECT_PAGE = "page_type:createNewProject"; //$NON-NLS-1$
 
-  private final String m_resourceBase = "resource/.projecttemplate.zip";
+  private final String m_resourceBase = "resource/.projecttemplate.zip"; //$NON-NLS-1$
 
   final HashMap<String, Feature> m_IDMap = new HashMap<String, Feature>();
 
@@ -101,7 +102,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
 
 // private GMLWorkspace m_parameterWS = null;
 
-  final File asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard
+  final File asciiBaseDir = new File( "C:\\TMP\\na" ); // TODO:change by wizard //$NON-NLS-1$
 
   public NewNAAsciiProjectWizard( )
   {
@@ -123,8 +124,8 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     try
     {
       m_createProjectPage = new WizardNewProjectCreationPage( PROJECT_PAGE );
-      m_createProjectPage.setDescription( "Test" );
-      m_createProjectPage.setTitle( "TitleNewProjectPage" );
+      m_createProjectPage.setDescription( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.2") ); //$NON-NLS-1$
+      m_createProjectPage.setTitle( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.3") ); //$NON-NLS-1$
       // m_createProjectPage.setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
       addPage( m_createProjectPage );
     }
@@ -196,7 +197,7 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
   private void copyResourcesToProject( final IPath path )
   {
     final String resource = m_resourceBase;
-    System.out.print( "resource: " + resource + "\n" );
+    System.out.print( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.4") + resource + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final InputStream resourceAsStream = getClass().getResourceAsStream( resource );
     try
     {
@@ -238,9 +239,9 @@ public class NewNAAsciiProjectWizard extends Wizard implements INewWizard, INewP
     final File parameterGmlFile = paraPath.toFile();
     final NAConfiguration ascii2GmlConfiguration = NAConfiguration.getAscii2GmlConfiguration( asciiBaseDir, parameterGmlFile );
     final Feature parameterRootFeature = NAModellConverter.parameterAsciiToFeature( ascii2GmlConfiguration );
-    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null );
+    final GMLWorkspace paraWorkspace = new GMLWorkspace_Impl( m_parameterSchema, m_parameterSchema.getAllFeatureTypes(), parameterRootFeature, null, null, "http://www.tuhh.de/parameter", null ); //$NON-NLS-1$
     GmlSerializer.serializeWorkspace( new FileWriter( parameterGmlFile ), paraWorkspace );
-    System.out.println( "Die parameter.gml Datei befindet sich unter: " + parameterGmlFile.getPath() );
+    System.out.println( Messages.getString("org.kalypso.ui.rrm.wizards.NewNAAsciiProjectWizard.7") + parameterGmlFile.getPath() ); //$NON-NLS-1$
   }
 
   /**
