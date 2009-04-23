@@ -34,11 +34,11 @@ public abstract class AbstractGaja3dSimulation {
 
 	public static final String INPUT_BOUNDARY = "Boundary";
 
-	private static final URL EXEC_ZIP_URL = GridJobSubmitter.class
-			.getResource("Gaja3dService_linux64.zip");
+	private static final URL EXEC_ZIP_URL = AbstractGaja3dSimulation.class
+			.getResource("resources/Gaja3dService_linux64.zip");
 
-	private static final URL EXEC_SCRIPT_URL = GridJobSubmitter.class
-			.getResource(EXECUTABLE_NAME);
+	private static final URL EXEC_SCRIPT_URL = AbstractGaja3dSimulation.class
+			.getResource("resources/" + EXECUTABLE_NAME);
 
 	private static final String WORKING_DIR = ".";
 
