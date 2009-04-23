@@ -191,6 +191,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
                 final Double value = super.getValue( x, y );
                 if( value.equals( Double.NaN ) )
                   return Double.NaN;
+
+                // possible that waterdepth input grid contains water depth less than zero!
+                else if( value.doubleValue() <= 0.0 )
+                  return Double.NaN;
+
                 else
                 {
 

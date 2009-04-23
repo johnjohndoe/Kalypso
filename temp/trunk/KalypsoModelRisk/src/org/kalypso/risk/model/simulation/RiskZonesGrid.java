@@ -93,6 +93,10 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final IGeoGrid m_resultGrid;
 
+  final SortedMap<Double, IRiskZoneDefinition> m_urbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
+
+  final SortedMap<Double, IRiskZoneDefinition> m_nonUrbanZonesDefinitions = new TreeMap<Double, IRiskZoneDefinition>();
+
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
@@ -119,6 +123,12 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+    for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
+      if( riskZoneDefinition.isUrbanLanduseType() )
+        m_urbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
+      else
+        m_nonUrbanZonesDefinitions.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
   }
 
   /**
@@ -303,17 +313,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private SortedMap<Double, IRiskZoneDefinition> getRiskZoneDefiniion( final boolean isUrbanLanduse )
   {
-    final SortedMap<Double, IRiskZoneDefinition> treeMap = new TreeMap<Double, IRiskZoneDefinition>();
-
-    for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
-    {
-      if( riskZoneDefinition.isUrbanLanduseType().booleanValue() == isUrbanLanduse )
-      {
-        treeMap.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
-      }
-    }
-
-    return treeMap;
+    return isUrbanLanduse ? m_urbanZonesDefinitions : m_nonUrbanZonesDefinitions;
   }
 
 }
