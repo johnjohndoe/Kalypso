@@ -77,7 +77,7 @@
 			</Axis>
 			<Axis id="h_ow_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Obwerwasser [m]</Label>
+				<Label>Oberwasser [m]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
 				<NumberRange>
