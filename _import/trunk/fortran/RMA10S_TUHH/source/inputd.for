@@ -40,29 +40,36 @@ CIPK JUN05
 cipk apr96 define save parameter
       isvs=0
   570 CONTINUE
-cipk apr96 keep track of data for end of time step
-      if(iyend+idye+hrend .eq. 0) then
-        isvs=1
-        rewind nscrin
-      elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
-cipk mar98        if(abs(tet-hrend) .lt. 0.001) then
-        if(tet .gt. hrend-0.001) then
-          isvs=1
-          ibin=ibinrst
-        else
-          ibin=nscrin
-          rewind ibin
-          isvs=0
-        endif
-cipk mar98
-      elseif(tet .gt. (idye-dayofy)*24.+hrend-0.001) then
-        isvs=1
-        ibin=ibinrst
-      else
-        ibin=nscrin
-        rewind ibin
-        isvs=0
-      endif
+
+!time handling is done by Kalypso
+!thus, the time handling is switched off for the moment
+!cipk apr96 keep track of data for end of time step
+!      if(iyend+idye+hrend .eq. 0) then
+!        isvs=1
+!        rewind nscrin
+!      elseif(iyrr .eq. iyend  .and.  dayofy .eq. idye) then
+!cipk mar98        if(abs(tet-hrend) .lt. 0.001) then
+!        if(tet .gt. hrend-0.001) then
+!          isvs=1
+!          ibin=ibinrst
+!        else
+!          ibin=nscrin
+!          rewind ibin
+!          isvs=0
+!        endif
+!cipk mar98
+!      elseif (tet .gt. (idye-dayofy)*24.+hrend-0.001) then
+!        isvs=1
+!        ibin=ibinrst
+!      else
+!        ibin=nscrin
+!        rewind ibin
+!        isvs=0
+!      endif
+      isvs = 1
+      rewind nscrin
+!-time handling      
+
  1961 READ(IBIN,7000,END=197,ERR=197) ID,DLIN
       write(75,7000) id,dlin
       IF(ID(1:3) .EQ. 'com') GO TO 1961
