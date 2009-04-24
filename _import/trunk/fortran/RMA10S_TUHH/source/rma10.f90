@@ -1385,11 +1385,11 @@ do i = 1, Points
   end if
   if (vel (3, i) > maxvel (3, i)) then
     maxvel (3, i) = vel (3, i)
-    maxrausv (i) = rausv (3, i)
+    maxrausv (i) = wsll(i)
   end if
   if (vel (3, i) < minvel (3, i)) then
     minvel (3, i) = vel (3, i)
-    minrausv (i) = rausv (3, i)
+    minrausv (i) = wsll(i)
   end if
 end do
 

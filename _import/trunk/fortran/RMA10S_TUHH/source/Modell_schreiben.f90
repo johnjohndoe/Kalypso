@@ -91,6 +91,8 @@ INTEGER              :: trans_els                      !counter and name-giver f
 
 CHARACTER (LEN = 1000) :: dataline
 
+real (kind = 8) :: h
+real :: aat, d1
 !nis,may07
 !Add midside node for polynom approach
 !!NiS,apr06: allocating the two local arrays for arc-handling with the size of MaxP
@@ -100,7 +102,6 @@ ALLOCATE (arc_tmp (maxp,5), arcmid(1:maxp,4))
 !-
 !NiS,may06: allocate 1D-2D-TRANSITION ELEMENTS array (1: number; 2-6: nodes)
 ALLOCATE (Trans_nodes(MaxT,6))
-
 ! INITIALIZING ---------------------------------------------------------
 
 !NiS,may06: initializing the trans_els variable
@@ -312,11 +313,12 @@ write_nodes: DO i = 1, np
 
   if (resultType == 'resu') THEN
     if (.not. (IntPolProf (i)) ) then
-      WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , rausv (3, i)
+
+      WRITE (IKALYPSOFM, 7003) i, (vel (j, i), j = 1, 3) , wsll(i)
       !NiS,may06: All degrees of freedom have to be written and read for restart
       WRITE (IKALYPSOFM, 7015) i, (vel (j, i), j = 4, 7)
     else
-      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , rausv (3, i)
+      WRITE (IKALYPSOFM, 7045) i, (vel (j, i), j = 1, 3) , wsll(i)
     end if
   ELSEIF ( resultType == 'mini') THEN
     WRITE (IKALYPSOFM, 7003) i, (minvel (j, i), j = 1, 3) , minrausv (i)
