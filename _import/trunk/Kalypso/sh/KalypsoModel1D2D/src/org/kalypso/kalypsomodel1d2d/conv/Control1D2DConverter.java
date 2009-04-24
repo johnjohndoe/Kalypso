@@ -212,8 +212,17 @@ public class Control1D2DConverter
     formatter.format( "TI      %30s%n", projectName ); //$NON-NLS-1$
 
     // // C0
+    Double tbfact = 0.0;
+    if (m_controlModel.getIEDSW() == 2 || m_controlModel.getIEDSW() == 13 || m_controlModel.getIEDSW() == 14)
+    {
+      tbfact = m_controlModel.getTBFACT();
+    }
+    else
+    {
+      tbfact = m_controlModel.getTBFACT_ESCUDIER();
+    }
     final Object[] c0Props = new Object[] { 0, m_controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 1 };
+        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), tbfact, m_controlModel.getTBMIN(), 1 };
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1

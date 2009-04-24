@@ -119,7 +119,7 @@
 					<xs:element name="Version">
 						<xs:annotation>
 							<xs:documentation>
-								Version des Rechenkerns RMA 10S
+								Version des Rechenkerns RMA·Kalypso
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
@@ -412,6 +412,18 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
+					<xs:element name="TBFACT_ESCUDIER" default="23.0">
+						<xs:annotation>
+							<xs:documentation>
+								Parameter freie Scherschichtdicke
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.02" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="TBMIN" type="xs:double" default="2">
 						<xs:annotation>
 							<xs:documentation>
@@ -545,7 +557,7 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Stätionar Berechnung
+								Stätionare Berechnung
 								
 							</xs:documentation>
 						</xs:annotation>
@@ -554,7 +566,7 @@
 						<xs:annotation>
 							<xs:documentation>
 
-								Instätionar Berechnung
+								Instätionare Berechnung
 								
 							</xs:documentation>
 						</xs:annotation>

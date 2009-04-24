@@ -143,6 +143,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public final static QName WB1D2DCONTROL_PROP_TBFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT" );
 
+  public final static QName WB1D2DCONTROL_PROP_TBFACT_ESCUDIER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT_ESCUDIER" );
+
   public final static QName WB1D2DCONTROL_PROP_IEDSW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IEDSW" );
 
   public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
@@ -272,6 +274,12 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public Double getTBFACT( )
   {
     final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT );
+    return property != null ? property : 0.0;
+  }
+
+  public Double getTBFACT_ESCUDIER( )
+  {
+    final Double property = (Double) getFeature().getProperty( ControlModel1D2D.WB1D2DCONTROL_PROP_TBFACT_ESCUDIER );
     return property != null ? property : 0.0;
   }
 

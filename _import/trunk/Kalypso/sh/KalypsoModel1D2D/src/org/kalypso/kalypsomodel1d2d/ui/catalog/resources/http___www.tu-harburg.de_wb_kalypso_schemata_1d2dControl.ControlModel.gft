@@ -280,7 +280,7 @@
 					</gft:group>
 
 					<!-- Anfangswerte-->
-					<gft:group text="Start Conditions" style="0">
+					<gft:group text="Initial Conditions" style="0">
 						<!--
 							Anfangswerte
 						-->
@@ -662,7 +662,7 @@
 					</gft:validatorlabel>
 
 					<!-- text="Scherschichtdicke" -->
-					<gft:label property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
+					<gft:label property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
 							<or>
 								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
@@ -677,7 +677,7 @@
 						</gft:enabledOperation>
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 					</gft:label>
-					<gft:text editable="true" property="c1d2d:TBFACT" style="SWT.BORDER">
+					<gft:text editable="true" property="c1d2d:TBFACT_ESCUDIER" style="SWT.BORDER">
 						<gft:enabledOperation>
 							<or>
 								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">
@@ -692,7 +692,7 @@
 						</gft:enabledOperation>
 						<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 					</gft:text>
-					<gft:validatorlabel property="c1d2d:TBFACT" visible="true" style="SWT.NONE">
+					<gft:validatorlabel property="c1d2d:TBFACT_ESCUDIER" visible="true" style="SWT.NONE">
 						<gft:enabledOperation>
 							<or>
 								<ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\" xmlns:ogc="http://www.opengis.net/ogc">

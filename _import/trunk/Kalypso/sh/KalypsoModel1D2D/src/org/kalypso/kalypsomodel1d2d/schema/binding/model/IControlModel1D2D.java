@@ -90,6 +90,8 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double getTBFACT( );
 
+  public Double getTBFACT_ESCUDIER( );
+
   public Double getTBMIN( );
 
   public Double getOMEGA( );
@@ -151,7 +153,6 @@ public interface IControlModel1D2D extends IControlModel
   public boolean isUnsteadySelected( );
 
   public IRestartInfo addRestartInfo( );
-
 
   boolean getPercentCheck( );
 

@@ -217,11 +217,7 @@ public class HydrographUtils
     try
     {
       final String charset = gmlResultFile.getCharset();
-      final FileOutputStream stream = new FileOutputStream( gmlResultFile.getLocation().toFile() );
-      writer = new OutputStreamWriter( stream, charset );
-      GmlSerializer.serializeWorkspace( writer, workspace, charset );
-
-      writer.close();
+      GmlSerializer.serializeWorkspace( gmlResultFile.getLocation().toFile(), workspace, charset);
       // refresh workspace
       /* update resource folder */
       gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
