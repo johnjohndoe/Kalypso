@@ -689,3 +689,6 @@ new features introduced/ started to be introduced:
       The file controller is meant to be a very general part of Kalypso to store the used files. It will be used to pass the files for reading and
       writing to the proper routines. All reading and writing routines shall be collected in the file controller.
 --- Nico Schrage, 06.04.2009
+
+017.) Deactivate time step handling within RMA; assumption that time step are properly defined. (affects inputd.for)
+--- Nico Schrage, 24.04.2009
