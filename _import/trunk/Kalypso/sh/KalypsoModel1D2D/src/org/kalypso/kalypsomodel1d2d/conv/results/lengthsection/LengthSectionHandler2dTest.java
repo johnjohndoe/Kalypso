@@ -77,7 +77,7 @@ public class LengthSectionHandler2dTest extends TestCase
     {
       // Demo river line file (Stör)
       URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" );
-      GMLWorkspace shapeWorkspace = getShapeWorkspace( resourceShape );
+      GMLWorkspace shapeWorkspace = null;
       // final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       // final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
       // csFac.getCSByName( "EPSG:31467" ) );
@@ -191,28 +191,5 @@ public class LengthSectionHandler2dTest extends TestCase
     return ShapeSerializer.deserialize( shape, cSystem );
   }
 
-  public static GMLWorkspace getShapeWorkspace( final URL shpURL ) throws LoaderException
-  {
-    if( shpURL == null )
-      throw new IllegalStateException();
-
-    /* attention - eShape loading works only without file extension */
-    final String[] sShapes = shpURL.toString().split( "\\." );
-    if( sShapes == null || sShapes.length < 2 )
-      throw new IllegalStateException();
-
-    String shape = "";
-    for( int i = 0; i < sShapes.length - 1; i++ )
-    {
-      if( i > 0 )
-        shape += ".";
-      shape += sShapes[i];
-    }
-    shape += "#EPSG:41367";
-
-    ShapeLoader shapeLoader = new ShapeLoader();
-    Object load = shapeLoader.load( shape, shpURL, new NullProgressMonitor() );
-    return (GMLWorkspace) load;
-  }
-
+ 
 }
