@@ -275,6 +275,8 @@ public class RMA10ResultPage extends WizardPage implements IWizardPage, ISimulat
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
 
+    addSpinner( m_resultProcessViewer, composite );
+
     final String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
     final String DESELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_deselectLabel;
 
