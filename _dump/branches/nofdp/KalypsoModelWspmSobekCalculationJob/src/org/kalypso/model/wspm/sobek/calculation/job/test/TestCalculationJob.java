@@ -7,6 +7,7 @@ import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 import org.kalypso.model.wspm.sobek.calculation.job.WspmSobekCalcJob;
 import org.kalypso.simulation.core.SimulationException;
@@ -30,7 +31,7 @@ public class TestCalculationJob extends TestCase
 
     FileUtils.forceMkdir( sobekTmpDir );
 
-    final WspmSobekCalcJob job = new WspmSobekCalcJob();
+    final WspmSobekCalcJob job = new WspmSobekCalcJob(new Path("C:\\Sobek212")); //$NON-NLS-1$
     job.run( sobekTmpDir, new TestCaseSimulationDataProvider(), new TestCaseResultEater(), new TestCaseSimulationMonitor() );
   }
 }

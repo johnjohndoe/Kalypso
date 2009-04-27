@@ -86,7 +86,7 @@ public class SimulationPi2SobekWorker implements ISimulation
       {
         exitValue = exec.exitValue();
         if( monitor.isCanceled() )
-          throw new SimulationException( "Computation Canceld" );
+          throw new SimulationException( "Computation Canceld" ); //$NON-NLS-1$
 
         break;
       }

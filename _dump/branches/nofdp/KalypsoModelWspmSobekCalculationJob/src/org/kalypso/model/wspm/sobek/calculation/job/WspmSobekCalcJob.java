@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.sobek.calculation.job;
 import java.io.File;
 import java.net.URL;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
@@ -68,15 +70,18 @@ public class WspmSobekCalcJob implements ISimulation
 
   private final MyPrintStream m_sobekStream;
 
-  public WspmSobekCalcJob( )
+  private final IPath m_sobekInstallationDir;
+
+  public WspmSobekCalcJob(final IPath sobekInstallationDir )
   {
-    this( null, null );
+    this( null, null, sobekInstallationDir );
   }
 
-  public WspmSobekCalcJob( MyPrintStream nofdpStream, MyPrintStream sobekStream )
+  public WspmSobekCalcJob( final MyPrintStream nofdpStream, final MyPrintStream sobekStream, final IPath sobekInstallationDir )
   {
     m_nofdpStream = nofdpStream;
     m_sobekStream = sobekStream;
+    m_sobekInstallationDir = sobekInstallationDir;
   }
 
   /**
@@ -93,39 +98,46 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_0 );
+    try
+    {
+      ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_0 );
 
-    final SimulationBaseWorker baseWorker = new SimulationBaseWorker( m_nofdpStream );
-    baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
+      final SimulationBaseWorker baseWorker = new SimulationBaseWorker(tmpdir, m_sobekInstallationDir, m_nofdpStream );
+      baseWorker.execute( new NullProgressMonitor() );
 
-    final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker( m_nofdpStream );
-    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
+      final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker( m_nofdpStream );
+      dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker( m_nofdpStream, m_sobekStream );
-    pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+      final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker( m_nofdpStream, m_sobekStream );
+      pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
+      dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker( m_nofdpStream, m_sobekStream );
-    sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+      final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker( m_nofdpStream, m_sobekStream );
+      sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker( m_nofdpStream, m_sobekStream );
-    sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
+      final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker( m_nofdpStream, m_sobekStream );
+      sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
 
-    /* add results of calculation */
-    File points = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS_PATH );
-    File structures = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES_PATH );
+      /* add results of calculation */
+      final File points = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS_PATH );
+      final File structures = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES_PATH );
 
-    if( !points.exists() )
-      throw new SimulationException( Messages.WspmSobekCalcJob_1 );
+      if( !points.exists() )
+        throw new SimulationException( Messages.WspmSobekCalcJob_1 );
 // if( !structures.exists() )
 // throw new SimulationException( Messages.WspmSobekCalcJob_2 );
 
-    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
-    if( structures.exists() )
-      resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
+      resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
+      if( structures.exists() )
+        resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
 
-    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_3 );
-    ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
+      ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_3 );
+      ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      throw new SimulationException("Processing failed", e); //$NON-NLS-1$
+    }
   }
 }
