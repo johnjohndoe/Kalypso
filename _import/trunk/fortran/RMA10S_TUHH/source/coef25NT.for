@@ -1990,15 +1990,14 @@ C       COMPUTE BOUNDARY FORCES
         transtype = TransLines (TransLine, 4)
       endif
 
-      !Following part of the source code settles the boundary hydrostatic forces,
-      !  either to active h-Boundary conditions or to shoreline boundaries, as well as
-      !  the shoreline friction values, if there was a fricition coefficient given.
+
+      !Run through elements' arcs
+      !--------------------------
       BoundaryForces: DO L=1,NCN,2
         !midside node of the current arc
         N2=NCON(L+1)
         
         !Check the current arc for being a boundary arc
-CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         IF (IBN (N2) /= 1  .AND. IBN (N2) /= 10 .AND.
      +      IBN (N2) /= 11 .AND. IBN (N2) /= 21 .AND.
             !nis,feb08: for transition, has to be checked further, se below
@@ -2013,7 +2012,6 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
           !from the TransitionMember - nodes only types 1 and 3 are considerable
           if ((.NOT. transtype == 1) .and. (.NOT. transtype == 3))
      +      CYCLE BoundaryForces
-
         end if
 
         !The three nodes of the current boundary arc
@@ -2027,11 +2025,13 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         H1=VEL(3,N1)
         H3=VEL(3,N3)
         !The length of the current arc
+        !-----------------------------
         DL(1,2)=(CORD(N2,1)-CORD(N1,1))*CX+(CORD(N2,2)-CORD(N1,2))*SA
         DL(1,1)=-(CORD(N2,1)-CORD(N1,1))*SA+(CORD(N2,2)-CORD(N1,2))*CX
         DL(2,2)=(CORD(N3,1)-CORD(N1,1))*CX+(CORD(N3,2)-CORD(N1,2))*SA
         DL(2,1)=-(CORD(N3,1)-CORD(N1,1))*SA+(CORD(N3,2)-CORD(N1,2))*CX
-        !Finding a direction factor (1.0 or -1.0)
+        !Find direction factor (1.0 or -1.0)
+        !-----------------------------------
         IF(DL(2,2) .LT. 0.) THEN
           FTF(1)=1.0
         ELSE
@@ -2042,6 +2042,8 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ELSE
           FTF(2)=-1.0
         ENDIF
+        !Examine active or passive boundary
+        !----------------------------------
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
         !Consider transition nodes (type 3) as active boundaries
@@ -2053,20 +2055,24 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
           IHD=0
         ENDIF
 
-        !Run through momentum equations of a node and integrate the boundary forces
-        !  over the length of the arc using a linear interpolation integrated with GAUSS
+        !Integrate boundary forces to both directions of mmomentum equations
+        !-------------------------------------------------------------------
         DO 600 M=1,2
           !Run through the GAUSS nodes on a linear line (boundary arc)
+          !-----------------------------------------------------------
           DO 580 N=1,4
             !get the density at the GAUSS point
             RHO=DEN(N1)+AFACT(N)*(DEN(N3)-DEN(N1))
             !get the water depth at the GAUSS point
             H=H1+AFACT(N)*(H3-H1)
-            !Calculate the bottom elevation, considering the Marsh slot if the option
-            !  is operative, otherwise the bottom elevation is ao.
+
+            !Calculate bottom elevation
+            !--------------------------
+            !Marsh option operative
             IF(IDNOPT .LT. 0) THEN
               AZER = AME((L+1)/2)+ADO(N1)  +
      +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+            !without Marsh option
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
             ENDIF
