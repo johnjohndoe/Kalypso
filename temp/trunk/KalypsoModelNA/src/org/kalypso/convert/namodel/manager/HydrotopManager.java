@@ -153,6 +153,7 @@ public class HydrotopManager extends AbstractManager
         double natFlaeche = 0.0;
         double gesFlaeche = 0.0;
         final GM_Object tGGeomProp = (GM_Object) catchmentFE.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
+        final Geometry jtsTG = JTSAdapter.export( tGGeomProp );
 
         // Hydrotope im TeilgebietsEnvelope
         final List hydInEnvList = hydList.query( catchmentFE.getEnvelope(), null );
@@ -163,7 +164,6 @@ public class HydrotopManager extends AbstractManager
           final GM_Object hydGeomProp = (GM_Object) hydFeature.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
           // Hint: JavaTopologySuite has no Coordinate System (here: all geometries
           // are in the same cs - see NaModelInnerCalcJob)
-          final Geometry jtsTG = JTSAdapter.export( tGGeomProp );
           final Geometry jtsHyd = JTSAdapter.export( hydGeomProp );
           if( jtsTG.contains( jtsHyd.getInteriorPoint() ) )
           {

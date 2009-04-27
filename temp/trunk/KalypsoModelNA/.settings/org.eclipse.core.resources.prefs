@@ -1,9 +1,5 @@
-#Sat Mar 25 11:48:48 CET 2006
+#Mon Apr 27 15:20:27 CEST 2009
 eclipse.preferences.version=1
 encoding//src/org/kalypso/convert/namodel/modell/modell.gml=UTF-8
 encoding//src/org/kalypso/convert/namodel/schema=UTF-8
-encoding//src/org/kalypso/convert/namodel/schema/v0.3/namodell.xsd=UTF-8
-encoding//src/org/kalypso/convert/namodel/schema/v0.4/namodell.xsd=UTF-8
-encoding//src/org/kalypso/convert/namodel/schema/v0.5/muldenRigole.xsd=UTF-8
-encoding//src/org/kalypso/convert/namodel/schema/v0.5/namodell.xsd=UTF-8
 encoding//src/org/kalypso/convert/namodel/schema/v0.6=UTF-8
