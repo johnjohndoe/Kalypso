@@ -329,7 +329,12 @@ transitionloop: do i = 1, MaxLT
   if (.not. (TransLines(i,4) == 2)) then
     do j = 1, lmt (TransLines (i, 2))
       nod = line (TransLines (i, 2), j)
-      spec (nod, 3) = waspi - ao (nod)
+      if (idnopt == 0) then
+        spec (nod, 3) = waspi - ao (nod)
+      else
+        specReal = waspi - ado (nod)
+        call amf (specReal, spec(nod, 3), akp(nod), adt(nod), adb(nod), dum1, dum2, 1)
+      endif
     enddo
   endif
 

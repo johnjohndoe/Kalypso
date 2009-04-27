@@ -691,4 +691,8 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 06.04.2009
 
 017.) Deactivate time step handling within RMA; assumption that time step are properly defined. (affects inputd.for)
+018.) Get rid of rausv during write out; Water Levels are not always updated!
 --- Nico Schrage, 24.04.2009
+
+019.) Critical bug fix at the 1D-2D line transition; inner 2D->1D boundary values were not transformed due to operative Marsh option.
+--- Nico Schrage, 27.04.2009
