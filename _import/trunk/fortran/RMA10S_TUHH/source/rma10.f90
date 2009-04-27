@@ -439,9 +439,9 @@ steadyCycle: Do
 !reserve for testoutput of matrices
 !-----------------------------------------------------------
 !nis,feb07,testing: Write whole matrix
-!write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+!write (matrixname, '(a6,i3.3,a4)') 'matrix', maxn, '.txt'
 !teststat = 0
-!open (9919, matrixname, iostat = teststat)
+!open (9919, file = matrixname, iostat = teststat)
 !if (teststat /= 0) STOP 'ERROR - while opening matrix file'
 !WRITE(9919,*) 'maxn', maxn
 !-----------------------------------------------------------
@@ -1099,10 +1099,9 @@ DynamicTimestepCycle: do n = 1, ncyc
 !-----------------------------------------------------------
 !nis,feb07,testing: Write whole matrix
 !if (maxn > -1) then
-!  write
-!+      (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
+!  write (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
 !  teststat = 0
-!  open (9919, matrixname, iostat = teststat)
+!  open (9919, file = matrixname, iostat = teststat)
 !  if (teststat /= 0) STOP 'ERROR - while opening matrix file'
 !  WRITE(9919,*) 'maxn', maxn
 !endif
