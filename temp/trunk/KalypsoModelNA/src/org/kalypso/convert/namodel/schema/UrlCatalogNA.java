@@ -46,7 +46,6 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 import org.kalypso.convert.namodel.NaModelConstants;
-import org.kalypso.convert.namodel.i18n.Messages;
 
 /**
  * class UrlCatalogNA
@@ -65,23 +64,20 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    // TODO: this type of versioning does not make any sense!
-    // If a real versioning should be done, namespace MUST change (see W3C recommendations)
-    // Anything else is done by CVS/SVN
-    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v1.0/control.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v1.0/namodell.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "v0.8/nacontrol.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.9/hydrotop.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "v0.8/parameter.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "v0.2/ombrometer.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "v0.6/synthN.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "v0.8/initialValues.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "v1.0/NAFortranLog.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "schemata/control.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "schemata/namodell.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "schemata/nacontrol.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "schemata/hydrotop.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "schemata/parameter.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "schemata/ombrometer.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "schemata/synthN.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "schemata/initialValues.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "schemata/NAFortranLog.xsd" ) ); //$NON-NLS-1$
 
-    catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "v1.0/landuse.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "v1.0/pedologie.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NAGEOLOGIE, myClass.getResource( "v1.0/geologie.xsd" ) ); //$NON-NLS-1$
-    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "v1.0/suds.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NALANDUSE, myClass.getResource( "schemata/landuse.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAPEDOLOGIE, myClass.getResource( "schemata/pedologie.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NAGEOLOGIE, myClass.getResource( "schemata/geologie.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NaModelConstants.NS_NASUDS, myClass.getResource( "schemata/suds.xsd" ) ); //$NON-NLS-1$
 
     // REMARK: these prefix definition are crucial for the optimisation, as the
     // sce xpathes rely on this special prefix.

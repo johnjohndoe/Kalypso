@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds"
+	xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+		<documentation>Suds definitions available for a hydrology-modell.</documentation>
+	</annotation>
+
+	<import namespace="http://www.tuhh.de/kalypsoNA" schemaLocation="namodell.xsd" />
+	<import namespace="http://www.opengis.net/gml" />
+
+	<element name="SudsCollection" substitutionGroup="gml:_Feature">
+		<complexType>
+			<complexContent>
+				<extension base="gml:AbstractFeatureType">
+					<sequence>
+						<element name="sudMember" minOccurs="0" maxOccurs="unbounded">
+							<complexType>
+								<sequence>
+									<element ref="suds:_Sud" />
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
+	<element name="_Sud" abstract="true" type="suds:AbstractSudType" substitutionGroup="gml:_Feature" />
+	<complexType name="AbstractSudType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--  What have all suds in common? -->
+					<element minOccurs="1" maxOccurs="1" name="SudType" type="suds:EnumSudType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AbstractSwaleType" abstract="true">
+		<complexContent>
+			<extension base="suds:AbstractSudType">
+				<sequence>
+					<element name="width" type="double">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Width of swale</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="area" type="double">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Area of swale</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="drainageNode" minOccurs="0" maxOccurs="0" type="na:NodeAssociationType">
+						<annotation>
+							<!-- Only downstream nodes are acceptable; node offered by default should be the drainage node of this subcatchment -->
+							<documentation xml:lang="en">
+								<label>Drainage node</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element minOccurs="0" name="drainagePipeDiameter" type="nonNegativeInteger" default="200">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe diameter [mm]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element minOccurs="0" name="drainagePipeKFvalue" type="nonNegativeInteger" default="8000">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe kf-value [mm/day]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element minOccurs="0" name="drainagePipeSlope" type="nonNegativeInteger" default="3">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe slope [‰]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element minOccurs="0" name="drainagePipeRoughness" type="nonNegativeDecimalType" default="2.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe roughness [mm]</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="landuseFileName" type="string" default="swale.nutz">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Landuse file</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="soilLayerFileName" type="string" default="boden_art.dat">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Soil layer file</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="layerProfileThickness" type="suds:EnumLayerProfileThicknessType">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Layer profile thickness</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element minOccurs="0" name="maxCapacityOfEmergencySpill" type="nonNegativeDecimalType" default="0.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Drainage pipe roughness [m3/s]</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Swale" type="suds:SwaleType" substitutionGroup="suds:_Sud" />
+	<element name="SwaleInfiltrationDitch" type="suds:SwaleInfiltrationDitchType" substitutionGroup="suds:_Sud" />
+
+	<complexType name="SwaleType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element minOccurs="1" maxOccurs="1" name="swaleType" type="suds:EnumSwaleType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SwaleInfiltrationDitchType">
+		<complexContent>
+			<extension base="suds:AbstractSwaleType">
+				<sequence>
+					<element name="swaleType" type="suds:EnumSwaleInfiltrationDitchType">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Swale-infiltration-ditch type</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxPercRate" type="double" default="2.8E-15">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Max. percolation rate</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="percentToGroundwater" type="double" default="1.0">
+						<annotation>
+							<documentation xml:lang="en">
+								<label>Percent to groundwater</label>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Reference to a sud. Used by landuse etc. to reference suds stored in the SudColection -->
+	<complexType name="SudPropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="suds:_Sud" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"></attributeGroup>
+	</complexType>
+	<!-- Sud-Property: Can be used to reference suds -->
+	<element name="sudLinkMember" type="suds:SudPropertyType" />
+
+	<simpleType name="EnumSudType">
+		<restriction base="string">
+			<enumeration value="GREEN_ROOF">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Green roof</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Gründach</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="SWALE">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Mulde</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="INFILTRATION_SWALE">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale infiltration ditch</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Mulde-rigole</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="CISTERN">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Cistern</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Cistern</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumSwaleType">
+		<restriction base="string">
+			<enumeration value="20">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale with outlet to sewer</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Swale with outlet to sewer</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="21">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale without an outlet to sewer</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Swale without an outlet to sewer</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumSwaleInfiltrationDitchType">
+		<restriction base="string">
+			<enumeration value="30">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale-Infiltration-ditch-element with drain-pipe</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Swale-Infiltration-ditch-element with drain-pipe</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="31">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>Swale-Infiltration-ditch-element without drain-pipe</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>Swale-Infiltration-ditch-element without drain-pipe</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="EnumLayerProfileThicknessType">
+		<restriction base="double">
+			<enumeration value="0.3">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.3 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,3 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="0.6">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.6 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,6 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="0.8">
+				<annotation>
+					<documentation xml:lang="en">
+						<label>0.8 m</label>
+					</documentation>
+					<documentation xml:lang="de">
+						<label>0,8 m</label>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+</schema>
