@@ -163,17 +163,15 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
   {
     final Set<Double> sortedSet = new TreeSet<Double>();
 
-    double lastY = Double.NaN;
+// double lastY = Double.NaN;
     for( final Coordinate coordinate : coordinates )
     {
       final double y = coordinate.y;
       sortedSet.add( new Double( y ) );
-
-      if( !Double.isNaN( lastY ) )
-        sortedSet.add( new Double( (y - lastY) / 2.0 ) );
-
-      lastY = y;
+// lastY = y;
     }
+
+// Double[] ySoFar = sortedSet.toArray( new Double[sortedSet.size()] );
 
     final Double[] result = sortedSet.toArray( new Double[sortedSet.size()] );
     return ArrayUtils.toPrimitive( result );
@@ -224,9 +222,13 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     if( m_polygon == null )
       return;
 
+    double maxWidth = -Double.MAX_VALUE;
+    for( int i = 0; i < m_widths.length; i++ )
+      maxWidth = Math.max( maxWidth, m_widths[i] );
+
     final String id = m_id;
     final String name = m_name;
-    formatter.format( "CRDS id '%s' nm '%s' ty 0 wm 9.274287 w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name );
+    formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth );
     formatter.format( "TBLE%n" );
     for( int i = 0; i < m_heights.length; i++ )
     {

@@ -49,8 +49,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.core.runtime.IStatus;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateFilter;
 
@@ -75,15 +73,17 @@ public class TubeResult extends HeightWidthResult
   protected List<Coordinate> buildPolygon( )
   {
     final List<Coordinate> arrayList = new ArrayList<Coordinate>( m_crdHash );
-    final UniqueCoordinateEPSArrayFilter uniqueCoordinateArrayFilter = new UniqueCoordinateEPSArrayFilter();
-    for( final Coordinate coordinate : arrayList )
-      uniqueCoordinateArrayFilter.filter( coordinate );
+// final UniqueCoordinateEPSArrayFilter uniqueCoordinateArrayFilter = new UniqueCoordinateEPSArrayFilter();
+// for( final Coordinate coordinate : arrayList )
+// uniqueCoordinateArrayFilter.filter( coordinate );
+//
+// final Coordinate[] coordinates = uniqueCoordinateArrayFilter.getCoordinates();
+//
+// final int diff = arrayList.size() - coordinates.length;
+// if( diff > 0 )
+// addStatus( IStatus.WARNING, String.format( "Removed %d duplicate Points", diff ), null );
 
-    final Coordinate[] coordinates = uniqueCoordinateArrayFilter.getCoordinates();
-
-    final int diff = arrayList.size() - coordinates.length;
-    if( diff > 0 )
-      addStatus( IStatus.WARNING, String.format( "Removed %d duplicate Points", diff ), null );
+    final Coordinate[] coordinates = arrayList.toArray( new Coordinate[arrayList.size()] );
 
     return Arrays.asList( coordinates );
   }
@@ -91,7 +91,7 @@ public class TubeResult extends HeightWidthResult
   /**
    * A {@link CoordinateFilter} that builds a set of <code>Coordinate</code>s. The set of coordinates contains no
    * duplicate points.
-   *
+   * 
    *@version 1.7
    */
   public static class UniqueCoordinateEPSArrayFilter implements CoordinateFilter
@@ -102,7 +102,7 @@ public class TubeResult extends HeightWidthResult
 
     /**
      * Returns the gathered <code>Coordinate</code>s.
-     *
+     * 
      *@return the <code>Coordinate</code>s collected by this <code>CoordinateArrayFilter</code>
      */
     public Coordinate[] getCoordinates( )

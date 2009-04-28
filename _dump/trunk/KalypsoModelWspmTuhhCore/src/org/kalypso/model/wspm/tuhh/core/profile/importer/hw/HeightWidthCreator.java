@@ -47,6 +47,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.kalypso.model.wspm.tuhh.core.profile.importer.IWProfContentHandler;
@@ -58,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class HeightWidthCreator implements IWProfContentHandler
 {
   private final Map<String, HeightWidthData> m_data = new LinkedHashMap<String, HeightWidthData>();
+
   private final File m_tempDir;
 
   public HeightWidthCreator( final File tempDir )
@@ -106,8 +108,8 @@ public class HeightWidthCreator implements IWProfContentHandler
     Formatter formatterLog = null;
     try
     {
-      formatterOut = new Formatter( outputFile, Charset.defaultCharset().name() );
-      formatterLog = new Formatter( logFile, Charset.defaultCharset().name() );
+      formatterOut = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.ENGLISH );
+      formatterLog = new Formatter( logFile, Charset.defaultCharset().name(), Locale.ENGLISH );
 
       for( final HeightWidthData data : m_data.values() )
       {
