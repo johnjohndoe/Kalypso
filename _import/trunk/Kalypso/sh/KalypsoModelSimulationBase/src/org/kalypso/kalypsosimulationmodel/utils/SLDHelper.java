@@ -313,7 +313,6 @@ public class SLDHelper
     defaultRule.setName( ELSEFILTER_NAME );
     defaultRule.setTitle( ELSEFILTER_TITLE );
     defaultRule.setAbstract( ELSEFILTER_TITLE );
-    style.addRule( defaultRule );
 
     // adding rules for every member
     for( final Object styledFeatureObject : collection )
@@ -345,6 +344,7 @@ public class SLDHelper
       rule.setFilter( filter );
       style.addRule( rule );
     }
+    style.addRule( defaultRule );
 
     final ParameterValueType[] anchorPoint = new ParameterValueType[2];
     anchorPoint[0] = StyleFactory.createParameterValueType( 0.5 );
