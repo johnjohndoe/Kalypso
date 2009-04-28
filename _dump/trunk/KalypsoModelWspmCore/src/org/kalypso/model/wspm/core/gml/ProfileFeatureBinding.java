@@ -152,7 +152,7 @@ public class ProfileFeatureBinding extends Feature_Impl implements IProfileFeatu
   public void setSrsName( final String srsName )
   {
     getFeature().setProperty( QNAME_SRS, srsName );
-
+    getFeature().setEnvelopesUpdated();
   }
 
   /**
