@@ -705,7 +705,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.50" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.51" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.50" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.53" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumBankIntersections.setSelection( m_data.getGlobNumBankIntersections() );
             return;
@@ -836,7 +836,7 @@ public class CreateMainChannelComposite extends Composite
       {
         if( m_data.getMeshStatus() == true )
         {
-          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ), Messages.getString( "Neu_org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.3" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          if( !MessageDialog.openQuestion( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.52" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.53" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             spinNumProfIntersections.setSelection( m_data.getNumProfileIntersections() );
             return;
