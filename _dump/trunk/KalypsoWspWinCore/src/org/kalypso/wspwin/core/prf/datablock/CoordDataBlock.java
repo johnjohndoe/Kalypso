@@ -122,32 +122,30 @@ public class CoordDataBlock extends AbstractDataBlock
         final String readLine = reader.readLine();
         if( readLine == null )
           throw new EOFException( Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.0") ); //$NON-NLS-1$
-          
+
         sT = new StringTokenizer( readLine );
       }
       catch( IOException e )
       {
         // TODO: ist das gut, vielleicht doch lieber ne exception raus werfen und das ganze profil
         // verwerfen??
-        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1") + e.getMessage() ); //$NON-NLS-1$
+        // aber es hilft beim Einlesen von Geokoordinaten mit z.B. Schrottrauheiten(nur der Datanblock wird verworfen)
+        m_logger.log( Level.SEVERE, e.getLocalizedMessage() );
         return coords;
       }
-      
+
       if( count < 1 )
         return coords;
-      
-      // TODO: auch den Fall abfangen, dass weniger als 4 koordinaten in der Zeile sind aber noch mehr erwartet werden!
-      
+
       String dblStr = ""; //$NON-NLS-1$
       final int ci = (sT.countTokens() / 2);
-      
+
       if( ci < 4 && counter + ci < count )
       {
-        // line contains not enough tokens!
-        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.3") ); //$NON-NLS-1$
+        m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.1") ); //$NON-NLS-1$
         return coords;
       }
-      
+
       for( int i = 0; i < ci; i++ )
       {
         try
@@ -160,7 +158,7 @@ public class CoordDataBlock extends AbstractDataBlock
         catch( NoSuchElementException e )
         {
           coords[counter] = 0.0;
-          m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.4") + Integer.toString( counter + 1 ) + "(" + dblStr + ") -> " + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          m_logger.log( Level.SEVERE, String.format( Messages.getString("org.kalypso.wspwin.core.prf.datablock.CoordDataBlock.2"),dblStr,  counter + 1  , e.getLocalizedMessage()));  //$NON-NLS-1$
         }
         counter++;
         if( counter == count )
@@ -175,7 +173,7 @@ public class CoordDataBlock extends AbstractDataBlock
   @Override
   public void printToPrinter( final PrintWriter pw )
   {
-    m_dataBlockHeader.printToPrinter(pw);
+    m_dataBlockHeader.printToPrinter( pw );
     writeDoubleBlock( m_xs, pw );
     writeDoubleBlock( m_ys, pw );
   }
@@ -183,16 +181,18 @@ public class CoordDataBlock extends AbstractDataBlock
   /**
    * Schreibt einen Koordinatenblock raus
    * 
-   * @param dbls -
-   * @param pw -
+   * @param dbls
+   *          -
+   * @param pw
+   *          -
    */
-  private  void writeDoubleBlock( final double[] dbls, final PrintWriter pw )
+  private void writeDoubleBlock( final double[] dbls, final PrintWriter pw )
 
   {
     for( int i = 0; i < dbls.length; i++ )
     {
 
-      pw.write(formatDouble( dbls[i] ) );
+      pw.write( formatDouble( dbls[i] ) );
 
       if( (i + 1) % 8 == 0 & i != dbls.length - 1 )
         pw.println();
@@ -223,6 +223,6 @@ public class CoordDataBlock extends AbstractDataBlock
    */
   public String[] getText( )
   {
-    return new String[]{m_xs.toString(),m_ys.toString()};
+    return new String[] { m_xs.toString(), m_ys.toString() };
   }
 }
