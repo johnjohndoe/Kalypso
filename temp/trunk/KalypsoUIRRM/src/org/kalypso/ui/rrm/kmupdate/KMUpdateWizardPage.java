@@ -194,7 +194,7 @@ public class KMUpdateWizardPage extends WizardPage
     parent.setLayout( new GridLayout( 3, false ) );
 
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.MUpdateWizardPage.4" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.4" ) ); //$NON-NLS-1$
     label.setLayoutData( new GridData() );
 
     final Text text = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
@@ -554,7 +554,7 @@ public class KMUpdateWizardPage extends WizardPage
 
     if( km == null )
     {
-      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.MUpdateWizardPage.34" ) ); //$NON-NLS-1$
+      errorLogger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_DETAILS, log + Messages.getString( "org.kalypso.ui.rrm.kmupdate.KMUpdateWizardPage.34" ) ); //$NON-NLS-1$
       return result;
     }
     final Double kmStart = km.getKmStart();
