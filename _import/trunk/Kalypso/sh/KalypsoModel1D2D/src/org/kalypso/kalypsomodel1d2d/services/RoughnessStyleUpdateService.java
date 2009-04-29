@@ -41,10 +41,14 @@
 package org.kalypso.kalypsomodel1d2d.services;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -60,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
+import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -74,10 +79,19 @@ public class RoughnessStyleUpdateService extends Job
 {
   private static final IPath ROUGHNESS_SLD_PATH = new Path( ".metadata/roughness.sld" ); //$NON-NLS-1$
 
+  private static final String POLYGON_LAYER_NAME = "Flow Resistance Class"; 
+  private static final String LABEL_LAYER_NAME = "Labels"; 
+  
+  
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
-  private static final String STYLE_NAME = "Roughness style"; //$NON-NLS-1$
+  
+  private static final String POLYGON_STYLE_NAME = "Roughness style"; //$NON-NLS-1$
 
-  private static final String STYLE_TITLE = "Roughness style"; //$NON-NLS-1$
+  private static final String POLYGON_STYLE_TITLE = "Flow Resistance Class"; //$NON-NLS-1$
+
+  private static final String LABEL_STYLE_NAME = "Label style"; //$NON-NLS-1$
+
+  private static final String LABEL_STYLE_TITLE = "Labels"; //$NON-NLS-1$
 
   private final IFile m_roughnessDBFile;
 
@@ -85,7 +99,7 @@ public class RoughnessStyleUpdateService extends Job
 
   public RoughnessStyleUpdateService( final IFile file )
   {
-    super( Messages.getString("org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateService.0") ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateService.0" ) ); //$NON-NLS-1$
     m_roughnessDBFile = file;
     m_sldFile = m_roughnessDBFile.getProject().getFile( ROUGHNESS_SLD_PATH );
   }
@@ -122,7 +136,12 @@ public class RoughnessStyleUpdateService extends Job
       final QName geomPropertyName = null; // IRoughnessPolygon.PROP_GEOM OR IElement2D.QNAME_PROP_GEOMETRY
 
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
-      SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, STYLE_NAME, STYLE_TITLE, monitor );
+
+      final List<Layer> layers = new ArrayList<Layer>();
+      layers.add( SLDHelper.polygonStyleLayer( POLYGON_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, POLYGON_STYLE_NAME, POLYGON_STYLE_TITLE, monitor ) );
+      layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, LABEL_STYLE_NAME, LABEL_STYLE_TITLE ) );
+
+      SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, layers.toArray(new Layer[0]), monitor );
       return Status.OK_STATUS;
     }
     catch( final Throwable t )
