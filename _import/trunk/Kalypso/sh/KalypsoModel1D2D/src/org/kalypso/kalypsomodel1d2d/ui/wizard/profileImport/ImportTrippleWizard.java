@@ -200,7 +200,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
 
     for( final IProfil profile : profiles )
     {
-      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
+      final IProfileFeature profileFeature = (IProfileFeature) FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, "Profile"  ) ); //$NON-NLS-1$ //$NON-NLS-1$
       profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       profileFeature.setSrsName( crs );
