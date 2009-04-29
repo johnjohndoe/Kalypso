@@ -41,6 +41,7 @@
 package org.kalypso.risk.model.services;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -67,6 +69,7 @@ import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.plugin.RasterizedLanduseThemeInfo;
 import org.kalypso.risk.plugin.RiskZonesThemeInfo;
+import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -124,7 +127,10 @@ public class LanduseStyleUpdateService extends Job
       final List<ILanduseClass> landuseClassesList = model.getLanduseClassesList();
       if( landuseClassesList != null && landuseClassesList.size() > 0 )
       {
-        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor );
+        final List<Layer> layers = new ArrayList<Layer>();
+        layers.add( SLDHelper.polygonStyleLayer( null, model.getLanduseClassesList(), ILandusePolygon.PROPERTY_GEOMETRY, ILandusePolygon.PROPERTY_SLDSTYLE, null, null, monitor ) );
+
+        SLDHelper.exportPolygonSymbolyzerSLD( m_landuseVectorSymbolyzerSldFile, layers.toArray( new Layer[0] ), monitor );
         SLDHelper.exportRasterSymbolyzerSLD( m_landuseRasterSymbolyzerSldFile, model.getLanduseClassesList(), null, null, monitor );
         final HashMap<Double, String> values = new HashMap<Double, String>();
         for( final ILanduseClass landuseClass : landuseClassesList )
