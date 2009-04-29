@@ -20,9 +20,15 @@ CIPK AUG05	INCLUDE 'BLKDR.COM'
 crrr aug97 add character lines
       CHARACTER*256 LINE256
       CHARACTER*80  FMT
+      
+      !local nprtf
+      integer (kind = 4) :: iprtf
 C-
 C-.....ASSIGN PROPER COEFS.....
 C-
+
+      !init iprtf
+      iprtf = 1
 
 !MD: Basis-Variable: Wasserdichte
       !MD:  NEU Wasserdichte ROAVG [kg/m^3] anlehnend an COEFxx
@@ -107,7 +113,14 @@ CIPK AUG06 UPDATE TO ADD CORNERS
         ENDIF      
       ENDDO
       
-      IF (MOD(IT,NPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
+      
+      if (nprtf == 0) then
+        iprtf =1
+      else
+        iprtf = nprtf
+      endif 
+
+      IF (MOD(IT,iPRTF) .NE. 0  .AND. TET .NE. 0.) go to 76
 
       WRITE(LOUT,9999) TMSED(0),TMSSED(0),TMSED(0)+TMSSED(0)
    76 continue
