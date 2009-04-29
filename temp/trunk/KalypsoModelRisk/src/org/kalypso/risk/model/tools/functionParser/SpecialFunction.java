@@ -1,6 +1,6 @@
 package org.kalypso.risk.model.tools.functionParser;
 
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 
 
 /***********************************************************************************************************************

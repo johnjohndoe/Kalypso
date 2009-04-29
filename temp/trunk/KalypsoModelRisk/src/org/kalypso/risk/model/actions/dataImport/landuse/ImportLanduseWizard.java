@@ -67,7 +67,7 @@ import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportNewLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
@@ -135,7 +135,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   {
     m_initialSelection = selection;
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportLanduseWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.0" ) ); //$NON-NLS-1$
 
     try
     {
@@ -236,7 +236,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
           if( count > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
           {
-            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Landnutzung importieren", "Auswahl enthält mehr als " + WARNING_MAX_LANDUSE_CLASSES_NUMBER + " Klassen. Sind Sie sicher?" ) )
+            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.2"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.3") + WARNING_MAX_LANDUSE_CLASSES_NUMBER + org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.6") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               return false;
             else
               break;
@@ -270,7 +270,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         return false;
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, importLanduseRunnable );
-      ErrorDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.4" ), Messages.getString( "ImportLanduseWizard.5" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.4" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.5" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

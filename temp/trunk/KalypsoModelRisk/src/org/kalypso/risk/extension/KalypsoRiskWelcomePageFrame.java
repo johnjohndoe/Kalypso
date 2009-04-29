@@ -42,6 +42,7 @@ package org.kalypso.risk.extension;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModuleWelcomePageFrame;
+import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author kuch
@@ -50,9 +51,9 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
 public class KalypsoRiskWelcomePageFrame implements IKalypsoModuleWelcomePageFrame
 {
 
-  protected static final Image IMG = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_no.gif" ) );
+  protected static final Image IMG = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_no.gif" ) ); //$NON-NLS-1$
 
-  protected static final Image IMG_HOVER = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_hover.gif" ) );
+  protected static final Image IMG_HOVER = new Image( null, KalypsoRiskWelcomePageFrame.class.getResourceAsStream( "icons/risk_hover.gif" ) ); //$NON-NLS-1$
 
   
   @Override
@@ -64,13 +65,13 @@ public class KalypsoRiskWelcomePageFrame implements IKalypsoModuleWelcomePageFra
   @Override
   public String getLabel( )
   {
-    return "KalypsoRisk";
+    return "KalypsoRisk"; //$NON-NLS-1$
   }
 
   @Override
   public String getTooltip( )
   {
-    return "KalypsoRisk öffnen";
+    return Messages.getString("org.kalypso.risk.extension.KalypsoRiskWelcomePageFrame.3"); //$NON-NLS-1$
   }
 
   @Override

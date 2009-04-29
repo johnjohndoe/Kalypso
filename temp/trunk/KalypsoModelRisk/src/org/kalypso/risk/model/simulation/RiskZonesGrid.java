@@ -56,7 +56,7 @@ import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -161,7 +161,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       {
         final IAnnualCoverageCollection previousValue = covMap.put( cov.getReturnPeriod().doubleValue(), cov );
         if( previousValue != null )
-          throw new IllegalArgumentException( "Several specific damage collections with the same return period detected: " + cov.getReturnPeriod().doubleValue() );
+          throw new IllegalArgumentException( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.RiskZonesGrid.1") + cov.getReturnPeriod().doubleValue() ); //$NON-NLS-1$
       }
 
       final Collection<IAnnualCoverageCollection> collections = covMap.values();
@@ -239,7 +239,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     catch( final Exception ex )
     {
-      throw new GeoGridException( Messages.getString( "RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
+      throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
     }
   }
 

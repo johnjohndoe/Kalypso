@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo

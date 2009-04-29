@@ -41,6 +41,7 @@
 package org.kalypso.risk.model.simulation;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.risk.i18n.Messages;
 
 /**
  * @author Dejan Antanaskovic
@@ -60,11 +61,11 @@ public interface ISimulationSpecKalypsoRisk
       switch( kind )
       {
         case LANDUSE_RASTERIZATION:
-          return "KalypsoRisk_LanduseRasterization";
+          return "KalypsoRisk_LanduseRasterization"; //$NON-NLS-1$
         case SPECIFIC_DAMAGE_CALCULATION:
-          return "KalypsoRisk_SpecificDamageCalculation";
+          return "KalypsoRisk_SpecificDamageCalculation"; //$NON-NLS-1$
         case RISK_ZONES_CALCULATION:
-          return "KalypsoRisk_RiskZonesCalculation";
+          return "KalypsoRisk_RiskZonesCalculation"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -86,20 +87,20 @@ public interface ISimulationSpecKalypsoRisk
       switch( kind )
       {
         case CONTROL_MODEL:
-          return "models/RasterizationControlModel.gml";
+          return "models/RasterizationControlModel.gml"; //$NON-NLS-1$
         case RASTER_MODEL:
-          return "models/RasterDataModel.gml";
+          return "models/RasterDataModel.gml"; //$NON-NLS-1$
         case VECTOR_MODEL:
-          return "models/VectorDataModel.gml";
+          return "models/VectorDataModel.gml"; //$NON-NLS-1$
         case INPUT_RASTER_FOLDER:
-          return "models/raster/input";
+          return "models/raster/input"; //$NON-NLS-1$
         case OUTPUT_RASTER_FOLDER:
-          return "models/raster/output";
+          return "models/raster/output"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
     }
   }
 
-  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "raster/output/";
+  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "raster/output/"; //$NON-NLS-1$
 }

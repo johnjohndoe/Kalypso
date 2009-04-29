@@ -1,6 +1,6 @@
 package org.kalypso.risk.model.tools.functionParser;
 
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 
 /***********************************************************************************************************************
  * ************************************************************************* * * Class ParseFunction *
@@ -1228,20 +1228,20 @@ class Node extends Object
   public void print( int indentLevel )
   {
     indent( indentLevel );
-    System.out.println( Messages.getString("ParseFunction.89") + type ); //$NON-NLS-1$
+    System.out.println( "ParseFunction.89" + type ); 
     indent( indentLevel );
-    System.out.println( Messages.getString("ParseFunction.90") + precedence ); //$NON-NLS-1$
+    System.out.println( "ParseFunction.90" + precedence ); 
     indent( indentLevel );
     switch( type )
     {
       case Node.VALUE:
-        System.out.println( Messages.getString("ParseFunction.91") + value ); //$NON-NLS-1$
+        System.out.println( "ParseFunction.91" + value ); 
         break;
       case Node.INDEPENDENT:
-        System.out.println( Messages.getString("ParseFunction.92") + op ); //$NON-NLS-1$
+        System.out.println( "ParseFunction.92" + op ); 
         break;
       default:
-        System.out.println( Messages.getString("ParseFunction.93") + op ); //$NON-NLS-1$
+        System.out.println( "ParseFunction.93" + op ); 
         if( left != null )
           left.print( indentLevel + 5 );
         if( right != null )

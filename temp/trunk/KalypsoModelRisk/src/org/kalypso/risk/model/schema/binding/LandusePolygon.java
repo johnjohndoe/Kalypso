@@ -3,7 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;

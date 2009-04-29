@@ -37,7 +37,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -206,7 +206,7 @@ public class RiskModelHelper
           }
           catch( final Exception ex )
           {
-            throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.0" ), ex ); //$NON-NLS-1$
+            throw new GeoGridException(Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.0" ), ex ); //$NON-NLS-1$
           }
         }
       };
@@ -223,8 +223,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.6" ) ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.9" ) ) + new Date().toString() ); //$NON-NLS-1$
+      newCoverage.setName( String.format("Spezifischer Schaden %s [%d]" ,sourceCoverageCollection.getReturnPeriod(),i )); 
+      newCoverage.setDescription( String.format(" erstellt am %s" , new Date().toString() )); 
 
       inputGrid.dispose();
     }
@@ -263,7 +263,7 @@ public class RiskModelHelper
    */
   public static void createSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
   {
-    final String layerName = Messages.getString( "DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String layerName = Messages.getString( "org.kalypso.risk.model.utils.DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
@@ -350,7 +350,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.14" ) + (i + 1) + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -403,7 +403,7 @@ public class RiskModelHelper
             }
             catch( final Exception ex )
             {
-              throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.10" ), ex ); //$NON-NLS-1$
+              throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.10" ), ex ); //$NON-NLS-1$
             }
           }
         };
@@ -422,7 +422,7 @@ public class RiskModelHelper
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskModelHelper.11" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.11" ) ); //$NON-NLS-1$
     }
   }
 
@@ -464,7 +464,7 @@ public class RiskModelHelper
     /* get cascading them that holds the damage layers */
     final String damageThemeProperty = "damagePotentialThemes"; //$NON-NLS-1$
 
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -492,7 +492,7 @@ public class RiskModelHelper
   {
     /* get cascading them that holds the damage layers */
     final String depthThemeProperty = "depthGridThemes"; //$NON-NLS-1$
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString( "org.kalypso.risk.model.utils.RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -672,7 +672,7 @@ public class RiskModelHelper
     layer.setType( "simple" ); //$NON-NLS-1$
     layer.setVisible( true );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setHref( "../models/RasterDataModel.gml" );
+    layer.setHref( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.utils.RiskModelHelper.1") ); //$NON-NLS-1$
     layer.setVisible( true );
     final Property layerPropertyDeletable = new Property();
     layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );

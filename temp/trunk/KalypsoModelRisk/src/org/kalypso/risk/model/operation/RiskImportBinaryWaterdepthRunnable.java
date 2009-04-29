@@ -19,7 +19,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -94,7 +94,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( raster.getGridDomain() );
         coverage.setName( binFileName );
-        coverage.setDescription( org.kalypso.risk.Messages.getString( "RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
+        coverage.setDescription(Messages.getString( "RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
 
         annualCoverageCollection.add( coverage );
       }
@@ -104,7 +104,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e,Messages.getString( "RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
     }
   }
 
@@ -115,9 +115,9 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     destFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
 
     if( !srcFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( org.kalypso.risk.Messages.getString( "RiskImportBinaryWaterdepthRunnable.6" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "RiskImportBinaryWaterdepthRunnable.6" ) ) ); //$NON-NLS-1$
     if( !destFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( org.kalypso.risk.Messages.getString( "RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
 
     srcFolder.accept( new IResourceVisitor()
     {

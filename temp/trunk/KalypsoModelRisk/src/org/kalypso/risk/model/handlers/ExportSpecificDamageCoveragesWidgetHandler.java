@@ -16,7 +16,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -37,13 +37,13 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
     final MapView mapView = (MapView) activePage.findView( MapView.ID );
     if( mapView == null )
     {
-      throw new ExecutionException( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.0" ) ); //$NON-NLS-1$
     }
 
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) )
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       return null;
     }
@@ -62,7 +62,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
       }
     }
 
-    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
 

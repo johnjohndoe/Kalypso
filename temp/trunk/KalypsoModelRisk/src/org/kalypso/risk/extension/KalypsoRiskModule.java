@@ -7,7 +7,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
 
 public class KalypsoRiskModule implements IKalypsoModule
 {
-  public static final String ID = "KalypsoRiskModel";
+  public static final String ID = "KalypsoRiskModel"; //$NON-NLS-1$
   
   // public constructor, needed because of extension point and java class loader
   public KalypsoRiskModule( )

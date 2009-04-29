@@ -72,7 +72,7 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
   @Override
   public String getHeader( )
   {
-    return "KalypsoRisk";
+    return "KalypsoRisk"; //$NON-NLS-1$
   }
 
   @Override
@@ -83,11 +83,11 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
       try
       {
         /* info page of plugin */
-        final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" );
+        final InputStream zipStream = getClass().getResourceAsStream( "infoPage.zip" ); //$NON-NLS-1$
         try
         {
           final IPath stateLocation = KalypsoRiskPlugin.getDefault().getStateLocation();
-          final File targetDir = new File( stateLocation.toFile(), "infoPage" );
+          final File targetDir = new File( stateLocation.toFile(), "infoPage" ); //$NON-NLS-1$
           // final boolean mkdir = dir.mkdir();
 
           ZipUtilities.unzip( zipStream, targetDir );
@@ -109,7 +109,7 @@ public class KalypsoRiskModulePage extends AbstractKalypsoModulePage
     final IPath stateLocation = KalypsoRiskPlugin.getDefault().getStateLocation();
     final URL baseUrl = stateLocation.toFile().toURI().toURL();
 
-    final URL url = new URL( baseUrl, "infoPage/index.html" );
+    final URL url = new URL( baseUrl, "infoPage/index.html" ); //$NON-NLS-1$
     return url;
   }
 

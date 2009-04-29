@@ -53,7 +53,7 @@ import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.Messages;
+import org.kalypso.risk.i18n.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -88,7 +88,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
   @Override
   public URL getSpezifikation( )
   {
-    return getClass().getResource( "Specification_SpecificDamageCalculation.xml" );
+    return getClass().getResource( "Specification_SpecificDamageCalculation.xml" ); //$NON-NLS-1$
   }
 
   /**
@@ -109,11 +109,11 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       final GMLWorkspace vectorModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( MODELSPEC_KALYPSORISK.VECTOR_MODEL.name() ), null );
       final IVectorDataModel vectorModel = (IVectorDataModel) vectorModelWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
 
-      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" );
+      final File outputRasterTmpDir = new File( tmpdir, "outputRaster" ); //$NON-NLS-1$
       outputRasterTmpDir.mkdir();
       doDamagePotentialCalculation( outputRasterTmpDir, controlModel, rasterModel, vectorModel, monitor );
-      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir );
-      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" );
+      final File tmpRasterModel = File.createTempFile( IRasterDataModel.MODEL_NAME, ".gml", tmpdir ); //$NON-NLS-1$
+      GmlSerializer.serializeWorkspace( tmpRasterModel, rasterModelWorkspace, "UTF-8" ); //$NON-NLS-1$
       resultEater.addResult( MODELSPEC_KALYPSORISK.RASTER_MODEL.name(), tmpRasterModel );
       resultEater.addResult( MODELSPEC_KALYPSORISK.OUTPUT_RASTER_FOLDER.name(), outputRasterTmpDir );
     }
@@ -135,7 +135,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-      throw new SimulationException( Messages.getString( org.kalypso.risk.Messages.getString( "RiskCalcSpecificDamageRunnable.0" ) ) ); //$NON-NLS-1$
+      throw new SimulationException( "Fehler beim Berechnen der Schadenswerte. Keine Wassertiefen vorhanden."); 
 
     /*
      * As the default value is 1, this is cannot happen any more
@@ -145,7 +145,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
      * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
      */
 
-    monitor.setMessage( Messages.getString( "DamagePotentialCalculationHandler.9" ) ); //$NON-NLS-1$
+    monitor.setMessage( "Rasterung des spezifischen Schadens..."  );
     try
     {
       /* clear existing data */
@@ -163,7 +163,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : rasterModel.getWaterlevelCoverageCollection() )
       {
-        monitor.setMessage( Messages.getString( "DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
+        monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
 
         /* create annual damage coverage collection */
         final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
@@ -244,7 +244,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
               }
               catch( final Exception ex )
               {
-                throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.0" ), ex ); //$NON-NLS-1$
+                throw new GeoGridException( Messages.getString( "org.kalypso.risk.model.simulation.RiskModelHelper.0" ), ex ); //$NON-NLS-1$
               }
             }
           };
@@ -259,8 +259,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           {
             landuseClass.updateStatistic( returnPeriod );
           }
-          newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.6" ) ) + srcAnnualCoverages.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.9" ) ) + new Date().toString() ); //$NON-NLS-1$
+          newCoverage.setName( String.format("Spezifischer Schaden %d [%d]" , srcAnnualCoverages.getReturnPeriod() ,i )); 
+          newCoverage.setDescription(String.format( "erstellt am %s", new Date().toString() )); 
           inputGrid.dispose();
         }
         /* set the return period of the specific damage grid */
@@ -269,7 +269,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     }
     catch( final Exception e )
     {
-      throw new SimulationException( Messages.getString( "RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.RiskCalcSpecificDamageRunnable.1" ) + ": " + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }
