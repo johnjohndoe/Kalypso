@@ -38,5 +38,5 @@ public class KalypsoModelSimulationBaseConsts
 
   public static final QName SIM_BASE_P_DICRRETISATION_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "feDiscretisationModel" ); //$NON-NLS-1$
 
-  public static final QName SIM_BASE_PROP_FILE_NAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "fileName" );
+  public static final QName SIM_BASE_PROP_FILE_NAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "fileName" ); //$NON-NLS-1$
 }

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -187,7 +188,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
     catch( final Throwable th )
     {
-      throw new RuntimeException( Messages.getString( "HMOTerrainElevationModel.0" ), th ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.HMOTerrainElevationModel.0" ), th ); //$NON-NLS-1$
     }
   }
 
@@ -205,7 +206,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Envelope jtsEnv = new Envelope( min, max );
     final List triToVisit = triangles.query( jtsEnv );
 
-    monitor.beginTask( "", triToVisit.size() );
+    monitor.beginTask( "", triToVisit.size() ); //$NON-NLS-1$
 
     final IProgressMonitor nullMonitor = new NullProgressMonitor(); // we reuse the same null-monitor here to avoid
     // production of thousands of sub-monitor, that do

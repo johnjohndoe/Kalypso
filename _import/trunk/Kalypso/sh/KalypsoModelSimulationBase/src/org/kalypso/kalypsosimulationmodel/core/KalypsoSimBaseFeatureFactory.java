@@ -33,6 +33,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -76,7 +77,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
   {
     if( !(adaptableObject instanceof Feature) )
     {
-      throw new IllegalArgumentException( "Adapter Factory for feature only but" + " get to adapt:" + adaptableObject );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.3") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.4") + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     AdapterConstructor ctor = constructors.get( adapterType );
@@ -212,7 +213,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           }
           catch( Throwable th )
           {
-            throw new IllegalArgumentException( "Could not create adapter for:" + "\n\t featue=" + feature + "\n\t adapter type=" + cls, th );
+            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.6") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.7") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.10") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
 
         }
@@ -224,13 +225,13 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
           }
           catch( Throwable th )
           {
-            throw new IllegalArgumentException( "Could not create adapter for:" + "\n\t featue=" + feature + "\n\t adaptaer type=" + cls, th );
+            throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.11") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.12") + feature + Messages.getString("org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory.13") + cls, th ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           }
 
         }
         else
         {
-          System.out.println( "Could not adapt=" + feature + " to" + cls );
+          System.out.println( "Could not adapt=" + feature + " to" + cls ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;// new TerrainElevationModel(feature);
         }
       }

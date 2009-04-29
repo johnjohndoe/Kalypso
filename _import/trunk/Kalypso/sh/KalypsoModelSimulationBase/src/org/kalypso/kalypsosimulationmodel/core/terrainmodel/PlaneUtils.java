@@ -43,6 +43,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.math.BigDecimal;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -94,7 +95,7 @@ public class PlaneUtils
     Assert.throwIAEOnNullParam( coords, "coords" ); //$NON-NLS-1$
     if( coords.length < 3 )
     {
-      throw new IllegalArgumentException( Messages.getString("PlaneUtils.1") + Messages.getString("PlaneUtils.2") + coords.length ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsosimulationmodel.core.terrainmodel.PlaneUtils.1") + Messages.getString("org.kalypso.kalypsosimulationmodel.core.terrainmodel.PlaneUtils.2") + coords.length ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     GM_Position coord = coords[0];

@@ -54,15 +54,15 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IResultMeta extends IModel
 {
-  public static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" );
+  public static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
+  public static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" );
+  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "childMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" );
+  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "parentMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" );
+  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" ); //$NON-NLS-1$
 
   public IPath getPath( );
 

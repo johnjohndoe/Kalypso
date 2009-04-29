@@ -51,12 +51,12 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IRoughnessLayer extends IFeatureWrapper2
 {
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" );
+  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" ); //$NON-NLS-1$
   
-  public final static QName PROP_EDITABLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "editable" );
+  public final static QName PROP_EDITABLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "editable" ); //$NON-NLS-1$
   
   // PROP_LAYER_TYPE: true = it is a basic layer, false = it is a correction layer
-  public final static QName PROP_LAYER_TYPE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "basic" );
+  public final static QName PROP_LAYER_TYPE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "basic" ); //$NON-NLS-1$
   
   public boolean isEditable();
   

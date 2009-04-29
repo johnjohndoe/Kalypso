@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -110,9 +111,9 @@ public class SLDHelper
 
   public static final String DEFAULT_STYLE_TITLE = "Kalypso style"; //$NON-NLS-1$
 
-  private static final String LAYER_NAME = "deegree style definition";
+  private static final String LAYER_NAME = "deegree style definition"; //$NON-NLS-1$
 
-  private static final String LABEL_RULE_NAME = "Labelle";
+  private static final String LABEL_RULE_NAME = "Labelle"; //$NON-NLS-1$
 
   private static final double DEFAULT_VECTOR_FILLOPACITY = 0.75;
 
@@ -124,9 +125,9 @@ public class SLDHelper
 
   private static final double DEFAULT_STROKEWIDTH = 1.0;
 
-  private static final String ELSEFILTER_NAME = "undefinierterStilID";
+  private static final String ELSEFILTER_NAME = "undefinierterStilID"; //$NON-NLS-1$
 
-  private static final String ELSEFILTER_TITLE = "undefinierter Stil";
+  private static final String ELSEFILTER_TITLE = Messages.getString("org.kalypso.kalypsosimulationmodel.utils.SLDHelper.0"); //$NON-NLS-1$
 
   private static final Color ELSEFILTER_FILLCOLOR = new Color( Integer.parseInt( "ffffff", 16 ) ); //$NON-NLS-1$
 
@@ -171,7 +172,7 @@ public class SLDHelper
   {
     if( !sldFile.isSynchronized( IResource.DEPTH_ZERO ) )
       sldFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
-    final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) );
+    final ByteArrayInputStream stream = new ByteArrayInputStream( descriptor.exportAsXML().getBytes( "UTF-8" ) ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( stream );
     final Source source = new DOMSource( doc );
 
@@ -189,7 +190,7 @@ public class SLDHelper
           // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
           try
           {
-            factory.setAttribute( "indent-number", new Integer( 4 ) );
+            factory.setAttribute( "indent-number", new Integer( 4 ) ); //$NON-NLS-1$
           }
           catch( final IllegalArgumentException e )
           {
@@ -352,11 +353,11 @@ public class SLDHelper
     final ParameterValueType rotation = StyleFactory.createParameterValueType( 0.0 );
 
     // adding labels rule
-    final Font font = StyleFactory.createFont( "Arial", 11.0 );
+    final Font font = StyleFactory.createFont( "Arial", 11.0 ); //$NON-NLS-1$
     font.setColor( Color.BLACK );
     final PointPlacement pointPlacement = new PointPlacement_Impl( anchorPoint, new ParameterValueType[0], rotation, true );
     final LabelPlacement labelPlacement = new LabelPlacement_Impl( pointPlacement );
-    final TextSymbolizer labelSymbolizer = StyleFactory.createTextSymbolizer( geomPropertyName, "<ogc:PropertyName>" + styleProperty.getLocalPart() + "</ogc:PropertyName>", labelPlacement );
+    final TextSymbolizer labelSymbolizer = StyleFactory.createTextSymbolizer( geomPropertyName, "<ogc:PropertyName>" + styleProperty.getLocalPart() + "</ogc:PropertyName>", labelPlacement ); //$NON-NLS-1$ //$NON-NLS-2$
     labelSymbolizer.setHalo( null );
     labelSymbolizer.setFont( font );
     final Rule labelRule = StyleFactory.createRule( labelSymbolizer, 0.0, 10.0 );

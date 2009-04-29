@@ -221,7 +221,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
 
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
     {
-      monitor.beginTask( "", row );
+      monitor.beginTask( "", row ); //$NON-NLS-1$
 
       final int N_COL_ENV = (int) Math.floor( env.getWidth() / cellSize );
       final int N_ROW_ENV = (int) Math.floor( env.getHeight() / cellSize );

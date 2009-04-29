@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.shiftone.cache.Cache;
 import org.shiftone.cache.adaptor.CacheMap;
 import org.shiftone.cache.policy.fifo.FifoCacheFactory;
@@ -116,12 +117,12 @@ public class NativeTerrainElevationModelFactory
       catch( final ParseException e )
       {
         e.printStackTrace();
-        throw new IllegalArgumentException( Messages.getString( "NativeTerrainElevationModelFactory.4" ), e ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory.4" ), e ); //$NON-NLS-1$
       }
     }
     else
     {
-      throw new RuntimeException( Messages.getString( "NativeTerrainElevationModelFactory.10" ) + filePath ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory.10" ) + filePath ); //$NON-NLS-1$
     }
   }
 

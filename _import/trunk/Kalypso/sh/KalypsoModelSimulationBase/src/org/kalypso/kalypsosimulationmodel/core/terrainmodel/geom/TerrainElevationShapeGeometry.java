@@ -7,6 +7,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -97,7 +98,7 @@ public class TerrainElevationShapeGeometry extends FeaturePropertyFunction
     }
     catch( final Throwable e )
     {
-      throw new RuntimeException( Messages.getString( "TerrainElevationShapeGeometry.0" ), e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry.0" ), e ); //$NON-NLS-1$
     }
   }
 

@@ -52,6 +52,7 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.afgui.model.Util;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -106,7 +107,7 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
     final String sourceName = (String) featureToBind.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME );
     if( sourceName == null )
     {
-      throw new IllegalArgumentException( Messages.getString( "NativeTerrainElevationModelWrapper.2" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper.2" ) ); //$NON-NLS-1$
     }
 
     // why using urls and file? We live in an eclipse workspace! Use IRources

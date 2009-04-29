@@ -9,6 +9,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -80,13 +81,13 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
     else
     {
-      throw new RuntimeException( Messages.getString( "RoughnessPolygon.3" ) + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      throw new RuntimeException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.3" ) + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
   public void setSurface( final GM_Object object ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNull( object, Messages.getString( "RoughnessPolygon.7" ) ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( object, Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.7" ) ); //$NON-NLS-1$
     if( object instanceof GM_Surface )
     {
       final Feature feature = getFeature();
@@ -94,7 +95,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
       feature.setProperty( geometryProperty, object );
     }
     else
-      throw new IllegalArgumentException( Messages.getString( "RoughnessPolygon.8" ) + object.getClass().getName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon.8" ) + object.getClass().getName() ); //$NON-NLS-1$
   }
 
   /**

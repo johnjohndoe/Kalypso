@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class VersionedModel extends AbstractFeatureBinder implements IFeatureWrapper2
 {
-  private static final String VERSION_0_0 = "0.0";
+  private static final String VERSION_0_0 = "0.0"; //$NON-NLS-1$
 
   private String m_version;
 

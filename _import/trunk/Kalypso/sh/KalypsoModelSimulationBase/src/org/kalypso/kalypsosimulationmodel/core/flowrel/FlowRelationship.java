@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public abstract class FlowRelationship extends AbstractFeatureBinder implements IFlowRelationship
 {
-  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
+  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" ); //$NON-NLS-1$
 
   public FlowRelationship( final Feature featureToBind, final QName qname )
   {
