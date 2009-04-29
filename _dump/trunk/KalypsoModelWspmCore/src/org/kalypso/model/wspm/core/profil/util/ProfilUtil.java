@@ -103,7 +103,7 @@ public class ProfilUtil
 
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
-   *
+   * 
    * @see #STATION_SCALE
    */
   public static BigDecimal stationToBigDecimal( final double station )
@@ -638,12 +638,11 @@ public class ProfilUtil
 
   /**
    * return a valid ProfilPoint if operation succeeds, otherwise null
-   *
+   * 
    * @see org.kalypso.model.wspm.core.profil.impl.points.IRecords#addPoint(double, double)
    */
   public static final IRecord addPoint( final IProfil profil, final double breite, final double hoehe )
   {
-
     final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     if( iBreite >= 0 && iHoehe >= 0 )
@@ -784,7 +783,7 @@ public class ProfilUtil
 
   /**
    * returns the georeferenced points of a profile.
-   *
+   * 
    * @param profile
    *          input profile
    */

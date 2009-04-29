@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Dirk Kuch
- *
  */
 public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
@@ -73,12 +72,10 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   /**
    * The scale (i.e. fraction digits) for station values.
-   *
+   * 
    * @see BigDecimal
    */
   public static final int STATION_SCALE = 4;
-
-
 
   /**
    * @Deprecated Use {@link #getBigStation()} instead.
@@ -97,6 +94,11 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   public IProfil getProfil( );
 
+  /**
+   * Returns the profile geometry.<br>
+   * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the
+   * Kalypso-Coorindate-System.
+   */
   public GM_Curve getLine( );
 
   public String getSrsName( );
@@ -105,7 +107,7 @@ public interface IProfileFeature extends Feature, IFeatureWrapper2
 
   public WspmWaterBody getWater( );
 
-  public String getProfileType(  );
+  public String getProfileType( );
 
   public void setProfileType( final String type );
 
