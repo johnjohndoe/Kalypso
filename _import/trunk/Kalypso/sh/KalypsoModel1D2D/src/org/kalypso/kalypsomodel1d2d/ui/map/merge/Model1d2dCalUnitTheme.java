@@ -47,6 +47,8 @@ import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -105,17 +107,20 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
-      return;
+      return Status.OK_STATUS;
 
     if( calUnitDisplayElement != null )
       calUnitDisplayElement.paint( g, p, monitor );
 
     markAppliedBoundaryConditions( g, p );
+    return Status.OK_STATUS;
   }
 
   private void markAppliedBoundaryConditions( final Graphics g, final GeoTransform p )
