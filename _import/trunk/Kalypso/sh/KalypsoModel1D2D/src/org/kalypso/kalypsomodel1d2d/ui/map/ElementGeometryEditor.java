@@ -123,7 +123,6 @@ public class ElementGeometryEditor
    *
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  @SuppressWarnings("unchecked")
   public void finish( ) throws Exception
   {
     final IFEDiscretisationModel1d2d discModel = Util.getModel( IFEDiscretisationModel1d2d.class );

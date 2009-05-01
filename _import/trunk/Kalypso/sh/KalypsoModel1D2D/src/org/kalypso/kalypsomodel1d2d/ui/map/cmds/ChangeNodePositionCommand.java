@@ -40,14 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
-import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -69,11 +73,12 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private final boolean m_fireEvents;
+  /** If <code>true</code>, also modell-change events for depending elements (edges, elements) are fired. */
+  private final boolean m_fireEventsForDependendElements;
 
-  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final double elevation, final boolean fireEvents )
+  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final double elevation, final boolean fireEventsForDependendElements )
   {
-    this( model, nodeToChange, createPoint( elevation, nodeToChange.getPoint() ), fireEvents );
+    this( model, nodeToChange, createPoint( elevation, nodeToChange.getPoint() ), fireEventsForDependendElements );
   }
 
   public static GM_Point createPoint( final double elevation, final GM_Point pos )
@@ -88,13 +93,13 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    * @param fireEvents
    *          If <code>true</code>, modell-events will be fired.
    */
-  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final GM_Point newNodePoint, final boolean fireEvents )
+  public ChangeNodePositionCommand( final IFEDiscretisationModel1d2d model, final IFE1D2DNode nodeToChange, final GM_Point newNodePoint, final boolean fireEventsForDependendElements )
   {
     m_discretisationModel = model;
     m_node = nodeToChange;
     m_newPosition = newNodePoint;
     m_oldPosition = m_node.getPoint();
-    m_fireEvents = fireEvents;
+    m_fireEventsForDependendElements = fireEventsForDependendElements;
   }
 
   /**
@@ -128,12 +133,24 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   {
     m_node.setPoint( position );
 
-    if( m_fireEvents )
+    final List<Feature> changedFeatures = new ArrayList<Feature>( 10 );
+    changedFeatures.add( m_node.getFeature() );
+
+    if( m_fireEventsForDependendElements )
     {
-      final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
-      final ModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { m_node.getFeature() } );
-      workspace.fireModellEvent( event );
+      /* Nodes etc. */
+      final IFeatureWrapperCollection<IFeatureWrapper2> containers = m_node.getContainers();
+      for( final IFeatureWrapper2 featureWrapper2 : containers )
+        changedFeatures.add( featureWrapper2.getFeature() );
+
+      /* Elements */
+      final IFE1D2DElement[] elements = m_node.getElements();
+      for( final IFE1D2DElement element : elements )
+        changedFeatures.add( element.getFeature() );
     }
+
+    final GMLWorkspace workspace = m_discretisationModel.getFeature().getWorkspace();
+    workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
   }
 
   /**

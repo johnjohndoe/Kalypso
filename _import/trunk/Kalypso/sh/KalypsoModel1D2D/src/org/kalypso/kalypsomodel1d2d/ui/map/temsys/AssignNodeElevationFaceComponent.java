@@ -84,8 +84,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Madanagopal
@@ -186,11 +184,6 @@ public class AssignNodeElevationFaceComponent
           {
             super.process();
 
-            // get notification fired for the nodes
-            final FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( workspace, model1d2d.getFeature(), new Feature[] { getMovedNode().getFeature(),
-                model1d2d.getFeature() },// changedFeaturesArray,
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
-            workspace.fireModellEvent( modellEvent );
             final Display display = m_table.getDisplay();
             display.asyncExec( updateTable );
           }
@@ -541,7 +534,6 @@ public class AssignNodeElevationFaceComponent
     final CellEditor[] editors = new CellEditor[] { textCellEditor, eleCellEditor };
     m_nodeElevationViewer.setCellEditors( editors );
     m_nodeElevationViewer.setCellModifier( m_cellModifier );
-
   }
 
   @SuppressWarnings("unchecked")
