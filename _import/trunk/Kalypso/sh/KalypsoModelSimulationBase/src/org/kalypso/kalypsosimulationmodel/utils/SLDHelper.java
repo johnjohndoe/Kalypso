@@ -250,7 +250,7 @@ public class SLDHelper
         throw new CoreException( Status.CANCEL_STATUS );
     }
 
-    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap, null );
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( null, colorMap, null, null );
     final Rule rule = StyleFactory.createRule( rasterSymbolizer );
     style.addRule( rule );
 
@@ -287,7 +287,7 @@ public class SLDHelper
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
 
-    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap, null );
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( null, colorMap, null, null );
     final Rule rule = StyleFactory.createRule( rasterSymbolizer );
     style.addRule( rule );
 
