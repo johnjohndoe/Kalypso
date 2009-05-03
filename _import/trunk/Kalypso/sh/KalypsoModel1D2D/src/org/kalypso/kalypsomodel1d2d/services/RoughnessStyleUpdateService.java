@@ -46,9 +46,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.graphics.sld.StyledLayerDescriptor;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -139,7 +137,7 @@ public class RoughnessStyleUpdateService extends Job
 
       final List<Layer> layers = new ArrayList<Layer>();
       layers.add( SLDHelper.polygonStyleLayer( POLYGON_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, POLYGON_STYLE_NAME, POLYGON_STYLE_TITLE, monitor ) );
-      layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, collection, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, LABEL_STYLE_NAME, LABEL_STYLE_TITLE ) );
+      layers.add( SLDHelper.textlabelStyleLayer( LABEL_LAYER_NAME, geomPropertyName, IRoughnessPolygon.PROP_ROUGHNESS_STYLE, LABEL_STYLE_NAME, LABEL_STYLE_TITLE ) );
 
       SLDHelper.exportPolygonSymbolyzerSLD( m_sldFile, layers.toArray(new Layer[0]), monitor );
       return Status.OK_STATUS;

@@ -100,9 +100,9 @@ import org.xml.sax.SAXException;
 
 /**
  * TODO: move this into the deegree plug-in.
- *
+ * 
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class SLDHelper
 {
@@ -128,7 +128,7 @@ public class SLDHelper
 
   private static final String ELSEFILTER_NAME = "undefinierterStilID"; //$NON-NLS-1$
 
-  private static final String ELSEFILTER_TITLE = Messages.getString("org.kalypso.kalypsosimulationmodel.utils.SLDHelper.0"); //$NON-NLS-1$
+  private static final String ELSEFILTER_TITLE = Messages.getString( "org.kalypso.kalypsosimulationmodel.utils.SLDHelper.0" ); //$NON-NLS-1$
 
   private static final Color ELSEFILTER_FILLCOLOR = new Color( Integer.parseInt( "ffffff", 16 ) ); //$NON-NLS-1$
 
@@ -145,7 +145,7 @@ public class SLDHelper
   public static void exportPolygonSymbolyzerSLD( final IFile sldFile, final Layer[] layers, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
   {
     final IProgressMonitor progressMonitor = monitor == null ? new NullProgressMonitor() : monitor;
-    final StyledLayerDescriptor descriptor = createPolygonSLD( layers, progressMonitor );
+    final StyledLayerDescriptor descriptor = createPolygonSLD( layers );
     exportSLD( sldFile, descriptor, progressMonitor );
   }
 
@@ -250,14 +250,14 @@ public class SLDHelper
         throw new CoreException( Status.CANCEL_STATUS );
     }
 
-    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap, null );
     final Rule rule = StyleFactory.createRule( rasterSymbolizer );
     style.addRule( rule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleName, styleTitle, null, false, featureTypeStyles ) };
     final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
-    return SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
   }
 
   private static StyledLayerDescriptor createRasterSLD( final List< ? > collection, final String styleName, final String styleTitle, final IProgressMonitor monitor ) throws CoreException
@@ -287,19 +287,19 @@ public class SLDHelper
       colorMap.put( new Double( quantity ), colorMapEntry );
     }
 
-    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap );
+    final RasterSymbolizer rasterSymbolizer = new RasterSymbolizer_Impl( colorMap, null );
     final Rule rule = StyleFactory.createRule( rasterSymbolizer );
     style.addRule( rule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleName, styleTitle, null, false, featureTypeStyles ) };
     final org.kalypsodeegree.graphics.sld.Layer[] layers = new org.kalypsodeegree.graphics.sld.Layer[] { SLDFactory.createNamedLayer( LAYER_NAME, null, styles ) };
-    return SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
   }
 
-  public static Layer polygonStyleLayer( final String layerName, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor progressMonitor) throws CoreException
+  public static Layer polygonStyleLayer( final String layerName, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle, final IProgressMonitor progressMonitor ) throws CoreException
   {
-    final String myLayerName = layerName == null ? LAYER_NAME: layerName;
+    final String myLayerName = layerName == null ? LAYER_NAME : layerName;
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
     final PropertyName geomPropertyName = geometryProperty == null ? null : new PropertyName( geometryProperty );
     final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
@@ -348,18 +348,16 @@ public class SLDHelper
       style.addRule( rule );
     }
 
-
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final UserStyle userStyle = StyleFactory.createUserStyle( myStyleName, myStyleTitle, null, false, featureTypeStyles );
     final Style[] styles = new Style[] { userStyle };
-    return SLDFactory.createNamedLayer( myLayerName, null, styles);
+    return SLDFactory.createNamedLayer( myLayerName, null, styles );
   }
 
-  
-  public static Layer textlabelStyleLayer( final String layerName, final List< ? > collection, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle) throws CoreException
+  public static Layer textlabelStyleLayer( final String layerName, final QName geometryProperty, final QName styleProperty, final String styleName, final String styleTitle )
   {
 
-    final String myLayerName = layerName == null ? LAYER_NAME: layerName;
+    final String myLayerName = layerName == null ? LAYER_NAME : layerName;
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
     final PropertyName geomPropertyName = geometryProperty == null ? null : new PropertyName( geometryProperty );
     final String myStyleName = styleName == null ? DEFAULT_STYLE_NAME : styleName;
@@ -369,7 +367,7 @@ public class SLDHelper
     anchorPoint[0] = StyleFactory.createParameterValueType( 0.5 );
     anchorPoint[1] = StyleFactory.createParameterValueType( 0.5 );
     final ParameterValueType rotation = StyleFactory.createParameterValueType( 0.0 );
-    
+
     // adding labels rule
     final Font font = StyleFactory.createFont( "Arial", 11.0 ); //$NON-NLS-1$
     font.setColor( Color.BLACK );
@@ -387,17 +385,11 @@ public class SLDHelper
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final UserStyle userStyle = StyleFactory.createUserStyle( myStyleName, myStyleTitle, null, false, featureTypeStyles );
     final Style[] styles = new Style[] { userStyle };
-    return SLDFactory.createNamedLayer( myLayerName, null, styles);
+    return SLDFactory.createNamedLayer( myLayerName, null, styles );
   }
 
-
-  private static StyledLayerDescriptor createPolygonSLD (final Layer[] layers , final IProgressMonitor monitor ) throws CoreException
+  private static StyledLayerDescriptor createPolygonSLD( final Layer[] layers )
   {
-    return SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    return SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
   }
-    
-    
-  }
-  
-  
-  
+}

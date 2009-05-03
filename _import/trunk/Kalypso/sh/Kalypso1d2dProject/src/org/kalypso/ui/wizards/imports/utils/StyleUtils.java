@@ -204,7 +204,7 @@ public class StyleUtils
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( m_StyleLayerName, m_StyleLayerName, null, false, featureTypeStyles ) };
     final Layer[] layers = new Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStreamWriter os = null;
@@ -375,7 +375,7 @@ public class StyleUtils
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { featureTypeStyle };
     final Style[] styles = new Style[] { StyleFactory.createUserStyle( styleLayerName, styleLayerName, null, false, featureTypeStyles ) };
     final Layer[] layers = new Layer[] { SLDFactory.createNamedLayer( "deegree style definition", null, styles ) }; //$NON-NLS-1$
-    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers, "1.0" ); //$NON-NLS-1$
+    final StyledLayerDescriptor sld = SLDFactory.createStyledLayerDescriptor( layers ); //$NON-NLS-1$
     final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
     final Source source = new DOMSource( doc );
     OutputStreamWriter os = null;
