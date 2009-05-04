@@ -49,7 +49,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( Messages.getString( "ChangeAnnualityOperation.0" ), 7 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.ChangeAnnualityOperation.0" ), 7 ); //$NON-NLS-1$
       final int oldReturnPeriod = m_coverageCollection.getReturnPeriod();
       m_coverageCollection.setReturnPeriod( m_newReturnPeriod );
       m_coverageCollection.setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$

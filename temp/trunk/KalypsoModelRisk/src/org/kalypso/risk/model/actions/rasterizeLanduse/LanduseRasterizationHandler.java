@@ -64,7 +64,7 @@ public class LanduseRasterizationHandler extends AbstractHandler implements ISim
       if( dialog.open() != 0 )
         return null;
 
-      final Job job = new Job(  Messages.getString("org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler.9") ) 
+      final Job job = new Job(  Messages.getString("org.kalypso.risk.model.actions.rasterizeLanduse.LanduseRasterizationHandler.9") )  //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

@@ -88,7 +88,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "ImportWaterdepthWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -117,7 +117,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final MapView mapView = (MapView) workbench.getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
     {
-      StatusUtilities.createWarningStatus( Messages.getString( "ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
+      StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.8" ) ); //$NON-NLS-1$
       return false;
     }
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapView.getMapPanel().getMapModell();
@@ -135,7 +135,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, scenarioFolder );
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, importWaterdepthRunnable );
-      ErrorDialog.openError( getShell(), Messages.getString( "ImportWaterdepthWizard.9" ), Messages.getString( "ImportWaterdepthWizard.10" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.9" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.10" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

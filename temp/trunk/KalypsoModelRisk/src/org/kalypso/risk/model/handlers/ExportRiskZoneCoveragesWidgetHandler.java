@@ -43,7 +43,7 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.1" ), Messages.getString( "org.kalypso.risk.model.handlers.ExportRiskZoneCoveragesWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       return null;
     }

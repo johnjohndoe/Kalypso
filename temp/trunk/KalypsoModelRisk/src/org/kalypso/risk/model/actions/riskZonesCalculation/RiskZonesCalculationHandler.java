@@ -47,7 +47,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       final IEvaluationContext context = handlerService.getCurrentState();
       final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final Job job = new Job( Messages.getString("org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.10") ) 
+      final Job job = new Job( Messages.getString("org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesCalculationHandler.10") )  //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

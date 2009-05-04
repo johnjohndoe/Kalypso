@@ -107,7 +107,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       if( damagefunctionValue > 1 )
       {
-        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         damagefunctionValue = 1.0;
       }
 
@@ -175,7 +175,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       // check if function is parsable
       if( !damageFunction.parse() )
-        throw new IllegalArgumentException( Messages.getString( "LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.risk.model.schema.binding.LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
       else
         return damageFunction;
     }

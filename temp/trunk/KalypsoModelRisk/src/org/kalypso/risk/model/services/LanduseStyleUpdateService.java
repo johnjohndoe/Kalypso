@@ -89,7 +89,7 @@ public class LanduseStyleUpdateService extends Job
 
   public LanduseStyleUpdateService( final IFile file )
   {
-    super( Messages.getString( "LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.risk.model.services.LanduseStyleUpdateService.0" ) ); //$NON-NLS-1$
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();

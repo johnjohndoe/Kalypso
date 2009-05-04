@@ -48,7 +48,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
     final IMapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.3", "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.5" ) ) 
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.3", "org.kalypso.risk.model.handlers.WaterdepthCoveragesWidgetHandler.5" ) )  //$NON-NLS-1$ //$NON-NLS-2$
     {
       return null;
     }

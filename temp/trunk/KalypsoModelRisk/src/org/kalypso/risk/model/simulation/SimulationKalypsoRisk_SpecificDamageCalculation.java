@@ -135,7 +135,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
     final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
 
     if( rasterModel.getWaterlevelCoverageCollection().size() == 0 )
-      throw new SimulationException( "Fehler beim Berechnen der Schadenswerte. Keine Wassertiefen vorhanden."); 
+      throw new SimulationException( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.0"));  //$NON-NLS-1$
 
     /*
      * As the default value is 1, this is cannot happen any more
@@ -145,7 +145,7 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
      * SimulationException( Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ }
      */
 
-    monitor.setMessage( "Rasterung des spezifischen Schadens..."  );
+    monitor.setMessage( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.1")  ); //$NON-NLS-1$
     try
     {
       /* clear existing data */
@@ -259,8 +259,8 @@ public class SimulationKalypsoRisk_SpecificDamageCalculation implements ISimulat
           {
             landuseClass.updateStatistic( returnPeriod );
           }
-          newCoverage.setName( String.format("Spezifischer Schaden %d [%d]" , srcAnnualCoverages.getReturnPeriod() ,i )); 
-          newCoverage.setDescription(String.format( "erstellt am %s", new Date().toString() )); 
+          newCoverage.setName( String.format(Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.2") , srcAnnualCoverages.getReturnPeriod() ,i ));  //$NON-NLS-1$
+          newCoverage.setDescription(String.format( Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_SpecificDamageCalculation.3"), new Date().toString() ));  //$NON-NLS-1$
           inputGrid.dispose();
         }
         /* set the return period of the specific damage grid */

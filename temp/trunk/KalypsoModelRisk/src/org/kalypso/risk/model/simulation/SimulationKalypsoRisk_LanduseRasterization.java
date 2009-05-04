@@ -123,14 +123,14 @@ public class SimulationKalypsoRisk_LanduseRasterization implements ISimulationSp
    */
   private void doLanduseRasterization( final File tmpdir, final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final ISimulationMonitor monitor, final double chainProcessWeight ) throws SimulationException
   {
-    monitor.setMessage( Messages.getString( "RiskLanduseRasterizationRunnable.0" ) ); //$NON-NLS-1$
+    monitor.setMessage( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization.0" ) ); //$NON-NLS-1$
     final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = rasterModel.getWaterlevelCoverageCollection();
     if( waterDepthCoverageCollection.size() == 0 )
       throw new SimulationException( "Keine Fliesstiefen Rasterdaten vorhanden. Bitte importieren Sie zuerst die Fliesstiefen." ); //$NON-NLS-1$
     final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( waterDepthCoverageCollection );
     final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
     if( maxReturnPeriod == Integer.MIN_VALUE )
-      throw new SimulationException( Messages.getString( "RiskLanduseRasterizationRunnable.1" ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.risk.model.simulation.SimulationKalypsoRisk_LanduseRasterization.1" ) ); //$NON-NLS-1$
 
     final ICoverageCollection inputCoverages = maxCoveragesCollection;
     final ICoverageCollection outputCoverages = rasterModel.getLanduseCoverage();

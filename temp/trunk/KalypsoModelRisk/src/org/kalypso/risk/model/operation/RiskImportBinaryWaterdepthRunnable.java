@@ -51,10 +51,10 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
-      monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.waterdepth.ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
@@ -94,7 +94,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
         coverage.setRangeSet( rangeSetFile );
         coverage.setGridDomain( raster.getGridDomain() );
         coverage.setName( binFileName );
-        coverage.setDescription(Messages.getString( "RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
+        coverage.setDescription(Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.4" ) + raster.getSourceFile().getName() ); //$NON-NLS-1$
 
         annualCoverageCollection.add( coverage );
       }
@@ -104,7 +104,7 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e,Messages.getString( "RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e,Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.5" ) ); //$NON-NLS-1$
     }
   }
 
@@ -115,9 +115,9 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
     destFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
 
     if( !srcFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "RiskImportBinaryWaterdepthRunnable.6" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.6" ) ) ); //$NON-NLS-1$
     if( !destFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "org.kalypso.risk.model.operation.RiskImportBinaryWaterdepthRunnable.7" ) ) ); //$NON-NLS-1$
 
     srcFolder.accept( new IResourceVisitor()
     {

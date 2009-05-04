@@ -45,7 +45,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( Messages.getString( "AddCollectionOperation.0" ), 7 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.manageWaterdepthCollections.AddCollectionOperation.0" ), 7 ); //$NON-NLS-1$
 
       /* Create a unique name */
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();

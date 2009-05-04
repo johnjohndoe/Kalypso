@@ -223,8 +223,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( String.format("Spezifischer Schaden %s [%d]" ,sourceCoverageCollection.getReturnPeriod(),i )); 
-      newCoverage.setDescription( String.format(" erstellt am %s" , new Date().toString() )); 
+      newCoverage.setName( String.format(Messages.getString("com.vividsolutions.jts.geom.Coordinate.RiskModelHelper.0") ,sourceCoverageCollection.getReturnPeriod(),i ));  //$NON-NLS-1$
+      newCoverage.setDescription( String.format(Messages.getString("com.vividsolutions.jts.geom.Coordinate.RiskModelHelper.1") , new Date().toString() ));  //$NON-NLS-1$
 
       inputGrid.dispose();
     }

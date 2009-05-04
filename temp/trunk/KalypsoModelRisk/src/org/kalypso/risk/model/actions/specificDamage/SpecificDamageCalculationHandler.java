@@ -65,7 +65,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
           return null;
         }
 
-        final Job job = new Job( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6")
+        final Job job = new Job( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.6") //$NON-NLS-1$
         {
           @Override
           protected IStatus run( final IProgressMonitor monitor )
@@ -92,7 +92,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
             }
             catch( final Exception e )
             {
-              ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
+              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.0" ), e.getLocalizedMessage(), Status.CANCEL_STATUS ); //$NON-NLS-1$
               return Status.CANCEL_STATUS;
             }
             return status;

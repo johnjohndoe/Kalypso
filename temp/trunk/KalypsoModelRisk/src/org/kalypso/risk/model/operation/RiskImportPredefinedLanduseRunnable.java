@@ -65,17 +65,16 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
-      monitor.subTask( Messages.getString( "ImportLanduseWizard.7" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.7" ) ); //$NON-NLS-1$
 
       final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-      monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
       landusePolygonCollection.clear();
 
@@ -107,7 +106,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "RiskImportPredefinedLanduseRunnable.4" ) ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable.4" ) ); //$NON-NLS-1$
     }
   }
 
