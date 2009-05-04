@@ -696,3 +696,8 @@ new features introduced/ started to be introduced:
 
 019.) Critical bug fix at the 1D-2D line transition; inner 2D->1D boundary values were not transformed due to operative Marsh option.
 --- Nico Schrage, 27.04.2009
+
+--- Monika Donner, 04.05.2009
+008.) Correction in SubR rma10:
+      Transfer vor outsuffix 'bed' for kohesive Material                                             
+--- Monika Donner, 04.05.2009
