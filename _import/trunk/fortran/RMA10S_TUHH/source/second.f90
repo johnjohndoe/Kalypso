@@ -1,10 +1,10 @@
-!     Last change:  MD   19 Mar 2009    1:02 pm
+!     Last change:  WP    4 May 2009    2:30 pm
 subroutine second (ta)
 implicit none
 save
 ! this version is for microsoft fortran
-data itim /0/
 integer :: itim
+data itim /0/
 real (kind = 8) , intent (out):: ta
 
 integer :: clock1, rate
