@@ -10,15 +10,18 @@
 !    a Friction Factor at each node
 ! --------------------------------------------------------------
  SUBROUTINE GET_FFACT
- USE BLK10MOD
- USE BLKSANMOD
- USE ParaKalyps
-
+ USE BLK10MOD, only : maxp, ne, imat, ncn, ncorn, nop, fact, np, wsll, ao, area, lout
+ USE BLKSANMOD, only : ffact_el, elton, tribarea, ffact_kn  
+ USE ParaKalyps, only : lambdatot
+ implicit none
+ 
  ! REAL(KIND=8) :: FACT
- REAL(KIND=8) :: FFACT_TEMP(1:maxp,1:12)
- REAL(KIND=8) :: AREA_PART(1:maxp,1:12)
+ REAL(KIND=8), allocatable :: FFACT_TEMP(:,:)
+ REAL(KIND=8), allocatable :: AREA_PART(:,:)
+ INTEGER (KIND=4) :: I,N,M
 ! -------------------------------------------------------------
 !MD:  Preparing Restart FFACT for each Element
+allocate (FFACT_TEMP (1:maxp,1:12), AREA_PART(1:maxp,1:12))
 DO N=1,NE
   IF (lambdaTot(N).ge.0.0) THEN
     FFACT_EL(N) = lambdaTot(N)/8.0
@@ -122,6 +125,6 @@ DO N=1,NP         ! over all nodes N
   ! WRITE(75,*) ' Friction factor at NODE ',N, ' is:',FFACT_KN(N)
 ENDDO
 
-
+deallocate (FFACT_TEMP , AREA_PART)
 RETURN
 END
