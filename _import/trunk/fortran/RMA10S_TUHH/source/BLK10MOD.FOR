@@ -17,7 +17,7 @@
       !i/o file and unit definitions (up to date); for description look into file.sub
       !------------------------------------------------------------------------------
       
-      type (fileCtrl) :: fileControl
+      type (fileCtrl), save :: fileControl
       !obsolete files
       integer (kind = 4) :: icfl
       integer (kind = 4) :: lin, lout, litr, imesout
