@@ -5,7 +5,7 @@ module mod_Arcs
     type (node), pointer :: last => null()
     type (node), pointer :: midside => null()
     type (arc), pointer :: nextSeg => null()
-    real (kind = 8) :: posNormal (1:2) = [0.0d0, 0.0d0]
+    real (kind = 8) :: posNormal (1:2) = (/0.0d0, 0.0d0/)
   end type
   
 CONTAINS

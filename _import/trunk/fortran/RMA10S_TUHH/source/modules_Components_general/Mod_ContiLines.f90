@@ -7,7 +7,7 @@ module mod_ContiLines
     type (linkedNode), pointer :: firstNode => null()
     type (linkedNode), pointer :: lastNode => null()
     type (arc), pointer :: firstSegment => null()
-    real (kind = 8) :: posNormal (1:2) = [0.0d0, 0.0d0]
+    real (kind = 8) :: posNormal (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: km
   end type
   

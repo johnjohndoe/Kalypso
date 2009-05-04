@@ -1,7 +1,7 @@
 module mod_Nodes
   type node
     integer (kind = 4) :: ID = 0
-    real (kind = 8) :: cord (1:2) = [0.0d0, 0.0d0]
+    real (kind = 8) :: cord (1:2) = (/0.0d0, 0.0d0/)
     real (kind = 8) :: ao = 0.0d0
   end type
 
@@ -28,9 +28,9 @@ contains
     
     new.ID = ID
     if (present (zcord)) then
-      call setCoords (new, [xcord, ycord], zcord)
+      call setCoords (new, (/xcord, ycord/), zcord)
     else
-      call setCoords (new, [xcord, ycord])
+      call setCoords (new, (/xcord, ycord/))
     endif
     !overgive the new node
     newNode => new

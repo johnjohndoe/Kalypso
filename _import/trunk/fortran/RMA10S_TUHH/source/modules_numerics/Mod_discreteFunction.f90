@@ -142,7 +142,7 @@ module mod_discreteFunction
     !function name
     real (kind = 8) :: interval
     !arguments
-    type (valuePair), pointer, intent (in) :: lowerBound
+    type (valuePair), pointer :: lowerBound
     
     if (associated (lowerBound.nextPair)) then
       interval = lowerBound.nextPair.abszissa - lowerBound.abszissa
@@ -156,8 +156,8 @@ module mod_discreteFunction
     !function name
     real (kind = 8) :: difference
     !arguments
-    real (kind = 8), pointer, intent (in) :: xValue
-    type (valuePair), pointer, intent (in) :: lowerBound
+    real (kind = 8), pointer :: xValue
+    type (valuePair), pointer :: lowerBound
 
 
     difference = xValue - lowerBound.abszissa

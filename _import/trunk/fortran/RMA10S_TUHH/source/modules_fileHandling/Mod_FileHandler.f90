@@ -120,7 +120,7 @@ end subroutine
   subroutine readVolumeWaterlevelFile (volWlFile, storageElt)
     implicit none
     !input parameters
-    type (file), intent (in), pointer :: volWlFile
+    type (file), pointer :: volWlFile
     type (StorageElement), pointer :: storageElt(:)
   
     !local variables
