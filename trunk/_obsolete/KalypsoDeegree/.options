@@ -1,4 +1,0 @@
-# Debug output
-org.kalypso.deegree/debug/transformation = true
-org.kalypso.deegree/debug/operation = true
-org.kalypso.deegree/debug/grid_ops = true
