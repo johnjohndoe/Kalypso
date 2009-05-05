@@ -557,7 +557,7 @@ steadyCycle: Do
 
       !MD: only for kohesive Sediment
       IF (LSS.gt.0) THEN
-        call generateOutputFileName ('stat', niti, 0, maxn, 'bed', 'bed', modellrst, ct, nb, outputFileName, inputFileName)
+        call generateOutputFileName ('stat', niti, 0, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
         CALL write_KALYP_Bed (outputFileName)
       END IF
     endif
@@ -627,7 +627,7 @@ if (ikalypsofm /= 0) then
 
   !MD: only for kohesive Sediment
   IF (LSS.gt.0) THEN
-    call generateOutputFileName ('stat', niti, 0, 0, 'bed', 'bed', modellrst, ct, nb, outputFileName, inputFileName)
+    call generateOutputFileName ('stat', niti, 0, 0, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
     CALL write_KALYP_Bed (outputFileName)
   END IF
 end if
@@ -1237,7 +1237,7 @@ DynamicTimestepCycle: do n = 1, ncyc
 
          !MD: only for kohesive Sediment
          IF (LSS.gt.0) THEN
-           call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', 'bed', modellrst, ct, nb, outputFileName, inputFileName)
+           call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein , modellrst, ct, nb, outputFileName, inputFileName)
            CALL write_KALYP_Bed (outputFileName)
          END IF
       endif
@@ -1336,7 +1336,7 @@ DynamicTimestepCycle: do n = 1, ncyc
       call write_kalypso (outputfilename, 'resu')
       !MD: only for kohesive Sediment
       IF (LSS.gt.0) THEN
-        call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', 'bed', modellrst, ct, nb, outputFileName, inputFileName)
+        call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein, modellrst, ct, nb, outputFileName, inputFileName)
         CALL write_KALYP_Bed (outputFileName)
       END IF
     endif
