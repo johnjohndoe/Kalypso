@@ -486,19 +486,11 @@ C
 
 
 CIPK AUG02 ADD NBSFRQ ABOVE AND BELOW
-      IF(NBSFRQ .EQ. 0) THEN
-        NBSFRQ=1
-      ENDIF
+      IF(NBSFRQ .EQ. 0) NBSFRQ=1
+      
+      IF(NPRTF .EQ. 0) NPRTF=1
 
-!      IF(NPRTI .EQ. 0) THEN
-!        IF(NPRTF .EQ. 0) THEN
-!          NPRTF=1
-!        ELSE
-!          NPRTF=-NPRTF
-!        ENDIF
-!      ELSE
-!        NPRTF=NPRTI
-!      ENDIF
+
       NDATLN=NDATLN+1
 CIPK NOV97      READ(LIN,7000) ID,DLIN
       call ginpt(lin,id,dlin)
