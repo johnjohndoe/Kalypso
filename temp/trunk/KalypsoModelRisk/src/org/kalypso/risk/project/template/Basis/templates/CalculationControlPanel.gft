@@ -15,8 +15,8 @@
 			grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" numRows="4"
 			makeColumnsEqualWidth="false" horizontalSpacing="10" />
-
-		<gft:group text="Landnutzungsklassen" style="0">
+<!-- text="Landnutzungsklassen" -->
+		<gft:group property="krrcm:landuseClassMember" style="0">
 			<gft:gridData horizontalSpan="2" verticalSpan="2"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" heightHint="200"
@@ -46,8 +46,8 @@
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
-
-		<gft:group text="Schadensfunktionen" style="0">
+<!-- text="Schadensfunktionen" -->
+		<gft:group property="krrcm:damageFunctionMember" style="0">
 			<gft:gridData horizontalSpan="1" minimumHeight="150"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
@@ -71,8 +71,8 @@
 				</ns1:gistableview>
 			</gft:table>
 		</gft:group>
-
-		<gft:group text="spez. Vermögenswerte" style="0">
+<!-- text="spez. Vermögenswerte" -->
+		<gft:group  property="krrcm:assetValueClassMember" style="0">
 			<gft:gridData horizontalSpan="1" verticalSpan="2"
 				minimumHeight="200" horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"

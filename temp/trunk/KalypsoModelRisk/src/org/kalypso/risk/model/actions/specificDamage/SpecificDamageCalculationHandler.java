@@ -105,7 +105,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoRiskPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.4" ), Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, "", Messages.getString( "org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
     }

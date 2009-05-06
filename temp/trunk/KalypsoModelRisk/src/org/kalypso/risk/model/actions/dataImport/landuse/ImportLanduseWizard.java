@@ -271,7 +271,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         return false;
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, importLanduseRunnable );
-      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.4" ), Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.5" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.risk.model.actions.dataImport.landuse.ImportLanduseWizard.4" ), "", execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {
