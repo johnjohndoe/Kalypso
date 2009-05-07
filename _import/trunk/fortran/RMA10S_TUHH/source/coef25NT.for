@@ -1,3 +1,4 @@
+C     Last change:  MD    7 May 2009    9:51 am
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -1117,7 +1118,10 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 
         SHEARVEL=VECQ*SQRT(FFACT)
         DIFX=SHEARVEL*H*ABS(ORT(NR,8))
-        DIFY=DIFX*ABS(ORT(NR,9))
+        !MD: DIFY is wrong 07-05-2009
+        !MD: DIFY=DIFX*ABS(ORT(NR,9))
+        DIFY=SHEARVEL*H*ABS(ORT(NR,9))
+
         !MD: testoutput into output.out
         IF (NN.eq.1 .or. NN.eq.2) THEN
           WRITE (75, *) 'Schergeschwindigkeit u_star(NN):', SHEARVEL
