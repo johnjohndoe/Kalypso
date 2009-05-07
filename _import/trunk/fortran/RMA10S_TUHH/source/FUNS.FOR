@@ -1,4 +1,4 @@
-C     Last change:  MD   20 Aug 2008    6:20 pm
+C     Last change:  MD    5 May 2009    4:09 pm
 
       FUNCTION DRODS(SAL,I)
       !function type declaration
@@ -31,7 +31,10 @@ C
       DATA GF/1.0,516./
 C-
 C**************** SEDIMENT FUNCTION
-      FDSED= 1.940*(1.0+SED*1.0E-3)*GF(I)
+!MD:  falsche Basisformel
+!MD:      FDSED= 1.940*(1.0+SED*1.0E-3)*GF(I)
+!MD: Korrektur fuer Dichte(sed):
+      FDSED= (1.940*GF(I)) + ((SED*1.0E-3)*(1.0 - 1.940*GF(I)/2650.0))
 C****************** 
       RETURN
       END
@@ -114,7 +117,12 @@ C-
 !MD   Ableitung von Dichte(sed)/ nach d(Sed):
 !MD    --> Dichte(sed) = (1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
 !MD   wird zu:
-      DRODSD=1.940E-3*GF(I)
+!MD   !! falsche Basisformel
+!MD       DRODSD=(1.935*1.0E-3)*GF(I)
+
+      !MD: Korrektur fuer Dichte(sed)/ nach d(Sed)
+      !MD: Dichte(sed) = (1.940*GF(I)) + ((SED*1.0E-3)*(1.0 - 1.940*GF(I)/2650.0)
+      DRODSD= 1.0E-3 * (1.0 - 1.940*GF(I)/2650.0)
 !MDMD: DRODSD= (1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
       RETURN
       END
