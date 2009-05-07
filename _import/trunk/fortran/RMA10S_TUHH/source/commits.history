@@ -698,6 +698,21 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 27.04.2009
 
 --- Monika Donner, 04.05.2009
-008.) Correction in SubR rma10:
+020.) Correction in SubR rma10:
       Transfer vor outsuffix 'bed' for kohesive Material                                             
 --- Monika Donner, 04.05.2009
+
+--- Monika Donner, 07.05.2009
+021.) Correction in SubR Coef25NT:
+      Calculation for dispersion coefficient for sediment-transport (only!)
+      was determined in a wrong way:
+        DIFX = h x u* x ORT(j,8)
+        DIFY = DIFX x ORT(j,9)
+        --> dispersion in y-direction can be greater than in x-direction
+      Correction for DIFY:
+        DIFY = h x u* x ORT(j,9) 
+022.) Correction in SubR FUNS for FDSED and DRODSD:
+      Calculation for density of suspension depending on concentration "SED"
+      Formula was not correct: influence on derivation of Momentum-x and -y
+      over concentration.                                                  
+--- Monika Donner, 07.05.2009
