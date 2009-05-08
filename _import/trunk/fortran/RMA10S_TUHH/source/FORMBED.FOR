@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Jan 2009    1:03 pm
+C     Last change:  MD    8 May 2009    1:34 pm
 CIPK LAST UPDATE MAY 30 2006 ADD GAD DEF.
 CIPK LAST UPDATE APRIL 22 2006 REMOVE TEST ON NLAYER
 CIPK LAST UPDATE APRIL 05 2006 TEST TO MAKE SURE LOOPS ARE ONLY ENTERED ONCE
@@ -281,18 +281,20 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
 	    IF(IPASST(N) .EQ. 0) THEN
 	      IPASST(N)=1
   	      DEP=VEL(3,N)
-	      AO(N)=AO(N)+DEPINCR(N)
-              ADO(N)=ADO(N)+DEPINCR(N)
-              ADB(N)=ADB(N)+DEPINCR(N)
-              ADT(N)=ADT(N)+DEPINCR(N)
-              HEL(N)=WSLL(N)-ADO(N)
-              CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-              VEL(3,N)=HTP   !MD HTP=HSIG
+       !MD	 AO(N)=AO(N)+DEPINCR(N)
+       !MD       ADO(N)=ADO(N)+DEPINCR(N)
+       !MD       ADB(N)=ADB(N)+DEPINCR(N)
+       !MD       ADT(N)=ADT(N)+DEPINCR(N)
+       !MD       HEL(N)=WSLL(N)-ADO(N)
+       !MD       CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+       !MD       VEL(3,N)=HTP   !MD HTP=HSIG
 	      RATIO=vel(3,n)/DEP
 	      VEL(1,N)=VEL(1,N)/RATIO
 	      VEL(2,N)=VEL(2,N)/RATIO
+              VEL(6,N)=VEL(6,N)/RATIO
 	      VDOT(1,N)=VDOT(1,N)/RATIO
 	      VDOT(2,N)=VDOT(2,N)/RATIO
+       	      VDOT(6,N)=VDOT(6,N)/RATIO
 	    ENDIF 
         ENDDO
         DO K=2,NCORN(M),2
@@ -312,13 +314,19 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
 	      ADO(N)=(ADO(N1)+ADO(N2))/2.
 	      ADB(N)=(ADB(N1)+ADB(N2))/2.
 	      ADT(N)=(ADT(N1)+ADT(N2))/2.
-	      BEDELO(N)=(BEDEL(N1)-AORIG(N1)+BEDEL(N2)-AORIG(N2))/2.
+              !MD: new new
+              ESRO(N)=(BSHEAR(N1)+BSHEAR(N2))/2.
+              DEPINCR(N)=(DEPINCR(N)+DEPINCR(N))/2.
+	      BEDELO(N)=(BEDELO(N1)+BEDELO(N2))/2.
+              !MD: new new
               BEDEL(N)=BEDELO(N)
 	      RATIO=vel(3,n)/DEP
 	      VEL(1,N)=VEL(1,N)/RATIO
 	      VEL(2,N)=VEL(2,N)/RATIO
+              VEL(6,N)=VEL(6,N)/RATIO
 	      VDOT(1,N)=VDOT(1,N)/RATIO
 	      VDOT(2,N)=VDOT(2,N)/RATIO
+              VDOT(6,N)=VDOT(6,N)/RATIO
 	    ENDIF
         ENDDO
 	 ENDIF
