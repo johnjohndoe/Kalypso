@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Jan 2009   11:57 am
+C     Last change:  MD    7 May 2009    7:57 pm
 cipk last update jan 11 2007 allow for 5 node transition elements
 CIPK LAST UPDATE SEP 05 2006 FINALIZE UPDATES
 CIPK LAST UPDATE SEP 05 2006 REVISE TESTS
@@ -88,7 +88,10 @@ ccc      AT(NN)=0.
         TMD(NN)=0.
 cipk apr99
 CIPK AUG06   SKIP TEST
-CIPK AUG06        if(wsll(nn) .lt. ao(nn)) go to 200
+
+!MDMD: reactivaed  in order to avoid maximum dep-rates
+        if(wsll(nn) .lt. ao(nn)) go to 200
+!MDMD: reactivaed  in order to avoid maximum dep-rates
 
         IF(ESRO(NN).GT.TAUCD .AND. BSHEAR(NN).GT.TAUCD) GO TO 200
 C-
@@ -120,14 +123,20 @@ CIPK REVISE TO USE OLD DEPRATO
 c        TMTMP2A=TEMP1*ABS(VST)*DELT*CS
 C        write(215,*) nn,temp,vst,delt
 C        write(215,*) TM(NN),TMTMP1,TMTMP2,deprat(nn)
-        TM(NN)=((ALPHA-1.)*TMTMP2+TMTMP1)/ALPHA
+
+      !MDMD: deactivaed and corrected 07-05-2009
+      !MDMD  TM(NN)=((ALPHA-1.)*TMTMP2+TMTMP1)/ALPHA
+        TM(NN)=(TMTMP2+TMTMP1)/2.00
+      !MDMD: deactivaed and corrected 07-05-2009
+
 cipk may06 end updates       
         TM(NN)=TM(NN)/1000.
         DELBED(NN)=BEDEL(NN)
 
-!MD: TMD=TM vor goto geschoben (statt danach!)
-        TMD(NN)=TM(NN)
         IF(TM(NN).LE.0.)GO TO 350
+        TMD(NN)=TM(NN)
+!MD: TMD=TM goto verschoben
+
 C    MASS DEPOSITED PER UNIT AREA.
 C..............................................................
 
@@ -301,11 +310,11 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
        	      DEP=VEL(3,N)
        	      AO(N)=AO(N)+DEPINCR(N)
               ADO(N)=ADO(N)+DEPINCR(N)
-         !MD   ADB(N)=ADB(N)+DEPINCR(N)
-         !MD   ADT(N)=ADT(N)+DEPINCR(N)
+              ADB(N)=ADB(N)+DEPINCR(N)
+              ADT(N)=ADT(N)+DEPINCR(N)
               HEL(N)=WSLL(N)-ADO(N)
               CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-         !MD   VEL(3,N)=HTP
+              VEL(3,N)=HTP
        	 !MD   RATIO=vel(3,n)/DEP
               RATIO = 1.0   !MD: test
        	      VEL(1,N)=VEL(1,N)/RATIO
@@ -341,7 +350,7 @@ cipk jan07
            N1=NOP(M,K-1)
 	    N=NOP(M,K)
            IF(K .LT. NCORN(M)) THEN
-	      N2=NOP(M,K+1)
+	     N2=NOP(M,K+1)
 	    ELSE
              N2=NOP(M,1)
 	    ENDIF
@@ -361,11 +370,14 @@ CIPK APR06 TEST TO SEE IF THIS NODE HAS BEEN PROCESSED
   	    IF(IPASST(N) .EQ. 0) THEN
   	      IPASST(N)=1
   	      DEP=VEL(3,N)
-  	  !MD    VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
+  	      VEL(3,N)=(VEL(3,N1)+VEL(3,N2))/2.
   	      AO(N)=(AO(N1)+AO(N2))/2.
   	      ADO(N)=(ADO(N1)+ADO(N2))/2.
-  	  !MD    ADB(N)=(ADB(N1)+ADB(N2))/2.
-  	  !MD    ADT(N)=(ADT(N1)+ADT(N2))/2.
+  	      ADB(N)=(ADB(N1)+ADB(N2))/2.
+  	      ADT(N)=(ADT(N1)+ADT(N2))/2.
+              !MD: new new
+              DEPINCR(N)=0.
+              !MD: new new
               BEDEL(N)=(BEDEL(N1)+BEDEL(N2))/2.
               BEDELO(N)=BEDEL(N)
               RATIO = 1.0    !MD: TEst
