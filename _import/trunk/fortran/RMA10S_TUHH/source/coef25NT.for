@@ -1,4 +1,4 @@
-C     Last change:  MD    7 May 2009    9:51 am
+C     Last change:  MD    8 May 2009   12:26 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -1125,6 +1125,8 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
         !MD: testoutput into output.out
         IF (NN.eq.1 .or. NN.eq.2) THEN
           WRITE (75, *) 'Schergeschwindigkeit u_star(NN):', SHEARVEL
+          WRITE (75, *) 'Dispersion in x DIFX(NN):', DIFX
+          WRITE (75, *) 'Dispersion in y DIFY(NN):', DIFY
         END IF
         !-
       ENDIF
@@ -1939,7 +1941,7 @@ CIPK MAY04 USE SIDFQQ
 
 !MDMD:  Ansatz des alphaSN-Parameter mit 2.0
 !MDMD   IF(ICYC .GT. 0) T1=T1 + AMU*ALTM*H
-        IF(ICYC .GT. 0) T1=T1 + AMU*H*(ALPHASN/DELT)
+        IF(ICYC .GT. 0) T1=T1 + AMU*H*(ALPHA/DELT)
         T2=AMU*DIFX*H
         T3=AMU*DIFY*H
         T5=AMU*R*H
@@ -2075,7 +2077,7 @@ C       COMPUTE BOUNDARY FORCES
             !Marsh option operative
             IF(IDNOPT .LT. 0) THEN
               AZER = AME((L+1)/2)+ADO(N1)  +
-     +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+     +	           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             !without Marsh option
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
