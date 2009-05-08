@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Jan 2009    6:29 pm
+C     Last change:  MD    7 May 2009    6:33 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
