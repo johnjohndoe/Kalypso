@@ -6,42 +6,42 @@
 	<Name>KalypsoFlood-Workflow</Name>
 
 	<TaskGroup URI="org.kalypso.model.flood.DataLoad" context="FloodMap">
-		<Help><![CDATA[Grunddaten importieren und verwalten.]]></Help>
-		<Name>Daten verwalten</Name>
+		<Help>%KalypsoFlood_DataLoad_help</Help>
+		<Name>%KalypsoFlood_DataLoad_name</Name>
 		<Task context="ImportBaseMap" URI="org.kalypso.model.flood.ImportBackgroundData">
-			<Help><![CDATA[Hier können Sie Hintergrunddaten (topographische Karten u.ä.) importieren.]]></Help>
-			<Name>Hintergrunddaten importieren</Name>
+			<Help>%KalypsoFlood_DataLoad_ImportBackgroundData_help</Help>
+			<Name>%KalypsoFlood_DataLoad_ImportBackgroundData</Name>
 		</Task>
 		<Task context="FloodMap" URI="org.kalypso.model.flood.ManageWaterlevelData">
-			<Help><![CDATA[Hier können Sie Wasserspiegeldaten einladen und verwalten.]]></Help>
+			<Help>%KalypsoFlood__DataLoad_ManageWaterlevelData_help</Help>
 			<Name>Wasserspiegeldaten verwalten</Name>
 		</Task>
 		<Task context="CoverageTheme" URI="org.kalypso.model.flood.ManageDTMData">
-			<Help><![CDATA[Hier können Sie Geländedaten (Raster) einladen und verwalten.]]></Help>
-			<Name>Geländedaten verwalten</Name>
+			<Help>%KalypsoFlood_DataLoad_ManageDTMData_help</Help>
+			<Name>%KalypsoFlood_DataLoad_ManageDTMData</Name>
 		</Task>
 	</TaskGroup>
 
 	<Task type="SYNCHRONOUS" context="FloodMap" URI="org.kalypso.model.flood.PolygonEditing">
-		<Help><![CDATA[Hier können Sie die hydraulisch ermittelten Überschwemmungsgebiete anpassen.]]></Help>
-		<Name>Überschwemmungsgebiete anpassen</Name>
+		<Help>%KalypsoFlood_PolygonEditing_help</Help>
+		<Name>%KalypsoFlood_PolygonEditing</Name>
 	</Task>
 
 	<Task context="FloodMap" URI="org.kalypso.model.flood.ProcessFloodModel">
-		<Help><![CDATA[Startet das Prozessieren der Fließtiefen.]]></Help>
-		<Name>Fließtiefen generieren</Name>
+		<Help>%KalypsoFlood_ProcessFloodModel_help</Help>
+		<Name>%KalypsoFlood_ProcessFloodModel</Name>
 	</Task>
 
 	<TaskGroup URI="org.kalypso.model.flood.Postprocessing" context="FloodMap">
-		<Help><![CDATA[Ergebnisauswertung]]></Help>
-		<Name>Ergebnisauswertung</Name>
+		<Help>%KalypsoFlood_Postprocessing_help</Help>
+		<Name>%KalypsoFlood_Postprocessing</Name>
 		<Task context="FloodMap" URI="org.kalypso.model.flood.VisualizeDepthData">
-			<Help><![CDATA[Hier können Sie sich die generierten Fließtiefen anzeigen und exportieren lassen.]]></Help>
-			<Name>Fließtiefen verwalten</Name>
+			<Help>%KalypsoFlood_Postprocessing_VisualizeDepthData_help</Help>
+			<Name>%KalypsoFlood_Postprocessing_VisualizeDepthData</Name>
 		</Task>
 		<Task URI="org.kalypso.model.flood.GenerateRiskModel" context="FloodMap">
-			<Help><![CDATA[Hierüber können Sie mit den erzeugten Fließtiefen ein neues Risk Model anlegen.]]></Help>
-			<Name>Risk Modell erzeugen</Name>
+			<Help>%KalypsoFlood_PostprocessingGenerateRiskModel_help</Help>
+			<Name>%KalypsoFlood_PostprocessingGenerateRiskModel</Name>
 		</Task>
 	</TaskGroup>
 
