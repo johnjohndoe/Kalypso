@@ -38,7 +38,7 @@
 	        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
 	        icon="icons/risk_project.gif"
 	        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
-	        name="Kalypso Risk Model"
+	        name="%org.kalypso.risk.project.KalypsoRiskProjectWizard.name"
 	        project="true">
 			<description>Creates a new risk project</description>
 		</wizard>
@@ -51,7 +51,7 @@
               hasPages="true"
               icon="icons/risk_project.gif"
               id="org.kalypso.risk.project.KalypsoRiskDemoProjectWizard"
-              name="Kalypso RISK Model - Demo Projekt"
+              name="%org.kalypso.risk.project.KalypsoRiskDemoProjectWizard.name"
               project="true"/>
         <!-- TODO remove both wizard from plugin.xml
         	They cannot be used from the File-New menu, so this makes no sense.
@@ -203,8 +203,8 @@
     <project
           category="org.kalypso.risk.projectTemplate"
           data="etc/RiskProjectTemplate.zip"
-          description="Leere Projektvorlage für Risiko Projekte"
-          label="Leere Vorlage"
+          description="%org.kalypso.contribs.eclipseplatform.projectTemplate.description"
+          label="%org.kalypso.contribs.eclipseplatform.projectTemplate.label"
           projectName=" ">
     </project>
  </extension>
@@ -231,7 +231,7 @@
                      class="org.kalypso.risk.views.RiskStatisticsResultView"
                      icon="icons/risk_project.gif"
                      id="org.kalypso.risk.views.RiskStatisticsResultView"
-                     name="Risk Statistics View"
+                     name="%org.kalypso.risk.views.RiskStatisticsResultView.name"
                      restorable="false">
                </view>
             </extension>
