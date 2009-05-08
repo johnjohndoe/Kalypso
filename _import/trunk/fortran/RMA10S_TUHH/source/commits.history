@@ -716,3 +716,30 @@ new features introduced/ started to be introduced:
       Formula was not correct: influence on derivation of Momentum-x and -y
       over concentration.                                                  
 --- Monika Donner, 07.05.2009
+
+--- Monika Donner, 08.05.2009
+023.) Correction in SubR COEF25nt:
+      temporal weighting is corrected: for all equation alpha = 1.8
+      MUST be used (no mix of alpha and alphaSN)     
+      >> IF(ICYC .GT. 0) T1=T1 + AMU*H*(ALPHA/DELT)   
+    
+024.) Corrections in NEWBED:
+      Reactivation of Marsh-Question in order to avoid maximum dep-rates
+      >> if(wsll(nn) .lt. ao(nn)) go to 200  
+      Change of temporal weighting of old and new deposition-Masses:
+      >> TM(NN)=(TMTMP2+TMTMP1)/2.00     
+      Reactivation of Marsh-Refreshing for new bed:
+      >> ADB(N) and ADT(N) 
+
+025.) Corrections in FORMBED:             
+      Deactivation of Marsh-Refreshing for RESTART-beds (already done in NEWBED!!):
+      >> AO(N), ADB(N) ADT(N) and so one
+      --> otherwise destroyed z-elevation and instability by hydrodynamic
+      Restarts!!  
+      Averaging at mid-side-nodes for ALL parameters was added:
+      >> new: VEL(6), ESRO(N), DEPINCR(N), BEDELO(N)                                                     
+--- Monika Donner, 08.05.2009
+
+
+
+
