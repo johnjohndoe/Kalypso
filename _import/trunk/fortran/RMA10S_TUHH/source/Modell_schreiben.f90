@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Jul 2008    5:19 pm
+!     Last change:  MD    8 May 2009    9:54 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -605,6 +605,20 @@ WRITE(IKALYPSOFM,'(/A)') LINE256(1:IDX+26)
 WRITE(LINE256,'(A,12I10)') '          (N/m2)    (m)       (Kg/m2)   (mm) ',&
 &                        (L,L=1,NLAYT),(L,L=1,NLAYO(1))
 WRITE(IKALYPSOFM,'(A)') LINE256
+
+
+!MD: weitere Ausgaben:
+!MD:    IMMT=IMAT(NN)
+!MD:    NR = MOD(IMMT,100)
+
+!MD:    UST(NN)
+!MD:    DIS_XX(NN) = UST(NN)*H*ABS(ORT(NR,8))
+!MD:    DIS_YY(NN) = UST(NN)*H*ABS(ORT(NR,9))
+!MD:    DEPRAT(NN)
+!MD:    DEPRAT0(NN)  = old
+!MD     VS(NN)      = sinken
+!MD     EDOT(NN)  = (MEROSN) Sus.Layer in [mg/l x m/s]
+!MD     SERAT(NN) = (SEROSN) Sus.Layer in [mg/l x m/s]
 
 
 
