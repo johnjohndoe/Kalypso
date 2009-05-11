@@ -272,7 +272,7 @@ real(8)                               ::  DD             ! Dune Height
 real(8)                               ::  RD             ! Ripple Height
 real(8)                               ::  CC             ! Chezy Coefficient
 real(8)                               ::  LMANN          ! Local Mannings Coefficient
-real(8)                               ::  D90M           ! D90 in m
+real (KIND = 8)                               ::  D90M           ! D90 in m
 real(8)                               ::  D50M           ! D50 in m
 !*************************************************************************************************
 !
