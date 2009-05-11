@@ -5,7 +5,12 @@ crrr  Last update Aug 23 1997
       USE BLK10MOD
       USE BLKSEDMOD
       USE BLKSANMOD
-      DATA NLMTP/100/
+      Implicit none
+!      DATA NLMTP/100/
+      Integer :: NLMTP = 100
+      Integer :: N, K, I, L, N9, N1, JJ, J, I1, K1
+      Integer :: IBED, IELEV, NLA, NTYPS, ETEMP, NL
+      Real (KIND = 8) :: TEMP1
 C**********************************************************************
 C
 C       THIS SUBROUTINE READS THE INITIAL BED PROFILE AND ELEVATION DATA 
@@ -48,7 +53,7 @@ CIPK AUG05      INCLUDE 'BLKSAND.COM'
       SSTOM=0.
       SMVALM=0.
       GBOM=0.
-      THICKM=0.
+
 
       IF(NB .EQ. 0) GO TO 10
       
