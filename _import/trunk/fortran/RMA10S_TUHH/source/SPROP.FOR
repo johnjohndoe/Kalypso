@@ -13,16 +13,19 @@ C-
       USE BLKSANMOD
       USE BLKFTMOD
 c      USE PARAMMOD
-
+      Implicit none
+      
+      Integer :: NN, N1, N9, I, J, K, L, N, JJ, NSEDTYP, NTYPS
+      REAL (KIND = 8) :: TTLAYM, WEGTM
 cipk aug05      INCLUDE 'BLK10.COM'
 CIPK AUG05	INCLUDE 'BLKSED.COM'
 CIPK AUG05	INCLUDE 'BLKSAND.COM'
 CIPK JUN97
 cipk nov97 add alternate reading logic
-      CHARACTER*8  IDA
-      CHARACTER*72 DLINA
-      DATA NLMTP/100/
-C      
+      CHARACTER (LEN = 8) ::  IDA
+      CHARACTER (LEN = 72) :: DLINA
+!      DATA NLMTP/100/
+      Integer :: NLMTP = 100
 C-
 C******************************************************************
 C
@@ -67,7 +70,7 @@ C     WRITE(LOUT,6032)
       CALL GINPT(LIN,ID,DLIN)
 
       IF(ID(1:4) .EQ. 'CSS2') THEN
-        READ (DLIN,'(3F8.0)') VK,RKS,D90
+        READ (DLIN,'(3F8.5)') VK,RKS,D90
       ELSE
         WRITE(75,*) 'EXPECTED CSS2 DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED CSS2 DATA - NONE FOUND'
