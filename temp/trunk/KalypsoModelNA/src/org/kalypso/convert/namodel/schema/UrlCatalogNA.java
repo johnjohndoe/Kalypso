@@ -58,6 +58,11 @@ import org.kalypso.convert.namodel.NaModelConstants;
  */
 public class UrlCatalogNA extends AbstractUrlCatalog
 {
+  public UrlCatalogNA( )
+  {
+
+  }
+  
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */

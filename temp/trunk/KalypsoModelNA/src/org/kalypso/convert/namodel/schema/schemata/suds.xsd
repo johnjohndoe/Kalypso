@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds"
-	xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified"
-	attributeFormDefault="unqualified">
+<schema targetNamespace="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:suds="http://sourceforge.kalypso.org/schemata/hydrology/suds" xmlns:na="http://www.tuhh.de/kalypsoNA" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
@@ -89,7 +87,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="drainagePipeRoughness" type="nonNegativeDecimalType" default="2.0">
+					<element minOccurs="0" name="drainagePipeRoughness" type="suds:nonNegativeDecimalType" default="2.0">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe roughness [mm]</label>
@@ -117,7 +115,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element minOccurs="0" name="maxCapacityOfEmergencySpill" type="nonNegativeDecimalType" default="0.0">
+					<element minOccurs="0" name="maxCapacityOfEmergencySpill" type="suds:nonNegativeDecimalType" default="0.0">
 						<annotation>
 							<documentation xml:lang="en">
 								<label>Drainage pipe roughness [m3/s]</label>
@@ -311,5 +309,12 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
+
+	<simpleType name="nonNegativeDecimalType">
+		<restriction base="decimal">
+			<minInclusive value="0.0" />
+		</restriction>
+	</simpleType>
+
 
 </schema>
