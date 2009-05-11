@@ -25,10 +25,8 @@ C-
       NLAYTM=0
       GAWM=0
       UNM=0
-      GABM=0
-      TTLAYM=0 
+      GABM=0 
       GACM=0
-      WEGTM=0
       ERCM=0
       GADM=0
       TLAYM=0
