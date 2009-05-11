@@ -16,8 +16,9 @@ c-    ISVL   = switch for settling velocity type
 c-    ESRO   = array of previous bed shears
 
 
-      REAL  RKS,VK,WEGT
+      REAL (KIND = 8)::  RKS,VK,WEGT
       INTEGER ISVL
+      REAL (KIND = 8), ALLOCATABLE, DIMENSION (:) :: EROSTM
 
       ALLOCATABLE  DEPRAT(:),BSHEAR(:),VS(:),
      +             EDOT(:),UST(:),SERAT(:)
@@ -44,7 +45,7 @@ c-    ERC    = erosion rate constant
 c-    UN     = kinematic viscosity of susp water 
 c-    VSST   = settling velocity
 
-      REAL CRCON1,VSS1,CRCON2,EXP2,VSK,VSS2,TAUCD,GAW
+      REAL (KIND = 8):: CRCON1,VSS1,CRCON2,EXP2,VSK,VSS2,TAUCD,GAW
      1         ,GAB,VSST,ERC,UN,GAC
       INTEGER NLAYT,LSS
 
@@ -52,10 +53,10 @@ c-    VSST   = settling velocity
      +           ,GACND(:),WEGTND(:),ERCND(:),SSND(:,:),GBND(:,:)
      +           ,TLAYND(:,:),GADND(:,:),TAUCDND(:),EROST(:,:)
 
-      REAL TAUCDM,GAWM,GABM,ERCM,UNM,GACM
+      REAL (KIND = 8) TAUCDM,GAWM,GABM,ERCM,UNM,GACM
       INTEGER NLAYTM
 
-      ALLOCATABLE GBM(:),SSM(:),GADM(:),TLAYM(:),EROSTM(:)
+      ALLOCATABLE GBM(:),SSM(:),GADM(:),TLAYM(:)
 
       ALLOCATABLE  TLAY(:),GAD(:),SS(:), GB(:)
 
