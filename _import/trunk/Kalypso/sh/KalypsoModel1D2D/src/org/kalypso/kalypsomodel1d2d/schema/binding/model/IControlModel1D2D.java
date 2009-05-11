@@ -62,7 +62,7 @@ import org.kalypso.observation.result.TupleResult;
 @SuppressWarnings("unchecked")
 public interface IControlModel1D2D extends IControlModel
 {
-  public static final QName QNAME_PROPERTY_RESTART_INFO = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "restartInfoMember" );
+  public static final QName QNAME_PROPERTY_RESTART_INFO = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "restartInfoMember" ); //$NON-NLS-1$
 
   public IObservation<TupleResult> getTimeSteps( );
 

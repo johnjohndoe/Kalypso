@@ -59,9 +59,9 @@ public class ControlModelGroup extends VersionedModel implements IControlModelGr
 {
 
   private IControlModel1D2DCollection cModelCollection;
-  public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
+  public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
   // Control model
-  public final static QName WB1D2DCONTROL_F_MODEL_GROUP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" );
+  public final static QName WB1D2DCONTROL_F_MODEL_GROUP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" ); //$NON-NLS-1$
 
   public ControlModelGroup( Feature featureToBind )
   {

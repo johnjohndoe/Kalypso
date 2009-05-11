@@ -65,9 +65,9 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
-  public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" );
-  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" );
-  public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
+  public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" ); //$NON-NLS-1$
+  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" ); //$NON-NLS-1$
+  public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ); //$NON-NLS-1$
 
   public ControlModel1D2DCollection( final Feature featureCol )
   {

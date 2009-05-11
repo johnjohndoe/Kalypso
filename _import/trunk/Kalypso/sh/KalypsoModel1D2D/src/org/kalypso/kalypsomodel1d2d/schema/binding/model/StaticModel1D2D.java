@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class StaticModel1D2D extends VersionedModel implements IStaticModel1D2D
 {
 
-  public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" );
+  public final static QName WB1D2D_F_STATIC_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "StaticModel1D2D" ); //$NON-NLS-1$
 
   public StaticModel1D2D( final Feature featureToBind )
   {

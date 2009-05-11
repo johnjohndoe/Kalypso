@@ -54,7 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
  */
 public interface IControlModelGroup extends IModel
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" ); //$NON-NLS-1$
 
   public IControlModel1D2DCollection getModel1D2DCollection();
 }

@@ -55,6 +55,7 @@ import org.kalypso.afgui.model.Util;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -79,81 +80,81 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 {
   private final IFeatureWrapperCollection<IRestartInfo> m_restartInfos = new FeatureWrapperCollection<IRestartInfo>( getFeature(), IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
 
-  public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
+  public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_unsteady" );
+  public final static QName WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_unsteady" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_STEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steady" );
+  public final static QName WB1D2DCONTROL_PROP_STEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steady" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_RELAXATION_FACTOR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" );
+  public final static QName WB1D2DCONTROL_PROP_RELAXATION_FACTOR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" );
+  public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" );
+  public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_AC2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC2" );
+  public final static QName WB1D2DCONTROL_PROP_AC2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC2" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
+  public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" ); //$NON-NLS-1$
 
-  public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" );
+  public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" ); //$NON-NLS-1$
 
-  public static final QName WB1D2DCONTROL_PROP_ICPU = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ICPU" );
+  public static final QName WB1D2DCONTROL_PROP_ICPU = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ICPU" ); //$NON-NLS-1$
 
-  public static final QName WB1D2DCONTROL_PROP_MFW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "MFW" );
+  public static final QName WB1D2DCONTROL_PROP_MFW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "MFW" ); //$NON-NLS-1$
 
-  public static final QName WB1D2DCONTROL_PROP_BUFFSIZ = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BUFFSIZ" );
+  public static final QName WB1D2DCONTROL_PROP_BUFFSIZ = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BUFFSIZ" ); //$NON-NLS-1$
 
-  public static final QName WB1D2DCONTROL_PROP_PERCENT_CHECK = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "PERCENT_CHECK" );
+  public static final QName WB1D2DCONTROL_PROP_PERCENT_CHECK = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "PERCENT_CHECK" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
+  public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
+  public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_IACCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IACCYC" );
+  public final static QName WB1D2DCONTROL_PROP_IACCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IACCYC" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_DRFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DRFACT" );
+  public final static QName WB1D2DCONTROL_PROP_DRFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DRFACT" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_IDRPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDRPT" );
+  public final static QName WB1D2DCONTROL_PROP_IDRPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDRPT" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_CONV_3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_3" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_3" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_CONV_2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_2" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_2" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_CONV_1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_1" );
+  public final static QName WB1D2DCONTROL_PROP_CONV_1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_1" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_NITN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITN" );
+  public final static QName WB1D2DCONTROL_PROP_NITN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITN" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_NITI = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITI" );
+  public final static QName WB1D2DCONTROL_PROP_NITI = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITI" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_DSETD = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSETD" );
+  public final static QName WB1D2DCONTROL_PROP_DSETD = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSETD" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_DSET = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSET" );
+  public final static QName WB1D2DCONTROL_PROP_DSET = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "DSET" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_HMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HMIN" );
+  public final static QName WB1D2DCONTROL_PROP_HMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "HMIN" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_UNOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UNOM" );
+  public final static QName WB1D2DCONTROL_PROP_UNOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UNOM" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_UDIR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UDIR" );
+  public final static QName WB1D2DCONTROL_PROP_UDIR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "UDIR" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_ELEV = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ELEV" );
+  public final static QName WB1D2DCONTROL_PROP_ELEV = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ELEV" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_OMEGA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "OMEGA" );
+  public final static QName WB1D2DCONTROL_PROP_OMEGA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "OMEGA" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_TBMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBMIN" );
+  public final static QName WB1D2DCONTROL_PROP_TBMIN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBMIN" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_TBFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT" );
+  public final static QName WB1D2DCONTROL_PROP_TBFACT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_TBFACT_ESCUDIER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT_ESCUDIER" );
+  public final static QName WB1D2DCONTROL_PROP_TBFACT_ESCUDIER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TBFACT_ESCUDIER" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_IEDSW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IEDSW" );
+  public final static QName WB1D2DCONTROL_PROP_IEDSW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IEDSW" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
+  public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
+  public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" );
+  public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" ); //$NON-NLS-1$
 
-  public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" );
+  public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" ); //$NON-NLS-1$
 
   public ControlModel1D2D( final Feature featureToBind )
   {
@@ -442,7 +443,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException( Messages.ControlModel1D2D_5, e );
+      throw new RuntimeException(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.modelControlModel1D2D.0"), e );
     }
   }
 

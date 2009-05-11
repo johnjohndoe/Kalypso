@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IControlModel1D2DCollection extends IFeatureWrapperCollection<IControlModel1D2D>
 {
-  public static final QName QNAME_PROP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
+  public static final QName QNAME_PROP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
 
   public void setActiveControlModel( IControlModel1D2D newControlModel );
 
