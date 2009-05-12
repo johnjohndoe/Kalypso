@@ -92,6 +92,9 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     prefixes.put( NaModelConstants.NS_NAHYDROTOP, "rrmHydrotop" );
     prefixes.put( NaModelConstants.NS_NAPARAMETER, "rrmParam" );
     prefixes.put( NaModelConstants.NS_OMBROMETER, "rrmOmbro" );
+    prefixes.put( NaModelConstants.NS_SYNTHN, "syn" );
+    prefixes.put( NaModelConstants.NS_INIVALUES, "ini" );
+    prefixes.put( NaModelConstants.NS_NAFORTRANLOG, "naLog" );
 
     prefixes.put( NaModelConstants.NS_NALANDUSE, "rrmLanduse" );
     prefixes.put( NaModelConstants.NS_NAPEDOLOGIE, "rrmPedo" );

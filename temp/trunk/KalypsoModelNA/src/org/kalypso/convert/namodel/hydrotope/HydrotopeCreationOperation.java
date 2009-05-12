@@ -41,7 +41,6 @@
 package org.kalypso.convert.namodel.hydrotope;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -128,7 +127,7 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
       m_outputList.clear();
       int count = 0;
-      int ordinalNr = 0;
+// int ordinalNr = 0;
 
       for( final Geometry geometry : intersectionList )
       {
@@ -144,9 +143,9 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         final GM_Envelope envelope = JTSAdapter.wrap( geometry.getInteriorPoint().getEnvelopeInternal() );
         final GM_Point point = (GM_Point) JTSAdapter.wrap( geometry.getInteriorPoint() );
 
-        final String prop_featureName = Integer.toString( ++ordinalNr );
-        String prop_soiltypeName = "";
-        String prop_landuseName = "";
+// final String prop_featureName = Integer.toString( ++ordinalNr );
+// String prop_soiltypeName = "";
+// String prop_landuseName = "";
 
         final List<Object> catchmentList = m_catchmentsList.query( envelope, null );
         if( catchmentList.size() == 0 )
@@ -179,9 +178,9 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
 
           final Object landuseClassLink = landuse.getLanduse();
           final Feature featureLanduse = FeatureHelper.resolveLinkedFeature( m_outputWorkspace, landuseClassLink );
-          prop_landuseName = featureLanduse.getName();
+// prop_landuseName = featureLanduse.getName();
 
-          feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, prop_landuseName );
+          feature.setProperty( NaModelConstants.HYDRO_PROP_LANDUSE_NAME, featureLanduse.getName() );
           feature.setProperty( NaModelConstants.HYDRO_PROP_DAINAGETYPE, landuse.getDrainageType() );
           feature.setProperty( NaModelConstants.HYDRO_PROP_SEAL_CORR_FACTOR, landuse.getCorrSealing() );
         }
@@ -201,12 +200,12 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
           if( soilType == null )
             continue;
           final Object soiltypeClassLink = soilType.getSoilType();
-          String value = ""; //$NON-NLS-1$
+          final String value; //$NON-NLS-1$
           if( soiltypeClassLink instanceof XLinkedFeature_Impl )
             value = ((XLinkedFeature_Impl) soiltypeClassLink).getFeatureId();
           else
             value = soiltypeClassLink.toString().substring( soiltypeClassLink.toString().indexOf( "#" ) + 1 ); //$NON-NLS-1$
-          prop_soiltypeName = value;
+// prop_soiltypeName = value;
           feature.setProperty( NaModelConstants.HYDRO_PROP_SOILTYPE, value );
         }
         else
@@ -233,12 +232,12 @@ public class HydrotopeCreationOperation implements IRunnableWithProgress
         feature.setProperty( NaModelConstants.HYDRO_PROP_GEOM, JTSAdapter.wrap( geometry ) );
         feature.setProperty( NaModelConstants.HYDRO_PROP_AREA, geometry.getArea() );
 
-        feature.setName( prop_featureName );
+// feature.setName( prop_featureName );
 
         // TODO: check for the full description format
-        // name/soiltype/landuse    /???/???/???/???
-        final String descriptionFormat = "1$s/2$s/3$s";
-        feature.setDescription( String.format( descriptionFormat, prop_featureName, prop_soiltypeName, prop_landuseName ) );
+        // name/soiltype/landuse /???/???/???/???
+// final String descriptionFormat = "%1$s/%2$s/%3$s";
+// feature.setDescription( String.format( descriptionFormat, prop_featureName, prop_soiltypeName, prop_landuseName ) );
 
         m_outputList.add( feature );
       }

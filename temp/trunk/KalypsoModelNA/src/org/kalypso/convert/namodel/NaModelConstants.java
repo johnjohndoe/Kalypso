@@ -43,7 +43,6 @@ package org.kalypso.convert.namodel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.convert.namodel.i18n.Messages;
 
 /**
  * @author doemming
@@ -81,17 +80,17 @@ public interface NaModelConstants
   // input
   public static final String IN_META_ID = "MetaSteuerdaten"; //$NON-NLS-1$
 
-  public final static String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD"; //$NON-NLS-1$
+  public static final String IN_ANALYSE_MODELL_XSD_ID = "AnalyseModellXSD"; //$NON-NLS-1$
 
-  public final static String IN_MODELL_ID = "Modell"; //$NON-NLS-1$
+  public static final String IN_MODELL_ID = "Modell"; //$NON-NLS-1$
 
-  public final static String IN_HYDROTOP_ID = "Hydrotop"; //$NON-NLS-1$
+  public static final String IN_HYDROTOP_ID = "Hydrotop"; //$NON-NLS-1$
 
-  public final static String IN_PARAMETER_ID = "Parameter"; //$NON-NLS-1$
+  public static final String IN_PARAMETER_ID = "Parameter"; //$NON-NLS-1$
 
-  public final static String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
+  public static final String IN_CONTROL_ID = "Control"; //$NON-NLS-1$
 
-  public final static String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
+  public static final String IN_SYNTHN_ID = "synthNiederschlag"; //$NON-NLS-1$
 
   public static final String IN_OPTIMIZECONF_ID = "SceConf"; //$NON-NLS-1$
 
@@ -103,7 +102,7 @@ public interface NaModelConstants
 
   public static final String IN_RESULTS_DIR_ID = "ErgebnisDir"; //$NON-NLS-1$
 
-  public final static String LZSIM_IN_ID = "LZSIM_IN"; //$NON-NLS-1$
+  public static final String LZSIM_IN_ID = "LZSIM_IN"; //$NON-NLS-1$
 
   // output
   public static final String OUT_ZML = "OUT_ZML"; //$NON-NLS-1$
@@ -112,9 +111,9 @@ public interface NaModelConstants
 
   public static final String OUTPUT_DIR_NAME = "results"; //$NON-NLS-1$
 
-  public final static String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
+  public static final String LZSIM_OUT_ID = "LZSIM_OUT"; //$NON-NLS-1$
 
-  public final static String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
+  public static final String LOG_EXE_STDOUT_ID = "LOG_EXE_STDOUT"; //$NON-NLS-1$
 
   public static final String LOG_EXE_ERROUT_ID = "LOG_EXE_ERROUT"; //$NON-NLS-1$
 
@@ -192,7 +191,7 @@ public interface NaModelConstants
 
   public static final QName KM_CHANNEL_FAKTOR_RKF_PROP = new QName( NS_NAMODELL, "faktorRkf" ); //$NON-NLS-1$
 
-  public static QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
+  public static final QName KM_CHANNEL_QRK_PROP = new QName( NS_NAMODELL, "qrk" ); //$NON-NLS-1$
 
   public static final QName KM_CHANNEL_RKF_PROP = new QName( NS_NAMODELL, "rkf" ); //$NON-NLS-1$
 
@@ -206,9 +205,9 @@ public interface NaModelConstants
 
   public static final QName KM_CHANNEL_RNV_PROP = new QName( NS_NAMODELL, "rnv" ); //$NON-NLS-1$
 
-  public static QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
+  public static final QName KM_CHANNEL_KMSTART = new QName( NS_NAMODELL, "startkm" ); //$NON-NLS-1$
 
-  public static QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
+  public static final QName KM_CHANNEL_KMEND = new QName( NS_NAMODELL, "endkm" ); //$NON-NLS-1$
 
   public static final QName IKNOT_MEMBER_PROP = new QName( NS_NAMODELL, "iknotNodeMember" ); //$NON-NLS-1$
 

@@ -15,6 +15,12 @@
               id="org.kalypso.convert.namodel.UrlCatalogNA"/>
      </extension>
      <extension
+           point="org.kalypso.core.catalogContribution">
+        <catalogContribution
+            class="org.kalypso.convert.namodel.schema.customView.NAModelCatalogContribution"
+            name="NA Model Catalog"/>
+     </extension>
+     <extension
            point="org.kalypso.gmlschema.virtualProperty">
         <virtualProperty
               allowSubstitution="true"
