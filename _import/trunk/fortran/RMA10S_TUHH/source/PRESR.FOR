@@ -1,3 +1,4 @@
+C     Last change:  MD   12 May 2009    4:12 pm
 
       SUBROUTINE PRESR
       USE BLK10MOD
@@ -16,27 +17,27 @@ C-
 C
           IF (GRAV .LT. 32.)  THEN
             IF(IPASS1 .EQ. 1) THEN
-              RHO1=1.94*516.
+              RHO1=1.935*516.
             ENDIF
             IF(IPASS2 .EQ. 1) THEN
-              RHO2=1.94*516.
+              RHO2=1.935*516.
             ENDIF
             IF(IPASS3 .EQ. 1) THEN
-              RHO3=1.94*516.
+              RHO3=1.935*516.
             ENDIF
-            DEN(N)=RHO1+RHO2+RHO3 - 3.88*516.
+            DEN(N)=RHO1+RHO2+RHO3 - 3.87*516.
           ELSE
             IF(IPASS1 .EQ. 1) THEN
-              RHO1=1.94
+              RHO1=1.935
             ENDIF
             IF(IPASS2 .EQ. 1) THEN
-              RHO2=1.94
+              RHO2=1.935
             ENDIF
             IF(IPASS3 .EQ. 1) THEN
-              RHO3=1.94
+              RHO3=1.935
             ENDIF
 
-            DEN(N)=RHO1+RHO2+RHO3-3.88
+            DEN(N)=RHO1+RHO2+RHO3-3.87
 
 C            DEN(N)= - CORD(N,3)+1000.0
 
