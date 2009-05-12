@@ -1,4 +1,4 @@
-C     Last change:  MD    5 May 2009    4:09 pm
+C     Last change:  MD   12 May 2009    4:25 pm
 
       FUNCTION DRODS(SAL,I)
       !function type declaration
@@ -34,7 +34,7 @@ C**************** SEDIMENT FUNCTION
 !MD:  falsche Basisformel
 !MD:      FDSED= 1.940*(1.0+SED*1.0E-3)*GF(I)
 !MD: Korrektur fuer Dichte(sed):
-      FDSED= (1.940*GF(I)) + ((SED*1.0E-3)*(1.0 - 1.940*GF(I)/2650.0))
+      FDSED= (1.935*GF(I)) + ((SED*1.0E-3)*(1.0 - 1.935*GF(I)/2650.0))
 C****************** 
       RETURN
       END
@@ -95,7 +95,7 @@ C
       DATA GF/1.0,516./
 C-
 C**************** SALINITY FUNCTION
-      FDEN=1.940*((4.906*SAL-11.7)/(6511.7 - 1.906*SAL)+1.0)*GF(I)
+      FDEN=1.935*((4.906*SAL-11.7)/(6511.7 - 1.906*SAL)+1.0)*GF(I)
 C****************
       RETURN
       END
@@ -122,7 +122,7 @@ C-
 
       !MD: Korrektur fuer Dichte(sed)/ nach d(Sed)
       !MD: Dichte(sed) = (1.940*GF(I)) + ((SED*1.0E-3)*(1.0 - 1.940*GF(I)/2650.0)
-      DRODSD= 1.0E-3 * (1.0 - 1.940*GF(I)/2650.0)
+      DRODSD= 1.0E-3 * (1.0 - 1.935*GF(I)/2650.0)
 !MDMD: DRODSD= (1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
       RETURN
       END
