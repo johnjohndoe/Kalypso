@@ -740,6 +740,30 @@ new features introduced/ started to be introduced:
       >> new: VEL(6), ESRO(N), DEPINCR(N), BEDELO(N)                                                     
 --- Monika Donner, 08.05.2009
 
+--- Monika Donner, 12.05.2009
+026.) Correction in SubR COEF25nt:
+      Using temporal weighting ALTM like for all equation 
+        >> IF(ICYC .NE. 0) T1=T1 + AMU*ALTM*H 
+      
+      Calculation for dispersion coefficient for sediment-transport (only!)
+      was corrected by VX or VY only:
+        >> SHEARV_X =SQRT((R*UBF)**2) * SQRT(FFACT)
+        >> SHEARV_Y =SQRT((S*VBF)**2) * SQRT(FFACT)
+        >> DIFX=SHEARV_X*H*ABS(ORT(NR,8))
+        >> DIFY=SHEARV_Y*H*ABS(ORT(NR,9))
+            
+027.) Corrections in PRESR:
+      Correction of Faktor for Water density from 1.94 to 1.935 as
+      already used in other SubRs
+      
+      Calculation of DEN(N) = Density per node ist not sloved accurate
+      ToDO: Guess about a better approach!!!
+
+028.) Corrections in FUNS:
+      Correction of Faktor for Water density from 1.94 to 1.935 as
+      already used in other SubRs             
+                                                       
+--- Monika Donner, 12.05.2009
 
 
 
