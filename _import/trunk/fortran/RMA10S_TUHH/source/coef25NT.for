@@ -1,4 +1,4 @@
-C     Last change:  MD    8 May 2009   12:26 pm
+C     Last change:  MD   12 May 2009    4:25 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -60,6 +60,8 @@ CIPK  LAST UPDATED SEP 7 1995
       integer (kind = 4) :: ps, ps_ID
 !EFa aug07, stage-flow-boundaries
       REAL(KIND=8) :: hm1
+      REAL(KIND=8) :: SHEARV_X, SHEARV_Y
+      REAL(KIND=8) :: SHEARVEL
 !-
       integer :: TransLine, transtype
 
@@ -81,12 +83,9 @@ cipk jun05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
       REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
-
       REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER
       REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
-
       REAL (kind = 8) :: TEMP,HP,HP1,DERR
-      
       real (kind = 8) :: lambda_shore, lambdaKS_shore, lambdaDunes_shore
       real (kind = 8) :: lambdaP_shore 
 
@@ -1117,10 +1116,18 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
       IF(ISLP .EQ. 1  .AND. IDIFSW .EQ. 5) THEN
 
         SHEARVEL=VECQ*SQRT(FFACT)
-        DIFX=SHEARVEL*H*ABS(ORT(NR,8))
+      !MD: DIFX=SHEARVEL*H*ABS(ORT(NR,8))
         !MD: DIFY is wrong 07-05-2009
         !MD: DIFY=DIFX*ABS(ORT(NR,9))
-        DIFY=SHEARVEL*H*ABS(ORT(NR,9))
+      !MD: DIFY=SHEARVEL*H*ABS(ORT(NR,9))
+
+        !MD: NEUE BERECHNUNG
+        !MD: VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
+        SHEARV_X =SQRT((R*UBF)**2) * SQRT(FFACT)
+        SHEARV_Y =SQRT((S*VBF)**2) * SQRT(FFACT)
+        DIFX=SHEARV_X*H*ABS(ORT(NR,8))
+        DIFY=SHEARV_Y*H*ABS(ORT(NR,9))
+
 
         !MD: testoutput into output.out
         IF (NN.eq.1 .or. NN.eq.2) THEN
@@ -1941,7 +1948,9 @@ CIPK MAY04 USE SIDFQQ
 
 !MDMD:  Ansatz des alphaSN-Parameter mit 2.0
 !MDMD   IF(ICYC .GT. 0) T1=T1 + AMU*ALTM*H
-        IF(ICYC .GT. 0) T1=T1 + AMU*H*(ALPHA/DELT)
+        !MD: IF(ICYC .GT. 0) T1=T1 + AMU*H*(ALPHA/DELT)
+        IF(ICYC .NE. 0) T1=T1 + AMU*ALTM*H
+
         T2=AMU*DIFX*H
         T3=AMU*DIFY*H
         T5=AMU*R*H
@@ -1966,7 +1975,7 @@ cipk aug98
             IB=IB+4
             IF(NSTRT(NCON(N),1) .EQ. 0) THEN
 !MDMD: new: Korrektur nach S. A-7
-!MDMD         ESTIFM(IA,IB)=ESTIFM(IA,IB) +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
+!MDMD       ESTIFM(IA,IB)=ESTIFM(IA,IB) +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
               ESTIFM(IA,IB)=ESTIFM(IA,IB)
      +                     +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
             ENDIF
