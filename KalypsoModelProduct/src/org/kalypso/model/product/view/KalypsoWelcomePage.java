@@ -266,7 +266,7 @@ public class KalypsoWelcomePage extends IntroPart implements IKalypsoWelcomePage
   {
     m_selectedModule = module;
     
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
 
       @Override
