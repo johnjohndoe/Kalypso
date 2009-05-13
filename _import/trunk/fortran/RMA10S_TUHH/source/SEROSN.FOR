@@ -1,4 +1,4 @@
-C     Last change:  MD   13 Jan 2009    5:50 pm
+C     Last change:  MD   13 May 2009   11:16 am
 cipk last update JUNE 5 2006  add test marshing
 CIPK LAST UPDATE MARCH 30 2006 UPDATE FOR MORE REALISTIC TRANSITION OPTION 
 CIPK LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -86,16 +86,16 @@ CIPKSEP05
 crr aug97 new units for temal2
 !MD:      TEMAL2 = SERAT(NN)/1000.  :never used!!
 cipk mar00
-          serat(n)=0.
-          SERAT(NN) = 0.
+          serat(n)=0.0
+          SERAT(NN) = 0.0
 cipk jun06  test for marshing
           if(wsll(n) .lt. ao(n)) go to 500
 
 cipk mar06         
-         seratnewl=0
-         !MD:  INDC = 0   :never used!!
-         !MD:  BALM = 0.  :never used!!
-         DELTREM=DELT
+          seratnewl=0.0
+          !MD:  INDC = 0   :never used!!
+          !MD:  BALM = 0.  :never used!!
+          DELTREM=DELT
 
 
 !......................................................
