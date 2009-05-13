@@ -140,7 +140,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
         }
 
       };
-      ProgressUtilities.busyCursorWhile( importOperation, "Failed to import flood depth data into new project" );
+      ProgressUtilities.busyCursorWhile( importOperation, Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.0") ); //$NON-NLS-1$
 
     }
     catch( final Exception e )
@@ -162,8 +162,8 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
 
     /* --- demo code for accessing the depth grid coverage collections --- */
     final IContainer scenarioFolder = riskDataProvider.getScenarioFolder();
-    final String rasterFolderPath = "raster/input/";
-    final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" );
+    final String rasterFolderPath = "raster/input/"; //$NON-NLS-1$
+    final IFolder rasterFolder = (IFolder) scenarioFolder.findMember( "models/raster/input" ); //$NON-NLS-1$
 
     Assert.isNotNull( floodModelScenarioFolder );
     Assert.isNotNull( rasterFolder );
@@ -180,15 +180,15 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
       int coverageCount = 0;
       for( final ICoverage coverage : coverages )
       {
-        final String targetFileName = String.format( "grid_%d_%d.ascbin", annualCoverageCollection.getReturnPeriod(), coverageCount );
+        final String targetFileName = String.format( "grid_%d_%d.ascbin", annualCoverageCollection.getReturnPeriod(), coverageCount ); //$NON-NLS-1$
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
         final String targetGridPath = rasterFolderPath + targetFileName;
         final File targetFile = new File( rasterFolder.getLocation().toFile(), targetFileName );
 
-        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", new NullProgressMonitor() );
-        newCoverage.setName( "" + coverageCount );
-        newCoverage.setDescription( String.format( "Imported from KalypsoFlood" ) );
+        final ICoverage newCoverage = GeoGridUtilities.addCoverage( annualCoverageCollection, grid, targetFile, targetGridPath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+        newCoverage.setName( "" + coverageCount ); //$NON-NLS-1$
+        newCoverage.setDescription( String.format( Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.6") ) ); //$NON-NLS-1$
         grid.dispose();
 
         coverageCount++;
@@ -199,7 +199,7 @@ public class GenerateRiskModelHandler extends AbstractHandler implements IHandle
     // TODO: maybe save other models?
     final GMLWorkspace workspace = rasterDataModel.getFeature().getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterlevelCoverageCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) );
+    riskDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( Messages.getString("org.kalypso.model.flood.handlers.GenerateRiskModelHandler.7"), false ) ); //$NON-NLS-1$
     riskDataProvider.saveModel( IRasterDataModel.class, new NullProgressMonitor() );
   }
 

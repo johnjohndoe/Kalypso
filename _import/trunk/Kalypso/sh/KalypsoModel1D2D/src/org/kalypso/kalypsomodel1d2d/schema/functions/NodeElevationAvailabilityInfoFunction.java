@@ -74,7 +74,7 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
     }
     else
     {
-      System.out.println( "Cannot get value for:" + "\n\tfeature=" + feature + "\n\tvalue=" + pt.getQName() + "\n\tcurrentValue=" + currentValue );
+      System.out.println( "Cannot get value for:" + "\n\tfeature=" + feature + "\n\tvalue=" + pt.getQName() + "\n\tcurrentValue=" + currentValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       return null;
     }
   }

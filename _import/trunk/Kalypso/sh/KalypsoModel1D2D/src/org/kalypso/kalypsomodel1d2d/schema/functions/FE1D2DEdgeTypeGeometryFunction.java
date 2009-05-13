@@ -101,7 +101,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
             IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
             if( nodes.size() == 2 )
             {
-              System.out.println( "Node set:" + lineString.getStartPoint().distance( nodes.get( 0 ).getPoint() ) );
+              System.out.println( "Node set:" + lineString.getStartPoint().distance( nodes.get( 0 ).getPoint() ) ); //$NON-NLS-1$
               nodes.get( 0 ).setPoint( lineString.getStartPoint() );
               nodes.get( 1 ).setPoint( lineString.getEndPoint() );
 
@@ -111,7 +111,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction
           }
 
         }
-        System.out.println( "Not sets:" + lineString );
+        System.out.println( "Not sets:" + lineString ); //$NON-NLS-1$
         return null;
       }
       catch( GM_Exception e )

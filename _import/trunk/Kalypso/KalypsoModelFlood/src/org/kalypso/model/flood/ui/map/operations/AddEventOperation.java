@@ -144,12 +144,12 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
   public static void checkSLDFile( final IRunoffEvent event, final IFolder eventFolder, final URL sldTemplate ) throws Exception
   {
     // Configure sld
-    final IFile sldFile = eventFolder.getFile( "wsp.sld" );
+    final IFile sldFile = eventFolder.getFile( "wsp.sld" ); //$NON-NLS-1$
     if( !sldFile.exists() )
     {
-      final String sldContent = FileUtilities.toString( sldTemplate, "UTF-8" ).replaceAll( "%eventFeatureId%", event.getFeature().getId() );
+      final String sldContent = FileUtilities.toString( sldTemplate, "UTF-8" ).replaceAll( "%eventFeatureId%", event.getFeature().getId() ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" );
+      final InputStream sldSource = IOUtils.toInputStream( sldContent, "UTF-8" ); //$NON-NLS-1$
       sldFile.create( sldSource, false, new NullProgressMonitor() );
     }
   }

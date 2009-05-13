@@ -62,9 +62,9 @@ import com.sun.java_cup.internal.runtime.virtual_parse_stack;
  */
 public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 {
-  public static final QName QNAME_PROP_CALCID = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "calcId" );
+  public static final QName QNAME_PROP_CALCID = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "calcId" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" );
+  public static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" ); //$NON-NLS-1$
 
   /*
    * the virtual depth is calculated by the calculation core RMA·Kalypso and can differ from the true depth defined by water
@@ -72,31 +72,31 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    * 
    * for that reason the true depth is computed separately.
    */
-  private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" );
+  private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VIRTDEPPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepPrevStep" );
+  private static final QName QNAME_PROP_VIRTDEPPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepPrevStep" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VIRTDEPOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTime" );
+  private static final QName QNAME_PROP_VIRTDEPOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTime" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTimePrevStep" );
+  private static final QName QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTimePrevStep" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
+  private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
+  private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
+  private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VELPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velPrevStep" );
+  private static final QName QNAME_PROP_VELPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velPrevStep" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VELOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTime" );
+  private static final QName QNAME_PROP_VELOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTime" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_VELOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTimePrevStep" );
+  private static final QName QNAME_PROP_VELOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTimePrevStep" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_DISCHARGE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "discharge" );
+  private static final QName QNAME_PROP_DISCHARGE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "discharge" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" );
+  private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" );
+  private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" ); //$NON-NLS-1$
 
   public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
 

@@ -60,7 +60,7 @@ public class TestOP extends TestCase
 
     try
     {
-      workspace = GmlSerializer.createGMLWorkspace( TestOP.class.getResource( "data/sim_1d2d_operational.xml" ), null );
+      workspace = GmlSerializer.createGMLWorkspace( TestOP.class.getResource( "data/sim_1d2d_operational.xml" ), null ); //$NON-NLS-1$
     }
     catch( Throwable th )
     {

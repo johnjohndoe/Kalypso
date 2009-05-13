@@ -66,8 +66,8 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
   @Override
   public void init( final Map<String, String> properties )
   {
-    m_vectorProperty = QName.valueOf( properties.get( "vectorProperty" ) );
-    m_kind = properties.get( "resultKind" );
+    m_vectorProperty = QName.valueOf( properties.get( "vectorProperty" ) ); //$NON-NLS-1$
+    m_kind = properties.get( "resultKind" ); //$NON-NLS-1$
   }
 
   /**
@@ -83,7 +83,7 @@ public class NodeResultVelocityFunction extends FeaturePropertyFunction
     final double vx = vector.get( 0 );
     final double vy = vector.get( 1 );
 
-    if( "norm".equalsIgnoreCase( m_kind ) )
+    if( "norm".equalsIgnoreCase( m_kind ) ) //$NON-NLS-1$
       return Math.sqrt( vx * vx + vy * vy );
 
     return GeometryUtilities.directionFromVector( vx, vy );

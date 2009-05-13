@@ -51,9 +51,9 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * Provides the mechanism to disable map view contribution items.
  * The mechanism consists of decorating the manager overrides with

@@ -556,12 +556,12 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     try
     {
       final UserStyle[] styles = runoffEventTheme.getStyles();
-      final UserStyle style = findUserStyle( styles, "wspUserStyle" );
+      final UserStyle style = findUserStyle( styles, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.0") ); //$NON-NLS-1$
       if( style != null )
       {
 
-        final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( "wspFts" );
-        final Rule wspRule = wspFts.getRule( "wspRule" );
+        final FeatureTypeStyle wspFts = style.getFeatureTypeStyle( Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.1") ); //$NON-NLS-1$
+        final Rule wspRule = wspFts.getRule( "wspRule" ); //$NON-NLS-1$
         final SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) wspRule.getSymbolizers()[0];
         return symb.getColorMap();
 
@@ -604,7 +604,7 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   {
     final IFolder eventsFolder = getEventsFolder();
     final IFolder folder = eventsFolder.getFolder( event.getDataPath() );
-    return folder.getFolder( "results" );
+    return folder.getFolder( "results" ); //$NON-NLS-1$
   }
 
   public static IFolder getEventsFolder( ) throws CoreException
@@ -975,8 +975,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
   private IKalypsoCascadingTheme findWspTheme( )
   {
     final IMapModell mapModell = getMapPanel().getMapModell();
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
-    Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.64"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
+    Assert.isNotNull( wspThemes, Messages.getString("org.kalypso.model.flood.ui.map.EventManagementWidget.6") ); //$NON-NLS-1$
     return wspThemes;
   }
 

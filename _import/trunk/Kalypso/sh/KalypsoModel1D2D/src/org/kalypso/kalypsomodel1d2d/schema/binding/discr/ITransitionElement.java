@@ -59,7 +59,7 @@ public interface ITransitionElement extends IAbstractJunction
       @Override
       final String getValue( )
       {
-        return "1D2D";
+        return "1D2D"; //$NON-NLS-1$
       }
     },
     TYPE2D1D
@@ -67,7 +67,7 @@ public interface ITransitionElement extends IAbstractJunction
       @Override
       final String getValue( )
       {
-        return "2D1D";
+        return "2D1D"; //$NON-NLS-1$
       }
     };
 

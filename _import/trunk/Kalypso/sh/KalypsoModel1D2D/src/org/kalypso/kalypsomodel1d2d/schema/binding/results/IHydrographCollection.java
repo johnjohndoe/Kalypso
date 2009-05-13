@@ -57,17 +57,17 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public interface IHydrographCollection extends IFeatureWrapperCollection<IHydrograph>
 {
-  public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" );
+  public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "resultMember" );
+  public final static QName QNAME_PROP_RESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "resultMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RESULT_ENTRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographResultType" );
+  public final static QName QNAME_PROP_RESULT_ENTRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographResultType" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RESULT_MEMBER_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "path" );
+  public final static QName QNAME_PROP_RESULT_MEMBER_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "path" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_RESULT_MEMBER_DATE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" );
+  public final static QName QNAME_PROP_RESULT_MEMBER_DATE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ); //$NON-NLS-1$
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographCollection" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographCollection" ); //$NON-NLS-1$
 
   public IHydrograph findHydrograph( final GM_Position position, final double searchRectWidth );
 

@@ -63,7 +63,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.5" ), Messages.getString( "org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     coverageManagementWidget.setShowAddRemoveButtons( false );
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePage );
+    final ActivateWidgetJob job = new ActivateWidgetJob( Messages.getString("org.kalypso.model.flood.handlers.VisualizeDepthDataHandler.10"), coverageManagementWidget, mapPanel, activePage ); //$NON-NLS-1$
     job.schedule();
 
     return null;

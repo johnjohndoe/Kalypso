@@ -46,10 +46,10 @@ public class FE1D2D_2DElementTypeGeometry extends FeaturePropertyFunction
     else
     {
       System.out.println(
-          "Cannot get feature prop:"+
-          "\n\tfeature="+feature+
-          "\n\tproperty="+pt.getQName()+
-          "currentValue="+currentValue);
+          "Cannot get feature prop:"+ //$NON-NLS-1$
+          "\n\tfeature="+feature+ //$NON-NLS-1$
+          "\n\tproperty="+pt.getQName()+ //$NON-NLS-1$
+          "currentValue="+currentValue); //$NON-NLS-1$
     }
 
     return null;

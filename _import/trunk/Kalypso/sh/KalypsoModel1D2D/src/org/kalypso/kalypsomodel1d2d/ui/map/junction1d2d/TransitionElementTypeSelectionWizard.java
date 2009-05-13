@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 /**
  * @author antanas

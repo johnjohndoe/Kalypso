@@ -76,7 +76,7 @@ public class LengthSectionHandler2dTest extends TestCase
     try
     {
       // Demo river line file (Stör)
-      URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" );
+      URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" ); //$NON-NLS-1$
       GMLWorkspace shapeWorkspace = null;
       // final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       // final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
@@ -107,14 +107,14 @@ public class LengthSectionHandler2dTest extends TestCase
       }
 
       // Demo Observations
-      final URL lsObsUrl = LengthSectionHandler2dTest.class.getResource( "resources/lengthSectionTemplate.gml" );
+      final URL lsObsUrl = LengthSectionHandler2dTest.class.getResource( "resources/lengthSectionTemplate.gml" ); //$NON-NLS-1$
       final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
       final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
       // Triangulated surfaces
 
       GM_TriangulatedSurface surface = null;
-      URL resource = getClass().getResource( "resources/tin_Terrain.gml" );
+      URL resource = getClass().getResource( "resources/tin_Terrain.gml" ); //$NON-NLS-1$
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -129,7 +129,7 @@ public class LengthSectionHandler2dTest extends TestCase
       }
       LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
 
-      URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" );
+      URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" ); //$NON-NLS-1$
       w = GmlSerializer.createGMLWorkspace( resource2, null );
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -147,13 +147,13 @@ public class LengthSectionHandler2dTest extends TestCase
       if( lsObs.getResult().size() > 0 )
       {
         ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-        File lsObsFile = new File( "d:/temp/lengthSection.gml" );
-        GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+        File lsObsFile = new File( "d:/temp/lengthSection.gml" ); //$NON-NLS-1$
+        GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" ); //$NON-NLS-1$
       }
 
       // test obs geklappt hat...
       boolean result = true;
-      assertEquals( "Result sollte true sein", true, result );
+      assertEquals( "Result sollte true sein", true, result ); //$NON-NLS-1$
     }
     catch( GmlSerializeException e )
     {
@@ -173,18 +173,18 @@ public class LengthSectionHandler2dTest extends TestCase
       throw new IllegalStateException();
 
     /* attention - eShape loading works only without fileextension */
-    final String[] sShapes = fShape.toString().split( "\\." );
+    final String[] sShapes = fShape.toString().split( "\\." ); //$NON-NLS-1$
     if( sShapes == null || sShapes.length < 2 )
       throw new IllegalStateException();
 
     // XXX fixed coordinate system?
-    final String cSystem = "EPSG:31467";
+    final String cSystem = "EPSG:31467"; //$NON-NLS-1$
 
-    String shape = "";
+    String shape = ""; //$NON-NLS-1$
     for( int i = 0; i < sShapes.length - 1; i++ )
     {
       if( i > 0 )
-        shape += ".";
+        shape += "."; //$NON-NLS-1$
       shape += sShapes[i];
     }
 

@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -72,7 +73,7 @@ public class CalculationUnit2D extends CalculationUnit implements ICalculationUn
   {
     boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
-      throw new IllegalArgumentException( "Argument must be an element 2D or continuity line." );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D.0") ); //$NON-NLS-1$
     return super.addElementAsRef( element );
   }
 

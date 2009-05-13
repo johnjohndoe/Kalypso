@@ -443,7 +443,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.modelControlModel1D2D.0"), e );
+      throw new RuntimeException(Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D.0"), e ); //$NON-NLS-1$
     }
   }
 

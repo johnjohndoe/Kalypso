@@ -46,7 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import  org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;

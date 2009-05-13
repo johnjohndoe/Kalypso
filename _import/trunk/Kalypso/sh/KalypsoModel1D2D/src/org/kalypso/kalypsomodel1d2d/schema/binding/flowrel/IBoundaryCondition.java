@@ -56,31 +56,31 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IBoundaryCondition extends IFlowRelationship
 {
-  public static final String PARENT_TYPE_ELEMENT1D2D = "ELEMENT1D2D";
+  public static final String PARENT_TYPE_ELEMENT1D2D = "ELEMENT1D2D"; //$NON-NLS-1$
 
-  public static final String PARENT_TYPE_NODE1D2D = "NODE1D2D";
+  public static final String PARENT_TYPE_NODE1D2D = "NODE1D2D"; //$NON-NLS-1$
 
-  public static final String PARENT_TYPE_LINE1D2D = "LINE1D2D";
+  public static final String PARENT_TYPE_LINE1D2D = "LINE1D2D"; //$NON-NLS-1$
 
-  public static final QName PROP_PARENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "bcType" );
+  public static final QName PROP_PARENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "bcType" ); //$NON-NLS-1$
 
-  public static final QName PROP_PARENT_CALCULATION_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentCalculationUnit" );
+  public static final QName PROP_PARENT_CALCULATION_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentCalculationUnit" ); //$NON-NLS-1$
 
-  public static final QName PROP_PARENT_MODEL_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentModelElement" );
+  public static final QName PROP_PARENT_MODEL_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentModelElement" ); //$NON-NLS-1$
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" ); //$NON-NLS-1$
 
-  public static final QName QNAME_OBSERVATION_WITH_SOURCE = new QName( UrlCatalog1D2D.MODEL_1D2DObservation_NS, "ObservationWithSource" );
+  public static final QName QNAME_OBSERVATION_WITH_SOURCE = new QName( UrlCatalog1D2D.MODEL_1D2DObservation_NS, "ObservationWithSource" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "observation" );
+  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "observation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "direction" );
+  public static final QName QNAME_P_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "direction" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_INFLOWVELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "inflowVelocity" );
+  public static final QName QNAME_P_INFLOWVELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "inflowVelocity" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_ISABSOLUTE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "absolute" );
+  public static final QName QNAME_P_ISABSOLUTE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "absolute" ); //$NON-NLS-1$
 
-  public static final QName QNAME_P_HASDIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "hasDirection" );
+  public static final QName QNAME_P_HASDIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "hasDirection" ); //$NON-NLS-1$
 
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn );
 

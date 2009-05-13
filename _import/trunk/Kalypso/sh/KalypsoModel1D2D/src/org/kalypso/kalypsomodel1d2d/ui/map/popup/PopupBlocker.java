@@ -45,10 +45,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IViewPart;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 /**
  * This class provides a SWT-Popup blocker functionality for SWT-Control
  * if it is register as one of the control menu detect({@link SWT#MenuDetect}) listener

@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -63,7 +64,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Knotendaten";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.0"); //$NON-NLS-1$
       }
     },
     tinTerrain
@@ -74,7 +75,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Gel‰ndemodell des FE-Netzes";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.1"); //$NON-NLS-1$
       }
     },
     tinWsp
@@ -85,7 +86,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Gel‰ndemodell der Wasserspiegellagen";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.2"); //$NON-NLS-1$
       }
     },
     tinVelo
@@ -96,7 +97,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Gel‰ndemodell der Flieﬂgeschwindigkeiten";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.3"); //$NON-NLS-1$
       }
     },
     tinDepth
@@ -107,7 +108,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Gel‰ndemodell der Flieﬂtiefen";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.4"); //$NON-NLS-1$
       }
     },
     tinShearStress
@@ -118,7 +119,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Gel‰ndemodell der Sohlschubspannungen";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.5"); //$NON-NLS-1$
       }
     },
     hydrograph
@@ -129,7 +130,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Ganglinie";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.6"); //$NON-NLS-1$
       }
     },
     lengthSection
@@ -140,7 +141,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "L‰ngsschnitt";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.7"); //$NON-NLS-1$
       }
     },
     tinDifference
@@ -151,7 +152,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Differenzen-Gel‰ndemodell";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.8"); //$NON-NLS-1$
       }
     },
     log
@@ -162,7 +163,7 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Protokolldaten";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.9"); //$NON-NLS-1$
       }
     },
     coreDataZip
@@ -173,18 +174,18 @@ public interface IDocumentResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Originaldaten des Rechenkerns";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.10"); //$NON-NLS-1$
       }
     }
   }
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" );
+  public static final QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" );
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" );
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" ); //$NON-NLS-1$
 
   public DOCUMENTTYPE getDocumentType( );
 

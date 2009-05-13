@@ -54,9 +54,9 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
  */
 public interface IFlowRelation1D extends IFlowRelationship
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_FlowRelation1D" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "_FlowRelation1D" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_TUHH_CALCULATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wspmTuhhCalculationMember" );
+  public static final QName QNAME_PROP_TUHH_CALCULATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "wspmTuhhCalculationMember" ); //$NON-NLS-1$
 
   public BigDecimal getStation( );
 

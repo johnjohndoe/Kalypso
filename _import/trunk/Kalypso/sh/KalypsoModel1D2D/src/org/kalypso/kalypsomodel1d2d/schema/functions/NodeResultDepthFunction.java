@@ -65,8 +65,8 @@ public class NodeResultDepthFunction extends FeaturePropertyFunction
   @Override
   public void init( final Map<String, String> properties )
   {
-    m_locationProperty = QName.valueOf( properties.get( "location" ) );
-    m_waterlevelProperty = QName.valueOf( properties.get( "waterlevel" ) );
+    m_locationProperty = QName.valueOf( properties.get( "location" ) ); //$NON-NLS-1$
+    m_waterlevelProperty = QName.valueOf( properties.get( "waterlevel" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -83,7 +83,7 @@ public class NodeResultDepthFunction extends FeaturePropertyFunction
     if( waterlevel.doubleValue() > point.getZ() )
       return (waterlevel.doubleValue() - point.getZ());
     else
-      return new Double( "0.0" );
+      return new Double( "0.0" ); //$NON-NLS-1$
   }
 
   /**

@@ -69,7 +69,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
           geometry = null;
         }
 
-        System.out.println( "got feature prop:" + "\n\tfeature=" + feature + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + geometry );
+        System.out.println( "got feature prop:" + "\n\tfeature=" + feature + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + geometry ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         return geometry;
       }
       catch( final Throwable e )
@@ -79,7 +79,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
     }
     else
     {
-      System.out.println( "Cannot get feature prop:" + "\n\tfeature=" + feature + "\n\tadapter=" + staticModel + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + currentValue );
+      System.out.println( "Cannot get feature prop:" + "\n\tfeature=" + feature + "\n\tadapter=" + staticModel + "\n\tproperty=" + pt.getQName() + "\n\tcurrentValue=" + currentValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     }
 
     return null;

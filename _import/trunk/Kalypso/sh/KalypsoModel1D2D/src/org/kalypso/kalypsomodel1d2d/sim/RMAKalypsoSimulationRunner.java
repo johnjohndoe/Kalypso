@@ -153,7 +153,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
 
       final Map<String, Object> inputs = new HashMap<String, Object>();
       final List<String> outputs = new ArrayList<String>();
-      final String resultsID = "results";
+      final String resultsID = "results"; //$NON-NLS-1$
       outputs.add( resultsID );
 
       return this.run( inputs, outputs, progress.newChild( 1000, SubMonitor.SUPPRESS_NONE ) );
@@ -197,7 +197,7 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     }
 
     final Map<String, ComplexValueReference> references = getReferences();
-    final ComplexValueReference complexValueReference = references.get( "results" );
+    final ComplexValueReference complexValueReference = references.get( "results" ); //$NON-NLS-1$
     if( complexValueReference == null )
     {
       return;
@@ -242,11 +242,11 @@ public class RMAKalypsoSimulationRunner extends WPSRequest implements ISimulatio
     final ProcessFailedType processFailed = exStatus.getProcessFailed();
     final ExceptionReport exceptionReport = processFailed.getExceptionReport();
     final List<ExceptionType> exceptions = exceptionReport.getException();
-    String messages = "";
+    String messages = ""; //$NON-NLS-1$
     for( final ExceptionType exception : exceptions )
     {
       final List<String> exceptionList = exception.getExceptionText();
-      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" );
+      final String exceptionText = Arrays.toString( exceptionList.toArray( new String[exceptionList.size()] ), "\n" ); //$NON-NLS-1$
       messages = messages + exceptionText;
     }
     return errorToStatus( messages );

@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.INTERPOLATION_METHOD;
 
 /**
@@ -78,9 +79,9 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
 
   public Command1D2DTimestepsInterpolationWizardPage( final String initRelaxationFactor )
   {
-    super( "Example" );
-    setTitle( "Interpolation mode" );
-    setDescription( "Please define the interpolation mode and the values you want to use." );
+    super( "Example" ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.2") ); //$NON-NLS-1$
     m_initRelaxationFactor = initRelaxationFactor;
   }
 
@@ -103,11 +104,11 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
     setControl( topContainer );
 
     final Group group = new Group( topContainer, SWT.SHADOW_NONE );
-    group.setText( "Interpolation mode" );
+    group.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.3") ); //$NON-NLS-1$
     group.setLayout( gridLayout1col );
     group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     final Button option1 = new Button( group, SWT.RADIO );
-    option1.setText( "by time interval" );
+    option1.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.4") ); //$NON-NLS-1$
     option1.setSelection( true );
     option1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     option1.addSelectionListener( new SelectionAdapter()
@@ -122,7 +123,7 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
       }
     } );
     final Button option2 = new Button( group, SWT.RADIO );
-    option2.setText( "by number of timesteps" );
+    option2.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.5") ); //$NON-NLS-1$
     option2.setSelection( false );
     option2.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     option2.addSelectionListener( new SelectionAdapter()
@@ -142,7 +143,7 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
     container.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_dateTimeLbl = new Label( container, SWT.NONE );
     m_dateTimeLbl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    m_dateTimeLbl.setText( "Time interval [dd, hh:mm:ss]:" );
+    m_dateTimeLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.6") ); //$NON-NLS-1$
 
     final Composite dateTimeContainer = new Composite( container, SWT.NULL );
     dateTimeContainer.setLayout( gridLayout3colNoMargin );
@@ -191,7 +192,7 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
 
     m_numberOfStepsLbl = new Label( container, SWT.NONE );
     m_numberOfStepsLbl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    m_numberOfStepsLbl.setText( "Number of steps:" );
+    m_numberOfStepsLbl.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.7") ); //$NON-NLS-1$
 
     m_numberOfStepsFld = new Spinner( container, SWT.NONE );
     m_numberOfStepsFld.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -215,10 +216,10 @@ public class Command1D2DTimestepsInterpolationWizardPage extends WizardPage
 
     final Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    uRelFactorLabel.setText( "Relaxationsfaktor [-]:" );
+    uRelFactorLabel.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizardPage.8") ); //$NON-NLS-1$
 
     m_uRelFactorCombo = new Combo( container, SWT.DROP_DOWN | SWT.READ_ONLY );
-    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" };
+    final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
     m_uRelFactorCombo.setItems( possibleURFValues );
     int cmbIndex = 0;
     for( ; cmbIndex < possibleURFValues.length; cmbIndex++ )

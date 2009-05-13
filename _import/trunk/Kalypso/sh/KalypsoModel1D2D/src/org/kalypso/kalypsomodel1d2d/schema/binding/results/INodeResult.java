@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface INodeResult extends IFeatureWrapper2
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" ); //$NON-NLS-1$
 
   public abstract void setCalcId( final int id );
 

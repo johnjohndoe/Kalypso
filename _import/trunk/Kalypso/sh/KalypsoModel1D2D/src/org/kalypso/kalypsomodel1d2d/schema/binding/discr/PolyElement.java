@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -125,7 +126,7 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
   public void addEdge( final String edgeID )
   {
     if( edgeID == null )
-      throw new IllegalArgumentException( Messages.getString( "Element2D.2" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D.2" ) ); //$NON-NLS-1$
     final FeatureList edgeFeatureList = m_edges.getWrappedList();
     if( edgeFeatureList.contains( edgeID ) )
       return;
@@ -217,13 +218,13 @@ public class PolyElement extends FE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdg
       final IFE1D2DNode secondNode = nodes.get( 1 );
 
       if( firstNode == null )
-        throw new IllegalStateException( "Invalid mesh: no first node for edge: " + edge.getGmlID() );
+        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement.0") + edge.getGmlID() ); //$NON-NLS-1$
 
       if( firstNode.equals( node ) && !excludeNodes.contains( secondNode ) )
         return secondNode;
 
       if( secondNode == null )
-        throw new IllegalStateException( "Invalid mesh: no second node for edge: " + edge.getGmlID() );
+        throw new IllegalStateException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement.1") + edge.getGmlID() ); //$NON-NLS-1$
 
       if( secondNode.equals( node ) && !excludeNodes.contains( firstNode ) )
         return firstNode;

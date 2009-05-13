@@ -52,9 +52,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMeta
 {
-  private static final String ERGEBNISSE = "Ergebnisse";
+  private static final String ERGEBNISSE = "Ergebnisse"; //$NON-NLS-1$
 
-  private static final String RESULTS = "results";
+  private static final String RESULTS = "results"; //$NON-NLS-1$
 
   public ScenarioResultMeta( final Feature featureToBind )
   {

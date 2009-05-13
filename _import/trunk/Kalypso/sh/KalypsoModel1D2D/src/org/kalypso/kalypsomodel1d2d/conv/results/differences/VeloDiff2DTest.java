@@ -131,37 +131,37 @@ public class VeloDiff2DTest extends TestCase
 
   private static void processResults( final FileObject result2dFile1, final FileObject result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job1.run( new NullProgressMonitor() );
 
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job2.run( new NullProgressMonitor() );
   }
 
   public void testLoadResults( ) throws Exception
   {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Start Result Processing Test (2D only)\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Start Result Processing Test (2D only)\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // unzip test project into workspace
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IProject project = workspace.getRoot().getProject( "veloDiffTest" );
+    final IProject project = workspace.getRoot().getProject( "veloDiffTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = NodeResultsHandler2DTest.class.getResource( "resources/ergs.zip" );
+    final URL zipLocation = NodeResultsHandler2DTest.class.getResource( "resources/ergs.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run model
-    final IFolder folder = project.getFolder( "ergs" );
-    final IFile resultFile1 = folder.getFile( "erg1.2d" );
-    final IFile resultFile2 = folder.getFile( "erg2.2d" );
-    final IFile templateFile = folder.getFile( "template.2d" );
+    final IFolder folder = project.getFolder( "ergs" ); //$NON-NLS-1$
+    final IFile resultFile1 = folder.getFile( "erg1.2d" ); //$NON-NLS-1$
+    final IFile resultFile2 = folder.getFile( "erg2.2d" ); //$NON-NLS-1$
+    final IFile templateFile = folder.getFile( "template.2d" ); //$NON-NLS-1$
 
-    final File outputDir1 = FileUtilities.createNewTempDir( "output1" );
-    final File outputDir2 = FileUtilities.createNewTempDir( "output2" );
+    final File outputDir1 = FileUtilities.createNewTempDir( "output1" ); //$NON-NLS-1$
+    final File outputDir2 = FileUtilities.createNewTempDir( "output2" ); //$NON-NLS-1$
 
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final List<TYPE> parameters = new ArrayList<TYPE>();
 
     parameters.add( TYPE.VELOCITY_X );
@@ -169,26 +169,26 @@ public class VeloDiff2DTest extends TestCase
 
     // ICalcUnitResultMeta resultMeta = new CalcUnitResultMeta(null);
 
-    System.out.println( "processing input result files..." );
+    System.out.println( "processing input result files..." ); //$NON-NLS-1$
     File file1 = resultFile1.getLocation().toFile();
     File file2 = resultFile2.getLocation().toFile();
 
-    file1 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_plan\\ohne_Hafen\\mhw_hq100\\mhw_hq100_plan_p16.2d" );
-    file2 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_ref\\mhw_hq100\\mhw_ref_g18.2d" );
+    file1 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_plan\\ohne_Hafen\\mhw_hq100\\mhw_hq100_plan_p16.2d" ); //$NON-NLS-1$
+    file2 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_ref\\mhw_hq100\\mhw_ref_g18.2d" ); //$NON-NLS-1$
 
     final StandardFileSystemManager manager = VFSUtilities.getNewManager();
     processResults( manager.toFileObject( file1 ), manager.toFileObject( file2 ), parameters, outputDir1, outputDir2 );
     manager.close();
 
-    final File outputFile = new File( "P:\\emu0528409\\modell\\bce_2d\\Auswertung_Querstroemung\\oH-Ref\\oH-Ref_mhw_hq100_quer.2d" );
+    final File outputFile = new File( "P:\\emu0528409\\modell\\bce_2d\\Auswertung_Querstroemung\\oH-Ref\\oH-Ref_mhw_hq100_quer.2d" ); //$NON-NLS-1$
     final File template = file2;
     // File template = templateFile.getLocation().toFile();
 
     final boolean parallel = true;
     if( parallel == true )
     {
-      final File outputFileParallel = new File( outputDir2, "output_para.2d" );
-      final File outputFileOrthogonal = new File( outputDir2, "output_ortho.2d" );
+      final File outputFileParallel = new File( outputDir2, "output_para.2d" ); //$NON-NLS-1$
+      final File outputFileOrthogonal = new File( outputDir2, "output_ortho.2d" ); //$NON-NLS-1$
 
       generateDifferences( parameters, outputDir1, outputDir2, template, outputFileParallel, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_PARALLEL );
       generateDifferences( parameters, outputDir1, outputDir2, template, outputFileOrthogonal, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_ORTHOGONAL );
@@ -203,11 +203,11 @@ public class VeloDiff2DTest extends TestCase
   {
     File gmlFile = null;
 
-    final File tinFolder = new File( outputDir, "Tin" );
+    final File tinFolder = new File( outputDir, "Tin" ); //$NON-NLS-1$
     if( resultType.equals( TYPE.VELOCITY_X ) )
-      gmlFile = new File( tinFolder, "tin_VELOCITY_X.gml" );
+      gmlFile = new File( tinFolder, "tin_VELOCITY_X.gml" ); //$NON-NLS-1$
     else
-      gmlFile = new File( tinFolder, "tin_VELOCITY_Y.gml" );
+      gmlFile = new File( tinFolder, "tin_VELOCITY_Y.gml" ); //$NON-NLS-1$
 
     final URL url = gmlFile.toURL();
 
@@ -215,7 +215,7 @@ public class VeloDiff2DTest extends TestCase
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
 
     final Feature rootFeature = workspace.getRootFeature();
-    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) );
+    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return surface;
   }

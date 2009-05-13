@@ -77,8 +77,8 @@ public class RoughnessStyleUpdateService extends Job
 {
   private static final IPath ROUGHNESS_SLD_PATH = new Path( ".metadata/roughness.sld" ); //$NON-NLS-1$
 
-  private static final String POLYGON_LAYER_NAME = "Flow Resistance Class"; 
-  private static final String LABEL_LAYER_NAME = "Labels"; 
+  private static final String POLYGON_LAYER_NAME = "Flow Resistance Class";  //$NON-NLS-1$
+  private static final String LABEL_LAYER_NAME = "Labels";  //$NON-NLS-1$
   
   
   // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also

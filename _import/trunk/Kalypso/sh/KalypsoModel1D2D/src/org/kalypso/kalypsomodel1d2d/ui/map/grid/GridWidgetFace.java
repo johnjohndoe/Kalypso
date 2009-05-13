@@ -43,7 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;

@@ -255,8 +255,8 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
         m_xmlStream.endElement( qname.getNamespaceURI(), qname.getLocalPart(), qname.getLocalPart() );
       }
 
-      m_xmlStream.endElement( "", "triangulatedSurfaceMember", "triangulatedSurfaceMember" );
-      m_xmlStream.endElement( "", "TinResult", "TinResult" );
+      m_xmlStream.endElement( "", "triangulatedSurfaceMember", "triangulatedSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      m_xmlStream.endElement( "", "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       m_xmlStream.endDocument();
 
       if( os instanceof ZipOutputStream )
@@ -265,7 +265,7 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to finish triangle file", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally
@@ -293,18 +293,18 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
     try
     {
       final String tinFilePath = m_tinResultFile.getPath();
-      final String tinFileBase = FileUtilities.nameWithoutExtension( tinFilePath ) + "_" + m_parameter.name();
+      final String tinFileBase = FileUtilities.nameWithoutExtension( tinFilePath ) + "_" + m_parameter.name(); //$NON-NLS-1$
 
       // Create zipped or normal file
       final OutputStream os;
-      if( tinFilePath.toLowerCase().endsWith( ".zip" ) )
+      if( tinFilePath.toLowerCase().endsWith( ".zip" ) ) //$NON-NLS-1$
       {
-        os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) );
-        m_zipEntry = new ZipEntry( "tin_" + m_parameter.name() + ".gml" );
+        os = new ZipOutputStream( new FileOutputStream( tinFileBase + ".zip" ) ); //$NON-NLS-1$
+        m_zipEntry = new ZipEntry( "tin_" + m_parameter.name() + ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
         ((ZipOutputStream) os).putNextEntry( m_zipEntry );
       }
       else
-        os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) );
+        os = new BufferedOutputStream( new FileOutputStream( new File( tinFileBase + ".gml" ) ) ); //$NON-NLS-1$
 
       m_xmlStream = new ToXMLStream();
       m_xmlStream.setOutputStream( os );
@@ -320,23 +320,23 @@ public class TriangulatedSurfaceDirectTriangleEater implements ITriangleEater
 
       m_xmlStream.startDocument();
 
-      m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); // the attribute does not trigger the prefix mapping
-      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult", "TinResult" );
-      m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "root" );
-      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember", "triangulatedSurfaceMember" );
+      m_xmlStream.startPrefixMapping( "gml", NS.GML3 ); // the attribute does not trigger the prefix mapping //$NON-NLS-1$
+      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult", "TinResult" ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_xmlStream.addAttribute( NS.GML3, "id", "gml:id", "string", "root" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      m_xmlStream.startElement( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember", "triangulatedSurfaceMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final AttributesImpl atts = new AttributesImpl();
       if( m_crs != null )
       {
-        atts.addAttribute( "", "srsName", "srsName", "CDATA", m_crs );
-        atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( m_crs ) );
+        atts.addAttribute( "", "srsName", "srsName", "CDATA", m_crs ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( m_crs ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
       }
 
       m_marshaller.startSurface( atts );
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Failed to initialize marshaller", e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceDirectTriangleEater.1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

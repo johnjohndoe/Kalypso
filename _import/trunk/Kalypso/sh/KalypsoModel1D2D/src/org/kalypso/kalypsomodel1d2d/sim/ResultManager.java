@@ -289,7 +289,7 @@ public class ResultManager implements ISimulation1D2DConstants
     {
       final FileName childName = child.getName();
       final String baseName = childName.getBaseName();
-      if( FilenameUtils.wildcardMatch( baseName, "*.2d" ) )
+      if( FilenameUtils.wildcardMatch( baseName, "*.2d" ) ) //$NON-NLS-1$
       {
         resultList.add( child );
       }

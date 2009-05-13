@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 
 /**
  * @author Patrice Congo

@@ -56,7 +56,7 @@ public interface IPolyElement<CT extends IFE1D2DComplexElement, ET extends IFE1D
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" ); //$NON-NLS-1$
   
-  public static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+  public static final QName QNAME_PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
   public GM_Surface<GM_SurfacePatch> getGeometry( );
 

@@ -228,7 +228,7 @@ public class LineGeometryEditor
         final PointSymbolizer pointSymb = new PointSymbolizer_Impl();
 
         final Fill fill = StyleFactory.createFill( color );
-        final Mark mark = StyleFactory.createMark( "square", fill, stroke );
+        final Mark mark = StyleFactory.createMark( "square", fill, stroke ); //$NON-NLS-1$
         final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
 
         pointSymb.setGraphic( graphic );

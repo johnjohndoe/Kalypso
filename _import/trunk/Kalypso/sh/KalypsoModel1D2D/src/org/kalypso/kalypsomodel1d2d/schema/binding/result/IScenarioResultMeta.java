@@ -50,7 +50,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public interface IScenarioResultMeta extends IResultMeta
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" ); //$NON-NLS-1$
 
   /**
    * tries to find a calculation unit in the result meta

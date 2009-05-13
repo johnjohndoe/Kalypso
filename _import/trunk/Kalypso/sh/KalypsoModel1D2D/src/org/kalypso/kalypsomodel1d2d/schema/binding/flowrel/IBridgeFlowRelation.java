@@ -49,5 +49,5 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
  */
 public interface IBridgeFlowRelation extends IBuildingFlowRelation
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BridgeFlowRelation" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BridgeFlowRelation" ); //$NON-NLS-1$
 }

@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolate.INTERPOLATION_METHOD;
 
 /**
@@ -59,7 +60,7 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
   {
     m_commandHandler = commandHandler;
     if( initRelaxationFactor == null || Double.isNaN( initRelaxationFactor ) )
-      m_page = new Command1D2DTimestepsInterpolationWizardPage( "1.0" );
+      m_page = new Command1D2DTimestepsInterpolationWizardPage( "1.0" ); //$NON-NLS-1$
     else
       m_page = new Command1D2DTimestepsInterpolationWizardPage( initRelaxationFactor.toString() );
   }
@@ -81,7 +82,7 @@ public class Command1D2DTimestepsInterpolationWizard extends Wizard implements I
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Timesteps interpolation" );
+    setWindowTitle( Messages.getString("org.kalypso.kalypsomodel1d2d.ogc.gml.om.table.command.handler.Command1D2DTimestepsInterpolationWizard.1") ); //$NON-NLS-1$
     addPage( m_page );
   }
 

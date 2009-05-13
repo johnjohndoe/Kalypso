@@ -14,6 +14,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioController;
 import org.osgi.framework.BundleContext;
 
@@ -57,7 +58,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
     // Initialize this controller inside a job, else this plugin will not get loaded
     // if anything happens (was the case on some machines, probably due to race conditions)
-    final Job job = new Job( "Register scenario controler" )
+    final Job job = new Job( Messages.getString("org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin.0") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( IProgressMonitor monitor )

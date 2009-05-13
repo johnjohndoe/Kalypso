@@ -45,41 +45,41 @@ package org.kalypso.kalypsomodel1d2d.schema.dict;
  */
 public interface Kalypso1D2DDictConstants
 {
-  public static final String DICT_COMPONENT_ORDINAL_NUMBER = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber";
+  public static final String DICT_COMPONENT_ORDINAL_NUMBER = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_TIME = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
+  public static final String DICT_COMPONENT_TIME = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_UNDER_RELAXATION_FACTOR = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor";
+  public static final String DICT_COMPONENT_UNDER_RELAXATION_FACTOR = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
+  public static final String DICT_COMPONENT_WATERLEVEL = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL_UPSTREAM = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream";
+  public static final String DICT_COMPONENT_WATERLEVEL_UPSTREAM = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelUpstream"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_WATERLEVEL_DOWNSTREAM = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream";
+  public static final String DICT_COMPONENT_WATERLEVEL_DOWNSTREAM = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#WaterlevelDownstream"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DISCHARGE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge";
+  public static final String DICT_COMPONENT_DISCHARGE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_1D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D";
+  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_1D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge1D"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_2D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D";
+  public static final String DICT_COMPONENT_SPECIFIC_DISCHARGE_2D = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#SpecificDischarge2D"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Depth";
+  public static final String DICT_COMPONENT_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Depth"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_VELOCITY = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity";
+  public static final String DICT_COMPONENT_VELOCITY = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Velocity"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_MAX_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityX";
+  public static final String DICT_COMPONENT_MAX_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityX"; //$NON-NLS-1$
 
-  public static final String DICT_COMPONENT_MAX_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityY";
+  public static final String DICT_COMPONENT_MAX_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityY"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_VELOCITY_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityNode";
+  public static final Object DICT_COMPONENT_MAX_VELOCITY_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxVelocityNode"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepth";
+  public static final Object DICT_COMPONENT_MAX_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepth"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_MAX_DEPTH_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepthNode";
+  public static final Object DICT_COMPONENT_MAX_DEPTH_NODE = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#MaxDepthNode"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityX";
+  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_X = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityX"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityY";
+  public static final Object DICT_COMPONENT_AVERAGE_VELOCITY_Y = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageVelocityY"; //$NON-NLS-1$
 
-  public static final Object DICT_COMPONENT_AVERAGE_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageDepth";
+  public static final Object DICT_COMPONENT_AVERAGE_DEPTH = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#AverageDepth"; //$NON-NLS-1$
 }

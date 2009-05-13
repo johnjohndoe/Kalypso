@@ -14,6 +14,7 @@ import org.kalypso.afgui.model.IModel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartInfo;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
@@ -137,7 +138,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   {
     if( !(adaptableObject instanceof Feature) )
     {
-      throw new IllegalArgumentException( "Adapter Factory for feature only but" + " get to adapt:" + adaptableObject );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory.0") + Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoModel1D2DFeatureFactory.1") + adaptableObject ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final AdapterConstructor ctor = constructors.get( adapterType );

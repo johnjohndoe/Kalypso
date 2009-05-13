@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface INodeResultCollection extends IFeatureWrapperCollection<INodeResult>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_NODERESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" );
+  public final static QName QNAME_PROP_NODERESULT_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ); //$NON-NLS-1$
 }

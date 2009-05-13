@@ -53,13 +53,13 @@ public interface IBuildingFlowRelation extends IFlowRelation1D
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BuildingFlowRelation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" );
+  public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "direction" );
+  public static final QName QNAME_PROP_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "direction" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
+  public static final QName QNAME_PROP_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" );
+  public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" ); //$NON-NLS-1$
 
   public enum KIND
   {

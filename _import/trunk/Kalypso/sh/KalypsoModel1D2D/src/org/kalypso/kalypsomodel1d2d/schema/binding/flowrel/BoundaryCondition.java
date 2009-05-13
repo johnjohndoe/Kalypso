@@ -65,7 +65,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 {
   private IObservation<TupleResult> m_observation;
 
-  public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
+  public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" ); //$NON-NLS-1$
 
   public BoundaryCondition( final Feature featureToBind )
   {
@@ -93,7 +93,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
         || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ))
         || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
     {
-      getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
+      getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) ); //$NON-NLS-1$
       setHasDirection( true );
     }
     else

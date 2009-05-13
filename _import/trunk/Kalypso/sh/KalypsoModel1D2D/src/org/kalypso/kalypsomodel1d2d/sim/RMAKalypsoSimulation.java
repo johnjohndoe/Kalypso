@@ -211,7 +211,7 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
       process.startProcess( logOS, errorOS, null, progressCancelable );
 
       // decide based on ERROR.OUT if simulation was successful
-      final FileObject errorFile = workingDir.resolveFile( "ERROR.OUT" );
+      final FileObject errorFile = workingDir.resolveFile( "ERROR.OUT" ); //$NON-NLS-1$
       if( errorFile == null || !errorFile.exists() || errorFile.getContent().getSize() == 0 )
       {
         /* Successfully finished simulation */
@@ -229,19 +229,19 @@ public class RMAKalypsoSimulation implements ISimulation, ISimulation1D2DConstan
     }
     catch( final ProcessTimeoutException e )
     {
-      throw new SimulationException( "Simulation timed out.", e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.0"), e ); //$NON-NLS-1$
     }
     catch( final OperationCanceledException e )
     {
-      throw new SimulationException( "Simulation canceled.", new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), e ) ) ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.1"), new CoreException( StatusUtilities.createStatus( IStatus.CANCEL, Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation.2" ), e ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
-      throw new SimulationException( "Simulation error.", e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.2"), e ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      throw new SimulationException( "I/O error.", e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.kalypsomodel1d2d.sim.RMAKalypsoSimulation.3"), e ); //$NON-NLS-1$
     }
     finally
     {

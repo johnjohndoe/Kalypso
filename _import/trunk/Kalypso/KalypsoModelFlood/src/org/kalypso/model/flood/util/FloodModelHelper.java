@@ -326,7 +326,7 @@ public class FloodModelHelper
 
   public static IKalypsoFeatureTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
   {
-    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+    final IKalypsoCascadingTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, Messages.getString("org.kalypso.model.flood.util.FloodModelHelper.23"), "waterlevelThemes" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( runoffEvent == null || wspThemes == null )
       return null;

@@ -85,11 +85,11 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.IWspmOverlayConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayer;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -572,7 +572,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( drawFirstBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.LEFT;
-          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" );
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( drawBankWidget );
         }
         else
@@ -664,7 +664,7 @@ public class CreateMainChannelComposite extends Composite
         {
           buttonGuard( drawSecondBankButton );
           final CreateChannelData.SIDE side = CreateChannelData.SIDE.RIGHT;
-          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" );
+          final IWidget drawBankWidget = new DrawBanklineWidget( m_data, side, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
           m_widget.setDelegate( drawBankWidget );
         }
         else

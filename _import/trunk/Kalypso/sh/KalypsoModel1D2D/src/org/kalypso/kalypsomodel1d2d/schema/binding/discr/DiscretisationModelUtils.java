@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -57,7 +58,7 @@ public class DiscretisationModelUtils
 {
   private DiscretisationModelUtils( )
   {
-    throw new UnsupportedOperationException( Messages.getString( "DiscretisationModelUtils.0" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils.0" ) ); //$NON-NLS-1$
   }
 
   /**

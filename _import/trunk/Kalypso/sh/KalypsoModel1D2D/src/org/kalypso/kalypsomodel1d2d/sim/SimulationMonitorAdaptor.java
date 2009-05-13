@@ -35,7 +35,7 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   @Override
   public void done( )
   {
-    done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SimulationMonitorAdaptor.0" ) ) );
+    done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.sim.SimulationMonitorAdaptor.0" ) ) ); //$NON-NLS-1$
   }
 
   @Override

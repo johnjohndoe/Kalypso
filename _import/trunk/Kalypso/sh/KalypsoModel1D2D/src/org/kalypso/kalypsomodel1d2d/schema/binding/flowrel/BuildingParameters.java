@@ -70,7 +70,7 @@ public class BuildingParameters
 
   public static final String COMPONENT_WATERLEVEL_UPSTREAM = Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM;
 
-  private static final BigDecimal UNKNOWN_DISCHARGE = new BigDecimal( "-999.999" );
+  private static final BigDecimal UNKNOWN_DISCHARGE = new BigDecimal( "-999.999" ); //$NON-NLS-1$
 
   private final Map<Object, BigDecimal> m_dischargeMap = new HashMap<Object, BigDecimal>();
 

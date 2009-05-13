@@ -52,17 +52,17 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
  */
 public interface ITeschkeFlowRelation extends IFlowRelation1D
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TeschkeFlowRelation" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TeschkeFlowRelation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_POINTSOBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "pointsMember" );
+  public static final QName QNAME_PROP_POINTSOBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "pointsMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_POLYNOMES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polynomialMember" );
+  public static final QName QNAME_PROP_POLYNOMES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "polynomialMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "station" );
+  public static final QName QNAME_PROP_STATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "station" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_SLOPE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "slope" );
+  public static final QName QNAME_PROP_SLOPE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "slope" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" );
+  public static final QName QNAME_PROP_PROFILE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "profileMember" ); //$NON-NLS-1$
 
   public List<IPolynomial1D> getPolynomials( );
 

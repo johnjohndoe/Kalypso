@@ -54,13 +54,13 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public interface ICalcUnitResultMeta extends IResultMeta
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "CalculationUnitResultMeta" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "CalculationUnitResultMeta" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationStartTime" );
+  public static final QName QNAME_PROP_CALC_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationStartTime" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationEndTime" );
+  public static final QName QNAME_PROP_CALC_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationEndTime" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "calcUnitID" );
+  public static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "calcUnitID" ); //$NON-NLS-1$
 
   public void setCalcStartTime( final Date startTime );
 

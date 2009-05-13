@@ -71,7 +71,7 @@ import org.kalypso.jts.QuadMesher.JTSCoordsElevInterpol;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -1033,7 +1033,7 @@ public class CreateChannelData
       return null;
 
     if( m_segmentList.size() < selection )
-      System.out.println( "Schlauchgenerator: Falsches Segment" );
+      System.out.println( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit..CreateChannelData.0") ); //$NON-NLS-1$
 
     return m_segmentList.get( selection );
   }

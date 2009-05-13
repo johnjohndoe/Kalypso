@@ -44,10 +44,10 @@ public class Element1DTypeGeometry extends FeaturePropertyFunction
     else
     {
       System.out.println(
-          "Cannot get feature prop:"+
-          "\n\tfeature="+feature+
-          "\n\tproperty="+pt.getQName()+
-          "\n\tcurrentValue="+currentValue);
+          "Cannot get feature prop:"+ //$NON-NLS-1$
+          "\n\tfeature="+feature+ //$NON-NLS-1$
+          "\n\tproperty="+pt.getQName()+ //$NON-NLS-1$
+          "\n\tcurrentValue="+currentValue); //$NON-NLS-1$
     }
 
     return null;

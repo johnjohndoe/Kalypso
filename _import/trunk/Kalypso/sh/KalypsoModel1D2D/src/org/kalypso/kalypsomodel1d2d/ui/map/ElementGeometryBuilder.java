@@ -59,7 +59,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -240,7 +240,7 @@ public class ElementGeometryBuilder
 
       // 0) Node was already grabbed
       if( ArrayUtils.indexOf( allNodes, newPoint ) != allNodes.length - 1 )
-        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.0" ) ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.0" ) ); //$NON-NLS-1$
 
       // 1) New Node lies inside an element (only for non-grabbed point)
 
@@ -252,7 +252,7 @@ public class ElementGeometryBuilder
         {
           final GM_Surface<GM_SurfacePatch> surface = elementForNewNode.getGeometry();
           if( surface.contains( newPoint ) )
-            return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
+            return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.6" ) ); //$NON-NLS-1$
         }
       }
 
@@ -278,7 +278,7 @@ public class ElementGeometryBuilder
               // check for null geometries... What to do?
               // delete the elements???
 
-              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.2" ) ); //$NON-NLS-1$
+              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.2" ) ); //$NON-NLS-1$
             }
             if( eleGeom.intersects( curve ) )
             {
@@ -290,7 +290,7 @@ public class ElementGeometryBuilder
                 final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
 
                 if( checkIntersectionCurve( allNodes, startPoint, endPoint ) )
-                  return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
+                  return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
               }
             }
           }
@@ -306,7 +306,7 @@ public class ElementGeometryBuilder
 
       // 4) New Element self-intersects
       if( GeometryUtilities.isSelfIntersecting( ring ) )
-        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.4" ) ); //$NON-NLS-1$
 
       // New Element intersects other elements
       final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
@@ -320,7 +320,7 @@ public class ElementGeometryBuilder
           {
             final GM_Object intersection = eleGeom.intersection( newSurface );
             if( intersection instanceof GM_Surface )
-              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
+              return StatusUtilities.createErrorStatus( org.kalypso.kalypsomodel1d2d.ui.i18n.Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.5" ) ); //$NON-NLS-1$
           }
         }
       }

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -77,7 +78,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() < 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
     final List<IFE1D2DNode> fullNodeList;
     try
     {
@@ -85,7 +86,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
@@ -144,7 +145,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
         if( neighbourNodes.size() == 0 )
         {
-          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.2" ) + currentNode.getFeature().getId() ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D.2" ) + currentNode.getFeature().getId() ); //$NON-NLS-1$
           throw new CoreException( status );
         }
         IFE1D2DNode bestCandidateNode = null;

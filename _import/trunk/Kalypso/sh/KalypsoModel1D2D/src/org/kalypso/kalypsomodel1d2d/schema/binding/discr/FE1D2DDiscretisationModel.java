@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.VersionedModel;
@@ -188,7 +189,7 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
         final IFE1D2DNode currentNode = new FE1D2DNode( feature );
         final GM_Point point = currentNode.getPoint();
         if( point == null )
-          throw new IllegalArgumentException( "Found node with null-geometry: " + currentNode );
+          throw new IllegalArgumentException( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel.0") + currentNode ); //$NON-NLS-1$
         final double currentDistance = nodeLocation.distance( point );
         if( minDistance > currentDistance )
         {

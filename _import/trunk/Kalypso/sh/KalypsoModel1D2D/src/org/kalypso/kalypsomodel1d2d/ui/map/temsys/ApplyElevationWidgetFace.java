@@ -42,7 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;

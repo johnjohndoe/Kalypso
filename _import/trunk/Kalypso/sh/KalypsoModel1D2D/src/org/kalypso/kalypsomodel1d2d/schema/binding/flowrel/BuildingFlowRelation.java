@@ -210,7 +210,7 @@ public abstract class BuildingFlowRelation extends AbstractFlowRelation1D implem
 
     final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
     final IFeatureType profileFT = profileRelation.getTargetFeatureType();
-    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" );
+    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     feature.setProperty( profileRelation, profileLinkFeature );
   }
 

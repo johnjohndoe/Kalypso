@@ -12,6 +12,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IModelAdaptor;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -31,7 +32,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ControlModelAdapter implements IModelAdaptor
 {
-  private static final String VERSION_1_0 = "1.0";
+  private static final String VERSION_1_0 = "1.0"; //$NON-NLS-1$
 
   private IStatus m_result = Status.OK_STATUS;
 
@@ -60,8 +61,8 @@ public class ControlModelAdapter implements IModelAdaptor
 
     final Feature controlModelGroup = workspace.getRootFeature();
 
-    final QName qnameProp1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
-    final QName qnameProp2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
+    final QName qnameProp1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ); //$NON-NLS-1$
+    final QName qnameProp2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ); //$NON-NLS-1$
     final IRelationType controlModelCollectionPropertyType = (IRelationType) controlModelGroup.getFeatureType().getProperty( qnameProp1 );
     final Feature controlModelCollection = (Feature) controlModelGroup.getProperty( controlModelCollectionPropertyType );
     if( controlModelCollection == null )
@@ -78,7 +79,7 @@ public class ControlModelAdapter implements IModelAdaptor
     {
       final int numberOfChanges = controlModels.size();
       final int amountOfWork = numberOfChanges * 10;
-      monitor.beginTask( "Adapting control model", amountOfWork );
+      monitor.beginTask( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.3"), amountOfWork ); //$NON-NLS-1$
 
       for( final Object modelObject : controlModels )
       {
@@ -107,8 +108,8 @@ public class ControlModelAdapter implements IModelAdaptor
     }
 
     if( statusList.size() > 0 )
-      return StatusUtilities.createStatus( statusList, "Problems during the control model adaptation." );
+      return StatusUtilities.createStatus( statusList, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.4") ); //$NON-NLS-1$
 
-    return StatusUtilities.createInfoStatus( "Control model has been adapted to version 1.0" );
+    return StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.ControlModelAdapter.5") ); //$NON-NLS-1$
   }
 }

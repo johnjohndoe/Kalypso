@@ -51,6 +51,7 @@ import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.SIDE;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -223,9 +224,9 @@ public class DrawBanklineWidget extends AbstractWidget
 
     String tooltipMsg = ""; //$NON-NLS-1$
     if( m_edit )
-      tooltipMsg = "Uferlinienbearbeitung:\n    <Esc>:                                 abbrechen.\n    <Leertaste>:                       Modus wechseln. \n\n     <Editiermodus aktiv>";
+      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.0"); //$NON-NLS-1$
     else
-      tooltipMsg = "Uferlinienbearbeitung:\n    <Esc>:                                 abbrechen.\n    <Leertaste>:                       Modus wechseln. \n\n     <Zeichenmodus aktiv>";
+      tooltipMsg = Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.DrawBanklineWidget.1"); //$NON-NLS-1$
 
     m_toolTipRenderer.setTooltip( tooltipMsg );
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
@@ -282,7 +283,7 @@ public class DrawBanklineWidget extends AbstractWidget
   @Override
   public void finish( )
   {
-    m_toolTipRenderer.setTooltip( "" );
+    m_toolTipRenderer.setTooltip( "" ); //$NON-NLS-1$
     super.finish();
   }
 

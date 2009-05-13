@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.kalypsomodel1d2d.ui.map.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ui.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.GM_PointSnapper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -450,7 +450,7 @@ public class DragBankLineWidget extends AbstractWidget
       final PointSymbolizer pointSymb = new PointSymbolizer_Impl();
 
       final Fill fill = StyleFactory.createFill( color );
-      final Mark mark = StyleFactory.createMark( "square", fill, stroke );
+      final Mark mark = StyleFactory.createMark( "square", fill, stroke ); //$NON-NLS-1$
       final Graphic graphic = StyleFactory.createGraphic( null, mark, 1, 5, 0 );
 
       pointSymb.setGraphic( graphic );

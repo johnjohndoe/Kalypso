@@ -53,31 +53,31 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class UrlCatalog1D2D extends AbstractUrlCatalog
 {
-  final static public String MODEL_1D2D_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2d";
+  final static public String MODEL_1D2D_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DControl_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl";
+  final static public String MODEL_1D2DControl_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DOperational_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel";
+  final static public String MODEL_1D2DOperational_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DObservation_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/observation";
+  final static public String MODEL_1D2DObservation_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/observation"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DResult_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta";
+  final static public String MODEL_1D2DResult_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DResults_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
+  final static public String MODEL_1D2DResults_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DSIMMETA_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel";
+  final static public String MODEL_1D2DSIMMETA_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2D_NS_PREFIX = "wb1d2d";
+  final static public String MODEL_1D2D_NS_PREFIX = "wb1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DControl_NS_PREFIX = "c1d2d";
+  final static public String MODEL_1D2DControl_NS_PREFIX = "c1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DOperational_NS_PREFIX = "op1d2d";
+  final static public String MODEL_1D2DOperational_NS_PREFIX = "op1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DResult_NS_PREFIX = "resultMeta1d2d";
+  final static public String MODEL_1D2DResult_NS_PREFIX = "resultMeta1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DResults_NS_PREFIX = "res1d2d";
+  final static public String MODEL_1D2DResults_NS_PREFIX = "res1d2d"; //$NON-NLS-1$
 
-  final static public String MODEL_1D2DSIMMETA_NS_PREFIX = "simMeta1d2d";
+  final static public String MODEL_1D2DSIMMETA_NS_PREFIX = "simMeta1d2d"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -85,13 +85,13 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( MODEL_1D2D_NS, myClass.getResource( "v0.0/sim_1d2d_model.xsd" ) );
-    catalog.put( MODEL_1D2DControl_NS, myClass.getResource( "v0.0/sim_1d2d_control.xsd" ) );
-    catalog.put( MODEL_1D2DOperational_NS, myClass.getResource( "v0.0/sim_1d2d_operational.xsd" ) );
-    catalog.put( MODEL_1D2DObservation_NS, myClass.getResource( "v0.0/sim_1d2d_observation.xsd" ) );
-    catalog.put( MODEL_1D2DResult_NS, myClass.getResource( "v0.0/sim_1d2d_result.xsd" ) );
-    catalog.put( MODEL_1D2DResults_NS, myClass.getResource( "v0.0/sim_1d2d_results.xsd" ) );
-    catalog.put( MODEL_1D2DSIMMETA_NS, myClass.getResource( "v0.0/sim_1d2d_model_metadata.xsd" ) );
+    catalog.put( MODEL_1D2D_NS, myClass.getResource( "v0.0/sim_1d2d_model.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DControl_NS, myClass.getResource( "v0.0/sim_1d2d_control.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DOperational_NS, myClass.getResource( "v0.0/sim_1d2d_operational.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DObservation_NS, myClass.getResource( "v0.0/sim_1d2d_observation.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DResult_NS, myClass.getResource( "v0.0/sim_1d2d_result.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DResults_NS, myClass.getResource( "v0.0/sim_1d2d_results.xsd" ) ); //$NON-NLS-1$
+    catalog.put( MODEL_1D2DSIMMETA_NS, myClass.getResource( "v0.0/sim_1d2d_model_metadata.xsd" ) ); //$NON-NLS-1$
     prefixes.put( MODEL_1D2D_NS, MODEL_1D2D_NS_PREFIX );
     prefixes.put( MODEL_1D2DControl_NS, MODEL_1D2DControl_NS_PREFIX );
     prefixes.put( MODEL_1D2DOperational_NS, MODEL_1D2DOperational_NS_PREFIX );

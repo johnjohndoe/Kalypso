@@ -89,27 +89,27 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class SimulationKalypsoFlood implements ISimulation
 {
-  public static String TYPEID = "KalypsoFloodSimulation";
+  public static String TYPEID = "KalypsoFloodSimulation"; //$NON-NLS-1$
 
-  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "../events/";
+  public static String CONST_COVERAGE_FILE_RELATIVE_PATH_PREFIX = "../events/"; //$NON-NLS-1$
 
-  public static final String INPUT_FLOOD_MODEL = "FLOOD_MODEL";
+  public static final String INPUT_FLOOD_MODEL = "FLOOD_MODEL"; //$NON-NLS-1$
 
-  public static final String INPUT_GRID_FOLDER = "GRID_FOLDER";
+  public static final String INPUT_GRID_FOLDER = "GRID_FOLDER"; //$NON-NLS-1$
 
-  public static final String INPUT_EVENTS_BASE_FOLDER = "EVENTS_BASE_FOLDER";
+  public static final String INPUT_EVENTS_BASE_FOLDER = "EVENTS_BASE_FOLDER"; //$NON-NLS-1$
 
-  public static final String OUTPUT_FLOOD_MODEL = "FLOOD_MODEL";
+  public static final String OUTPUT_FLOOD_MODEL = "FLOOD_MODEL"; //$NON-NLS-1$
 
-  public static final String OUTPUT_EVENTS_BASE_FOLDER = "EVENTS_BASE_FOLDER";
+  public static final String OUTPUT_EVENTS_BASE_FOLDER = "EVENTS_BASE_FOLDER"; //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS = "Ereignis '%s'";
+  private static final String STR_EREIGNIS_xS = Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.7"); //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS = STR_EREIGNIS_xS + " - Volumenermittlung '%s'";
+  private static final String STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.8"); //$NON-NLS-1$
 
-  private static final String STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS = STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS + " (%s)";
+  private static final String STR_EREIGNISE_xS_VOLUMENERMITTLUNG_xS_COVERAGE_xS = STR_EREIGNIS_xS_VOLUMENERMITTLUNG_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.9"); //$NON-NLS-1$
 
-  private static final String STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS = STR_EREIGNIS_xS + " - Fließtiefenermittlung (%s)";
+  private static final String STR_EREIGNIS_xS_FLIESSTIEFENERMITTLUNG_xS = STR_EREIGNIS_xS + Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.0"); //$NON-NLS-1$
 
   private static final double VOLUME_EPS = 1.0;
 
@@ -135,13 +135,13 @@ public class SimulationKalypsoFlood implements ISimulation
 
     final IProgressMonitor simulationMonitorAdaptor = new SimulationMonitorAdaptor( monitor );
 
-    final File eventsTmpDir = new File( tmpdir, "events" );
+    final File eventsTmpDir = new File( tmpdir, "events" ); //$NON-NLS-1$
 
     try
     {
       final GMLWorkspace workspace = runSimulation( gmlURL, eventsTmpDir, simulationMonitorAdaptor );
-      final File tmpModel = File.createTempFile( "tmpFloodModel", ".gml", tmpdir );
-      GmlSerializer.serializeWorkspace( tmpModel, workspace, "UTF-8" );
+      final File tmpModel = File.createTempFile( "tmpFloodModel", ".gml", tmpdir ); //$NON-NLS-1$ //$NON-NLS-2$
+      GmlSerializer.serializeWorkspace( tmpModel, workspace, "UTF-8" ); //$NON-NLS-1$
       resultEater.addResult( OUTPUT_FLOOD_MODEL, tmpModel );
       resultEater.addResult( OUTPUT_EVENTS_BASE_FOLDER, eventsTmpDir );
     }
@@ -159,9 +159,9 @@ public class SimulationKalypsoFlood implements ISimulation
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, "Modellrechnung läuft", 1000 );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.15"), 1000 ); //$NON-NLS-1$
 
-      progress.subTask( "Lade Modelldaten..." );
+      progress.subTask( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.16") ); //$NON-NLS-1$
       final GMLWorkspace modelWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
       final IFloodModel model = (IFloodModel) modelWorkspace.getRootFeature().getAdapter( IFloodModel.class );
       ProgressUtilities.worked( monitor, 100 );
@@ -178,7 +178,7 @@ public class SimulationKalypsoFlood implements ISimulation
       }
 
       if( markedEvents.size() == 0 )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, "Kein Ereignis zur Berechnung markiert.", null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.17"), null ) ); //$NON-NLS-1$
 
       progress.setWorkRemaining( events.size() * 2 );
       for( final IRunoffEvent event : markedEvents )
@@ -277,16 +277,16 @@ public class SimulationKalypsoFlood implements ISimulation
     }
 
     if( Double.isNaN( minWsp ) || Double.isInfinite( minWsp ) )
-      throw new SimulationException( "Volumenbasierter Wasserpiegel konnte nicht ermittelt werden: Ermittlung der unteren Grenze (Wasserpiegel) nicht möglich. Polygon evtl. außerhalb des Geländemodells?" );
+      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.18") ); //$NON-NLS-1$
     if( Double.isNaN( maxWsp ) || Double.isInfinite( maxWsp ) )
-      throw new SimulationException( "Volumenbasierter Wasserpiegel konnte nicht ermittelt werden: Ermittlung der oberen Grenze (Wasserpiegel) nicht möglich. Polygon evtl. außerhalb des Geländemodells?" );
+      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.19") ); //$NON-NLS-1$
 
     progress.setWorkRemaining( 100 );
     final double wsp = searchWsp( volume, minWsp, maxWsp, terrainCoverages, volumeGmObject, progress.newChild( 100 ) );
     if( Double.isNaN( wsp ) )
     {
       volumePolygon.setWaterlevel( null );
-      throw new SimulationException( "Volumenbasierter Wasserpiegel konnte nicht ermittelt werden" );
+      throw new SimulationException( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.20") ); //$NON-NLS-1$
     }
 
     volumePolygon.setWaterlevel( new BigDecimal( wsp ) );
@@ -297,9 +297,9 @@ public class SimulationKalypsoFlood implements ISimulation
     // Binary search within min/max; we start in the middle
     final double currentWsp = (maxWsp + minWsp) / 2;
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Volumenermittlung", IProgressMonitor.UNKNOWN );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.21"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
-    progress.subTask( String.format( "Iterative Volumenermittlung - aktueller Wasserspiegel: %.3f", currentWsp ) );
+    progress.subTask( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.22"), currentWsp ) ); //$NON-NLS-1$
 
     if( Double.isNaN( currentWsp ) || Double.isInfinite( currentWsp ) )
       return Double.NaN;
@@ -360,11 +360,11 @@ public class SimulationKalypsoFlood implements ISimulation
     }
     catch( final GeoGridException e )
     {
-      throw new SimulationException( String.format( "Volumen konnte nicht ermittelt werden : %s", e.getLocalizedMessage() ), e );
+      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.23"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
     catch( final GM_Exception e )
     {
-      throw new SimulationException( String.format( "Volumen konnte nicht ermittelt werden : %s", e.getLocalizedMessage() ), e );
+      throw new SimulationException( String.format( Messages.getString("org.kalypso.model.flood.core.SimulationKalypsoFlood.24"), e.getLocalizedMessage() ), e ); //$NON-NLS-1$
     }
   }
 

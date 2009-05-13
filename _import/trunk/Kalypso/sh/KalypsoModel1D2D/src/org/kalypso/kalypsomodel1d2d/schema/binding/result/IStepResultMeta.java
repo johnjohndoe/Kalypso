@@ -44,6 +44,7 @@ import java.util.Date;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
@@ -63,7 +64,7 @@ public interface IStepResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "stationärer Rechenlauf";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.0"); //$NON-NLS-1$
       }
     },
     qSteady
@@ -74,7 +75,7 @@ public interface IStepResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "quasi stationärer Rechenschritt";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.1"); //$NON-NLS-1$
       }
     },
     unsteady
@@ -85,7 +86,7 @@ public interface IStepResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "instationärer Rechenschritt";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.2"); //$NON-NLS-1$
       }
     },
     maximum
@@ -96,7 +97,7 @@ public interface IStepResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "maximale Strömungsgrößen";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.3"); //$NON-NLS-1$
       }
     },
     error
@@ -107,18 +108,18 @@ public interface IStepResultMeta extends IResultMeta
       @Override
       public String toString( )
       {
-        return "Protokoll";
+        return Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.4"); //$NON-NLS-1$
       }
     }
   }
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "StepResultMeta" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.5") ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "stepTime" );
+  public static final QName QNAME_PROP_STEP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.6") ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_IS_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "isRestart" );
+  public static final QName QNAME_PROP_STEP_IS_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.7") ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STEP_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" );
+  public static final QName QNAME_PROP_STEP_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, Messages.getString("org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.8") ); //$NON-NLS-1$
 
   public void setStepTime( final Date stepTime );
 
