@@ -761,9 +761,33 @@ new features introduced/ started to be introduced:
 
 028.) Corrections in FUNS:
       Correction of Faktor for Water density from 1.94 to 1.935 as
-      already used in other SubRs             
-                                                       
+      already used in other SubRs                                                                    
 --- Monika Donner, 12.05.2009
 
+--- Monika Donner, 13.05.2009
+029.) Correction in SubR KALYP_SHEAR:
+      Delete block with IT==1 question, because old bed-shear is already
+      collected in NEWBED at the end of an iteration
+      --> can cause an error, because first calculation of sediment
+      must not be at IT=1, if hydrodynamic is calculated first.
+      
+      New Averaged sizes at midside nodes:
+        >> ESRO(NN)=(ESRO(IMID(NN,1))+ESRO(IMID(NN,2)))/2.
+        >> UST(NN)=(UST(IMID(NN,1))+UST(IMID(NN,2)))/2.
 
+030.) Correction in SubR DEPSN:
+      Default value at all nodes MUST be:
+         DEPRAT(N)=0.0
+      instead of settling velocity VS!!
+        
+      Delete block with IT==1 question, because old Dep-rate is already
+      collected in the upper Part
+      --> can cause an error, because first calculation of sediment
+      must not be at IT=1, if hydrodynamic is calculated first.
+
+031.) Reactivatation in SubR COEF25nt:
+      Reactivatate of linear distribution for ALP1 and APL2
+      for cohesive sediment (Quellen- & Senkenterm)
+                                                                                    
+--- Monika Donner, 13.05.2009
 
