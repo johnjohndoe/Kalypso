@@ -1,5 +1,7 @@
 package org.kalypso.model.km;
 
+import org.kalypso.model.km.i18n.Messages;
+
 /**
  * interpolates KM for some profiles at same discharge
  * 
@@ -53,15 +55,15 @@ public class MulitKMValue extends AbstractKMValue
     m_n = n;
     m_nForeland = nForeland;
     // TODO: Put in logger, because of tooooo many values!!!
-    System.out.println( "\nBerechnung Kalinin Miljukov Parameter über " + values.length + " Profil(e) konstanter Abfluss " );
+    System.out.println( Messages.getString("org.kalypso.model.km.MulitKMValue.0") + values.length + Messages.getString("org.kalypso.model.km.MulitKMValue.1") ); //$NON-NLS-1$ //$NON-NLS-2$
     for( int i = 0; i < values.length; i++ )
     {
-      System.out.println( "Profil #" + (i+1) + ":" );
-      System.out.println( "-------------");
+      System.out.println( Messages.getString("org.kalypso.model.km.MulitKMValue.2") + (i+1) + ":" ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( "-------------"); //$NON-NLS-1$
       final AbstractKMValue value = values[i];
       System.out.println( value );
     }
-    System.out.println( "Ergebnis:" + this );
+    System.out.println( Messages.getString("org.kalypso.model.km.MulitKMValue.5") + this ); //$NON-NLS-1$
   }
 
   public double getAlpha( )

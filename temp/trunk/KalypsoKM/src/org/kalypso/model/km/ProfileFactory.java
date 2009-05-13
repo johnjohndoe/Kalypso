@@ -16,17 +16,17 @@ import java.util.regex.Pattern;
 public class ProfileFactory
 {
   // double
-  private final static String _D = "(\\d*\\.\\d*)";
+  private final static String _D = "(\\d*\\.\\d*)"; //$NON-NLS-1$
 
   // integer
-  private final static String _I = "(\\d+)";
+  private final static String _I = "(\\d+)"; //$NON-NLS-1$
 
   // space
-  private final static String _S = ".+?";
+  private final static String _S = ".+?"; //$NON-NLS-1$
 
-  final static Pattern PATTERN_HEAD = Pattern.compile( _S + _D + _S + "Station \\[km\\].*" );
+  final static Pattern PATTERN_HEAD = Pattern.compile( _S + _D + _S + "Station \\[km\\].*" ); //$NON-NLS-1$
 
-  final static Pattern PATTERN_TABLE = Pattern.compile( _S + _I + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + ".*?" );
+  final static Pattern PATTERN_TABLE = Pattern.compile( _S + _I + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + _S + _D + ".*?" ); //$NON-NLS-1$
 
   public static ProfileDataSet createProfileSet( final File[] profileFiles, double minKM, double maxKM )
   {
@@ -40,7 +40,7 @@ public class ProfileFactory
     {
       public boolean accept( final File file )
       {
-        return file.getName().endsWith( "km" );
+        return file.getName().endsWith( "km" ); //$NON-NLS-1$
       }
     };
     final File[] profileFiles = profileDir.listFiles( filter );
@@ -53,7 +53,7 @@ public class ProfileFactory
     {
       public boolean accept( final File file )
       {
-        return file.getName().endsWith( "km" );
+        return file.getName().endsWith( "km" ); //$NON-NLS-1$
       }
     };
     final File[] profileFiles = profileDir.listFiles( filter );

@@ -2,6 +2,8 @@ package org.kalypso.model.km;
 
 import java.io.File;
 
+import org.kalypso.model.km.i18n.Messages;
+
 public class ProfileData
 {
   private final double m_meter;
@@ -57,13 +59,13 @@ public class ProfileData
 
   public String toString( )
   {
-    final StringBuffer result = new StringBuffer( "Profile " + m_meter + "[km]\n" );
+    final StringBuffer result = new StringBuffer( Messages.getString("org.kalypso.model.km.ProfileData.0") + m_meter + Messages.getString("org.kalypso.model.km.ProfileData.1") ); //$NON-NLS-1$ //$NON-NLS-2$
     for( int i = 0; i < m_rows.length; i++ )
     {
       Row row = m_rows[i];
 
       result.append( row.toString() );
-      result.append( "\n" );
+      result.append( "\n" ); //$NON-NLS-1$
 
     }
     return result.toString();
@@ -104,7 +106,7 @@ public class ProfileData
 
     if( m_rows.length < 6 ) // not enough values for calculation
     {
-      buffer.append( m_meter + ": Profildaten nicht O.K.! Es liegen nicht genug Abflüsse zur Berechnung vor (mind. 6). \n" );
+      buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.3") ); //$NON-NLS-1$
       return false;
     }
     for( int i = 0; i < m_rows.length - 1; i++ )
@@ -112,7 +114,7 @@ public class ProfileData
       if( (m_rows[i].getQ() - m_rows[i + 1].getQ()) > 0.009 )// Änderung in der dritten Nachkommastelle O.K. -
       // Rechenungenauigkeiten im Hydraulikmodell
       {
-        buffer.append( m_meter + ": Profildaten nicht O.K.! Es liegt ein Rücksprung in den Abflüssen des Flussschlauches vor. Zeile: " + (i + 2) + "\n" );
+        buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.4") + (i + 2) + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
         return false;
       }
     }
@@ -120,20 +122,20 @@ public class ProfileData
     // TODO: Check if values above bordfull is necessary!
     if( m_rows[m_rows.length - 1].getAlpha() >= 1.0 ) // no values above bordfull
     {
-      buffer.append( m_meter + ": Profildaten nicht O.K.! Keine Abflüsse über bordvollem Abfluss vorhanden. \n" );
+      buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.6") ); //$NON-NLS-1$
       return false;
     }
     for( int i = 0; i < m_rows.length - 1; i++ )
     {
       if( m_rows[i].getSlope() < 0.0 )
       {
-        buffer.append( m_meter + ": Profildaten nicht vollständig O.K.! Es liegt ein negatives Spiegelliniengefälle vor. Zeile: " + (i + 2) + "\n"
-            + "        Es wird mit dem Absolutwert der Gefälles weiter gerechnet." );
+        buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.7") + (i + 2) + "\n" //$NON-NLS-1$ //$NON-NLS-2$
+            + Messages.getString("org.kalypso.model.km.ProfileData.9") ); //$NON-NLS-1$
         return true;
       }
     }
 
-    buffer.append( m_meter + ": Profildaten sind O.K.. \n" );
+    buffer.append( m_meter + Messages.getString("org.kalypso.model.km.ProfileData.10") ); //$NON-NLS-1$
     return true;
 
   }

@@ -2,6 +2,7 @@ package org.kalypso.model.km;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.model.km.i18n.Messages;
 
 public class KMValueFromQinterpolation extends AbstractKMValue
 {
@@ -42,10 +43,10 @@ public class KMValueFromQinterpolation extends AbstractKMValue
     final LinearEquation qf = new LinearEquation( km1.getQSum(), km1.getQForeland(), km2.getQSum(), km2.getQForeland() );
     m_qf = qf.computeY( q );
 
-    System.out.println( "\n Lineare Interpolation zweier KM-Datensätze für q= " + q );
-    System.out.println( "KM1: " + km1 );
-    System.out.println( "KM2: " + km2 );
-    System.out.println( "Ergebnis:" + this );
+    System.out.println( Messages.getString("org.kalypso.model.km.KMValueFromQinterpolation.0") + q ); //$NON-NLS-1$
+    System.out.println( Messages.getString("org.kalypso.model.km.KMValueFromQinterpolation.1") + km1 ); //$NON-NLS-1$
+    System.out.println( Messages.getString("org.kalypso.model.km.KMValueFromQinterpolation.2") + km2 ); //$NON-NLS-1$
+    System.out.println( Messages.getString("org.kalypso.model.km.KMValueFromQinterpolation.3") + this ); //$NON-NLS-1$
   }
 
   @Override

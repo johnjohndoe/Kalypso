@@ -184,7 +184,7 @@ public class LanduseImportOperation implements ICoreRunnableWithProgress
     
     if (!log.isEmpty())
     {
-      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), "Landuse Import Operation failed.", null );
+      return new MultiStatus( "org.kalypso.NACalcJob", -1, log.toArray( new IStatus[] {} ), Messages.getString("org.kalypso.convert.namodel.hydrotope.LanduseImportOperation.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return Status.OK_STATUS;

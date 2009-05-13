@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.model.km.i18n.Messages;
 
 public class ProfileDataSet
 {
@@ -74,7 +75,7 @@ public class ProfileDataSet
       }
       catch( IOException e )
       {
-        Logger.getAnonymousLogger().log( Level.WARNING, "Profil konnte nicht gelesen werden. Datei: " + file.getAbsolutePath() );
+        Logger.getAnonymousLogger().log( Level.WARNING, Messages.getString("org.kalypso.model.km.ProfileDataSet.0") + file.getAbsolutePath() ); //$NON-NLS-1$
         e.printStackTrace();
       }
     }
