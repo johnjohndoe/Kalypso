@@ -1,4 +1,4 @@
-C     Last change:  MD   22 Oct 2008    6:58 pm
+C     Last change:  MD   13 May 2009   11:09 am
 CIPK LAST UPDATE SEP 05 2006  ADD DEPRATO
 cipk last update JUNE 5 2006  add test marshing
 CIPK  LAST UPDATE SEP 29 2005 MAKE DEPRAT LINEAR
@@ -21,7 +21,8 @@ C
       DO N=1,NP
 CIPK SEP06
         DEPRATO(N)=DEPRAT(N)
-        DEPRAT(N)=VS(N)
+        !MD: change: DEPRAT(N)=VS(N)
+        DEPRAT(N)=0.0
       ENDDO
 C
       DO N=1,NPM
@@ -31,7 +32,7 @@ C
          TAUCD=TAUCDND(N)
          I=N
          IF(NDEP(N) .GT. 1) I=NREF(N)+NDEP(N)-1
-         DEPRAT(I)=0.
+         DEPRAT(I)=0.0
          
 cipk jun06  test for marshing
          if(wsll(i) .lt. ao(i)) go to 500
@@ -40,9 +41,9 @@ cipk jun06  test for marshing
 C          DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)/WD(I)
            DEPRAT(I)= VS(I)*(1.-BSHEAR(I)/TAUCD)
 CIPK SEP06
-           IF(IT .EQ. 1) THEN
-             DEPRATO(I)=DEPRAT(I)
-           ENDIF
+         !MD:  IF(IT .EQ. 1) THEN
+         !MD:    DEPRATO(I)=DEPRAT(I)
+         !MD:  ENDIF
          ENDIF
        ENDIF
   500  continue       
