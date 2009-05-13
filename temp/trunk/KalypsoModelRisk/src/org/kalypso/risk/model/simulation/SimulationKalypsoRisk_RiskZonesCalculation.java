@@ -261,7 +261,8 @@ public class SimulationKalypsoRisk_RiskZonesCalculation implements ISimulationSp
   {
     /* add the landuse class name component */
     final String landuseHeader = "Landuse"; //$NON-NLS-1$
-    final Component componentLanduse = new Component( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.5"), landuseHeader, landuseHeader, org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.6"), org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.7"), XmlTypes.XS_STRING, "null", new Phenomenon( org.kalypso.risk.i18n.Messages.getString("org.kalypso.risk.model.simulation.SimulationKalypsoRisk_RiskZonesCalculation.9"), landuseHeader, landuseHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    
+    final Component componentLanduse = new Component( "", landuseHeader, landuseHeader, "","", XmlTypes.XS_STRING, "null", new Phenomenon( "", landuseHeader, landuseHeader ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     result.addComponent( componentLanduse );
 
     final int numOfDataColumns = riskLanduseStatistics.length;
