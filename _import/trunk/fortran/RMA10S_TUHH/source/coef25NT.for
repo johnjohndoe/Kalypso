@@ -1,4 +1,4 @@
-C     Last change:  MD   12 May 2009    4:25 pm
+C     Last change:  MD   13 May 2009    1:23 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -885,6 +885,7 @@ C
           ALP2=0.0
           DO M=1,NCN
             MR=NOP(NN,M)
+            !MD should be LINEAR INTERPOLATION like RHO??? Check this
             ALP1=ALP1+ALPHA1(MR)*XN(M)
             ALP2=ALP2+ALPHA2(MR)*XN(M)
           ENDDO
@@ -904,20 +905,20 @@ CIPK SEP05            ALP2=ALP2+(EDOT(MR)+SERAT(MR))*XN(M)
 CIPK AUG06 ADD AVERAGE TEST
           IF(IAVEL .EQ. 0) THEN
 !MD 05.11.2008: Deactivatate because, weighting must be with
-!MD:  XN-Fuctions and at all Nodes!!
-!MD:        DO M=1,NCNX
-!MD:          MC = 2*M - 1
-!MD:          MR=NCON(MC)
-!MD:          ALP1 = ALP1 + XM(M)*DEPRAT(MR)
-!MD:          ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)
-!MD:        END DO
-!MD: End of Deactivatate
-
-            DO M=1,NCN
-              MR=NOP(NN,M)
-              ALP1 = ALP1 + XN(M)*DEPRAT(MR)
-              ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XN(M)
+!MD 12.05.2009: Reactivatate linear distribution
+            DO M=1,NCNX
+              MC = 2*M - 1
+              MR=NCON(MC)
+              ALP1 = ALP1 + XM(M)*DEPRAT(MR)
+              ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)
             END DO
+
+!MD:    Deactivatated
+!MD:      DO M=1,NCN
+!MD:        MR=NOP(NN,M)
+!MD:        ALP1 = ALP1 + XN(M)*DEPRAT(MR)
+!MD:        ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XN(M)
+!MD:      END DO
 
           ELSE
             alp1=depratm
