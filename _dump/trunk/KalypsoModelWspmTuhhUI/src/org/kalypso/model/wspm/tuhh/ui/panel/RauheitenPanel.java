@@ -361,7 +361,7 @@ public class RauheitenPanel extends AbstractProfilView
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    final String text = value == null ? "<Not Set>" : String.format( "%.4f", value.toString() );
+    final String text = value == null ? "<Not Set>" : String.format( "%.4f", value.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
     final Text t = toolkit.createText( panel, text, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     t.setLayoutData( data );
     t.addModifyListener( doubleModifyListener );

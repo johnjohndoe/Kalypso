@@ -426,7 +426,7 @@ public class WeirPanel extends AbstractProfilView
       }
     } );
     toolkit.adapt( m_Wehrart.getCombo() );
-    m_parameterLabel = toolkit.createLabel( panel, "", SWT.NONE );
+    m_parameterLabel = toolkit.createLabel( panel, "", SWT.NONE ); //$NON-NLS-1$
     final GridData plGridData = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     plGridData.horizontalSpan = 2;
     m_parameterLabel.setLayoutData( plGridData );

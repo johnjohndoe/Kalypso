@@ -116,7 +116,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon() );
     if( crds.size() < 3 )
     {
-      addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null );
+      addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null ); //$NON-NLS-1$
       return;
     }
 
@@ -134,7 +134,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final TopologyValidationError validationError = isValidOp.getValidationError();
       final String message = validationError.getMessage();
       final Coordinate coordinate = validationError.getCoordinate();
-      final String msg = String.format( "Invalid geometry: '%s' at ", message, coordinate );
+      final String msg = String.format( "Invalid geometry: '%s' at ", message, coordinate ); //$NON-NLS-1$
       addStatus( IStatus.ERROR, msg, null );
       return;
     }
@@ -198,12 +198,12 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
         if( i == 0 || i == heights.length - 1 )
         {
           widths[i] = 0;
-          addStatus( IStatus.INFO, "Topology Problem at start or end", e );
+          addStatus( IStatus.INFO, "Topology Problem at start or end", e ); //$NON-NLS-1$
         }
         else
         {
           widths[i] = 0;
-          addStatus( IStatus.WARNING, "Topology Problem in the middle, height/width not correctly calculated", e );
+          addStatus( IStatus.WARNING, "Topology Problem in the middle, height/width not correctly calculated", e ); //$NON-NLS-1$
         }
       }
     }
@@ -228,17 +228,17 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
     final String id = m_id;
     final String name = m_name;
-    formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth );
-    formatter.format( "TBLE%n" );
+    formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth ); //$NON-NLS-1$
+    formatter.format( "TBLE%n" ); //$NON-NLS-1$
     for( int i = 0; i < m_heights.length; i++ )
     {
       final double height = m_heights[i];
       final double width = m_widths[i];
       final double relHeight = height - m_heights[0];
-      formatter.format( "%f %f %f <%n", relHeight, width, width );
+      formatter.format( "%f %f %f <%n", relHeight, width, width ); //$NON-NLS-1$
     }
-    formatter.format( "tble%n" );
-    formatter.format( "crds%n" );
+    formatter.format( "tble%n" ); //$NON-NLS-1$
+    formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
   /**
@@ -256,8 +256,8 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     final double areaPoly = m_polygon.getArea();
     final double areaHW = calculateArea( m_widths, m_heights );
 
-    formatter.format( "Fläche Shape: %f%n", areaPoly );
-    formatter.format( "Fläche HW   : %f%n", areaHW );
+    formatter.format( "Fläche Shape: %f%n", areaPoly ); //$NON-NLS-1$
+    formatter.format( "Fläche HW   : %f%n", areaHW ); //$NON-NLS-1$
   }
 
   private void debugShapeWrite( final LinearRing shell, final boolean valid )
@@ -292,7 +292,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + 0, shapeFT, data ); //$NON-NLS-1$
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
 
-      final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() );
+      final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() ); //$NON-NLS-1$
 
       ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
     }

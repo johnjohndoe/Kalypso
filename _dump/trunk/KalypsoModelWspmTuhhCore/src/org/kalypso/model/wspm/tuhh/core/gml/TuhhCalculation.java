@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
 {
-  public static final QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" );
+  public static final QName QN_PROPERTY_RUN_OFF_EVENT_MEMBER = new QName( NS_WSPM_TUHH, "runOffEventMember" ); //$NON-NLS-1$
 
   public static enum ExeVersion
   {
@@ -465,6 +465,6 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
   public IPath getResultFolder( )
   {
     final String calcCaseName = getName();
-    return new Path( String.format( "Ergebnisse/%s", calcCaseName ) );
+    return new Path( String.format( "Ergebnisse/%s", calcCaseName ) ); //$NON-NLS-1$
   }
 }

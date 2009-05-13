@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
+import org.kalypso.model.wspm.tuhh.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.transformation.GeoTransformer;
@@ -105,7 +106,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     {
       final IProfil profil = findProfil( station, riverId, profileName, profileComment, photoURL );
       if( profil == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( "Unable to create profile at", station ), null ) );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, String.format( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.0"), station ), null ) ); //$NON-NLS-1$
 
       if( componentId != null && !componentId.isEmpty() )
       {
@@ -145,7 +146,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
           final int commentIndex = profil.indexOfProperty( POINT_PROPERTY_COMMENT );
 
           final String existingComment = (String) point.getValue( commentIndex );
-          final String commentToSet = existingComment == null ? comment : existingComment + " - " + comment;
+          final String commentToSet = existingComment == null ? comment : existingComment + " - " + comment; //$NON-NLS-1$
           point.setValue( commentIndex, commentToSet );
         }
       }
@@ -154,12 +155,12 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to create profile", e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.2"), e ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Failed to add new point", e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.3"), e ) ); //$NON-NLS-1$
     }
 
   }
@@ -183,7 +184,7 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
 
   private IProfil findProfil( final BigDecimal station, final String riverId, final String name, final String comment, final URL photoURL ) throws GMLSchemaException
   {
-    final String key = String.format( "%s - %s - %s", riverId, station, name );
+    final String key = String.format( "%s - %s - %s", riverId, station, name ); //$NON-NLS-1$
 
     final ProfileInCreation pic = m_profiles.get( key );
     if( pic != null )
@@ -205,20 +206,20 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
     newProfile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_RECHTSWERT ) );
     newProfile.addPointProperty( provider.getPointProperty( POINT_PROPERTY_HOCHWERT ) );
 
-    System.out.println( String.format( "Create profile for riverId '%s' at station '%f'", riverId, station ) );
+    System.out.println( String.format( Messages.getString("org.kalypso.model.wspm.tuhh.core.profile.importer.TuhhProfileWProfContentHandler.5"), riverId, station ) ); //$NON-NLS-1$
 
     return newProfile;
   }
 
   private String getComponent( final String objectType, final int type )
   {
-    if( "V01".equals( objectType ) )
+    if( "V01".equals( objectType ) ) //$NON-NLS-1$
       return POINT_PROPERTY_HOEHE;
-    if( "21".equals( objectType ) )
+    if( "21".equals( objectType ) ) //$NON-NLS-1$
       return POINT_PROPERTY_HOEHE;
 
     /* Verdohlung */
-    if( objectType.startsWith( "D" ) )
+    if( objectType.startsWith( "D" ) ) //$NON-NLS-1$
     {
       switch( type )
       {
@@ -233,9 +234,9 @@ public class TuhhProfileWProfContentHandler implements IWProfContentHandler, IWs
       }
     }
 
-    if( "V02".equals( objectType ) )
+    if( "V02".equals( objectType ) ) //$NON-NLS-1$
       return POINT_PROPERTY_UNTERKANTEBRUECKE;
-    if( "V03".equals( objectType ) )
+    if( "V03".equals( objectType ) ) //$NON-NLS-1$
       return POINT_PROPERTY_OBERKANTEBRUECKE;
 
     return null;

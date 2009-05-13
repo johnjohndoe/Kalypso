@@ -65,7 +65,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public String getRiverId( final Feature feature )
   {
-    return ObjectUtils.toString( feature.getProperty( "GEW_ID" ), "Unknown" );
+    return ObjectUtils.toString( feature.getProperty( "GEW_ID" ), "Unknown" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -74,7 +74,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public BigDecimal getStation( final Feature feature )
   {
-    final String stationString = ObjectUtils.toString( feature.getProperty( "STATION" ), "-999999.9999" );
+    final String stationString = ObjectUtils.toString( feature.getProperty( "STATION" ), "-999999.9999" ); //$NON-NLS-1$ //$NON-NLS-2$
     final BigDecimal bigDecimal = new BigDecimal( stationString );
     bigDecimal.setScale( 4, BigDecimal.ROUND_HALF_UP );
     return bigDecimal;
@@ -86,7 +86,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public GM_Point getLocation( final Feature feature )
   {
-    return (GM_Point) feature.getProperty( "GEOM" );
+    return (GM_Point) feature.getProperty( "GEOM" ); //$NON-NLS-1$
   }
 
   /**
@@ -95,7 +95,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public String getComment( final Feature feature )
   {
-    return ObjectUtils.toString( feature.getProperty( "P_KOMMENTA" ), "" );
+    return ObjectUtils.toString( feature.getProperty( "P_KOMMENTA" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -104,7 +104,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public BigDecimal getDistance( final Feature feature )
   {
-    final String distanceString = ObjectUtils.toString( feature.getProperty( "DIST" ), "NaN" );
+    final String distanceString = ObjectUtils.toString( feature.getProperty( "DIST" ), "NaN" ); //$NON-NLS-1$ //$NON-NLS-2$
     final double distance = Double.parseDouble( distanceString );
     final BigDecimal bigDecimal = new BigDecimal( distance );
     bigDecimal.setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -117,7 +117,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public double getValue( final Feature feature )
   {
-    final String distanceString = ObjectUtils.toString( feature.getProperty( "Z" ), "NaN" );
+    final String distanceString = ObjectUtils.toString( feature.getProperty( "Z" ), "NaN" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Double.parseDouble( distanceString );
   }
 
@@ -127,7 +127,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public String getObjectType( final Feature feature )
   {
-    return ObjectUtils.toString( feature.getProperty( "OBJ_TYP" ), "Unbekannt" );
+    return ObjectUtils.toString( feature.getProperty( "OBJ_TYP" ), "Unknown" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -136,7 +136,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public int getType( final Feature feature )
   {
-    final String typeString = ObjectUtils.toString( feature.getProperty( "PUNKTATTRI" ), "-1" );
+    final String typeString = ObjectUtils.toString( feature.getProperty( "PUNKTATTRI" ), "-1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Integer.parseInt( typeString );
   }
 
@@ -146,7 +146,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public int getProfileType( final Feature feature )
   {
-    final String typeString = ObjectUtils.toString( feature.getProperty( "PROFILTYP" ), "-1" );
+    final String typeString = ObjectUtils.toString( feature.getProperty( "PROFILTYP" ), "-1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Integer.parseInt( typeString );
   }
 
@@ -161,14 +161,14 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
     if( imageNames == null || imageNames.length == 0 )
       return null;
 
-    final String format = String.format( "%5s\\Bilder\\%s", riverId, imageNames[0] ).toString();
-    return format.replaceAll( " ", "0" );
+    final String format = String.format( "%5s\\Bilder\\%s", riverId, imageNames[0] ).toString(); //$NON-NLS-1$
+    return format.replaceAll( " ", "0" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private String[] getImageNames( final Feature feature )
   {
-    final String imagesString = ObjectUtils.toString( feature.getProperty( "P_FOTO" ), "" );
-    return imagesString.split( ";" );
+    final String imagesString = ObjectUtils.toString( feature.getProperty( "P_FOTO" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return imagesString.split( ";" ); //$NON-NLS-1$
   }
 
   /**
@@ -178,7 +178,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   public String getProfileComment( final Feature feature )
   {
     final String profileName = getProfileName( feature );
-    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%n", getRiverId( feature ), profileName, getComment( feature ), getObjectType( feature ) );
+    return String.format( "Gew-ID: %s%nProfil-Name: %s%nErster Punkt: %s%nErster Obj_Typ: %s%n", getRiverId( feature ), profileName, getComment( feature ), getObjectType( feature ) ); //$NON-NLS-1$
   }
 
   /**
@@ -187,9 +187,9 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public String getProfileName( final Feature feature )
   {
-    final String pNam = ObjectUtils.toString( feature.getProperty( "P_NAM" ), "-999999.9999" );
+    final String pNam = ObjectUtils.toString( feature.getProperty( "P_NAM" ), "-999999.9999" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String pNamString = pNam.substring( pNam.indexOf( '-' ) + 1 );
-    final String profileName = pNamString.replaceAll( "\"", "" );
+    final String profileName = pNamString.replaceAll( "\"", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     return profileName;
   }
 
@@ -199,7 +199,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public int getNumber( final Feature feature )
   {
-    final String string = ObjectUtils.toString( feature.getProperty( "NUMMER" ), "-1" );
+    final String string = ObjectUtils.toString( feature.getProperty( "NUMMER" ), "-1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Integer.parseInt( string );
   }
 
@@ -209,7 +209,7 @@ public class BCEShapeWPRofContentProvider implements IWProfContentProvider, IWsp
   @Override
   public int getPartNumber( final Feature feature )
   {
-    final String string = ObjectUtils.toString( feature.getProperty( "TEILPROFIL" ), "-1" );
+    final String string = ObjectUtils.toString( feature.getProperty( "TEILPROFIL" ), "-1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return Integer.parseInt( string );
   }
 }

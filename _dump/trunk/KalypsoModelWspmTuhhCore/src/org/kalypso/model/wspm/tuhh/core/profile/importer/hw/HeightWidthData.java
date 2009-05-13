@@ -78,7 +78,7 @@ public class HeightWidthData
     final Map<Integer, Coordinate> crdHash = getCoordinates( objectType );
 
     // TODO: check
-    if( !objectType.startsWith( "K" ) || attributeType != 60 )
+    if( !objectType.startsWith( "K" ) || attributeType != 60 ) //$NON-NLS-1$
       crdHash.put( ord, coordinate );
   }
 
@@ -104,12 +104,12 @@ public class HeightWidthData
   public void formatErr( final Formatter formatter )
   {
     System.out.println( m_name );
-    formatter.format( "%s%n%n", m_name );
+    formatter.format( "%s%n%n", m_name ); //$NON-NLS-1$
 
     final IHeightWidthResult[] results = getResults();
     for( final IHeightWidthResult heightWidthResult : results )
       heightWidthResult.formatLog( formatter );
-    formatter.format( "%n%n%n" );
+    formatter.format( "%n%n%n" ); //$NON-NLS-1$
   }
 
   public IHeightWidthResult[] getResults( )
@@ -121,16 +121,16 @@ public class HeightWidthData
       final Map<Integer, Coordinate> crdHash = entry.getValue();
 
       // All tubes are calculated
-      if( key.startsWith( "K" ) )
+      if( key.startsWith( "K" ) ) //$NON-NLS-1$
         results.add( new TubeResult( m_name, key, m_name, m_name, crdHash.values(), m_tempDir ) );
 
       // Mabye we have a bridge like structure
-      if( key.startsWith( "V01" ) )
+      if( key.startsWith( "V01" ) ) //$NON-NLS-1$
       {
         /* Check if we have a 'Unterkante Brücke', then we can calculate some area as well */
-        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "V02" );
+        final Map<Integer, Coordinate> ukCrds = m_coordinatesHash.get( "V02" ); //$NON-NLS-1$
         if( ukCrds != null )
-          results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) );
+          results.add( new BridgeResult( m_name, "V01-V03", m_name, m_name, crdHash.values(), ukCrds.values(), m_tempDir ) ); //$NON-NLS-1$
       }
     }
 

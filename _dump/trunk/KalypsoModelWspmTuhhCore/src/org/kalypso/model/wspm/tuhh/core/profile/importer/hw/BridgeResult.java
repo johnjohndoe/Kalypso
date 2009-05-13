@@ -125,7 +125,7 @@ public class BridgeResult extends HeightWidthResult
     {
       // We will crop everything before that x
       upperLeftX = upperLeft.x;
-      addStatus( IStatus.WARNING, String.format( "Unterkante start-point did not match river-bed: %s", upperRight ), null );
+      addStatus( IStatus.WARNING, String.format( "Unterkante start-point did not match river-bed: %s", upperRight ), null ); //$NON-NLS-1$
     }
     else
     {
@@ -140,7 +140,7 @@ public class BridgeResult extends HeightWidthResult
     {
       // We will crop everything before that x
       upperRightX = upperRight.x;
-      addStatus( IStatus.WARNING, String.format( "Unterkante end-point did not match river-bed: %s", upperRight ), null );
+      addStatus( IStatus.WARNING, String.format( "Unterkante end-point did not match river-bed: %s", upperRight ), null ); //$NON-NLS-1$
     }
     else
     {
@@ -199,17 +199,17 @@ public class BridgeResult extends HeightWidthResult
       if( diff > -EPS )
       {
         if( diff > 0.2 )
-          addStatus( IStatus.ERROR, String.format( "Upper coordinate way below lower coorindate: %.2f [m]", Math.abs( diff + EPS ) ), null );
+          addStatus( IStatus.ERROR, String.format( "Upper coordinate way below lower coorindate: %.2f [m]", Math.abs( diff + EPS ) ), null ); //$NON-NLS-1$
         else if( diff > EPS )
         {
-          addStatus( IStatus.WARNING, String.format( "Small adaption of upper coordinate by %.3f [m]", Math.abs( diff + EPS ) ), null );
+          addStatus( IStatus.WARNING, String.format( "Small adaption of upper coordinate by %.3f [m]", Math.abs( diff + EPS ) ), null ); //$NON-NLS-1$
 
           // REMARK: we lift a bit above lower, so later we may get non self-intertsection rings
           upperCrd.y = lowerY + EPS;
         }
         else
         {
-          addStatus( IStatus.INFO, String.format( "Tiny adaption of upper coordinate by: %.2f [m]", Math.abs( diff + EPS ) ), null );
+          addStatus( IStatus.INFO, String.format( "Tiny adaption of upper coordinate by: %.2f [m]", Math.abs( diff + EPS ) ), null ); //$NON-NLS-1$
 
           // REMARK: we lift a bit above lower, so later we may get non self-intertsection rings
           upperCrd.y = lowerY + EPS;

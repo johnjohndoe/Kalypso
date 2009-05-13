@@ -10,7 +10,7 @@ import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoModul
  */
 public class KalypsoWspmTuhhModule implements IKalypsoModule
 {
-  public static final String ID = "KalypsoWspmModel";
+  public static final String ID = "KalypsoWspmModel"; //$NON-NLS-1$
   
   // public constructor, needed because of declared extension point and java class loader
   public KalypsoWspmTuhhModule( )

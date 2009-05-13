@@ -36,6 +36,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
@@ -107,7 +108,7 @@ public class CreateProfileMapAction extends ActionDelegate
           if( mapTemplate == null )
             return Status.OK_STATUS;
 
-          final String storageName = title == null ? "<unbekannt>.gmt" : title + ".gmt";
+          final String storageName = title == null ? "<unbekannt>.gmt" : title + ".gmt"; //$NON-NLS-1$ //$NON-NLS-2$
           final IPath storagePath = guessPath( activePart, storageName );
 
           final IWorkbenchPartSite activeSite = activePart.getSite();

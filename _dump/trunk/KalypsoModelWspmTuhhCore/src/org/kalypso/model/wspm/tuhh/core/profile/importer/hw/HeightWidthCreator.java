@@ -89,7 +89,7 @@ public class HeightWidthCreator implements IWProfContentHandler
 
   private HeightWidthData getData( final String riverId, final BigDecimal station, final String profileName )
   {
-    final String key = String.format( "%s - %s - %s", riverId, profileName, station );
+    final String key = String.format( "%s - %s - %s", riverId, profileName, station ); //$NON-NLS-1$
 
     final HeightWidthData data = m_data.get( key );
     if( data != null )

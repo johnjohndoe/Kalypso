@@ -194,8 +194,8 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( "Filter" );
-    new Label( group, SWT.NONE ).setText( "Choose which profile points will be changed:" );
+    group.setText( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.3") ); //$NON-NLS-1$
+    new Label( group, SWT.NONE ).setText( Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.OperationChooserPage.4") ); //$NON-NLS-1$
 
     if( m_filters == null )
     {

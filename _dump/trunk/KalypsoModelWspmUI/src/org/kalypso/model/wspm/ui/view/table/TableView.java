@@ -131,7 +131,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     {
       final IRecord[] points = m_profile.getPoints();
       if( points.length > 0 )
-        m_view.update( points, new String[] { "" } );
+        m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
       updateProblemView();
       return Status.OK_STATUS;
     }
@@ -232,7 +232,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   {
     final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
     if( contextService != null )
-      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" );
+      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" ); //$NON-NLS-1$
 
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createForm( parent );
@@ -308,7 +308,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( (m_profile == null) )
     {
-      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION );
+      m_form.setMessage( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.table.TableView.2"), IMessageProvider.INFORMATION ); //$NON-NLS-1$
 
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
@@ -319,7 +319,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
 
     /* Create handlers for this profile */
-    setContentDescription( "" );
+    setContentDescription( "" ); //$NON-NLS-1$
     final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );

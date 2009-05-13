@@ -76,7 +76,7 @@ public class ProblemResult implements IHeightWidthResult
   protected void addStatus( final int severity, final String message, final Throwable exception )
   {
     if( m_status == null )
-      m_status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), -1, "", null );
+      m_status = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhCorePlugin.getDefault() ), -1, "", null ); //$NON-NLS-1$
     else if( !(m_status instanceof MultiStatus) )
       m_status = new MultiStatus( m_status.getPlugin(), m_status.getCode(), m_status.getMessage(), m_status.getException() );
 
@@ -97,23 +97,23 @@ public class ProblemResult implements IHeightWidthResult
   @Override
   public void formatLog( final Formatter formatter )
   {
-    formatter.format( "%s%n%n", m_name );
+    formatter.format( "%s%n%n", m_name ); //$NON-NLS-1$
 
     if( m_status == null || m_status.isOK() )
       return;
 
-    formatter.format( "Warnings while processing:%n" );
+    formatter.format( "Warnings while processing:%n" ); //$NON-NLS-1$
 
     formatStatus( formatter, m_status, 0 );
-    formatter.format( "%n" );
+    formatter.format( "%n" ); //$NON-NLS-1$
   }
 
   private void formatStatus( final Formatter formatter, final IStatus status, final int indent )
   {
     final int indentation = (indent + 1) * 2;
-    final String formatString = "%" + indentation + "s%s: %s (%s)%n";
+    final String formatString = "%" + indentation + "s%s: %s (%s)%n"; //$NON-NLS-1$ //$NON-NLS-2$
     final String severity = StatusUtilities.getLocalizedSeverity( status );
-    formatter.format( formatString, "", severity, status.getMessage(), status.getException() );
+    formatter.format( formatString, "", severity, status.getMessage(), status.getException() ); //$NON-NLS-1$
     final IStatus[] children = status.getChildren();
     for( final IStatus child : children )
       formatStatus( formatter, child, indent + 1 );
