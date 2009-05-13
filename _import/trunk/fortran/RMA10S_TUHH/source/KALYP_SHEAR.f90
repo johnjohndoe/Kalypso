@@ -1,4 +1,4 @@
-!     Last change:  MD   13 Jan 2009    5:59 pm
+!     Last change:  MD   13 May 2009   11:28 am
 !----------------------------------------------------------------------
 SUBROUTINE KALYP_SHEAR
 
@@ -65,9 +65,9 @@ DO N=1,NPM
 
   BSHEAR(K1)=UST(K1)*UST(K1)*GAW
 
-  IF(IT .EQ. 1) THEN
-    ESRO(K1)=BSHEAR(K1)
-  ENDIF
+  !MD: IF(IT .EQ. 1) THEN
+  !MD:  ESRO(K1)=BSHEAR(K1)
+  !MD: ENDIF
 
   IF (N.eq.NPM) THEN
     WRITE(75,*) 'All BedShears are calculated till NODE ',N
@@ -86,6 +86,8 @@ DO N=1,NPM
     NN = N
     IF (NDEP(N) .GT. 1) NN = NREF(N) + NDEP(N)-1
     BSHEAR(NN)=(BSHEAR(IMID(NN,1))+BSHEAR(IMID(NN,2)))/2.
+    ESRO(NN)=(ESRO(IMID(NN,1))+ESRO(IMID(NN,2)))/2.
+    UST(NN)=(UST(IMID(NN,1))+UST(IMID(NN,2)))/2.
     BSHEAR(N)=BSHEAR(NN)
   ENDIF
 ENDDO
