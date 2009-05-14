@@ -695,6 +695,7 @@ new features introduced/ started to be introduced:
 --- Nico Schrage, 24.04.2009
 
 019.) Critical bug fix at the 1D-2D line transition; inner 2D->1D boundary values were not transformed due to operative Marsh option.
+      >> lineTransitionCalc
 --- Nico Schrage, 27.04.2009
 
 --- Monika Donner, 04.05.2009
@@ -791,3 +792,6 @@ new features introduced/ started to be introduced:
                                                                                     
 --- Monika Donner, 13.05.2009
 
+032.) Correct calculation of element related friction factor lambda; lambda is calculated at each Gauss node, thus
+      the element related lambda is the sum of the weighted lambdas at the Gauss nodes.
+--- Nico Schrage, 14.05.2009

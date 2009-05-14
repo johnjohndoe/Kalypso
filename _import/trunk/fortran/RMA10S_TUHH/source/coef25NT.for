@@ -1121,7 +1121,7 @@ cipk mar05
         
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lambdaTot(nn)/8.0
+        FFACT = lambda/8.0
 
         !TODO:
         !Is here a derivative of friciton over h necessary?

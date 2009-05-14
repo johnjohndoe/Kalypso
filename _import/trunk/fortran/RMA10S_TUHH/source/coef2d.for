@@ -86,6 +86,8 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
       
       real (kind = 8) :: lambda_shore, lambdaKS_shore, lambdaDunes_shore
       real (kind = 8) :: lambdaP_shore 
+      real (kind = 8) :: lambda, lamKS, lamP, lamDunes
+
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
@@ -940,18 +942,31 @@ cipk mar05
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
 
-        call darcy(lambdaTot(nn), vecq, h,
+        call darcy(lambda, vecq, h,
      +             cniku(nn)      * correctionKS(nn),
      +             abst(nn)       * correctionAxAy(nn),
      +             durchbaum(nn)  * correctionDp(nn),
      +             nn, morph, gl_bedform, MaxE, c_wr(nn), 2,
                    !store values for output
-     +             lambdaKS(nn),
-     +             lambdaP(nn),
-     +             lambdaDunes(nn), dset)
+     +             lamKS,
+     +             lamP,
+     +             lamDunes, dset)
+     
+     
+        !at first Gauss node the lambdas are initialized
+        if (i == 1) then
+          lambdaTot (nn) = 0.0d0
+          lambdaKS (nn) = 0.0d0
+          lambdaP (nn) = 0.0d0
+          lambdaDunes (nn) = 0.0d0
+        endif
+        lambdaTot (nn) = lambdaTot (nn) + waitx(i) * lambda/ 4.0d0
+        lambdaKS (nn) = lambdaKS (nn) + waitx(i) * lamKS/ 4.0d0
+        lambdaP (nn) = lambdaP (nn) + waitx(i) * lamP/ 4.0d0
+        lambdaDunes (nn) = lambdaDunes (nn) + waitx(i) * lamDunes/ 4.0d0
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lambdaTot(nn)/8.0
+        FFACT = lambda/8.0
 
         !TODO:
         !Is here a derivative of friciton over h necessary?
