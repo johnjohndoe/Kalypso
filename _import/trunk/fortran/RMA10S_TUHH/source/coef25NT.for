@@ -1,4 +1,3 @@
-C     Last change:  MD   13 May 2009    1:23 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -64,6 +63,8 @@ CIPK  LAST UPDATED SEP 7 1995
       REAL(KIND=8) :: SHEARVEL
 !-
       integer :: TransLine, transtype
+      
+      real (kind = 8) :: lambda, lamKS, lamP, lamDunes
 
 C
 
@@ -83,9 +84,12 @@ cipk jun05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
       REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
+
       REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER
       REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
+
       REAL (kind = 8) :: TEMP,HP,HP1,DERR
+      
       real (kind = 8) :: lambda_shore, lambdaKS_shore, lambdaDunes_shore
       real (kind = 8) :: lambdaP_shore 
 
@@ -918,7 +922,7 @@ CIPK AUG06 ADD AVERAGE TEST
 !MD:        MR=NOP(NN,M)
 !MD:        ALP1 = ALP1 + XN(M)*DEPRAT(MR)
 !MD:        ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XN(M)
-!MD:      END DO
+!MD:        END DO
 
           ELSE
             alp1=depratm
@@ -1091,16 +1095,30 @@ cipk mar05
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
-
-        call darcy(lambdaTot(nn), vecq, h,
+        call darcy(lambda, vecq, h,
      +             cniku(nn)      * correctionKS(nn),
      +             abst(nn)       * correctionAxAy(nn),
      +             durchbaum(nn)  * correctionDp(nn),
      +             nn, morph, gl_bedform, MaxE, c_wr(nn), 2,
                    !store values for output
-     +             lambdaKS(nn),
-     +             lambdaP(nn),
-     +             lambdaDunes(nn), dset)
+     +             lamKS,
+     +             lamP,
+     +             lamDunes, dset)
+     
+     
+        !at first Gauss node the lambdas are initialized
+        if (i == 1) then
+          lambdaTot (nn) = 0.0d0
+          lambdaKS (nn) = 0.0d0
+          lambdaP (nn) = 0.0d0
+          lambdaDunes (nn) = 0.0d0
+        endif
+        lambdaTot (nn) = lambdaTot (nn) + waitx(i) * lambda/ 4.0d0
+        lambdaKS (nn) = lambdaKS (nn) + waitx(i) * lamKS/ 4.0d0
+        lambdaP (nn) = lambdaP (nn) + waitx(i) * lamP/ 4.0d0
+        lambdaDunes (nn) = lambdaDunes (nn) + waitx(i) * lamDunes/ 4.0d0
+        
+        
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lambdaTot(nn)/8.0
@@ -1976,7 +1994,7 @@ cipk aug98
             IB=IB+4
             IF(NSTRT(NCON(N),1) .EQ. 0) THEN
 !MDMD: new: Korrektur nach S. A-7
-!MDMD       ESTIFM(IA,IB)=ESTIFM(IA,IB) +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
+!MDMD         ESTIFM(IA,IB)=ESTIFM(IA,IB) +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
               ESTIFM(IA,IB)=ESTIFM(IA,IB)
      +                     +FEEAN*XO(N)+FEEBN*DOX(N)+FEECN*DOY(N)
             ENDIF
@@ -2087,7 +2105,7 @@ C       COMPUTE BOUNDARY FORCES
             !Marsh option operative
             IF(IDNOPT .LT. 0) THEN
               AZER = AME((L+1)/2)+ADO(N1)  +
-     +	           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+     +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             !without Marsh option
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
