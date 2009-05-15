@@ -4,11 +4,13 @@ import org.apache.commons.lang.NotImplementedException;
 
 public interface IKalypsoModelConnectorType {
     public enum MODEL_CONNECTOR_TYPEID {
-	CONNECTOR_NA_WSPM, CONNECTOR_WSPM_FLOOD, CONNECTOR_FLOOD_RISK;
+	CONNECTOR_LZNA_KZNA, CONNECTOR_NA_WSPM, CONNECTOR_WSPM_FLOOD, CONNECTOR_FLOOD_RISK;
 	public String getValue() {
 	    final MODEL_CONNECTOR_TYPEID kind = MODEL_CONNECTOR_TYPEID.valueOf(name());
 
 	    switch (kind) {
+	    case CONNECTOR_LZNA_KZNA:
+		return "KalypsoModelConnector_LZNA_KZNA";
 	    case CONNECTOR_NA_WSPM:
 		return "KalypsoModelConnector_NA_WSPM";
 	    case CONNECTOR_WSPM_FLOOD:
@@ -19,6 +21,10 @@ public interface IKalypsoModelConnectorType {
 		throw new NotImplementedException();
 	    }
 	}
+    }
+
+    public enum MODELSPEC_CONNECTOR_LZNA_KZNA {
+	LZ_NA, KZ_NA;
     }
 
     public enum MODELSPEC_CONNECTOR_NA_WSPM {

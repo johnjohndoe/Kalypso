@@ -4,6 +4,10 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulation
+            simulationClass="org.kalypso.calculation.connector.lzNA_kzNA.Connector_lzNA_kzNA_Job"
+            typeID="KalypsoModelConnector_LZNA_KZNA">
+      </simulation>
+      <simulation
             simulationClass="org.kalypso.calculation.connector.na_wspm.Connector_NA_WSPM_Job"
             typeID="KalypsoModelConnector_NA_WSPM">
       </simulation>
