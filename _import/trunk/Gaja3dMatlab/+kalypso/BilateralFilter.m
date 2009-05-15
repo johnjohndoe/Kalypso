@@ -1,16 +1,7 @@
-classdef BilateralFilter
-    properties
-        hsize
-        name = 'bilateral';
-    end % private properties
-
+classdef BilateralFilter < kalypso.SmoothFilter
     methods
         function this = BilateralFilter(varargin)
-            p = inputParser;
-            p.KeepUnmatched = true;
-            p.addParamValue('smooth', 9, @isnumeric);
-            p.parse(varargin{:});
-            this.hsize = p.Results.smooth;
+            this = this@kalypso.SmoothFilter(varargin{:});
         end
         
         function Z = process(this, grid)

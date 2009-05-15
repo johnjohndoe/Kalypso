@@ -1,4 +1,4 @@
-function saveAsciiGrid( grid, filename )
+function saveAsciiGrid( filename, grid )
     fid = fopen(filename, 'w');
     
     nrows = size(grid.Z, 1);
@@ -13,14 +13,14 @@ function saveAsciiGrid( grid, filename )
     fprintf(fid, 'cellsize %d\n', grid.dx);
 
     nodata = -9999;
-    fprintf(fid, 'nodata_value %f\n', nodata);
+    fprintf(fid, 'nodata_value %0.3f\n', nodata);
     
     Z = grid.Z;
     Z(isnan(Z)) = nodata;
     
     %% flip along first axis, i.e. print rows in reverse order
     for r=nrows:-1:1
-        fprintf(fid, '%0.7f ', Z(r,:));
+        fprintf(fid, '%0.3f ', Z(r,:));
         fprintf(fid, '\n');
     end
     

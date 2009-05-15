@@ -108,7 +108,7 @@ function [ points ] = loadPointData( filespec, hasheader, params )
                 %close file
                 fclose(fid);
             otherwise
-                warning('File extension %s not recognized.', ext);
+                fprintf(1, 'File extension %s not recognized.\n', ext);
         end    
     end
     

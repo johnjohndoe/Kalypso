@@ -1,4 +1,4 @@
-function [xshift, yshift] = saveTrianglesAsBce2d( elements, Xtri, Ytri, Ztri, filename, xshift, yshift )
+function [xshift, yshift] = saveTrianglesAsBce2d( filename, elements, Xtri, Ytri, Ztri, xshift, yshift )
 %SAVETRIANGLESASBCE2D Saves triangles as BCE2d-file
 %   elements           nx3 indices into coordinate arrays
 %   Xtri, Ytri, Ztri   nx1 point coordinates

@@ -155,7 +155,7 @@ classdef Shape
         end
     end    
     
-    methods (Access = protected, Static = true)
+    methods (Static = true)
         function coords = toCoords(X, Y, Z)
             n = numel(X);
             coords = javaArray('com.vividsolutions.jts.geom.Coordinate', n);
@@ -203,7 +203,19 @@ classdef Shape
                            for n=1:geomCount
                                shapeCount = shapeCount + 1;
                                geomN = jtsGeom.getGeometryN(n-1);
-                               this(shapeCount) = constructorCallback(geomN);
+                               if(isempty(constructorCallback))
+                                   geomClass = class(geomN);
+                                   switch(geomClass)
+                                       case {'com.vividsolutions.jts.geom.Polygon'}
+                                           this(shapeCount) = kalypso.Polygon(geomN);
+                                       case {'com.vividsolutions.jts.geom.LineString'}
+                                           this(shapeCount) = kalypso.Curve(geomN);
+                                       otherwise
+                                           error('Unknown Shape geometry %s', geomClass);
+                                   end
+                               else
+                                   this(shapeCount) = constructorCallback(geomN);
+                               end
                            end
                        end
                    end

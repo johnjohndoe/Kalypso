@@ -69,6 +69,31 @@ classdef Curve < kalypso.Shape
            end
        end
        
+       function result = discardSmall(this, length)
+           count = numel(this);
+           j = 1;
+           for i=1:count
+               if(this(i).jtsGeometry.getLength() >= length)
+                   result(j) = this(i);
+                   j = j + 1;
+               end
+           end
+       end
+       
+       function result = merge(this)
+           count = numel(this);
+           import com.vividsolutions.jts.operation.linemerge.*;
+           lineMerger = LineMerger();
+           for i=1:count
+               lineMerger.add(this(i).jtsGeometry);
+           end
+           mergedLines = lineMerger.getMergedLineStrings();
+           newcount = mergedLines.size();
+           for i=0:(newcount-1)
+               result(i+1) = kalypso.Curve(mergedLines.get(i));
+           end
+       end
+       
        function allCurves = clip(this, polygon)
            X = this.getX();
            Y = this.getY();

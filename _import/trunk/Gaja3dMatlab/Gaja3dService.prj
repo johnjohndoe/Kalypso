@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project><!--Gaja3dService.prj-->
    <MCCProperties>
-      <output>Gaja3dService</output>
+      <output>gaja3d</output>
       <wrapper>
          <type>main</type>
-         <component_name>Gaja3dService</component_name>
+         <component_name>gaja3d</component_name>
          <default_class>Main function</default_class>
       </wrapper>
       <intermediate_dir>$(PROJECTDIR)/Gaja3dService/src</intermediate_dir>
@@ -30,33 +30,28 @@
          <file>$(PROJECTDIR)/Gaja3dService/Gaja3dService.m</file>
       </category>
       <category name="Other files"><!--Do not modify the value of the name attribute, unless it is a class name.-->
-         <file>$(PROJECTDIR)/set_classpath.m</file>
-         <file>$(PROJECTDIR)/utils/assert_equalsTol.m</file>
-         <file>$(PROJECTDIR)/utils/bfilter2.m</file>
-         <file>$(PROJECTDIR)/utils/boundariesForGrids.m</file>
-         <file>$(PROJECTDIR)/utils/bufferPolygon.m</file>
-         <file>$(PROJECTDIR)/utils/clipLine.m</file>
-         <file>$(PROJECTDIR)/utils/constructRefMat.m</file>
-         <file>$(PROJECTDIR)/utils/convertArguments.m</file>
-         <file>$(PROJECTDIR)/utils/createGrid.m</file>
-         <file>$(PROJECTDIR)/utils/exportArea.m</file>
-         <file>$(PROJECTDIR)/utils/exportNodeEle.m</file>
-         <file>$(PROJECTDIR)/utils/exportNodes.m</file>
-         <file>$(PROJECTDIR)/utils/exportPoly.m</file>
-         <file>$(PROJECTDIR)/utils/getPointInPolygon.m</file>
-         <file>$(PROJECTDIR)/utils/griddedBoundaries.m</file>
-         <file>$(PROJECTDIR)/utils/gridfit.m</file>
-         <file>$(PROJECTDIR)/utils/inpoly.m</file>
-         <file>$(PROJECTDIR)/utils/interptri.m</file>
-         <file>$(PROJECTDIR)/utils/reduceToBoundary.m</file>
-         <file>$(PROJECTDIR)/utils/simplifyLine.m</file>
-         <file>$(PROJECTDIR)/data/saveTrianglesAsShape.m</file>
+         <file>$(PROJECTDIR)/+kalypso/BilateralFilter.m</file>
+         <file>$(PROJECTDIR)/+kalypso/Curve.m</file>
+         <file>$(PROJECTDIR)/+kalypso/EdgeFilterRegistry.m</file>
+         <file>$(PROJECTDIR)/+kalypso/FeatureDetector.m</file>
+         <file>$(PROJECTDIR)/+kalypso/FeatureDetectorRegistry.m</file>
+         <file>$(PROJECTDIR)/+kalypso/Gaja3D.m</file>
+         <file>$(PROJECTDIR)/+kalypso/GaussianFilter.m</file>
+         <file>$(PROJECTDIR)/+kalypso/NoFeatureDetector.m</file>
+         <file>$(PROJECTDIR)/+kalypso/NoSmoothFilter.m</file>
+         <file>$(PROJECTDIR)/+kalypso/Polygon.m</file>
+         <file>$(PROJECTDIR)/+kalypso/RectifiedGridCoverage.m</file>
+         <file>$(PROJECTDIR)/+kalypso/Shape.m</file>
+         <file>$(PROJECTDIR)/+kalypso/SimpleFeatureDetector.m</file>
+         <file>$(PROJECTDIR)/+kalypso/SmoothFilter.m</file>
+         <file>$(PROJECTDIR)/+kalypso/SmoothFilterRegistry.m</file>
+         <file>$(PROJECTDIR)/+kalypso/TriangulatedSurface.m</file>
+         <file>$(PROJECTDIR)/+kalypso/TriangulatedSurface2.m</file>
          <file>$(PROJECTDIR)/data/loadDbf.m</file>
          <file>$(PROJECTDIR)/data/loadGrid.m</file>
          <file>$(PROJECTDIR)/data/loadLineData.m</file>
          <file>$(PROJECTDIR)/data/loadPointData.m</file>
          <file>$(PROJECTDIR)/data/loadPointShape.m</file>
-         <file>$(PROJECTDIR)/data/loadPolygonData.m</file>
          <file>$(PROJECTDIR)/data/loadTriangleOutput.m</file>
          <file>$(PROJECTDIR)/data/loadTriangleShape.m</file>
          <file>$(PROJECTDIR)/data/progressbar.m</file>
@@ -66,24 +61,29 @@
          <file>$(PROJECTDIR)/data/saveTiff.m</file>
          <file>$(PROJECTDIR)/data/saveTrianglesAsBce2d.m</file>
          <file>$(PROJECTDIR)/data/saveTrianglesAsEle.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/SimpleFeatureDetector.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/TriangulatedSurface.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/BilateralFilter.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/CannyDetector.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/Curve.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/EdgeFilter.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/FeatureDetector.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/Gaja3D.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/GaussianFilter.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/Polygon.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/RectifiedGridCoverage.m</file>
-         <file>$(PROJECTDIR)/+org/+kalypso/+gaja3d/+matlab/Shape.m</file>
+         <file>$(PROJECTDIR)/data/saveTrianglesAsShape.m</file>
+         <file>$(PROJECTDIR)/utils/simplifyLine.m</file>
+         <file>$(PROJECTDIR)/utils/bfilter2.m</file>
+         <file>$(PROJECTDIR)/utils/clipLine.m</file>
+         <file>$(PROJECTDIR)/utils/constructRefMat.m</file>
+         <file>$(PROJECTDIR)/utils/convertArguments.m</file>
+         <file>$(PROJECTDIR)/utils/createGrid.m</file>
+         <file>$(PROJECTDIR)/utils/exportArea.m</file>
+         <file>$(PROJECTDIR)/utils/exportNodes.m</file>
+         <file>$(PROJECTDIR)/utils/exportPoly.m</file>
+         <file>$(PROJECTDIR)/utils/getPointInPolygon.m</file>
+         <file>$(PROJECTDIR)/utils/griddedBoundaries.m</file>
+         <file>$(PROJECTDIR)/utils/inBoundary.m</file>
+         <file>$(PROJECTDIR)/utils/inpoly.m</file>
+         <file>$(PROJECTDIR)/utils/interptri.m</file>
       </category>
       <category name="C/C++ files"><!--Do not modify the value of the name attribute, unless it is a class name.--></category>
    </file_info>
    <packaging>
-      <name>Gaja3dService_pkg</name>
-      <mcr include="false"/>
+      <name>gaja3d_deploy</name>
+      <mcr include="true">
+         <location>default</location>
+      </mcr>
       <additional_files>
          <file>$(PROJECTDIR)/deegree2.jar</file>
          <file>$(PROJECTDIR)/gaja3d-1.0.jar</file>
@@ -92,16 +92,21 @@
          <file>$(PROJECTDIR)/jai_codec.jar</file>
          <file>$(PROJECTDIR)/geotiff-jai.jar</file>
          <file>$(PROJECTDIR)/vecmath.jar</file>
+         <file>$(PROJECTDIR)/log4j-1.2.9.jar</file>
       </additional_files>
    </packaging>
    <MATLABPath>
       <Directory>$(MATLABROOT)/toolbox/compiler/deploy</Directory>
       <Directory>$(PROJECTDIR)/</Directory>
+      <Directory>D:\EigeneDateien\MATLAB\utils</Directory>
+      <Directory>D:\EigeneDateien\MATLAB\data</Directory>
+      <Directory>D:\EigeneDateien\MATLAB\Gaja3dService</Directory>
       <Directory>D:\EigeneDateien\MATLAB</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/general</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/ops</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/lang</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/elmat</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/randfun</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/elfun</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/specfun</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/matfun</Directory>
@@ -125,6 +130,7 @@
       <Directory>$(MATLABROOT)/toolbox/matlab/codetools</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/helptools</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/winfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/winfun/NET</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/demos</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/timeseries</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/hds</Directory>
@@ -135,6 +141,7 @@
       <Directory>$(MATLABROOT)/toolbox/shared/dastudio</Directory>
       <Directory>$(MATLABROOT)/toolbox/matlab/datamanager</Directory>
       <Directory>$(MATLABROOT)/toolbox/simulink/simulink</Directory>
+      <Directory>$(MATLABROOT)/toolbox/simulink/simulink/slresolve</Directory>
       <Directory>$(MATLABROOT)/toolbox/simulink/blocks</Directory>
       <Directory>$(MATLABROOT)/toolbox/simulink/components</Directory>
       <Directory>$(MATLABROOT)/toolbox/simulink/fixedandfloat</Directory>
@@ -165,6 +172,12 @@
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/common/can/blocks</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/common/configuration/resource</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/common/tgtcommon</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/targets/connectivity</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/targets/pil</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/rtw/datadiff/GUI</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/rtw/datadiff/GUI/Icons</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/rtw/datadiff/API</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/rtw/cgv/API</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/rtwin/rtwin</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/AUTOSAR/AUTOSAR</Directory>
       <Directory>$(MATLABROOT)/toolbox/bioinfo/bioinfo</Directory>
@@ -186,10 +199,9 @@
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccslink</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccslink/mdlinfo</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccslink/tfl</Directory>
-      <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccslinkdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccslink/lic</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/targets/ccslink/ccsblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets</Directory>
-      <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets/mdlinfo</Directory>
-      <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets/lic</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/autointerface</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/autointerface/util</Directory>
@@ -198,10 +210,13 @@
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/pjtgenerator/tgtpref</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/pjtgenerator/profiler</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/pjtgenerator/mdlinfo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/idelinks/pjtgenerator/blks</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/idelinks/idelinkdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/idelinks/errorhandler</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/idelinks/pjtgenerator/blks/utils</Directory>
       <Directory>$(MATLABROOT)/toolbox/comm/comm</Directory>
       <Directory>$(MATLABROOT)/toolbox/comm/commdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/comm/commdemos/commdocdemos</Directory>
+      <Directory>$(MATLABROOT)/help/toolbox/comm/examples</Directory>
       <Directory>$(MATLABROOT)/toolbox/comm/commobsolete</Directory>
       <Directory>$(MATLABROOT)/toolbox/commblks/commblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/commblks/commmasks</Directory>
@@ -210,6 +225,7 @@
       <Directory>$(MATLABROOT)/toolbox/commblks/commblksobsolete/v3</Directory>
       <Directory>$(MATLABROOT)/toolbox/commblks/commblksobsolete/v2p5</Directory>
       <Directory>$(MATLABROOT)/toolbox/commblks/commblksobsolete/v2</Directory>
+      <Directory>$(MATLABROOT)/help/toolbox/commblks/examples</Directory>
       <Directory>$(MATLABROOT)/toolbox/compiler</Directory>
       <Directory>$(MATLABROOT)/toolbox/control/control</Directory>
       <Directory>$(MATLABROOT)/toolbox/control/ctrlguis</Directory>
@@ -219,9 +235,10 @@
       <Directory>$(MATLABROOT)/toolbox/shared/slcontrollib</Directory>
       <Directory>$(MATLABROOT)/toolbox/curvefit/curvefit</Directory>
       <Directory>$(MATLABROOT)/toolbox/curvefit/cftoolgui</Directory>
+      <Directory>$(MATLABROOT)/toolbox/curvefit/sftoolgui</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/optimlib</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/data_manager/data_manager</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp</Directory>
+      <Directory>$(MATLABROOT)/toolbox/distcomp/distcomp</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp/user</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp/mpi</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp/pctdemos</Directory>
@@ -236,11 +253,13 @@
       <Directory>$(MATLABROOT)/toolbox/distcomp/parallel/sparfun</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp/parallel/specfun</Directory>
       <Directory>$(MATLABROOT)/toolbox/distcomp/parallel/util</Directory>
+      <Directory>$(MATLABROOT)/toolbox/distcomp/lang</Directory>
       <Directory>$(MATLABROOT)/toolbox/dspblks/dspblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/dspblks/dspmasks</Directory>
       <Directory>$(MATLABROOT)/toolbox/dspblks/dspmex</Directory>
       <Directory>$(MATLABROOT)/toolbox/dspblks/dspdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/filterdesignlib</Directory>
+      <Directory>$(MATLABROOT)/help/toolbox/dspblks/examples</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/ecoder</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/ecoder/ecoderdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/mpt</Directory>
@@ -249,8 +268,8 @@
       <Directory>$(MATLABROOT)/toolbox/eml/eml</Directory>
       <Directory>$(MATLABROOT)/toolbox/emlcoder/emlcoder</Directory>
       <Directory>$(MATLABROOT)/toolbox/emlcoder/emlcodermex</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/simtargets</Directory>
       <Directory>$(MATLABROOT)/toolbox/exlink</Directory>
-      <Directory>$(MATLABROOT)/toolbox/symbolic/extended</Directory>
       <Directory>$(MATLABROOT)/toolbox/fixedpoint/fixedpoint</Directory>
       <Directory>$(MATLABROOT)/toolbox/fixedpoint/fidemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/fixedpoint/fixedpointtool</Directory>
@@ -269,14 +288,14 @@
       <Directory>$(MATLABROOT)/toolbox/ident/iddemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/ident/iddemos/examples</Directory>
       <Directory>$(MATLABROOT)/toolbox/ident/idhelp</Directory>
+      <Directory>$(MATLABROOT)/toolbox/images/colorspaces</Directory>
       <Directory>$(MATLABROOT)/toolbox/images/images</Directory>
-      <Directory>$(MATLABROOT)/toolbox/images/imuitools</Directory>
       <Directory>$(MATLABROOT)/toolbox/images/imdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/images/imuitools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/images/iptformats</Directory>
       <Directory>$(MATLABROOT)/toolbox/images/iptutils</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/imageslib</Directory>
-      <Directory>$(MATLABROOT)/toolbox/images/medformats</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/spcuilib</Directory>
-      <Directory>$(MATLABROOT)/toolbox/images/iptformats</Directory>
       <Directory>$(MATLABROOT)/toolbox/imaq/imaq</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/imaqlib</Directory>
       <Directory>$(MATLABROOT)/toolbox/imaq/imaqdemos</Directory>
@@ -289,6 +308,7 @@
       <Directory>$(MATLABROOT)/toolbox/instrument/instrumentblks/instrumentblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/instrument/instrumentblks/instrumentmex</Directory>
       <Directory>$(MATLABROOT)/toolbox/instrument/instrumentblks/instrumentmasks</Directory>
+      <Directory>$(MATLABROOT)/toolbox/javabuilder/javabuilder</Directory>
       <Directory>$(MATLABROOT)/toolbox/map/map</Directory>
       <Directory>$(MATLABROOT)/toolbox/map/mapdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/map/mapdisp</Directory>
@@ -296,19 +316,12 @@
       <Directory>$(MATLABROOT)/toolbox/map/mapproj</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/mapgeodesy</Directory>
       <Directory>$(MATLABROOT)/toolbox/map/maputils</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/mech/mech</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/mech/mechdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/pmimport/pmimport</Directory>
       <Directory>$(MATLABROOT)/toolbox/slvnv/simcoverage</Directory>
       <Directory>$(MATLABROOT)/toolbox/mpc/mpc</Directory>
       <Directory>$(MATLABROOT)/toolbox/mpc/mpcdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/mpc/mpcguis</Directory>
       <Directory>$(MATLABROOT)/toolbox/mpc/mpcobsolete</Directory>
       <Directory>$(MATLABROOT)/toolbox/mpc/mpcutils</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/network_engine</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/ne_sli</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/ne_support</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/library</Directory>
       <Directory>$(MATLABROOT)/toolbox/nnet</Directory>
       <Directory>$(MATLABROOT)/toolbox/nnet/nncontrol</Directory>
       <Directory>$(MATLABROOT)/toolbox/nnet/nndemos</Directory>
@@ -341,17 +354,32 @@
       <Directory>$(MATLABROOT)/toolbox/optim/optim</Directory>
       <Directory>$(MATLABROOT)/toolbox/optim/optimdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/pde</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/data_manager/data_manager</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/elec/elec</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/elec/elecdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/equation_language/equation_language</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/foundation/foundation</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/mech/importer</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/mech/mech</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/mech/mechdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/ne_sli</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/ne_support</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/network_engine/network_engine</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/pmir/pmir</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/pm_sli/pm_sli</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/pm_util/pm_util</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/powersys</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/powerdemo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/pm_visimpl/pm_visimpl</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/DR/DR</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/DR/DRdemo</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/powersys/drives/drives</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/powersys/drives/drivesdemo</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/powersys/facts/facts</Directory>
       <Directory>$(MATLABROOT)/toolbox/physmod/powersys/facts/factsdemo</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/DR/DR</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/DR/DRdemo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/powerdemo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/powersys/powersys</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/simscape/simscape</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/simscape/simscapedemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/simscape_language/simscape_language</Directory>
+      <Directory>$(MATLABROOT)/toolbox/physmod/unit_manager/unit_manager</Directory>
       <Directory>$(MATLABROOT)/toolbox/rf/rf</Directory>
       <Directory>$(MATLABROOT)/toolbox/rf/rfdemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/rf/rftool</Directory>
@@ -371,39 +399,47 @@
       <Directory>$(MATLABROOT)/toolbox/signal/sigtools</Directory>
       <Directory>$(MATLABROOT)/toolbox/signal/sptoolgui</Directory>
       <Directory>$(MATLABROOT)/toolbox/signal/sigdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/simscape/simscape</Directory>
-      <Directory>$(MATLABROOT)/toolbox/physmod/simscape/simscapedemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/siglib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sl3d/sl3d</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sl3d/sl3ddemos</Directory>
       <Directory>$(MATLABROOT)/toolbox/slcontrol/slcontrol</Directory>
       <Directory>$(MATLABROOT)/toolbox/slcontrol/slctrlguis</Directory>
       <Directory>$(MATLABROOT)/toolbox/slcontrol/slctrlutil</Directory>
       <Directory>$(MATLABROOT)/toolbox/slcontrol/slctrldemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/slestim/slestdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/slestim/slestguis</Directory>
-      <Directory>$(MATLABROOT)/toolbox/slestim/slestim</Directory>
-      <Directory>$(MATLABROOT)/toolbox/slestim/slestmex</Directory>
-      <Directory>$(MATLABROOT)/toolbox/slestim/slestutil</Directory>
-      <Directory>$(MATLABROOT)/toolbox/sloptim/sloptim</Directory>
-      <Directory>$(MATLABROOT)/toolbox/sloptim/sloptguis</Directory>
-      <Directory>$(MATLABROOT)/toolbox/sloptim/sloptdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/sloptim/sloptobsolete</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldodemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldodemos/optim</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldodemos/estim</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldodemos/estim/docexamples/adaptive</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sldodemos/estim/docexamples/lookuptable</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sloptim/sloptim</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sloptim/sloptguis</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/sloptim/sloptobsolete</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/slestim/slestguis</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/slestim/slestim</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/slestim/slestmex</Directory>
+      <Directory>$(MATLABROOT)/toolbox/sldo/slestim/slestutil</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/sldv</Directory>
       <Directory>$(MATLABROOT)/toolbox/splines</Directory>
       <Directory>$(MATLABROOT)/toolbox/stats</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/statslib</Directory>
       <Directory>$(MATLABROOT)/toolbox/symbolic</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/tic6000/tic6000</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rtw/targets/tic6000/tic6000/tfl</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/tic6000/tic6000blks</Directory>
       <Directory>$(MATLABROOT)/toolbox/rtw/targets/tic6000/tic6000demos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets/mdlinfo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets/lic</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/etargets/rtdxblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/shared/etargets/etargets/demoutils</Directory>
       <Directory>$(MATLABROOT)/toolbox/vipblks/vipblks</Directory>
       <Directory>$(MATLABROOT)/toolbox/vipblks/vipmasks</Directory>
       <Directory>$(MATLABROOT)/toolbox/vipblks/vipmex</Directory>
       <Directory>$(MATLABROOT)/toolbox/vipblks/vipdemos</Directory>
-      <Directory>$(MATLABROOT)/toolbox/vr/vr</Directory>
-      <Directory>$(MATLABROOT)/toolbox/vr/vrdemos</Directory>
+      <Directory>$(MATLABROOT)/help/toolbox/vipblks/examples</Directory>
       <Directory>$(MATLABROOT)/toolbox/wavelet/wavelet</Directory>
       <Directory>$(MATLABROOT)/toolbox/wavelet/wmultisig1d</Directory>
       <Directory>$(MATLABROOT)/toolbox/wavelet/wavedemo</Directory>
-      <Directory>$(MATLABROOT)/work</Directory>
+      <Directory>$(MATLABROOT)/toolbox/wavelet/compression</Directory>
    </MATLABPath>
 </project>

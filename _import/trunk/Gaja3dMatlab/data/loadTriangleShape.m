@@ -1,4 +1,4 @@
-function [eleMatrix, Xtri, Ytri, Ztri] = loadTriangleShape( filename )
+function [elements, points] = loadTriangleShape( filename )
 %LOADTRIANGLESHAPE Load polygon data from a Polygon or PolygonZ shape file
     [pathstr,name,ext] = fileparts(filename);
 
@@ -49,15 +49,8 @@ function [eleMatrix, Xtri, Ytri, Ztri] = loadTriangleShape( filename )
         points = loadPointMethod();
         [b, m, n] = unique(points(:,1:2), 'rows');
         points = points(m, :);
-        eleMatrix = reshape(n, 4, recordCount)';
-        eleMatrix = eleMatrix(:,[1 3 2]); % discard double point info
-        Xtri = points(:,1);
-        Ytri = points(:,2);
-        if(size(points, 2) == 3)
-            Ztri = points(:,3);
-        else
-            Ztri = 0;
-        end
+        elements = reshape(n, 4, recordCount)';
+        elements = elements(:,[1 3 2]); % discard double point info
     catch err
         fclose(shpFileId);
         rethrow(err);
@@ -78,9 +71,7 @@ function [eleMatrix, Xtri, Ytri, Ztri] = loadTriangleShape( filename )
 
     function points = readPolygons()
         %% read all Polygons from file
-        points = fread(shpFileId,[2 recordCount*4],'8*double',56,'ieee-le')'; %read 4 points per polygon, skip 56 bytes to next        
-        %fours = ones(recordCount,1) * 4; % for converting from matrix to (1 x recordCount) cell array of 1x4
-        %polygons = struct('Geometry', 'Polygon', 'X', mat2cell(pointsXY(1,:), 1, fours), 'Y', mat2cell(pointsXY(2,:), 1, fours));
+        points = fread(shpFileId,[2 recordCount*4],'8*double',56,'ieee-le')'; %read 4 points per polygon, skip 56 bytes to next
     end
 
 end %LOADTRIANGLESHAPE

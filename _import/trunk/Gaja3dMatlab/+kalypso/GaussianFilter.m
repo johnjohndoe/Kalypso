@@ -1,16 +1,8 @@
-classdef GaussianFilter
-    properties
-        hsize
-        name = 'gauss';
-    end % private properties
+classdef GaussianFilter < kalypso.SmoothFilter
 
     methods
         function this = GaussianFilter(varargin)
-            p = inputParser;
-            p.KeepUnmatched = true;
-            p.addParamValue('smooth', 9, @isnumeric);
-            p.parse(varargin{:});
-            this.hsize = p.Results.smooth;
+            this = this@kalypso.SmoothFilter(varargin{:});
         end
         
         function Z = process(this, grid)

@@ -1,8 +1,4 @@
-classdef FeatureDetector
-   properties (Constant)
-       DEFAULT = kalypso.SimpleFeatureDetector();
-   end
-   
+classdef FeatureDetector < handle
    properties
        highThresh
        lowThresh
@@ -10,6 +6,10 @@ classdef FeatureDetector
    
    methods
        function this = FeatureDetector(varargin)
+           this.configure(varargin{:});
+       end
+       
+       function configure(this, varargin)
            % parse arguments
            p = inputParser;
            p.KeepUnmatched = true;

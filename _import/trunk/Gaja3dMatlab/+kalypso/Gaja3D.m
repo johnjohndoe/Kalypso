@@ -1,91 +1,59 @@
 classdef Gaja3D < handle
 %GAJA3D 3D Terrain Discretisation Service
 
-    properties (SetAccess = private, SetObservable = true)
-        % all file paths are be relative to this directory,
-        % defaults to the current directory.
-        % Directory will be created if it does not exist.
-        workingDir = pwd;
-        
+    properties (SetObservable = true)
         % buffers [meter] around tile boundaries
         bufferTin = 300; % for tin creation from points
         bufferGrid = 150; % for grid creation from tin 
         
         % array of indices determining which boundaries to process
         tiles = [];
-        
+    end
+    
+    properties (SetAccess = private, SetObservable = true)
         % the outer boundaries of the model area tiles
-        boundaries = kalypso.Polygon.EMPTY;
+        boundaries = kalypso.Polygon.empty();
         
-        % original tin points and triangle indices
-        demTin = kalypso.TriangulatedSurface.EMPTY;
+        % original scattered tin points and linear triangulation interpolation
+        demTin = kalypso.TriangulatedSurface2.empty();
         
         % raster elevation model (GRID)
         % single instance of RectifiedGridCoverage
-        demGrid = kalypso.RectifiedGridCoverage.EMPTY;
+        demGrid = kalypso.RectifiedGridCoverage.empty();
         
         % breaklines for tin generation
         % Curve array
-        breaklines = kalypso.Curve.EMPTY;
+        breaklines = kalypso.Curve.empty();
         
         % All breaklines for tin generation. These may be set manually and
         % will override the other breaklines if present.
-        breaklinesMerged = kalypso.Curve.EMPTY;
+        breaklinesMerged = kalypso.Curve.empty();
         
         % generated tin points and triangle indices
-        modelTin = kalypso.TriangulatedSurface.EMPTY;
+        modelTin = kalypso.TriangulatedSurface.empty();
         refineCount = 0;
-        
-        cmd_args = cell(0);
     end % public properties
         
-    methods 
-        % set demTin, revert demGrid
-        function this = set.demTin(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'kalypso.TriangulatedSurface'))
-                this.demTin = varargin{1};
-            else
-                this.demTin = kalypso.TriangulatedSurface(varargin{:});
-            end
-            this.demGrid = [];
-        end 
-
-        % set demGrid, revert breaklines
-        function this = set.demGrid(this, varargin)
-            if(nargin == 2 && isa(varargin{1},'kalypso.RectifiedGridCoverage'))
-                this.demGrid = varargin{1};
-            else
-                this.demGrid = kalypso.RectifiedGridCoverage(varargin{:});
-            end
-            this.breaklines = [];
-        end
-
-        % set breaklines, revert modelTin
-        function this = set.breaklines(this, varargin)
-            if(nargin == 2 && iscell(varargin{1}))
-                breaklines = varargin{1};
-                for i=1:numel(breaklines)
-                    if(isa(breaklines{i},'kalypso.Curve'))
-                        this.breaklines{i} = breaklines{i};
-                    else
-                        args = breaklines{i};
-                        if(isempty(args))
-                            this.breaklines{i} = kalypso.Curve.EMPTY;
-                        else
-                            this.breaklines(i) = kalypso.Curve(args{:});
-                        end
-                    end
+    methods
+         % listen to property changes
+        function objectChanged(this, src, event) %#ok<INUSD>
+            if(any(strcmp(src.Name, {'boundaries'})))
+                this.tiles = 1:numel(this.boundaries);
+                this.demTin = kalypso.TriangulatedSurface2.empty(0, numel(this.tiles));
+            elseif(any(strcmp(src.Name, {'demTin'})))
+                this.demGrid = kalypso.RectifiedGridCoverage.empty(0, numel(this.tiles));
+            elseif(any(strcmp(src.Name, {'demGrid'})))
+                this.breaklines = cell(0);
+                for i=1:max(this.tiles)
+                    this.breaklines{i} = kalypso.Curve.empty();
                 end
-            elseif(nargin == 2 && isempty(varargin{1}))
-                noBreaklines = cell(size(this.tiles));
-                this.breaklines = noBreaklines;
+            elseif(any(strcmp(src.Name, {'breaklines'})))
+                this.breaklinesMerged = kalypso.Curve.empty();
+                this.modelTin = kalypso.TriangulatedSurface();
             end
-            this.breaklinesMerged = kalypso.Curve.EMPTY;
-            this.modelTin = kalypso.TriangulatedSurface.EMPTY;
         end
         
-        % set breaklines, revert modelTin
-        function this = set.boundaries(this, varargin)
+        function set.boundaries(this, varargin)
             if(nargin == 2 && isa(varargin{1},'kalypso.Polygon'))
                 this.boundaries = varargin{1};
             elseif(nargin == 3)
@@ -93,286 +61,62 @@ classdef Gaja3D < handle
             else
                 this.boundaries = kalypso.Polygon(varargin{:});
             end
-            this.tiles = 1:numel(this.boundaries);
-            this.demTin = [];
+        end
+        
+        function set.demTin(this, varargin)
+            if(nargin == 2 && isa(varargin{1},'kalypso.TriangulatedSurface2'))
+                this.demTin = varargin{1};
+            else
+                this.demTin = kalypso.TriangulatedSurface2(varargin{:});
+            end
+        end
+
+        function set.demGrid(this, varargin)
+            if(nargin == 2 && isa(varargin{1},'kalypso.RectifiedGridCoverage'))
+                this.demGrid = varargin{1};
+            else
+                this.demGrid = kalypso.RectifiedGridCoverage(varargin{:});
+            end
+        end
+
+        function set.breaklines(this, varargin)
+            if(nargin == 2 && iscell(varargin{1}))
+                l_breaklines = varargin{1};
+                for i=1:numel(l_breaklines)
+                    if(isa(l_breaklines{i},'kalypso.Curve'))
+                        this.breaklines{i} = l_breaklines{i};
+                    else
+                        args = l_breaklines{i};
+                        if(isempty(args))
+                            this.breaklines{i} = kalypso.Curve.empty();
+                        else
+                            this.breaklines(i) = kalypso.Curve(args{:});
+                        end
+                    end
+                end
+            end
         end
     end
    
     methods (Access = public)
         % Private constructor
         function this = Gaja3D(varargin)
-            % convert from strings to doubles if deployed
-            if(isdeployed)
-                disp(strvcat('Gaja3d command line arguments:', char(varargin))); %#ok<VCAT>
-                varargin = convertArguments(varargin{:});
-            end
-            
-            % parse inputs, keep defaults where unspecified
-            p = inputParser;
-            p.KeepUnmatched = true;
-
-            p.addParamValue('workingDir', this.workingDir, @ischar);
-            p.addParamValue('bufferTin', this.bufferTin, @isnumeric);
-            p.addParamValue('bufferGrid', this.bufferGrid, @isnumeric);
-            
-            % tiles separated by comma or empty array
-            p.addParamValue('tiles', this.tiles, @isnumeric);
-            
-            % grids and tins as well as boundary (e.g. *.shp)
-            % will be matched to tiles in alphabetical order
-            p.addParamValue('boundary', '', @ischar);
-            p.addParamValue('demPoints', '', @ischar);
-            p.addParamValue('demTin', '', @ischar);
-            p.addParamValue('demGrid', '', @ischar);
-            p.addParamValue('breaklines', '', @ischar);
-            
-            % which operations to perform automatically
-            p.addParamValue('createGrid', 'false');
-            p.addParamValue('detectBreaklines', 'false');
-            p.addParamValue('createTin', 'false');
-            p.addParamValue('assignElevations', 'false');
-            p.addParamValue('refineTin', 'false');
-            
-            p.parse(varargin{:});
-            
-            % set working directory
-            this.workingDir = p.Results.workingDir;
-            this.bufferTin = p.Results.bufferTin;
-            this.bufferGrid = p.Results.bufferGrid;
-            
-            % preload boundaries
-            boundariesSpec = p.Results.boundary;
-            if(~isempty(boundariesSpec))
-                bFile = fullfile(this.workingDir, boundariesSpec);
-                if(exist(bFile, 'file'))
-                    disp(sprintf('Loading boundaries %s...', bFile));
-                    this.setBoundaries(bFile);
-                    disp(sprintf('Loaded boundary with %d tiles', numel(this.boundaries)));
-                else
-                    error('Boundary file %s could not be found!', bFile);
-                end
-            end
-            
-            pointSpec = p.Results.demPoints;
-            if(~isempty(pointSpec))
-                if(isempty(this.boundaries))
-                    error('Must specify boundaries for triangulation of elevation points.');
-                end
-                pFiles = fullfile(this.workingDir, pointSpec);
-                disp(sprintf('Specified points %s', pFiles));
-                pointFiles = dir(pFiles);
-                if(~isempty(pointFiles))
-                    disp(sprintf('%d files matched:', numel(pointFiles)));
-                    disp(char({pointFiles.name}));
-                else
-                    error('No point files found.');
-                end
-            end
-            
-            tinSpec = p.Results.demTin;
-            if(~isempty(tinSpec))
-                if(~isempty(pointSpec))
-                    error('Cannot specify both tins and points.');
-                end
-                tFiles = fullfile(this.workingDir, tinSpec);
-                disp(sprintf('Specified tins %s', tFiles));
-                tinFiles = dir(tFiles);
-                if(~isempty(tinFiles))
-                    disp(sprintf('%d files matched:', numel(tinFiles)));
-                    disp(char({tinFiles.name}));
-                else
-                    error('No tin files found.');
-                end
-            end
-            
-            gridSpec = p.Results.demGrid;
-            if(~isempty(gridSpec))
-                if(~isempty(pointSpec))
-                    error('Cannot specify both grids and points.');
-                end
-                if(~isempty(tinSpec))
-                    error('Cannot specify both tins and grids.');
-                end
-                gFiles = fullfile(this.workingDir, gridSpec);
-                disp(sprintf('Specified grids %s', gFiles));
-                gridFiles = dir(gFiles);
-                if(~isempty(gridFiles))
-                    disp(sprintf('%d files matched:', numel(gridFiles)));
-                    disp(char({gridFiles.name}));
-                else
-                    error('No grid files found.');
-                end
-            end
-            
-            % determine tiles to process
-            if(~isempty(p.Results.tiles))
-                % process given tiles
-                this.tiles = p.Results.tiles;
-            end
-
-            if(~isempty(tinSpec))
-                if(~isempty(this.tiles))
-                    noTin = this.tiles > numel(tinFiles);
-                    if(any(noTin))
-                        error('No tin for tile(s) %s!', mat2str(this.tiles(noTin)));
-                    end
-                else
-                   % process all tins
-                    this.tiles = 1:numel(tinFiles);
-                end            
-            elseif(~isempty(gridSpec))
-                if(~isempty(this.tiles))
-                    noGrid = this.tiles > numel(gridFiles);
-                    if(any(noGrid))
-                        error('No grid for tile(s) %s!', mat2str(this.tiles(noGrid)));
-                    end
-                else
-                    % process all grids
-                    this.tiles = 1:numel(gridFiles);
-                end
-            end
-            
-            noBoundary = this.tiles > numel(this.boundaries);
-            if(any(noBoundary))
-                error('No boundary for tile(s) %s!', mat2str(this.tiles(noBoundary)));
-            end
-            
-            if(~isempty(this.tiles))
-                disp(sprintf('Tiles: %s', mat2str(this.tiles)));
-            end
-            
-            if(~isempty(pointSpec))
-                % preload points
-                allPointsCell = cell(numel(pointFiles),1);
-                for i=1:numel(pointFiles)
-                    file = pointFiles(i);
-                    disp(sprintf('Loading point data from %s...', file.name));
-                    pointFileName = [fileparts(pFiles) filesep file.name];
-                    allPointsCell{i} = loadPointData(pointFileName);
-                    pointCount = size(allPointsCell{i},1);
-                    disp(sprintf('Loaded %d points.', pointCount));
-                end
-                if(~isempty(allPointsCell))
-                    allPoints = vertcat(allPointsCell{:});
-                    totalPointCount = size(allPoints,1);
-                    disp(sprintf('Total number of points loaded is %d', totalPointCount));
-                    disp('Triangulating elevation surfaces for all tiles...');
-                    this.setElevationPoints(allPoints);
-                    for i=this.tiles
-                        tin = this.demTin(i);
-                        pointCount = size(tin.points,1);
-                        elementCount = size(tin.elements,1);
-                        disp(sprintf('Tin %d has %d points and %d elements.', i, pointCount, elementCount));
-                    end
-                end
-            end
-            
-            if(~isempty(tinSpec))
-                % preload tins
-                for i=this.tiles;
-                    if(i <= numel(tinFiles))
-                        file = tinFiles(i);
-                        [pathstr, name, ext] = fileparts(file.name);
-                        tinExtensions = {'.ele','.node','.shp'};
-                        if(~any(strcmp(ext,tinExtensions)))
-                            error('Unrecognized tin file extension %s. Known extensions are: %s', ext, char(tinExtensions)');
-                        end
-                        eleFileName = [fileparts(tFiles) filesep file.name];
-                        disp(sprintf('Loading tin with basename %s...', eleFileName));
-                        this.demTin(i) = kalypso.TriangulatedSurface(eleFileName);
-                    end
-                end
-            end
-            
-            if(~isempty(gridSpec))
-                % preload grids
-                for i=this.tiles;
-                    if(i <= numel(gridFiles))
-                        file = gridFiles(i);
-                        filename = [fileparts(gFiles) filesep file.name];
-                        disp(sprintf('Loading grid %s...', filename));
-                        this.demGrid(i) = kalypso.RectifiedGridCoverage(filename, varargin{:});
-                    end
-                end
-            end
-            
-            % preload breaklines
-            breaklinesSpec = p.Results.breaklines;
-            if(~isempty(breaklinesSpec))
-                brFile = fullfile(this.workingDir, breaklinesSpec);
-                if(exist(brFile, 'file'))
-                    disp(sprintf('Loading breaklines %s...', brFile));
-                    this.setBreaklines(brFile);
-                else
-                    error('Breaklines file %s could not be found!', brFile);
-                end
-            end
-            
-            for i=1:max(this.tiles)
-                if(~any(i==this.tiles))
-                    this.demTin(i) = kalypso.TriangulatedSurface.EMPTY;
-                    this.demGrid(i) = kalypso.RectifiedGridCoverage.EMPTY;
-                end
-            end
-            
-            % remember arguments for all calls
-            this.cmd_args = varargin;
-            if(strcmpi('true', p.Results.createGrid))
-                disp('Creating grid...');
-                this.createGrid();
-            end
-            
-            if(strcmpi('true', p.Results.detectBreaklines))
-                disp('Detecting breaklines...');
-                this.setSmoothFilter();
-                this.setFeatureDetector();
-                this.detectBreaklines();
-            end
-            
-            if(strcmpi('true', p.Results.createTin))
-                disp('Creating tin...');
-                this.createTin();
-                
-                % assign elevations after tin creation
-                if(strcmpi('true', p.Results.assignElevations))
-                    disp('Assigning elevations...');
-                    this.assignElevations();
-                end
-            end
-            
-            if(strcmpi('true', p.Results.refineTin))
-                disp('Refining tin...');
-                this.refineTin();
-                
-                % assign elevations after tin refinement
-                if(strcmpi('true', p.Results.assignElevations))
-                    disp('Assigning elevations...');
-                    this.assignElevations();
-                end
-            end
+            this.addlistener({'boundaries','demTin','demGrid','breaklines'},...
+                'PostSet', @(src,event)this.objectChanged(src,event));
         end
         
-        function this = setElevationPoints(this, varargin)
+        function setElevationPoints(this, varargin)
             if(isempty(this.boundaries))
-                error('must set boundaries first');
+                error('Must set boundaries first!');
             end
             if(nargin < 2)
-                error('must specify point or tin data');
+                error('Call with point data argument only!');
             end
             if(nargin >= 2)
                 points = varargin{1};
-            end
-            if(nargin >= 3)
-                % if elements is specified, use given tin for all
-                % boundaries
-                elements = varargin{2};
-                tin = kalypso.TriangulatedSurface(points, elements);
-                [this.demTin] = deal(tin);
-                return;
-            else
-                workingDir = this.workingDir;
+
                 if(ischar(points))
-                    points = loadPointData(points);
+                    points = loadPointData(points,0);
                 end
                 
                 % discard duplicate points and NaN elevations and sort
@@ -381,40 +125,29 @@ classdef Gaja3D < handle
                 [b, m] = unique(points(:,1:2), 'rows');
                 points = sortrows(points(m,:),1:2);
                 
-                
                 % triangulate patches with buffer
                 for i=this.tiles
-                    if(numel(this.tiles) == 1 && i == 1)
-                        tempfile = [workingDir filesep 'DemTin'];
-                    else
-                        tempfile = [workingDir filesep sprintf('DemTin_%04d', i)];
-                    end
-                    % buffer for tin generation
+                    % buffer boundary for tin
+                    boundary = this.boundaries(i);
                     bufDist = this.bufferTin;
-                    redPoints = reduceToBoundary(points(:,1:3), this.boundaries(i), bufDist);
+                    boundaryBuffer = boundary.buffer(bufDist);
+                    
+                    % reduce to boundary
+                    index = inBoundary(points(:,1), points(:,2), boundaryBuffer);
+                    redPoints = points(index,:);
+                    
+                    % create tin
                     if(isempty(redPoints))
-                        warning('No elevation points in tile %n.', i);
-                        tin = kalypso.TriangulatedSurface.EMPTY;
+                        error('No elevation points in boundary %i.', i);
                     else
-                        exportNodes(redPoints, tempfile);
-                        if(isdeployed())
-                            tricommand = [pwd filesep 'exec' filesep 'triangle -N'];
-                        else
-                            tricommand = [pwd filesep 'exec' filesep 'triangle.exe -N'];
-                        end
-                        eval(sprintf('! %s %s', tricommand, tempfile));
-                        outputPrefix = [tempfile '.1'];
-                        elements = loadTriangleOutput( outputPrefix );
-                        tin = kalypso.TriangulatedSurface(redPoints, double(elements));
-                        movefile([outputPrefix '.ele'], [tempfile '.ele']);
-                        zip([tempfile '.zip'], {[tempfile '.ele'], [tempfile '.node']});
+                        tin = kalypso.TriangulatedSurface2(redPoints);
                     end
                     this.demTin(i) = tin;
                 end
             end 
         end
         
-        function this = setElevationGrid(this, grid)
+        function setElevationGrid(this, grid)
             if(~iscell(grid))
                 grid = {grid};
             end
@@ -423,8 +156,10 @@ classdef Gaja3D < handle
             end
         end
         
-        function this = setBreaklines(this, breaklines)
-            if(~iscell(breaklines))
+        function setBreaklines(this, breaklines)
+            if(isempty(breaklines))
+                this.breaklinesMerged = kalypso.Curve.empty();
+            elseif(~iscell(breaklines))
                 this.breaklinesMerged = kalypso.Curve(breaklines);
             elseif(~all(size(breaklines)==size(this.breaklines)))
                 error('Number of breaklines sets does not match number of grids');
@@ -436,92 +171,59 @@ classdef Gaja3D < handle
             end
         end
         
-        function this = setBoundaries(this, boundaries)
+        function setBoundaries(this, boundaries)
             this.boundaries = boundaries;
         end
         
         % creates a grid from a tin with given resolution
-        function this = createGrid(this, varargin)
+        function createGrid(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end
             noTin = isempty(this.demTin(this.tiles));
             if(any(noTin(:)))
-                error('For tile(s) %s tin needs to be set first.', mat2str(this.tiles(noTin)));
+                error('For tile(s) %s elevation points need to be set first.', mat2str(this.tiles(noTin)));
             end        
             
+            % parse inputs
             p = inputParser;
             p.KeepUnmatched = true;
-            p.addParamValue('gridx', 5, @isnumeric);
-            p.addParamValue('gridy', 5, @isnumeric);
-            p.parse(this.cmd_args{:}, varargin{:});
-            
+            testf = @(x)(isnumeric(x) && isscalar(x) && x>0);
+            p.addParamValue('gridx', 1, testf);
+            p.addParamValue('gridy', 1, testf);
+            p.parse(varargin{:});
             dx = p.Results.gridx;
             dy = p.Results.gridy;
             
-            % create grid for all instances
-            workingDir = this.workingDir;
+            % create grid for all tins
             for i=this.tiles
                 tin = this.demTin(i);
-                points = tin.points;
-                elements = tin.elements;
-                X = points(:,1);
-                Y = points(:,2);
-                Z = points(:,3);
-                boundary = this.boundaries(i);
                 
                 %buffer boundary for grid creation
                 bufdist = this.bufferGrid;
+                boundary = this.boundaries(i);
                 boundaryBuffer = boundary.buffer(bufdist);
-                
+
+                % create grid mesh
                 polyX = boundaryBuffer.getX();
                 polyY = boundaryBuffer.getY();
-                pointCount = numel(polyX);
-                edges = zeros(pointCount - sum(isnan(polyX))*2 - 1, 2);
-                currentEdge = 1;
-                for j=1:pointCount
-                    if(j == pointCount)
-                    elseif(isnan(polyX(j)))
-                    elseif(isnan(polyX(j+1)))
-                    else
-                        edges(currentEdge,:) = [j j+1];
-                        currentEdge = currentEdge + 1;
-                    end
-                end
-                
-                minx = min(boundaryBuffer.getX());
-                miny = min(boundaryBuffer.getY());
-                
-                refmat = constructRefMat(minx, miny, dx, dy);
-
-                % mesh grid
-                maxx = max(boundaryBuffer.getX());
-                maxy = max(boundaryBuffer.getY());
-                rangex = minx:dx:maxx;
-                rangey = miny:dy:maxy;
-                [gridx, gridy] = meshgrid(rangex, rangey);
+                [gridx, gridy, refmat] = createGrid(polyX, polyY, dx, dy);
                 
                 % interpolate gridz
-                %[gridx, gridy, refmat] = createGrid(points, (change to cell) dx, dy);
-                %[gridx, gridy, gridz] = gridfit(X, Y, Z, rangex, rangey);
-                %[gridx, gridy, gridz] = griddata(X, Y, Z, gridx, gridy);
-                gridz = interptri(elements, X, Y, Z, gridx, gridy);
-                inboundary = inpoly([gridx(:) gridy(:)], [polyX polyY], edges);
-                %inboundary = inpolygon(gridx, gridy, boundaryBuffer.getX(), boundaryBuffer.getY());
-                gridz(~inboundary) = NaN;
+                gridz = tin(gridx, gridy);
+                
+                % reduce to boundary
+                index = inBoundary(gridx(:), gridy(:), boundaryBuffer);
+                gridz(~index) = NaN;
+                
+                % create coverage
                 grid = kalypso.RectifiedGridCoverage(gridz, refmat);
+                
                 this.demGrid(i) = grid;
-                if(numel(this.tiles) == 1 && i == 1)
-                    gridFile = [workingDir filesep 'DemGrid'];
-                else
-                    gridFile = [workingDir filesep sprintf('DemGrid_%04d',i)];
-                end
-                saveAsciiGrid(grid, [gridFile '.asc']);
-                zip([gridFile '.zip'], {[gridFile '.asc']});
             end
         end
         
-        function this = setSmoothFilter(this, varargin)
+        function setSmoothFilter(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end
@@ -532,11 +234,11 @@ classdef Gaja3D < handle
             grids = this.demGrid;
             for i=this.tiles
                 grid = grids(i);
-                grid.setSmoothFilter(this.cmd_args{:}, varargin{:});
+                grid.setSmoothFilter(varargin{:});
             end
         end
         
-        function this = setFeatureDetector(this, varargin)
+        function setFeatureDetector(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end            
@@ -547,11 +249,11 @@ classdef Gaja3D < handle
             grids = this.demGrid;
             for i=this.tiles
                 grid = grids(i);
-                grid.setFeatureDetector(this.cmd_args{:}, varargin{:});
+                grid.setFeatureDetector(varargin{:});
             end
         end
         
-        function this = setEdgeFilter(this, varargin)
+        function setEdgeFilter(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end            
@@ -562,12 +264,12 @@ classdef Gaja3D < handle
             grids = this.demGrid;
             for i=this.tiles
                 grid = grids(i);
-                grid.setEdgeFilter(this.cmd_args{:}, varargin{:});
+                grid.setEdgeFilter(varargin{:});
             end
         end
        
         % detects breaklines in a grid
-        function this = detectBreaklines(this, varargin)
+        function detectBreaklines(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end
@@ -580,11 +282,10 @@ classdef Gaja3D < handle
             p = inputParser;
             p.KeepUnmatched = true;
             p.addParamValue('distanceTolerance', 0); % simplify lines using this tolerance
-            p.parse(this.cmd_args{:}, varargin{:});
+            p.parse(varargin{:});
             
             distanceTolerance = p.Results.distanceTolerance;
             
-            workingDir = this.workingDir;
             grids = this.demGrid;
             for i=this.tiles
                 grid = grids(i);
@@ -612,34 +313,12 @@ classdef Gaja3D < handle
                    end
                    this.breaklines{i} = kalypso.Curve(X, Y, Z);
                    this.breaklines{i} = this.breaklines{i}.clip(this.boundaries(i));
-                   bs = this.breaklines{i}.asGeostruct();
-                   if(~isempty(bs))
-%                       featureMethod = 'simple';
-%                       if(~isempty(grid.smoothFilter))
-%                           smoothMethod = grid.smoothFilter.name;
-%                           smooth = sprintf('%02.1f', grid.smoothFilter.hsize);
-%                       else
-%                           smoothMethod = 'none';
-%                           smooth = '';
-%                       end
-%                       shpFileName =
-%                       sprintf('Breaklines_%s_%02.1f-%02.1f_%s%s_%04d.shp'
-%                       , featureMethod, grid.featureDetector.lowThresh, grid.featureDetector.highThresh, smoothMethod, smooth, i);
-                      if(numel(this.tiles) == 1 && i == 1)
-                          shpFileName = 'Breaklines';
-                      else
-                          shpFileName = sprintf('Breaklines_%04d', i);
-                      end
-                      fullshpbase = [workingDir filesep shpFileName];
-                      shapewrite(bs, [fullshpbase '.shp'], 'DbfSpec', makedbfspec(bs));
-                      zip([workingDir filesep shpFileName '.zip'], {[fullshpbase '.shp'], [fullshpbase '.dbf'], [fullshpbase '.shx']});
-                   end
                 end
             end
             this.breaklinesMerged = [this.breaklines{this.tiles}];
         end
         
-        function this = createTin(this, varargin)
+        function createTin(this, varargin)
             if(isempty(this.tiles))
                 error('No tiles to process!');
             end
@@ -649,11 +328,9 @@ classdef Gaja3D < handle
             p.KeepUnmatched = true;
             p.addParamValue('minAngle', []); % maximum angle in degrees
             p.addParamValue('maxArea', []); % maximum area
-            p.addParamValue('minArea', []); % maximum area
-            p.parse(this.cmd_args{:}, varargin{:});
+            p.parse(varargin{:});
 
-            workingDir = this.workingDir;
-            tempfile = [workingDir filesep 'ModelTin'];
+            tempfile = 'ModelTin';
             this.exportForTriangle(tempfile);
             if(isdeployed())
                 tricommand = [pwd filesep 'exec' filesep 'triangle'];
@@ -676,22 +353,25 @@ classdef Gaja3D < handle
             cmd = sprintf('! %s -p%s%s %s', tricommand, angleString, maxAreaString, tempfile);
             eval(cmd);
             outputPrefix = [tempfile '.1'];
+
             [ elements, Xtri, Ytri ] = loadTriangleOutput( outputPrefix );
+            
             movefile([outputPrefix '.ele'], [tempfile '.ele']);
             movefile([outputPrefix '.node'], [tempfile '.node']);
             movefile([outputPrefix '.poly'], [tempfile '.poly']);
-            zip([tempfile '.zip'], {[tempfile '.ele'], [tempfile '.node'], [tempfile '.poly']}, workingDir);
+            
+            % initialize to 0 elevation
             Ztri = zeros(size(Xtri));
             points = [Xtri Ytri Ztri];
             this.modelTin = kalypso.TriangulatedSurface(points, elements);
             this.refineCount = 0;
         end
         
-        function this = assignElevations(this, varargin)
+        function assignElevations(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
             p.addParamValue('source', 'tin'); % tin or grid
-            p.parse(this.cmd_args{:}, varargin{:});
+            p.parse(varargin{:});
             
             tin = this.modelTin;
             if(isempty(tin))
@@ -704,17 +384,16 @@ classdef Gaja3D < handle
             Ztri = zeros(size(Xtri)) * NaN;
             for i=this.tiles
                 % use tin as elevation source
-                if(~(strcmpi(p.Results.source, 'grid') || i > numel(this.demTin) || isempty(this.demTin(i).points)))
-                    source = this.demTin(i);
+                if(~(strcmpi(p.Results.source, 'grid') || i > numel(this.demTin)))
+                    l_demTin = this.demTin(i);
+                    Zi = l_demTin(Xtri, Ytri);
                 elseif(i <= numel(this.demGrid))
                     % fall back to using grid if that is the only available
                     % elevation source
-                    source = this.demGrid(i);
+                    l_demGrid = this.demGrid(i);
+                    Zi = l_demGrid.interpolateZ(Xtri, Ytri, varargin{:});
                 end
-                if(isempty(source))
-                    warning('No elevation source for tile %d', i);
-                end
-                Zi = source.interpolateZ(Xtri, Ytri, varargin{:});
+                
                 Zmatched = ~isnan(Zi);
                 hasZ = ~isnan(Ztri);
                 ZmatchedAndNotHasZ = Zmatched & ~hasZ;
@@ -723,26 +402,29 @@ classdef Gaja3D < handle
                 Ztri(ZmatchedAndHasZ) = (Zi(ZmatchedAndHasZ) + Ztri(ZmatchedAndHasZ)) / 2;
             end
             this.modelTin = kalypso.TriangulatedSurface([Xtri Ytri Ztri], elements);
-            workingDir = this.workingDir;
-            tempfile = [workingDir filesep 'ModelTin'];
-            saveTrianglesAsEle(this.modelTin.elements, [tempfile '.ele']);
-            exportNodes(this.modelTin.points, tempfile);
-            zip([tempfile '.zip'], {[tempfile '.ele'], [tempfile '.node']});
+            
+            if(this.refineCount == 0)
+                tempfile = 'ModelTin';
+            else
+                tempfile = sprintf('ModelTin.%d', this.refineCount);
+            end
+            
+            exportNodes([Xtri Ytri Ztri], tempfile);
         end
         
-        function this = refineTin(this, varargin)
+        function refineTin(this, varargin)
             tin = this.modelTin;
             if(isempty(tin))
                 error('No tin to refine.');
             end
-            workingDir = this.workingDir;
+            
             if(this.refineCount == 0)
-                tempfile = [workingDir filesep 'ModelTin'];
+                tempfile = 'ModelTin';
             else
-                tempfile = [workingDir filesep sprintf('ModelTin.%d', this.refineCount)];
+                tempfile = sprintf('ModelTin.%d', this.refineCount);
             end
             
-            [elements, Xtri, Ytri] = tin.refine(this.cmd_args{:}, varargin{:}, 'tempfile', tempfile);
+            [elements, Xtri, Ytri] = tin.refine(varargin{:}, 'tempfile', tempfile);
             
             % initialize to NaN elevations
             Ztri = zeros(size(Xtri)) * NaN;
@@ -751,25 +433,19 @@ classdef Gaja3D < handle
         end
        
         % disposes of Gaja3D workspace
-        function this = delete(this)
-            % clean up
-            % this call will clear all the other properties too
-            this.boundaries = kalypso.Polygon.EMPTY;
-            this.cmd_args = cell(0);
-            delete('temp.*');
+        function delete(this)
+            % this call will clear all properties
+            this.boundaries = kalypso.Polygon.empty();
         end       
     end % public methods
    
 	methods (Access = private)
          function exportForTriangle(this, filename)
-            segmentsMatrixFinal = zeros(0,2);
-            nodeCount = 1;
+            l_boundaries = this.boundaries(this.tiles);
+            boundariesMerged = l_boundaries(1);
             
-            boundaries = this.boundaries(this.tiles);
-            boundariesMerged = boundaries(1);
-            
-            for i=2:numel(boundaries)
-                boundariesMerged = boundariesMerged.union(boundaries(i));
+            for i=2:numel(l_boundaries)
+                boundariesMerged = boundariesMerged.union(l_boundaries(i));
             end
 
             polyX = boundariesMerged.getX();
@@ -801,28 +477,13 @@ classdef Gaja3D < handle
             end
             nodesMatrixFinal = [polyX polyY];
             
-            %nodesMatrixFinal = [polyX(1:end-1) polyY(1:end-1)];
-            %first = nodeCount;
-            %for n = 1:size(polyX, 1)-2 % last point connected to first
-            %    node1 = nodeCount;
-            %    node2 = nodeCount + 1;
-            %    segmentsMatrixFinal = [segmentsMatrixFinal; node1 node2];
-            %    nodeCount = nodeCount + 1;
-            %end
-            %segmentsMatrixFinal = [segmentsMatrixFinal; nodeCount first];
-            
-            breaklines = this.breaklinesMerged;
+            l_breaklines = this.breaklinesMerged;
             nodeCount = numel(polyX);
             nodeCount = nodeCount + 1;
             
-            % clip breaklines that are too close to outer boundary (20 m)
-            % EXPERIMENTAL
-            %[outerClipX, outerClipY] = bufferPolygon(boundariesMerged.getX, boundariesMerged.getY, -20);
-            %outerClip = kalypso.Polygon(outerClipX, outerClipY);
-            %breaklines = breaklines.clip(outerClip);
-            for i=1:numel(breaklines)
-                lineX = breaklines(i).getX();
-                lineY = breaklines(i).getY();
+            for i=1:numel(l_breaklines)
+                lineX = l_breaklines(i).getX();
+                lineY = l_breaklines(i).getY();
                 nodesMatrixFinal = [nodesMatrixFinal; lineX lineY];
                 for n = 1:size(lineX, 1)-1 % last point is only endpoint
                     node1 = nodeCount;

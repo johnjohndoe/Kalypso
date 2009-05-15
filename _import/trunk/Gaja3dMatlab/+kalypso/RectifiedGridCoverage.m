@@ -8,57 +8,67 @@ classdef RectifiedGridCoverage < handle
        miny = 0;
    end % public properties
 
-   properties (SetObservable = true)
+   properties (SetObservable=true)
+       smoothFilter;
+       edgeFilter;
+       featureDetector;
+   end
+   
+   properties (SetAccess=private)
        Z = zeros(0, 0);
        dx = 1;
        dy = 1;
-       smoothFilter = []; % no smooth
-       edgeFilter;
-       featureDetector;
-   end % public properties (observable)
+   end
    
-   properties (SetAccess = private)
-       smoothed = zeros(0, 0);
-       slope = zeros(0, 0, 2);
-       breakpoints = zeros(0, 0);
-   end % read-only properties
+   properties (Access=private)
+       smoothed_cache
+       slope_cache
+       breakpoints_cache
+   end
    
    properties (Dependent)
-       refmat;
+       refmat, smoothed, slope, breakpoints;
    end % dependent properties
    
    methods
-        % setter for Z
-        function set.Z(this, Z)
-            if(~isnumeric(Z))
-                error('Z is no elevation data.');
-            end
-            % convert to double precision
-            this.Z = double(Z);
-        end
-        
         % listen to property changes
         % maybe update smoothed, slope and breakpoints
-        function objectChanged(this, src, event)
-            if(any(strcmp(src.Name, {'Z', 'dx', 'dy', 'smoothFilter'})))
-                % rerun smooth filter
-                if(isempty(this.smoothFilter))
-                    % just set Z as smoothed image
-                    this.smoothed = this.Z;
-                else
-                    % run smooth filter and save result
-                    this.smoothed = this.smoothFilter.process(this);
-                end
+        function objectChanged(this, src, event) %#ok<INUSD>
+            if(any(strcmp(src.Name, {'smoothFilter'})))
+                this.smoothed_cache = [];
             end
-            
-            if(any(strcmp(src.Name, {'Z', 'dx', 'dy', 'smoothFilter', 'edgeFilter'})))
-                % recalculate slope based on smoothed image
+            if(any(strcmp(src.Name, {'smoothFilter', 'edgeFilter'})))
+                this.slope_cache = [];
+            end
+            if(any(strcmp(src.Name, {'smoothFilter', 'edgeFilter', 'featureDetector'})))
+                this.breakpoints_cache = [];
+            end
+        end
+        
+        % getter for refmat, calculated on-the-fly
+        function refmat = get.refmat(this)
+            refmat = constructRefMat(this.minx, this.miny, this.dx, this.dy);
+        end
+        
+        % getter for smoothed, calculated on-the-fly
+        function smoothed = get.smoothed(this)
+            if(isempty(this.smoothed_cache))
+                % run smooth filter
+                this.smoothed_cache = this.smoothFilter.process(this);
+            end
+            smoothed = this.smoothed_cache;
+        end
+        
+        % getter for slope, calculated on-the-fly
+        function slope = get.slope(this)
+            if(isempty(this.slope_cache))
+                % calculate slope based on smoothed image
                 image = this.smoothed;
                 if(isempty(image))
-                    this.slope = zeros(0, 0, 2);
+                    this.slope_cache = zeros(0, 0, 2);
                 else
-                    this.slope = zeros([size(image) 2]);
-                    
+                    this.slope_cache = zeros([size(image) 2]);
+
                     edgesVert = imfilter(image, this.edgeFilter, 'replicate');
                     edgesHori = imfilter(image, this.edgeFilter', 'replicate');
 
@@ -67,24 +77,20 @@ classdef RectifiedGridCoverage < handle
                     normVert = 180 / pi / this.dy;
                     normHori = 180 / pi / this.dx;
 
-                    this.slope(:,:,1) = atan(edgesVert) * normVert;
-                    this.slope(:,:,2) = atan(edgesHori) * normHori;
+                    this.slope_cache(:,:,1) = atan(edgesVert) * normVert;
+                    this.slope_cache(:,:,2) = atan(edgesHori) * normHori;
                 end
             end
-            
-            if(any(strcmp(src.Name, {'Z', 'dx', 'dy', 'smoothFilter', 'edgeFilter', 'featureDetector'})))
-                if(isempty(this.featureDetector))
-                    this.breakpoints = zeros(size(this.Z));
-                else
-                    % rerun feature detector
-                    this.breakpoints = this.featureDetector.process(this);
-                end
-            end
+            slope = this.slope_cache;
         end
         
-        % getter for refmat, calculated on-the-fly
-        function refmat = get.refmat(this)
-            refmat = constructRefMat(this.minx, this.miny, this.dx, this.dy);
+        % getter for breakpoints, calculated on-the-fly
+        function breakpoints = get.breakpoints(this)
+            if(isempty(this.breakpoints_cache))
+                % run feature detector
+                this.breakpoints_cache = this.featureDetector.process(this);
+            end
+            breakpoints = this.breakpoints_cache;
         end
    end % property getters and setters
 
@@ -94,25 +100,33 @@ classdef RectifiedGridCoverage < handle
         %               (Z, refmat)
         %               (Z, dx, dy, minx, miny)
         function this = RectifiedGridCoverage(varargin)
+            smoothFilterRegistry = kalypso.SmoothFilterRegistry();
+            this.smoothFilter = smoothFilterRegistry('none');
+            
+            featureDetectorRegistry = kalypso.FeatureDetectorRegistry();
+            this.featureDetector = featureDetectorRegistry('none');
+            
+            edgeFilterRegistry = kalypso.EdgeFilterRegistry();
+            this.edgeFilter = edgeFilterRegistry('ood');
+            
             % add property listener
             % it will recalculate smoothed, slope and breakpoints
-            this.edgeFilter = kalypso.EdgeFilter.DEFAULT;
-            this.featureDetector = kalypso.FeatureDetector.DEFAULT;
-            this.addlistener({'Z', 'dx', 'dy', 'smoothFilter', 'edgeFilter', 'featureDetector'},...
-                'PostSet', @(src,evnt)this.objectChanged(src,evnt));
+            this.addlistener({'smoothFilter', 'edgeFilter', 'featureDetector'},...
+                'PostSet', @(src,event)this.objectChanged(src,event));
+       
             if(nargin == 0)
                 return;
             elseif(ischar(varargin{1}))
                 this = kalypso.RectifiedGridCoverage.fromFile(varargin{:});
                 return;
             else
-                Z = varargin{1};
+                l_Z = varargin{1};
             end
             
             if(nargin == 2)
                 refmat = varargin{2};
                 
-                [rows, cols] = size(Z);
+                [rows, cols] = size(l_Z);
                 % coordinates of map corners
                 ul = [1 1 1] * refmat; % upper left pixel
                 lr = [rows cols 1] * refmat; % lower right pixel
@@ -123,17 +137,18 @@ classdef RectifiedGridCoverage < handle
 
                 % convert to increasing X and Y coordinates
                 if(iminx == 2)
-                    Z = fliplr(Z);
+                    l_Z = fliplr(l_Z);
                 end
                 if(iminy == 2)
-                    Z = flipud(Z);
+                    l_Z = flipud(l_Z);
                 end
 
                 this.dx = (maxx - this.minx) / (cols - 1);
                 this.dy = (maxy - this.miny) / (rows - 1);
             end
             
-            this.Z = Z;
+            % convert to double
+            this.Z = double(l_Z);
             
             if(nargin >= 3)
                 this.dx = varargin{2};
@@ -149,57 +164,37 @@ classdef RectifiedGridCoverage < handle
         function setSmoothFilter(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
-            p.addParamValue('method', 'gauss', @ischar);
+            p.addParamValue('smoothFilter', 'none', @ischar);
             p.parse(varargin{:});
-            smoothMethod = p.Results.method;
+            smoothMethod = p.Results.smoothFilter;
             
-            switch smoothMethod
-                case 'bilateral'
-                    this.smoothFilter = kalypso.BilateralFilter(varargin{:});
-                case 'gauss'
-                    this.smoothFilter = kalypso.GaussianFilter(varargin{:});
-                case 'none'
-                    this.smoothFilter = [];
-                otherwise
-                    error('Smooth filter method %s not recognized.', smoothMethod)
-            end
+            smoothFilterRegistry = kalypso.SmoothFilterRegistry();
+            this.smoothFilter = smoothFilterRegistry(smoothMethod);
+            this.smoothFilter.configure(varargin{:});
         end
         
         function setFeatureDetector(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
-            p.addParamValue('method', 'simple', @ischar);
+            p.addParamValue('featureDetector', 'none', @ischar);
             p.parse(varargin{:});
-            featureMethod = p.Results.method;
+            featureMethod = p.Results.featureDetector;
             
-            switch featureMethod
-                case 'canny'
-                    this.featureDetector = kalypso.CannyDetector(varargin{:});
-                case 'simple'
-                    this.featureDetector = kalypso.SimpleFeatureDetector(varargin{:});
-                otherwise
-                    error('Feature detection method %s not recognized.', featureMethod)
-            end
+            featureDetectorRegistry = kalypso.FeatureDetectorRegistry();
+            this.featureDetector = featureDetectorRegistry(featureMethod);
+            this.featureDetector.configure(varargin{:});
         end
        
         % getter for slope, calculated on-the-fly
         function setEdgeFilter(this, varargin)
             p = inputParser;
             p.KeepUnmatched = true;
-            p.addParamValue('method', 'ood', @ischar);
+            p.addParamValue('edgeFilter', 'ood', @ischar);
             p.parse(varargin{:});
-            method = p.Results.method;
+            edgeMethod = p.Results.edgeFilter;
             
-            switch method
-                case {'ood', 'frei-chen'}
-                    this.edgeFilter = kalypso.EdgeFilter.FREI_CHEN;
-                case 'sobel'
-                    this.edgeFilter = kalypso.EdgeFilter.SOBEL;
-                case 'prewitt'
-                    this.edgeFilter = kalypso.EdgeFilter.PREWITT;
-                otherwise
-                    error('Edge filter %s not recognized.', method)                    
-            end
+            edgeFilterRegistry = kalypso.EdgeFilterRegistry();
+            this.edgeFilter = edgeFilterRegistry(edgeMethod);
         end
        
         % interpolate grid z-values from tin
@@ -207,25 +202,30 @@ classdef RectifiedGridCoverage < handle
             p = inputParser;
             p.KeepUnmatched = true;
             p.addParamValue('useSmoothed', false);
+            p.addParamValue('interp', 'cubic', @isstr);
             p.parse(varargin{:});
             if(p.Results.useSmoothed)
-                Z = this.smoothed;
+                l_Z = this.smoothed;
             else
-                Z = this.Z;
+                l_Z = this.Z;
             end
-            [rows, cols] = size(Z);
+            [rows, cols] = size(l_Z);
             maxx = this.minx + this.dx * (cols - 1);
             maxy = this.miny + this.dy * (rows - 1);
             rangex = this.minx:this.dx:maxx;
             rangey = this.miny:this.dy:maxy;
             [X, Y] = meshgrid(rangex, rangey);
-            zi = interp2(X, Y, Z, xi, yi, 'cubic');
+            zi = interp2(X, Y, l_Z, xi, yi, p.Results.interp);
         end
         
         % Warning: this method changes the underlying grid data!
-        function scale(this, dx, dy)
-            Z = this.Z;
-            [rows, cols] = size(Z);
+        function scale(this, dx, dy, varargin)
+            p = inputParser;
+            p.KeepUnmatched = true;
+            p.addParamValue('interp', 'cubic', @isstr);
+            p.parse(varargin{:});
+            
+            [rows, cols] = size(this.Z);
             maxx = this.minx + this.dx * (cols - 1);
             maxy = this.miny + this.dy * (rows - 1);
             rangex = this.minx:this.dx:maxx;
@@ -236,17 +236,15 @@ classdef RectifiedGridCoverage < handle
             [xi, yi] = meshgrid(rangexi, rangeyi);
             
             % to avoid recomputation of slope etc.
-            this.Z = zeros(0,0);
             this.dx = dx;
             this.dy = dy;
-            this.Z = interp2(X, Y, Z, xi, yi, 'cubic');
+            this.Z = interp2(X, Y, this.Z, xi, yi, p.Results.interp);
         end
         
         % Warning: this method changes the underlying grid data!
         % deletes all data outside the given polygon
         function crop(this, polygon)
-            Z = this.Z;
-            [rows, cols] = size(Z);
+            [rows, cols] = size(this.Z);
             maxx = this.minx + this.dx * (cols - 1);
             maxy = this.miny + this.dy * (rows - 1);
             rangex = this.minx:this.dx:maxx;
@@ -266,13 +264,11 @@ classdef RectifiedGridCoverage < handle
             [xi, yi] = meshgrid(rangexi, rangeyi);
             
             %interpolate all new grid values from the old grid
-            Z = interp2(X, Y, Z, xi, yi, 'cubic');
+            this.Z = interp2(X, Y, this.Z, xi, yi, 'cubic');
             
             %discard all data outside the polygon (make NaN)
             index = inpolygon(xi, yi, polyX, polyY);
-            Z(~index) = NaN;
-            
-            this.Z = Z;
+            this.Z(~index) = NaN;
         end
         
         function delete(this)
@@ -337,7 +333,7 @@ classdef RectifiedGridCoverage < handle
                 this.dy = 1;
             end
 
-            Z = zeros(rows, cols) * NaN;
+            this.Z = zeros(rows, cols) * NaN;
             rangex = this.minx:this.dx:maxx;
             rangey = this.miny:this.dy:maxy;
             [X, Y] = meshgrid(rangex, rangey);
@@ -353,12 +349,11 @@ classdef RectifiedGridCoverage < handle
                     end
                     currentPoint = points(idx,:);
                     if(currentPoint(1) == X(x,y) && currentPoint(2) == Y(x,y))
-                        Z(x,y) = currentPoint(3);
+                        this.Z(x,y) = currentPoint(3);
                         idx = idx + 1;
                     end
                 end
             end
-            this.Z = Z;
         end
         
         function this = fromFile(file, varargin)
@@ -371,6 +366,7 @@ classdef RectifiedGridCoverage < handle
             TIFEXT = '.tif';
             TIFFEXT = '.tiff';
             ASCEXT = '.asc';
+            ASGEXT = '.asg';
             SHPEXT = '.shp';
             TXTEXT = '.txt';
             XYZEXT = '.xyz';
@@ -381,15 +377,15 @@ classdef RectifiedGridCoverage < handle
             switch(lower(ext))
                 case {TIFEXT, TIFFEXT}
                     % read image file
-                    Z = double(imread(file));
+                    l_Z = double(imread(file));
                     % load world file (referencing matrix)
                     worldfile = getworldfilename(file);
                     refmat = worldfileread(worldfile);
-                    this = kalypso.RectifiedGridCoverage(Z, refmat);
-                case {ASCEXT}
+                    this = kalypso.RectifiedGridCoverage(l_Z, refmat);
+                case {ASCEXT, ASGEXT}
                     % read arcview ascii grid file
-                    [Z, refmat] = readAsciiGrid(file);
-                    this = kalypso.RectifiedGridCoverage(Z, refmat);
+                    [l_Z, refmat] = readAsciiGrid(file);
+                    this = kalypso.RectifiedGridCoverage(l_Z, refmat);
                 case {SHPEXT, TXTEXT, XYZEXT}
                     % load points from file
                     points = loadPointData(file);
@@ -399,7 +395,8 @@ classdef RectifiedGridCoverage < handle
                     filenames = unzip(file, tmp_dir);
                     allGrids = cell(size(filenames));
                     for i=1:numel(filenames)
-                       grid = kalypso.RectifiedGridCoverage(filenames{i});
+                       filename = filenames{i};
+                       grid = kalypso.RectifiedGridCoverage(filename);
                        allGrids{i} = grid;
                     end
                     this = [allGrids{:}];
@@ -409,10 +406,7 @@ classdef RectifiedGridCoverage < handle
                         warning(e.message);
                     end
                 otherwise
-                    % try your luck with gdal
-                    [Z, attrib] = gdalread(file);
-                    refmat = flipud(reshape(attrib.GeoTransform, 3, 2));
-                    this = kalypso.RectifiedGridCoverage(Z, refmat);
+                    fprintf(1, 'File extension %s not recognized.\n', ext);
             end
        end
    end

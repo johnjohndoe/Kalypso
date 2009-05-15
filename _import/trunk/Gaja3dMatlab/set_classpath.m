@@ -8,6 +8,8 @@ function set_classpath( )
     javaaddpath jai_codec.jar % Java Advanced Imaging
     javaaddpath jai_core.jar % Java Advanced Imaging
     javaaddpath geotiff-jai.jar % Java Advanced Imaging (Geotiff support)
+    javaaddpath vecmath.jar;
+    javaaddpath log4j-1.2.9.jar % Java Advanced Imaging (Geotiff support)
     
     % Matlab dynamic path
     addpath data %data import/export functions

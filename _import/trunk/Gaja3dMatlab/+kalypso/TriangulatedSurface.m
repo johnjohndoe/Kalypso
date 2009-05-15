@@ -42,9 +42,7 @@ classdef TriangulatedSurface < handle
                                         this.points = varargin{1};
                                         this.initializeTin();
                                     case 15 % PolygonZ
-                                        [l_elements, Xtri, Ytri, Ztri] = loadTriangleShape( varargin{1} );
-                                        this.points = [Xtri Ytri Ztri];
-                                        this.elements = l_elements;
+                                        [this.elements, this.points] = loadTriangleShape( varargin{1} );
                                     otherwise
                                         error('Shape geometry type neither PointZ nor PolygonZ.');
                                 end
@@ -230,14 +228,13 @@ classdef TriangulatedSurface < handle
                 elementHeights = max(allZ,[],2) - min(allZ,[],2);
                 lengthFractions = maxHeight ./ elementHeights;
                 areaFactor = lengthFractions .* lengthFractions;
-                areaFactor(lengthFractions > 1) = 1;
                 badTriangleFraction = sum(areaFactor < 1) / tricount;
-                disp(sprintf('%f2.2 of %d triangles are bad.', badTriangleFraction, tricount));
-                if(badTriangleFraction > 0.01) % only process if more than 1/100 of all Triangles are bad
-                    l_maxArea = areas .* areaFactor;
-                    this.maxArea = min(l_maxArea, this.maxArea);
-                    areaSwitch = 'a';
-                end
+                fprintf(1, '%2.1f %% of %d triangles are bad.\n', badTriangleFraction*100, tricount);
+                l_maxArea = areas .* areaFactor;
+                l_maxArea(lengthFractions >= 1) = -1;
+                l_maxArea(isnan(l_maxArea)) = -1;
+                this.maxArea = min(l_maxArea, this.maxArea);
+                areaSwitch = 'a';
             end
             
             if(strcmp(areaSwitch, 'a'))
@@ -275,7 +272,6 @@ classdef TriangulatedSurface < handle
                 resultfile = [path filesep nameext(1:idx) num2str(count + 1)];
             end
             [ eleMatrix, Xtri, Ytri ] = loadTriangleOutput( resultfile );
-            zip([resultfile '.zip'], {[resultfile '.ele'], [resultfile '.node'], [resultfile '.poly']});
         end
         
         function s = asGeostruct(this)

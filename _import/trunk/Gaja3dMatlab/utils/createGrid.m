@@ -1,15 +1,13 @@
-function [gridx, gridy, refmat] = createGrid(points, dx, dy)
+function [gridx, gridy, refmat] = createGrid(X, Y, dx, dy)
 %% CREATEGRID Creates a grid with given resolution for a digital terrain model.
 %
-%   points      - Nx3 array with point X,Y,Z-coordinates
-%   dx, dy      - grid resolution (optional, default=1)
-%
-% The grid can be visualized with the Mapping Toolbox as follows:
-% >> mapshow(grid.Z, grid.refmat, 'DisplayType', 'surface');
+%   X, Y     - X and Y sample data (used to determine minimum and maximum
+%              grid coordinates
+%   dx, dy   - grid resolution (optional, defaults to 1)
 %
 
-    if(~exist('points','var') || size(points, 2) < 2)
-        error('Must specify at least nx2 elevation data with XY-coordinates.');
+    if(~exist('X','var') || ~exist('Y','var'))
+        error('Must specify X and Y sample data.');
     end
     if(~exist('dx', 'var') || isempty(dx))
         dx = 1;
@@ -17,19 +15,15 @@ function [gridx, gridy, refmat] = createGrid(points, dx, dy)
     if(~exist('dy', 'var') || isempty(dy))
         dy = 1;
     end
-   
-    % extract columns
-    X = points(:,1);
-    Y = points(:,2);
 
     % create referencing matrix
-    minx = min(X);
-    miny = min(Y);
+    minx = min(X) - (dx / 2);
+    miny = min(Y) - (dy / 2);
+    maxx = max(X) - (dx / 2);
+    maxy = max(Y) - (dy / 2);
     refmat = constructRefMat(minx, miny, dx, dy);
     
     % mesh grid
-    maxx = max(X);
-    maxy = max(Y);
     rangex = minx:dx:maxx;
     rangey = miny:dy:maxy;
     [gridx, gridy] = meshgrid(rangex, rangey);
