@@ -788,10 +788,23 @@ new features introduced/ started to be introduced:
 
 031.) Reactivatation in SubR COEF25nt:
       Reactivatate of linear distribution for ALP1 and APL2
-      for cohesive sediment (Quellen- & Senkenterm)
-                                                                                    
+      for cohesive sediment (Quellen- & Senkenterm)                                                                                    
 --- Monika Donner, 13.05.2009
 
 032.) Correct calculation of element related friction factor lambda; lambda is calculated at each Gauss node, thus
       the element related lambda is the sum of the weighted lambdas at the Gauss nodes.
 --- Nico Schrage, 14.05.2009
+
+--- Monika Donner, 18.05.2009
+033.) New Limit of maximal Sediment-concentration with 1500 mg/l in SubR UPDATE:
+      Maximal Limit in order to avoid extrem Konzentration
+      --> TODO: should be given by user in the CONTROL-Data
+            
+034.) Tests in SubR COEF25nt for Dispersion_Approach according to ELder:
+      in C1 line with IDIFSW = 5
+      Problems for Sediment under marsh-conditions
+      Extrem Dispersion Coefficients (too lagre and to low). 
+      Manual defined limits didn't stabilze the problem.
+      --> but, use IDIFSW = 2 (in C1 line)
+      NO changes, only tests                                                                                 
+--- Monika Donner, 18.05.2009
