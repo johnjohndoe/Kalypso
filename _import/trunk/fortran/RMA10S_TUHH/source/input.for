@@ -1,3 +1,4 @@
+C     Last change:  MD   15 May 2009   10:42 am
 CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
 CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
@@ -644,7 +645,7 @@ cipk SEP02 add sand data
 cipk may03 add cutout opton for settling/erosion for element types
 
       IF(ID(1:3) .EQ. 'DRP') THEN
-      
+
         READ(DLIN,'(9I8)') (IEDROP(N),N=1,9)
         call ginpt(lin,id,dlin)
 
