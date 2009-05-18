@@ -1147,6 +1147,31 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
         DIFX=SHEARV_X*H*ABS(ORT(NR,8))
         DIFY=SHEARV_Y*H*ABS(ORT(NR,9))
 
+        !MD: Avoid Dispersion >> convection
+        !MD:  IF (DIFX .gt. (1.0*ABS(R*UBF))) THEN
+        !MD:  DIFX = (1.0*ABS(R*UBF))
+        !MD:  IF (ABS(R*UBF).ne.0.0) THEN
+        !MD:    DIFY = DIFX * ABS(S*VBF)/ABS(R*UBF)
+        !MD:  END IF
+        !MD:END IF
+        !MD:IF (DIFY .gt. (1.0*ABS(S*VBF))) THEN
+        !MD:  DIFY = (1.0*ABS(S*VBF))
+        !MD:  IF (ABS(S*VBF).ne.0.0) THEN
+        !MD:    DIFX = DIFY * ABS(R*UBF)/ABS(S*VBF)
+        !MD:  END IF
+        !MD:END IF
+
+        !MD: Avoid Dispersion --> if convection tends to zero
+        !MD: important for marsh-nodes
+        !MD: compare to Min EDDY: ca. 0.5 till 0.1
+
+        !MD:  IF (DIFX.lt. 0.10) THEN
+        !MD:    DIFX = (0.10 + DIFX) /2.0
+        !MD:  ENDIF
+        !MD:  IF (DIFY.lt. 0.10) THEN
+        !MD:    DIFY = (0.10 + DIFY) /2.0
+        !MD:  ENDIF
+        !MD:  Limits with 1.0E-5 are too small!!
 
         !MD: testoutput into output.out
         IF (NN.eq.1 .or. NN.eq.2) THEN
