@@ -808,3 +808,24 @@ new features introduced/ started to be introduced:
       --> but, use IDIFSW = 2 (in C1 line)
       NO changes, only tests                                                                                 
 --- Monika Donner, 18.05.2009
+
+--- Monika Donner, 20.05.2009
+035.) Change in SubR FRONT for Dispersion-Approach DISP = 2:
+      The call of COEF2DNT for sediment with Dispersion-Approach = 2
+      should only be used for Kings Method: For Kings-Turbulence (IEDSW=2) enclosure
+      (=SMAG) combined with Dispersion enclosure (IDIFSW=2). Reason for this change is
+      to avoid a switch between different COEF-Routines (Coef25 and coef2d) for one model:
+        >> ELSEIF(ISLP.EQ.1 .AND. IUTUB.EQ.1 .AND. IDIFSW.EQ.2 .and. IEDSW .EQ. 2) THEN
+      
+      TODO: Changes must be also implemented into FRONT_MKL!!!!!!!!!!     
+            
+036.) Changes and Corrections in SubR COEF25nt for Dispersion-Approach:
+      - Whole dispersion bloc is moved down below "call turbulence", because
+        turbulence parameters are/can be needed.
+      - Dispersion enclosure (IDIFSW=2)is corrected and implemented: 
+        >> ELSEIF (IDIFSW.EQ.2) THEN
+          The approach was implemented according to COEF2dNT by combining
+          turbulent diffusion with sediment dispersion.
+          But here (and now), valid for all turbulence approaches!!
+                                                                               
+--- Monika Donner, 20.05.2009
