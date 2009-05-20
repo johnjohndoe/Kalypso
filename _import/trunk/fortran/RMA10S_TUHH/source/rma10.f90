@@ -1,4 +1,4 @@
-!     Last change:  MD    4 May 2009    3:30 pm
+!     Last change:  MD   20 May 2009    1:54 pm
   !update degrees of freedom and check for convergence
   !---------------------------------------------------
 subroutine RMA_Kalypso
@@ -457,11 +457,13 @@ steadyCycle: Do
   !---------------
   if (icpu == 0) then
     !frontal solution scheme
-    !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.
+    !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for
+    !numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.
     call front (1)
   else
     !Pardiso solver from the Intel MKL library
-    !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
+    !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In:
+    ! Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
     call front_pardiso (1)
   endif
   
@@ -578,7 +580,7 @@ end do steadyCycle
 ! to keep within an appropriate range as appropriate
 !-------------------------------------------------------------------------
 SalLowPerm = 0.0001
-SalHighPerm = 300
+SalHighPerm = 300.0
 Do J = 1,NP
   If (Vel(4,J)<SalLowPerm) Then
     Vel(4,J) = SalLowPerm
@@ -798,7 +800,8 @@ DynamicTimestepCycle: do n = 1, ncyc
     call amf (hel (j), vtm, akp (j), adt (j), adb (j), d1, d2, 0)
 
     !update for all degrees of freedom
-    !TODO: Is this necessary? Reasons for questions: 1. water stage/ depth is revised in next logic; 2. alpha is overwritten for sediment (alphasn) stuff and applied later again
+    !TODO: Is this necessary? Reasons for questions: 1. water stage/ depth is revised in next logic; 2. alpha is
+    !overwritten for sediment (alphasn) stuff and applied later again
     ForAllDOFs: do k = ndl, ndf
       if (iespc (k, j) == 0) then
         !TODO: This can't work, because there will never be a time derivative value unequal zero
@@ -807,7 +810,8 @@ DynamicTimestepCycle: do n = 1, ncyc
         if (iproj == 0) then
           vel (k, j) = vel (k, j) + delt * vdot (k, j)
 
-        !project the variable used within this turn use projection for the variable of current run by the old variable and the variable of the penultimate calculation step
+        !project the variable used within this turn use projection for the variable of current run by the old
+        !variable and the variable of the penultimate calculation step
         !calculate the time derivative
         elseif(iproj == 2) then
           dtfac       = thetcn * vdot (k, j) + (1. - thetcn) * v2ol (k, j)
@@ -1118,11 +1122,13 @@ DynamicTimestepCycle: do n = 1, ncyc
     !---------------
     if (icpu == 0) then
       !frontal solution scheme
-      !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical Methods in Engineering. Vol. 2, p. 5-32. 1970.
+      !by Irons, B.: A Frontal solution program for Finite Element analysis. In: Internaltiional Journal for numerical
+      ! Methods in Engineering. Vol. 2, p. 5-32. 1970.
       call front (1)
     else
       !Pardiso solver from the Intel MKL library
-      !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
+      !by Schenk, O., Gärtner, K.: Solving unsymmetric sparse systems of linear equations with PARDISO. In: Jorunal of
+      ! Future Generation Computer Systems, Vol. 20 Iss. 3, p. 475-487. 2004.
       call front_pardiso (1)
     endif
   
@@ -1231,13 +1237,13 @@ DynamicTimestepCycle: do n = 1, ncyc
     if (nprti /= 0) then
       if (mod (icyc, iprtf) == 0 .and. mod (maxn, iprti) == 0) then
         !generate file name
-      call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName, inputFileName)
+      call generateOutputFileName ('inst', niti, icyc, maxn, modellaus, modellein, modellrst, ct, nb, outputFileName,inputFileName)
         !write result after iteration
         call write_kalypso (outputfilename, 'resu')
 
          !MD: only for kohesive Sediment
          IF (LSS.gt.0) THEN
-           call generateOutputFileName ('inst', niti, icyc, maxn, 'bed', modellein , modellrst, ct, nb, outputFileName, inputFileName)
+           call generateOutputFileName ('inst',niti, icyc, maxn, 'bed', modellein, modellrst, ct,nb, outputFileName, inputFileName)
            CALL write_KALYP_Bed (outputFileName)
          END IF
       endif
