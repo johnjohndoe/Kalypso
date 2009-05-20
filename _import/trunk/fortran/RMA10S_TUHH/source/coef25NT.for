@@ -1,3 +1,4 @@
+C     Last change:  MD   20 May 2009    7:48 pm
 CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -406,6 +407,7 @@ C
 CIPK SEP96      ROAVG=1.935
 CIPK SEP96      IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 C
+
 CIPK SEP96 ADD TESTS FOR IEDSW
       IF(IEDSW .NE. 2  .AND.  IEDSW .NE. 4) THEN
         EPSX = EEXXYY(1,NN)/ROAVG
@@ -432,36 +434,6 @@ c get element lengths in the projected direction
       ENDIF
 cipk sep96 rewrite logic for DIFX and DIFY
 CIPK MAR03  add logic for IDIFSW
-
-      IF(ISLP .EQ. 0  .OR.  IDIFSW .EQ. 0) THEN
-        IF(IEDSW .LT. 2) THEN
-          DIFX = EEXXYY(5,NN)
-          DIFY = EEXXYY(6,NN)
-        ELSEIF(IEDSW .EQ. 3) THEN
-          DIFX = EEXXYY(5,NN)
-          DIFY = DIFX*ABS(ORT(NR,9))
-CIPK JAN97      ELSEIF(IEDSW .EQ. 4) THEN
-        ELSEIF(IEDSW .EQ. 2  .OR.  IEDSW .EQ. 4) THEN
-          DIFX = ABS(ORT(NR,8)*(XLMAX-XLMIN))/CVF2
-          DIFY = DIFX*ABS(ORT(NR,9))
-        ENDIF
-      !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
-      ELSE
-        IF(IDIFSW .EQ. 9  .OR.  IDIFSW .LT. 3) THEN
-          DIFX = EEXXYY(5,NN)
-          DIFY = EEXXYY(6,NN)
-        ELSEIF(IDIFSW .EQ. 3) THEN
-          DIFX = EEXXYY(5,NN)
-          DIFY = DIFX*ABS(ORT(NR,9))
-        ELSEIF(IDIFSW .EQ. 4) THEN
-          DIFX = ABS(ORT(NR,8)*(XLMAX-XLMIN))/CVF2
-          DIFY = DIFX*ABS(ORT(NR,9))
-        ENDIF
-      ENDIF
-cipk mar03 end changes
-!MD  END only for NTX=1: Real calculation
-!MD  (NTX = 0: data Reading and preparing restart)
-!................................................
 
    72 CONTINUE
       NGP=7
@@ -1104,8 +1076,8 @@ cipk mar05
      +             lamKS,
      +             lamP,
      +             lamDunes, dset)
-     
-     
+
+
         !at first Gauss node the lambdas are initialized
         if (i == 1) then
           lambdaTot (nn) = 0.0d0
@@ -1130,71 +1102,7 @@ cipk mar05
       ENDIF
 
 
-CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
-!MD: for Sediment, Salinity, Temperatur only (ISLP=1)
-      IF(ISLP .EQ. 1  .AND. IDIFSW .EQ. 5) THEN
 
-        SHEARVEL=VECQ*SQRT(FFACT)
-      !MD: DIFX=SHEARVEL*H*ABS(ORT(NR,8))
-        !MD: DIFY is wrong 07-05-2009
-        !MD: DIFY=DIFX*ABS(ORT(NR,9))
-      !MD: DIFY=SHEARVEL*H*ABS(ORT(NR,9))
-
-        !MD: NEUE BERECHNUNG
-        !MD: VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
-        SHEARV_X =SQRT((R*UBF)**2) * SQRT(FFACT)
-        SHEARV_Y =SQRT((S*VBF)**2) * SQRT(FFACT)
-        DIFX=SHEARV_X*H*ABS(ORT(NR,8))
-        DIFY=SHEARV_Y*H*ABS(ORT(NR,9))
-
-        !MD: Avoid Dispersion >> convection
-        !MD:  IF (DIFX .gt. (1.0*ABS(R*UBF))) THEN
-        !MD:  DIFX = (1.0*ABS(R*UBF))
-        !MD:  IF (ABS(R*UBF).ne.0.0) THEN
-        !MD:    DIFY = DIFX * ABS(S*VBF)/ABS(R*UBF)
-        !MD:  END IF
-        !MD:END IF
-        !MD:IF (DIFY .gt. (1.0*ABS(S*VBF))) THEN
-        !MD:  DIFY = (1.0*ABS(S*VBF))
-        !MD:  IF (ABS(S*VBF).ne.0.0) THEN
-        !MD:    DIFX = DIFY * ABS(R*UBF)/ABS(S*VBF)
-        !MD:  END IF
-        !MD:END IF
-
-        !MD: Avoid Dispersion --> if convection tends to zero
-        !MD: important for marsh-nodes
-        !MD: compare to Min EDDY: ca. 0.5 till 0.1
-
-        !MD:  IF (DIFX.lt. 0.10) THEN
-        !MD:    DIFX = (0.10 + DIFX) /2.0
-        !MD:  ENDIF
-        !MD:  IF (DIFY.lt. 0.10) THEN
-        !MD:    DIFY = (0.10 + DIFY) /2.0
-        !MD:  ENDIF
-        !MD:  Limits with 1.0E-5 are too small!!
-
-        !MD: testoutput into output.out
-        IF (NN.eq.1 .or. NN.eq.2) THEN
-          WRITE (75, *) 'Schergeschwindigkeit u_star(NN):', SHEARVEL
-          WRITE (75, *) 'Dispersion in x DIFX(NN):', DIFX
-          WRITE (75, *) 'Dispersion in y DIFY(NN):', DIFY
-        END IF
-        !-
-      ENDIF
-
-      if(difx .lt. ort(nr,14)) then
-        if(difx .gt. 0.) then
-          dify=ort(nr,14)*dify/difx
-        else
-          dify=ort(nr,14)
-        endif
-        difx=ort(nr,14)
-      endif
-
-!MD: testoutput into output.out
-!MD      IF (NN.eq.1 .or. NN.eq.2) THEN
-!MD        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
-!MD      END IF
 
 CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
 
@@ -1310,6 +1218,8 @@ CIPK AUG06 ADD QIN
         !-
       ENDIF
 
+
+!------- Turbulence (TU) and Dispersion bloc ----------------------------------
       !EFa may07, new subroutine for turbulence modell
       if (iedsw.ge.10) then
         call turbulence(nn,iedsw,tbmin,eexxyy(1,nn),eexxyy(2,nn),
@@ -1317,6 +1227,112 @@ CIPK AUG06 ADD QIN
      +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
       end if
       !-
+
+!MD: Dispersion for sediment, salinity or temperatur
+!MD: Bloc is moved from ca. LN 440 down, because turbulence parameters
+!     and results are needed
+      IF(ISLP .EQ. 0  .OR.  IDIFSW .EQ. 0) THEN
+        IF(IEDSW .LT. 2) THEN
+          DIFX = EEXXYY(5,NN)
+          DIFY = EEXXYY(6,NN)
+        ELSEIF(IEDSW .EQ. 3) THEN
+          DIFX = EEXXYY(5,NN)
+          DIFY = DIFX*ABS(ORT(NR,9))
+CIPK JAN97      ELSEIF(IEDSW .EQ. 4) THEN
+        ELSEIF(IEDSW .EQ. 2  .OR.  IEDSW .EQ. 4) THEN
+          DIFX = ABS(ORT(NR,8)*(XLMAX-XLMIN))/CVF2
+          DIFY = DIFX*ABS(ORT(NR,9))
+        ENDIF
+      !MD: for Sediment, Salinity, Temperatur only (ISLP=1)
+
+      ELSE
+        !MD: new approach for Disp-Modell 2
+        IF(IDIFSW .EQ. 9  .OR.  IDIFSW .LT. 2) THEN
+          DIFX = EEXXYY(5,NN)  ! = ORT(NR,8)
+          DIFY = EEXXYY(6,NN)  ! = ORT(NR,9)
+        ELSEIF (IDIFSW.EQ.2) THEN
+          !MD: use approach according to COEF2dNT by combining
+          !MD     turbulent diffusion with sediment dispersion
+          !MD:    but here, valid for all turbulence approaches!!
+          DIFX = EPSX
+          !MD:  DIFX = EPSX * EEXXYY(5,NN)
+          DIFY = EPSZX * EEXXYY(6,NN)
+        ELSEIF(IDIFSW .EQ. 3) THEN
+          DIFX = EEXXYY(5,NN)
+          DIFY = DIFX*ABS(ORT(NR,9))
+        ELSEIF(IDIFSW .EQ. 4) THEN
+          DIFX = ABS(ORT(NR,8)*(XLMAX-XLMIN))/CVF2
+          DIFY = DIFX*ABS(ORT(NR,9))
+        ENDIF
+      ENDIF
+cipk mar03 end changes
+!MD  END only for NTX=1: Real calculation
+!MD  (NTX = 0: data Reading and preparing restart)
+!................................................
+CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
+!MD: Bloc is moved from ca. LN 1100 down, because turbulence parameters
+!     and results are needed
+!MD: for Sediment, Salinity, Temperatur only (ISLP=1)
+      IF(ISLP .EQ. 1  .AND. IDIFSW .EQ. 5) THEN
+
+        SHEARVEL=VECQ*SQRT(FFACT)
+      !MD: DIFX=SHEARVEL*H*ABS(ORT(NR,8))
+        !MD: DIFY is wrong 07-05-2009
+        !MD: DIFY=DIFX*ABS(ORT(NR,9))
+      !MD: DIFY=SHEARVEL*H*ABS(ORT(NR,9))
+
+        !MD: NEUE BERECHNUNG
+        !MD: VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
+        SHEARV_X =SQRT((R*UBF)**2) * SQRT(FFACT)
+        SHEARV_Y =SQRT((S*VBF)**2) * SQRT(FFACT)
+        DIFX=SHEARV_X*H*ABS(ORT(NR,8))
+        DIFY=SHEARV_Y*H*ABS(ORT(NR,9))
+
+        !MD: Avoid: Dispersion in x >> convection
+        !MD: IF (DIFX .gt. (1.0*ABS(R*UBF))) THEN
+        !MD:   DIFX = (1.0*ABS(R*UBF))
+        !MD: END IF
+        !MD: But: Dispersion in y must be >> convection!
+        !MD: IF (DIFY .lt. (1.0*ABS(S*VBF))) THEN
+        !MD:   DIFY = (1.0*ABS(S*VBF))
+        !MD: END IF
+
+        !MD: Avoid Dispersion --> if convection tends to zero
+        !MD: important for marsh-nodes
+        !MD: compare to Min EDDY: ca. 0.5 till 0.01
+
+        !MD:  IF (DIFX.lt. 0.10) THEN
+        !MD:    DIFX = (0.10 + DIFX) /2.0
+        !MD:  ENDIF
+        !MD:  IF (DIFY.lt. 0.10) THEN
+        !MD:    DIFY = (0.10 + DIFY) /2.0
+        !MD:  ENDIF
+        !MD:  Limits with 1.0E-5 are too small!!
+
+        !MD: testoutput into output.out
+        IF (NN.eq.1 .or. NN.eq.2) THEN
+          WRITE (75, *) 'Schergeschwindigkeit u_star(NN):', SHEARVEL
+          WRITE (75, *) 'Dispersion in x DIFX(NN):', DIFX
+          WRITE (75, *) 'Dispersion in y DIFY(NN):', DIFY
+        END IF
+        !-
+      ENDIF
+
+      if(difx .lt. ort(nr,14)) then
+        if(difx .gt. 0.) then
+          dify=ort(nr,14)*dify/difx
+        else
+          dify=ort(nr,14)
+        endif
+        difx=ort(nr,14)
+      endif
+
+!MD: testoutput into output.out
+!MD      IF (NN.eq.1 .or. NN.eq.2) THEN
+!MD        WRITE (75, *) 'DIFX:', DIFX, 'DIFY:', DIFY
+!MD      END IF
+!--- End of Turbulence and Dispersion bloc ---------------------------------
+
 
 !-------------------------------------------------
 !.....Set up TERMS for the MOMENTUM EQUATIONS.....
