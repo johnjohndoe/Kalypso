@@ -1,4 +1,4 @@
-C     Last change:  MD   21 Aug 2008    7:35 pm
+C     Last change:  MD   20 May 2009    6:16 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -231,20 +231,30 @@ CIPK MAR05
 
 C     Modify tests to allows for IDIFSW
 
-          ELSEIF(IUTUB .EQ. 1  .and.  iedsw .eq. 2  .AND. ISLP .EQ. 0)
+            ELSEIF(IUTUB.EQ.1 .and. iedsw.eq.2  .AND. ISLP.EQ. 0)
      +	      THEN
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2D(N,NRX)
               ELSE
+                if(nell .le. 2) then
+                  write(*,*) ' entering COEF2DNT'
+                endif
                 CALL COEF2DNT(N,NRX)
               ENDIF
-            ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2)
-     +        THEN
+
+            !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
+            !MD:  combined with Dispersion enclosure 2. Reason for this change
+            !MD:  to avoid a switch between different COEF-Routines for one model
+            ELSEIF(ISLP.EQ.1 .AND. IUTUB.EQ.1 .AND. IDIFSW.EQ.2
+     +              .and. IEDSW .EQ. 2) THEN
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2D(N,NRX)
               ELSE
+                if(nell .le. 2) then
+                  write(*,*) ' entering COEF2DNT'
+                endif
                 CALL COEF2DNT(N,NRX)
               ENDIF
       	    ELSE
@@ -252,16 +262,20 @@ CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2(N,NRX)
               ELSE
+                if(nell .le. 2)  then
+                  write(*,*) ' entering COEF25NT'
+                endif
                 CALL COEF2NT(N,NRX)
               ENDIF
             ENDIF
           ELSE
             GO TO 18
           ENDIF
-            CALL SECOND(SOUC)
-            TSURC=SOUC-SINC+TSURC
-          ELSE
-            IF(NETYP(N)/10 .EQ. 2) THEN
+          CALL SECOND(SOUC)
+          TSURC=SOUC-SINC+TSURC
+
+        ELSE
+          IF(NETYP(N)/10 .EQ. 2) THEN
 
 cipk nov99 skip if collapsing to 2-d
 
@@ -275,15 +289,15 @@ cipk jan97
               call coef3(n,nrx)
             endif
 cipk jan97 end changes
-              CALL SECOND(SOUC)
-              TCOEFS=TCOEFS+SOUC-SINC
-            ELSE
-              IF(NETYP(N)/10 .EQ. 1) THEN
+            CALL SECOND(SOUC)
+            TCOEFS=TCOEFS+SOUC-SINC
+          ELSE
+            IF(NETYP(N)/10 .EQ. 1) THEN
 
 C     Process   twod elements
 
 CIPK JUN05
-                IF(IMAT(N)  .LT. 900  .OR.  NCORN(N) .GT. 5) THEN
+              IF(IMAT(N)  .LT. 900  .OR.  NCORN(N) .GT. 5) THEN
 
 C     Process   horizontal 2d
 
@@ -291,21 +305,32 @@ C     Process   horizontal 2d
 cipk jan97
                 if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
      +            then
-                  if(nell .eq. 1)  then
+                  if(nell .eq. 1) then
                     write(75,*) 'going to smag'
                   endif
 CIPK MAR05
                   IF(INOTR .EQ. 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
+                    if(nell .le. 2) then
+                      write(*,*) ' entering COEF2DNT'
+                    endif
                     CALL COEF2DNT(N,NRX)
+
                   ENDIF
+
+                !MD: Should only be used for Kings-Turbulence enclosure 2 (SMAG)
+                !MD:  combined with Dispersion enclosure 2. Reason for this change
+                !MD:  to avoid a switch between different COEF-Routines for one model
                 ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND.
-     +            IDIFSW .EQ. 2) THEN
+     +                 IDIFSW .EQ. 2. .and. IEDSW .EQ. 2) THEN
 CIPK MAR05
                   IF(INOTR .EQ. 0) THEN
                     CALL COEF2D(N,NRX)
                   ELSE
+                    if(nell .le. 2) then
+                      write(*,*) ' entering COEF2DNT'
+                    endif
                     CALL COEF2DNT(N,NRX)
                   ENDIF
                 else
@@ -313,6 +338,9 @@ CIPK MAR05
                   IF(INOTR .EQ. 0) THEN
                     CALL COEF2(N,NRX)
                   ELSE
+                    if(nell .le. 2)then
+                      write(*,*) ' entering COEF25NT'
+                    endif
                     CALL COEF2NT(N,NRX)
                   ENDIF
                 endif
@@ -323,9 +351,7 @@ CIPK JAN99
 
 C      Process vertical 2d
 
-
 cipk nov99 skip if collapsing to 2-d
-
                 IF(ICOLLAPE(N) .EQ. 1  .AND.  NRX .NE. 2) GO TO 18
 
                 CALL COEFV(N,NRX)
@@ -376,6 +402,9 @@ CIPK MAR05
           IF(INOTR .EQ. 0) THEN
             CALL COEF2(N,NRX)
           ELSE
+            if(nell .le. 2)  then
+              write(*,*) ' entering COEF25NT at goto_20 '
+            endif
             CALL COEF2NT(N,NRX)
           ENDIF
           CALL SECOND(SOUC)
