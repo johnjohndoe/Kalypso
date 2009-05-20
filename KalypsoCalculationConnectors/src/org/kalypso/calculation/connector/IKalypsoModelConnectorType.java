@@ -24,7 +24,7 @@ public interface IKalypsoModelConnectorType {
     }
 
     public enum MODELSPEC_CONNECTOR_LZNA_KZNA {
-	LZ_NA, KZ_NA;
+	LZNA_ERGEBNISSE_AKTUEL_ANFANGWERTE, KZNA_CALCULATION, KZNA_ANFANGWERTE_LZSIM;
     }
 
     public enum MODELSPEC_CONNECTOR_NA_WSPM {
