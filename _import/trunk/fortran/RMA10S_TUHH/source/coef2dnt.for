@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  MD   29 Jul 2008   11:18 am
+C     Last change:  MD   20 May 2009    7:51 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -664,9 +664,11 @@ CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
         SIGMAZ=0.
       ENDIF
 
-      DSQ=SQRT(DRDX**2+DSDZ**2+0.5*(DRDZ+DSDX)**2)
+!MD: Equation for prandtl mixing lenght:
+      DSQ=SQRT((DRDX**2.)+(DSDZ**2.)+0.5*((DRDZ+DSDX)**2.))
 
- 
+!MD:  TBFACT defined by user = 0.20
+!MD:  AREAE = Area of Element
       AMH=TBFACT*AREAE*DSQ
       if(tbmin .gt. 0.  .and.  amh .lt. tbmin/2.) then
         amh=tbmin/2.
@@ -785,7 +787,7 @@ CIPK AUG06 ADD AVERAGE TEST
               MC = 2*M - 1
               MR=NCON(MC)
               ALP1 = ALP1 + XM(M)*DEPRAT(MR)
-             ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)            
+              ALP2 = ALP2 +(EDOT(MR)+SERAT(MR))*XM(M)
             END DO
 
           ELSE
