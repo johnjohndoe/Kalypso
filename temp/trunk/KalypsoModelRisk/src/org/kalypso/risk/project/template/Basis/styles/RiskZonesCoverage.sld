@@ -15,10 +15,10 @@
                     <RasterSymbolizer uom="pixel">
 						<ColorMap>
                             <ColorMapEntry color="#ffff00" opacity="0.85" quantity="1.0"/>
-                            <ColorMapEntry color="#ff9900" opacity="0.85" quantity="2.0"/>
+                            <ColorMapEntry color="#ffaa00" opacity="0.85" quantity="2.0"/>
                             <ColorMapEntry color="#ff0000" opacity="0.85" quantity="3.0"/>
-                            <ColorMapEntry color="#00ccff" opacity="0.85" quantity="4.0"/>
-                            <ColorMapEntry color="#006699" opacity="0.85" quantity="5.0"/>
+                            <ColorMapEntry color="#ff73de" opacity="0.85" quantity="4.0"/>
+                            <ColorMapEntry color="#8400a8" opacity="0.85" quantity="5.0"/>
                             <ColorMapEntry color="#000033" opacity="0.85" quantity="6.0"/>
                             <ColorMapEntry color="#000033" opacity="0.85" quantity="6.0"/>
                         </ColorMap>
